@@ -1,0 +1,59 @@
+YajHFC FAQ
+==========
+
+Q: Where do I get a fax viewer for Windows?
+A: 
+Generally you can use any program that can display TIFF files, although 
+some of them display faxes in low resolution with an incorrect (half) height.
+
+Luckily, all recent Windows versions come with program that does this correctly:
+- Windows 95/98/ME/2000: You can use the Accessories/Imaging application.
+      To use it with YajHFC, use the browse button of the "Command line for fax viewer"
+      box to browse for kodakimg.exe on your hard drive
+      (this file usually resides either in the Windows directory (Win 98/ME) or
+       in "Program Files\Windows NT\Accessories\ImageVue" (Win 2k))
+- Windows XP: You can use the integrates "picture and fax viewer" (sorry, don't know
+      how this is exactly called in English).
+      To use it, enter the following text into the "Command line for fax viewer" box:
+      rundll32.exe shimgvw.dll,ImageView_Fullscreen %s
+
+      
+Q: Where do I get a fax viewer for Linux/*BSD/... ?
+A:
+"kfax" works very well for me, but just as with Windows, you may use any program that 
+can display TIFF files, just search your distribution's package database 
+(xloadimage does *not* work for me, however).
+
+
+Q: Where do I get a Postscript viewer?
+A:
+Windows: Use Ghostview from http://www.cs.wisc.edu/~ghost/
+Linux/*BSD/...: Just install one of the Postscript viewer packages
+                (e.g. gv, kghostview, gnome-gv, ...)
+	
+
+Q: How can I edit cover page templates?
+A:
+The templates have to be in the same special Postscript format the Hylafax 
+"faxcover" program uses. See the follwing pages for hints how to create/edit
+such files:
+http://www.hylafax.org/HylaFAQ/Q202.html
+http://www.hylafax.org/howto/tweaking.html
+
+
+Q: What does the column XYZ mean?
+A:
+Most likely, I don't know exactly either, because the column descriptions
+are simply copied from the faxstat(1) man page (JobFmt/RcvFmt) and 
+abbreviated/translated.
+
+
+Q: Why did you choose that stupid name?
+A:
+YajHFC started out as a "test project" for Java and the gnu.hylafax library and so
+it didn't have a "nice" name. After working at it for a while, I noticed that it turned 
+out to be actually useable, so I chose to give it a name.
+Because I was also playing around with SuSE's yast at that point of time and I knew there
+were/are already a lot of other java hylafax clients out there, I called it
+"yet another" java hylafax client. 
+
