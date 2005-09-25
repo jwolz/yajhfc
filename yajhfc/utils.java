@@ -18,9 +18,12 @@ package yajhfc;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-import gnu.hylafax.*;
+import gnu.hylafax.HylaFAXClientProtocol;
+import gnu.hylafax.Job;
+import gnu.hylafax.Pagesize;
 
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -32,10 +35,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URL;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Locale;
@@ -397,6 +398,8 @@ class FaxOptions {
     public String FromCompany;
     public String CustomCover;
     public boolean useCover, useCustomCover;
+    
+    public boolean bringToFrontOnNewFaxes = true;
     
     public FaxOptions() {
         this.host = "";

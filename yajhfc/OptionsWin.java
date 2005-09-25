@@ -64,7 +64,7 @@ public class OptionsWin extends JDialog {
     private JTextField textNotifyAddress, textHost, textUser, /*textViewer,*/ textPort;
     private JPasswordField textPassword;
     private JComboBox comboTZone, comboNotify, comboPaperSize, comboResolution;
-    private JCheckBox checkPasv;
+    private JCheckBox checkPasv, checkNewFaxToFront;
     private JSpinner spinMaxTry, spinMaxDial;
     //private JButton buttonBrowseViewer;
     private FileTextField ftfFaxViewer, ftfPSViewer;
@@ -112,6 +112,7 @@ public class OptionsWin extends JDialog {
         comboTZone.setSelectedItem(foEdit.tzone);
         
         checkPasv.setSelected(foEdit.pasv);
+        checkNewFaxToFront.setSelected(foEdit.bringToFrontOnNewFaxes);
         
         spinMaxDial.setValue(Integer.valueOf(foEdit.maxDial));
         spinMaxTry.setValue(Integer.valueOf(foEdit.maxTry));
@@ -220,7 +221,7 @@ public class OptionsWin extends JDialog {
         if (panelServer == null) {
             double[][] tablelay = {
                     {border, 0.25, border, 0.25, border, 0.25, border, TableLayout.FILL, border},
-                    new double[8]
+                    new double[9]
             };
             double rowh = 1 / (double)(tablelay[1].length - 2);
             tablelay[1][0] = border;
@@ -239,6 +240,7 @@ public class OptionsWin extends JDialog {
             textPassword = new JPasswordField();
             
             checkPasv = new JCheckBox(_("Use passive mode to fetch faxes"));
+            checkNewFaxToFront = new JCheckBox(_("Bring window to front when a new fax is received"));
             
             addWithLabel(panelServer, textHost, _("Host name:"), "1, 2, 5, 2, f, c");
             addWithLabel(panelServer, textPort, _("Port:"), "7, 2, f, c");
@@ -246,6 +248,7 @@ public class OptionsWin extends JDialog {
             addWithLabel(panelServer, textPassword, _("Password:"), "5, 4, 7, 4, f, c");
             
             panelServer.add(checkPasv, "1, 6, 7, 6");
+            panelServer.add(checkNewFaxToFront, "1, 7, 7, 7");
         }
         return panelServer;
     }
@@ -425,6 +428,7 @@ public class OptionsWin extends JDialog {
                 foEdit.tzone = (FaxStringProperty)comboTZone.getSelectedItem();
                 
                 foEdit.pasv = checkPasv.isSelected();
+                foEdit.bringToFrontOnNewFaxes = checkNewFaxToFront.isSelected();
                 
                 foEdit.recvfmt = recvfmt;
                 foEdit.sentfmt = sentfmt;
