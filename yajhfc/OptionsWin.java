@@ -63,15 +63,15 @@ public class OptionsWin extends JDialog {
     
     private JTextField textNotifyAddress, textHost, textUser, /*textViewer,*/ textPort;
     private JPasswordField textPassword;
-    private JComboBox comboTZone, comboNotify, comboPaperSize, comboResolution;
-    private JCheckBox checkPasv, checkNewFaxToFront;
+    private JComboBox comboTZone, comboNotify, comboPaperSize, comboResolution, comboNewFaxAction;
+    private JCheckBox checkPasv;
     private JSpinner spinMaxTry, spinMaxDial;
     //private JButton buttonBrowseViewer;
     private FileTextField ftfFaxViewer, ftfPSViewer;
     
     private JTextField textFromFaxNumber, textFromName, textFromCompany, textFromLocation, textFromVoicenumber;
     
-    private JPanel panelServer, panelSend, panelPaths, panelCover;
+    private JPanel panelServer, panelSend, panelPaths, panelCover, panelMisc;
     
     private FaxOptions foEdit = null;
     private Vector<FmtItem> recvfmt, sentfmt, sendingfmt;
@@ -110,9 +110,9 @@ public class OptionsWin extends JDialog {
         comboPaperSize.setSelectedItem(foEdit.paperSize);
         comboResolution.setSelectedItem(foEdit.resolution);
         comboTZone.setSelectedItem(foEdit.tzone);
+        comboNewFaxAction.setSelectedItem(foEdit.newFaxAction);
         
         checkPasv.setSelected(foEdit.pasv);
-        checkNewFaxToFront.setSelected(foEdit.bringToFrontOnNewFaxes);
         
         spinMaxDial.setValue(Integer.valueOf(foEdit.maxDial));
         spinMaxTry.setValue(Integer.valueOf(foEdit.maxTry));
@@ -190,13 +190,14 @@ public class OptionsWin extends JDialog {
     private JPanel getPanelCommon() {        
         if (PanelCommon == null) {
             double[][] tablelay = {
-                    {border, TableLayout.FILL, border},
+                    {border, TableLayout.FILL, border, 0.33, border},
                     { border, 0.55, border, TableLayout.FILL, border }
             };
             PanelCommon = new JPanel(new TableLayout(tablelay));
             
             PanelCommon.add(getPanelServer(), "1,1");
-            PanelCommon.add(getPanelPaths(), "1,3");
+            PanelCommon.add(getPanelMisc(), "3,1");
+            PanelCommon.add(getPanelPaths(), "1,3,3,3");
         }
         return PanelCommon;
     }
@@ -221,7 +222,7 @@ public class OptionsWin extends JDialog {
         if (panelServer == null) {
             double[][] tablelay = {
                     {border, 0.25, border, 0.25, border, 0.25, border, TableLayout.FILL, border},
-                    new double[9]
+                    new double[8]
             };
             double rowh = 1 / (double)(tablelay[1].length - 2);
             tablelay[1][0] = border;
@@ -240,7 +241,6 @@ public class OptionsWin extends JDialog {
             textPassword = new JPasswordField();
             
             checkPasv = new JCheckBox(_("Use passive mode to fetch faxes"));
-            checkNewFaxToFront = new JCheckBox(_("Bring window to front when a new fax is received"));
             
             addWithLabel(panelServer, textHost, _("Host name:"), "1, 2, 5, 2, f, c");
             addWithLabel(panelServer, textPort, _("Port:"), "7, 2, f, c");
@@ -248,9 +248,30 @@ public class OptionsWin extends JDialog {
             addWithLabel(panelServer, textPassword, _("Password:"), "5, 4, 7, 4, f, c");
             
             panelServer.add(checkPasv, "1, 6, 7, 6");
-            panelServer.add(checkNewFaxToFront, "1, 7, 7, 7");
         }
         return panelServer;
+    }
+    
+    private JPanel getPanelMisc() {
+        if (panelMisc == null) {
+            double[][] tablelay = {
+                    {border, TableLayout.FILL, border},
+                    new double[5]
+            };
+            double rowh = 1 / (double)(tablelay[1].length - 2);
+            tablelay[1][0] = border;
+            tablelay[1][tablelay[1].length - 1] = border;
+            Arrays.fill(tablelay[1], 1, tablelay[1].length - 2, rowh);
+            tablelay[1][tablelay[1].length - 2] = TableLayout.FILL;
+            
+            panelMisc = new JPanel(new TableLayout(tablelay));
+            panelMisc.setBorder(BorderFactory.createTitledBorder(_("Miscellaneous settings")));
+            
+            comboNewFaxAction = new JComboBox(utils.newFaxActions);
+            
+            addWithLabel(panelMisc, comboNewFaxAction, "<html>" + _("When a new fax is received:") + "</html>", "1, 2, 1, 2, f, c");
+        }
+        return panelMisc;
     }
     
     private JPanel getPanelSend() {
@@ -268,7 +289,6 @@ public class OptionsWin extends JDialog {
             panelSend = new JPanel(new TableLayout(tablelay));
             panelSend.setBorder(BorderFactory.createTitledBorder(_("Delivery settings")));
            
-            
             textNotifyAddress = new JTextField();
             
             comboTZone = new JComboBox(utils.timezones);
@@ -424,11 +444,11 @@ public class OptionsWin extends JDialog {
                 
                 foEdit.notifyWhen = (FaxStringProperty)comboNotify.getSelectedItem();
                 foEdit.paperSize = (PaperSize)comboPaperSize.getSelectedItem();
-                foEdit.resolution = (FaxResolution)comboResolution.getSelectedItem();
+                foEdit.resolution = (FaxIntProperty)comboResolution.getSelectedItem();
                 foEdit.tzone = (FaxStringProperty)comboTZone.getSelectedItem();
+                foEdit.newFaxAction = (FaxIntProperty)comboNewFaxAction.getSelectedItem();
                 
                 foEdit.pasv = checkPasv.isSelected();
-                foEdit.bringToFrontOnNewFaxes = checkNewFaxToFront.isSelected();
                 
                 foEdit.recvfmt = recvfmt;
                 foEdit.sentfmt = sentfmt;

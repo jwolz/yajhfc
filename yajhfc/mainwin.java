@@ -903,12 +903,18 @@ public class mainwin extends JFrame {
         if (recvTableModel == null) {
             recvTableModel = new UnReadMyTableModel(utils.recvfmt_FileName);
             recvTableModel.addUnreadItemListener(new UnreadItemListener() {
-                public void newUnreadItemsAvailable(UnreadItemEvent evt) {
-                    if (myopts.bringToFrontOnNewFaxes) {
+                public void newItemsAvailable(UnreadItemEvent evt) {
+                    if (evt.isOldDataNull())
+                        return;
+                    
+                    if ((myopts.newFaxAction.type & utils.NEWFAX_TOFRONT) != 0) {
                         int state = getExtendedState();
                         if ((state & mainwin.ICONIFIED) != 0) 
                             setExtendedState(state & (~mainwin.ICONIFIED));
                         toFront();
+                    }
+                    if ((myopts.newFaxAction.type & utils.NEWFAX_BEEP) != 0) {
+                        Toolkit.getDefaultToolkit().beep();
                     }
                 };
             });

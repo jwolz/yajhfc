@@ -280,19 +280,25 @@ class MyTableModel extends AbstractTableModel {
 
 class UnreadItemEvent extends EventObject {
     private Set<String> items = null;
+    private boolean oldDataNull;
     
     public Set<String> getItems() {
         return items;
     }
     
-    public UnreadItemEvent(Object source, Set<String> items) {
+    public boolean isOldDataNull() {
+        return oldDataNull;
+    }
+    
+    public UnreadItemEvent(Object source, Set<String> items, boolean oldDataNull) {
         super(source);
         this.items = items;
+        this.oldDataNull = oldDataNull;
     }
 }
 
 interface UnreadItemListener extends EventListener {
-    public void newUnreadItemsAvailable(UnreadItemEvent evt);
+    public void newItemsAvailable(UnreadItemEvent evt);
 }
 
 // Tablemodel with read/unread state
@@ -313,16 +319,16 @@ class UnReadMyTableModel extends MyTableModel {
         listenerList.remove(UnreadItemListener.class, l);
     }
         
-    protected void fireNewUnreadItemsAvailable(Set<String> items) {
+    protected void fireNewUnreadItemsAvailable(Set<String> items, boolean oldDataNull) {
         // Guaranteed to return a non-null array
         Object[] listeners = listenerList.getListenerList();
-        UnreadItemEvent evt = new UnreadItemEvent(this, items);
+        UnreadItemEvent evt = new UnreadItemEvent(this, items, oldDataNull);
         
         // Process the listeners last to first, notifying
         // those that are interested in this event
         for (int i = listeners.length-2; i>=0; i-=2) {
             if (listeners[i]==UnreadItemListener.class) {
-                ((UnreadItemListener)listeners[i+1]).newUnreadItemsAvailable(evt);
+                ((UnreadItemListener)listeners[i+1]).newItemsAvailable(evt);
             }
         }
     }
@@ -332,10 +338,11 @@ class UnReadMyTableModel extends MyTableModel {
         Set<String> oldDataKeys = getDataKeySet();
         super.setData(arg0);
         Set<String> newDataKeys = getDataKeySet();
-        if (newDataKeys != null && oldDataKeys != null) {
-            newDataKeys.removeAll(oldDataKeys);
+        if (newDataKeys != null) {
+            if (oldDataKeys != null)
+                newDataKeys.removeAll(oldDataKeys);
             if (newDataKeys.size() > 0)
-                fireNewUnreadItemsAvailable(newDataKeys);
+                fireNewUnreadItemsAvailable(newDataKeys, (oldDataKeys == null));
         }
     }
     
@@ -370,7 +377,7 @@ class UnReadMyTableModel extends MyTableModel {
     }
     
     public Set<String> getDataKeySet() {
-        if (hashColIdx < 0)
+        if (hashColIdx < 0 || data == null)
             return null;
         
         int rowC = getRowCount();
