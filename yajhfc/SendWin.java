@@ -615,7 +615,7 @@ public class SendWin extends JDialog {
                 j.setMaximumTries(((Integer)SpinMaxTries.getValue()).intValue());
                 j.setNotifyType(((FaxStringProperty)ComboNotification.getSelectedItem()).type);
                 j.setPageDimension(((PaperSize)ComboPaperSize.getSelectedItem()).size);
-                j.setVerticalResolution(((FaxResolution)ComboResolution.getSelectedItem()).type);
+                j.setVerticalResolution(((FaxIntProperty)ComboResolution.getSelectedItem()).type);
                 j.setKilltime(utils.minutesToHylaTime(((Integer)SpinKillTime.getValue()).intValue()));  
                 
                 if (pollMode) 

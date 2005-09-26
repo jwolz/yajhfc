@@ -34,6 +34,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -60,7 +61,7 @@ public class utils {
     public static final String AppCopyright = "Copyright © 2005 by Jonas Wolz";
     public static final String AppVersion = "0.2.1";
     public static final String AuthorEMail = "Jonas Wolz &lt;jwolz@freenet.de&gt;";
-    public static final String HomepageURL = "http://www.yajhfc.de.vu/";
+    public static final String HomepageURL = "http://www.yajhfc.de.vu/"; 
     
     private static FaxOptions theoptions = null;
     private static ResourceBundle msgs = null;
@@ -160,9 +161,9 @@ public class utils {
             new PaperSize("Legal", Pagesize.LEGAL)
     };
     
-    public static final FaxResolution[] resolutions = {
-            new FaxResolution(_("High (196 lpi)"), Job.RESOLUTION_MEDIUM),
-            new FaxResolution(_("Low (98 lpi)"), Job.RESOLUTION_LOW)      
+    public static final FaxIntProperty[] resolutions = {
+            new FaxIntProperty(_("High (196 lpi)"), Job.RESOLUTION_MEDIUM),
+            new FaxIntProperty(_("Low (98 lpi)"), Job.RESOLUTION_LOW)      
     };
     
     public static final FaxStringProperty[] notifications = {
@@ -190,6 +191,18 @@ public class utils {
 
     public static final FmtItem[] requiredRecvFmts = {
       recvfmt_FileName  
+    };
+    
+    public static final int NEWFAX_NOACTION = 0;
+    public static final int NEWFAX_BEEP = 1;
+    public static final int NEWFAX_TOFRONT = 2;
+    public static final int NEWFAX_BOTH = NEWFAX_BEEP | NEWFAX_TOFRONT;
+    
+    public static final FaxIntProperty[] newFaxActions = {
+        new FaxIntProperty(_("No action"), NEWFAX_NOACTION),
+        new FaxIntProperty(_("Beep"), NEWFAX_BEEP),
+        new FaxIntProperty(_("Bring to front"), NEWFAX_TOFRONT),
+        new FaxIntProperty(_("Beep & bring to front"), NEWFAX_BOTH)
     };
     
     public static String VectorToString(Vector v, String delim) {
@@ -376,7 +389,7 @@ class FaxOptions {
     
     public String notifyAddress;
     public FaxStringProperty notifyWhen = null;
-    public FaxResolution resolution = null;
+    public FaxIntProperty resolution = null;
     public PaperSize paperSize = null;
     
     public int maxTry; 
@@ -399,7 +412,7 @@ class FaxOptions {
     public String CustomCover;
     public boolean useCover, useCustomCover;
     
-    public boolean bringToFrontOnNewFaxes = true;
+    public FaxIntProperty newFaxAction = utils.newFaxActions[3];
     
     public FaxOptions() {
         this.host = "";
@@ -481,6 +494,9 @@ class FaxOptions {
         
         for (int i = 0; i < f.length; i++) {
             try {
+                if (Modifier.isStatic(f[i].getModifiers()) || Modifier.isFinal(f[i].getModifiers()))
+                    continue;
+                
                 Object val = f[i].get(this);
                 if (val == null)
                     continue;
@@ -555,6 +571,8 @@ class FaxOptions {
                         dataarray = utils.resolutions;
                     else if (fName.equals("paperSize"))
                         dataarray = utils.papersizes;
+                    else if (fName.equals("newFaxAction"))
+                        dataarray = utils.newFaxActions;
                     else {
                         System.err.println("Unknown MyManualMapObject field: " + fName);
                         continue;
@@ -651,11 +669,11 @@ class FaxStringProperty extends MyManualMapObject {
     }
 }
 
-class FaxResolution extends MyManualMapObject{
+class FaxIntProperty extends MyManualMapObject{
     String desc;
     int type;
     
-    public FaxResolution(String desc, int type) {
+    public FaxIntProperty(String desc, int type) {
         this.desc = desc;
         this.type = type;        
     }
