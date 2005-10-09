@@ -229,7 +229,11 @@ class MyTableModel extends AbstractTableModel {
                 return result; // value is cached -> return it
             
             String res = getStringAt(rowIndex, columnIndex).trim();
-            if (res.length() > 0) {
+            
+            if (dataClass == Boolean.class)  { // "*" if true, " " otherwise
+                //result = (res.length() > 0);
+                result = res.equals("*");
+            } else if (res.length() > 0) {
                 //System.out.println("Parse: " + res);
                 try {
                     if (dataClass == Integer.class)
@@ -238,8 +242,6 @@ class MyTableModel extends AbstractTableModel {
                         result = Float.valueOf(res);
                     else if (dataClass == Double.class)
                         result = Double.valueOf(res);
-                    else if (dataClass == Boolean.class) // "*" if true, " " otherwise
-                        result = (res.trim().length() > 0);
                     else if (dataClass == Date.class)
                         result = columns.get(columnIndex).dateFormat.fmtIn.parse(res);
                     else
