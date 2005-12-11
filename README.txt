@@ -1,10 +1,10 @@
-README for YajHFC 0.2.1
+README for YajHFC 0.2.2
 =======================
 
 ABOUT
 -----
 
-YajHFC (Yet Another Java Hylafax Client) is a client for the hylafax fax server
+YajHFC (Yet Another Java HylaFAX Client) is a client for the HylaFAX fax server
 (http://www.hylafax.org/) written in Java.
 
 Features:
@@ -28,9 +28,9 @@ Requirements:
 * Some program to view TIFF files (also see FAQ.txt for this)
 * Optional: A Postscript viewer (e.g. Ghostview)
 
-To install YajHFC just download the yajhfc-0_2_1.jar file to some folder on your
+To install YajHFC just download the yajhfc-0_2_2.jar file to some folder on your
 file system.
-To execute it, use: "java -jar yajhfc-0_2_1.jar"
+To execute it, use: "java -jar yajhfc-0_2_2.jar"
 (In Windows you usually can just double click the jar file as well.)
 
 LICENSE
@@ -60,6 +60,9 @@ YajHFC was originally written as a first more complicated
 
 CHANGES
 -------
+
+0.2.2:
+- Added support for "window to front"/beep on new faxes
 
 0.2.1:
 - Added read/unread status for received faxes
