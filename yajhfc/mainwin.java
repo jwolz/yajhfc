@@ -20,6 +20,7 @@ package yajhfc;
 
 import gnu.hylafax.HylaFAXClient;
 import gnu.hylafax.Job;
+import gnu.inet.ftp.ServerResponseException;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -49,6 +50,7 @@ import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -120,7 +122,7 @@ public class mainwin extends JFrame {
     private JPopupMenu tblPopup;
     
     // Actions:
-    private Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead;
+    private Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward;
     private ActionEnabler actChecker;
 
     private static String _(String key) {
@@ -166,41 +168,28 @@ public class mainwin extends JFrame {
         
         actDelete = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
-                Component selComp = TabMain.getSelectedComponent();
+                TooltipJTable selTable = (TooltipJTable)((JScrollPane)TabMain.getSelectedComponent()).getViewport().getView();
                 
-                if ((selComp == scrollRecv) && (TableRecv.getSelectedRow() >= 0)) {
-                    String fileName = getRecvFilename(TableRecv.getSelectedRow());
-                    if (JOptionPane.showConfirmDialog(mainwin.this, MessageFormat.format(_("Do you want to delete the fax \"{0}\"?"), fileName), _("Delete fax"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                String msgText;
+                
+                if (selTable == TableSending)
+                    msgText = _("Do you really want to cancel the selected fax jobs?");
+                else
+                    msgText = _("Do you really want to delete the selected faxes?");
+                
+                if (JOptionPane.showConfirmDialog(mainwin.this, msgText, _("Delete faxes"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    for (int i : selTable.getSelectedRows()) {
+                        YajJob yj = null;
                         try {
-                            hyfc.dele("recvq/" + fileName);
+                            yj = selTable.getJobForRow(i);
+                            yj.delete(hyfc);
                         } catch (Exception e1) {
-                            JOptionPane.showMessageDialog(mainwin.this, _("Couldn't delete the fax: ") + "\n" + e1.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                            if (yj == null)
+                                msgText = _("Error deleting a fax:\n");
+                            else
+                                msgText = MessageFormat.format(_("Error deleting the fax \"{0}\":\n"), yj.getIDValue());
+                            JOptionPane.showMessageDialog(mainwin.this, msgText + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
                         }
-                    }
-                } else if ((selComp == scrollSent) || (selComp == scrollSending)) {
-                    TooltipJTable tbl = (selComp == scrollSent) ? TableSent : TableSending;
-                    
-                    try {
-                        if (tbl.getSelectedRow() >= 0) {
-                            Job job = getJob(tbl.getSelectedRow(), tbl);
-                            if (job == null) {
-                                JOptionPane.showMessageDialog(mainwin.this, _("Selected job could not be found!"), _("Error"), JOptionPane.WARNING_MESSAGE);
-                                return;
-                            }   
-                            
-                            if (JOptionPane.showConfirmDialog(mainwin.this, MessageFormat.format(_("Do you want to delete the fax job No. \"{0,number,integer}\" (fax number: {1})?"), Long.valueOf(job.getId()), job.getDialstring()), _("Delete job"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                                try {
-                                    if (tbl == TableSending)
-                                        hyfc.kill(job);
-                                    else
-                                        hyfc.delete(job);
-                                } catch (Exception e1) {
-                                    JOptionPane.showMessageDialog(mainwin.this, _("Couldn't delete the job: ") + "\n" + e1.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
-                                }
-                            }
-                        }
-                    } catch (Exception e1) {
-                        JOptionPane.showMessageDialog(mainwin.this, _("Couldn't access the selected job!\n Reason: ")  + e1.getLocalizedMessage(), _("Error"), JOptionPane.WARNING_MESSAGE);;                       
                     }
                 }
             };
@@ -211,26 +200,36 @@ public class mainwin extends JFrame {
         
         actShow = new AbstractAction() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
-                Component selComp = TabMain.getSelectedComponent();
-                if ((selComp == scrollRecv) && (TableRecv.getSelectedRow() >= 0))
-                    showRecvFile(TableRecv.getSelectedRow());
-                else if ((selComp == scrollSent) || (selComp == scrollSending)) {
-                    TooltipJTable tbl = (selComp == scrollSent) ? TableSent : TableSending;
-                    
+                TooltipJTable selTable = (TooltipJTable)((JScrollPane)TabMain.getSelectedComponent()).getViewport().getView();
+                
+                int sMin = Integer.MAX_VALUE, sMax = Integer.MIN_VALUE;
+                for (int i : selTable.getSelectedRows()) {
+                    YajJob yj = null;
                     try {
-                        if (tbl.getSelectedRow() >= 0) {
-                            Job job = getJob(tbl.getSelectedRow(), tbl);
-                            if (job == null) {
-                                JOptionPane.showMessageDialog(mainwin.this, _("Selected job could not be found!"), _("Error"), JOptionPane.WARNING_MESSAGE);
-                                return;
-                            }   
-                            
-                            showJobFile(job);
+                        yj = selTable.getJobForRow(i);
+                        for(HylaServerFile hsf : yj.getServerFilenames(hyfc)) {
+                            try {
+                                hsf.view(hyfc, myopts);
+                            } catch (Exception e1) {
+                                JOptionPane.showMessageDialog(mainwin.this, MessageFormat.format(_("An error occured displaying the file {0} (job {1}):\n"), hsf.getPath(), yj.getIDValue()) + e1.getMessage() , _("Error"), JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                        if (yj instanceof RecvYajJob) {
+                            ((RecvYajJob)yj).setRead(true);
+                            if (i < sMin)
+                                sMin = i;
+                            if (i > sMax)
+                                sMax = i;
                         }
                     } catch (Exception e1) {
-                        JOptionPane.showMessageDialog(mainwin.this, _("Couldn't access the selected job!\n Reason: ")  + e1.getLocalizedMessage(), _("Error"), JOptionPane.WARNING_MESSAGE);;                       
+                        JOptionPane.showMessageDialog(mainwin.this, MessageFormat.format(_("An error occured displaying the fax \"{0}\":\n"), yj.getIDValue()) + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
                     }
                 }
+                if (sMax >= 0 && selTable == TableRecv) {
+                    TableRecv.getSorter().fireTableRowsUpdated(sMin, sMax);
+                    actFaxRead.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, true);
+                }
+                
             }
         };
         actShow.putValue(Action.NAME, _("Show") + "...");
@@ -291,15 +290,125 @@ public class mainwin extends JFrame {
                     newState = !state;
                 
                 if (TabMain.getSelectedComponent() == scrollRecv) { // TableRecv
-                    if (TableRecv.getSelectedRow() >= 0) {
-                        recvSetRead(TableRecv.getSelectedRow(), newState);
+                    int sMin = Integer.MAX_VALUE, sMax = Integer.MIN_VALUE;
+                    for (int i:TableRecv.getSelectedRows()) {
+                        ((RecvYajJob)TableRecv.getJobForRow(i)).setRead(newState);
+                        if (i < sMin)
+                            sMin = i;
+                        if (i > sMax)
+                            sMax = i;
                     }
+                    if (sMax >= 0)
+                        TableRecv.getSorter().fireTableRowsUpdated(sMin, sMax);
+                    actFaxRead.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, newState);
                 }
             };
         };
         actFaxRead.putValue(Action.NAME, _("Marked as read"));
         actFaxRead.putValue(Action.SHORT_DESCRIPTION, _("Marks the selected fax as read/unread"));
         actFaxRead.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, true);
+        
+        actFaxSave = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                TooltipJTable selTable = (TooltipJTable)((JScrollPane)TabMain.getSelectedComponent()).getViewport().getView();
+                
+                if (selTable.getSelectedRowCount() == 1) {
+                    JFileChooser jfc = new JFileChooser();
+                    
+                    try {
+                        YajJob yj = selTable.getJobForRow(selTable.getSelectedRow());
+                        for(HylaServerFile hsf : yj.getServerFilenames(hyfc)) {
+                            try {
+                                String filename = hsf.getPath();
+                                int seppos = filename.lastIndexOf('/');
+                                if (seppos < 0)
+                                    seppos = filename.lastIndexOf(File.separatorChar);
+                                if (seppos >= 0)
+                                    filename = filename.substring(seppos + 1);
+                                jfc.setDialogTitle(MessageFormat.format(_("Save {0} to"), hsf.getPath()));
+                                jfc.setSelectedFile(new File(filename));
+                                
+                                jfc.resetChoosableFileFilters();
+                                ExampleFileFilter curFilter = new ExampleFileFilter(hsf.getType(), hsf.getType() + _(" files"));
+                                jfc.addChoosableFileFilter(curFilter);
+                                jfc.setFileFilter(curFilter);
+                                
+                                if (jfc.showSaveDialog(mainwin.this) == JFileChooser.APPROVE_OPTION)
+                                    hsf.download(hyfc, jfc.getSelectedFile());
+                            } catch (Exception e1) {
+                                JOptionPane.showMessageDialog(mainwin.this, MessageFormat.format(_("An error occured saving the file {0} (job {1}):\n"), hsf.getPath(), yj.getIDValue()) + e1.getMessage() , _("Error"), JOptionPane.ERROR_MESSAGE);                         
+                            }                               
+                        }
+                        
+                    } catch (Exception e1) {
+                        JOptionPane.showMessageDialog(mainwin.this, _("An error occured saving the fax:\n")  + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JFileChooser jfc = new JFileChooser();
+                    jfc.setDialogTitle(_("Select a directory to save the faxes in"));
+                    jfc.setApproveButtonText(_("Select"));
+                    jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                    if (jfc.showOpenDialog(mainwin.this) == JFileChooser.APPROVE_OPTION) {
+                        int fileCounter = 0;
+                        
+                        for (int i : selTable.getSelectedRows()) {
+                            YajJob yj = null;
+                            try {
+                                yj = selTable.getJobForRow(i);
+                                for(HylaServerFile hsf : yj.getServerFilenames(hyfc)) {
+                                    try {
+                                        String filename = hsf.getPath();
+                                        int seppos = filename.lastIndexOf('/');
+                                        if (seppos < 0)
+                                            seppos = filename.lastIndexOf(File.separatorChar);
+                                        if (seppos >= 0)
+                                            filename = filename.substring(seppos + 1);
+                                        
+                                        File target = new File(jfc.getSelectedFile(), filename);
+                                        hsf.download(hyfc, target);
+                                        fileCounter++;
+                                    } catch (Exception e1) {
+                                        JOptionPane.showMessageDialog(mainwin.this, MessageFormat.format(_("An error occured saving the file {0} (job {1}):\n"), hsf.getPath(), yj.getIDValue()) + e1.getMessage() , _("Error"), JOptionPane.ERROR_MESSAGE);
+                                    }
+                                }
+                                
+                            } catch (Exception e1) {
+                                JOptionPane.showMessageDialog(mainwin.this, _("An error occured saving the fax:\n") + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                        
+                        JOptionPane.showMessageDialog(mainwin.this, MessageFormat.format(_("{0} files saved to directory {1}."), fileCounter, jfc.getSelectedFile().getPath()), _("Faxes saved"), JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+            };
+        };
+        actFaxSave.putValue(Action.NAME, _("Save fax..."));
+        actFaxSave.putValue(Action.SHORT_DESCRIPTION, _("Saves the selected fax on disk"));
+        actFaxSave.putValue(Action.SMALL_ICON, utils.loadIcon("general/SaveAs"));
+        
+        actForward = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                if (TabMain.getSelectedComponent() != scrollRecv || TableRecv.getSelectedRow() < 0)
+                    return;
+                
+                String filename;
+                try {
+                    filename = TableRecv.getJobForRow(TableRecv.getSelectedRow()).getServerFilenames(hyfc).get(0).getPath();
+                } catch (Exception e1) {
+                    JOptionPane.showMessageDialog(mainwin.this, _("Couldn't get a filename for the fax:\n") + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+                SendWin sw = new SendWin(hyfc, mainwin.this);
+                sw.setModal(true);
+                sw.setFilename(false, "@Server:" + filename);
+                sw.setVisible(true);
+            }
+        };
+        actForward.putValue(Action.NAME, _("Forward fax..."));
+        actForward.putValue(Action.SHORT_DESCRIPTION, _("Forwards the fax"));
+        actForward.putValue(Action.SMALL_ICON, utils.loadIcon("general/Redo"));
+        
         
         actChecker = new ActionEnabler();
     }
@@ -308,6 +417,7 @@ public class mainwin extends JFrame {
         if (tblPopup == null) {
             tblPopup = new JPopupMenu(_("Fax"));
             tblPopup.add(new JMenuItem(actShow));
+            tblPopup.add(new JMenuItem(actFaxSave));
             tblPopup.add(new JMenuItem(actDelete));
             tblPopup.addSeparator();
             tblPopup.add(new ActionJCheckBoxMenuItem(actFaxRead));
@@ -582,27 +692,25 @@ public class mainwin extends JFrame {
             TableSent.setColumnCfgString(myopts.sentColState);
             TableSending.setColumnCfgString(myopts.sendingColState);
             
-            //ReloadTables();
-            
-            //recvTableModel.setStateString(myopts.recvReadState);
-            try {
-                recvTableModel.readFromStream(new FileInputStream(utils.getConfigDir() + "recvread"));
-            } catch (FileNotFoundException e) { 
-                // No file yet - keep empty
-            } catch (IOException e) {
-                System.err.println("Error reading read status: " + e.getMessage());
-            }
-            TableRecv.repaint();
-            
-            //tmrStat.start();
-            //tmrTable.start();
-            
             // Multi-threaded implementation of the periodic refreshes.
             // I hope I didn't introduce too much race conditions/deadlocks this way
             statRefresher = new StatusRefresher();
             utmrTable.schedule(statRefresher, 0, myopts.statusUpdateInterval);
             
             tableRefresher = new TableRefresher(utils.VectorToString(myopts.sentfmt, "|"), utils.VectorToString(myopts.sendingfmt, "|"));
+            // Read the read/unread status after the table contents has been set 
+            tableRefresher.run();
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    try {
+                        recvTableModel.readFromStream(new FileInputStream(utils.getConfigDir() + "recvread"));
+                    } catch (FileNotFoundException e) { 
+                        // No file yet - keep empty
+                    } catch (IOException e) {
+                        System.err.println("Error reading read status: " + e.getMessage());
+                    } 
+                }
+            });
             utmrTable.schedule(tableRefresher, 0, myopts.tableUpdateInterval);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, _("An error occured connecting to the server:") + "\n" + e.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
@@ -616,7 +724,7 @@ public class mainwin extends JFrame {
         Vector stat = hyfc.getList("status");
         TextStatus.setText(utils.VectorToString(stat, "\n"));
     }*/
-    
+/*    
     private void showRecvFile(int row) {
         try {
             File tmptif = File.createTempFile("fax", ".tif");
@@ -703,15 +811,15 @@ public class mainwin extends JFrame {
             JOptionPane.showMessageDialog(this, _("Couldn't open the fax:") + "\n" + e.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE); 
         }
         
-    }
-    
+    }*/
+    /*
     private void recvSetRead(int row, boolean state) {
-        recvTableModel.setRead(getRecvFilename(row), state);
+        ((RecvYajJob)TableRecv.getRealModel().getJob(TableRecv.getSorter().modelIndex(row))).setRead(state);
         TableRecv.getSorter().fireTableRowsUpdated(row, row); // HACK to repaint table (calling it in the TableModel would remove the current selection)
         actFaxRead.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, state);
-    }
+    }*/
     
-    private String getRecvFilename(int row) {
+   /* private String getRecvFilename(int row) {
         //return recvTableModel.getValueAt(row, myopts.recvfmt.indexOf(utils.recvfmt_FileName)).toString();
         return TableRecv.getModel().getValueAt(row, myopts.recvfmt.indexOf(utils.recvfmt_FileName)).toString().trim();
     }
@@ -726,7 +834,7 @@ public class mainwin extends JFrame {
         } catch (Exception e) {
             return null;
         }
-    }
+    }*/
     
     ///////////
     
@@ -845,19 +953,9 @@ public class mainwin extends JFrame {
     private TooltipJTable getTableRecv() {
         if (TableRecv == null) {
             TableRecv = new TooltipJTable(getRecvTableModel());
-            TableRecv.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+            TableRecv.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
             //TableRecv.setModel(getRecvTableModel());
             TableRecv.setShowGrid(true);
-            
-            /* TableRecv.addMouseListener(new MouseAdapter() {
-                public void mouseClicked(MouseEvent e) {
-                    if ((e.getButton() == MouseEvent.BUTTON1) && (e.getClickCount() == 2)) {
-                        int row = TableRecv.rowAtPoint(e.getPoint());
-                        if (row >= 0)
-                            showRecvFile(row);
-                    }
-                }
-            }); */
             TableRecv.addMouseListener(getTblMouseListener());
             TableRecv.getSelectionModel().addListSelectionListener(actChecker);
             TableRecv.setDefaultRenderer(Date.class, getHylaDateRenderer());
@@ -901,7 +999,7 @@ public class mainwin extends JFrame {
      */
     private UnReadMyTableModel getRecvTableModel() {
         if (recvTableModel == null) {
-            recvTableModel = new UnReadMyTableModel(utils.recvfmt_FileName);
+            recvTableModel = new UnReadMyTableModel();
             recvTableModel.addUnreadItemListener(new UnreadItemListener() {
                 public void newItemsAvailable(UnreadItemEvent evt) {
                     if (evt.isOldDataNull())
@@ -945,7 +1043,7 @@ public class mainwin extends JFrame {
             TableSent = new TooltipJTable(getSentTableModel());
             TableSent.setShowGrid(true);
             //TableSent.setModel(getSentTableModel());
-            TableSent.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+            TableSent.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
             TableSent.getSelectionModel().addListSelectionListener(actChecker);
             TableSent.addMouseListener(getTblMouseListener());
             TableSent.setDefaultRenderer(Date.class, getHylaDateRenderer());
@@ -987,7 +1085,7 @@ public class mainwin extends JFrame {
             TableSending = new TooltipJTable(getSendingTableModel());
             TableSending.setShowGrid(true);
             //TableSending.setModel(getSendingTableModel());
-            TableSending.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+            TableSending.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
             TableSending.getSelectionModel().addListSelectionListener(actChecker);
             TableSending.addMouseListener(getTblMouseListener());
             TableSending.setDefaultRenderer(Date.class, getHylaDateRenderer());
@@ -1017,8 +1115,10 @@ public class mainwin extends JFrame {
             menuFax.setText(_("Fax"));
             menuFax.add(getSendMenuItem());
             menuFax.add(new JMenuItem(actPoll));
+            menuFax.add(new JMenuItem(actForward));
             menuFax.addSeparator();
             menuFax.add(getShowMenuItem());
+            menuFax.add(new JMenuItem(actFaxSave));
             menuFax.add(getDeleteMenuItem());
             menuFax.addSeparator();
             menuFax.add(new ActionJCheckBoxMenuItem(actFaxRead));
@@ -1111,7 +1211,7 @@ public class mainwin extends JFrame {
                     showState = true;
                     deleteState = true;
                     faxReadState = true;
-                    faxReadSelected = recvTableModel.getRead(getRecvFilename(TableRecv.getSelectedRow()));
+                    faxReadSelected = ((RecvYajJob)TableRecv.getJobForRow(TableRecv.getSelectedRow())).isRead();
                 }
             } else if (TabMain.getSelectedComponent() == scrollSent) { // Sent Table
                 if (TableSent.getSelectedRow() >= 0) {
@@ -1126,8 +1226,10 @@ public class mainwin extends JFrame {
             } 
             
             actShow.setEnabled(showState);
+            actFaxSave.setEnabled(showState);
             actDelete.setEnabled(deleteState);
             actFaxRead.setEnabled(faxReadState);
+            actForward.setEnabled(faxReadState);
             actFaxRead.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, faxReadSelected);
         }
     }

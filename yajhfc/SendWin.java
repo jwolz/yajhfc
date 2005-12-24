@@ -38,8 +38,8 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.swing.Action;
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -100,6 +100,7 @@ public class SendWin extends JDialog {
     private JScrollPane scrollToComments = null;
     private JTextArea textToComments = null;
     
+    private ClipboardPopup clPop = new ClipboardPopup();
     
     private InputStream myInStream = null;
     private boolean pollMode = false;
@@ -139,6 +140,7 @@ public class SendWin extends JDialog {
         this.hyfc = hyfc;
         this.pollMode = pollMode;
         initialize();
+
     }
 
     /**
@@ -406,6 +408,7 @@ public class SendWin extends JDialog {
             TextNumber = new JTextField();
             //TextNumber.setBounds(10, 80, 320, 25);
             //AddLabel(TextNumber, _("Fax number:"));
+            TextNumber.addMouseListener(clPop);
         }
         return TextNumber;
     }
@@ -545,7 +548,9 @@ public class SendWin extends JDialog {
                             fOut.close();
                         } else                        
                             remoteName = hyfc.putTemporary(myInStream);
-                    } else
+                    } else if (ftfFilename.getText().startsWith("@Server:")) // Reference file on server
+                        remoteName = ftfFilename.getText().substring(8);
+                    else
                         submitFile = new File(ftfFilename.getText());
                     
                     if (submitFile != null) {
