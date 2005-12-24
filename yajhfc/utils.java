@@ -56,7 +56,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.text.JTextComponent;
 
 public class utils {
-    public static final String AppName = "Yet Another Java Hylafax Client (YajHFC)";
+    public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005 by Jonas Wolz";
     public static final String AppVersion = "0.2.2";
