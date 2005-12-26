@@ -189,9 +189,9 @@ public class Launcher {
                 SendWin sw = new SendWin(application.hyfc, application);
                 sw.setModal(true);
                 if (useStdin)
-                    sw.setInputStream(System.in);
+                    sw.addInputStream(System.in);
                 else
-                    sw.setFilename(true, fileName);
+                    sw.addLocalFile(fileName);
                 sw.setVisible(true);
                 application.dispose();
             }
@@ -258,9 +258,9 @@ public class Launcher {
                 SendWin sw = new SendWin(application.hyfc, application);
                 sw.setModal(true);
                 if (strIn != null)
-                    sw.setInputStream(strIn);
+                    sw.addInputStream(strIn);
                 else
-                    sw.setFilename(true, fileName);
+                    sw.addLocalFile(fileName);
                 
                 sw.setVisible(true);
                 if (strIn != null)

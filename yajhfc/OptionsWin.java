@@ -70,7 +70,7 @@ public class OptionsWin extends JDialog {
     private FileTextField ftfFaxViewer, ftfPSViewer;
     
     private JTextField textFromFaxNumber, textFromName, textFromCompany, textFromLocation, textFromVoicenumber;
-    
+    private ClipboardPopup clpDef;
     private JPanel panelServer, panelSend, panelPaths, panelCover, panelMisc;
     
     private FaxOptions foEdit = null;
@@ -93,6 +93,7 @@ public class OptionsWin extends JDialog {
         this.setResizable(false);
         this.setTitle(_("Options"));
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        clpDef = new ClipboardPopup();
         this.setContentPane(getJContentPane());
         
         modalResult = false;
@@ -235,9 +236,12 @@ public class OptionsWin extends JDialog {
                         
             
             textHost = new JTextField();
+            textHost.addMouseListener(clpDef);
             textPort = new JTextField();
+            textPort.addMouseListener(clpDef);
             textPort.setInputVerifier(new IntVerifier(1, 65536));
             textUser = new JTextField();
+            textUser.addMouseListener(clpDef);
             textPassword = new JPasswordField();
             
             checkPasv = new JCheckBox(_("Use passive mode to fetch faxes"));
@@ -290,6 +294,7 @@ public class OptionsWin extends JDialog {
             panelSend.setBorder(BorderFactory.createTitledBorder(_("Delivery settings")));
            
             textNotifyAddress = new JTextField();
+            textNotifyAddress.addMouseListener(clpDef);
             
             comboTZone = new JComboBox(utils.timezones);
             comboNotify = new JComboBox(utils.notifications);
@@ -326,10 +331,15 @@ public class OptionsWin extends JDialog {
             panelCover.setBorder(BorderFactory.createTitledBorder(_("Fax cover page from:")));
             
             textFromCompany = new JTextField();
+            textFromCompany.addMouseListener(clpDef);
             textFromFaxNumber = new JTextField();
+            textFromFaxNumber.addMouseListener(clpDef);
             textFromLocation = new JTextField();
+            textFromLocation.addMouseListener(clpDef);
             textFromName = new JTextField();
+            textFromName.addMouseListener(clpDef);
             textFromVoicenumber = new JTextField();
+            textFromVoicenumber.addMouseListener(clpDef);
             
             addWithLabel(panelCover, textFromName, _("Name:"), "1, 2, f, c");
             addWithLabel(panelCover, textFromCompany, _("Company:"), "1, 4, f, c");
@@ -356,7 +366,9 @@ public class OptionsWin extends JDialog {
             panelPaths.setBorder(BorderFactory.createTitledBorder(_("Path settings")));
             
             ftfFaxViewer = new ExeFileTextField();
+            ftfFaxViewer.getJTextField().addMouseListener(clpDef);
             ftfPSViewer = new ExeFileTextField();
+            ftfPSViewer.getJTextField().addMouseListener(clpDef);
             
             panelPaths.add(new JLabel(_("Command line for fax viewer: (insert %s as a placeholder for the filename)")), "1, 1 f b");
             panelPaths.add(ftfFaxViewer, "1, 2, f, c");

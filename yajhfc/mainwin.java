@@ -401,7 +401,7 @@ public class mainwin extends JFrame {
                 
                 SendWin sw = new SendWin(hyfc, mainwin.this);
                 sw.setModal(true);
-                sw.setFilename(false, "@Server:" + filename);
+                sw.addServerFile(filename);
                 sw.setVisible(true);
             }
         };
