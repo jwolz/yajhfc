@@ -21,6 +21,7 @@ package yajhfc;
 import info.clearthought.layout.TableLayout;
 
 import java.awt.Component;
+import java.awt.Toolkit;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
@@ -43,6 +44,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+
 public class TextFieldList extends JPanel implements ListSelectionListener, KeyListener, MouseListener, DocumentListener, FocusListener {
 
     protected JTextField textField;
@@ -57,6 +59,10 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
         if (upAction == null) {
             upAction = new AbstractAction() {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
+                    if (!this.isEnabled()) {
+                        Toolkit.getDefaultToolkit().beep();
+                        return;
+                    }
                     int selIdx = list.getSelectedIndex();
                     if (selIdx >= 1) {
                         Object old = model.get(selIdx);
@@ -77,6 +83,10 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
         if (downAction == null) {
             downAction = new AbstractAction() {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
+                    if (!this.isEnabled()) {
+                        Toolkit.getDefaultToolkit().beep();
+                        return;
+                    }
                     int selIdx = list.getSelectedIndex();
                     if (selIdx >= 0 && selIdx < model.getSize() - 1) {
                         Object old = model.get(selIdx);
@@ -97,9 +107,11 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
         if (addAction == null) {
             addAction = new AbstractAction() {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
-                    String text = textField.getText();
-                    if (text.length() > 0 && model.indexOf(text) == -1) // Elements should be unique
-                        model.addElement(text);
+                    if (!this.isEnabled()) {
+                        Toolkit.getDefaultToolkit().beep();
+                        return;
+                    }
+                    addListItem(textField.getText());                    
                 };
             };
             addAction.putValue(Action.NAME, utils._("Add"));
@@ -113,8 +125,14 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
         if (removeAction == null) {
             removeAction = new AbstractAction() {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
-                    if (list.getSelectedIndex() >= 0)
+                    if (!this.isEnabled()) {
+                        Toolkit.getDefaultToolkit().beep();
+                        return;
+                    }
+                    if (list.getSelectedIndex() >= 0) {
                         model.remove(list.getSelectedIndex());
+                        textField.setText("");
+                    }
                 };
             };
             removeAction.putValue(Action.NAME, utils._("Remove"));
@@ -129,8 +147,15 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
         if (modifyAction == null) {
             modifyAction = new AbstractAction() {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
-                    if (list.getSelectedIndex() >= 0) {
-                        model.setElementAt(textField.getText(), list.getSelectedIndex());
+                    if (!this.isEnabled()) {
+                        Toolkit.getDefaultToolkit().beep();
+                        return;
+                    }
+                    TFLItem sel = (TFLItem)list.getSelectedValue();
+                    if (sel != null && sel.isMutable()) {
+                        sel.setText(textField.getText());
+                        // Hack to redraw the list:
+                        model.setElementAt(sel, list.getSelectedIndex());
                     }
                 };
             };
@@ -140,6 +165,15 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
             modifyAction.setEnabled(false);
         }
         return modifyAction;
+    }
+    
+    protected TFLItem createListItem(String text) {
+        return new DefTFLItem(text);
+    }
+    
+    public void addListItem(String text) {
+        if (text.length() > 0 && model.indexOf(text) == -1) // Elements should be unique
+            model.addElement(createListItem(text));
     }
     
     public DefaultListModel getModel() {
@@ -247,16 +281,20 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
     
     public void valueChanged(ListSelectionEvent e) {
         int selIdx = list.getSelectedIndex();
+        TFLItem sel = (TFLItem)list.getSelectedValue();
         
-        getModifyAction().setEnabled(selIdx >= 0);
-        getRemoveAction().setEnabled(selIdx >= 0);
+        getModifyAction().setEnabled(selIdx >= 0 && sel.isMutable());
+        getRemoveAction().setEnabled(selIdx >= 0 && sel.isMutable());
         if (useUpDown) {
             getUpAction().setEnabled(selIdx >= 1);
             getDownAction().setEnabled(selIdx >= 0 && selIdx < model.getSize() - 1);
         }
         
-        if (selIdx >= 0 && !e.getValueIsAdjusting()) {
-            textField.setText(list.getSelectedValue().toString());
+        if (sel != null && !e.getValueIsAdjusting()) {
+            if (sel.isMutable())
+                textField.setText(sel.getText());
+            else
+                textField.setText("");
         }       
     }
     
@@ -265,9 +303,10 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
     }
     
     public void focusLost(FocusEvent e) {
-        if (list.getSelectedIndex() == -1)
-            getAddAction().actionPerformed(null);
-        else
+        if (list.getSelectedIndex() == -1) {
+            if (getAddAction().isEnabled())
+                getAddAction().actionPerformed(null);
+        } else if (getModifyAction().isEnabled())
             getModifyAction().actionPerformed(null);
     }
 

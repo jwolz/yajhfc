@@ -20,6 +20,7 @@ package yajhfc;
 
 import gnu.hylafax.HylaFAXClient;
 import gnu.hylafax.Job;
+import gnu.inet.ftp.ServerResponseException;
 import info.clearthought.layout.TableLayout;
 import info.clearthought.layout.TableLayoutConstraints;
 
@@ -32,22 +33,21 @@ import java.awt.event.WindowEvent;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import javax.swing.Action;
 import javax.swing.Box;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -182,7 +182,9 @@ public class SendWin extends JDialog {
             this.setLocationByPlatform(true);
         
         if (pollMode) {
-            setFilename(false, null);
+            ftfFilename.setText(_("<none>"));
+            ftfFilename.setEnabled(false);
+            tflFiles.setEnabled(false);
             setTitle(_("Poll fax"));
             pack();
         }
@@ -298,7 +300,12 @@ public class SendWin extends JDialog {
             
             paneCommon = new JPanel(new TableLayout(tablelay));
             
-            tflFiles = new TextFieldList(getFtfFilename().getJTextField(), true);
+            tflFiles = new TextFieldList(getFtfFilename().getJTextField(), true) {
+                @Override
+                protected TFLItem createListItem(String text) {
+                    return new LocalFileTFLItem(text);
+                }
+            };
             clpFiles = new ClipboardPopup();
             clpFiles.getPopupMenu().addSeparator();
             clpFiles.getPopupMenu().add(tflFiles.getModifyAction());
@@ -479,8 +486,7 @@ public class SendWin extends JDialog {
                 @Override
                 protected void writeTextFieldFileName(String fName) {
                     super.writeTextFieldFileName(fName);
-                    tflFiles.model.addElement(fName);
-                    tflFiles.list.setSelectedIndex(tflFiles.model.getSize() - 1);
+                    tflFiles.addListItem(fName);
                 }
             };
             ftfFilename.setFileFilters(
@@ -503,8 +509,7 @@ public class SendWin extends JDialog {
                     PhoneBookEntry pb = pbw.selectNumber();
                     if (pb != null) {
                         TextNumber.setText(pb.faxnumber);
-                        tflNumbers.model.addElement(pb.faxnumber);
-                        tflNumbers.list.setSelectedIndex(tflNumbers.model.getSize() - 1);
+                        tflNumbers.addListItem(pb.faxnumber);
                         
                         textToCompany.setText(pb.company);
                         textToLocation.setText(pb.location);
@@ -530,33 +535,43 @@ public class SendWin extends JDialog {
         return defClPop;
     }
     
-    public void setFilename(boolean allowUserInput, String filename) {
-        if (filename != null)
-            tflFiles.model.addElement(filename);
-        else
-            tflFiles.model.addElement(_("<none>"));
-        tflFiles.list.setSelectedIndex(tflFiles.model.getSize() - 1);
-        
-        getFtfFilename().setEnabled(allowUserInput);
-        lblFilename.setEnabled(allowUserInput);
-        tflFiles.setEnabled(allowUserInput);
+    public void addLocalFile(String fileName) {
+        tflFiles.addListItem(fileName);
     }
     
-    public void setInputStream(InputStream inStream) {
-        setFilename(false, null);
-        myInStream = inStream;
+    public void addServerFile(String serverFileName) {
+        tflFiles.model.addElement(new ServerFileTFLItem(serverFileName));
+    }
+    
+    public void addInputStream(InputStream inStream) {
+        try {
+            tflFiles.model.addElement(new StreamTFLItem(inStream));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(ButtonSend, _("An error occured reading the input: ") + "\n" + e.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+        }
     }
     
     class SendButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+            
+            if (tflFiles.model.size() == 0) {
+                JOptionPane.showMessageDialog(SendWin.this, _("To send a fax you must select at least one file!"), _("Warning"), JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            
+            if (tflNumbers.model.size() == 0) {
+                JOptionPane.showMessageDialog(SendWin.this, _("To send a fax you have to enter at least one phone number!"), _("Warning"), JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            
             try {        
                 String coverName = null;
-                String remoteName = null;
-                FaxOptions fo = utils.getFaxOptions();
+                FaxOptions fo = utils.getFaxOptions();                    
                 
                 if (!pollMode) {
-                    File submitFile = null;
-                    boolean delSubmitFile = false;                     
+                    Faxcover cov = null;
+                    if (checkUseCover.isSelected())
+                        cov = new Faxcover();
                     
                     if (checkUseCover.isSelected() && checkCustomCover.isSelected() && (!(new File(ftfCustomCover.getText()).canRead()))) {
                         JOptionPane.showMessageDialog(SendWin.this, MessageFormat.format(_("Can not read file \"{0}\"!"), ftfCustomCover.getText()), _("Error"), JOptionPane.WARNING_MESSAGE);
@@ -565,41 +580,20 @@ public class SendWin extends JDialog {
                     
                     hyfc.type(HylaFAXClient.TYPE_IMAGE);
                     
-                    if (myInStream != null) { // read from custom input stream
-                        if (checkUseCover.isSelected()) { // We need to read the data 2 times
-                            submitFile = File.createTempFile("submit", ".tmp");
-                            submitFile.deleteOnExit();
-                            delSubmitFile = true;
-                            
-                            byte[] buf = new byte[8000];
-                            int len = 0;
-                            FileOutputStream fOut = new FileOutputStream(submitFile);
-                            BufferedInputStream fIn = new BufferedInputStream(myInStream);
-                            while ((len = fIn.read(buf)) >= 0) {
-                                fOut.write(buf, 0, len);
-                            }
-                            fOut.close();
-                        } else                        
-                            remoteName = hyfc.putTemporary(myInStream);
-                    } else if (ftfFilename.getText().startsWith("@Server:")) // Reference file on server
-                        remoteName = ftfFilename.getText().substring(8);
-                    else
-                        submitFile = new File(ftfFilename.getText());
-                    
-                    if (submitFile != null) {
-                        if (!submitFile.canRead()) {
-                            JOptionPane.showMessageDialog(SendWin.this, MessageFormat.format(_("Can not read file \"{0}\"!"), submitFile.getPath()), _("Error"), JOptionPane.WARNING_MESSAGE);
-                            return;
+                    for (int i = 0; i < tflFiles.model.size(); i++) {
+                        HylaTFLItem item = (HylaTFLItem)tflFiles.model.get(i);
+                        item.upload(hyfc);
+                        
+                        if (cov != null) {
+                            InputStream strIn = item.getInputStream();
+                            if (strIn != null)
+                                // Try to get page count 
+                                cov.estimatePostscriptPages(strIn);
                         }
-                            
-                        FileInputStream fi = new FileInputStream(submitFile);
-                        remoteName = hyfc.putTemporary(fi);
-                        fi.close();
-                    }                    
+                    }
                     
                     // Create cover
-                    if (checkUseCover.isSelected()) {
-                        Faxcover cov = new Faxcover();
+                    if (cov != null) {
                         
                         cov.fromCompany = fo.FromCompany;
                         cov.fromFaxNumber = fo.FromFaxNumber;
@@ -619,10 +613,6 @@ public class SendWin extends JDialog {
                         
                         cov.pageCount = 0;
                         
-                        // Try to get page count
-                        FileInputStream fi = new FileInputStream(submitFile);
-                        cov.estimatePostscriptPages(fi);
-                        fi.close();
                         
                         if (checkCustomCover.isSelected())
                             cov.coverTemplate = new File(ftfCustomCover.getText());
@@ -633,48 +623,187 @@ public class SendWin extends JDialog {
                         FileOutputStream fout = new FileOutputStream(coverFile);
                         cov.makeCoverSheet(fout);
                         fout.close();
-                        fi = new FileInputStream(coverFile);
+                        FileInputStream fi = new FileInputStream(coverFile);
                         coverName = hyfc.putTemporary(fi);
                         fi.close();
                         coverFile.delete();                        
                     }
-                    
-                    if (delSubmitFile && (submitFile != null))
-                        submitFile.delete();
                 }            
                 
-                Job j = hyfc.createJob();
-                
-                j.setFromUser(fo.user);
-                j.setNotifyAddress(fo.notifyAddress);
-                j.setMaximumDials(fo.maxDial);
-                
-                j.setDialstring(TextNumber.getText());
-                j.setMaximumTries(((Integer)SpinMaxTries.getValue()).intValue());
-                j.setNotifyType(((FaxStringProperty)ComboNotification.getSelectedItem()).type);
-                j.setPageDimension(((PaperSize)ComboPaperSize.getSelectedItem()).size);
-                j.setVerticalResolution(((FaxIntProperty)ComboResolution.getSelectedItem()).type);
-                j.setKilltime(utils.minutesToHylaTime(((Integer)SpinKillTime.getValue()).intValue()));  
-                
-                if (pollMode) 
-                    j.setProperty("POLL", "\"\" \"\"");
-                else {               
-                    if (coverName != null)
-                        j.setProperty("COVER", coverName);
-                    if (remoteName != null)
-                        j.addDocument(remoteName);
-                    fo.useCover = checkUseCover.isSelected();
-                    fo.useCustomCover = checkCustomCover.isSelected();
-                    fo.CustomCover = ftfCustomCover.getText();
+                for (int i = 0; i < tflNumbers.model.size(); i++) {
+                    String number = tflNumbers.model.get(i).toString();
+                    
+                    try {
+                        Job j = hyfc.createJob();
+                        
+                        j.setFromUser(fo.user);
+                        j.setNotifyAddress(fo.notifyAddress);
+                        j.setMaximumDials(fo.maxDial);
+                        
+                        j.setDialstring(number);
+                        j.setMaximumTries(((Integer)SpinMaxTries.getValue()).intValue());
+                        j.setNotifyType(((FaxStringProperty)ComboNotification.getSelectedItem()).type);
+                        j.setPageDimension(((PaperSize)ComboPaperSize.getSelectedItem()).size);
+                        j.setVerticalResolution(((FaxIntProperty)ComboResolution.getSelectedItem()).type);
+                        j.setKilltime(utils.minutesToHylaTime(((Integer)SpinKillTime.getValue()).intValue()));  
+                        
+                        if (pollMode) 
+                            j.setProperty("POLL", "\"\" \"\"");
+                        else {               
+                            if (coverName != null)
+                                j.setProperty("COVER", coverName);
+                            
+                            for (int k = 0; k < tflFiles.model.size(); k++) {
+                                HylaTFLItem item = (HylaTFLItem)tflFiles.model.get(k);
+                                j.addDocument(item.getServerName());                        
+                            }
+                            
+                            fo.useCover = checkUseCover.isSelected();
+                            fo.useCustomCover = checkCustomCover.isSelected();
+                            fo.CustomCover = ftfCustomCover.getText();
+                        }
+                        
+                        hyfc.submit(j);   
+                    } catch (Exception e1) {
+                        JOptionPane.showMessageDialog(ButtonSend, MessageFormat.format(_("An error occured while submitting the fax job for phone number \"{0}\" (will try to submit the fax to the other numbers anyway): "), number) + "\n" + e1.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);                        
+                    }
                 }
-                                
-                hyfc.submit(j);       
                 
+                for (int i = 0; i < tflFiles.model.size(); i++) {
+                    HylaTFLItem item = (HylaTFLItem)tflFiles.model.get(i);
+                    item.cleanup();
+                }
                 dispose();
             } catch (Exception e1) {
-                JOptionPane.showMessageDialog(ButtonSend, _("An error occured while submitting the job: ") + "\n" + e1.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(ButtonSend, _("An error occured while submitting the fax: ") + "\n" + e1.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
             }
         }
-        
     }
-}  //  @jve:decl-index=0:visual-constraint="10,10"
+}  
+
+abstract class HylaTFLItem extends TFLItem {
+    protected String serverName = "<invalid>";
+
+    public abstract void upload(HylaFAXClient hyfc) throws FileNotFoundException, IOException, ServerResponseException ;
+    
+    // May return null!
+    public abstract InputStream getInputStream() throws FileNotFoundException;
+    
+    public String getServerName() {
+        return serverName;
+    }
+    
+    public void cleanup() {
+        // NOP
+    }
+}
+
+class LocalFileTFLItem extends HylaTFLItem {
+    protected String fileName;
+    
+    @Override
+    public InputStream getInputStream() throws FileNotFoundException {
+        return new FileInputStream(fileName);
+    }
+
+    @Override
+    public void upload(HylaFAXClient hyfc) throws FileNotFoundException, IOException, ServerResponseException {
+        serverName = hyfc.putTemporary(getInputStream());
+    }
+
+    @Override
+    public String getText() {
+        return fileName;
+    }
+
+    @Override
+    public void setText(String newText) {
+        fileName = newText;
+    }
+    
+    public LocalFileTFLItem(String fileName) {
+        this.fileName = fileName;
+    }
+}
+
+class StreamTFLItem extends HylaTFLItem {
+    protected File tempFile;
+    
+    @Override
+    public void cleanup() {
+        tempFile.delete();
+    }
+
+    @Override
+    public InputStream getInputStream() throws FileNotFoundException {
+        return new FileInputStream(tempFile);
+    }
+
+
+    @Override
+    public void upload(HylaFAXClient hyfc) throws FileNotFoundException, IOException, ServerResponseException {
+        serverName = hyfc.putTemporary(getInputStream());
+    }
+
+    @Override
+    public String getText() {
+        return utils._("<none>");
+    }
+
+    @Override
+    public boolean isMutable() {
+        return false;
+    }
+
+    @Override
+    public void setText(String newText) {
+        throw new IllegalArgumentException("StreamTFLItem is immutable!");
+    }
+    
+    public StreamTFLItem(InputStream inStream) throws IOException, FileNotFoundException {
+        // Copy input stream to a temporary file:
+        tempFile = File.createTempFile("submit", "tmp");
+        tempFile.deleteOnExit();
+        byte[] buf = new byte[8000];
+        int len = 0;
+        FileOutputStream fOut = new FileOutputStream(tempFile);
+        BufferedInputStream fIn = new BufferedInputStream(inStream);
+        while ((len = fIn.read(buf)) >= 0) {
+            fOut.write(buf, 0, len);
+        }
+        fOut.close();
+    }
+    
+}
+
+class ServerFileTFLItem extends HylaTFLItem {
+    
+    @Override
+    public InputStream getInputStream() throws FileNotFoundException {
+        return null;
+    }
+
+    @Override
+    public void upload(HylaFAXClient hyfc) throws FileNotFoundException, IOException, ServerResponseException {
+        // NOP
+    }
+
+    @Override
+    public String getText() {
+        return "@server:" + serverName;
+    }
+
+    @Override
+    public boolean isMutable() {
+        return false;
+    }
+
+    @Override
+    public void setText(String newText) {
+        throw new IllegalArgumentException("ServerFileTFLItem is immutable!");
+    }
+    
+    public ServerFileTFLItem(String serverFile) {
+        this.serverName = serverFile;
+    }
+}
