@@ -18,8 +18,28 @@ package yajhfc;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-public class UnknownFormatException extends Exception {
-    public UnknownFormatException(String message) {
-        super(message);
+import java.awt.Dimension;
+
+public class PaperSize extends MyManualMapObject {
+    String desc;
+    Dimension size;
+    
+    public PaperSize(String desc, Dimension size) {
+        this.desc = desc;
+        this.size = size;        
+    }
+    
+    public String toString() {
+        return desc;
+    }
+    
+    @Override
+    public Object getKey() {
+        return desc;
     }
 }
+
+
+
+
+

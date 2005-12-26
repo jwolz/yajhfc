@@ -76,6 +76,8 @@ public class PhoneBookWin extends JDialog
     private PhoneBookEntry oldEntry = null;
     private EntryTextFieldListener entryListener;
     
+    private ClipboardPopup defClPop;
+    
     private boolean usedSelectButton;
     
     private final double border = 5;
@@ -264,6 +266,7 @@ public class PhoneBookWin extends JDialog
         JTextField res = new JTextField();
         res.addFocusListener(entryListener);
         res.addActionListener(entryListener);
+        res.addMouseListener(getDefClPop());
         return res;
     }
     
@@ -295,6 +298,7 @@ public class PhoneBookWin extends JDialog
             textComment.setWrapStyleWord(true);
             textComment.setLineWrap(true);
             textComment.addFocusListener(entryListener);
+            textComment.addMouseListener(getDefClPop());
             scrollComment = new JScrollPane(textComment, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
             
             addWithLabel(rightPane, textGivenname, _("Given name:"), "1, 2, F, C");
@@ -403,6 +407,13 @@ public class PhoneBookWin extends JDialog
             return res;
         } else
             return null;
+    }
+    
+    private ClipboardPopup getDefClPop() {
+        if (defClPop == null) {
+            defClPop = new ClipboardPopup();
+        }
+        return defClPop;
     }
     
     class EntryTextFieldListener implements ActionListener, FocusListener {

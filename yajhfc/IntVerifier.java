@@ -18,8 +18,31 @@ package yajhfc;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-public class UnknownFormatException extends Exception {
-    public UnknownFormatException(String message) {
-        super(message);
+import javax.swing.InputVerifier;
+import javax.swing.JComponent;
+import javax.swing.text.JTextComponent;
+
+public class IntVerifier extends InputVerifier {
+    public int min;
+    public int max;
+    
+    @Override
+    public boolean verify(JComponent input) {
+        try {
+            int val = Integer.parseInt(((JTextComponent)input).getText());
+            return ((val >= min) && (val <= max));
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+    
+    public IntVerifier() {
+        this(Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+    
+    public IntVerifier(int min, int max) {
+        super();
+        this.min = min;
+        this.max = max;
     }
 }

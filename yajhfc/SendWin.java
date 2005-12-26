@@ -40,12 +40,14 @@ import java.util.Arrays;
 
 import javax.swing.Action;
 import javax.swing.Box;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -84,6 +86,8 @@ public class SendWin extends JDialog {
     private JLabel lblFilename = null;
     private FileTextField ftfFilename = null;
     
+    private TextFieldList tflNumbers, tflFiles;    
+    
     // Cover:
     private JPanel paneCover = null; 
     
@@ -100,7 +104,7 @@ public class SendWin extends JDialog {
     private JScrollPane scrollToComments = null;
     private JTextArea textToComments = null;
     
-    private ClipboardPopup clPop = new ClipboardPopup();
+    private ClipboardPopup defClPop, clpNumbers, clpFiles;
     
     private InputStream myInStream = null;
     private boolean pollMode = false;
@@ -247,9 +251,16 @@ public class SendWin extends JDialog {
             textSubject = new JTextField();
             textToVoiceNumber = new JTextField();
             
+            textToName.addMouseListener(getDefClPop());
+            textToCompany.addMouseListener(getDefClPop());
+            textToLocation.addMouseListener(getDefClPop());
+            textSubject.addMouseListener(getDefClPop());
+            textToVoiceNumber.addMouseListener(getDefClPop());
+            
             textToComments = new JTextArea();
             textToComments.setWrapStyleWord(true);
             textToComments.setLineWrap(true);
+            textToComments.addMouseListener(getDefClPop());
             scrollToComments = new JScrollPane(textToComments, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
             
             paneCover.add(checkUseCover, "1, 1, F, C");
@@ -274,22 +285,32 @@ public class SendWin extends JDialog {
         if (paneCommon == null) {
             double[][] tablelay = {
                     {border, 0.5, border, 0.5, border},
-                    new double[12]
+                    new double[14]
             };
-            double rowh = 1 / (double)(tablelay[1].length - 3);
+            double rowh = 1 / (double)(tablelay[1].length - 1);
             tablelay[1][0] = border;
             tablelay[1][tablelay[1].length - 1] = border;
             
             tablelay[1][1] = TableLayout.PREFERRED; 
             Arrays.fill(tablelay[1], 2, tablelay[1].length - 2, rowh);
+            tablelay[1][3] = tablelay[1][6] = 2*rowh;
             tablelay[1][tablelay[1].length - 2] = TableLayout.FILL;
             
             paneCommon = new JPanel(new TableLayout(tablelay));
             
-            lblFilename = addWithLabel(paneCommon, getFtfFilename(), _("Filename:"), "1, 2, 3, 2, F, C");
+            tflFiles = new TextFieldList(getFtfFilename().getJTextField(), true);
+            clpFiles = new ClipboardPopup();
+            clpFiles.getPopupMenu().addSeparator();
+            clpFiles.getPopupMenu().add(tflFiles.getModifyAction());
+            clpFiles.getPopupMenu().add(tflFiles.getAddAction());
+            getFtfFilename().getJTextField().addMouseListener(clpFiles);
+            
+            lblFilename = addWithLabel(paneCommon, getFtfFilename(), _("File(s):"), "1, 2, 3, 2, F, C");
+            paneCommon.add(tflFiles, "1, 3, 3, 3, F, F");
             
             Box box = Box.createHorizontalBox();
-            box.add(getTextNumber());
+            TextNumber = new JTextField();
+            box.add(TextNumber);
             box.add(getButtonPhoneBook());
             
             Dimension d = ButtonPhoneBook.getPreferredSize();
@@ -302,13 +323,21 @@ public class SendWin extends JDialog {
             ButtonPhoneBook.setMaximumSize(d);
             TextNumber.setMaximumSize(d2);
             
-            addWithLabel(paneCommon, box, _("Fax number:"), "1, 4, 3, 4, F, C");
+            tflNumbers = new TextFieldList(TextNumber, false);
+            clpNumbers = new ClipboardPopup();
+            clpNumbers.getPopupMenu().addSeparator();
+            clpNumbers.getPopupMenu().add(tflNumbers.getModifyAction());
+            clpNumbers.getPopupMenu().add(tflNumbers.getAddAction());
+            TextNumber.addMouseListener(clpNumbers);
             
-            addWithLabel(paneCommon, getComboNotification(), _("Notify when:"), "1, 6, 3, 6, F, C");
-            addWithLabel(paneCommon, getComboResolution(), _("Resolution:"), "1, 8, F, C");
-            addWithLabel(paneCommon, getComboPaperSize(), _("Paper size:"), "3, 8, F, C");
-            addWithLabel(paneCommon, getSpinKillTime(), _("Cancel job after (minutes):"), "1, 10, F, C");
-            addWithLabel(paneCommon, getSpinMaxTries(), _("Maximum tries:"), "3, 10, F, C");
+            addWithLabel(paneCommon, box, _("Fax number(s):"), "1, 5, 3, 5, F, C");
+            paneCommon.add(tflNumbers, "1, 6, 3, 6, F, F");
+            
+            addWithLabel(paneCommon, getComboNotification(), _("Notify when:"), "1, 8, 3, 8, F, C");
+            addWithLabel(paneCommon, getComboResolution(), _("Resolution:"), "1, 10, F, C");
+            addWithLabel(paneCommon, getComboPaperSize(), _("Paper size:"), "3, 10, F, C");
+            addWithLabel(paneCommon, getSpinKillTime(), _("Cancel job after (minutes):"), "1, 12, F, C");
+            addWithLabel(paneCommon, getSpinMaxTries(), _("Maximum tries:"), "3, 12, F, C");
         }
         return paneCommon;
     }
@@ -398,20 +427,6 @@ public class SendWin extends JDialog {
         return ButtonCancel;
     }
 
-    /**
-     * This method initializes jTextField	
-     * 	
-     * @return javax.swing.JTextField	
-     */
-    private JTextField getTextNumber() {
-        if (TextNumber == null) {
-            TextNumber = new JTextField();
-            //TextNumber.setBounds(10, 80, 320, 25);
-            //AddLabel(TextNumber, _("Fax number:"));
-            TextNumber.addMouseListener(clPop);
-        }
-        return TextNumber;
-    }
     
     private JComboBox getComboResolution() {
         if (ComboResolution == null) {
@@ -460,7 +475,14 @@ public class SendWin extends JDialog {
     
     private FileTextField getFtfFilename() {
         if (ftfFilename == null) {
-            ftfFilename = new FileTextField();
+            ftfFilename = new FileTextField() {
+                @Override
+                protected void writeTextFieldFileName(String fName) {
+                    super.writeTextFieldFileName(fName);
+                    tflFiles.model.addElement(fName);
+                    tflFiles.list.setSelectedIndex(tflFiles.model.getSize() - 1);
+                }
+            };
             ftfFilename.setFileFilters(
                     new ExampleFileFilter("ps", _("Postscript files")),
                     new ExampleFileFilter("pdf", _("PDF documents")),
@@ -481,6 +503,8 @@ public class SendWin extends JDialog {
                     PhoneBookEntry pb = pbw.selectNumber();
                     if (pb != null) {
                         TextNumber.setText(pb.faxnumber);
+                        tflNumbers.model.addElement(pb.faxnumber);
+                        tflNumbers.list.setSelectedIndex(tflNumbers.model.getSize() - 1);
                         
                         textToCompany.setText(pb.company);
                         textToLocation.setText(pb.location);
@@ -499,14 +523,23 @@ public class SendWin extends JDialog {
         return ButtonPhoneBook;
     }
     
+    private ClipboardPopup getDefClPop() {
+        if (defClPop == null) {
+            defClPop = new ClipboardPopup();
+        }
+        return defClPop;
+    }
+    
     public void setFilename(boolean allowUserInput, String filename) {
         if (filename != null)
-            getFtfFilename().setText(filename);
+            tflFiles.model.addElement(filename);
         else
-            getFtfFilename().setText(_("<none>"));
+            tflFiles.model.addElement(_("<none>"));
+        tflFiles.list.setSelectedIndex(tflFiles.model.getSize() - 1);
+        
         getFtfFilename().setEnabled(allowUserInput);
-        if (lblFilename != null)
-            lblFilename.setEnabled(allowUserInput);
+        lblFilename.setEnabled(allowUserInput);
+        tflFiles.setEnabled(allowUserInput);
     }
     
     public void setInputStream(InputStream inStream) {
