@@ -18,8 +18,15 @@ package yajhfc;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-public class UnknownFormatException extends Exception {
-    public UnknownFormatException(String message) {
-        super(message);
+import java.text.SimpleDateFormat;
+
+public class HylaDateField {
+    public SimpleDateFormat fmtIn = null;
+    public SimpleDateFormat fmtOut = null;
+    
+    public HylaDateField(String sFmtIn, String sFmtOut) {
+        fmtIn = new SimpleDateFormat(sFmtIn);
+        fmtOut = new SimpleDateFormat(sFmtOut, utils.getLocale());
     }
+    
 }

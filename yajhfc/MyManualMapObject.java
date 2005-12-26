@@ -18,21 +18,34 @@ package yajhfc;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-import gnu.hylafax.HylaFAXClient;
-import gnu.inet.ftp.ServerResponseException;
-
-import java.io.IOException;
-import java.util.Vector;
-
-public class SendingYajJob extends SentYajJob {
-
+public abstract class MyManualMapObject {
+    public abstract Object getKey();
+    
     @Override
-    public void delete(HylaFAXClient hyfc) throws IOException, ServerResponseException {
-        hyfc.kill(getJob(hyfc));
+    public int hashCode() {
+        return getKey().hashCode();
     }
     
-    public SendingYajJob(Vector<FmtItem> cols, String[] stringData) {
-        super(cols, stringData);
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof MyManualMapObject)
+            return getKey().equals(((MyManualMapObject)obj).getKey());
+        else if (obj.getClass().isInstance(getKey()))
+            return getKey().equals(obj);
+        else if (obj instanceof String) 
+            return getKey().equals(stringToKey((String)obj));
+        else
+            return false;
     }
-
+    
+    /**
+     * Returns strKey converted into the data format of strKey. 
+     * Must be overridden if the Object returned by getKey() is not a String!
+     * 
+     * @param strKey
+     * @return
+     */
+    public Object stringToKey(String strKey) {
+        return strKey;
+    }
 }

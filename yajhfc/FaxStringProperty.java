@@ -18,8 +18,22 @@ package yajhfc;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-public class UnknownFormatException extends Exception {
-    public UnknownFormatException(String message) {
-        super(message);
+
+public class FaxStringProperty extends MyManualMapObject {
+    String desc;
+    String type;
+    
+    public FaxStringProperty(String desc, String type) {
+        this.desc = desc;
+        this.type = type;        
+    }
+    
+    public String toString() {
+        return desc;
+    }
+    
+    @Override
+    public Object getKey() {
+        return type;
     }
 }

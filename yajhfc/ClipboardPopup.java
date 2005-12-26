@@ -1,4 +1,22 @@
 package yajhfc;
+/*
+ * YAJHFC - Yet another Java Hylafax client
+ * Copyright (C) 2005 Jonas Wolz
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
@@ -29,13 +47,13 @@ public class ClipboardPopup implements MouseListener, ActionListener {
     }
 
     protected void createPopupMenu() {
-        cut = new JMenuItem(utils._("Cut"));
+        cut = new JMenuItem(utils._("Cut"), utils.loadIcon("general/Cut"));
         cut.addActionListener(this);
-        copy = new JMenuItem(utils._("Copy"));
+        copy = new JMenuItem(utils._("Copy"), utils.loadIcon("general/Copy"));
         copy.addActionListener(this);
-        paste = new JMenuItem(utils._("Paste"));
+        paste = new JMenuItem(utils._("Paste"), utils.loadIcon("general/Paste"));
         paste.addActionListener(this);
-        delete = new JMenuItem(utils._("Delete"));
+        delete = new JMenuItem(utils._("Delete"), utils.loadIcon("general/Remove"));
         delete.addActionListener(this);
         selectAll = new JMenuItem(utils._("Select All"));
         selectAll.addActionListener(this);
