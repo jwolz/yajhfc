@@ -547,14 +547,15 @@ public class SendWin extends JDialog {
         try {
             tflFiles.model.addElement(new StreamTFLItem(inStream));
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(ButtonSend, _("An error occured reading the input: ") + "\n" + e.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+            //JOptionPane.showMessageDialog(ButtonSend, _("An error occured reading the input: ") + "\n" + e.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+            ExceptionDialog.showExceptionDialog(this, _("An error occured reading the input: "), e);
         }
     }
     
     class SendButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             
-            if (tflFiles.model.size() == 0) {
+            if (!pollMode && tflFiles.model.size() == 0) {
                 JOptionPane.showMessageDialog(SendWin.this, _("To send a fax you must select at least one file!"), _("Warning"), JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
@@ -565,13 +566,15 @@ public class SendWin extends JDialog {
             }
             
             try {        
-                String coverName = null;
+                File coverFile = null;
                 FaxOptions fo = utils.getFaxOptions();                    
                 
                 if (!pollMode) {
                     Faxcover cov = null;
-                    if (checkUseCover.isSelected())
+                    if (checkUseCover.isSelected()) {
                         cov = new Faxcover();
+                        cov.pageCount = 0;
+                    }
                     
                     if (checkUseCover.isSelected() && checkCustomCover.isSelected() && (!(new File(ftfCustomCover.getText()).canRead()))) {
                         JOptionPane.showMessageDialog(SendWin.this, MessageFormat.format(_("Can not read file \"{0}\"!"), ftfCustomCover.getText()), _("Error"), JOptionPane.WARNING_MESSAGE);
@@ -611,22 +614,16 @@ public class SendWin extends JDialog {
                         
                         cov.setPageSize(((PaperSize)ComboPaperSize.getSelectedItem()).size);
                         
-                        cov.pageCount = 0;
-                        
                         
                         if (checkCustomCover.isSelected())
                             cov.coverTemplate = new File(ftfCustomCover.getText());
                         
                         // Create cover:
-                        File coverFile = File.createTempFile("cover", ".tmp");
+                        coverFile = File.createTempFile("cover", ".tmp");
                         coverFile.deleteOnExit();
                         FileOutputStream fout = new FileOutputStream(coverFile);
                         cov.makeCoverSheet(fout);
-                        fout.close();
-                        FileInputStream fi = new FileInputStream(coverFile);
-                        coverName = hyfc.putTemporary(fi);
-                        fi.close();
-                        coverFile.delete();                        
+                        fout.close();                       
                     }
                 }            
                 
@@ -634,6 +631,13 @@ public class SendWin extends JDialog {
                     String number = tflNumbers.model.get(i).toString();
                     
                     try {
+                        String coverName = null;
+                        if (coverFile != null) {
+                            FileInputStream fi = new FileInputStream(coverFile);
+                            coverName = hyfc.putTemporary(fi);
+                            fi.close();
+                        }
+                        
                         Job j = hyfc.createJob();
                         
                         j.setFromUser(fo.user);
@@ -665,7 +669,8 @@ public class SendWin extends JDialog {
                         
                         hyfc.submit(j);   
                     } catch (Exception e1) {
-                        JOptionPane.showMessageDialog(ButtonSend, MessageFormat.format(_("An error occured while submitting the fax job for phone number \"{0}\" (will try to submit the fax to the other numbers anyway): "), number) + "\n" + e1.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);                        
+                        //JOptionPane.showMessageDialog(ButtonSend, MessageFormat.format(_("An error occured while submitting the fax job for phone number \"{0}\" (will try to submit the fax to the other numbers anyway): "), number) + "\n" + e1.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                        ExceptionDialog.showExceptionDialog(SendWin.this, MessageFormat.format(_("An error occured while submitting the fax job for phone number \"{0}\" (will try to submit the fax to the other numbers anyway): "), number) , e1);
                     }
                 }
                 
@@ -673,9 +678,13 @@ public class SendWin extends JDialog {
                     HylaTFLItem item = (HylaTFLItem)tflFiles.model.get(i);
                     item.cleanup();
                 }
+                if (coverFile != null)
+                    coverFile.delete();
+                
                 dispose();
             } catch (Exception e1) {
-                JOptionPane.showMessageDialog(ButtonSend, _("An error occured while submitting the fax: ") + "\n" + e1.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                //JOptionPane.showMessageDialog(ButtonSend, _("An error occured while submitting the fax: ") + "\n" + e1.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                ExceptionDialog.showExceptionDialog(SendWin.this, _("An error occured while submitting the fax: "), e1);
             }
         }
     }
@@ -747,7 +756,7 @@ class StreamTFLItem extends HylaTFLItem {
 
     @Override
     public String getText() {
-        return utils._("<none>");
+        return utils._("<stdin>");
     }
 
     @Override
