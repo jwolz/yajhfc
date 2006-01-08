@@ -19,8 +19,6 @@ package yajhfc;
  */
 
 import gnu.hylafax.HylaFAXClient;
-import gnu.hylafax.Job;
-import gnu.inet.ftp.ServerResponseException;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -40,8 +38,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.TimerTask;
 import java.util.Vector;
 
@@ -74,17 +72,17 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 
 public class mainwin extends JFrame {
-
+    
     private JPanel jContentPane = null;
-
+    
     private JToolBar toolbar;
     
     private JTabbedPane TabMain = null;
-
+    
     private JScrollPane scrollRecv = null;
     private JScrollPane scrollSent = null;
     private JScrollPane scrollSending = null;
-
+    
     private TooltipJTable TableRecv = null;
     private TooltipJTable TableSent = null;
     private TooltipJTable TableSending = null;
@@ -94,7 +92,7 @@ public class mainwin extends JFrame {
     private MyTableModel sendingTableModel = null; 
     
     private JTextPane TextStatus = null;
-
+    
     private JMenuBar jJMenuBar = null;
     
     private JMenu menuFax = null;
@@ -124,7 +122,7 @@ public class mainwin extends JFrame {
     // Actions:
     private Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward;
     private ActionEnabler actChecker;
-
+    
     private static String _(String key) {
         return utils._(key);
     }
@@ -188,7 +186,8 @@ public class mainwin extends JFrame {
                                 msgText = _("Error deleting a fax:\n");
                             else
                                 msgText = MessageFormat.format(_("Error deleting the fax \"{0}\":\n"), yj.getIDValue());
-                            JOptionPane.showMessageDialog(mainwin.this, msgText + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                            //JOptionPane.showMessageDialog(mainwin.this, msgText + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                            ExceptionDialog.showExceptionDialog(mainwin.this, msgText, e1);
                         }
                     }
                 }
@@ -207,11 +206,17 @@ public class mainwin extends JFrame {
                     YajJob yj = null;
                     try {
                         yj = selTable.getJobForRow(i);
-                        for(HylaServerFile hsf : yj.getServerFilenames(hyfc)) {
-                            try {
-                                hsf.view(hyfc, myopts);
-                            } catch (Exception e1) {
-                                JOptionPane.showMessageDialog(mainwin.this, MessageFormat.format(_("An error occured displaying the file {0} (job {1}):\n"), hsf.getPath(), yj.getIDValue()) + e1.getMessage() , _("Error"), JOptionPane.ERROR_MESSAGE);
+                        List<HylaServerFile> serverFiles = yj.getServerFilenames(hyfc);
+                        if (serverFiles.size() == 0) {
+                            JOptionPane.showMessageDialog(mainwin.this, MessageFormat.format(_("No document files available for the fax \"{0}\"."), yj.getIDValue()), _("Display fax"), JOptionPane.INFORMATION_MESSAGE);
+                        } else {
+                            for(HylaServerFile hsf : serverFiles) {
+                                try {
+                                    hsf.view(hyfc, myopts);
+                                } catch (Exception e1) {
+                                    //JOptionPane.showMessageDialog(mainwin.this, MessageFormat.format(_("An error occured displaying the file {0} (job {1}):\n"), hsf.getPath(), yj.getIDValue()) + e1.getMessage() , _("Error"), JOptionPane.ERROR_MESSAGE);
+                                    ExceptionDialog.showExceptionDialog(mainwin.this, MessageFormat.format(_("An error occured displaying the file {0} (job {1}):\n"), hsf.getPath(), yj.getIDValue()), e1);
+                                }
                             }
                         }
                         if (yj instanceof RecvYajJob) {
@@ -222,7 +227,8 @@ public class mainwin extends JFrame {
                                 sMax = i;
                         }
                     } catch (Exception e1) {
-                        JOptionPane.showMessageDialog(mainwin.this, MessageFormat.format(_("An error occured displaying the fax \"{0}\":\n"), yj.getIDValue()) + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                        //JOptionPane.showMessageDialog(mainwin.this, MessageFormat.format(_("An error occured displaying the fax \"{0}\":\n"), yj.getIDValue()) + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                        ExceptionDialog.showExceptionDialog(mainwin.this, MessageFormat.format(_("An error occured displaying the fax \"{0}\":"), yj.getIDValue()), e1);
                     }
                 }
                 if (sMax >= 0 && selTable == TableRecv) {
@@ -317,31 +323,37 @@ public class mainwin extends JFrame {
                     
                     try {
                         YajJob yj = selTable.getJobForRow(selTable.getSelectedRow());
-                        for(HylaServerFile hsf : yj.getServerFilenames(hyfc)) {
-                            try {
-                                String filename = hsf.getPath();
-                                int seppos = filename.lastIndexOf('/');
-                                if (seppos < 0)
-                                    seppos = filename.lastIndexOf(File.separatorChar);
-                                if (seppos >= 0)
-                                    filename = filename.substring(seppos + 1);
-                                jfc.setDialogTitle(MessageFormat.format(_("Save {0} to"), hsf.getPath()));
-                                jfc.setSelectedFile(new File(filename));
-                                
-                                jfc.resetChoosableFileFilters();
-                                ExampleFileFilter curFilter = new ExampleFileFilter(hsf.getType(), hsf.getType() + _(" files"));
-                                jfc.addChoosableFileFilter(curFilter);
-                                jfc.setFileFilter(curFilter);
-                                
-                                if (jfc.showSaveDialog(mainwin.this) == JFileChooser.APPROVE_OPTION)
-                                    hsf.download(hyfc, jfc.getSelectedFile());
-                            } catch (Exception e1) {
-                                JOptionPane.showMessageDialog(mainwin.this, MessageFormat.format(_("An error occured saving the file {0} (job {1}):\n"), hsf.getPath(), yj.getIDValue()) + e1.getMessage() , _("Error"), JOptionPane.ERROR_MESSAGE);                         
-                            }                               
+                        List<HylaServerFile> serverFiles = yj.getServerFilenames(hyfc);
+                        if (serverFiles.size() == 0) {
+                            JOptionPane.showMessageDialog(mainwin.this, MessageFormat.format(_("No document files available for the fax \"{0}\"."), yj.getIDValue()), _("Display fax"), JOptionPane.INFORMATION_MESSAGE);
+                        } else {
+                            for(HylaServerFile hsf : serverFiles) {
+                                try {
+                                    String filename = hsf.getPath();
+                                    int seppos = filename.lastIndexOf('/');
+                                    if (seppos < 0)
+                                        seppos = filename.lastIndexOf(File.separatorChar);
+                                    if (seppos >= 0)
+                                        filename = filename.substring(seppos + 1);
+                                    jfc.setDialogTitle(MessageFormat.format(_("Save {0} to"), hsf.getPath()));
+                                    jfc.setSelectedFile(new File(filename));
+                                    
+                                    jfc.resetChoosableFileFilters();
+                                    ExampleFileFilter curFilter = new ExampleFileFilter(hsf.getType(), hsf.getType() + _(" files"));
+                                    jfc.addChoosableFileFilter(curFilter);
+                                    jfc.setFileFilter(curFilter);
+                                    
+                                    if (jfc.showSaveDialog(mainwin.this) == JFileChooser.APPROVE_OPTION)
+                                        hsf.download(hyfc, jfc.getSelectedFile());
+                                } catch (Exception e1) {
+                                    //JOptionPane.showMessageDialog(mainwin.this, MessageFormat.format(_("An error occured saving the file {0} (job {1}):\n"), hsf.getPath(), yj.getIDValue()) + e1.getMessage() , _("Error"), JOptionPane.ERROR_MESSAGE);
+                                    ExceptionDialog.showExceptionDialog(mainwin.this, MessageFormat.format(_("An error occured saving the file {0} (job {1}):"), hsf.getPath(), yj.getIDValue()), e1);
+                                }                               
+                            }
                         }
-                        
                     } catch (Exception e1) {
-                        JOptionPane.showMessageDialog(mainwin.this, _("An error occured saving the fax:\n")  + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                        //JOptionPane.showMessageDialog(mainwin.this, _("An error occured saving the fax:\n")  + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                        ExceptionDialog.showExceptionDialog(mainwin.this, _("An error occured saving the fax:"), e1);
                     }
                 } else {
                     JFileChooser jfc = new JFileChooser();
@@ -368,12 +380,14 @@ public class mainwin extends JFrame {
                                         hsf.download(hyfc, target);
                                         fileCounter++;
                                     } catch (Exception e1) {
-                                        JOptionPane.showMessageDialog(mainwin.this, MessageFormat.format(_("An error occured saving the file {0} (job {1}):\n"), hsf.getPath(), yj.getIDValue()) + e1.getMessage() , _("Error"), JOptionPane.ERROR_MESSAGE);
+                                        //JOptionPane.showMessageDialog(mainwin.this, MessageFormat.format(_("An error occured saving the file {0} (job {1}):\n"), hsf.getPath(), yj.getIDValue()) + e1.getMessage() , _("Error"), JOptionPane.ERROR_MESSAGE);
+                                        ExceptionDialog.showExceptionDialog(mainwin.this, MessageFormat.format(_("An error occured saving the file {0} (job {1}):"), hsf.getPath(), yj.getIDValue()), e1);
                                     }
                                 }
                                 
                             } catch (Exception e1) {
-                                JOptionPane.showMessageDialog(mainwin.this, _("An error occured saving the fax:\n") + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                                //JOptionPane.showMessageDialog(mainwin.this, _("An error occured saving the fax:\n") + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                                ExceptionDialog.showExceptionDialog(mainwin.this, _("An error occured saving the fax:"), e1);
                             }
                         }
                         
@@ -395,7 +409,8 @@ public class mainwin extends JFrame {
                 try {
                     filename = TableRecv.getJobForRow(TableRecv.getSelectedRow()).getServerFilenames(hyfc).get(0).getPath();
                 } catch (Exception e1) {
-                    JOptionPane.showMessageDialog(mainwin.this, _("Couldn't get a filename for the fax:\n") + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                    //JOptionPane.showMessageDialog(mainwin.this, _("Couldn't get a filename for the fax:\n") + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                    ExceptionDialog.showExceptionDialog(mainwin.this, _("Couldn't get a filename for the fax:"), e1);
                     return;
                 }
                 
@@ -440,11 +455,11 @@ public class mainwin extends JFrame {
                 public void mousePressed(MouseEvent e) {
                     maybeShowPopup(e);
                 }
-
+                
                 public void mouseReleased(MouseEvent e) {
                     maybeShowPopup(e);
                 }
-
+                
                 private void maybeShowPopup(MouseEvent e) {
                     if (e.isPopupTrigger()) {
                         JTable src = (JTable)e.getComponent();
@@ -456,7 +471,7 @@ public class mainwin extends JFrame {
                         }
                     }
                 }
-
+                
                 
             };
         }
@@ -713,7 +728,8 @@ public class mainwin extends JFrame {
             });
             utmrTable.schedule(tableRefresher, 0, myopts.tableUpdateInterval);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, _("An error occured connecting to the server:") + "\n" + e.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+            //JOptionPane.showMessageDialog(this, _("An error occured connecting to the server:") + "\n" + e.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+            ExceptionDialog.showExceptionDialog(this, _("An error occured connecting to the server:"), e);
             actOptions.actionPerformed(null);
         }
         
@@ -1099,7 +1115,12 @@ public class mainwin extends JFrame {
      */
     private MyTableModel getSendingTableModel() {
         if (sendingTableModel == null) {
-            sendingTableModel = new MyTableModel();
+            sendingTableModel = new MyTableModel() {
+                @Override
+                protected YajJob createYajJob(String[] data) {
+                    return new SendingYajJob(this.columns, data);
+                }
+            };
         }
         return sendingTableModel;
     }

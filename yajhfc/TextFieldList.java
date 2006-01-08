@@ -131,7 +131,7 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
                     }
                     if (list.getSelectedIndex() >= 0) {
                         model.remove(list.getSelectedIndex());
-                        textField.setText("");
+                        //textField.setText("");
                     }
                 };
             };
@@ -152,7 +152,7 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
                         return;
                     }
                     TFLItem sel = (TFLItem)list.getSelectedValue();
-                    if (sel != null && sel.isMutable()) {
+                    if (sel != null && sel.isMutable() && textField.getDocument().getLength() > 0) {
                         sel.setText(textField.getText());
                         // Hack to redraw the list:
                         model.setElementAt(sel, list.getSelectedIndex());
@@ -172,8 +172,13 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
     }
     
     public void addListItem(String text) {
-        if (text.length() > 0 && model.indexOf(text) == -1) // Elements should be unique
-            model.addElement(createListItem(text));
+        if (text.length() > 0) {
+            TFLItem newItem = createListItem(text);
+            if (!model.contains(newItem)) {// Elements should be unique
+                model.addElement(newItem);
+                list.setSelectedIndex(model.getSize() - 1);
+            }
+        }
     }
     
     public DefaultListModel getModel() {
@@ -302,13 +307,14 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
         getAddAction().setEnabled(textField.getDocument().getLength() > 0);        
     }
     
+    
     public void focusLost(FocusEvent e) {
-        if (list.getSelectedIndex() == -1) {
-            if (getAddAction().isEnabled())
+        // for inexperienced users...
+        if (model.size() == 0 && getAddAction().isEnabled()) {
                 getAddAction().actionPerformed(null);
-        } else if (getModifyAction().isEnabled())
-            getModifyAction().actionPerformed(null);
+        }
     }
+    
 
     public void mouseClicked(MouseEvent e) {
         if ((e.getButton() == MouseEvent.BUTTON1) && (e.getClickCount() == 2)) {
@@ -351,8 +357,10 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
     public void removeUpdate(DocumentEvent e) {
         // method stub
     }
-
+    
+    
     public void focusGained(FocusEvent e) {
         // method stub
     }
+    
 }

@@ -32,4 +32,14 @@ public abstract class TFLItem {
     public String toString() {
         return getText();
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        return getText().equals(obj.toString());
+    }
+    
+    @Override
+    public int hashCode() {
+        return getText().hashCode();
+    }
 }

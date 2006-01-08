@@ -19,6 +19,7 @@ package yajhfc;
  */
 
 import gnu.hylafax.HylaFAXClient;
+import gnu.hylafax.Job;
 import gnu.inet.ftp.ServerResponseException;
 
 import java.io.IOException;
@@ -28,7 +29,9 @@ public class SendingYajJob extends SentYajJob {
 
     @Override
     public void delete(HylaFAXClient hyfc) throws IOException, ServerResponseException {
-        hyfc.kill(getJob(hyfc));
+        Job job = getJob(hyfc);
+        //hyfc.suspend(job);
+        hyfc.kill(job);
     }
     
     public SendingYajJob(Vector<FmtItem> cols, String[] stringData) {
