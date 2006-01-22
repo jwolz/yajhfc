@@ -1,6 +1,14 @@
 YajHFC FAQ
 ==========
 
+Q: When trying to view sent faxes I always get an error message saying 
+   "File format PCL not supported.", although all the documents are PostScript/PDF.
+A:
+Check the "Use PCL file type bugfix" checkbox in the Options dialog and try again.
+Some HylaFAX versions incorrectly report a file type of "PCL" for all documents
+associated with a job. If this checkbox is checked, YajHFC tries to guess the
+file type using the extension if PCL is reported (which usually works pretty well).
+
 Q: Where do I get a fax viewer for Windows?
 A: 
 Generally you can use any program that can display TIFF files, although 

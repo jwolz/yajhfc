@@ -62,7 +62,7 @@ public class HylaServerFile {
         else if (type.equalsIgnoreCase("ps") || type.equalsIgnoreCase("pdf"))
             execCmd = opts.psViewer;
         else
-            throw new UnknownFormatException(MessageFormat.format("File format {1} not supported.", type));
+            throw new UnknownFormatException(MessageFormat.format(utils._("File format {0} not supported."), type));
         
         if (execCmd.indexOf("%s") >= 0)
             execCmd = execCmd.replace("%s", tmptif.getPath());

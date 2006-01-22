@@ -2,14 +2,14 @@
 # This file is distributed under the same license as YajHFC package.
 # Copyright (C) Jonas Wolz.
 # Jonas Wolz <jonas.wolz@freenet.de>, 2005.
-# Jonas Wolz <jwolz@freenet.de>, 2005.
+# Jonas Wolz <jwolz@freenet.de>, 2005, 2006.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: messages_de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-12-26 17:01+0100\n"
-"PO-Revision-Date: 2005-12-26 17:13GMT\n"
+"POT-Creation-Date: 2006-01-22 16:04+0100\n"
+"PO-Revision-Date: 2006-01-22 16:05GMT\n"
 "Last-Translator: Jonas Wolz <jwolz@freenet.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -31,11 +31,11 @@ msgstr ""
 "<html>YajHFC ist ein Client für den Hylafax-Faxserver (http://www.hylafax."
 "org). <br><br>Homepage: {1} <br>Autor: {0} </html>"
 
-#: ../AboutDialog.java:146 ../OptionsWin.java:158
+#: ../AboutDialog.java:146 ../ExceptionDialog.java:49 ../OptionsWin.java:160
 msgid "OK"
 msgstr "OK"
 
-#: ../AboutDialog.java:196 ../mainwin.java:257
+#: ../AboutDialog.java:196 ../mainwin.java:263
 msgid "About"
 msgstr "Über"
 
@@ -48,7 +48,7 @@ msgstr "Lizenz"
 msgid "About {0}"
 msgstr "Über {0}"
 
-#: ../AboutDialog.java:203 ../mainwin.java:279
+#: ../AboutDialog.java:203 ../mainwin.java:285
 msgid "Documentation"
 msgstr "Dokumentation"
 
@@ -64,7 +64,7 @@ msgstr "Kopieren"
 msgid "Paste"
 msgstr "Einfügen"
 
-#: ../ClipboardPopup.java:56 ../mainwin.java:197
+#: ../ClipboardPopup.java:56 ../mainwin.java:196
 msgid "Delete"
 msgstr "Löschen"
 
@@ -72,9 +72,22 @@ msgstr "Löschen"
 msgid "Select All"
 msgstr "Alles Auswählen"
 
+#: ../ExceptionDialog.java:51 ../ExceptionDialog.java:122
+msgid "Details"
+msgstr "Details"
+
+#: ../ExceptionDialog.java:149 ../ExceptionDialog.java:159 ../SendWin.java:580
+msgid "Error"
+msgstr "Fehler"
+
 #: ../FileTextField.java:109
 msgid "Choose a file using a dialog"
 msgstr "Datei mittels Dialogfeld wählen"
+
+#: ../HylaServerFile.java:65
+#, java-format
+msgid "File format {0} not supported."
+msgstr "Dateiformat {0} wird nicht unterstützt."
 
 #: ../Launcher.java:128 ../Launcher.java:130
 msgid "Unknown command line argument: "
@@ -84,136 +97,140 @@ msgstr "Unbekanntes Befehlszeilenargument: "
 msgid "There already is a running instance!"
 msgstr "Es läuft bereits eine Programminstanz!"
 
-#: ../OptionsWin.java:94 ../mainwin.java:143
+#: ../OptionsWin.java:94 ../mainwin.java:141
 msgid "Options"
 msgstr "Optionen"
 
-#: ../OptionsWin.java:165 ../SendWin.java:422
+#: ../OptionsWin.java:167 ../SendWin.java:422
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: ../OptionsWin.java:181 ../SendWin.java:356
+#: ../OptionsWin.java:183 ../SendWin.java:356
 msgid "Common"
 msgstr "Allgemein"
 
-#: ../OptionsWin.java:182
+#: ../OptionsWin.java:184
 msgid "Delivery"
 msgstr "Versand"
 
-#: ../OptionsWin.java:183 ../OptionsWin.java:184 ../OptionsWin.java:185
+#: ../OptionsWin.java:185 ../OptionsWin.java:186 ../OptionsWin.java:187
 #, java-format
 msgid "Table \"{0}\""
 msgstr "Tabelle \"{0}\""
 
-#: ../OptionsWin.java:183 ../mainwin.java:926
+#: ../OptionsWin.java:185 ../mainwin.java:942
 msgid "Received"
 msgstr "Empfangen"
 
-#: ../OptionsWin.java:184 ../mainwin.java:927
+#: ../OptionsWin.java:186 ../mainwin.java:943
 msgid "Sent"
 msgstr "Gesendet"
 
-#: ../OptionsWin.java:185 ../mainwin.java:928
+#: ../OptionsWin.java:187 ../mainwin.java:944
 msgid "Transmitting"
 msgstr "Sendend"
 
-#: ../OptionsWin.java:234
+#: ../OptionsWin.java:236
 msgid "Server settings"
 msgstr "Servereinstellungen"
 
-#: ../OptionsWin.java:243
+#: ../OptionsWin.java:248
 msgid "Use passive mode to fetch faxes"
 msgstr "\"Passive mode\" zum Abholen der Faxe benutzen"
 
-#: ../OptionsWin.java:245
+#: ../OptionsWin.java:250
 msgid "Host name:"
 msgstr "Hostname:"
 
-#: ../OptionsWin.java:246
+#: ../OptionsWin.java:251
 msgid "Port:"
 msgstr "Port:"
 
-#: ../OptionsWin.java:247
+#: ../OptionsWin.java:252
 msgid "Username:"
 msgstr "Benutzername:"
 
-#: ../OptionsWin.java:248
+#: ../OptionsWin.java:253
 msgid "Password:"
 msgstr "Passwort:"
 
-#: ../OptionsWin.java:268
+#: ../OptionsWin.java:273
 msgid "Miscellaneous settings"
 msgstr "Allgemeine Einstellungen:"
 
-#: ../OptionsWin.java:272
+#: ../OptionsWin.java:276
+msgid "Use PCL file type bugfix"
+msgstr "PCL-Dateityp-Bugfix verwenden"
+
+#: ../OptionsWin.java:278
 msgid "When a new fax is received:"
 msgstr "Bei Empfang eines neues Faxes:"
 
-#: ../OptionsWin.java:290
+#: ../OptionsWin.java:297
 msgid "Delivery settings"
 msgstr "Versandeinstellungen:"
 
-#: ../OptionsWin.java:302
+#: ../OptionsWin.java:310
 msgid "E-mail address for notifications:"
 msgstr "E-Mail-Adresse für Benachrichtigungen:"
 
-#: ../OptionsWin.java:303 ../SendWin.java:343
+#: ../OptionsWin.java:311 ../SendWin.java:343
 msgid "Notify when:"
 msgstr "Benachrichtigen, wenn:"
 
-#: ../OptionsWin.java:304
+#: ../OptionsWin.java:312
 msgid "Time zone:"
 msgstr "Zeitzone:"
 
-#: ../OptionsWin.java:305 ../SendWin.java:344
+#: ../OptionsWin.java:313 ../SendWin.java:344
 msgid "Resolution:"
 msgstr "Auflösung:"
 
-#: ../OptionsWin.java:306 ../SendWin.java:345
+#: ../OptionsWin.java:314 ../SendWin.java:345
 msgid "Paper size:"
 msgstr "Papierformat:"
 
-#: ../OptionsWin.java:307
+#: ../OptionsWin.java:315
 msgid "Maximum dials:"
 msgstr "Max. Anz. Wählversuche:"
 
-#: ../OptionsWin.java:308 ../SendWin.java:347
+#: ../OptionsWin.java:316 ../SendWin.java:347
 msgid "Maximum tries:"
 msgstr "Max. Anzahl Versuche:"
 
-#: ../OptionsWin.java:326
+#: ../OptionsWin.java:334
 msgid "Fax cover page from:"
 msgstr "Faxdeckblatt Absender:"
 
-#: ../OptionsWin.java:334
+#: ../OptionsWin.java:347
 msgid "Name:"
 msgstr "Name:"
 
-#: ../OptionsWin.java:335 ../PhoneBookWin.java:306 ../SendWin.java:274
+#: ../OptionsWin.java:348 ../PhoneBookWin.java:306 ../SendWin.java:274
 msgid "Company:"
 msgstr "Firma:"
 
-#: ../OptionsWin.java:336 ../PhoneBookWin.java:308 ../SendWin.java:275
+#: ../OptionsWin.java:349 ../PhoneBookWin.java:308 ../SendWin.java:275
 msgid "Location:"
 msgstr "Ort:"
 
-#: ../OptionsWin.java:337 ../PhoneBookWin.java:309 ../SendWin.java:276
+#: ../OptionsWin.java:350 ../PhoneBookWin.java:309 ../SendWin.java:276
 msgid "Voice number:"
 msgstr "Telefonnummer:"
 
-#: ../OptionsWin.java:338 ../PhoneBookWin.java:310
+#: ../OptionsWin.java:351 ../PhoneBookWin.java:310
 msgid "Fax number:"
 msgstr "Faxnummer:"
 
-#: ../OptionsWin.java:356
+#: ../OptionsWin.java:369
 msgid "Path settings"
 msgstr "Pfadeinstellungen"
 
-#: ../OptionsWin.java:361
+#: ../OptionsWin.java:376
 msgid "Command line for fax viewer: (insert %s as a placeholder for the filename)"
 msgstr "Befehlszeile für Faxviewer (%s als Platzhalter für Dateinamen einfügen)"
 
-#: ../OptionsWin.java:363
+#: ../OptionsWin.java:378
 msgid ""
 "Command line for Postscript viewer: (insert %s as a placeholder for the "
 "filename)"
@@ -221,7 +238,7 @@ msgstr ""
 "Befehlszeile für Postscriptviewer (%s als Platzhalter für Dateinamen "
 "einfügen)"
 
-#: ../OptionsWin.java:463
+#: ../OptionsWin.java:479
 msgid "Please enter a number."
 msgstr "Bitte geben Sie eine Zahl ein."
 
@@ -258,7 +275,7 @@ msgstr "Kommentare:"
 msgid "Close"
 msgstr "Schließen"
 
-#: ../PhoneBookWin.java:339 ../mainwin.java:349
+#: ../PhoneBookWin.java:339 ../mainwin.java:361
 msgid "Select"
 msgstr "Auswählen"
 
@@ -266,7 +283,7 @@ msgstr "Auswählen"
 msgid "Phone book:"
 msgstr "Telefonbuch"
 
-#: ../PhoneBookWin.java:363 ../mainwin.java:268
+#: ../PhoneBookWin.java:363 ../mainwin.java:274
 msgid "Phone book"
 msgstr "Telefonbuch"
 
@@ -283,7 +300,7 @@ msgstr "<kein Name>"
 msgid "Send Fax"
 msgstr "Fax senden"
 
-#: ../SendWin.java:185 ../SendWin.java:750
+#: ../SendWin.java:185
 msgid "<none>"
 msgstr "<kein>"
 
@@ -327,11 +344,11 @@ msgstr "Abbrechen nach (Minuten):"
 msgid "Cover page"
 msgstr "Deckblatt"
 
-#: ../SendWin.java:399 ../mainwin.java:165
+#: ../SendWin.java:399 ../mainwin.java:163
 msgid "Poll"
 msgstr "Abrufen"
 
-#: ../SendWin.java:402 ../mainwin.java:154
+#: ../SendWin.java:402 ../mainwin.java:152
 msgid "Send"
 msgstr "Senden"
 
@@ -347,45 +364,44 @@ msgstr "Textdateien"
 msgid "Choose number from phone book"
 msgstr "Nummer aus dem Telefonbuch auswählen"
 
-#: ../SendWin.java:550
+#: ../SendWin.java:551
 msgid "An error occured reading the input: "
 msgstr "Beim Lesen der Eingabe ist ein Fehler aufgetreten:"
 
-#: ../SendWin.java:550 ../SendWin.java:577 ../SendWin.java:668
-#: ../SendWin.java:678 ../mainwin.java:191 ../mainwin.java:214
-#: ../mainwin.java:225 ../mainwin.java:339 ../mainwin.java:344
-#: ../mainwin.java:371 ../mainwin.java:376 ../mainwin.java:398
-#: ../mainwin.java:716
-msgid "Error"
-msgstr "Fehler"
-
-#: ../SendWin.java:558
+#: ../SendWin.java:559
 msgid "To send a fax you must select at least one file!"
 msgstr "Sie müssen mindestens eine Datei auswählen, um ein Fax zu verschicken!"
 
-#: ../SendWin.java:558 ../SendWin.java:563
+#: ../SendWin.java:559 ../SendWin.java:564
 msgid "Warning"
 msgstr "Warnung"
 
-#: ../SendWin.java:563
+#: ../SendWin.java:564
 msgid "To send a fax you have to enter at least one phone number!"
 msgstr "Sie müssen mindestens eine Telefonnummer angeben, um ein Fax zu verschicken!"
 
-#: ../SendWin.java:577
+#: ../SendWin.java:580
 #, java-format
 msgid "Can not read file \"{0}\"!"
 msgstr "Kann Datei \"{0}\" nicht lesen!"
 
-#: ../SendWin.java:668
+#: ../SendWin.java:673
 #, java-format
 msgid ""
 "An error occured while submitting the fax job for phone number \"{0}\" (will "
 "try to submit the fax to the other numbers anyway): "
-msgstr "Beim Absenden des Faxes an die Telefonnummer \"{0}\" ist ein Fehler aufgetreten (werde trotzdem versuchen, Faxe an die anderen Nummern zu verschicken)"
+msgstr ""
+"Beim Absenden des Faxes an die Telefonnummer \"{0}\" ist ein Fehler "
+"aufgetreten (werde trotzdem versuchen, Faxe an die anderen Nummern zu "
+"verschicken)"
 
-#: ../SendWin.java:678
+#: ../SendWin.java:687
 msgid "An error occured while submitting the fax: "
 msgstr "Beim Abschicken des Faxes ist ein Fehler aufgetreten:"
+
+#: ../SendWin.java:759
+msgid "<stdin>"
+msgstr "<stdin>"
 
 #: ../TextFieldList.java:74 ../fmtEditor.java:96
 msgid "Up"
@@ -463,169 +479,178 @@ msgstr "Verfügbare Spalten:"
 msgid "Selected Columns:"
 msgstr "Ausgewählte Spalten:"
 
-#: ../mainwin.java:144
+#: ../mainwin.java:142
 msgid "Shows the Options dialog"
 msgstr "Zeigt den Optionen-Dialog an"
 
-#: ../mainwin.java:155
+#: ../mainwin.java:153
 msgid "Shows the send fax dialog"
 msgstr "Zeigt das \"Fax versenden\"-Dialogfeld an"
 
-#: ../mainwin.java:166
+#: ../mainwin.java:164
 msgid "Shows the poll fax dialog"
 msgstr "Zeigt das \"Fax abrufen\"-Dialogfeld an"
 
-#: ../mainwin.java:176
+#: ../mainwin.java:174
 msgid "Do you really want to cancel the selected fax jobs?"
 msgstr "Möchten Sie die ausgewählten Faxaufträge wirklich abbrechen?"
 
-#: ../mainwin.java:178
+#: ../mainwin.java:176
 msgid "Do you really want to delete the selected faxes?"
 msgstr "Möchten Sie die ausgewählten Faxe wirklich löschen?"
 
-#: ../mainwin.java:180
+#: ../mainwin.java:178
 msgid "Delete faxes"
 msgstr "Faxe löschen"
 
-#: ../mainwin.java:188
+#: ../mainwin.java:186
 msgid "Error deleting a fax:\n"
 msgstr "Fehler beim Löschen eines Faxes:\n"
 
-#: ../mainwin.java:190
+#: ../mainwin.java:188
 #, java-format
 msgid "Error deleting the fax \"{0}\":\n"
 msgstr "Fehler beim Löschen des Faxes  \"{0}\":\n"
 
-#: ../mainwin.java:198
+#: ../mainwin.java:197
 msgid "Deletes the selected fax"
 msgstr "Löscht das ausgewählte Fax"
 
-#: ../mainwin.java:214
+#: ../mainwin.java:211 ../mainwin.java:328
+#, java-format
+msgid "No document files available for the fax \"{0}\"."
+msgstr "Für das Fax \"{0}\" sind keine Dokumente vorhanden."
+
+#: ../mainwin.java:211 ../mainwin.java:328
+msgid "Display fax"
+msgstr "Fax anzeigen"
+
+#: ../mainwin.java:218
 #, java-format
 msgid "An error occured displaying the file {0} (job {1}):\n"
 msgstr "Beim Anzeigen der Datei {0} (für Auftrag {1}) ist ein Fehler aufgetreten:\n"
 
-#: ../mainwin.java:225
+#: ../mainwin.java:231
 #, java-format
-msgid "An error occured displaying the fax \"{0}\":\n"
-msgstr "Beim Anzeigen des Faxes \"{0}\" ist ein Fehler aufgetreten:\n"
+msgid "An error occured displaying the fax \"{0}\":"
+msgstr "Beim Anzeigen des Faxes \"{0}\" ist ein Fehler aufgetreten:"
 
-#: ../mainwin.java:235
+#: ../mainwin.java:241
 msgid "Show"
 msgstr "Anzeigen"
 
-#: ../mainwin.java:236
+#: ../mainwin.java:242
 msgid "Displays the selected fax"
 msgstr "Zeigt das ausgewählte Fax an"
 
-#: ../mainwin.java:245
+#: ../mainwin.java:251
 msgid "Exit"
 msgstr "Beenden"
 
-#: ../mainwin.java:246
+#: ../mainwin.java:252
 msgid "Exits the application"
 msgstr "Beendet die Anwendung"
 
-#: ../mainwin.java:258
+#: ../mainwin.java:264
 msgid "Shows the about dialog"
 msgstr "Zeigt das Info-Dialogfeld an"
 
-#: ../mainwin.java:269
+#: ../mainwin.java:275
 msgid "Display/edit the phone book"
 msgstr "Das Telefonbuch anzeigen/bearbeiten"
 
-#: ../mainwin.java:280
+#: ../mainwin.java:286
 msgid "Shows the README files"
 msgstr "Zeigt die README-Dateien an"
 
-#: ../mainwin.java:307
+#: ../mainwin.java:313
 msgid "Marked as read"
 msgstr "Als gelesen markiert"
 
-#: ../mainwin.java:308
+#: ../mainwin.java:314
 msgid "Marks the selected fax as read/unread"
 msgstr "Markiert das ausgewählte Fax als (un)gelesen"
 
-#: ../mainwin.java:328
+#: ../mainwin.java:338
 #, java-format
 msgid "Save {0} to"
 msgstr "{0} speichern unter"
 
-#: ../mainwin.java:332
+#: ../mainwin.java:342
 msgid " files"
 msgstr " Dateien"
 
-#: ../mainwin.java:339 ../mainwin.java:371
+#: ../mainwin.java:350 ../mainwin.java:384
 #, java-format
-msgid "An error occured saving the file {0} (job {1}):\n"
-msgstr "Beim Speichern der Datei {0} (Auftrag {1}) ist ein Fehler aufgetreten:\n"
+msgid "An error occured saving the file {0} (job {1}):"
+msgstr "Beim Speichern der Datei {0} (Auftrag {1}) ist ein Fehler aufgetreten:"
 
-#: ../mainwin.java:344 ../mainwin.java:376
-msgid "An error occured saving the fax:\n"
-msgstr "Beim Speichern des Faxes ist ein Fehler aufgetreten:\n"
+#: ../mainwin.java:356 ../mainwin.java:390
+msgid "An error occured saving the fax:"
+msgstr "Beim Speichern des Faxes ist ein Fehler aufgetreten:"
 
-#: ../mainwin.java:348
+#: ../mainwin.java:360
 msgid "Select a directory to save the faxes in"
 msgstr "Wählen Sie ein Verzeichnis zum Speichern der Faxe aus"
 
-#: ../mainwin.java:380
+#: ../mainwin.java:394
 #, java-format
 msgid "{0} files saved to directory {1}."
 msgstr "{0} Dateien in Verzeichnis {1} gespeichert"
 
-#: ../mainwin.java:380
+#: ../mainwin.java:394
 msgid "Faxes saved"
 msgstr "Faxe gespeichert"
 
-#: ../mainwin.java:385
+#: ../mainwin.java:399
 msgid "Save fax..."
 msgstr "Fax speichern..."
 
-#: ../mainwin.java:386
+#: ../mainwin.java:400
 msgid "Saves the selected fax on disk"
 msgstr "Speichert das ausgewählte Fax auf der Festplatte"
 
-#: ../mainwin.java:398
-msgid "Couldn't get a filename for the fax:\n"
-msgstr "Konnte keinen Dateinamen für das Fax bestimmen:\n"
+#: ../mainwin.java:413
+msgid "Couldn't get a filename for the fax:"
+msgstr "Konnte keinen Dateinamen für das Fax bestimmen:"
 
-#: ../mainwin.java:408
+#: ../mainwin.java:423
 msgid "Forward fax..."
 msgstr "Fax weiterleiten..."
 
-#: ../mainwin.java:409
+#: ../mainwin.java:424
 msgid "Forwards the fax"
 msgstr "Leitet das Fax weiter"
 
-#: ../mainwin.java:418 ../mainwin.java:1115
+#: ../mainwin.java:433 ../mainwin.java:1136
 msgid "Fax"
 msgstr "Fax"
 
-#: ../mainwin.java:651
+#: ../mainwin.java:666
 msgid "Disconnected."
 msgstr "Nicht verbunden."
 
-#: ../mainwin.java:716
+#: ../mainwin.java:732
 msgid "An error occured connecting to the server:"
 msgstr "Beim Verbindungsaufbau mit dem Server ist ein Fehler aufgetreten:"
 
-#: ../mainwin.java:884
+#: ../mainwin.java:900
 msgid "Help"
 msgstr "Hilfe"
 
-#: ../mainwin.java:926
+#: ../mainwin.java:942
 msgid "Received faxes"
 msgstr "Empfangene Faxe"
 
-#: ../mainwin.java:927
+#: ../mainwin.java:943
 msgid "Sent faxes"
 msgstr "Gesendete Faxe"
 
-#: ../mainwin.java:928
+#: ../mainwin.java:944
 msgid "Faxes in the output queue"
 msgstr "Faxe in der Ausgangswarteschlange"
 
-#: ../mainwin.java:1133
+#: ../mainwin.java:1154
 msgid "Extras"
 msgstr "Extras"
 

@@ -48,6 +48,16 @@ public class SentYajJob extends YajJob {
             String[] fields = files[i].split("\\s");
             try {
                 hyfc.stat(fields[1]); // will throw FileNotFoundException if file doesn't exist
+                // Bugfix for certain HylaFAX versions that always return "PCL"
+                // as file type for all documents
+                if (utils.getFaxOptions().pclBug && fields[0].equalsIgnoreCase("pcl")) {
+                    if (fields[1].contains(".ps"))
+                        fields[0] = "ps";
+                    else if (fields[1].contains(".pdf"))
+                        fields[0] = "pdf";
+                    else if (fields[1].contains(".tif"))
+                        fields[0] = "tif";
+                }
                 availFiles.add(new HylaServerFile(fields[1], fields[0]));
             } catch (FileNotFoundException e) {
                 // do nothing
