@@ -64,7 +64,7 @@ public class OptionsWin extends JDialog {
     private JTextField textNotifyAddress, textHost, textUser, /*textViewer,*/ textPort;
     private JPasswordField textPassword;
     private JComboBox comboTZone, comboNotify, comboPaperSize, comboResolution, comboNewFaxAction;
-    private JCheckBox checkPasv;
+    private JCheckBox checkPasv, checkPCLBug;
     private JSpinner spinMaxTry, spinMaxDial;
     //private JButton buttonBrowseViewer;
     private FileTextField ftfFaxViewer, ftfPSViewer;
@@ -114,6 +114,7 @@ public class OptionsWin extends JDialog {
         comboNewFaxAction.setSelectedItem(foEdit.newFaxAction);
         
         checkPasv.setSelected(foEdit.pasv);
+        checkPCLBug.setSelected(foEdit.pclBug);
         
         spinMaxDial.setValue(Integer.valueOf(foEdit.maxDial));
         spinMaxTry.setValue(Integer.valueOf(foEdit.maxTry));
@@ -272,8 +273,10 @@ public class OptionsWin extends JDialog {
             panelMisc.setBorder(BorderFactory.createTitledBorder(_("Miscellaneous settings")));
             
             comboNewFaxAction = new JComboBox(utils.newFaxActions);
-            
+            checkPCLBug = new JCheckBox("<html>" + _("Use PCL file type bugfix") + "</html>");
+             
             addWithLabel(panelMisc, comboNewFaxAction, "<html>" + _("When a new fax is received:") + "</html>", "1, 2, 1, 2, f, c");
+            panelMisc.add(checkPCLBug, "1, 3");
         }
         return panelMisc;
     }
@@ -461,6 +464,7 @@ public class OptionsWin extends JDialog {
                 foEdit.newFaxAction = (FaxIntProperty)comboNewFaxAction.getSelectedItem();
                 
                 foEdit.pasv = checkPasv.isSelected();
+                foEdit.pclBug = checkPCLBug.isSelected();
                 
                 foEdit.recvfmt = recvfmt;
                 foEdit.sentfmt = sentfmt;

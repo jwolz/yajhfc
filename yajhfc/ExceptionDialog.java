@@ -142,8 +142,7 @@ public class ExceptionDialog extends JDialog implements ActionListener {
     public static void showExceptionDialog(Frame owner, String title, String message, Exception exc) {
         ExceptionDialog eDlg = new ExceptionDialog(owner, title, message, exc);
         eDlg.setVisible(true);
-        eDlg.pack();
-        eDlg.validate();
+        eDlg.invalidate();
     }
 
     public static void showExceptionDialog(Frame owner, String message, Exception exc) {
@@ -153,8 +152,7 @@ public class ExceptionDialog extends JDialog implements ActionListener {
     public static void showExceptionDialog(Dialog owner, String title, String message, Exception exc) {
         ExceptionDialog eDlg = new ExceptionDialog(owner, title, message, exc);
         eDlg.setVisible(true);
-        eDlg.pack();
-        eDlg.validate();
+        eDlg.invalidate();
     }
 
     public static void showExceptionDialog(Dialog owner, String message, Exception exc) {

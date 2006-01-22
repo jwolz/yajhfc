@@ -72,6 +72,7 @@ public class FaxOptions {
     public boolean useCover, useCustomCover;
     
     public FaxIntProperty newFaxAction = utils.newFaxActions[3];
+    public boolean pclBug = false;
     
     public FaxOptions() {
         this.host = "";
