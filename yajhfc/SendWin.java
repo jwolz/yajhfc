@@ -28,6 +28,7 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedInputStream;
@@ -41,6 +42,8 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -56,6 +59,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SpinnerNumberModel;
 
 import yajhfc.faxcover.Faxcover;
@@ -418,14 +422,15 @@ public class SendWin extends JDialog {
      */
     private JButton getButtonCancel() {
         if (ButtonCancel == null) {
-            ButtonCancel = new JButton();
-            ButtonCancel.setText(_("Cancel"));
-            
-            ButtonCancel.addActionListener(new ActionListener() {
-               public void actionPerformed(ActionEvent e) {
-                   dispose();
-               } 
-            });
+            Action actCancel = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    dispose();
+                };
+            };
+            actCancel.putValue(Action.NAME, _("Cancel"));
+            ButtonCancel = new JButton(actCancel);
+            ButtonCancel.getActionMap().put("EscapePressed", actCancel);
+            ButtonCancel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "EscapePressed");
             
             /*ButtonCancel.setMinimumSize(buttonSize);
             ButtonCancel.setPreferredSize(buttonSize);
@@ -556,8 +561,13 @@ public class SendWin extends JDialog {
         public void actionPerformed(ActionEvent e) {
             
             if (!pollMode && tflFiles.model.size() == 0) {
-                JOptionPane.showMessageDialog(SendWin.this, _("To send a fax you must select at least one file!"), _("Warning"), JOptionPane.INFORMATION_MESSAGE);
-                return;
+                if (checkUseCover.isSelected()) {
+                    if (JOptionPane.showConfirmDialog(SendWin.this, _("You haven't selected a file to transmit, so your fax will ONLY contain the cover page.\nContinue anyway?"), _("Continue?"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION)
+                        return;
+                } else {
+                    JOptionPane.showMessageDialog(SendWin.this, _("To send a fax you must select at least one file!"), _("Warning"), JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
             }
             
             if (tflNumbers.model.size() == 0) {

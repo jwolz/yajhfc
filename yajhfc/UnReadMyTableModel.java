@@ -74,19 +74,21 @@ class UnReadMyTableModel extends MyTableModel {
         super.setData(arg0);
         
         HashSet<Object> newUnread = new HashSet<Object>();
-        if (newUnread != null) {
+        if (arg0 != null) {
             for ( int i=0; i < jobs.length; i++ ) {
                 RecvYajJob j = (RecvYajJob)jobs[i];
-                Boolean val;
-                if (oldRead != null)
-                    val = oldRead.get(j.getIDValue());
-                else
-                    val = null;
-                
-                if (val != null)
-                    j.setRead(val);
-                else
-                    newUnread.add(j.getIDValue());
+                if (j != null) {                   
+                    Boolean val;
+                    if (oldRead != null)
+                        val = oldRead.get(j.getIDValue());
+                    else
+                        val = null;
+                    
+                    if (val != null)
+                        j.setRead(val);
+                    else
+                        newUnread.add(j.getIDValue());
+                }
             }
             if (newUnread.size() > 0)
                 fireNewUnreadItemsAvailable(newUnread, (oldRead == null ? true : oldRead.size() == 0));
@@ -138,7 +140,8 @@ class UnReadMyTableModel extends MyTableModel {
         
         for ( int i=0; i < jobs.length; i++ ) {
             RecvYajJob j = (RecvYajJob)jobs[i];
-            j.setRead(oldRead.contains(j.getIDValue()));
+            if (j != null)
+                j.setRead(oldRead.contains(j.getIDValue()));
         }
     }
     

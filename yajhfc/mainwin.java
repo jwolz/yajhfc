@@ -19,13 +19,18 @@ package yajhfc;
  */
 
 import gnu.hylafax.HylaFAXClient;
+import gnu.inet.ftp.ServerResponseException;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -115,13 +120,16 @@ public class mainwin extends JFrame {
     private StatusRefresher statRefresher = null;
     
     private MouseListener tblMouseListener;
+    private KeyListener tblKeyListener;
     private DefaultTableCellRenderer hylaDateRenderer;
     
     private JPopupMenu tblPopup;
     
     // Actions:
-    private Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward;
+    private Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward, actAdminMode;
     private ActionEnabler actChecker;
+    
+    private Color defStatusBackground = null;
     
     private static String _(String key) {
         return utils._(key);
@@ -147,6 +155,7 @@ public class mainwin extends JFrame {
                 SendWin sw = new SendWin(hyfc, mainwin.this);
                 sw.setModal(true);
                 sw.setVisible(true);
+                reloadTables();
             }
         };
         actSend.putValue(Action.NAME, _("Send") + "...");
@@ -190,6 +199,7 @@ public class mainwin extends JFrame {
                             ExceptionDialog.showExceptionDialog(mainwin.this, msgText, e1);
                         }
                     }
+                    reloadTables();
                 }
             };
         };
@@ -418,12 +428,30 @@ public class mainwin extends JFrame {
                 sw.setModal(true);
                 sw.addServerFile(filename);
                 sw.setVisible(true);
+                reloadTables();
             }
         };
         actForward.putValue(Action.NAME, _("Forward fax..."));
         actForward.putValue(Action.SHORT_DESCRIPTION, _("Forwards the fax"));
         actForward.putValue(Action.SMALL_ICON, utils.loadIcon("general/Redo"));
         
+        actAdminMode = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                Boolean state = (Boolean)getValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY);
+                boolean newState;
+                if (state == null)
+                    newState = false;
+                else
+                    newState = !state;
+
+                actAdminMode.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, newState);
+                
+                ReloadSettings();
+            };
+        };
+        actAdminMode.putValue(Action.NAME, _("Admin mode"));
+        actAdminMode.putValue(Action.SHORT_DESCRIPTION, _("Connect to the server in admin mode (e.g. to delete faxes)"));
+        actAdminMode.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, false);
         
         actChecker = new ActionEnabler();
     }
@@ -438,6 +466,10 @@ public class mainwin extends JFrame {
             tblPopup.add(new ActionJCheckBoxMenuItem(actFaxRead));
         }
         return tblPopup;
+    }
+    
+    void reloadTables() {
+        tableRefresher.run();
     }
     
     private MouseListener getTblMouseListener() {
@@ -476,6 +508,24 @@ public class mainwin extends JFrame {
             };
         }
         return tblMouseListener;
+    }
+    
+    private KeyListener getTblKeyListener() {
+        if (tblKeyListener == null) {
+            tblKeyListener = new KeyAdapter() {
+                public void keyPressed(java.awt.event.KeyEvent e) {
+                    switch (e.getKeyCode()) {
+                    case KeyEvent.VK_ENTER:
+                        actShow.actionPerformed(null);
+                        break;
+                    case KeyEvent.VK_DELETE:
+                        actDelete.actionPerformed(null);
+                        break;
+                    }
+                };
+            };            
+        }
+        return tblKeyListener;
     }
     
     private DefaultTableCellRenderer getHylaDateRenderer() {
@@ -566,70 +616,9 @@ public class mainwin extends JFrame {
     }
 
     
-    /*private void ReloadTables() throws FileNotFoundException, IOException, ServerResponseException  {
-        MyTableModel tm = getRecvTableModel();
-        Vector lst = hyfc.getList("recvq");
-     
-        if ((lastRecvList == null) || !lst.equals(lastRecvList)) {
-            String[][] data = new String[lst.size()][];
-            for (int i = 0; i < lst.size(); i++)
-                data[i] = ((String)lst.get(i)).split("\\|");
-            tm.setData(data);
-            lastRecvList = lst;
-        }        
-        
-        tm = getSentTableModel();
-        String fmt = utils.VectorToString(myopts.sentfmt, "|");
-        hyfc.jobfmt(fmt);
-        lst = hyfc.getList("doneq");
-        if ((lastSentList == null) || !lst.equals(lastSentList)) {
-            String[][] data = new String[lst.size()][];
-            for (int i = 0; i < lst.size(); i++) 
-                data[i] = ((String)lst.get(i)).split("\\|");
-            tm.setData(data);
-            lastSentList = lst;
-        }
-        
-        tm = getSendingTableModel();
-        fmt = utils.VectorToString(myopts.sendingfmt, "|");
-        hyfc.jobfmt(fmt);
-        lst = hyfc.getList("sendq");
-        if ((lastSendingList == null) || !lst.equals(lastSendingList)) {
-            String[][] data = new String[lst.size()][];
-            for (int i = 0; i < lst.size(); i++)
-                data[i] = ((String)lst.get(i)).split("\\|");
-            tm.setData(data);  
-            lastSendingList = lst;
-        }
-    }*/
-    
     private void MyInit() { 
         myopts = utils.getFaxOptions();
-        
-        /*tmrStat = new Timer(500, new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    getStatus();
-                }
-                catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            };
-        });
-        tmrStat.stop();*/
-        
-        /*tmrTable = new Timer(2000, new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    ReloadTables();
-                }
-                catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            };
-        }); 
-        tmrTable.stop();*/
-        
+       
         utmrTable = new java.util.Timer("RefreshTimer");
         ReloadSettings();
     }
@@ -663,9 +652,11 @@ public class mainwin extends JFrame {
             getSentTableModel().setData(null);
             getSendingTableModel().setData(null);
             
+            getTextStatus().setBackground(defStatusBackground);
             getTextStatus().setText(_("Disconnected."));
         }
         catch (Exception e) {
+            e.printStackTrace();
             // do nothing
         }
     }
@@ -682,8 +673,54 @@ public class mainwin extends JFrame {
         try {
             hyfc.open(myopts.host, myopts.port);
             
-            if (hyfc.user(myopts.user)) 
-                hyfc.pass(myopts.pass);
+            if (hyfc.user(myopts.user)) {                
+                if (myopts.askPassword) {
+                    boolean repeatAsk = true;
+                    do {
+                        String pwd = PasswordDialog.showPasswordDialog(this, _("User password"), MessageFormat.format(_("Please enter the password for user \"{0}\"."), myopts.user));
+                        if (pwd == null) { // User cancelled
+                            hyfc.quit();
+                            hyfc = null;
+                            return;
+                        } else
+                            try {
+                                hyfc.pass(pwd);
+                                repeatAsk = false;
+                            } catch (ServerResponseException e) {
+                                ExceptionDialog.showExceptionDialog(this, _("An error occured in response to the password:"), e);
+                                repeatAsk = true;
+                            }
+                    } while (repeatAsk);
+                } else 
+                    hyfc.pass(myopts.pass);
+            }
+            
+            if ((Boolean)actAdminMode.getValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY)) {
+                boolean authOK = false;
+                if (myopts.askAdminPassword) {
+                    do {
+                        String pwd = PasswordDialog.showPasswordDialog(this, _("Admin password"), MessageFormat.format(_("Please enter the administrative password for user \"{0}\"."), myopts.user));
+                        if (pwd == null) { // User cancelled
+                            break; //Continue in "normal" mode
+                        } else
+                            try {
+                                hyfc.admin(pwd);
+                                authOK = true;
+                            } catch (ServerResponseException e) {
+                                ExceptionDialog.showExceptionDialog(this, _("An error occured in response to the password:"), e);
+                                authOK = false;
+                            }
+                    } while (!authOK);
+                } else {
+                    hyfc.admin(myopts.AdminPassword);
+                    authOK = true; // No error => authOK
+                }
+                if (authOK) {
+                    // A reddish gray
+                    TextStatus.setBackground(new Color(Math.min(defStatusBackground.getRed() + 40, 255), defStatusBackground.getGreen(), defStatusBackground.getBlue()));
+                } else
+                    actAdminMode.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, false);
+            }
             
             hyfc.setPassive(myopts.pasv);
             hyfc.tzone(myopts.tzone.type);
@@ -708,12 +745,12 @@ public class mainwin extends JFrame {
             TableSending.setColumnCfgString(myopts.sendingColState);
             
             // Multi-threaded implementation of the periodic refreshes.
-            // I hope I didn't introduce too much race conditions/deadlocks this way
+            // I hope I didn't introduce too many race conditions/deadlocks this way
             statRefresher = new StatusRefresher();
             utmrTable.schedule(statRefresher, 0, myopts.statusUpdateInterval);
             
             tableRefresher = new TableRefresher(utils.VectorToString(myopts.sentfmt, "|"), utils.VectorToString(myopts.sendingfmt, "|"));
-            // Read the read/unread status after the table contents has been set 
+            // Read the read/unread status *after* the table contents has been set 
             tableRefresher.run();
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
@@ -736,123 +773,6 @@ public class mainwin extends JFrame {
     }
     
     
-    /*private void getStatus() throws FileNotFoundException, IOException, ServerResponseException {
-        Vector stat = hyfc.getList("status");
-        TextStatus.setText(utils.VectorToString(stat, "\n"));
-    }*/
-/*    
-    private void showRecvFile(int row) {
-        try {
-            File tmptif = File.createTempFile("fax", ".tif");
-            tmptif.deleteOnExit();
-            
-            FileOutputStream tmpout = new FileOutputStream(tmptif);
-            
-            hyfc.type(gnu.inet.ftp.FtpClientProtocol.TYPE_IMAGE);
-            hyfc.get("recvq/" + getRecvFilename(row), tmpout);
-            tmpout.close();
-            
-            
-            String execCmd = myopts.faxViewer;
-            
-            if (execCmd.indexOf("%s") >= 0)
-                execCmd = execCmd.replace("%s", tmptif.getPath());
-            else
-                execCmd += " " + tmptif.getPath();
-            
-            Runtime.getRuntime().exec(execCmd);
-            
-            recvSetRead(row, true);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, _("Couldn't open the fax:") + "\n" + e.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE); 
-        }
-        
-    }
-    
-    private void showJobFile(Job job) {
-        try {
-            
-            String[] files = job.getDocumentName().split("\n");
-            ArrayList<FaxStringProperty> availFiles = new ArrayList<FaxStringProperty>();
-            
-            // The last entry is "End of Documents"!
-            for (int i = 0; i < files.length - 1; i++) {
-                String[] fields = files[i].split("\\s");
-                if (fields[0].equalsIgnoreCase("PS") || fields[0].equalsIgnoreCase("PDF")) {
-                    try {
-                        hyfc.stat(fields[1]); // will throw FileNotFoundException if file doesn't exist
-                        availFiles.add(new FaxStringProperty(fields[1], fields[0])); // "abuse" FaxStringProperty to hold fileName <-> type "map"
-                    } catch (FileNotFoundException e) {
-                        // do nothing
-                        //System.err.println(e.toString());
-                    }
-                } else
-                    System.err.println(_("Unknown file format for file: ") + files[i]);
-            }
-            
-            if (availFiles.size() == 0) {
-                JOptionPane.showMessageDialog(this, _("No document files available for this job."), _("Show fax"), JOptionPane.INFORMATION_MESSAGE);
-                return;
-            }
-                
-            FaxStringProperty selFile = null;
-            
-            if (availFiles.size() > 1) { 
-                
-                selFile = (FaxStringProperty)JOptionPane.showInputDialog(this, _("Please select the file to display."), _("Show fax"), JOptionPane.INFORMATION_MESSAGE, null, availFiles.toArray(), availFiles.get(0));
-            
-                if (selFile == null)
-                    return;
-            } else
-                selFile = availFiles.get(0);
-            
-            File tmpFile = File.createTempFile("fax", "." + selFile.type.toLowerCase());
-            tmpFile.deleteOnExit();
-            
-            FileOutputStream tmpout = new FileOutputStream(tmpFile);
-            
-            hyfc.type(gnu.inet.ftp.FtpClientProtocol.TYPE_IMAGE);
-            hyfc.get(selFile.desc, tmpout);
-            tmpout.close();
-            
-            String execCmd = myopts.psViewer;
-            
-            if (execCmd.indexOf("%s") >= 0)
-                execCmd = execCmd.replace("%s", tmpFile.getPath());
-            else
-                execCmd += " " + tmpFile.getPath();
-            
-            Runtime.getRuntime().exec(execCmd);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, _("Couldn't open the fax:") + "\n" + e.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE); 
-        }
-        
-    }*/
-    /*
-    private void recvSetRead(int row, boolean state) {
-        ((RecvYajJob)TableRecv.getRealModel().getJob(TableRecv.getSorter().modelIndex(row))).setRead(state);
-        TableRecv.getSorter().fireTableRowsUpdated(row, row); // HACK to repaint table (calling it in the TableModel would remove the current selection)
-        actFaxRead.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, state);
-    }*/
-    
-   /* private String getRecvFilename(int row) {
-        //return recvTableModel.getValueAt(row, myopts.recvfmt.indexOf(utils.recvfmt_FileName)).toString();
-        return TableRecv.getModel().getValueAt(row, myopts.recvfmt.indexOf(utils.recvfmt_FileName)).toString().trim();
-    }
-    
-    private Job getJob(int row, TooltipJTable table) {
-        int col = table.getRealModel().columns.indexOf(utils.jobfmt_JobID);
-        if (col < 0)
-            return null;
-        
-        try {
-            return hyfc.getJob((Integer)table.getModel().getValueAt(row, col));
-        } catch (Exception e) {
-            return null;
-        }
-    }*/
-    
-    ///////////
     
     /**
      * This method initializes jContentPane
@@ -973,6 +893,7 @@ public class mainwin extends JFrame {
             //TableRecv.setModel(getRecvTableModel());
             TableRecv.setShowGrid(true);
             TableRecv.addMouseListener(getTblMouseListener());
+            TableRecv.addKeyListener(getTblKeyListener());
             TableRecv.getSelectionModel().addListSelectionListener(actChecker);
             TableRecv.setDefaultRenderer(Date.class, getHylaDateRenderer());
             
@@ -1002,7 +923,10 @@ public class mainwin extends JFrame {
                 }
             };
             TextStatus.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
-            TextStatus.setBackground(UIManager.getColor("Label.backgroundColor"));
+            defStatusBackground = UIManager.getColor("control");
+            if (defStatusBackground == null)
+                defStatusBackground = new Color(230, 230, 230);
+            TextStatus.setBackground(defStatusBackground);
             TextStatus.setFont(new java.awt.Font("DialogInput", java.awt.Font.PLAIN, 12));
             TextStatus.setEditable(false);
         }
@@ -1062,6 +986,7 @@ public class mainwin extends JFrame {
             TableSent.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
             TableSent.getSelectionModel().addListSelectionListener(actChecker);
             TableSent.addMouseListener(getTblMouseListener());
+            TableSent.addKeyListener(getTblKeyListener());
             TableSent.setDefaultRenderer(Date.class, getHylaDateRenderer());
         }
         return TableSent;
@@ -1104,6 +1029,7 @@ public class mainwin extends JFrame {
             TableSending.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
             TableSending.getSelectionModel().addListSelectionListener(actChecker);
             TableSending.addMouseListener(getTblMouseListener());
+            TableSending.addKeyListener(getTblKeyListener());
             TableSending.setDefaultRenderer(Date.class, getHylaDateRenderer());
         }
         return TableSending;
@@ -1155,6 +1081,8 @@ public class mainwin extends JFrame {
             menuExtras.add(actPhonebook);
             menuExtras.addSeparator();
             menuExtras.add(getOptionsMenuItem());
+            menuExtras.addSeparator();
+            menuExtras.add(new ActionJCheckBoxMenuItem(actAdminMode));
         }
         return menuExtras;
     }

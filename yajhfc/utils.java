@@ -59,7 +59,7 @@ public class utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005 by Jonas Wolz";
-    public static final String AppVersion = "0.2.3";
+    public static final String AppVersion = "0.2.4";
     public static final String AuthorEMail = "Jonas Wolz &lt;jwolz@freenet.de&gt;";
     public static final String HomepageURL = "http://www.yajhfc.de.vu/"; 
     
@@ -190,7 +190,7 @@ public class utils {
 
 
     public static final FmtItem[] requiredRecvFmts = {
-      recvfmt_FileName  
+        recvfmt_FileName  
     };
     
     public static final int NEWFAX_NOACTION = 0;

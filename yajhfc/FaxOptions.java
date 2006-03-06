@@ -39,7 +39,6 @@ public class FaxOptions {
     public String pass;
     
     public Vector<FmtItem> recvfmt;
-    //public int recvFileCol;
     public Vector<FmtItem> sentfmt;
     public Vector<FmtItem> sendingfmt;
     
@@ -73,6 +72,8 @@ public class FaxOptions {
     
     public FaxIntProperty newFaxAction = utils.newFaxActions[3];
     public boolean pclBug = false;
+    public boolean askPassword = false, askAdminPassword = true;
+    public String AdminPassword = "";
     
     public FaxOptions() {
         this.host = "";
