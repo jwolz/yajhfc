@@ -58,6 +58,7 @@ public class AboutDialog extends JDialog {
     private JPanel aboutPane;
     //private ArrayList<JScrollPane> scrollTxt;
     private ArrayList<JTextArea> textText;
+    private ClipboardPopup clpText;
     
     private void loadFile(JTextArea text, String resName) {
         URL txtURL = AboutDialog.class.getResource(resName);
@@ -85,6 +86,7 @@ public class AboutDialog extends JDialog {
         JTextArea text = new JTextArea();
         text.setEditable(false);
         text.setFont(new Font("DialogInput", java.awt.Font.PLAIN, 12));
+        text.addMouseListener(clpText);
         loadFile(text, resName);
         
         textText.add(text);
@@ -181,7 +183,10 @@ public class AboutDialog extends JDialog {
         setModal(true);
         setSize(500, 380);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        clpText = new ClipboardPopup();
         setContentPane(getjContentPane());
+        
+        getRootPane().setDefaultButton(buttonOK);
         setLocationByPlatform(true);
     }
     

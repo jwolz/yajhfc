@@ -26,12 +26,17 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Vector;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -47,7 +52,10 @@ import javax.swing.JPasswordField;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class OptionsWin extends JDialog {
     
@@ -62,9 +70,9 @@ public class OptionsWin extends JDialog {
     private JButton ButtonOK, ButtonCancel;
     
     private JTextField textNotifyAddress, textHost, textUser, /*textViewer,*/ textPort;
-    private JPasswordField textPassword;
+    private JPasswordField textPassword, textAdminPassword;
     private JComboBox comboTZone, comboNotify, comboPaperSize, comboResolution, comboNewFaxAction;
-    private JCheckBox checkPasv, checkPCLBug;
+    private JCheckBox checkPasv, checkPCLBug, checkAskPassword, checkAskAdminPassword;
     private JSpinner spinMaxTry, spinMaxDial;
     //private JButton buttonBrowseViewer;
     private FileTextField ftfFaxViewer, ftfPSViewer;
@@ -89,7 +97,7 @@ public class OptionsWin extends JDialog {
     }
     
     private void initialize() {
-        this.setSize(600, 400);
+        this.setSize(600, 430);
         this.setResizable(false);
         this.setTitle(_("Options"));
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -104,6 +112,7 @@ public class OptionsWin extends JDialog {
         textPort.setText(String.valueOf(foEdit.port));
         textUser.setText(foEdit.user);
         textPassword.setText(foEdit.pass);
+        textAdminPassword.setText(foEdit.AdminPassword);
         ftfFaxViewer.setText(foEdit.faxViewer);
         ftfPSViewer.setText(foEdit.psViewer);
         
@@ -115,6 +124,8 @@ public class OptionsWin extends JDialog {
         
         checkPasv.setSelected(foEdit.pasv);
         checkPCLBug.setSelected(foEdit.pclBug);
+        checkAskPassword.setSelected(foEdit.askPassword);
+        checkAskAdminPassword.setSelected(foEdit.askAdminPassword);
         
         spinMaxDial.setValue(Integer.valueOf(foEdit.maxDial));
         spinMaxTry.setValue(Integer.valueOf(foEdit.maxTry));
@@ -164,12 +175,15 @@ public class OptionsWin extends JDialog {
             
             PanelButtons.add(Box.createRigidArea(new Dimension(20, 1)));
             
-            ButtonCancel = new JButton(_("Cancel"));
-            ButtonCancel.addActionListener(new ActionListener() {
-               public void actionPerformed(ActionEvent e) {
-                   dispose();
-                } 
-            });
+            Action actCancel = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    dispose();
+                };
+            };
+            actCancel.putValue(Action.NAME, _("Cancel"));
+            ButtonCancel = new JButton(actCancel);
+            ButtonCancel.getActionMap().put("EscapePressed", actCancel);
+            ButtonCancel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "EscapePressed");
             ButtonCancel.setPreferredSize(buttonSize);
             PanelButtons.add(ButtonCancel);
         }
@@ -192,8 +206,8 @@ public class OptionsWin extends JDialog {
     private JPanel getPanelCommon() {        
         if (PanelCommon == null) {
             double[][] tablelay = {
-                    {border, TableLayout.FILL, border, 0.33, border},
-                    { border, 0.55, border, TableLayout.FILL, border }
+                    {border, TableLayout.FILL, border, 0.35, border},
+                    { border, 0.65, border, TableLayout.FILL, border }
             };
             PanelCommon = new JPanel(new TableLayout(tablelay));
             
@@ -223,11 +237,11 @@ public class OptionsWin extends JDialog {
     private JPanel getPanelServer() {
         if (panelServer == null) {
             double[][] tablelay = {
-                    {border, 0.25, border, 0.25, border, 0.25, border, TableLayout.FILL, border},
-                    new double[8]
+                    {border, 0.22, border, 0.22, border, 0.22, border, TableLayout.FILL, border},
+                    new double[11]
             };
             double rowh = 1 / (double)(tablelay[1].length - 2);
-            tablelay[1][0] = border;
+            tablelay[1][0] = 0;
             tablelay[1][tablelay[1].length - 1] = border;
             Arrays.fill(tablelay[1], 1, tablelay[1].length - 2, rowh);
             tablelay[1][tablelay[1].length - 2] = TableLayout.FILL;
@@ -244,15 +258,32 @@ public class OptionsWin extends JDialog {
             textUser = new JTextField();
             textUser.addMouseListener(clpDef);
             textPassword = new JPasswordField();
+            textAdminPassword = new JPasswordField();
+            checkAskPassword = new JCheckBox(_("Always ask"));
+            checkAskPassword.addItemListener(new ItemListener() {
+               public void itemStateChanged(ItemEvent e) {
+                   textPassword.setEnabled(!checkAskPassword.isSelected());
+                } 
+            });
+            checkAskAdminPassword = new JCheckBox(_("Always ask"));
+            checkAskAdminPassword.addItemListener(new ItemListener() {
+                public void itemStateChanged(ItemEvent e) {
+                    textAdminPassword.setEnabled(!checkAskAdminPassword.isSelected());
+                 } 
+             });
             
             checkPasv = new JCheckBox(_("Use passive mode to fetch faxes"));
             
             addWithLabel(panelServer, textHost, _("Host name:"), "1, 2, 5, 2, f, c");
-            addWithLabel(panelServer, textPort, _("Port:"), "7, 2, f, c");
-            addWithLabel(panelServer, textUser, _("Username:"), "1, 4, 3, 4, f, c");
-            addWithLabel(panelServer, textPassword, _("Password:"), "5, 4, 7, 4, f, c");
+            addWithLabel(panelServer, textPort, _("Port:"), "7, 4, f, c");
+            addWithLabel(panelServer, textUser, _("Username:"), "1, 4, 5, 4, f, c");
+            //addWithLabel(panelServer, textPassword, _("Password:"), "5, 4, 7, 4, f, c");
+            addWithLabel(panelServer, textPassword, _("Password:"), "1, 6, 5, 6, f, c");
+            panelServer.add(checkAskPassword, "6, 6, 7, 6, f, c");
+            addWithLabel(panelServer, textAdminPassword, _("Admin Password:"), "1, 8, 5, 8, f, c");
+            panelServer.add(checkAskAdminPassword, "6, 8, 7, 8, f, c");
             
-            panelServer.add(checkPasv, "1, 6, 7, 6");
+            panelServer.add(checkPasv, "1, 9, 7, 9");
         }
         return panelServer;
     }
@@ -360,7 +391,7 @@ public class OptionsWin extends JDialog {
                     new double[6]
             };
             double rowh = 1 / (double)(tablelay[1].length - 2);
-            tablelay[1][0] = border;
+            tablelay[1][0] = 0;
             tablelay[1][tablelay[1].length - 1] = border;
             Arrays.fill(tablelay[1], 1, tablelay[1].length - 2, rowh);
             tablelay[1][tablelay[1].length - 2] = TableLayout.FILL;
@@ -456,6 +487,7 @@ public class OptionsWin extends JDialog {
                 foEdit.pass = textPassword.getText();
                 foEdit.faxViewer = ftfFaxViewer.getText();
                 foEdit.psViewer = ftfPSViewer.getText();
+                foEdit.AdminPassword = textAdminPassword.getText();
                 
                 foEdit.notifyWhen = (FaxStringProperty)comboNotify.getSelectedItem();
                 foEdit.paperSize = (PaperSize)comboPaperSize.getSelectedItem();
@@ -465,6 +497,8 @@ public class OptionsWin extends JDialog {
                 
                 foEdit.pasv = checkPasv.isSelected();
                 foEdit.pclBug = checkPCLBug.isSelected();
+                foEdit.askPassword = checkAskPassword.isSelected();
+                foEdit.askAdminPassword = checkAskAdminPassword.isSelected();
                 
                 foEdit.recvfmt = recvfmt;
                 foEdit.sentfmt = sentfmt;

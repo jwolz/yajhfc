@@ -9,6 +9,7 @@ Some HylaFAX versions incorrectly report a file type of "PCL" for all documents
 associated with a job. If this checkbox is checked, YajHFC tries to guess the
 file type using the extension if PCL is reported (which usually works pretty well).
 
+
 Q: Where do I get a fax viewer for Windows?
 A: 
 Generally you can use any program that can display TIFF files, although 
@@ -33,6 +34,13 @@ can display TIFF files, just search your distribution's package database
 (xloadimage does *not* work for me, however).
 
 
+Q: What should I use as a fax viewer on Mac OS X?
+A:
+Just enter "open %s" into the "Command line for fax viewer" box.
+The faxes should open in the default application now.
+Thanks to Scott Harris for figuring this out.
+
+
 Q: Where do I get a Postscript viewer?
 A:
 Windows: Use Ghostview from http://www.cs.wisc.edu/~ghost/
@@ -47,6 +55,18 @@ The templates have to be in the same special Postscript format the Hylafax
 such files:
 http://www.hylafax.org/HylaFAQ/Q202.html
 http://www.hylafax.org/howto/tweaking.html
+
+
+Q: Why are passwords stored in clear text?
+A:
+Simply because there isn't any method that is much better.
+YajHFC could encode/"encrypt" them somehow before storing, but if it did, 
+you could always look at the source code to find out how to decrypt them.
+(even if YajHFC was closed source software you could still disassemble it
+or experiment a bit to find that out).
+The only secure method would require you to enter a master password every time
+you start YajHFC, but in my opinion that would not provide a improvement over
+entering the "real" password.
 
 
 Q: What does the column XYZ mean?

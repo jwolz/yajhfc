@@ -29,9 +29,12 @@ import javax.swing.table.AbstractTableModel;
 
 public class MyTableModel extends AbstractTableModel {
     
-    protected String[][] data;
-    public Vector<FmtItem> columns;
+    protected String[][] rawData;
     protected YajJob[] jobs;
+    protected int rowCount = 0;
+    
+    public Vector<FmtItem> columns;
+    public YajJobFilter jobFilter = null;
     
     
     /**
@@ -50,11 +53,28 @@ public class MyTableModel extends AbstractTableModel {
     }
     
     public void setData(String[][] newData) {
-        if (!Arrays.deepEquals(data, newData)) {
-            data = newData;
-            jobs = new YajJob[data.length];
-            for (int i=0; i < data.length; i++) {
-                jobs[i] = createYajJob(data[i]);
+        if (!Arrays.deepEquals(rawData, newData)) {
+            rawData = newData;
+            if (newData != null) {
+                rowCount = newData.length;
+                int deltaI = 0;
+                
+                if (jobFilter != null)
+                    jobFilter.initFilter(columns);
+                
+                jobs = new YajJob[newData.length];
+                for (int i=0; i < newData.length; i++) {
+                    YajJob newJob = createYajJob(rawData[i]);
+                    if (jobFilter == null || jobFilter.jobIsVisible(newJob)) {
+                        jobs[i - deltaI] = newJob;
+                    } else { // Skip job
+                        rowCount--;
+                        deltaI++;
+                    }
+                }
+            } else {
+                jobs = null;
+                rowCount = 0;
             }
             fireTableDataChanged();
         }
@@ -67,10 +87,11 @@ public class MyTableModel extends AbstractTableModel {
     }
     
     public int getRowCount() {
-        if (data == null)
+        /*if (data == null)
             return 0;
         else
-            return data.length;
+            return data.length;*/
+        return rowCount;
     }
     
     public String getStringAt(int rowIndex, int columnIndex) {

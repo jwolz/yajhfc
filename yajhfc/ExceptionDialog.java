@@ -22,6 +22,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 public class ExceptionDialog extends JDialog implements ActionListener {
@@ -39,7 +40,7 @@ public class ExceptionDialog extends JDialog implements ActionListener {
     private void initialize(String message, Exception exc) {
         final int border = 12;
         double[][] dLay = {
-                { border, 400, border },
+                { border, TableLayout.PREFERRED, border, 400, border },
                 { border, TableLayout.PREFERRED, border, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, border, TableLayout.PREFERRED, border }
         };
         
@@ -56,6 +57,8 @@ public class ExceptionDialog extends JDialog implements ActionListener {
         boxButtons.add(Box.createHorizontalStrut(border));
         boxButtons.add(btnDetails);
         boxButtons.add(Box.createHorizontalGlue());
+        
+        JLabel lblIcon = new JLabel(UIManager.getIcon("OptionPane.errorIcon"));
         
         lblText = new JLabel("<html>" + message + "</html>");
         
@@ -76,6 +79,7 @@ public class ExceptionDialog extends JDialog implements ActionListener {
         textStacktrace.setEditable(false);
         textStacktrace.addMouseListener(clpDef);
         textStacktrace.setRows(8);
+        textStacktrace.setColumns(40);
         
         scrollStacktrace = new JScrollPane(textStacktrace, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         
@@ -97,12 +101,14 @@ public class ExceptionDialog extends JDialog implements ActionListener {
         contentPane.add(Box.createHorizontalStrut(border), BorderLayout.EAST);
         contentPane.add(boxLabels, BorderLayout.CENTER); */
         
-        contentPane.add(lblText, "1, 1");
+        contentPane.add(lblIcon, "1, 1, 1, 3");
+        contentPane.add(lblText, "3, 1");
         if (lblExceptionText != null)
-            contentPane.add(lblExceptionText, "1, 3");
-        contentPane.add(boxButtons, "1, 7");
+            contentPane.add(lblExceptionText, "3, 3");
+        contentPane.add(boxButtons, "1, 7, 3, 7");
         
         this.setResizable(false);
+        this.getRootPane().getRootPane().setDefaultButton(btnOK);
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         this.setContentPane(contentPane);
     }
@@ -113,8 +119,8 @@ public class ExceptionDialog extends JDialog implements ActionListener {
         } else if (e.getSource() == btnDetails) {
             detailState = !detailState;
             if (detailState) {
-                contentPane.add(strutStacktrace, "1, 4");
-                contentPane.add(scrollStacktrace, "1, 5");
+                contentPane.add(strutStacktrace, "1, 4, 3, 4");
+                contentPane.add(scrollStacktrace, "1, 5, 3, 5");
             } else {
                 contentPane.remove(strutStacktrace);
                 contentPane.remove(scrollStacktrace);
@@ -124,25 +130,33 @@ public class ExceptionDialog extends JDialog implements ActionListener {
         }
     }
     
+    private void doublePack() {
+        this.pack();
+        // Pack Dialog again later to work around some bug I don't understand...
+        SwingUtilities.invokeLater(new Runnable() {
+           public void run() {
+                 ExceptionDialog.this.pack();
+            } 
+        });        
+    }
  
     public ExceptionDialog(Dialog owner, String title, String message, Exception exc) {
         super(owner, title, true);
         initialize(message, exc);
         this.setLocationRelativeTo(owner);
-        this.pack();
+        this.doublePack();
     }
     
     public ExceptionDialog(Frame owner, String title, String message, Exception exc) {
         super(owner, title, true);
         initialize(message, exc);
         this.setLocationRelativeTo(owner);
-        this.pack();
+        this.doublePack();
     }
 
     public static void showExceptionDialog(Frame owner, String title, String message, Exception exc) {
         ExceptionDialog eDlg = new ExceptionDialog(owner, title, message, exc);
         eDlg.setVisible(true);
-        eDlg.invalidate();
     }
 
     public static void showExceptionDialog(Frame owner, String message, Exception exc) {
@@ -152,7 +166,6 @@ public class ExceptionDialog extends JDialog implements ActionListener {
     public static void showExceptionDialog(Dialog owner, String title, String message, Exception exc) {
         ExceptionDialog eDlg = new ExceptionDialog(owner, title, message, exc);
         eDlg.setVisible(true);
-        eDlg.invalidate();
     }
 
     public static void showExceptionDialog(Dialog owner, String message, Exception exc) {
