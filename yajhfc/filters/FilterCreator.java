@@ -157,7 +157,7 @@ public class FilterCreator {
         if (flt1[0].equals("|")) {
             af = new OrFilter();
         } else if (flt1[0].equals("&")) {
-            af = new OrFilter();
+            af = new AndFilter();
         } else {
             System.err.println("Unknown And/Or specification in stringToFilter: " + flt1[0]);
             return null;
