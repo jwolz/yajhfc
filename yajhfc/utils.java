@@ -1,7 +1,7 @@
 package yajhfc;
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005 Jonas Wolz
+ * Copyright (C) 2005-2006 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -58,7 +58,7 @@ import javax.swing.text.JTextComponent;
 public class utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
-    public static final String AppCopyright = "Copyright © 2005 by Jonas Wolz";
+    public static final String AppCopyright = "Copyright © 2005-2006 by Jonas Wolz";
     public static final String AppVersion = "0.2.4";
     public static final String AuthorEMail = "Jonas Wolz &lt;jwolz@freenet.de&gt;";
     public static final String HomepageURL = "http://www.yajhfc.de.vu/"; 
@@ -70,6 +70,9 @@ public class utils {
     
     public static final FmtItem jobfmt_JobID =
         new FmtItem("j", _("ID"), _("Job identifier"), Integer.class);
+    
+    public static final FmtItem jobfmt_Owner =
+        new FmtItem("o", _("Owner"),  _("Job owner"));
     
     public static final FmtItem[] jobfmts =
     { 
@@ -113,7 +116,7 @@ public class utils {
             new FmtItem("l", _("Page length"), _("Page length in mm"), Integer.class), 
             new FmtItem("m", _("Modem"), _("Assigned modem")), 
             new FmtItem("n", _("Notification"), _("E-mail notification handling (one-character symbol)")), 
-            new FmtItem("o", _("Owner"),  _("Job owner")), 
+            jobfmt_Owner, 
             new FmtItem("p", _("# pages"), _("# pages transmitted"), Integer.class), 
             new FmtItem("q", _("Retry time"), _("Job retry time (MM::SS)")/*, new HylaDateField("mm:ss", _("mm:ss"))*/), 
             new FmtItem("r", _("Resolution"), _("Document resolution in lines/inch"), Integer.class), 
@@ -130,6 +133,9 @@ public class utils {
     public static final FmtItem recvfmt_FileName 
         = new FmtItem("f", _("Filename"), _("Document filename (relative to the recvq directory)"));
     
+    public static final FmtItem recvfmt_Owner
+        = new FmtItem("o", _("Owner"), _("File owner"));
+    
     public static final FmtItem[] recvfmts = {
             new FmtItem("Y", _("Time/Date"),  _("Extended representation of the time when the receive happened"), new HylaDateField("yyyy:MM:dd HH:mm:ss", _("dd/MM/yyyy HH:mm:ss"))), 
             new FmtItem("a", _("SubAddress"), _("SubAddress received from sender (if any)")), 
@@ -144,7 +150,7 @@ public class utils {
             new FmtItem("l", _("Page length"), _("Page length in mm"), Integer.class), 
             new FmtItem("m", _("Fax Protection"), _("Fax-style protection mode string (``-rwxrwx'')")), 
             new FmtItem("n", _("File size"), _("File size (number of bytes)"), Integer.class), 
-            new FmtItem("o", _("Owner"), _("File owner")), 
+            recvfmt_Owner, 
             new FmtItem("p", _("Pages"), _("Number of pages in document"), Integer.class), 
             new FmtItem("q", _("Protection"), _("UNIX-style protection flags")), 
             new FmtItem("r", _("Resolution"), _("Resolution of received data"), Integer.class), 
@@ -294,6 +300,51 @@ public class utils {
             }
         }
         return confdir;
+    }
+    
+    /***
+     * Escapes all forbiddenChars using escapeChar + a letter between A and Z. 
+     * Therefore forbiddenChars should be shorter than 26 characters. 
+     * escapeChar should not be contained in forbiddenChar and not a letter between A and Z.
+     * @param input
+     * @param forbiddenChars
+     * @param escapeChar
+     * @return
+     */
+    public static String escapeChars(String input, String forbiddenChars, char escapeChar) {
+        StringBuilder sBuf = new StringBuilder(input.length() * 2);
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+            if (c == escapeChar) {
+                sBuf.append(escapeChar).append(escapeChar);
+            } else {
+                int idx = forbiddenChars.indexOf(c);
+                if (idx >= 0) {
+                    sBuf.append(escapeChar);
+                    sBuf.append((char)('A' + idx));
+                } else {
+                    sBuf.append(c);
+                }
+            } 
+        }
+        return sBuf.toString();
+    }
+    
+    public static String unEscapeChars(String input, String forbiddenChars, char escapeChar) {
+        StringBuilder sBuf = new StringBuilder(input.length());
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+            if (c == escapeChar) {
+                c = input.charAt(++i);
+                if (c == escapeChar) 
+                    sBuf.append(escapeChar);
+                else
+                    sBuf.append(forbiddenChars.charAt(c - 'A'));
+            } else {
+                sBuf.append(c);
+            } 
+        }
+        return sBuf.toString();
     }
 }
 

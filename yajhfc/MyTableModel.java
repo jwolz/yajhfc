@@ -1,7 +1,7 @@
 package yajhfc;
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005 Jonas Wolz
+ * Copyright (C) 2005-2006 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,10 +19,7 @@ package yajhfc;
  */
 
 import java.awt.Font;
-import java.text.ParseException;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
@@ -30,12 +27,29 @@ import javax.swing.table.AbstractTableModel;
 public class MyTableModel extends AbstractTableModel {
     
     protected String[][] rawData;
-    protected YajJob[] jobs;
+    /**
+     * jobs: *All* Jobs from the HylaFAX server
+     */
+    protected YajJob[] jobs; 
+    protected YajJobFilter jobFilter = null;
     protected int rowCount = 0;
+    /**
+     * visibleJobs: Only the visible Jobs (after jobFilter has been applied).
+     * n.b.: if jobFilter == null then visibleJobs == jobs
+     */
+    protected YajJob[] visibleJobs;
     
     public Vector<FmtItem> columns;
-    public YajJobFilter jobFilter = null;
     
+    
+    public void setJobFilter(YajJobFilter jobFilter) {
+        this.jobFilter = jobFilter;
+        refreshVisibleJobs();
+    }
+    
+    public YajJobFilter getJobFilter() {
+        return jobFilter;
+    }
     
     /**
      * Returns a custom font for the table cell.
@@ -56,29 +70,44 @@ public class MyTableModel extends AbstractTableModel {
         if (!Arrays.deepEquals(rawData, newData)) {
             rawData = newData;
             if (newData != null) {
-                rowCount = newData.length;
-                int deltaI = 0;
-                
-                if (jobFilter != null)
-                    jobFilter.initFilter(columns);
-                
                 jobs = new YajJob[newData.length];
                 for (int i=0; i < newData.length; i++) {
-                    YajJob newJob = createYajJob(rawData[i]);
-                    if (jobFilter == null || jobFilter.jobIsVisible(newJob)) {
-                        jobs[i - deltaI] = newJob;
-                    } else { // Skip job
-                        rowCount--;
-                        deltaI++;
-                    }
+                    jobs[i] = createYajJob(rawData[i]);
                 }
             } else {
                 jobs = null;
-                rowCount = 0;
             }
-            fireTableDataChanged();
+            //fireTableDataChanged();
+            refreshVisibleJobs();
         }
     }
+    
+    /**
+     * Reloads the visible Jobs array. Called if either jobs[] or jobFilter has changed.
+     */
+    protected void refreshVisibleJobs() {
+        if (jobs == null) {
+            rowCount = 0;
+            visibleJobs = null;
+        } else 
+            if (jobFilter == null) {
+                visibleJobs = jobs;
+                rowCount = jobs.length;
+            } else {
+                rowCount = 0;
+                visibleJobs = new YajJob[jobs.length];
+                jobFilter.initFilter(columns);
+                
+                for (int i = 0; i < jobs.length; i++) {
+                    if (jobFilter.jobIsVisible(jobs[i])) {
+                        visibleJobs[rowCount] = jobs[i];
+                        rowCount++;
+                    }
+                }
+            }
+        fireTableDataChanged();
+    }
+    
     public int getColumnCount() {
         if (columns != null)
             return columns.size();
@@ -94,15 +123,26 @@ public class MyTableModel extends AbstractTableModel {
         return rowCount;
     }
     
+    public int getRealRowCount() {
+        if (jobs == null)
+            return 0;
+        else
+            return jobs.length;
+    }
+    
     public String getStringAt(int rowIndex, int columnIndex) {
-        return jobs[rowIndex].getStringData(columnIndex);
+        return visibleJobs[rowIndex].getStringData(columnIndex);
     }
     
     public Object getValueAt(int rowIndex, int columnIndex) {
-        return jobs[rowIndex].getData(columnIndex);
+        return visibleJobs[rowIndex].getData(columnIndex);
     }
     
     public YajJob getJob(int rowIndex) {
+        return visibleJobs[rowIndex];
+    }
+    
+    public YajJob getRealJob(int rowIndex) {
         return jobs[rowIndex];
     }
     

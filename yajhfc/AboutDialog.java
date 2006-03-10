@@ -1,7 +1,7 @@
 package yajhfc;
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005 Jonas Wolz
+ * Copyright (C) 2005-2006 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,6 +30,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Properties;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -57,7 +59,6 @@ public class AboutDialog extends JDialog {
     private JTabbedPane tabMain;
     private JPanel aboutPane;
     //private ArrayList<JScrollPane> scrollTxt;
-    private ArrayList<JTextArea> textText;
     private ClipboardPopup clpText;
     
     private void loadFile(JTextArea text, String resName) {
@@ -89,8 +90,6 @@ public class AboutDialog extends JDialog {
         text.addMouseListener(clpText);
         loadFile(text, resName);
         
-        textText.add(text);
-        
         JScrollPane scroll = new JScrollPane(text);
         return scroll;
         
@@ -103,6 +102,24 @@ public class AboutDialog extends JDialog {
             scrollLicense = new JScrollPane(textLicense);          
         }
         return scrollLicense; */
+    }
+    
+    private JScrollPane addSysPropTxt() {
+        JTextArea text = new JTextArea();
+        text.setEditable(false);
+        text.setFont(new Font("DialogInput", java.awt.Font.PLAIN, 12));
+        text.addMouseListener(clpText);
+
+        Properties sp = System.getProperties();
+        Enumeration e = sp.propertyNames();
+        while (e.hasMoreElements()) {
+            String sKey = (String)e.nextElement();
+            text.append(sKey + "=" + sp.getProperty(sKey) + "\n");
+        }
+        text.setCaretPosition(0);
+        
+        JScrollPane scroll = new JScrollPane(text);
+        return scroll;
     }
     
     private JPanel getAboutPane() {
@@ -200,6 +217,7 @@ public class AboutDialog extends JDialog {
         case ABOUT:
             tabMain.addTab(_("About"), getAboutPane());
             tabMain.addTab(_("License"), addScrollTxt("/COPYING"));
+            tabMain.addTab(_("System properties"), addSysPropTxt());
             this.setTitle(MessageFormat.format(_("About {0}"), utils.AppShortName));
             break;
         case READMES:
@@ -215,7 +233,6 @@ public class AboutDialog extends JDialog {
     
     public AboutDialog(Frame owner) {
         super(owner);
-        textText = new ArrayList<JTextArea>();
         
         initialize();
     }

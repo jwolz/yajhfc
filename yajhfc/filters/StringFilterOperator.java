@@ -1,10 +1,7 @@
-package yajhfc;
-
-import java.util.Vector;
-
+package yajhfc.filters;
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005 Jonas Wolz
+ * Copyright (C) 2005-2006 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,27 +17,30 @@ import java.util.Vector;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+import yajhfc.utils;
 
-public interface YajJobFilter {
-    /**
-     * Should return true if job is to be shown (i.e. not filtered), false otherwise. 
-     * @param job
-     * @return
-     */
-    public boolean jobIsVisible(YajJob job);
+
+public enum StringFilterOperator {
+    EQUAL(utils._("equals")),
+    NOTEQUAL(utils._("not equals")),
+    CONTAINS(utils._("contains")),
+    STARTSWITH(utils._("starts with")),
+    ENDSWITH(utils._("ends with")),
+    MATCHES(utils._("matches"));
     
-    /**
-     * Initialize filter. It is guaranteed that the columns or filter properties
-     * are not changed during the subsequent jobIsVisible() calls.
-     * @param columns
-     */
-    public void initFilter(Vector<FmtItem> columns);
+    private final String description;
     
-    /**
-     * Validates this filter against the new set of columns.
-     * Returns true if this filter still applies to them, false if it should be removed.
-     * @param columns
-     * @return
-     */
-    public boolean validate(Vector<FmtItem> columns);
+    StringFilterOperator(String description) {
+        this.description = description;
+    }
+    
+    public String description() {
+        return description;
+    }
+    
+    @Override
+    public String toString() {
+        return description;
+    }
 }
+
