@@ -706,6 +706,7 @@ public class mainwin extends JFrame {
             getTextStatus().setText(_("Disconnected."));
             
             menuView.setEnabled(false);
+            this.setTitle("Disconnected - " + utils.AppName);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -747,6 +748,8 @@ public class mainwin extends JFrame {
                     hyfc.pass(myopts.pass);
             }
             
+            this.setTitle(myopts.user + "@" + myopts.host + " - " + utils.AppName  );
+            
             if ((Boolean)actAdminMode.getValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY)) {
                 boolean authOK = false;
                 if (myopts.askAdminPassword) {
@@ -770,6 +773,7 @@ public class mainwin extends JFrame {
                 if (authOK) {
                     // A reddish gray
                     TextStatus.setBackground(new Color(Math.min(defStatusBackground.getRed() + 40, 255), defStatusBackground.getGreen(), defStatusBackground.getBlue()));
+                    this.setTitle(myopts.user + "@" + myopts.host + " (admin) - " +utils.AppName);
                 } else
                     actAdminMode.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, false);
             }

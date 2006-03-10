@@ -110,12 +110,14 @@ public class PasswordDialog extends JDialog {
 
     public PasswordDialog(Frame owner, String title, String prompt)  {
         super(owner, title, true);
-        initialize(prompt);        
+        initialize(prompt);       
+        this.setLocationRelativeTo(owner);
     }
 
     public PasswordDialog(Dialog owner, String title, String prompt)  {
         super(owner, title, true);
         initialize(prompt);
+        this.setLocationRelativeTo(owner);
     }
     
     public static String showPasswordDialog(Frame owner, String title, String prompt) {

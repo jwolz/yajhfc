@@ -1,4 +1,4 @@
-README for YajHFC 0.2.3
+README for YajHFC 0.2.4
 =======================
 
 ABOUT
@@ -28,9 +28,9 @@ Requirements:
 * Some program to view TIFF files (also see FAQ.txt for this)
 * Optional: A Postscript viewer (e.g. Ghostview)
 
-To install YajHFC just download the yajhfc-0_2_3.jar file to some folder on your
+To install YajHFC just download the yajhfc-0_2_4.jar file to some folder on your
 file system.
-To execute it, use: "java -jar yajhfc-0_2_3.jar"
+To execute it, use: "java -jar yajhfc-0_2_4.jar"
 (In Windows you usually can just double click the jar file as well.)
 
 LICENSE
@@ -60,6 +60,11 @@ YajHFC was originally written as a first more complicated
 
 CHANGES
 -------
+
+0.2.4:
+- Support for filters
+- Support for admin mode
+
 0.2.3:
 - Support for multiple numbers/files for sent faxes
 - Forwarding/saving faxes
