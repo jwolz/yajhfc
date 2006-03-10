@@ -1,7 +1,7 @@
 package yajhfc;
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005 Jonas Wolz
+ * Copyright (C) 2005-2006 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -103,6 +103,7 @@ public class PasswordDialog extends JDialog {
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         this.getRootPane().setDefaultButton(btnOK);
         this.pack();
+        this.setLocationByPlatform(true);
     }
     
     

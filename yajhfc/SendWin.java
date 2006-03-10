@@ -1,7 +1,7 @@
 package yajhfc;
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005 Jonas Wolz
+ * Copyright (C) 2005-2006 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -87,7 +87,7 @@ public class SendWin extends JDialog {
     private JSpinner SpinKillTime = null;
     private JSpinner SpinMaxTries = null;
     
-    private JLabel lblFilename = null;
+    //private JLabel lblFilename = null;
     private FileTextField ftfFilename = null;
     
     private TextFieldList tflNumbers, tflFiles;    
@@ -316,7 +316,7 @@ public class SendWin extends JDialog {
             clpFiles.getPopupMenu().add(tflFiles.getAddAction());
             getFtfFilename().getJTextField().addMouseListener(clpFiles);
             
-            lblFilename = addWithLabel(paneCommon, getFtfFilename(), _("File(s):"), "1, 2, 3, 2, F, C");
+            /*lblFilename = */addWithLabel(paneCommon, getFtfFilename(), _("File(s):"), "1, 2, 3, 2, F, C");
             paneCommon.add(tflFiles, "1, 3, 3, 3, F, F");
             
             Box box = Box.createHorizontalBox();
@@ -586,9 +586,18 @@ public class SendWin extends JDialog {
                         cov.pageCount = 0;
                     }
                     
-                    if (checkUseCover.isSelected() && checkCustomCover.isSelected() && (!(new File(ftfCustomCover.getText()).canRead()))) {
-                        JOptionPane.showMessageDialog(SendWin.this, MessageFormat.format(_("Can not read file \"{0}\"!"), ftfCustomCover.getText()), _("Error"), JOptionPane.WARNING_MESSAGE);
-                        return;
+                    if (checkUseCover.isSelected()) {
+                        if (checkCustomCover.isSelected()) {
+                            if (!(new File(ftfCustomCover.getText()).canRead())) {
+                                JOptionPane.showMessageDialog(SendWin.this, MessageFormat.format(_("Can not read file \"{0}\"!"), ftfCustomCover.getText()), _("Error"), JOptionPane.WARNING_MESSAGE);
+                                return;
+                            }
+                        } else if (fo.useCustomDefaultCover) {
+                            if (!(new File(fo.defaultCover).canRead())) {
+                                JOptionPane.showMessageDialog(SendWin.this, MessageFormat.format(_("Can not read default cover page file \"{0}\"!"), fo.defaultCover), _("Error"), JOptionPane.WARNING_MESSAGE);
+                                return;
+                            }
+                        }
                     }
                     
                     hyfc.type(HylaFAXClient.TYPE_IMAGE);
@@ -627,6 +636,8 @@ public class SendWin extends JDialog {
                         
                         if (checkCustomCover.isSelected())
                             cov.coverTemplate = new File(ftfCustomCover.getText());
+                        else if (fo.useCustomDefaultCover)
+                            cov.coverTemplate = new File(fo.defaultCover);
                         
                         // Create cover:
                         coverFile = File.createTempFile("cover", ".tmp");

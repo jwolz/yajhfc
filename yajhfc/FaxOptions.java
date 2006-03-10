@@ -1,7 +1,7 @@
 package yajhfc;
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005 Jonas Wolz
+ * Copyright (C) 2005-2006 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -53,7 +53,7 @@ public class FaxOptions {
     public int maxTry; 
     public int maxDial;
     
-    public Rectangle mainWinBounds, phoneWinBounds;
+    public Rectangle mainWinBounds, phoneWinBounds, customFilterBounds = null;
     public Point sendWinPos, optWinPos;
     public String recvColState, sentColState, sendingColState/*, recvReadState*/;
     public int mainwinLastTab;
@@ -74,6 +74,11 @@ public class FaxOptions {
     public boolean pclBug = false;
     public boolean askPassword = false, askAdminPassword = true;
     public String AdminPassword = "";
+    
+    public String recvFilter = null, sentFilter = null, sendingFilter = null;
+    
+    public String defaultCover = null;
+    public boolean useCustomDefaultCover = false;
     
     public FaxOptions() {
         this.host = "";

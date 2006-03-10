@@ -1,10 +1,7 @@
-package yajhfc;
-
-import java.util.Vector;
-
+package yajhfc.filters;
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005 Jonas Wolz
+ * Copyright (C) 2005-2006 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,31 +17,22 @@ import java.util.Vector;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+import yajhfc.YajJob;
+import yajhfc.YajJobFilter;
 
-/**
- * A filter that displays only jobs where the value in the specified column is
- * equal to the compareValue.
- */
-public class StringEqualsFilter implements YajJobFilter {
-
-    public String compareValue = null;
-    public FmtItem column = null;
-    
-    protected int colIdx = -1;
-    
-    public StringEqualsFilter(FmtItem col, String compareValue) {
-        super();
-        this.column = col;
-        this.compareValue = compareValue;
-    }
+public class OrFilter extends AndFilter {
 
     public boolean jobIsVisible(YajJob job) {
-        if (column == null || compareValue == null || colIdx < 0)
+        if (children.size() == 0)
             return true;
-        return job.getStringData(colIdx).equals(compareValue);
+        
+        boolean retVal = false;
+        for (YajJobFilter yjf: children) {
+            retVal = retVal || yjf.jobIsVisible(job);
+            if (retVal)
+                return true;
+        }
+        return retVal;
     }
 
-    public void initFilter(Vector<FmtItem> columns) {
-        colIdx = columns.indexOf(column);
-    }
 }

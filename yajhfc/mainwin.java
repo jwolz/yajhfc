@@ -1,7 +1,7 @@
 package yajhfc;
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005 Jonas Wolz
+ * Copyright (C) 2005-2006 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,6 +28,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -52,6 +53,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -61,6 +63,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -73,7 +76,13 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.plaf.basic.BasicBorders.RadioButtonBorder;
 import javax.swing.table.DefaultTableCellRenderer;
+
+import yajhfc.filters.CustomFilterDialog;
+import yajhfc.filters.FilterCreator;
+import yajhfc.filters.StringFilter;
+import yajhfc.filters.StringFilterOperator;
 
 
 public class mainwin extends JFrame {
@@ -101,6 +110,7 @@ public class mainwin extends JFrame {
     private JMenuBar jJMenuBar = null;
     
     private JMenu menuFax = null;
+    private JMenu menuView = null;
     private JMenu menuExtras = null;
     private JMenu helpMenu = null;
     
@@ -110,6 +120,9 @@ public class mainwin extends JFrame {
     private JMenuItem ShowMenuItem = null;
     private JMenuItem DeleteMenuItem = null;
     private JMenuItem SendMenuItem = null;    
+    
+    private JRadioButtonMenuItem menuViewAll, menuViewOwn, menuViewCustom;
+    private ButtonGroup viewGroup;
     
     HylaFAXClient hyfc = null;
     private FaxOptions myopts = null;
@@ -124,6 +137,8 @@ public class mainwin extends JFrame {
     private DefaultTableCellRenderer hylaDateRenderer;
     
     private JPopupMenu tblPopup;
+    
+    private MenuViewListener menuViewListener;
     
     // Actions:
     private Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward, actAdminMode;
@@ -560,6 +575,39 @@ public class mainwin extends JFrame {
         return toolbar;
     }
     
+    private JMenu getMenuView() {
+        if (menuView == null) {
+            menuView = new JMenu(_("View"));
+            
+            menuViewListener = new MenuViewListener();
+            
+            menuViewAll = new JRadioButtonMenuItem(_("All faxes"));
+            menuViewAll.setActionCommand("view_all");
+            menuViewAll.setSelected(true);
+            menuViewAll.addActionListener(menuViewListener);
+            
+            menuViewOwn = new JRadioButtonMenuItem(_("Only own faxes"));
+            menuViewOwn.setActionCommand("view_own");
+            menuViewOwn.addActionListener(menuViewListener);
+            
+            menuViewCustom = new JRadioButtonMenuItem(_("Custom filter..."));
+            menuViewCustom.setActionCommand("view_custom");
+            menuViewCustom.addActionListener(menuViewListener);
+            
+            viewGroup = new ButtonGroup();
+            viewGroup.add(menuViewAll);
+            viewGroup.add(menuViewOwn);
+            viewGroup.add(menuViewCustom);
+         
+            menuView.add(menuViewAll);
+            menuView.add(menuViewOwn);
+            menuView.add(menuViewCustom);
+            
+            getTabMain().addChangeListener(menuViewListener);
+        }
+        return menuView;
+    }
+    
     /**
      * This is the default constructor
      */
@@ -586,6 +634,7 @@ public class mainwin extends JFrame {
             
             public void windowClosing(java.awt.event.WindowEvent e) {
                 doLogout();
+                menuViewListener.saveToOptions();
                 myopts.mainWinBounds = getBounds();
                 myopts.mainwinLastTab = getTabMain().getSelectedIndex();
                 
@@ -618,9 +667,10 @@ public class mainwin extends JFrame {
     
     private void MyInit() { 
         myopts = utils.getFaxOptions();
-       
+        
         utmrTable = new java.util.Timer("RefreshTimer");
         ReloadSettings();
+        menuViewListener.loadFromOptions();
     }
     
     private void doLogout() {
@@ -654,6 +704,8 @@ public class mainwin extends JFrame {
             
             getTextStatus().setBackground(defStatusBackground);
             getTextStatus().setText(_("Disconnected."));
+            
+            menuView.setEnabled(false);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -744,6 +796,10 @@ public class mainwin extends JFrame {
             TableSent.setColumnCfgString(myopts.sentColState);
             TableSending.setColumnCfgString(myopts.sendingColState);
             
+            menuView.setEnabled(true);
+            // Re-check menu View state:
+            menuViewListener.reConnected();
+            
             // Multi-threaded implementation of the periodic refreshes.
             // I hope I didn't introduce too many race conditions/deadlocks this way
             statRefresher = new StatusRefresher();
@@ -803,6 +859,7 @@ public class mainwin extends JFrame {
         if (jJMenuBar == null) {
             jJMenuBar = new JMenuBar();
             jJMenuBar.add(getMenuFax());
+            jJMenuBar.add(getMenuView());
             jJMenuBar.add(getMenuExtras());
             jJMenuBar.add(getHelpMenu());
         }
@@ -1139,7 +1196,133 @@ public class mainwin extends JFrame {
         return optionsMenuItem;
     }
     
+    class MenuViewListener implements ActionListener, ChangeListener {
+        private JRadioButtonMenuItem[] lastSel = new JRadioButtonMenuItem[3];
+        
+        public void actionPerformed(ActionEvent e) {
+            String cmd = e.getActionCommand();
+            MyTableModel model = ((TooltipJTable)((JScrollPane)TabMain.getSelectedComponent()).getViewport().getView()).getRealModel();
+            int selTab = TabMain.getSelectedIndex();
+            
+            if (cmd.equals("view_all")) {
+                model.setJobFilter(null);
+                lastSel[selTab] = menuViewAll;
+            } else if (cmd.equals("view_own")) {
+                model.setJobFilter(getOwnFilterFor(model));
+                lastSel[selTab] = menuViewOwn;
+            } else if (cmd.equals("view_custom")) {
+                CustomFilterDialog cfd = new CustomFilterDialog(mainwin.this, TabMain.getTitleAt(selTab), 
+                        model.columns, (lastSel[selTab] == menuViewCustom) ? model.getJobFilter() : null);
+                cfd.setVisible(true);
+                if (cfd.returnValue != null) {
+                    model.setJobFilter(cfd.returnValue);
+                    lastSel[selTab] = menuViewCustom;
+                } else {
+                    if (lastSel[selTab] != menuViewCustom)
+                            resetLastSel(selTab);
+                }
+            }
+        }
+        
+        private void resetLastSel(int selTab) {
+            if (lastSel[selTab] != null)
+                lastSel[selTab].setSelected(true);
+            else 
+                menuViewAll.setSelected(true);
+        }
+        
+        public void stateChanged(ChangeEvent e) {
+            MyTableModel model = ((TooltipJTable)((JScrollPane)TabMain.getSelectedComponent()).getViewport().getView()).getRealModel();
+            boolean viewOwnState  = ownFilterOK(model);
+            
+            resetLastSel(TabMain.getSelectedIndex());
+            menuViewOwn.setEnabled(viewOwnState);
+            if ((!viewOwnState && menuViewOwn.isSelected())) {
+                menuViewAll.setSelected(true);
+                model.setJobFilter(null);
+            }
+        }
+        
+        private YajJobFilter getOwnFilterFor(MyTableModel model) {
+            return new StringFilter((model == recvTableModel ? utils.recvfmt_Owner : utils.jobfmt_Owner), StringFilterOperator.EQUAL, myopts.user);
+        }
+        
+        private boolean ownFilterOK(MyTableModel model) {
+            if (model == recvTableModel) { 
+                return myopts.recvfmt.contains(utils.recvfmt_Owner);
+            } else if (model == sentTableModel || model == sendingTableModel) { 
+                return model.columns.contains(utils.jobfmt_Owner);
+            } else
+                return false;
+        }
+        /**
+         * Re-validates the filters on reconnection
+         */
+        public void reConnected() {
+            for (int i = 0; i < lastSel.length; i++) {
+                MyTableModel model = ((TooltipJTable)((JScrollPane)TabMain.getComponent(i)).getViewport().getView()).getRealModel();
+                if (lastSel[i] == menuViewOwn) {
+                    if (ownFilterOK(model)) 
+                        model.setJobFilter(getOwnFilterFor(model));
+                    else {
+                        lastSel[i] = menuViewAll;
+                        model.setJobFilter(null);
+                    }
+                } else if (lastSel[i] == menuViewCustom) {
+                    if (!model.getJobFilter().validate(model.columns)) {
+                        lastSel[i] = menuViewAll;
+                        model.setJobFilter(null);
+                    }
+                    
+                } else if (lastSel[i] == menuViewAll) 
+                    model.setJobFilter(null);
+            }
+            stateChanged(null);
+        }
+        
 
+        private void loadSaveString(int idx, String data) {
+            if ((data == null) || data.equals("A")) {
+                lastSel[idx] = menuViewAll;
+            } else if (data.equals("O")) {
+                lastSel[idx] = menuViewOwn;
+            } else if (data.startsWith("C")) {
+                MyTableModel model = ((TooltipJTable)((JScrollPane)TabMain.getComponent(idx)).getViewport().getView()).getRealModel();
+                YajJobFilter yjf = FilterCreator.stringToFilter(data.substring(1), model.columns);
+                if (yjf == null) {
+                    lastSel[idx] = menuViewAll;
+                } else {
+                    lastSel[idx] = menuViewCustom;
+                    model.setJobFilter(yjf);
+                }
+            }
+        }
+        
+        public void loadFromOptions() {
+            loadSaveString(0, myopts.recvFilter);
+            loadSaveString(1, myopts.sentFilter);
+            loadSaveString(2, myopts.sendingFilter);
+            reConnected();
+        }
+        
+        private String getSaveString(int idx) {
+            if (lastSel[idx] == null || lastSel[idx] == menuViewAll) {
+                return "A";
+            } else if (lastSel[idx] == menuViewOwn) {
+                return "O";
+            } else if (lastSel[idx] == menuViewCustom) {
+                MyTableModel model = ((TooltipJTable)((JScrollPane)TabMain.getComponent(idx)).getViewport().getView()).getRealModel();
+                return "C" + FilterCreator.filterToString(model.getJobFilter());
+            } else
+                return null;
+        }
+        
+        public void saveToOptions() {
+            myopts.recvFilter = getSaveString(0);
+            myopts.sentFilter = getSaveString(1);
+            myopts.sendingFilter = getSaveString(2);
+        }
+    }
 
     class ActionEnabler implements ListSelectionListener, ChangeListener {
         public void stateChanged(ChangeEvent e) {

@@ -32,7 +32,6 @@ import java.util.Vector;
 import javax.swing.AbstractListModel;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -231,14 +230,6 @@ public class fmtEditor extends JPanel
         dontDeleteFmts = dontDelete;
         
         initialize();
-    }
-    
-    class FmtItemRenderer extends DefaultListCellRenderer {
-        @Override
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            return super.getListCellRendererComponent(list, ((FmtItem)value).desc, index, isSelected,
-                    cellHasFocus);
-        }
     }
     
     class VectorListModel extends AbstractListModel {

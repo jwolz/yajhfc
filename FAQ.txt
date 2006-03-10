@@ -57,6 +57,16 @@ http://www.hylafax.org/HylaFAQ/Q202.html
 http://www.hylafax.org/howto/tweaking.html
 
 
+Q: What can I enter as a value for the "matches" Operator 
+   in the custom filter dialog?
+A:
+Regular Expressions. A short reference about the accepted syntax can be found at:
+http://java.sun.com/j2se/1.5.0/docs/api/java/util/regex/Pattern.html
+Please note that Regular Expressions are not the same as wildcards: 
+For example, to get the effect of the "*" wildcard, you have to use ".*" and 
+for the effect of the wildcard "?" use ".".
+
+
 Q: Why are passwords stored in clear text?
 A:
 Simply because there isn't any method that is much better.

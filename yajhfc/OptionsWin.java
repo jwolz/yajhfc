@@ -31,6 +31,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Vector;
@@ -54,8 +55,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 public class OptionsWin extends JDialog {
     
@@ -72,10 +71,10 @@ public class OptionsWin extends JDialog {
     private JTextField textNotifyAddress, textHost, textUser, /*textViewer,*/ textPort;
     private JPasswordField textPassword, textAdminPassword;
     private JComboBox comboTZone, comboNotify, comboPaperSize, comboResolution, comboNewFaxAction;
-    private JCheckBox checkPasv, checkPCLBug, checkAskPassword, checkAskAdminPassword;
+    private JCheckBox checkPasv, checkPCLBug, checkAskPassword, checkAskAdminPassword, checkUseCustomDefCover;
     private JSpinner spinMaxTry, spinMaxDial;
     //private JButton buttonBrowseViewer;
-    private FileTextField ftfFaxViewer, ftfPSViewer;
+    private FileTextField ftfFaxViewer, ftfPSViewer, ftfCustomDefCover;
     
     private JTextField textFromFaxNumber, textFromName, textFromCompany, textFromLocation, textFromVoicenumber;
     private ClipboardPopup clpDef;
@@ -129,6 +128,9 @@ public class OptionsWin extends JDialog {
         
         spinMaxDial.setValue(Integer.valueOf(foEdit.maxDial));
         spinMaxTry.setValue(Integer.valueOf(foEdit.maxTry));
+        
+        ftfCustomDefCover.setText(foEdit.defaultCover);
+        checkUseCustomDefCover.setSelected(foEdit.useCustomDefaultCover);
         
         textFromCompany.setText(foEdit.FromCompany); 
         textFromFaxNumber.setText(foEdit.FromFaxNumber);
@@ -316,7 +318,7 @@ public class OptionsWin extends JDialog {
         if (panelSend == null) {
             double[][] tablelay = {
                     {border,  0.5, border, TableLayout.FILL, border},
-                    new double[12]
+                    new double[14]
             };
             double rowh = 1 / (double)(tablelay[1].length - 2);
             tablelay[1][0] = border;
@@ -338,6 +340,17 @@ public class OptionsWin extends JDialog {
             spinMaxDial = new JSpinner(new SpinnerNumberModel(12, 1, 100, 1));
             spinMaxTry = new JSpinner(new SpinnerNumberModel(6, 1, 100, 1));
             
+            checkUseCustomDefCover = new JCheckBox(_("Use a custom default cover page:"));
+            checkUseCustomDefCover.addItemListener(new ItemListener() {
+                public void itemStateChanged(ItemEvent e) {
+                    ftfCustomDefCover.setEnabled(checkUseCustomDefCover.isSelected());
+                 } 
+             });
+            ftfCustomDefCover = new FileTextField();
+            ftfCustomDefCover.getJTextField().addMouseListener(clpDef);
+            ftfCustomDefCover.setFileFilters(new ExampleFileFilter("ps", _("Postscript files")));
+            ftfCustomDefCover.setEnabled(false);
+            
             addWithLabel(panelSend, textNotifyAddress, _("E-mail address for notifications:"), "1, 2, 3, 2, f, c");
             addWithLabel(panelSend, comboNotify, _("Notify when:"), "1, 4, 3, 4, f, c");
             addWithLabel(panelSend, comboTZone, _("Time zone:"), "1, 6, 3, 6, f, c");
@@ -345,6 +358,9 @@ public class OptionsWin extends JDialog {
             addWithLabel(panelSend, comboPaperSize, _("Paper size:"), "3, 8, f, c" );
             addWithLabel(panelSend, spinMaxDial, _("Maximum dials:"), "1, 10, f, c");
             addWithLabel(panelSend, spinMaxTry, _("Maximum tries:"), "3, 10, f, c");    
+            
+            panelSend.add(checkUseCustomDefCover, "1, 11, 3, 11, l, b");
+            panelSend.add(ftfCustomDefCover, "1, 12, 3, 12, f, c");
         }
         return panelSend;
     }
@@ -475,6 +491,14 @@ public class OptionsWin extends JDialog {
     class ButtonOKActionListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             
+            if (checkUseCustomDefCover.isSelected()) {
+                if (!(new File(ftfCustomDefCover.getText()).canRead())) {
+                    JOptionPane.showMessageDialog(ButtonOK, _("The selected default cover page can not be read."), _("Error"), JOptionPane.ERROR_MESSAGE);
+                    ftfCustomDefCover.getJTextField().requestFocus();
+                    return;
+                }
+            }
+            
             try {
                 foEdit.port = Integer.parseInt(textPort.getText());
                 
@@ -509,8 +533,12 @@ public class OptionsWin extends JDialog {
                 foEdit.FromLocation = textFromLocation.getText();
                 foEdit.FromName = textFromName.getText();
                 foEdit.FromVoiceNumber = textFromVoicenumber.getText();
+                
+                foEdit.defaultCover = ftfCustomDefCover.getText();
+                foEdit.useCustomDefaultCover = checkUseCustomDefCover.isSelected();
             } catch (NumberFormatException e1) {
                 JOptionPane.showMessageDialog(ButtonOK, _("Please enter a number."));
+                return;
             }
             
             modalResult = true;
