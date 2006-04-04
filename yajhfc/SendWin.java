@@ -310,6 +310,7 @@ public class SendWin extends JDialog {
                     return new LocalFileTFLItem(text);
                 }
             };
+            tflFiles.addLocalComponent(getFtfFilename().getJButton());
             clpFiles = new ClipboardPopup();
             clpFiles.getPopupMenu().addSeparator();
             clpFiles.getPopupMenu().add(tflFiles.getModifyAction());
@@ -335,6 +336,7 @@ public class SendWin extends JDialog {
             TextNumber.setMaximumSize(d2);
             
             tflNumbers = new TextFieldList(TextNumber, false);
+            tflNumbers.addLocalComponent(ButtonPhoneBook);
             clpNumbers = new ClipboardPopup();
             clpNumbers.getPopupMenu().addSeparator();
             clpNumbers.getPopupMenu().add(tflNumbers.getModifyAction());
@@ -559,6 +561,9 @@ public class SendWin extends JDialog {
     
     class SendButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+            
+            tflFiles.commit();
+            tflNumbers.commit();
             
             if (!pollMode && tflFiles.model.size() == 0) {
                 if (checkUseCover.isSelected()) {

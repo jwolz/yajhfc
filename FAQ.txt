@@ -72,6 +72,14 @@ Please note that Regular Expressions are not the same as wildcards:
 For example, to get the effect of the "*" wildcard, you have to use ".*" and 
 for the effect of the wildcard "?" use ".".
 
+Q: Which command line arguments does YajHFC understand?
+A:
+General usage:
+java -jar yajhfc.jar [--admin] [--stdin | filename]
+Argument description:
+filename    The file name of a PostScript file to send.
+--stdin     Read the file to send from standard input
+--admin     Start up in admin mode
 
 Q: Why are passwords stored in clear text?
 A:
@@ -81,7 +89,7 @@ you could always look at the source code to find out how to decrypt them.
 (even if YajHFC was closed source software you could still disassemble it
 or experiment a bit to find that out).
 The only secure method would require you to enter a master password every time
-you start YajHFC, but in my opinion that would not provide a improvement over
+you start YajHFC, but in my opinion that would not provide an improvement over
 entering the "real" password.
 
 

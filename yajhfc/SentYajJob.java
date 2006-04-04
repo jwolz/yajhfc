@@ -29,13 +29,13 @@ import java.util.List;
 import java.util.Vector;
 
 public class SentYajJob extends YajJob {
-    private Job curJob = null;
+    //private Job curJob = null;
 
     public Job getJob(HylaFAXClient hyfc) throws ServerResponseException, IOException {
-        if (curJob == null) {
-            curJob = hyfc.getJob((Integer)getData(columns.indexOf(utils.jobfmt_JobID)));
-        }
-        return curJob;
+        /*if (curJob == null) {
+            curJob =*/ return hyfc.getJob((Integer)getData(columns.indexOf(utils.jobfmt_JobID)));
+        //}
+        //return curJob;
     }
     
     @Override

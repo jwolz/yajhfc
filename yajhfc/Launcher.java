@@ -119,11 +119,14 @@ public class Launcher {
         // parse command line
         String fileName = "";
         boolean useStdin = false;
+        boolean adminMode = false;
         
         for (int i = 0; i < args.length; i++) {
             if (args[i].startsWith("--")) { // command line argument
                 if (args[i].equals("--stdin"))
                     useStdin = true;
+                else if (args[i].equals("--admin"))
+                    adminMode = true;
                 else
                     System.err.println(utils._("Unknown command line argument: ") + args[i]);
             } else if (args[i].startsWith("-"))
@@ -135,7 +138,7 @@ public class Launcher {
         Socket oldinst = checkLock();
         
         if (oldinst == null) {
-            SwingUtilities.invokeLater(new NewInstRunner(fileName, useStdin));
+            SwingUtilities.invokeLater(new NewInstRunner(fileName, useStdin, adminMode));
             blockThread = new SockBlockAcceptor();
             blockThread.start();
         } else {            
@@ -174,6 +177,7 @@ public class Launcher {
     static class NewInstRunner implements Runnable {
         String fileName;
         boolean useStdin;
+        boolean adminMode;
         
         public void run() {
             try {
@@ -182,7 +186,7 @@ public class Launcher {
                 System.err.println("Couldn't load native look&feel.");
             }
             
-            application = new mainwin();
+            application = new mainwin(adminMode);
             application.setVisible(true);
             
             if (fileName.length() > 0 || useStdin) {
@@ -197,10 +201,11 @@ public class Launcher {
             }
         }   
         
-        public NewInstRunner(String fileName, boolean useStdin) {
+        public NewInstRunner(String fileName, boolean useStdin, boolean adminMode) {
             super();
             this.fileName = fileName;
             this.useStdin = useStdin;
+            this.adminMode = adminMode;
         }
     }
     

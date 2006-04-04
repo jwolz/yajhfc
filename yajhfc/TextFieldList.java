@@ -28,11 +28,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -54,6 +56,8 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
     protected Action addAction, removeAction, modifyAction, upAction, downAction;
     protected JPopupMenu popup;
     protected boolean useUpDown;
+    protected ArrayList<JComponent> localComponents;
+    
     
     public Action getUpAction() {
         if (upAction == null) {
@@ -223,37 +227,51 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
         };
         this.setLayout(new TableLayout(dLay));
         
+        localComponents = new ArrayList<JComponent>();
+        
         scrollPane = new JScrollPane(getList(), JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        localComponents.add(scrollPane);
         add(scrollPane, "0, 0, 0, 1, F, F");
         
         JButton btnAdd = new JButton(getAddAction());
         btnAdd.setText("");
+        localComponents.add(btnAdd);
         JButton btnRemove = new JButton(getRemoveAction());
         btnRemove.setText("");
-        /*if (haveUpDown) {
-            JButton btnUp = new JButton(getUpAction());
-            btnUp.setText("");
-            JButton btnDown = new JButton(getDownAction());
-            btnDown.setText("");
-            
-            add(btnAdd, "1, 0");
-            add(btnRemove, "1, 1");
-            add(btnUp, "1, 2");
-            add(btnDown, "1, 3");
-        } else {*/
+        localComponents.add(btnRemove);
         add(btnAdd, "1, 0");
         add(btnRemove, "1, 1");
-        //}
         
         textField.addKeyListener(this);
         textField.getDocument().addDocumentListener(this);
-        textField.addFocusListener(this);
+        localComponents.add(textField);
         
         list.addKeyListener(this);
         list.addListSelectionListener(this);
         list.addMouseListener(this);
+        localComponents.add(list);
+        
+        for (JComponent comp : localComponents) {
+            comp.addFocusListener(this);
+        }
     }
 
+    /**
+     * Adds a component that should be considered "local" in regard to focus
+     * (i.e. belonging to this TextFieldList).
+     * @param comp
+     */
+    public void addLocalComponent(JComponent comp) {
+        localComponents.add(comp);
+        comp.addFocusListener(this);
+    }
+    
+    public void removeLocalComponent(JComponent comp) {
+        if (localComponents.remove(comp)) {
+            comp.removeFocusListener(this);
+        }
+    }
+    
     public void keyPressed(KeyEvent e) {
         if (e.getSource() == list) {
             if (e.getKeyCode() == KeyEvent.VK_DELETE) {
@@ -307,11 +325,18 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
         getAddAction().setEnabled(textField.getDocument().getLength() > 0);        
     }
     
+    public void commit() {
+        if (model.size() == 0 && getAddAction().isEnabled()) {
+            getAddAction().actionPerformed(null);
+        } else if (getModifyAction().isEnabled()) {
+            getModifyAction().actionPerformed(null);
+        }
+    }
     
     public void focusLost(FocusEvent e) {
-        // for inexperienced users...
-        if (model.size() == 0 && getAddAction().isEnabled()) {
-                getAddAction().actionPerformed(null);
+        // Our group of components lost focus...
+        if (!localComponents.contains(e.getOppositeComponent())) {
+            commit();
         }
     }
     
