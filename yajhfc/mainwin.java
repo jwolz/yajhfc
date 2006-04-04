@@ -151,7 +151,7 @@ public class mainwin extends JFrame {
     }
     
     // Creates all actions:
-    private void createActions() {
+    private void createActions(boolean adminState) {
         actOptions = new AbstractAction() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 OptionsWin ow = new OptionsWin(myopts, mainwin.this);
@@ -231,6 +231,7 @@ public class mainwin extends JFrame {
                     YajJob yj = null;
                     try {
                         yj = selTable.getJobForRow(i);
+                        //System.out.println("" + i + ": " + yj.getIDValue().toString());
                         List<HylaServerFile> serverFiles = yj.getServerFilenames(hyfc);
                         if (serverFiles.size() == 0) {
                             JOptionPane.showMessageDialog(mainwin.this, MessageFormat.format(_("No document files available for the fax \"{0}\"."), yj.getIDValue()), _("Display fax"), JOptionPane.INFORMATION_MESSAGE);
@@ -238,6 +239,7 @@ public class mainwin extends JFrame {
                             for(HylaServerFile hsf : serverFiles) {
                                 try {
                                     hsf.view(hyfc, myopts);
+                                    //System.out.println(hsf.getPath());
                                 } catch (Exception e1) {
                                     //JOptionPane.showMessageDialog(mainwin.this, MessageFormat.format(_("An error occured displaying the file {0} (job {1}):\n"), hsf.getPath(), yj.getIDValue()) + e1.getMessage() , _("Error"), JOptionPane.ERROR_MESSAGE);
                                     ExceptionDialog.showExceptionDialog(mainwin.this, MessageFormat.format(_("An error occured displaying the file {0} (job {1}):\n"), hsf.getPath(), yj.getIDValue()), e1);
@@ -466,7 +468,7 @@ public class mainwin extends JFrame {
         };
         actAdminMode.putValue(Action.NAME, _("Admin mode"));
         actAdminMode.putValue(Action.SHORT_DESCRIPTION, _("Connect to the server in admin mode (e.g. to delete faxes)"));
-        actAdminMode.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, false);
+        actAdminMode.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, adminState);
         
         actChecker = new ActionEnabler();
     }
@@ -611,9 +613,9 @@ public class mainwin extends JFrame {
     /**
      * This is the default constructor
      */
-    public mainwin() {
+    public mainwin(boolean adminState) {
         super();
-        initialize();
+        initialize(adminState);
     }
 
     /**
@@ -621,8 +623,8 @@ public class mainwin extends JFrame {
      * 
      * @return void
      */
-    private void initialize() {
-        createActions();
+    private void initialize(boolean adminState) {
+        createActions(adminState);
         
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setJMenuBar(getJJMenuBar());

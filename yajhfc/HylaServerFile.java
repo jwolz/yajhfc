@@ -57,7 +57,7 @@ public class HylaServerFile {
         download(hyfc, tmptif);        
         
         String execCmd;
-        if (type.equalsIgnoreCase("tif")) 
+        if (type.equalsIgnoreCase("tif") || type.equalsIgnoreCase("tiff")) 
             execCmd = opts.faxViewer;
         else if (type.equalsIgnoreCase("ps") || type.equalsIgnoreCase("pdf"))
             execCmd = opts.psViewer;
