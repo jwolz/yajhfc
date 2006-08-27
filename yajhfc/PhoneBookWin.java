@@ -377,7 +377,8 @@ public class PhoneBookWin extends JDialog
             this.setBounds(utils.getFaxOptions().phoneWinBounds);
         else {
             this.setSize(640, 480);
-            this.setLocationByPlatform(true);
+            //this.setLocationByPlatform(true);
+            utils.setDefWinPos(this);
         }
         
         textDescriptor.setText(utils.getFaxOptions().lastPhonebook);

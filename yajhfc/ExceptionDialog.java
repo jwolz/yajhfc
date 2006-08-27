@@ -129,7 +129,7 @@ public class ExceptionDialog extends JDialog implements ActionListener {
         this.getRootPane().getRootPane().setDefaultButton(btnOK);
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         this.setContentPane(contentPane);
-        this.setLocationByPlatform(true);
+        //this.setLocationByPlatform(true);
     }
     
     public void actionPerformed(ActionEvent e) {

@@ -177,7 +177,8 @@ public class CustomFilterDialog extends JDialog
             this.setBounds(utils.getFaxOptions().customFilterBounds);
         } else {
             this.pack();
-            this.setLocationByPlatform(true);
+            //this.setLocationByPlatform(true);
+            utils.setDefWinPos(this);
         }
     }
     

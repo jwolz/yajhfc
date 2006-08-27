@@ -148,7 +148,8 @@ public class OptionsWin extends JDialog {
         if (foEdit.optWinPos != null)
             this.setLocation(foEdit.optWinPos);
         else
-            this.setLocationByPlatform(true);
+            //this.setLocationByPlatform(true);
+            utils.setDefWinPos(this);
         
     }
     
