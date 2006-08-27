@@ -659,7 +659,8 @@ public class mainwin extends JFrame {
         if (myopts.mainWinBounds != null)
             this.setBounds(myopts.mainWinBounds);
         else
-            this.setLocationByPlatform(true);
+            //this.setLocationByPlatform(true);
+            utils.setDefWinPos(this);
         
         TabMain.setSelectedIndex(myopts.mainwinLastTab);
         actChecker.doEnableCheck();
@@ -728,10 +729,9 @@ public class mainwin extends JFrame {
         try {
             hyfc.open(myopts.host, myopts.port);
             
-            if (hyfc.user(myopts.user)) {                
-                if (myopts.askPassword) {
-                    boolean repeatAsk = true;
-                    do {
+            while (hyfc.user(myopts.user)) {                
+                    if (myopts.askPassword) {
+                        
                         String pwd = PasswordDialog.showPasswordDialog(this, _("User password"), MessageFormat.format(_("Please enter the password for user \"{0}\"."), myopts.user));
                         if (pwd == null) { // User cancelled
                             hyfc.quit();
@@ -740,15 +740,17 @@ public class mainwin extends JFrame {
                         } else
                             try {
                                 hyfc.pass(pwd);
-                                repeatAsk = false;
+                                //repeatAsk = false;
+                                break;
                             } catch (ServerResponseException e) {
                                 ExceptionDialog.showExceptionDialog(this, _("An error occured in response to the password:"), e);
-                                repeatAsk = true;
+                                //repeatAsk = true;
                             }
-                    } while (repeatAsk);
-                } else 
-                    hyfc.pass(myopts.pass);
-            }
+                    } else {
+                        hyfc.pass(myopts.pass);
+                        break;
+                    }
+            } 
             
             this.setTitle(myopts.user + "@" + myopts.host + " - " + utils.AppName  );
             

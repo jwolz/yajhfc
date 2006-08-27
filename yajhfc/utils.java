@@ -26,6 +26,7 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -59,7 +60,7 @@ public class utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2006 by Jonas Wolz";
-    public static final String AppVersion = "0.2.5";
+    public static final String AppVersion = "0.2.6";
     public static final String AuthorEMail = "Jonas Wolz &lt;jwolz@freenet.de&gt;";
     public static final String HomepageURL = "http://www.yajhfc.de.vu/"; 
     
@@ -345,6 +346,16 @@ public class utils {
             } 
         }
         return sBuf.toString();
+    }
+    
+    public static void setDefWinPos(Window win) {
+        String osname = System.getProperty("os.name");
+        // Do we have a buggy Java/Windows combination?
+        if ((osname.equalsIgnoreCase("Windows 95") || osname.equalsIgnoreCase("Windows 98") || osname.equalsIgnoreCase("Windows ME")))
+            win.setLocationRelativeTo(null);
+            //win.setLocation(0,0);
+        else
+            win.setLocationByPlatform(true);
     }
 }
 

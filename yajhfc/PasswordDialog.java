@@ -103,7 +103,7 @@ public class PasswordDialog extends JDialog {
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         this.getRootPane().setDefaultButton(btnOK);
         this.pack();
-        this.setLocationByPlatform(true);
+        //this.setLocationByPlatform(true);
     }
     
     

@@ -182,8 +182,8 @@ public class SendWin extends JDialog {
         
         if (fo.sendWinPos != null)
             this.setLocation(fo.sendWinPos);
-        else
-            this.setLocationByPlatform(true);
+        /*else
+            this.setLocationByPlatform(true);*/
         
         if (pollMode) {
             ftfFilename.setText(_("<none>"));

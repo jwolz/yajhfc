@@ -204,7 +204,7 @@ public class AboutDialog extends JDialog {
         setContentPane(getjContentPane());
         
         getRootPane().setDefaultButton(buttonOK);
-        setLocationByPlatform(true);
+        //setLocationByPlatform(true);
     }
     
     private static String _(String key) {
@@ -235,5 +235,6 @@ public class AboutDialog extends JDialog {
         super(owner);
         
         initialize();
+        setLocationRelativeTo(owner);
     }
 }
