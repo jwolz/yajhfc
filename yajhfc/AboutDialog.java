@@ -28,8 +28,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Properties;
 
@@ -62,12 +62,13 @@ public class AboutDialog extends JDialog {
     private ClipboardPopup clpText;
     
     private void loadFile(JTextArea text, String resName) {
-        URL txtURL = AboutDialog.class.getResource(resName);
+        //URL txtURL = AboutDialog.class.getResource(resName);
+        URL txtURL = utils.getLocalizedFile(resName);
         
         try {
             text.setText("");
             
-            BufferedReader fIn = new BufferedReader(new InputStreamReader(txtURL.openStream()));
+            BufferedReader fIn = new BufferedReader(new InputStreamReader(txtURL.openStream(), Charset.forName("UTF-8")));
             while (true) {
                 String line = fIn.readLine();
                 if (line != null) {
@@ -127,7 +128,7 @@ public class AboutDialog extends JDialog {
             double border = 15;
             double[][] dLay = {
                     { border, TableLayout.PREFERRED, border, TableLayout.FILL, border },
-                    { border, TableLayout.PREFERRED, border, TableLayout.FILL, border, 0.25, border }
+                    { border, TableLayout.PREFERRED, border, TableLayout.PREFERRED, border, 0.25, 0.3, border }
             };
             
             aboutPane = new JPanel(new TableLayout(dLay));
@@ -148,12 +149,20 @@ public class AboutDialog extends JDialog {
             JLabel lblCopyright = new JLabel(utils.AppCopyright);
             
             JLabel lblInfo = new JLabel(MessageFormat.format(_("<html>YajHFC is a client for the hylafax fax server (http://www.hylafax.org).<br><br>Homepage: {1} <br>Author: {0} </html>"), utils.AuthorEMail, utils.HomepageURL));
+            JLabel lblTranslator = null;
+            
+            String translator = _("$TRANSLATOR$");
+            if (!translator.equals("$TRANSLATOR$")) {
+                lblTranslator = new JLabel(MessageFormat.format(_("$LANGUAGE$ translation by {0}"), translator));
+            }
             
             aboutPane.add(lblImg, "1, 1");
             aboutPane.add(boxApp, "3, 1, F, C");
             
             aboutPane.add(lblInfo, "1, 3, 3, 3, F, C");
-            aboutPane.add(lblCopyright, "1, 5, 3, 5, F, C");
+            if (lblTranslator != null)
+                aboutPane.add(lblTranslator, "1, 5, 3, 5, F, C");
+            aboutPane.add(lblCopyright, "1, 6, 3, 6, F, C");
         }
         return aboutPane;
     }

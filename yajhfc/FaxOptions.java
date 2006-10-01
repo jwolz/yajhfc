@@ -80,6 +80,11 @@ public class FaxOptions {
     public String defaultCover = null;
     public boolean useCustomDefaultCover = false;
     
+    public YajLanguage locale = utils.AvailableLocales[0];
+    
+    // Offset for displayed date values in seconds:
+    public int dateOffsetSecs = 0;
+    
     public FaxOptions() {
         this.host = "";
         this.port = 4559;
@@ -239,6 +244,8 @@ public class FaxOptions {
                         dataarray = utils.papersizes;
                     else if (fName.equals("newFaxAction"))
                         dataarray = utils.newFaxActions;
+                    else if (fName.equals("locale"))
+                        dataarray = utils.AvailableLocales;
                     else {
                         System.err.println("Unknown MyManualMapObject field: " + fName);
                         continue;

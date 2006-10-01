@@ -672,7 +672,7 @@ public class mainwin extends JFrame {
         myopts = utils.getFaxOptions();
         
         utmrTable = new java.util.Timer("RefreshTimer");
-        ReloadSettings();
+        //ReloadSettings();
         menuViewListener.loadFromOptions();
     }
     
@@ -717,7 +717,7 @@ public class mainwin extends JFrame {
         }
     }
     
-    private void ReloadSettings() {
+    public void ReloadSettings() {
         doLogout();
         
         if (myopts.host.length() == 0) { // Prompt for server if not set
@@ -830,8 +830,9 @@ public class mainwin extends JFrame {
             utmrTable.schedule(tableRefresher, 0, myopts.tableUpdateInterval);
         } catch (Exception e) {
             //JOptionPane.showMessageDialog(this, _("An error occured connecting to the server:") + "\n" + e.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+            hyfc = null;
             ExceptionDialog.showExceptionDialog(this, _("An error occured connecting to the server:"), e);
-            actOptions.actionPerformed(null);
+            //actOptions.actionPerformed(null);
         }
         
     }

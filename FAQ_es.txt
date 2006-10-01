@@ -1,0 +1,97 @@
+﻿YajHFC FAQ 
+==========
+
+P: Cuando intento ver los faxes enviados siempre obtengo un mensaje de error 
+   que dice "Formato de archivo PCL no soportado.", aunque todos los documentos 
+   están el formato PostScript/PDF.
+R:
+Verifica que la opción "Utilizar fichero PCL para la corrección de error" en el 
+cuadro de Opciones e inténtalo de nuevo. Algunas versiones de HylaFAX reportan 
+un tipo de fichero "PCL" para todos los documentos asociados con un trabajo. 
+Si esta opción está seleccionada, YajHFC intenta adivinar el tipo de fichero 
+utilizando la extensión si se reporta PCL (lo cual generalmente funciona bastante bien).
+
+P: ¿Dónde puedo conseguir un visor de faxes para Windows?
+R: 
+Generalmente puedes utilizar cualquier programa que permita mostrar ficheros TIFF, aunque algunos de ellos muestran los faxes en una resolución baja con una anchura (a la mitad) incorrecta.
+
+Afortunadamente, las versiones recientes de Windows vienen con un programa 
+que hace ésto correctamente:
+- Windows 95/98/ME/2002: puedes utilizar el programa que se encuentra en Accesorios / Imagen. 
+Para utilizarlo con YajHFC, utiliza el botón de exploración en "Línea de comandos 
+para el visor de faxes" y selecciona la ubicación de kodakimg.exe en tu disco duro.
+
+- Windows XP: Puedes utilizar el programa integrado "Visor de imágenes y faxes". 
+Para utilizarlo, introduce el siguiente texto en "Línea de comandos para el visor de faxes":
+rundll32.exe shimgvw.dll,ImageView_Fullscreen %s
+     
+P: ¿Dónde puedo obtener un visor de faxes para Linux/*BSD/... ?
+R:
+"KFax" funciona muy bien, pero al igual que en Windows, puedes utilizar cualquier programa que pueda mostrar archivos TIFF, tan sólo busca en la base de paqueets de tu distribución (xloadimage *no* funciona).
+
+P: ¿Qué puedo utilizar como visor de faxes en Mac OS X?
+R:
+Sólo tienes que introducir "open %s" en "Línea de comandos para el visor de faxes". 
+Los faxes deberían abrirse con la aplicación predeterminada. 
+Gracias a Scott Harris por esta ayuda.
+
+P: ¿Dónde puedo obtener un visor PostScript?
+R:
+Windows: Utiliza Ghostview disponible en http://www.cs.wisc.edu/~ghost/
+
+Nota: también es posible utilizar la impresora de Acrobat Distiller
+(sólo disponible en la versión completa) para genera un fichero PDF 
+y visualizarlo al instante. Para ello hay que introducir la ruta al programa 
+en "Línea de comandos para el visor archivos PostScript", generalmente:
+
+"C:\Archivos de programa\Adobe\Acrobat 5.0\Distillr\Acrodist.exe" %s
+
+Linux/*BSD/...: Simplemente instala uno de los paquetes de visores PostScript 
+(por ejemplo: gv, kghostview, gnome-gv...)
+	
+P: ¿Cómo puedo editar las plantillas de las portadas?
+R:
+Las plantillas tienen que estar en el mismo formato PostScript especial 
+que utiliza el programa "faxcover" de HylaFAX. Revisa las siguiente ayuda 
+para saber cómo crear / modificar este tipo de archivos:
+http://www.hylafax.org/HylaFAQ/Q202.html
+http://www.hylafax.org/howto/tweaking.html
+
+P: ¿Por qué no se puede seleccionar (gris claro) la opción de "Ver->Sólo faxes propios"?
+R:
+Actualmente YajHFC sólo puede filtrar las columnas visibles. Por lo que tienes que añadir la columna de "Propietario" a la table en la que quieres filtrar por propietario.
+
+P: ¿Qué puedo poner como valor "igual a" en el cuadro de diálogo de filtrado personalizado? 
+R:
+Expresiones regulares. Puedes encontrar una breve referencia sobre la sintaxis permitida en http://java.sun.com/j2se/1.5.0/docs/api/java/util/regex/Pattern.html
+te en cuenta que las expresiones regulares no son lo mismo que los caracteres comodín:
+Por ejemplo, para obtener el mismo efecto que el comodín "*" tienes que utilizar ".*"
+y para simular el efecto de "?" hay que utilizar ".".
+
+P: ¿Qué argumentos de línea de comandos entiende YajHFC?
+R:
+Uso general:
+java -jar yajhfc.jar [--admin] [--stdin | archivo]
+Descripción de los argumentos:
+archivo     El nombre del archivo PostScript para enviar.
+--stdin     Lee el archivo para enviar de una entrada estándar
+--admin     Inicia en modo administrador
+
+P: ¿Por qué se guardan las contraseñas en texto plano?
+R:
+Simplemente porque no hay otro método que sea mejor.
+YajHFC  puede codificar/"encriptar" las contraseñas antes de almacenarlas, 
+pero si lo hace siempre es posible visualizar el código fuente para encontrarlas 
+y desencriptarlas (incluso aunque YajHFC fuera de código cerrado podrías reventarlas o experimentar un poco sobre cómo hacerlo).
+El único método seguro requeriría introducir una contraseña maestra cada vez que se inicia YajHFC, pero en mi opinión no es mejor que introducir la contraseña real.
+
+P: ¿Qué significa la columna XYZ?
+R:
+Yo tampoco lo sé exactamente porque la descripción de las columnas ha sido copiada del manual de  faxstat (1) (JobFmt/RcvFmt), abreviada y traducida
+
+P: ¿Por qué escogiste ese nombre tan tonto?
+R:
+YajHFC empezó como "proyecto de prueba" para Java y la biblioteca gnu.hylafax
+y por lo tanto no tuvo un nombre "bonito". Después de trabajar un poco sobre ello, me di cuenta de que se volvería útil, por lo que elegí darle un nombre.
+Dado que estaba con la herramienta Yast de SuSE en ese momento y sabía 
+que había / hay otros clientes Java para HylaFAX, lo llamé "yet another" java hylafax client (en español, "otro cliente java para HylaFAX").

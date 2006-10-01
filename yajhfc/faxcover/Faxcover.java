@@ -168,7 +168,7 @@ public class Faxcover {
         
         InputStream coverIS;
         if (coverTemplate == null) {
-            // Try to find a locale specific cover page
+            /*// Try to find a locale specific cover page
             final String prefix = "faxcover";
             final String suffix = ".ps";
             Locale loc = utils.getLocale();
@@ -184,7 +184,8 @@ public class Faxcover {
                 coverURL = Faxcover.class.getResource(prefix + tryList[i] + suffix);
                 if (coverURL != null)
                     break;
-            }
+            }*/
+            URL coverURL = utils.getLocalizedFile("faxcover/faxcover.ps");
             if (coverURL == null) {
                throw new IOException("Default cover page not found!");
             }

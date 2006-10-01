@@ -24,7 +24,9 @@ import gnu.inet.ftp.ServerResponseException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Vector;
 
@@ -79,9 +81,16 @@ public abstract class YajJob {
                             result = Float.valueOf(res);
                         else if (dataClass == Double.class)
                             result = Double.valueOf(res);
-                        else if (dataClass == Date.class)
-                            result = columns.get(col).dateFormat.fmtIn.parse(res);
-                        else
+                        else if (dataClass == Date.class) {
+                            Date d = columns.get(col).dateFormat.fmtIn.parse(res);
+                            if (d != null && utils.getFaxOptions().dateOffsetSecs != 0) {
+                                Calendar cal = Calendar.getInstance(utils.getLocale());
+                                cal.setTime(d);
+                                cal.add(Calendar.SECOND, utils.getFaxOptions().dateOffsetSecs);
+                                d = cal.getTime();
+                            }
+                            result = d;
+                        } else
                             result = res;
                     } catch (NumberFormatException e) {
                         System.err.println("Not a number: " + res);

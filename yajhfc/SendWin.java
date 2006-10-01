@@ -671,6 +671,7 @@ public class SendWin extends JDialog {
                         j.setMaximumDials(fo.maxDial);
                         
                         j.setDialstring(number);
+                        j.setExternal(number); // needed to fix an error while sending multiple jobs
                         j.setMaximumTries(((Integer)SpinMaxTries.getValue()).intValue());
                         j.setNotifyType(((FaxStringProperty)ComboNotification.getSelectedItem()).type);
                         j.setPageDimension(((PaperSize)ComboPaperSize.getSelectedItem()).size);

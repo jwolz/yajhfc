@@ -20,16 +20,14 @@ package yajhfc;
 
 import info.clearthought.layout.TableLayout;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dialog;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
-import java.awt.GraphicsConfiguration;
-import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -40,10 +38,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-public class ExceptionDialog extends JDialog implements ActionListener {
+public class ExceptionDialog extends JDialog implements ActionListener, ComponentListener {
 
     private JLabel lblText, lblExceptionText;
     private JScrollPane scrollStacktrace;
@@ -130,6 +127,10 @@ public class ExceptionDialog extends JDialog implements ActionListener {
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         this.setContentPane(contentPane);
         //this.setLocationByPlatform(true);
+        
+        this.pack();
+        lblText.addComponentListener(this);
+        lblExceptionText.addComponentListener(this);
     }
     
     public void actionPerformed(ActionEvent e) {
@@ -149,28 +150,17 @@ public class ExceptionDialog extends JDialog implements ActionListener {
         }
     }
     
-    private void doublePack() {
-        this.pack();
-        // Pack Dialog again later to work around some bug I don't understand...
-        SwingUtilities.invokeLater(new Runnable() {
-           public void run() {
-                 ExceptionDialog.this.pack();
-            } 
-        });        
-    }
  
     public ExceptionDialog(Dialog owner, String title, String message, Exception exc) {
         super(owner, title, true);
         initialize(message, exc);
         this.setLocationRelativeTo(owner);
-        this.doublePack();
     }
     
     public ExceptionDialog(Frame owner, String title, String message, Exception exc) {
         super(owner, title, true);
         initialize(message, exc);
         this.setLocationRelativeTo(owner);
-        this.doublePack();
     }
 
     public static void showExceptionDialog(Frame owner, String title, String message, Exception exc) {
@@ -190,4 +180,21 @@ public class ExceptionDialog extends JDialog implements ActionListener {
     public static void showExceptionDialog(Dialog owner, String message, Exception exc) {
         showExceptionDialog(owner, utils._("Error"), message, exc);
     }
+
+    public void componentHidden(ComponentEvent e) {
+        //  not used   
+    }
+
+    public void componentMoved(ComponentEvent e) {
+        //  not used   
+    }
+
+    public void componentResized(ComponentEvent e) {
+        this.pack();    
+    }
+
+    public void componentShown(ComponentEvent e) {
+        // not used
+    }
+
 }
