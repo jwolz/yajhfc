@@ -144,17 +144,19 @@ class UnReadMyTableModel extends MyTableModel {
     }
     
     public void storeToStream(OutputStream fOut) throws IOException {
-        BufferedWriter bOut = new BufferedWriter(new OutputStreamWriter(fOut));
-        
-        bOut.write("# " + utils.AppShortName + " " + utils.AppVersion + " configuration file\n");
-        bOut.write("# This file contains a list of faxes considered read\n\n");
-        
-        for ( int i=0; i < jobs.length; i++ ) {
-            RecvYajJob j = (RecvYajJob)jobs[i];
-            if (j.isRead())
-                bOut.write(j.getIDValue().toString() + "\n");
+        if (jobs != null) { // Only write the configuration if there is a valid list of jobs
+            BufferedWriter bOut = new BufferedWriter(new OutputStreamWriter(fOut));
+            
+            bOut.write("# " + utils.AppShortName + " " + utils.AppVersion + " configuration file\n");
+            bOut.write("# This file contains a list of faxes considered read\n\n");
+            
+            for ( int i=0; i < jobs.length; i++ ) {
+                RecvYajJob j = (RecvYajJob)jobs[i];
+                if (j.isRead())
+                    bOut.write(j.getIDValue().toString() + "\n");
+            }
+            bOut.close();
         }
-        bOut.close();
     }
     
     /*public String getStateString() {

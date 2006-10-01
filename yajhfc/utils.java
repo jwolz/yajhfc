@@ -56,11 +56,13 @@ import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.text.JTextComponent;
 
+import yajhfc.faxcover.Faxcover;
+
 public class utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2006 by Jonas Wolz";
-    public static final String AppVersion = "0.2.6";
+    public static final String AppVersion = "0.2.7";
     public static final String AuthorEMail = "Jonas Wolz &lt;jwolz@freenet.de&gt;";
     public static final String HomepageURL = "http://www.yajhfc.de.vu/"; 
     
@@ -212,6 +214,14 @@ public class utils {
         new FaxIntProperty(_("Beep & bring to front"), NEWFAX_BOTH)
     };
     
+    // Update this when new translations are added!
+    public static final YajLanguage[] AvailableLocales = {
+        new YajAutoLanguage(),
+        new YajLanguage(Locale.ENGLISH),
+        new YajLanguage(Locale.GERMAN),
+        new YajLanguage(new Locale("es"))
+    };
+    
     public static String VectorToString(Vector v, String delim) {
         StringBuilder s = new StringBuilder();
         Enumeration e = v.elements();
@@ -230,8 +240,29 @@ public class utils {
         return theoptions;
     }
     
+    private static Locale myLocale = null;
     public static Locale getLocale() {
-        return Locale.getDefault();
+        if (myLocale == null) {
+            // Need to load locale setting manually to avoid a
+            // chicken-egg problem with the initialization of the FmtItem-Arrays above
+            Properties prop = new Properties();
+            String locale;
+            try {
+                FileInputStream fIn = new FileInputStream(FaxOptions.getDefaultConfigFileName());
+                prop.load(fIn);
+                fIn.close();
+                locale = prop.getProperty("locale", "auto");
+            } catch (Exception ex) {
+                locale = "auto";
+            }
+            
+            if (locale.equals("auto")) {
+                myLocale = Locale.getDefault();
+            } else {
+                myLocale = new Locale(locale);
+            }
+        }
+        return myLocale;
     }
     
     public static String _(String key) {
@@ -252,12 +283,18 @@ public class utils {
     
     private static void LoadMessages() {
         TriedMsgLoad = true;
-        try {
-            msgs = ResourceBundle.getBundle("yajhfc.i18n.Messages", getLocale());
-        } catch (Exception e) {
-            msgs = null;
-        }
         
+        // Use special handling for english locale as we don't use
+        // a ResourceBundle for it
+        if (getLocale().equals(Locale.ENGLISH)) {
+            msgs = null;
+        } else {
+            try {
+                msgs = ResourceBundle.getBundle("yajhfc.i18n.Messages", getLocale());
+            } catch (Exception e) {
+                msgs = null;
+            }
+        }
     }
     
     public static MyManualMapObject findInArray(MyManualMapObject[] array, Object key) {
@@ -356,6 +393,35 @@ public class utils {
             //win.setLocation(0,0);
         else
             win.setLocationByPlatform(true);
+    }
+    
+    public static URL getLocalizedFile(String path) {
+        String prefix;
+        String suffix;
+        Locale loc = utils.getLocale();
+        int pos = path.indexOf('.');
+        
+        if (pos < 0) {
+            prefix = path;
+            suffix = "";
+        } else {
+            prefix = path.substring(0, pos);
+            suffix = path.substring(pos);
+        }
+        
+        String[] tryList = {
+                "_" + loc.getLanguage() + "_" + loc.getCountry() + "_" + loc.getVariant(),
+                "_" + loc.getLanguage() + "_" + loc.getCountry(),
+                "_" + loc.getLanguage(),
+                ""
+        };
+        URL lURL = null;
+        for (int i = 0; i < tryList.length; i++) {
+            lURL = utils.class.getResource(prefix + tryList[i] + suffix);
+            if (lURL != null)
+                return lURL;
+        }
+        return null;
     }
 }
 

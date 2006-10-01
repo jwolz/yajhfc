@@ -71,8 +71,9 @@ public class OptionsWin extends JDialog {
     private JTextField textNotifyAddress, textHost, textUser, /*textViewer,*/ textPort;
     private JPasswordField textPassword, textAdminPassword;
     private JComboBox comboTZone, comboNotify, comboPaperSize, comboResolution, comboNewFaxAction;
+    private JComboBox comboLang;
     private JCheckBox checkPasv, checkPCLBug, checkAskPassword, checkAskAdminPassword, checkUseCustomDefCover;
-    private JSpinner spinMaxTry, spinMaxDial;
+    private JSpinner spinMaxTry, spinMaxDial, spinOffset;
     //private JButton buttonBrowseViewer;
     private FileTextField ftfFaxViewer, ftfPSViewer, ftfCustomDefCover;
     
@@ -120,6 +121,7 @@ public class OptionsWin extends JDialog {
         comboResolution.setSelectedItem(foEdit.resolution);
         comboTZone.setSelectedItem(foEdit.tzone);
         comboNewFaxAction.setSelectedItem(foEdit.newFaxAction);
+        comboLang.setSelectedItem(foEdit.locale);
         
         checkPasv.setSelected(foEdit.pasv);
         checkPCLBug.setSelected(foEdit.pclBug);
@@ -128,6 +130,7 @@ public class OptionsWin extends JDialog {
         
         spinMaxDial.setValue(Integer.valueOf(foEdit.maxDial));
         spinMaxTry.setValue(Integer.valueOf(foEdit.maxTry));
+        spinOffset.setValue(foEdit.dateOffsetSecs);
         
         ftfCustomDefCover.setText(foEdit.defaultCover);
         checkUseCustomDefCover.setSelected(foEdit.useCustomDefaultCover);
@@ -295,12 +298,12 @@ public class OptionsWin extends JDialog {
         if (panelMisc == null) {
             double[][] tablelay = {
                     {border, TableLayout.FILL, border},
-                    new double[5]
+                    new double[8]
             };
-            double rowh = 1 / (double)(tablelay[1].length - 2);
-            tablelay[1][0] = border;
+            double rowh = 1 / (double)(tablelay[1].length - 1);
+            //tablelay[1][0] = border;
             tablelay[1][tablelay[1].length - 1] = border;
-            Arrays.fill(tablelay[1], 1, tablelay[1].length - 2, rowh);
+            Arrays.fill(tablelay[1], 0, tablelay[1].length - 1, rowh);
             tablelay[1][tablelay[1].length - 2] = TableLayout.FILL;
             
             panelMisc = new JPanel(new TableLayout(tablelay));
@@ -308,9 +311,15 @@ public class OptionsWin extends JDialog {
             
             comboNewFaxAction = new JComboBox(utils.newFaxActions);
             checkPCLBug = new JCheckBox("<html>" + _("Use PCL file type bugfix") + "</html>");
-             
-            addWithLabel(panelMisc, comboNewFaxAction, "<html>" + _("When a new fax is received:") + "</html>", "1, 2, 1, 2, f, c");
-            panelMisc.add(checkPCLBug, "1, 3");
+            
+            comboLang = new JComboBox(utils.AvailableLocales);
+            spinOffset = SpinnerDateOffsetEditor.createJSpinner();
+            
+            addWithLabel(panelMisc, comboLang, _("Language:"), "1, 1, 1, 1, f, c");
+            addWithLabel(panelMisc, comboNewFaxAction, "<html>" + _("When a new fax is received:") + "</html>", "1, 3, 1, 3, f, c");
+            addWithLabel(panelMisc, spinOffset, _("Date/Time offset:"), "1, 5, 1, 5, f, c");
+            spinOffset.setToolTipText(_("Offset to be added to dates received from the HylaFAX server before displaying them."));
+            panelMisc.add(checkPCLBug, "1, 6");
         }
         return panelMisc;
     }
@@ -505,6 +514,7 @@ public class OptionsWin extends JDialog {
                 
                 foEdit.maxDial = ((Integer)spinMaxDial.getValue()).intValue();
                 foEdit.maxTry = ((Integer)spinMaxTry.getValue()).intValue();
+                foEdit.dateOffsetSecs = (Integer)spinOffset.getValue();
                 
                 foEdit.notifyAddress = textNotifyAddress.getText();
                 foEdit.host = textHost.getText();
@@ -519,6 +529,12 @@ public class OptionsWin extends JDialog {
                 foEdit.resolution = (FaxIntProperty)comboResolution.getSelectedItem();
                 foEdit.tzone = (FaxStringProperty)comboTZone.getSelectedItem();
                 foEdit.newFaxAction = (FaxIntProperty)comboNewFaxAction.getSelectedItem();
+                
+                YajLanguage newLang = (YajLanguage)comboLang.getSelectedItem();
+                if (!newLang.equals(foEdit.locale)) {
+                    foEdit.locale = newLang;
+                    JOptionPane.showMessageDialog(OptionsWin.this, _("You must restart the program for the change of the language to take effect."), _("Options"), JOptionPane.INFORMATION_MESSAGE);
+                }
                 
                 foEdit.pasv = checkPasv.isSelected();
                 foEdit.pclBug = checkPCLBug.isSelected();

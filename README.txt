@@ -1,4 +1,4 @@
-README for YajHFC 0.2.6
+README for YajHFC 0.2.7
 =======================
 
 ABOUT
@@ -8,13 +8,13 @@ YajHFC (Yet Another Java HylaFAX Client) is a client for the HylaFAX fax server
 (http://www.hylafax.org/) written in Java.
 
 Features:
-* Faxing documents in Postscript or PDF format
+* Faxing documents in PostScript or PDF format
 * Polling faxes
 * Support for generating cover pages from templates
 * Viewing sent and received faxes
 * Phone book
 * Visible table columns may be selected in a dialog
-* Supports two languages: English and German
+* Supports three languages: English, German and Spanish
 
 Homepage: http://www.yajhfc.de.vu/
 email:    Jonas Wolz <jwolz@freenet.de>
@@ -26,11 +26,11 @@ Requirements:
 * JRE 5.0 or higher
 * A running hylafax server in your network (of course ;-) )
 * Some program to view TIFF files (also see FAQ.txt for this)
-* Optional: A Postscript viewer (e.g. Ghostview)
+* Optional: A PostScript viewer (e.g. Ghostview)
 
-To install YajHFC just download the yajhfc-0_2_6.jar file to some folder on your
+To install YajHFC just download the yajhfc-0_2_7.jar file to some folder on your
 file system.
-To execute it, use: "java -jar yajhfc-0_2_6.jar"
+To execute it, use: "java -jar yajhfc-0_2_7.jar"
 (In Windows you usually can just double click the jar file as well.)
 
 LICENSE
@@ -60,6 +60,13 @@ YajHFC was originally written as a first more complicated
 
 CHANGES
 -------
+
+0.2.7:
+- Added Spanish translation
+- Added a option to select the language 
+- Support to add an offset to date values
+- Fixed a bug causing wrong numbers to be displayed when sending
+  multiple faxes
 
 0.2.6:
 - Small workaround for Windows 9x
@@ -94,4 +101,5 @@ TODO
 The following features might be added in the future:
 
 * Support for phone books in SQL databases (via JDBC)
+* Support for phone books in LDAP databases
 
