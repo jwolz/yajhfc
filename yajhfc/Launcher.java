@@ -188,7 +188,7 @@ public class Launcher {
             
             application = new mainwin(adminMode);
             application.setVisible(true);
-            application.ReloadSettings();
+            application.reconnectToServer();
             
             if (fileName.length() > 0 || useStdin) {
                 SendWin sw = new SendWin(application.hyfc, application);

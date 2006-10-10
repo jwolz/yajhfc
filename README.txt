@@ -1,5 +1,5 @@
-README for YajHFC 0.2.7
-=======================
+README for YajHFC 0.2.7a
+========================
 
 ABOUT
 -----
@@ -28,9 +28,9 @@ Requirements:
 * Some program to view TIFF files (also see FAQ.txt for this)
 * Optional: A PostScript viewer (e.g. Ghostview)
 
-To install YajHFC just download the yajhfc-0_2_7.jar file to some folder on your
+To install YajHFC just download the yajhfc-0_2_7a.jar file to some folder on your
 file system.
-To execute it, use: "java -jar yajhfc-0_2_7.jar"
+To execute it, use: "java -jar yajhfc-0_2_7a.jar"
 (In Windows you usually can just double click the jar file as well.)
 
 LICENSE
@@ -60,6 +60,9 @@ YajHFC was originally written as a first more complicated
 
 CHANGES
 -------
+
+0.2.7a:
+- Bugfix for a exception that occured when displaying "only own faxes"
 
 0.2.7:
 - Added Spanish translation
