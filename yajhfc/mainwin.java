@@ -85,7 +85,7 @@ import yajhfc.filters.StringFilter;
 import yajhfc.filters.StringFilterOperator;
 
 
-public class mainwin extends JFrame {
+public final class mainwin extends JFrame {
     
     private JPanel jContentPane = null;
     
@@ -158,7 +158,7 @@ public class mainwin extends JFrame {
                 ow.setModal(true);
                 ow.setVisible(true);
                 if (ow.getModalResult()) 
-                    ReloadSettings();
+                    reconnectToServer();
             }
         };
         actOptions.putValue(Action.NAME, _("Options") + "...");
@@ -463,7 +463,7 @@ public class mainwin extends JFrame {
 
                 actAdminMode.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, newState);
                 
-                ReloadSettings();
+                reconnectToServer();
             };
         };
         actAdminMode.putValue(Action.NAME, _("Admin mode"));
@@ -672,7 +672,7 @@ public class mainwin extends JFrame {
         myopts = utils.getFaxOptions();
         
         utmrTable = new java.util.Timer("RefreshTimer");
-        //ReloadSettings();
+        reloadTableColumnSettings();
         menuViewListener.loadFromOptions();
     }
     
@@ -717,7 +717,25 @@ public class mainwin extends JFrame {
         }
     }
     
-    public void ReloadSettings() {
+    private void reloadTableColumnSettings() {
+        MyTableModel tm = getRecvTableModel();
+        tm.columns = myopts.recvfmt;
+        tm.fireTableStructureChanged();
+        
+        tm = getSentTableModel();
+        tm.columns = myopts.sentfmt;
+        tm.fireTableStructureChanged();
+
+        tm = getSendingTableModel();
+        tm.columns = myopts.sendingfmt;
+        tm.fireTableStructureChanged();
+        
+        TableRecv.setColumnCfgString(myopts.recvColState);
+        TableSent.setColumnCfgString(myopts.sentColState);
+        TableSending.setColumnCfgString(myopts.sendingColState);
+    }
+    
+    public void reconnectToServer() {
         doLogout();
         
         if (myopts.host.length() == 0) { // Prompt for server if not set
@@ -785,24 +803,8 @@ public class mainwin extends JFrame {
             hyfc.setPassive(myopts.pasv);
             hyfc.tzone(myopts.tzone.type);
             
-            //getStatus();
-            
-            MyTableModel tm = getRecvTableModel();
-            tm.columns = myopts.recvfmt;
-            tm.fireTableStructureChanged();
+            reloadTableColumnSettings();
             hyfc.rcvfmt(utils.VectorToString(myopts.recvfmt, "|"));
-            
-            tm = getSentTableModel();
-            tm.columns = myopts.sentfmt;
-            tm.fireTableStructureChanged();
-
-            tm = getSendingTableModel();
-            tm.columns = myopts.sendingfmt;
-            tm.fireTableStructureChanged();
-            
-            TableRecv.setColumnCfgString(myopts.recvColState);
-            TableSent.setColumnCfgString(myopts.sentColState);
-            TableSending.setColumnCfgString(myopts.sendingColState);
             
             menuView.setEnabled(true);
             // Re-check menu View state:
