@@ -31,6 +31,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.Enumeration;
+import java.util.Locale;
 import java.util.Properties;
 
 import javax.swing.Box;
@@ -50,6 +51,12 @@ public class AboutDialog extends JDialog {
     
     private static final String[] readmeFiles = 
             { "README.txt", "FAQ.txt", "COPYING" };
+    /**
+     * Determines if the english version of the readmeFiles above
+     * should be displayed in addition to the localized ones.
+     */
+    private static final boolean[] addEnglishReadme = 
+            { true,         true,      false };
     
     private JPanel jContentPane;
     
@@ -61,9 +68,12 @@ public class AboutDialog extends JDialog {
     //private ArrayList<JScrollPane> scrollTxt;
     private ClipboardPopup clpText;
     
-    private void loadFile(JTextArea text, String resName) {
-        //URL txtURL = AboutDialog.class.getResource(resName);
-        URL txtURL = utils.getLocalizedFile(resName);
+    private void loadFile(JTextArea text, String resName, boolean useLocalized) {
+        URL txtURL;
+        if (useLocalized)
+            txtURL = utils.getLocalizedFile(resName);
+        else
+            txtURL = AboutDialog.class.getResource(resName);
         
         try {
             text.setText("");
@@ -84,12 +94,12 @@ public class AboutDialog extends JDialog {
     }
     
     
-    private JScrollPane addScrollTxt(String resName) {
+    private JScrollPane addScrollTxt(String resName, boolean useLocalized) {
         JTextArea text = new JTextArea();
         text.setEditable(false);
         text.setFont(new Font("DialogInput", java.awt.Font.PLAIN, 12));
         text.addMouseListener(clpText);
-        loadFile(text, resName);
+        loadFile(text, resName, useLocalized);
         
         JScrollPane scroll = new JScrollPane(text);
         return scroll;
@@ -225,13 +235,18 @@ public class AboutDialog extends JDialog {
         switch (mode) {
         case ABOUT:
             tabMain.addTab(_("About"), getAboutPane());
-            tabMain.addTab(_("License"), addScrollTxt("/COPYING"));
+            tabMain.addTab(_("License"), addScrollTxt("/COPYING", false));
             tabMain.addTab(_("System properties"), addSysPropTxt());
             this.setTitle(MessageFormat.format(_("About {0}"), utils.AppShortName));
             break;
         case READMES:
-            for (int i = 0; i < readmeFiles.length; i++)
-                tabMain.addTab(readmeFiles[i], addScrollTxt("/" + readmeFiles[i]));
+            for (int i = 0; i < readmeFiles.length; i++) {
+                tabMain.addTab(readmeFiles[i], addScrollTxt("/" + readmeFiles[i], true));
+                
+                if (addEnglishReadme[i] && (!utils.getLocale().equals(Locale.ENGLISH))) {
+                    tabMain.addTab(MessageFormat.format("{0} ({1})", readmeFiles[i], Locale.ENGLISH.getDisplayLanguage(utils.getLocale())), addScrollTxt("/" + readmeFiles[i], false));
+                }
+            }
             this.setTitle(_("Documentation"));
             this.setSize(640, 480);
             break;

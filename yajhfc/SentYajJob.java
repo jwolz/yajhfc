@@ -46,6 +46,9 @@ public class SentYajJob extends YajJob {
         // The last entry is "End of Documents"!
         for (int i = 0; i < files.length - 1; i++) {
             String[] fields = files[i].split("\\s");
+            if (utils.debugMode) {
+                System.out.println("Trying to access file " + fields[1] + "; type: " + fields[0]);
+            }
             try {
                 hyfc.stat(fields[1]); // will throw FileNotFoundException if file doesn't exist
                 // Bugfix for certain HylaFAX versions that always return "PCL"
@@ -62,6 +65,9 @@ public class SentYajJob extends YajJob {
             } catch (FileNotFoundException e) {
                 // do nothing
                 //System.err.println(e.toString());
+                if (utils.debugMode) {
+                    e.printStackTrace(System.out);
+                }
             }
         }
         

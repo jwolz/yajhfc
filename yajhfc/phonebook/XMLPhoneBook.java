@@ -1,4 +1,4 @@
-package yajhfc;
+package yajhfc.phonebook;
 /*
  * YAJHFC - Yet another Java Hylafax client
  * Copyright (C) 2005 Jonas Wolz
@@ -18,12 +18,13 @@ package yajhfc;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+import java.awt.Dialog;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -36,13 +37,21 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import yajhfc.ExampleFileFilter;
+import yajhfc.ExceptionDialog;
+import yajhfc.utils;
+
 public class XMLPhoneBook extends PhoneBook {
 
+    public static final String PB_Prefix = "XML";      // The prefix of this Phonebook type's descriptor
+    public static final String PB_DisplayName = utils._("XML Phonebook"); // A user-readable name for this Phonebook type
+    public static final String PB_Description = utils._("A Phonebook saving its entries as a XML file."); // A user-readable description of this Phonebook type
+    
     private ArrayList<XMLPhoneBookEntry> list;
     private String fileName;
     private DefaultPhoneBookEntryComparator pbeComparator;
     
-    public void reSort() {
+    public void resort() {
         Collections.sort(list, pbeComparator);
     }
     
@@ -96,8 +105,8 @@ public class XMLPhoneBook extends PhoneBook {
         jfc.addChoosableFileFilter(jfc.getAcceptAllFileFilter());
         jfc.setFileFilter(ff);
         
-        if (jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
-            return jfc.getSelectedFile().getPath();
+        if (jfc.showOpenDialog(parentDialog) == JFileChooser.APPROVE_OPTION)
+            return PB_Prefix + ":" + jfc.getSelectedFile().getPath();
         else
             return null;
     }
@@ -120,10 +129,10 @@ public class XMLPhoneBook extends PhoneBook {
             Transformer transformer = tFactory.newTransformer();
             
             DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(new File(fileName));
+            StreamResult result = new StreamResult(new FileOutputStream(fileName));
             transformer.transform(source, result);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, utils._("Error saving the phone book: ") + e.getLocalizedMessage());
+            ExceptionDialog.showExceptionDialog(parentDialog, utils._("Error saving the phone book: "), e);
         }
     }
 
@@ -148,12 +157,16 @@ public class XMLPhoneBook extends PhoneBook {
             }
         }
         
-        reSort();
+        resort();
         fireContentsChanged(this, 0, list.size() - 1);
     }
     
+    public void openDefault() {
+        open(PB_Prefix + ":" + utils.getConfigDir() + "default.phonebook");
+    }
+    
     @Override
-    public void open(String descriptor) {       
+    protected void openInternal(String descriptor) {       
 /*        for (int i = 0; i < 20; i++) {
             XMLPhoneBookEntry pb = new XMLPhoneBookEntry();
             
@@ -181,50 +194,18 @@ public class XMLPhoneBook extends PhoneBook {
             
             loadFromXML(root);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, utils._("Error loading the phone book: ") + e.getLocalizedMessage());
+            //JOptionPane.showMessageDialog(null, utils._("Error loading the phone book: ") + e.getLocalizedMessage());
+            ExceptionDialog.showExceptionDialog(parentDialog, utils._("Error loading the phone book: "), e);
         }
         
     }
 
-    public XMLPhoneBook() {
+    public XMLPhoneBook(Dialog parent) {
+        super(parent);
+        
         list = new ArrayList<XMLPhoneBookEntry>();
         pbeComparator = new DefaultPhoneBookEntryComparator();
     }
 
 }
 
-class XMLPhoneBookEntry extends PhoneBookEntry {
-    public void saveToXML(Element el, Document doc) {
-        java.lang.reflect.Field[] f = XMLPhoneBookEntry.class.getFields();
-        
-        for (int i = 0; i < f.length; i++) {
-            try {
-                Object val = f[i].get(this);
-                if (val == null)
-                    continue;
-                
-                Element dataEl = doc.createElement(f[i].getName());
-                dataEl.setTextContent(val.toString());
-                el.appendChild(dataEl);
-            } catch (Exception e) {
-                System.err.println("Error writing element " + f[i].getName() + ": " + e.toString());
-            }
-        }
-    }
-    
-    public void loadFromXML(Element el) {
-        NodeList nl = el.getChildNodes();
-        
-        for (int i = 0; i < nl.getLength(); i++) {
-            Node item = nl.item(i);
-            if ((item.getNodeType() == Node.ELEMENT_NODE)) {
-                try {
-                    java.lang.reflect.Field f = XMLPhoneBookEntry.class.getField(item.getNodeName());
-                    f.set(this, item.getTextContent());
-                } catch (Exception e) {
-                     System.err.println("Error reading element " + item.getNodeName() + ": " + e.toString());
-                }
-            }
-        }
-    }
-}

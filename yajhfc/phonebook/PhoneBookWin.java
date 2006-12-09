@@ -1,4 +1,4 @@
-package yajhfc;
+package yajhfc.phonebook;
 /*
  * YAJHFC - Yet another Java Hylafax client
  * Copyright (C) 2005 Jonas Wolz
@@ -31,18 +31,21 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.MessageFormat;
 import java.util.Arrays;
-import java.util.Comparator;
 
-import javax.swing.AbstractListModel;
+import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -51,7 +54,11 @@ import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-public class PhoneBookWin extends JDialog 
+import yajhfc.ClipboardPopup;
+import yajhfc.ExceptionDialog;
+import yajhfc.utils;
+
+public final class PhoneBookWin extends JDialog 
     implements ListSelectionListener, ActionListener {
 
     private JPanel jContentPane;
@@ -78,6 +85,8 @@ public class PhoneBookWin extends JDialog
     
     private ClipboardPopup defClPop;
     
+    private JMenuItem mnuAdd, mnuDel;
+    
     private boolean usedSelectButton;
     
     private final double border = 5;
@@ -100,14 +109,14 @@ public class PhoneBookWin extends JDialog
             textComment.setText("");
             enable = false;
         } else {
-            textSurname.setText(pb.surname);
-            textGivenname.setText(pb.givenname);
-            textTitle.setText(pb.title);
-            textCompany.setText(pb.company);
-            textLocation.setText(pb.location);
-            textVoicenumber.setText(pb.voicenumber);
-            textFaxnumber.setText(pb.faxnumber);
-            textComment.setText(pb.comment);
+            textSurname.setText(pb.getName());
+            textGivenname.setText(pb.getGivenName());
+            textTitle.setText(pb.getTitle());
+            textCompany.setText(pb.getCompany());
+            textLocation.setText(pb.getLocation());
+            textVoicenumber.setText(pb.getVoiceNumber());
+            textFaxnumber.setText(pb.getFaxNumber());
+            textComment.setText(pb.getComment());
             enable = true;
         }
         
@@ -125,14 +134,14 @@ public class PhoneBookWin extends JDialog
         if (pb == null)
            return; 
         
-        pb.surname = textSurname.getText();
-        pb.givenname = textGivenname.getText();
-        pb.title = textTitle.getText();
-        pb.company = textCompany.getText();
-        pb.location = textLocation.getText();
-        pb.voicenumber = textVoicenumber.getText();
-        pb.faxnumber = textFaxnumber.getText();
-        pb.comment = textComment.getText();
+        pb.setName(textSurname.getText());
+        pb.setGivenName(textGivenname.getText());
+        pb.setTitle(textTitle.getText());
+        pb.setCompany(textCompany.getText());
+        pb.setLocation(textLocation.getText());
+        pb.setVoiceNumber(textVoicenumber.getText());
+        pb.setFaxNumber(textFaxnumber.getText());
+        pb.setComment(textComment.getText());
         
         if (updateOnly)
             phoneBook.updateEntryInList(pb);
@@ -148,18 +157,26 @@ public class PhoneBookWin extends JDialog
         phoneBook.close();
     }
     
-    private void openPhoneBook() {
+    private void openPhoneBook(String descriptor) {
         closePhoneBook();
-            
-        phoneBook = new XMLPhoneBook();
-        oldEntry = null;
         
-        String descriptor = textDescriptor.getText();
-        if (descriptor == null || descriptor.equals("")) {
-            descriptor = utils.getConfigDir() + "default.phonebook";
-            textDescriptor.setText(descriptor);
+        //String descriptor = textDescriptor.getText();
+        textDescriptor.setText(descriptor);
+        
+        if (descriptor != null && descriptor.length() > 0) {
+            phoneBook = PhoneBookFactory.instanceForDescriptor(descriptor, this);
+            if (phoneBook == null) {
+                JOptionPane.showMessageDialog(this, utils._("Unknown Phonebook type selected, using default!"), utils._("Error"), JOptionPane.ERROR_MESSAGE);
+            } else {
+                phoneBook.open(descriptor);
+            }
         }
-        phoneBook.open(descriptor);
+        if (phoneBook == null) {
+            phoneBook = PhoneBookFactory.createDefault(this);
+            phoneBook.openDefault();
+        }
+        
+        oldEntry = null;
         
         listEntries.setModel(phoneBook);
         
@@ -167,6 +184,7 @@ public class PhoneBookWin extends JDialog
             listEntries.setSelectedIndex(0);
         else {
             buttonDel.setEnabled(false);
+            mnuDel.setEnabled(false);
             writeToTextFields(null); // disable text fields
         }
     }
@@ -178,7 +196,10 @@ public class PhoneBookWin extends JDialog
                 readFromTextFields(oldEntry, false);
                 oldEntry = newEntry;
                 writeToTextFields(oldEntry);
-                buttonDel.setEnabled(listEntries.getSelectedIndex() >= 0);
+                
+                boolean enable = listEntries.getSelectedIndex() >= 0;
+                buttonDel.setEnabled(enable);
+                mnuDel.setEnabled(enable);
             }
         }        
     }
@@ -201,8 +222,8 @@ public class PhoneBookWin extends JDialog
         } else if (e.getActionCommand().equals("browse")) {
             String newPB = phoneBook.browseForPhoneBook();
             if (newPB != null) {
-                textDescriptor.setText(newPB);
-                openPhoneBook();
+                //textDescriptor.setText(newPB);
+                openPhoneBook(newPB);
             }
         } else if (e.getActionCommand().equals("select")) {
             usedSelectButton = true;
@@ -319,7 +340,7 @@ public class PhoneBookWin extends JDialog
 
             double [][] dLay = {
                     {border, TableLayout.FILL, border, TableLayout.PREFERRED, border},
-                    {border, 25, border, 25, border, TableLayout.FILL}
+                    {0, TableLayout.PREFERRED, border, 25, border, TableLayout.FILL}
             };
             
             jContentPane = new JPanel(new TableLayout(dLay));
@@ -357,8 +378,76 @@ public class PhoneBookWin extends JDialog
         return jContentPane;
     }
     
+    private JMenu getPhonebookMenu() {
+        JMenu importMenu = new JMenu(utils._("Import"));
+        importMenu.setIcon(utils.loadIcon("general/Import"));
+        JMenu openMenu = new JMenu(utils._("Open"));
+        openMenu.setIcon(utils.loadIcon("general/Open"));
+        /*JMenu saveAsMenu = new JMenu(utils._("Save as"));
+        saveAsMenu.setIcon(utils.loadIcon("general/SaveAs"));*/
+        
+        for (PhoneBookType pbt : PhoneBookFactory.PhonebookTypes) {
+            String menuText = pbt.getDisplayName();
+            PhonebookMenuActionListener pbmal = new PhonebookMenuActionListener(pbt);
+            
+            JMenuItem mi;
+            mi = new JMenuItem(menuText);
+            mi.setActionCommand(PhonebookMenuActionListener.IMPORT_COMMAND);
+            mi.addActionListener(pbmal);
+            importMenu.add(mi);
+            
+            mi = new JMenuItem(menuText);
+            mi.setActionCommand(PhonebookMenuActionListener.OPEN_COMMAND);
+            mi.addActionListener(pbmal);
+            openMenu.add(mi);
+            
+            /*mi = new JMenuItem(menuText);
+            mi.setActionCommand(PhonebookMenuActionListener.SAVEAS_COMMAND);
+            mi.addActionListener(pbmal);
+            saveAsMenu.add(mi);*/
+        }
+        
+        JMenuItem closeMenu = new JMenuItem(utils._("Close"));
+        closeMenu.setActionCommand("close");
+        closeMenu.addActionListener(this);
+        
+        JMenu pbMenu = new JMenu(utils._("Phonebook"));
+        pbMenu.add(openMenu);
+        pbMenu.add(importMenu);
+        //pbMenu.add(saveAsMenu);
+        pbMenu.add(new JSeparator());
+        pbMenu.add(closeMenu);
+        return pbMenu;
+    }
+    
+    private JMenu getEntryMenu() {
+        JMenu entryMenu = new JMenu(utils._("Entry"));
+        
+        mnuAdd = new JMenuItem(utils._("Add"), utils.loadIcon("general/Add"));
+        mnuAdd.setToolTipText(_("Add new entry"));
+        mnuAdd.setActionCommand("add");
+        mnuAdd.addActionListener(this);
+        mnuDel = new JMenuItem(utils._("Delete"), utils.loadIcon("general/Delete"));
+        mnuDel.setToolTipText(_("Delete selected entry"));
+        mnuDel.setEnabled(false);
+        mnuDel.setActionCommand("del");
+        mnuDel.addActionListener(this);
+        
+        entryMenu.add(mnuAdd);
+        entryMenu.add(mnuDel);
+        return entryMenu;
+    }
+    
+    private JMenuBar getMenu() {
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.add(getPhonebookMenu());
+        menuBar.add(getEntryMenu());
+        return menuBar;
+    }
+    
     public void initialize() {
         setContentPane(getJContentPane());
+        setJMenuBar(getMenu());
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setTitle(_("Phone book"));
         
@@ -368,7 +457,7 @@ public class PhoneBookWin extends JDialog
                 closePhoneBook();
                 
                 utils.getFaxOptions().phoneWinBounds = getBounds();
-                utils.getFaxOptions().lastPhonebook = textDescriptor.getText();
+                utils.getFaxOptions().lastPhonebook = phoneBook.getDescriptor();
             }
         });
         
@@ -381,8 +470,7 @@ public class PhoneBookWin extends JDialog
             utils.setDefWinPos(this);
         }
         
-        textDescriptor.setText(utils.getFaxOptions().lastPhonebook);
-        openPhoneBook();
+        openPhoneBook(utils.getFaxOptions().lastPhonebook);
     }
     
     public PhoneBookWin(Dialog owner) {
@@ -417,7 +505,7 @@ public class PhoneBookWin extends JDialog
         return defClPop;
     }
     
-    class EntryTextFieldListener implements ActionListener, FocusListener {
+    private class EntryTextFieldListener implements ActionListener, FocusListener {
 
         public void actionPerformed(ActionEvent e) {
             updateListEntries();
@@ -436,77 +524,75 @@ public class PhoneBookWin extends JDialog
             listEntries.setSelectedValue(oldEntry, true);
         }
     }
-}
-
-// Phone book entry
-// Phone book implementations can override this in order to
-// save status information.
-// New PhoneBookEntry classes are only to be created by PhoneBook implementations
-abstract class PhoneBookEntry {
-    public String surname = "";
-    public String givenname = "";
-    public String title = "";
-    public String company = "";
-    public String location = "";
-    public String voicenumber = "";
-    public String faxnumber = "";
-    public String comment = "";
     
-    public String toString() {
-        if (surname.length() > 0) {
-            if (givenname.length() > 0)
-                //return surname + ", " + givenname;
-                return MessageFormat.format(utils._("{0} {1}"), givenname, surname);
+    private class PhonebookMenuActionListener implements ActionListener{
+        
+        public static final String IMPORT_COMMAND = "pb_import";
+        public static final String SAVEAS_COMMAND = "pb_saveas";
+        public static final String OPEN_COMMAND = "pb_open";
+        
+        public PhoneBookType pbType;
+        
+        public void actionPerformed(ActionEvent e) {
+            try {
+                String cmd = e.getActionCommand();
+
+                if (cmd.equals(OPEN_COMMAND)) 
+                    doOpen();
+                /*else if (cmd.equals(SAVEAS_COMMAND))
+                    doSaveAs();*/
+                else if (cmd.equals(IMPORT_COMMAND)) 
+                    doImport();
+                else
+                    System.err.println("Unknown Action command: " + cmd);
+            } catch (Exception ex) {
+                ExceptionDialog.showExceptionDialog(PhoneBookWin.this, utils._("Error executing the desired action:"), ex);
+            }
+        }
+        
+        private void doImport() {
+            PhoneBook pb;
+            String descriptor;
+            
+            pb = pbType.createInstance(PhoneBookWin.this);
+            
+            descriptor = pb.browseForPhoneBook();
+            if (descriptor != null) {
+                pb.open(descriptor); 
+                
+                for (int i=0; i < pb.getSize(); i++) {
+                    PhoneBookEntry pbe = phoneBook.addNewEntry();
+                    pbe.copyFrom(pb.readEntry(i));
+                }
+                pb.close();
+                phoneBook.resort();
+            }
+        }
+        
+        /*private void doSaveAs() {
+            
+        }*/
+        
+        private void doOpen() {
+            PhoneBook pb;
+            String descriptor;
+            
+            if (pbType.targetClass.isInstance(phoneBook))
+                pb = phoneBook;
             else
-                return surname;
-        } else {
-            if (givenname.length() > 0)
-                return givenname;
-            else
-                return utils._("<no name>");
+                pb = pbType.createInstance(PhoneBookWin.this);
+            
+            descriptor = pb.browseForPhoneBook();
+            if (descriptor != null) {
+                openPhoneBook(descriptor);                
+            }
+        }
+        
+        public PhonebookMenuActionListener(PhoneBookType pbType) {
+            this.pbType = pbType;
         }
     }
-    
 }
 
-class DefaultPhoneBookEntryComparator implements Comparator<PhoneBookEntry> {
-    public int compare(PhoneBookEntry o1, PhoneBookEntry o2) {
-        int res;
-        res = o1.surname.compareToIgnoreCase(o2.surname);
-        if (res == 0) {
-            return o1.givenname.compareToIgnoreCase(o2.givenname);
-        } else
-            return res;
-        //return o1.toString().compareToIgnoreCase(o2.toString());
-    }
-}
 
-// Abstract class describing a phone book
-// Should be sorted
-abstract class PhoneBook extends AbstractListModel {
 
-    public abstract PhoneBookEntry addNewEntry();
-    
-    // read entry
-    public PhoneBookEntry readEntry(int index) {
-        return (PhoneBookEntry)getElementAt(index);
-    }
-    
-    // Write the entry to the "database"
-    public abstract void writeEntry(PhoneBookEntry entry);
-    
-    // Just update the display in the JList
-    public void updateEntryInList(PhoneBookEntry entry) {
-        writeEntry(entry);
-    }
-    
-    public abstract void deleteEntry(PhoneBookEntry entry);
-    
-    // Show dialog to select a new Phonebook.
-    // Return null if user selects cancel
-    public abstract String browseForPhoneBook();
-    
-    public abstract void open(String descriptor);
-    
-    public abstract void close();
-}

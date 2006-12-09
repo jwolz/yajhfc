@@ -76,13 +76,13 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.plaf.basic.BasicBorders.RadioButtonBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import yajhfc.filters.CustomFilterDialog;
 import yajhfc.filters.FilterCreator;
 import yajhfc.filters.StringFilter;
 import yajhfc.filters.StringFilterOperator;
+import yajhfc.phonebook.PhoneBookWin;
 
 
 public final class mainwin extends JFrame {
@@ -744,6 +744,7 @@ public final class mainwin extends JFrame {
         }
         
         hyfc = new HylaFAXClient();
+        hyfc.setDebug(utils.debugMode);
         try {
             hyfc.open(myopts.host, myopts.port);
             

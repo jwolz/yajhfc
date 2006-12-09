@@ -63,6 +63,8 @@ import javax.swing.KeyStroke;
 import javax.swing.SpinnerNumberModel;
 
 import yajhfc.faxcover.Faxcover;
+import yajhfc.phonebook.PhoneBookEntry;
+import yajhfc.phonebook.PhoneBookWin;
 
 
 public class SendWin extends JDialog {
@@ -515,18 +517,18 @@ public class SendWin extends JDialog {
                     PhoneBookWin pbw = new PhoneBookWin(SendWin.this);
                     PhoneBookEntry pb = pbw.selectNumber();
                     if (pb != null) {
-                        TextNumber.setText(pb.faxnumber);
-                        tflNumbers.addListItem(pb.faxnumber);
+                        TextNumber.setText(pb.getFaxNumber());
+                        tflNumbers.addListItem(pb.getFaxNumber());
                         
-                        textToCompany.setText(pb.company);
-                        textToLocation.setText(pb.location);
-                        textToVoiceNumber.setText(pb.voicenumber);
+                        textToCompany.setText(pb.getCompany());
+                        textToLocation.setText(pb.getLocation());
+                        textToVoiceNumber.setText(pb.getVoiceNumber());
                         String name = "";
-                        if (pb.title.length() > 0)
-                            name += pb.title + " ";
-                        if (pb.givenname.length() > 0)
-                            name += pb.givenname + " ";
-                        name += pb.surname;
+                        if (pb.getTitle().length() > 0)
+                            name += pb.getTitle() + " ";
+                        if (pb.getGivenName().length() > 0)
+                            name += pb.getGivenName() + " ";
+                        name += pb.getName();
                         textToName.setText(name);
                     }
                 }
@@ -560,6 +562,16 @@ public class SendWin extends JDialog {
     }
     
     class SendButtonListener implements ActionListener {
+        
+        private void setIfNotEmpty(Job j, String prop, String val) {
+            try {
+            if (val.length() >  0)
+                j.setProperty(prop, val);
+            } catch (Exception e) {
+                System.err.println("Couldn't set additional job info " + prop + ": " + e.getMessage());
+            }
+        }
+        
         public void actionPerformed(ActionEvent e) {
             
             tflFiles.commit();
@@ -669,6 +681,16 @@ public class SendWin extends JDialog {
                         j.setFromUser(fo.user);
                         j.setNotifyAddress(fo.notifyAddress);
                         j.setMaximumDials(fo.maxDial);
+                        
+                        // Set general job information...
+                        setIfNotEmpty(j, "TOUSER", textToName.getText());
+                        setIfNotEmpty(j, "TOCOMPANY", textToCompany.getText());
+                        setIfNotEmpty(j, "TOLOCATION", textToLocation.getText());
+                        setIfNotEmpty(j, "TOVOICE", textToVoiceNumber.getText());
+                        setIfNotEmpty(j, "REGARDING", textSubject.getText());
+                        setIfNotEmpty(j, "FROMCOMPANY", fo.FromCompany);
+                        setIfNotEmpty(j, "FROMLOCATION", fo.FromLocation);
+                        setIfNotEmpty(j, "FROMVOICE", fo.FromVoiceNumber);
                         
                         j.setDialstring(number);
                         j.setExternal(number); // needed to fix an error while sending multiple jobs

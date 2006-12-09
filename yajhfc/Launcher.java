@@ -37,7 +37,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-public class Launcher {
+public final class Launcher {
 
     private static ServerSocket sockBlock = null;
     private static SockBlockAcceptor blockThread;
@@ -112,6 +112,21 @@ public class Launcher {
         }
     }
     
+    
+    private static void printHelp() {
+        System.out.println(
+            "General usage:\n"+
+            "java -jar yajhfc.jar [--help] [--debug] [--admin] [--stdin | filename]\n"+
+            "Argument description:\n"+
+            "filename    The file name of a PostScript file to send.\n"+
+            "--stdin     Read the file to send from standard input"+
+            "--admin     Start up in admin mode"+
+            "--debug     Output some debugging information"+
+            "--help      Displays this text"
+            );   
+    }
+    
+    
     /**
      * Launches this application
      */
@@ -120,13 +135,19 @@ public class Launcher {
         String fileName = "";
         boolean useStdin = false;
         boolean adminMode = false;
+        utils.debugMode = false;
         
         for (int i = 0; i < args.length; i++) {
             if (args[i].startsWith("--")) { // command line argument
-                if (args[i].equals("--stdin"))
+                if (args[i].equals("--help")) {
+                    printHelp();
+                    System.exit(0);
+                } else if (args[i].equals("--stdin"))
                     useStdin = true;
                 else if (args[i].equals("--admin"))
                     adminMode = true;
+                else if (args[i].equals("--debug"))
+                    utils.debugMode = true;
                 else
                     System.err.println(utils._("Unknown command line argument: ") + args[i]);
             } else if (args[i].startsWith("-"))
