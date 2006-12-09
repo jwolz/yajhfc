@@ -130,7 +130,13 @@ public class ExceptionDialog extends JDialog implements ActionListener, Componen
         
         this.pack();
         lblText.addComponentListener(this);
-        lblExceptionText.addComponentListener(this);
+        if (lblExceptionText != null)
+            lblExceptionText.addComponentListener(this);
+        
+        if (utils.debugMode) {
+            System.out.println("EXCEPTION occured: " + message);
+            exc.printStackTrace(System.out);
+        }
     }
     
     public void actionPerformed(ActionEvent e) {

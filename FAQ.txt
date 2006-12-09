@@ -75,11 +75,13 @@ for the effect of the wildcard "?" use ".".
 Q: Which command line arguments does YajHFC understand?
 A:
 General usage:
-java -jar yajhfc.jar [--admin] [--stdin | filename]
+java -jar yajhfc.jar [--help] [--debug] [--admin] [--stdin | filename]
 Argument description:
 filename    The file name of a PostScript file to send.
 --stdin     Read the file to send from standard input
 --admin     Start up in admin mode
+--debug		Output some debugging information
+--help		Displays this text
 
 Q: Why are passwords stored in clear text?
 A:

@@ -22,49 +22,28 @@ import gnu.hylafax.HylaFAXClientProtocol;
 import gnu.hylafax.Job;
 import gnu.hylafax.Pagesize;
 
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.InputVerifier;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JTextField;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.text.JTextComponent;
-
-import yajhfc.faxcover.Faxcover;
 
 public final class utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2006 by Jonas Wolz";
-    public static final String AppVersion = "0.2.7a";
+    public static final String AppVersion = "0.2.8pre";
     public static final String AuthorEMail = "Jonas Wolz &lt;jwolz@freenet.de&gt;";
     public static final String HomepageURL = "http://www.yajhfc.de.vu/"; 
+    
+    public static boolean debugMode = false;
     
     private static FaxOptions theoptions = null;
     private static ResourceBundle msgs = null;
