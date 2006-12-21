@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
+
 public class SentYajJob extends YajJob {
     //private Job curJob = null;
 
@@ -46,22 +48,36 @@ public class SentYajJob extends YajJob {
         // The last entry is "End of Documents"!
         for (int i = 0; i < files.length - 1; i++) {
             String[] fields = files[i].split("\\s");
+            String fileName = fields[1];
+            String fileType = fields[0];
+            
             if (utils.debugMode) {
-                System.out.println("Trying to access file " + fields[1] + "; type: " + fields[0]);
+                System.out.println("Trying to access file " + fileName + "; type: " + fileType);
             }
             try {
-                hyfc.stat(fields[1]); // will throw FileNotFoundException if file doesn't exist
+                hyfc.stat(fileName); // will throw FileNotFoundException if file doesn't exist
                 // Bugfix for certain HylaFAX versions that always return "PCL"
                 // as file type for all documents
-                if (utils.getFaxOptions().pclBug && fields[0].equalsIgnoreCase("pcl")) {
-                    if (fields[1].contains(".ps"))
-                        fields[0] = "ps";
-                    else if (fields[1].contains(".pdf"))
-                        fields[0] = "pdf";
-                    else if (fields[1].contains(".tif"))
-                        fields[0] = "tif";
+                if (utils.getFaxOptions().pclBug && fileType.equalsIgnoreCase("pcl")) {
+                    if (fileName.contains(".ps"))
+                        fileType = "ps";
+                    else if (fileName.contains(".pdf"))
+                        fileType = "pdf";
+                    else if (fileName.contains(".tif"))
+                        fileType = "tif";
                 }
-                availFiles.add(new HylaServerFile(fields[1], fields[0]));
+                
+                if (utils.getFaxOptions().preferRenderedTIFF) {
+                    // Use a hack to get the rendered TIFF instead of the
+                    // original file (if available)
+                    String tiff = findRenderedTIFF(hyfc, fileName);
+                    if (tiff != null) {
+                        fileName = tiff;
+                        fileType = "tif";
+                    }
+                }
+                
+                availFiles.add(new HylaServerFile(fileName, fileType));
             } catch (FileNotFoundException e) {
                 // do nothing
                 //System.err.println(e.toString());
@@ -72,6 +88,46 @@ public class SentYajJob extends YajJob {
         }
         
         return availFiles;
+    }
+    
+    /**
+     * Tries to find a rendered TIFF on the server for the file "serverName".
+     */
+    private String findRenderedTIFF(HylaFAXClient hyfc, String serverName) {
+        if (utils.debugMode)
+            System.out.println("Trying to find the rendered TIFF for " + serverName);
+            
+        int pos = serverName.indexOf('/');
+        if (pos < 0)
+            return null;
+        
+        try {
+            String dir = serverName.substring(0, pos+1);
+            Vector fileList = hyfc.getNameList(dir);
+            
+            // Simple assumption:
+            // The rendered TIFF can be found by appending ";" plus a number to the document's filename
+            String searchPrefix = serverName.substring(pos+1) + ";";
+            for (Object fobj : fileList) {
+                String file = (String)fobj;
+                if (file.startsWith(searchPrefix)) {
+                    file = dir + file;
+                    if (utils.debugMode)
+                        System.out.println("Found a TIFF: " + file);
+                    
+                    hyfc.stat(file); //Throws an exception if the TIFF is not accessible...
+                    
+                    return file;
+                }
+            }
+            return null; //Nothing found;
+        } catch (Exception ex) {
+            if (utils.debugMode) {
+                System.out.println("Got an exception:");
+                ex.printStackTrace(System.out);
+            }
+            return null;
+        }
     }
     
     @Override

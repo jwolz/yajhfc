@@ -27,6 +27,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.MessageFormat;
 
+import yajhfc.FormattedFile.FileFormat;
+
 public class HylaServerFile {
     protected String path;
     protected String type;
@@ -52,24 +54,21 @@ public class HylaServerFile {
         throws IOException, FileNotFoundException, ServerResponseException, UnknownFormatException {
         
         File tmptif = File.createTempFile("fax", "." + type);
+        FileFormat format;
         tmptif.deleteOnExit();
         
         download(hyfc, tmptif);        
         
-        String execCmd;
         if (type.equalsIgnoreCase("tif") || type.equalsIgnoreCase("tiff")) 
-            execCmd = opts.faxViewer;
-        else if (type.equalsIgnoreCase("ps") || type.equalsIgnoreCase("pdf"))
-            execCmd = opts.psViewer;
+            format = FileFormat.TIFF;
+        else if (type.equalsIgnoreCase("ps"))
+            format = FileFormat.PostScript;
+        else if(type.equalsIgnoreCase("pdf"))
+            format = FileFormat.PDF;
         else
             throw new UnknownFormatException(MessageFormat.format(utils._("File format {0} not supported."), type));
         
-        if (execCmd.indexOf("%s") >= 0)
-            execCmd = execCmd.replace("%s", tmptif.getPath());
-        else
-            execCmd += " " + tmptif.getPath();
-        
-        Runtime.getRuntime().exec(execCmd);
+        FormattedFile.viewFile(tmptif.getPath(), format);
     }
     
     @Override

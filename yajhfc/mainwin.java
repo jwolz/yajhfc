@@ -69,6 +69,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.JToolBar;
+import javax.swing.ProgressMonitor;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
@@ -200,11 +201,21 @@ public final class mainwin extends JFrame {
                     msgText = _("Do you really want to delete the selected faxes?");
                 
                 if (JOptionPane.showConfirmDialog(mainwin.this, msgText, _("Delete faxes"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                    for (int i : selTable.getSelectedRows()) {
+                    int[] selRows =  selTable.getSelectedRows();
+                    int progress = 0;
+                    ProgressMonitor pMon = new ProgressMonitor(mainwin.this, _("Deleting faxes"), _("Initializing"), 0, 20 + 10*selRows.length);
+                    
+                    for (int i : selRows) {
                         YajJob yj = null;
                         try {
                             yj = selTable.getJobForRow(i);
+                            pMon.setNote(MessageFormat.format("Deleting fax {0}", yj.getIDValue()));
+                            
                             yj.delete(hyfc);
+                            
+                            progress += 10;
+                            pMon.setProgress(progress);
+                            
                         } catch (Exception e1) {
                             if (yj == null)
                                 msgText = _("Error deleting a fax:\n");
@@ -214,7 +225,9 @@ public final class mainwin extends JFrame {
                             ExceptionDialog.showExceptionDialog(mainwin.this, msgText, e1);
                         }
                     }
+                    pMon.setNote(_("Reloading fax list"));
                     reloadTables();
+                    pMon.close();
                 }
             };
         };
@@ -226,16 +239,27 @@ public final class mainwin extends JFrame {
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 TooltipJTable selTable = (TooltipJTable)((JScrollPane)TabMain.getSelectedComponent()).getViewport().getView();
                 
+                int[] selRows =  selTable.getSelectedRows();
+                int progress = 0;
+                ProgressMonitor pMon = new ProgressMonitor(mainwin.this, _("Viewing faxes"), _("Initializing"), 0, 100 + 1100*selRows.length);
+                
                 int sMin = Integer.MAX_VALUE, sMax = Integer.MIN_VALUE;
-                for (int i : selTable.getSelectedRows()) {
+                for (int i : selRows) {
                     YajJob yj = null;
                     try {
                         yj = selTable.getJobForRow(i);
+                        pMon.setNote(MessageFormat.format(_("Displaying fax {0}"), yj.getIDValue()));
+                        
                         //System.out.println("" + i + ": " + yj.getIDValue().toString());
                         List<HylaServerFile> serverFiles = yj.getServerFilenames(hyfc);
+                        progress += 100;
+                        pMon.setProgress(progress);
                         if (serverFiles.size() == 0) {
                             JOptionPane.showMessageDialog(mainwin.this, MessageFormat.format(_("No document files available for the fax \"{0}\"."), yj.getIDValue()), _("Display fax"), JOptionPane.INFORMATION_MESSAGE);
+                            progress += 1000;
+                            pMon.setProgress(progress);
                         } else {
+                            int step = 1000 / serverFiles.size();
                             for(HylaServerFile hsf : serverFiles) {
                                 try {
                                     hsf.view(hyfc, myopts);
@@ -244,6 +268,8 @@ public final class mainwin extends JFrame {
                                     //JOptionPane.showMessageDialog(mainwin.this, MessageFormat.format(_("An error occured displaying the file {0} (job {1}):\n"), hsf.getPath(), yj.getIDValue()) + e1.getMessage() , _("Error"), JOptionPane.ERROR_MESSAGE);
                                     ExceptionDialog.showExceptionDialog(mainwin.this, MessageFormat.format(_("An error occured displaying the file {0} (job {1}):\n"), hsf.getPath(), yj.getIDValue()), e1);
                                 }
+                                progress += step;
+                                pMon.setProgress(progress);
                             }
                         }
                         if (yj instanceof RecvYajJob) {
@@ -258,11 +284,12 @@ public final class mainwin extends JFrame {
                         ExceptionDialog.showExceptionDialog(mainwin.this, MessageFormat.format(_("An error occured displaying the fax \"{0}\":"), yj.getIDValue()), e1);
                     }
                 }
+                pMon.setNote(_("Cleaning up"));
                 if (sMax >= 0 && selTable == TableRecv) {
                     TableRecv.getSorter().fireTableRowsUpdated(sMin, sMax);
                     actFaxRead.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, true);
                 }
-                
+                pMon.close();
             }
         };
         actShow.putValue(Action.NAME, _("Show") + "...");
@@ -390,10 +417,15 @@ public final class mainwin extends JFrame {
                     if (jfc.showOpenDialog(mainwin.this) == JFileChooser.APPROVE_OPTION) {
                         int fileCounter = 0;
                         
-                        for (int i : selTable.getSelectedRows()) {
+                        int[] selRows =  selTable.getSelectedRows();
+                        int progress = 0;
+                        ProgressMonitor pMon = new ProgressMonitor(mainwin.this, _("Saving faxes"), _("Initializing"), 0, 1000*selRows.length);
+                        
+                        for (int i : selRows) {
                             YajJob yj = null;
                             try {
                                 yj = selTable.getJobForRow(i);
+                                pMon.setNote(MessageFormat.format(_("Saving fax {0}"), yj.getIDValue()));
                                 for(HylaServerFile hsf : yj.getServerFilenames(hyfc)) {
                                     try {
                                         String filename = hsf.getPath();
@@ -411,13 +443,14 @@ public final class mainwin extends JFrame {
                                         ExceptionDialog.showExceptionDialog(mainwin.this, MessageFormat.format(_("An error occured saving the file {0} (job {1}):"), hsf.getPath(), yj.getIDValue()), e1);
                                     }
                                 }
-                                
                             } catch (Exception e1) {
                                 //JOptionPane.showMessageDialog(mainwin.this, _("An error occured saving the fax:\n") + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
                                 ExceptionDialog.showExceptionDialog(mainwin.this, _("An error occured saving the fax:"), e1);
                             }
+                            progress += 100;
+                            pMon.setProgress(progress);
                         }
-                        
+                        pMon.close();
                         JOptionPane.showMessageDialog(mainwin.this, MessageFormat.format(_("{0} files saved to directory {1}."), fileCounter, jfc.getSelectedFile().getPath()), _("Faxes saved"), JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
