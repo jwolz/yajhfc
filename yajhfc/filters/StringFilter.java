@@ -3,8 +3,6 @@ package yajhfc.filters;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
-import sun.management.StringFlag;
-
 import yajhfc.FmtItem;
 import yajhfc.YajJob;
 import yajhfc.YajJobFilter;

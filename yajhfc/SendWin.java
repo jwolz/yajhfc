@@ -24,6 +24,8 @@ import gnu.inet.ftp.ServerResponseException;
 import info.clearthought.layout.TableLayout;
 import info.clearthought.layout.TableLayoutConstraints;
 
+import java.awt.Component;
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
@@ -31,6 +33,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.peer.LabelPeer;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,6 +45,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.print.DocFlavor;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Box;
@@ -53,6 +57,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSpinner;
@@ -60,14 +65,16 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.ProgressMonitor;
 import javax.swing.SpinnerNumberModel;
 
+import yajhfc.FormattedFile.FileFormat;
 import yajhfc.faxcover.Faxcover;
 import yajhfc.phonebook.PhoneBookEntry;
 import yajhfc.phonebook.PhoneBookWin;
 
 
-public class SendWin extends JDialog {
+public class SendWin extends JDialog  {
     private final int border = 10;
     
     private JPanel jContentPane = null;
@@ -109,10 +116,10 @@ public class SendWin extends JDialog {
     private JTextField textSubject = null;
     private JScrollPane scrollToComments = null;
     private JTextArea textToComments = null;
+    private JButton buttonPreview;
     
     private ClipboardPopup defClPop, clpNumbers, clpFiles;
     
-    private InputStream myInStream = null;
     private boolean pollMode = false;
     private static final Dimension buttonSize = new Dimension(120, 27);
     
@@ -378,19 +385,24 @@ public class SendWin extends JDialog {
             
             double[][] tablelay = {
                     { TableLayout.FILL, border, buttonSize.width, border },
-                    { border, buttonSize.height, border, buttonSize.height, TableLayout.FILL }
+                    { border, buttonSize.height, border, buttonSize.height, border, buttonSize.height, TableLayout.FILL, border}
             };
             
             jContentPane = new JPanel(new TableLayout(tablelay));
             
-            jContentPane.add(getButtonSend(), "2, 1");
-            jContentPane.add(getButtonCancel(), "2, 3");
-            
             if (pollMode) {
-                jContentPane.add(getPaneCommon(), "0, 0, 0, 4");
-                jContentPane.add(new JSeparator(JSeparator.VERTICAL), "1, 0, 1, 4, L, F");
-            } else
-                jContentPane.add(getTabMain(), "0, 0, 0, 4");
+                 jContentPane.add(getButtonSend(), "2, 1");
+                 jContentPane.add(getButtonCancel(), "2, 3");
+                 
+                 jContentPane.add(getPaneCommon(), "0, 0, 0, 7");
+                 jContentPane.add(new JSeparator(JSeparator.VERTICAL), "1, 0, 1, 7, L, F");
+            } else {
+                 jContentPane.add(getButtonSend(), "2, 1");
+                 jContentPane.add(getButtonPreview(), "2, 3");
+                 jContentPane.add(getButtonCancel(), "2, 5");
+                 
+                 jContentPane.add(getTabMain(), "0, 0, 0, 7");
+            }
         }
         return jContentPane;
     }
@@ -443,6 +455,54 @@ public class SendWin extends JDialog {
         return ButtonCancel;
     }
 
+    private JButton getButtonPreview() {
+        if (buttonPreview == null) {
+            buttonPreview = new JButton(_("Preview"), utils.loadIcon("general/PrintPreview"));
+            buttonPreview.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    if (!checkUseCover.isSelected() && tflFiles.model.size() == 0) {
+                        JOptionPane.showMessageDialog(SendWin.this, _("Nothing to preview! (Neither a cover page nor a file to send has been selected.)"), _("Preview"), JOptionPane.INFORMATION_MESSAGE);
+                        return;
+                    }
+                    
+                    ProgressMonitor pMon = new ProgressMonitor(SendWin.this, _("Previewing fax"), _("Initialization"), 0, 10000);
+                    pMon.setMillisToPopup(300);
+                    pMon.setMillisToDecideToPopup(100);
+                    
+                    try {
+                        int step, progress;
+                        
+                        if (checkUseCover.isSelected()) {
+                            step = 10000 / (tflFiles.model.size() + 1);
+                            pMon.setNote(_("Creating cover page"));
+                            
+                            File coverFile = prepareCover();
+                            FormattedFile.viewFile(coverFile.getPath(), FileFormat.PostScript);
+                            pMon.setProgress(step);
+                            progress = step;
+                        } else {
+                            if (tflFiles.model.size() > 0)
+                                step = 10000 / tflFiles.model.size();
+                            else
+                                step = 0;
+                            progress = 0;
+                        }
+                        for (int i = 0; i < tflFiles.model.size(); i++) {
+                            HylaTFLItem item = (HylaTFLItem)tflFiles.model.get(i);
+                            pMon.setNote(MessageFormat.format(_("Formatting {0}"), item.getText()));
+                            item.preview(SendWin.this);
+                            progress += step;
+                            pMon.setProgress(progress);
+                        }
+                    } catch (Exception e1) {
+                        ExceptionDialog.showExceptionDialog(SendWin.this, utils._("Error previewing the documents:"), e1);
+                    }
+                    pMon.close();
+                } 
+            });
+        }
+        return buttonPreview;
+    }
     
     private JComboBox getComboResolution() {
         if (ComboResolution == null) {
@@ -499,9 +559,12 @@ public class SendWin extends JDialog {
                 }
             };
             ftfFilename.setFileFilters(
+                    new ExampleFileFilter(new String[] { "ps", "pdf", "jpg", "jpeg", "gif", "png" }, _("All supported formats")),
                     new ExampleFileFilter("ps", _("Postscript files")),
                     new ExampleFileFilter("pdf", _("PDF documents")),
-                    new ExampleFileFilter("txt", _("Plain text"))
+                    new ExampleFileFilter(new String[] {"jpg", "jpeg"}, _("JPEG pictures")),
+                    new ExampleFileFilter("gif", _("GIF pictures")),
+                    new ExampleFileFilter("png", _("PNG pictures"))
             );           
         }
         return ftfFilename;
@@ -560,8 +623,71 @@ public class SendWin extends JDialog {
             ExceptionDialog.showExceptionDialog(this, _("An error occured reading the input: "), e);
         }
     }
+            
+    private File prepareCover() throws IOException, FileNotFoundException {
+        FaxOptions fo = utils.getFaxOptions();   
+        Faxcover cov;
+        File coverFile;
+
+        cov = new Faxcover();
+        cov.pageCount = 0;
+
+        if (checkCustomCover.isSelected()) {
+            if (!(new File(ftfCustomCover.getText()).canRead())) {
+                JOptionPane.showMessageDialog(SendWin.this, MessageFormat.format(_("Can not read file \"{0}\"!"), ftfCustomCover.getText()), _("Error"), JOptionPane.WARNING_MESSAGE);
+                return null;
+            }
+        } else if (fo.useCustomDefaultCover) {
+            if (!(new File(fo.defaultCover).canRead())) {
+                JOptionPane.showMessageDialog(SendWin.this, MessageFormat.format(_("Can not read default cover page file \"{0}\"!"), fo.defaultCover), _("Error"), JOptionPane.WARNING_MESSAGE);
+                return null;
+            }
+        }
+
+        for (int i = 0; i < tflFiles.model.size(); i++) {
+            HylaTFLItem item = (HylaTFLItem)tflFiles.model.get(i);
+
+            InputStream strIn = item.getInputStream();
+            if (strIn != null) {
+                // Try to get page count 
+                cov.estimatePostscriptPages(strIn);
+                strIn.close();
+            }
+        }
+
+        cov.fromCompany = fo.FromCompany;
+        cov.fromFaxNumber = fo.FromFaxNumber;
+        cov.fromLocation = fo.FromLocation;
+        cov.fromVoiceNumber = fo.FromVoiceNumber;
+        cov.sender = fo.FromName;
+
+        cov.comments = textToComments.getText();
+        cov.regarding = textSubject.getText();
+        cov.toCompany = textToCompany.getText();
+        cov.toFaxNumber = TextNumber.getText();
+        cov.toLocation = textToLocation.getText();
+        cov.toName = textToName.getText();
+        cov.toVoiceNumber = textToVoiceNumber.getText();
+
+        cov.setPageSize(((PaperSize)ComboPaperSize.getSelectedItem()).size);
+
+        if (checkCustomCover.isSelected())
+            cov.coverTemplate = new File(ftfCustomCover.getText());
+        else if (fo.useCustomDefaultCover)
+            cov.coverTemplate = new File(fo.defaultCover);
+
+        // Create cover:
+        coverFile = File.createTempFile("cover", ".tmp");
+        coverFile.deleteOnExit();
+        FileOutputStream fout = new FileOutputStream(coverFile);
+        cov.makeCoverSheet(fout);
+        fout.close();                       
+
+        return coverFile;
+    }
+
     
-    class SendButtonListener implements ActionListener {
+    private class SendButtonListener implements ActionListener {
         
         private void setIfNotEmpty(Job j, String prop, String val) {
             try {
@@ -592,81 +718,42 @@ public class SendWin extends JDialog {
                 return;
             }
             
+            int maxProgress;
+            maxProgress = 20 * tflFiles.model.size() + 15 * tflNumbers.model.size() + 10;
+            if (checkUseCover.isSelected())
+                maxProgress += 20;
+            ProgressMonitor pMon = new ProgressMonitor(SendWin.this, _("Sending fax"), _("Initialization"), 0, maxProgress);
+            pMon.setMillisToPopup(300);
+            pMon.setMillisToDecideToPopup(100);
+            
             try {        
                 File coverFile = null;
                 FaxOptions fo = utils.getFaxOptions();                    
                 
+                int progress = 0;
                 if (!pollMode) {
-                    Faxcover cov = null;
                     if (checkUseCover.isSelected()) {
-                        cov = new Faxcover();
-                        cov.pageCount = 0;
+                        pMon.setNote(_("Creating cover page"));
+                        coverFile = prepareCover();
+                        progress += 20;
+                        pMon.setProgress(progress);
                     }
                     
-                    if (checkUseCover.isSelected()) {
-                        if (checkCustomCover.isSelected()) {
-                            if (!(new File(ftfCustomCover.getText()).canRead())) {
-                                JOptionPane.showMessageDialog(SendWin.this, MessageFormat.format(_("Can not read file \"{0}\"!"), ftfCustomCover.getText()), _("Error"), JOptionPane.WARNING_MESSAGE);
-                                return;
-                            }
-                        } else if (fo.useCustomDefaultCover) {
-                            if (!(new File(fo.defaultCover).canRead())) {
-                                JOptionPane.showMessageDialog(SendWin.this, MessageFormat.format(_("Can not read default cover page file \"{0}\"!"), fo.defaultCover), _("Error"), JOptionPane.WARNING_MESSAGE);
-                                return;
-                            }
-                        }
-                    }
-                    
+                    // Upload documents:
                     hyfc.type(HylaFAXClient.TYPE_IMAGE);
                     
                     for (int i = 0; i < tflFiles.model.size(); i++) {
                         HylaTFLItem item = (HylaTFLItem)tflFiles.model.get(i);
+                        pMon.setNote(MessageFormat.format(_("Uploading {0}"), item.getText()));
                         item.upload(hyfc);
-                        
-                        if (cov != null) {
-                            InputStream strIn = item.getInputStream();
-                            if (strIn != null)
-                                // Try to get page count 
-                                cov.estimatePostscriptPages(strIn);
-                        }
-                    }
-                    
-                    // Create cover
-                    if (cov != null) {
-                        
-                        cov.fromCompany = fo.FromCompany;
-                        cov.fromFaxNumber = fo.FromFaxNumber;
-                        cov.fromLocation = fo.FromLocation;
-                        cov.fromVoiceNumber = fo.FromVoiceNumber;
-                        cov.sender = fo.FromName;
-                        
-                        cov.comments = textToComments.getText();
-                        cov.regarding = textSubject.getText();
-                        cov.toCompany = textToCompany.getText();
-                        cov.toFaxNumber = TextNumber.getText();
-                        cov.toLocation = textToLocation.getText();
-                        cov.toName = textToName.getText();
-                        cov.toVoiceNumber = textToVoiceNumber.getText();
-                        
-                        cov.setPageSize(((PaperSize)ComboPaperSize.getSelectedItem()).size);
-                        
-                        
-                        if (checkCustomCover.isSelected())
-                            cov.coverTemplate = new File(ftfCustomCover.getText());
-                        else if (fo.useCustomDefaultCover)
-                            cov.coverTemplate = new File(fo.defaultCover);
-                        
-                        // Create cover:
-                        coverFile = File.createTempFile("cover", ".tmp");
-                        coverFile.deleteOnExit();
-                        FileOutputStream fout = new FileOutputStream(coverFile);
-                        cov.makeCoverSheet(fout);
-                        fout.close();                       
+                        progress += 20;
+                        pMon.setProgress(progress);
                     }
                 }            
                 
                 for (int i = 0; i < tflNumbers.model.size(); i++) {
                     String number = tflNumbers.model.get(i).toString();
+                    pMon.setNote(MessageFormat.format(_("Creating job to {0}"), number));
                     
                     try {
                         String coverName = null;
@@ -677,6 +764,9 @@ public class SendWin extends JDialog {
                         }
                         
                         Job j = hyfc.createJob();
+                        
+                        progress += 5;
+                        pMon.setProgress(progress);
                         
                         j.setFromUser(fo.user);
                         j.setNotifyAddress(fo.notifyAddress);
@@ -716,13 +806,20 @@ public class SendWin extends JDialog {
                             fo.CustomCover = ftfCustomCover.getText();
                         }
                         
+                        progress += 5;
+                        pMon.setProgress(progress);
+                        
                         hyfc.submit(j);   
+                        
+                        progress += 5;
+                        pMon.setProgress(progress);
                     } catch (Exception e1) {
                         //JOptionPane.showMessageDialog(ButtonSend, MessageFormat.format(_("An error occured while submitting the fax job for phone number \"{0}\" (will try to submit the fax to the other numbers anyway): "), number) + "\n" + e1.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
                         ExceptionDialog.showExceptionDialog(SendWin.this, MessageFormat.format(_("An error occured while submitting the fax job for phone number \"{0}\" (will try to submit the fax to the other numbers anyway): "), number) , e1);
                     }
                 }
                 
+                pMon.setNote(_("Cleaning up"));
                 for (int i = 0; i < tflFiles.model.size(); i++) {
                     HylaTFLItem item = (HylaTFLItem)tflFiles.model.get(i);
                     item.cleanup();
@@ -730,13 +827,16 @@ public class SendWin extends JDialog {
                 if (coverFile != null)
                     coverFile.delete();
                 
+                pMon.close();
                 dispose();
             } catch (Exception e1) {
                 //JOptionPane.showMessageDialog(ButtonSend, _("An error occured while submitting the fax: ") + "\n" + e1.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
                 ExceptionDialog.showExceptionDialog(SendWin.this, _("An error occured while submitting the fax: "), e1);
-            }
+                pMon.close();
+            } 
         }
     }
+    
 }  
 
 abstract class HylaTFLItem extends TFLItem {
@@ -745,7 +845,29 @@ abstract class HylaTFLItem extends TFLItem {
     public abstract void upload(HylaFAXClient hyfc) throws FileNotFoundException, IOException, ServerResponseException ;
     
     // May return null!
-    public abstract InputStream getInputStream() throws FileNotFoundException;
+    public abstract InputStream getInputStream() throws FileNotFoundException, IOException;
+    
+    /**
+     * Previews the file in a viewer.
+     */
+    public boolean preview(Component parent) throws IOException, UnknownFormatException {
+        FormattedFile previewFile = getPreviewFilename();
+        if (previewFile == null) {
+            //JOptionPane.showMessageDialog(parent, MessageFormat.format(utils._("Preview is not supported for document \"{0}\"."), this.getText()), utils._("Preview"), JOptionPane.INFORMATION_MESSAGE);
+            return false;
+        }
+        previewFile.view();
+        return true;
+    }
+    
+    /**
+     * Returns a local file to be used by the default implementation of preview().
+     * Return null if preview is not supported.
+     * @return
+     */
+    protected FormattedFile getPreviewFilename() {
+        return null;
+    }
     
     public String getServerName() {
         return serverName;
@@ -758,10 +880,70 @@ abstract class HylaTFLItem extends TFLItem {
 
 class LocalFileTFLItem extends HylaTFLItem {
     protected String fileName;
+    protected boolean prepared = false;
+    protected FormattedFile preparedFile;
+    
+    private void convertFile(DocFlavor.INPUT_STREAM flavor) {
+        FileConverter fconv = new FileConverter(flavor);
+        try {
+            File f = fconv.covertToPSTemp(new FileInputStream(fileName));
+            preparedFile = new FormattedFile(f, FileFormat.PostScript);
+        }  catch (Exception e) {
+            ExceptionDialog.showExceptionDialog((Dialog)null, MessageFormat.format(utils._("The document {0} could not get converted to PostScript. Reason:"), getText()), e);
+        }        
+    }
+    
+    protected void prepareFile() throws FileNotFoundException, IOException {
+        if (prepared)
+            return;
+        
+        FileFormat format = FormattedFile.detectFileFormat(fileName);
+        switch (format) { 
+        case JPEG:
+            convertFile(DocFlavor.INPUT_STREAM.JPEG);
+            break;
+        case GIF:
+            convertFile(DocFlavor.INPUT_STREAM.GIF);
+            break;
+        case PNG:
+            convertFile(DocFlavor.INPUT_STREAM.PNG);
+            break;
+        /*case PlainText:
+            convertFile(DocFlavor.INPUT_STREAM.TEXT_PLAIN_HOST);
+            break;*/
+        /*case Unknown:
+            if (JOptionPane.showConfirmDialog(null, MessageFormat.format(utils._("The document \"{0}\" has a unknown data format. It might not get transferred by HylaFAX. Use it anyway?"), getText()), utils._("Unknown format"), JOptionPane.QUESTION_MESSAGE | JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                preparedFile = new FormattedFile(fileName, FileFormat.Unknown);
+            } else {
+                preparedFile = null;
+            }
+            break;
+        */
+        default: // PostScript, PDF, TIFF, ...
+            preparedFile = new FormattedFile(fileName, format);
+            break;
+        }
+        prepared = true;
+    }
     
     @Override
-    public InputStream getInputStream() throws FileNotFoundException {
-        return new FileInputStream(fileName);
+    protected FormattedFile getPreviewFilename() {
+        try {
+            prepareFile();
+        } catch (Exception ex) {
+            return null;
+        }
+        
+        return preparedFile;
+    }
+    
+    @Override
+    public InputStream getInputStream() throws FileNotFoundException, IOException {
+        prepareFile();
+        if (preparedFile == null) 
+            return null;
+        
+        return new FileInputStream(preparedFile.file);
     }
 
     @Override
@@ -776,7 +958,10 @@ class LocalFileTFLItem extends HylaTFLItem {
 
     @Override
     public void setText(String newText) {
-        fileName = newText;
+        if (!fileName.equals(newText)) {
+            fileName = newText;
+            prepared = false;
+        }        
     }
     
     public LocalFileTFLItem(String fileName) {

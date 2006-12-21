@@ -85,6 +85,8 @@ public class FaxOptions {
     // Offset for displayed date values in seconds:
     public int dateOffsetSecs = 0;
     
+    public boolean preferRenderedTIFF = false;
+    
     public FaxOptions() {
         this.host = "";
         this.port = 4559;
