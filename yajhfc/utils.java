@@ -375,10 +375,13 @@ public final class utils {
     }
     
     public static URL getLocalizedFile(String path) {
+        return getLocalizedFile(path, true);
+    }
+    public static URL getLocalizedFile(String path, boolean intlVersionValid) {
         String prefix;
         String suffix;
         Locale loc = utils.getLocale();
-        int pos = path.indexOf('.');
+        int pos = path.lastIndexOf('.');
         
         if (pos < 0) {
             prefix = path;
@@ -391,8 +394,7 @@ public final class utils {
         String[] tryList = {
                 "_" + loc.getLanguage() + "_" + loc.getCountry() + "_" + loc.getVariant(),
                 "_" + loc.getLanguage() + "_" + loc.getCountry(),
-                "_" + loc.getLanguage(),
-                ""
+                "_" + loc.getLanguage()
         };
         URL lURL = null;
         for (int i = 0; i < tryList.length; i++) {
@@ -400,7 +402,10 @@ public final class utils {
             if (lURL != null)
                 return lURL;
         }
-        return null;
+        if (intlVersionValid)
+            return utils.class.getResource(path);
+        else
+            return null;
     }
 }
 

@@ -1,0 +1,303 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.70)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>YajHFC FAQ</TITLE>
+<META NAME="description" CONTENT="YajHFC FAQ">
+<META NAME="keywords" CONTENT="faq_es">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="faq_es.css">
+
+</HEAD>
+
+<BODY >
+
+<P>
+<H1 ALIGN="CENTER">YajHFC FAQ</H1>
+<DIV>
+
+</DIV>
+
+<P>
+<BR>
+
+<H2><A NAME="SECTION00010000000000000000">
+Índice General</A>
+</H2>
+<!--Table of Contents-->
+
+<UL>
+<LI><A NAME="tex2html22"
+  HREF="faq_es.html#SECTION00020000000000000000">Installation</A>
+<UL>
+<LI><A NAME="tex2html23"
+  HREF="faq_es.html#SECTION00021000000000000000">¿Dónde puedo conseguir un visor de faxes para Windows?</A>
+<LI><A NAME="tex2html24"
+  HREF="faq_es.html#SECTION00022000000000000000">¿Dónde puedo obtener un visor de faxes para Linux/*BSD/... ?</A>
+<LI><A NAME="tex2html25"
+  HREF="faq_es.html#SECTION00023000000000000000">¿Qué puedo utilizar como visor de faxes en Mac OS X?</A>
+<LI><A NAME="tex2html26"
+  HREF="faq_es.html#SECTION00024000000000000000">¿Dónde puedo obtener un visor PostScript?</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html27"
+  HREF="faq_es.html#SECTION00030000000000000000">Usage of the program</A>
+<UL>
+<LI><A NAME="tex2html28"
+  HREF="faq_es.html#SECTION00031000000000000000">¿Cómo puedo editar las plantillas de las portadas?</A>
+<LI><A NAME="tex2html29"
+  HREF="faq_es.html#SECTION00032000000000000000">¿Por qué no se puede seleccionar (gris claro) la opción de Ver-&gt;Sólo faxes propios?</A>
+<LI><A NAME="tex2html30"
+  HREF="faq_es.html#SECTION00033000000000000000">¿Qué puedo poner como valor igual a en el cuadro de diálogo de filtrado personalizado? </A>
+<LI><A NAME="tex2html31"
+  HREF="faq_es.html#SECTION00034000000000000000">¿Qué argumentos de línea de comandos entiende YajHFC?</A>
+<LI><A NAME="tex2html32"
+  HREF="faq_es.html#SECTION00035000000000000000">Cuando intento ver los faxes enviados siempre obtengo un mensaje de error que dice Formato de archivo PCL no soportado, aunque todos los documentos están el formato PostScript/PDF.</A>
+<LI><A NAME="tex2html33"
+  HREF="faq_es.html#SECTION00036000000000000000">¿Qué significa la columna XYZ?</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html34"
+  HREF="faq_es.html#SECTION00040000000000000000">Miscellaneous</A>
+<UL>
+<LI><A NAME="tex2html35"
+  HREF="faq_es.html#SECTION00041000000000000000">¿Por qué se guardan las contraseñas en texto plano?</A>
+<LI><A NAME="tex2html36"
+  HREF="faq_es.html#SECTION00042000000000000000">¿Por qué escogiste ese nombre tan tonto?</A>
+</UL></UL>
+<!--End of Table of Contents-->
+<P>
+
+<H1><A NAME="SECTION00020000000000000000">
+Installation</A>
+</H1>
+
+<H2><A NAME="SECTION00021000000000000000">
+¿Dónde puedo conseguir un visor de faxes para Windows?</A>
+</H2>
+
+<P>
+Generalmente puedes utilizar cualquier programa que permita mostrar ficheros TIFF, aunque algunos de ellos muestran los faxes en una resolución baja con una anchura (a la mitad) incorrecta.
+
+<P>
+Afortunadamente, las versiones recientes de Windows vienen con un programa 
+que hace ésto correctamente:
+
+<P>
+<DL>
+<DT><STRONG>Windows 95/98/ME/2000:</STRONG></DT>
+<DD>puedes utilizar el programa que se encuentra en Accesorios / Imagen. 
+Para utilizarlo con YajHFC, utiliza el botón de exploración en <TT>Línea de comandos 
+para el visor de faxes</TT> y selecciona la ubicación de kodakimg.exe en tu disco duro.
+
+<P>
+</DD>
+<DT><STRONG>Windows XP:</STRONG></DT>
+<DD>Puedes utilizar el programa integrado "Visor de imágenes y faxes". 
+Para utilizarlo, introduce el siguiente texto en "Línea de comandos para el visor de faxes":
+<BR>      <code>rundll32.exe shimgvw.dll,ImageView_Fullscreen %s</code>
+ 
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00022000000000000000">
+¿Dónde puedo obtener un visor de faxes para Linux/*BSD/... ?</A>
+</H2>
+<TT>kfax</TT> funciona muy bien, pero al igual que en Windows, puedes utilizar cualquier programa que pueda mostrar archivos TIFF, tan sólo busca en la base de paqueets de tu distribución (xloadimage <I>no</I> funciona).
+
+<P>
+
+<H2><A NAME="SECTION00023000000000000000">
+¿Qué puedo utilizar como visor de faxes en Mac OS X?</A>
+</H2>
+Sólo tienes que introducir <code>open %s</code> en <TT>Línea de comandos para el visor de faxes".</TT>
+Los faxes deberían abrirse con la aplicación predeterminada. 
+Gracias a Scott Harris por esta ayuda.
+
+<P>
+
+<H2><A NAME="SECTION00024000000000000000">
+¿Dónde puedo obtener un visor PostScript?</A>
+</H2>
+<DL>
+<DT><STRONG>Windows:</STRONG></DT>
+<DD>Utiliza Ghostview disponible en <TT><A NAME="tex2html1"
+  HREF="http://www.cs.wisc.edu/~ghost/">http://www.cs.wisc.edu/~ghost/</A></TT>
+<BR><B>Nota:</B> también es posible utilizar la impresora de Acrobat Distiller
+(sólo disponible en la versión completa) para genera un fichero PDF 
+y visualizarlo al instante. Para ello hay que introducir la ruta al programa 
+en <TT>Línea de comandos para el visor archivos PostScript</TT>, generalmente:
+<code>"C:\Archivos de programa\Adobe\Acrobat 5.0\Distillr\Acrodist.exe" %s</code>
+
+<P>
+</DD>
+<DT><STRONG>Linux/*BSD/...:</STRONG></DT>
+<DD>Simplemente instala uno de los paquetes de visores PostScript 
+(por ejemplo: <TT>gv, kghostview, gnome-gv, ...</TT>)
+</DD>
+</DL>
+
+<P>
+
+<H1><A NAME="SECTION00030000000000000000">
+Usage of the program</A>
+</H1>	
+
+<P>
+
+<H2><A NAME="SECTION00031000000000000000">
+¿Cómo puedo editar las plantillas de las portadas?</A>
+</H2>
+Las plantillas tienen que estar en el mismo formato PostScript especial 
+que utiliza el programa <TT>faxcover</TT> de HylaFAX. Revisa las siguiente ayuda 
+para saber cómo crear / modificar este tipo de archivos: 
+<BR><TT><A NAME="tex2html2"
+  HREF="http://www.hylafax.org/HylaFAQ/Q202.html">http://www.hylafax.org/HylaFAQ/Q202.html</A></TT>
+<BR><TT><A NAME="tex2html3"
+  HREF="http://www.hylafax.org/howto/tweaking.html">http://www.hylafax.org/howto/tweaking.html</A></TT>
+<BR>
+<P>
+
+<H2><A NAME="SECTION00032000000000000000">
+¿Por qué no se puede seleccionar (gris claro) la opción de <TT>Ver-&gt;Sólo faxes propios</TT>?</A>
+</H2>
+
+<P>
+Actualmente YajHFC sólo puede filtrar las columnas visibles. Por lo que tienes que añadir la columna de "Propietario" a la table en la que quieres filtrar por propietario.
+
+<P>
+
+<H2><A NAME="SECTION00033000000000000000">
+¿Qué puedo poner como valor <TT>igual a</TT> en el cuadro de diálogo de filtrado personalizado? </A>
+</H2>
+
+<P>
+Expresiones regulares. Puedes encontrar una breve referencia sobre la sintaxis permitida en
+<TT><A NAME="tex2html4"
+  HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/util/regex/Pattern.html">http://java.sun.com/j2se/1.5.0/docs/api/java/util/regex/Pattern.html</A></TT>
+<P>
+te en cuenta que las expresiones regulares no son lo mismo que los caracteres comodín:
+Por ejemplo, para obtener el mismo efecto que el comodín <code>*</code> tienes que utilizar <code>.*</code>
+y para simular el efecto de <code>?</code> hay que utilizar <code>.</code>.
+
+<P>
+
+<H2><A NAME="SECTION00034000000000000000">
+¿Qué argumentos de línea de comandos entiende YajHFC?</A>
+</H2>
+
+<P>
+<PRE>
+Uso general:
+java -jar yajhfc.jar [--help] [--debug] [--admin] [--stdin | filename]
+Descripción de los argumentos:
+filename    El nombre del archivo PostScript para enviar.
+--stdin     Lee el archivo para enviar de una entrada estándar
+--admin     Inicia en modo administrador
+--debug     Output some debugging information
+--help      Displays this text
+</PRE>
+
+<P>
+
+<H2><A NAME="SECTION00035000000000000000">
+ Cuando intento ver los faxes enviados siempre obtengo un mensaje de error 
+   que dice <TT>Formato de archivo PCL no soportado</TT>, aunque todos los documentos 
+   están el formato PostScript/PDF.</A>
+</H2>
+
+<P>
+Verifica que la opción <TT>Utilizar fichero PCL para la corrección de error</TT> en el 
+cuadro de Opciones e inténtalo de nuevo.
+
+<P>
+Algunas versiones de HylaFAX reportan 
+un tipo de fichero "PCL" para todos los documentos asociados con un trabajo. 
+Si esta opción está seleccionada, YajHFC intenta adivinar el tipo de fichero 
+utilizando la extensión si se reporta PCL (lo cual generalmente funciona bastante bien).
+
+<P>
+
+<H2><A NAME="SECTION00036000000000000000">
+¿Qué significa la columna XYZ?</A>
+</H2>
+
+<P>
+Yo tampoco lo sé exactamente porque la descripción de las columnas ha sido copiada del manual de  <code>faxstat(1)</code> (JobFmt/RcvFmt), abreviada y traducida
+
+<P>
+
+<H1><A NAME="SECTION00040000000000000000">
+Miscellaneous</A>
+</H1>
+
+<P>
+
+<H2><A NAME="SECTION00041000000000000000">
+¿Por qué se guardan las contraseñas en texto plano?</A>
+</H2>
+
+<P>
+Simplemente porque no hay otro método que sea mejor.
+
+<P>
+YajHFC  puede codificar/"encriptar" las contraseñas antes de almacenarlas, 
+pero si lo hace siempre es posible visualizar el código fuente para encontrarlas 
+y desencriptarlas (incluso aunque YajHFC fuera de código cerrado podrías reventarlas o experimentar un poco sobre cómo hacerlo).
+
+<P>
+El único método seguro requeriría introducir una contraseña maestra cada vez que se inicia YajHFC, pero en mi opinión no es mejor que introducir la contraseña real.
+
+<P>
+
+<H2><A NAME="SECTION00042000000000000000">
+¿Por qué escogiste ese nombre tan tonto?</A>
+</H2>
+
+<P>
+YajHFC empezó como "proyecto de prueba" para Java y la biblioteca <TT>gnu.hylafax</TT>
+y por lo tanto no tuvo un nombre "bonito". Después de trabajar un poco sobre ello, me di cuenta de que se volvería útil, por lo que elegí darle un nombre.
+Dado que estaba con la herramienta Yast de SuSE en ese momento y sabía 
+que había / hay otros clientes Java para HylaFAX, lo llamé "yet another" java hylafax client (en español, "otro cliente java para HylaFAX").
+
+<P>
+
+<H1><A NAME="SECTION00050000000000000000">
+Sobre este documento...</A>
+</H1>
+ <STRONG>YajHFC FAQ</STRONG><P>
+This document was generated using the
+<A HREF="http://www.latex2html.org/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 2002-2-1 (1.70)
+<P>
+Copyright © 1993, 1994, 1995, 1996,
+<A HREF="http://cbl.leeds.ac.uk/nikos/personal.html">Nikos Drakos</A>, 
+Computer Based Learning Unit, University of Leeds.
+<BR>
+Copyright © 1997, 1998, 1999,
+<A HREF="http://www.maths.mq.edu.au/~ross/">Ross Moore</A>, 
+Mathematics Department, Macquarie University, Sydney.
+<P>
+The command line arguments were: <BR>
+ <STRONG>latex2html</STRONG> <TT>-no_subdir -split 0 -html_version 3.2,latin1,unicode,utf8 -no_navigation faq_es.tex</TT>
+<P>
+The translation was initiated by Jonas Wolz on 2006-12-23
+<BR><HR>
+<ADDRESS>
+Jonas Wolz
+2006-12-23
+</ADDRESS>
+</BODY>
+</HTML>

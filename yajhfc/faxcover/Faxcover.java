@@ -305,7 +305,10 @@ public class Faxcover {
             } else if (Arrays.equals(sig, "%PDF".getBytes())) {
                 BufferedInputStream bIn = new BufferedInputStream(psFile);
                 byte[] buf = new byte[4000];
-                final byte[] search = "/Type /Page".getBytes();
+                final byte[] search1 = "/Type".getBytes();
+                final byte[] search2 = "/Page".getBytes();
+                final int searchlen = search1.length + search2.length + 2;
+                
                 int offset = 0, len = 0;
                 
                 while ((len = bIn.read(buf, offset, buf.length - offset)) > 0) {
@@ -315,9 +318,32 @@ public class Faxcover {
                     
                     offset = 0;
                     while ((slash = arrIndexOf(buf, (byte)'/', slash + 1)) >= 0) {
-                        if (slash < (len - search.length)) {
-                            if (arrEqualsOffset(buf, search, slash) && (buf[slash + search.length] != (byte)'s'))
-                                pages++;
+                        if (slash < (len - searchlen)) {
+                            // Try to match the pattern "/Type\w*/page"
+                            boolean found = true;
+                            for (int i = 0; i < search1.length; i++) {
+                                if (buf[slash+i] != search1[i]) {
+                                    found = false;
+                                    break;
+                                }
+                            }
+                            if (found) {
+                                int off = slash + search1.length;
+                                while (Character.isWhitespace(buf[off])) {
+                                    off++;
+                                }
+                                
+                                found = true;
+                                for (int i = 0; i < search2.length; i++) {
+                                    if (buf[off+i] != search2[i]) {
+                                        found = false;
+                                        break;
+                                    }
+                                }
+                                if (found && (buf[off + search2.length] != (byte)'s')) {
+                                    pages++;
+                                }
+                            }
                         } else {
                             offset = len - slash;
                             if (offset > 0)
@@ -335,13 +361,6 @@ public class Faxcover {
         return pages;
     }
     
-    private boolean arrEqualsOffset(byte[] arrSrc, byte[] arrCmp, int srcOffset) {
-        for (int i = 0; i < arrCmp.length; i++) {
-            if (arrSrc[i+srcOffset] != arrCmp[i])
-                return false;
-        }
-        return true;
-    }
     
     private int arrIndexOf(byte[] arr, byte key, int offset) {
         for (int i = offset; i < arr.length; i++) {

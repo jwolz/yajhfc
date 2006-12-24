@@ -28,8 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
-
 public class SentYajJob extends YajJob {
     //private Job curJob = null;
 

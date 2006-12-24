@@ -1,0 +1,138 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[latin1]{inputenc}
+\usepackage{url}
+\usepackage[left=3cm,right=3cm,top=2cm,bottom=2cm,nohead]{geometry}
+
+%opening
+\title{YajHFC FAQ}
+\author{}
+\date{}
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\section{Installation}
+\subsection{Where do I get a fax viewer for Windows?}
+
+Generally you can use any program that can display TIFF files, although 
+some of them display faxes in low resolution with an incorrect (half) height.
+
+Luckily, all recent Windows versions come with program that does this correctly:
+
+\begin{description}
+\item[Windows 95/98/ME/2000:]
+ You can use the Accessories/Imaging application.
+      To use it with YajHFC, use the browse button of the \texttt{Command line for fax viewer}
+      box to browse for \texttt{kodakimg.exe} on your hard drive.\\
+      This file usually resides either in the Windows directory (Win 98/ME) \emph{or} \\
+      in \verb.Program Files\Windows NT\Accessories\ImageVue. (Win 2k).
+       
+\item[Windows XP:]
+You can use the integrates ``picture and fax viewer'' (sorry, I don't know
+      how this is exactly called in English).
+      To use it, enter the following text into the \texttt{Command line for fax viewer} box:\\
+      \verb#rundll32.exe shimgvw.dll,ImageView_Fullscreen %s#
+ \end{description}
+
+      
+\subsection{Where do I get a fax viewer for Linux/*BSD/... ?}
+\texttt{kfax} works very well for me, but just as with Windows, you may use any program that 
+can display TIFF files, just search your distribution's package database 
+(xloadimage does \emph{not} work for me, however).
+
+
+\subsection{What should I use as a fax viewer on Mac OS X?}
+Just enter \verb.open %s. into the \texttt{Command line for fax viewer} box.
+The faxes should open in the default application now.
+Thanks to Scott Harris for figuring this out.
+
+
+\subsection{Where do I get a Postscript viewer?}
+\begin{description}
+\item[Windows:] Use Ghostview from \url{http://www.cs.wisc.edu/~ghost/}
+\item[Linux/*BSD/...:] Just install one of the Postscript viewer packages
+                (e.g. \texttt{gv, kghostview, gnome-gv, ...})
+\end{description}
+		
+\section{Usage of the program}	
+
+\subsection{How can I edit cover page templates?}
+The templates have to be in the same special Postscript format the Hylafax 
+\texttt{faxcover} program uses. See the follwing pages for hints how to create/edit
+such files: \\
+\url{http://www.hylafax.org/HylaFAQ/Q202.html}\\
+\url{http://www.hylafax.org/howto/tweaking.html}\\
+
+
+\subsection{Why is the \texttt{View->Only own faxes} menu item grayed out?}
+
+Currently YajHFC can only filter on visible columns. So you have to add the 
+``Owner'' column to the table you want to filter by owner.
+
+
+\subsection{What can I enter as a value for the \texttt{matches} Operator in the custom filter dialog?}
+
+Regular Expressions. A short reference about the accepted syntax can be found at:
+\url{http://java.sun.com/j2se/1.5.0/docs/api/java/util/regex/Pattern.html}
+
+Please note that Regular Expressions are not the same as wildcards: 
+For example, to get the effect of the \verb.*. wildcard, you have to use \verb#.*# and 
+for the effect of the wildcard \verb#?# use \verb#.#.
+
+\subsection{Which command line arguments does YajHFC understand?}
+
+\begin{verbatim}
+General usage:
+java -jar yajhfc.jar [--help] [--debug] [--admin] [--stdin | filename]
+Argument description:
+filename    The file name of a PostScript file to send.
+--stdin     Read the file to send from standard input
+--admin     Start up in admin mode
+--debug     Output some debugging information
+--help      Displays this text
+\end{verbatim}
+
+
+\subsection{ When trying to view sent faxes I always get an error message saying 
+   \texttt{File format PCL not supported}, although all the documents are PostScript/PDF.}
+
+Check the \texttt{Use PCL file type bugfix} checkbox in the Options dialog and try again.
+
+Some HylaFAX versions incorrectly report a file type of ``PCL'' for all documents
+associated with a job. If this checkbox is checked, YajHFC tries to guess the
+file type using the extension if PCL is reported (which usually works pretty well).
+
+\subsection{What does the column XYZ mean?}
+
+Most likely, I don't know exactly either, because the column descriptions
+are simply copied from the \verb.faxstat(1). man page (JobFmt/RcvFmt) and 
+abbreviated/translated.
+
+\section{Miscellaneous}
+
+\subsection{Why are passwords stored in clear text?}
+
+Simply put: Because there isn't any method that is much better.
+
+YajHFC could encode/``encrypt'' them somehow before storing, but if it did, 
+you could always look at the source code to find out how to decrypt them
+(even if YajHFC was closed source software you could still disassemble it
+or experiment a bit to find that out).
+
+The only secure method would require you to enter a master password every time
+you start YajHFC, but in my opinion that would not provide an improvement over
+entering the ``real'' password.
+
+
+\subsection{Why did you choose that stupid name?}
+
+YajHFC started out as a test project for Java and the \texttt{gnu.hylafax} library and so
+it didn't have a ``nice'' name. After working at it for a while, I noticed that it turned 
+out to be actually useable, so I chose to give it a name.
+Because I was also playing around with SuSE's yast at that point of time and I knew there
+were/are already a lot of other java hylafax clients out there, I called it
+``yet another'' java hylafax client. 
+
+\end{document}

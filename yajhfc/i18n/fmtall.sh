@@ -13,6 +13,9 @@ fi
 
 echo 'Compiling language files ...'
 
+# Make sure we compile for JDK 1.5
+export JAVAC="javac -target 1.5"
+
 for PO in messages_*.po ; do
 	LANG=${PO##*messages_}
 	LANG=${LANG%.po}

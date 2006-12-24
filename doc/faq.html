@@ -1,0 +1,308 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.70)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>YajHFC FAQ</TITLE>
+<META NAME="description" CONTENT="YajHFC FAQ">
+<META NAME="keywords" CONTENT="faq">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="faq.css">
+
+</HEAD>
+
+<BODY >
+
+<P>
+<H1 ALIGN="CENTER">YajHFC FAQ</H1>
+<DIV>
+
+</DIV>
+
+<P>
+<BR>
+
+<H2><A NAME="SECTION00010000000000000000">
+Contents</A>
+</H2>
+<!--Table of Contents-->
+
+<UL>
+<LI><A NAME="tex2html22"
+  HREF="faq.html#SECTION00020000000000000000">Installation</A>
+<UL>
+<LI><A NAME="tex2html23"
+  HREF="faq.html#SECTION00021000000000000000">Where do I get a fax viewer for Windows?</A>
+<LI><A NAME="tex2html24"
+  HREF="faq.html#SECTION00022000000000000000">Where do I get a fax viewer for Linux/*BSD/... ?</A>
+<LI><A NAME="tex2html25"
+  HREF="faq.html#SECTION00023000000000000000">What should I use as a fax viewer on Mac OS X?</A>
+<LI><A NAME="tex2html26"
+  HREF="faq.html#SECTION00024000000000000000">Where do I get a Postscript viewer?</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html27"
+  HREF="faq.html#SECTION00030000000000000000">Usage of the program</A>
+<UL>
+<LI><A NAME="tex2html28"
+  HREF="faq.html#SECTION00031000000000000000">How can I edit cover page templates?</A>
+<LI><A NAME="tex2html29"
+  HREF="faq.html#SECTION00032000000000000000">Why is the View-&gt;Only own faxes menu item grayed out?</A>
+<LI><A NAME="tex2html30"
+  HREF="faq.html#SECTION00033000000000000000">What can I enter as a value for the matches Operator in the custom filter dialog?</A>
+<LI><A NAME="tex2html31"
+  HREF="faq.html#SECTION00034000000000000000">Which command line arguments does YajHFC understand?</A>
+<LI><A NAME="tex2html32"
+  HREF="faq.html#SECTION00035000000000000000">When trying to view sent faxes I always get an error message saying File format PCL not supported, although all the documents are PostScript/PDF.</A>
+<LI><A NAME="tex2html33"
+  HREF="faq.html#SECTION00036000000000000000">What does the column XYZ mean?</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html34"
+  HREF="faq.html#SECTION00040000000000000000">Miscellaneous</A>
+<UL>
+<LI><A NAME="tex2html35"
+  HREF="faq.html#SECTION00041000000000000000">Why are passwords stored in clear text?</A>
+<LI><A NAME="tex2html36"
+  HREF="faq.html#SECTION00042000000000000000">Why did you choose that stupid name?</A>
+</UL></UL>
+<!--End of Table of Contents-->
+<P>
+
+<H1><A NAME="SECTION00020000000000000000">
+Installation</A>
+</H1>
+
+<H2><A NAME="SECTION00021000000000000000">
+Where do I get a fax viewer for Windows?</A>
+</H2>
+
+<P>
+Generally you can use any program that can display TIFF files, although 
+some of them display faxes in low resolution with an incorrect (half) height.
+
+<P>
+Luckily, all recent Windows versions come with program that does this correctly:
+
+<P>
+<DL>
+<DT><STRONG>Windows 95/98/ME/2000:</STRONG></DT>
+<DD>You can use the Accessories/Imaging application.
+      To use it with YajHFC, use the browse button of the <TT>Command line for fax viewer</TT>
+      box to browse for <TT>kodakimg.exe</TT> on your hard drive.
+<BR>
+This file usually resides either in the Windows directory (Win 98/ME) <I>or</I> 
+<BR>
+in <code>Program Files\Windows NT\Accessories\ImageVue</code> (Win 2k).
+
+<P>
+</DD>
+<DT><STRONG>Windows XP:</STRONG></DT>
+<DD>You can use the integrates “picture and fax viewer” (sorry, I don't know
+      how this is exactly called in English).
+      To use it, enter the following text into the <TT>Command line for fax viewer</TT> box:
+<BR>      <code>rundll32.exe shimgvw.dll,ImageView_Fullscreen %s</code>
+ 
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00022000000000000000">
+Where do I get a fax viewer for Linux/*BSD/... ?</A>
+</H2>
+<TT>kfax</TT> works very well for me, but just as with Windows, you may use any program that 
+can display TIFF files, just search your distribution's package database 
+(xloadimage does <I>not</I> work for me, however).
+
+<P>
+
+<H2><A NAME="SECTION00023000000000000000">
+What should I use as a fax viewer on Mac OS X?</A>
+</H2>
+Just enter <code>open %s</code> into the <TT>Command line for fax viewer</TT> box.
+The faxes should open in the default application now.
+Thanks to Scott Harris for figuring this out.
+
+<P>
+
+<H2><A NAME="SECTION00024000000000000000">
+Where do I get a Postscript viewer?</A>
+</H2>
+<DL>
+<DT><STRONG>Windows:</STRONG></DT>
+<DD>Use Ghostview from <TT><A NAME="tex2html1"
+  HREF="http://www.cs.wisc.edu/~ghost/">http://www.cs.wisc.edu/~ghost/</A></TT>
+</DD>
+<DT><STRONG>Linux/*BSD/...:</STRONG></DT>
+<DD>Just install one of the Postscript viewer packages
+                (e.g. <TT>gv, kghostview, gnome-gv, ...</TT>)
+</DD>
+</DL>
+
+<P>
+
+<H1><A NAME="SECTION00030000000000000000">
+Usage of the program</A>
+</H1>	
+
+<P>
+
+<H2><A NAME="SECTION00031000000000000000">
+How can I edit cover page templates?</A>
+</H2>
+The templates have to be in the same special Postscript format the Hylafax 
+<TT>faxcover</TT> program uses. See the follwing pages for hints how to create/edit
+such files: 
+<BR><TT><A NAME="tex2html2"
+  HREF="http://www.hylafax.org/HylaFAQ/Q202.html">http://www.hylafax.org/HylaFAQ/Q202.html</A></TT>
+<BR><TT><A NAME="tex2html3"
+  HREF="http://www.hylafax.org/howto/tweaking.html">http://www.hylafax.org/howto/tweaking.html</A></TT>
+<BR>
+<P>
+
+<H2><A NAME="SECTION00032000000000000000">
+Why is the <TT>View-&gt;Only own faxes</TT> menu item grayed out?</A>
+</H2>
+
+<P>
+Currently YajHFC can only filter on visible columns. So you have to add the 
+“Owner” column to the table you want to filter by owner.
+
+<P>
+
+<H2><A NAME="SECTION00033000000000000000">
+What can I enter as a value for the <TT>matches</TT> Operator in the custom filter dialog?</A>
+</H2>
+
+<P>
+Regular Expressions. A short reference about the accepted syntax can be found at:
+<TT><A NAME="tex2html4"
+  HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/util/regex/Pattern.html">http://java.sun.com/j2se/1.5.0/docs/api/java/util/regex/Pattern.html</A></TT>
+<P>
+Please note that Regular Expressions are not the same as wildcards: 
+For example, to get the effect of the <code>*</code> wildcard, you have to use <code>.*</code> and 
+for the effect of the wildcard <code>?</code> use <code>.</code>.
+
+<P>
+
+<H2><A NAME="SECTION00034000000000000000">
+Which command line arguments does YajHFC understand?</A>
+</H2>
+
+<P>
+<PRE>
+General usage:
+java -jar yajhfc.jar [--help] [--debug] [--admin] [--stdin | filename]
+Argument description:
+filename    The file name of a PostScript file to send.
+--stdin     Read the file to send from standard input
+--admin     Start up in admin mode
+--debug     Output some debugging information
+--help      Displays this text
+</PRE>
+
+<P>
+
+<H2><A NAME="SECTION00035000000000000000">
+ When trying to view sent faxes I always get an error message saying 
+   <TT>File format PCL not supported</TT>, although all the documents are PostScript/PDF.</A>
+</H2>
+
+<P>
+Check the <TT>Use PCL file type bugfix</TT> checkbox in the Options dialog and try again.
+
+<P>
+Some HylaFAX versions incorrectly report a file type of “PCL” for all documents
+associated with a job. If this checkbox is checked, YajHFC tries to guess the
+file type using the extension if PCL is reported (which usually works pretty well).
+
+<P>
+
+<H2><A NAME="SECTION00036000000000000000">
+What does the column XYZ mean?</A>
+</H2>
+
+<P>
+Most likely, I don't know exactly either, because the column descriptions
+are simply copied from the <code>faxstat(1)</code> man page (JobFmt/RcvFmt) and 
+abbreviated/translated.
+
+<P>
+
+<H1><A NAME="SECTION00040000000000000000">
+Miscellaneous</A>
+</H1>
+
+<P>
+
+<H2><A NAME="SECTION00041000000000000000">
+Why are passwords stored in clear text?</A>
+</H2>
+
+<P>
+Simply put: Because there isn't any method that is much better.
+
+<P>
+YajHFC could encode/“encrypt” them somehow before storing, but if it did, 
+you could always look at the source code to find out how to decrypt them
+(even if YajHFC was closed source software you could still disassemble it
+or experiment a bit to find that out).
+
+<P>
+The only secure method would require you to enter a master password every time
+you start YajHFC, but in my opinion that would not provide an improvement over
+entering the “real” password.
+
+<P>
+
+<H2><A NAME="SECTION00042000000000000000">
+Why did you choose that stupid name?</A>
+</H2>
+
+<P>
+YajHFC started out as a test project for Java and the <TT>gnu.hylafax</TT> library and so
+it didn't have a “nice” name. After working at it for a while, I noticed that it turned 
+out to be actually useable, so I chose to give it a name.
+Because I was also playing around with SuSE's yast at that point of time and I knew there
+were/are already a lot of other java hylafax clients out there, I called it
+“yet another” java hylafax client. 
+
+<P>
+
+<H1><A NAME="SECTION00050000000000000000">
+About this document ...</A>
+</H1>
+ <STRONG>YajHFC FAQ</STRONG><P>
+This document was generated using the
+<A HREF="http://www.latex2html.org/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 2002-2-1 (1.70)
+<P>
+Copyright © 1993, 1994, 1995, 1996,
+<A HREF="http://cbl.leeds.ac.uk/nikos/personal.html">Nikos Drakos</A>, 
+Computer Based Learning Unit, University of Leeds.
+<BR>
+Copyright © 1997, 1998, 1999,
+<A HREF="http://www.maths.mq.edu.au/~ross/">Ross Moore</A>, 
+Mathematics Department, Macquarie University, Sydney.
+<P>
+The command line arguments were: <BR>
+ <STRONG>latex2html</STRONG> <TT>-no_subdir -split 0 -html_version 3.2,latin1,unicode,utf8 -no_navigation faq.tex</TT>
+<P>
+The translation was initiated by Jonas Wolz on 2006-12-23
+<BR><HR>
+<ADDRESS>
+Jonas Wolz
+2006-12-23
+</ADDRESS>
+</BODY>
+</HTML>
