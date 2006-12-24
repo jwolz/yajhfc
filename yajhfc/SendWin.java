@@ -462,41 +462,9 @@ public class SendWin extends JDialog  {
                         JOptionPane.showMessageDialog(SendWin.this, _("Nothing to preview! (Neither a cover page nor a file to send has been selected.)"), _("Preview"), JOptionPane.INFORMATION_MESSAGE);
                         return;
                     }
-                    
-                    ProgressMonitor pMon = new ProgressMonitor(SendWin.this, _("Previewing fax"), _("Initialization"), 0, 10000);
-                    pMon.setMillisToPopup(300);
-                    pMon.setMillisToDecideToPopup(100);
-                    
-                    try {
-                        int step, progress;
-                        
-                        if (checkUseCover.isSelected()) {
-                            step = 10000 / (tflFiles.model.size() + 1);
-                            pMon.setNote(_("Creating cover page"));
-                            
-                            File coverFile = prepareCover();
-                            FormattedFile.viewFile(coverFile.getPath(), FileFormat.PostScript);
-                            pMon.setProgress(step);
-                            progress = step;
-                        } else {
-                            if (tflFiles.model.size() > 0)
-                                step = 10000 / tflFiles.model.size();
-                            else
-                                step = 0;
-                            progress = 0;
-                        }
-                        for (int i = 0; i < tflFiles.model.size(); i++) {
-                            HylaTFLItem item = (HylaTFLItem)tflFiles.model.get(i);
-                            pMon.setNote(MessageFormat.format(_("Formatting {0}"), item.getText()));
-                            item.preview(SendWin.this);
-                            progress += step;
-                            pMon.setProgress(progress);
-                        }
-                    } catch (Exception e1) {
-                        ExceptionDialog.showExceptionDialog(SendWin.this, utils._("Error previewing the documents:"), e1);
-                    }
-                    pMon.close();
-                } 
+                    PreviewWorker wrk = new PreviewWorker();
+                    wrk.startWork(SendWin.this, _("Previewing fax"));
+                }
             });
         }
         return buttonPreview;
@@ -684,9 +652,42 @@ public class SendWin extends JDialog  {
         return coverFile;
     }
 
-    
-    private class SendButtonListener implements ActionListener {
+    private class PreviewWorker extends ProgressWorker {
         
+        protected int calculateMaxProgress() {
+            return 10000;
+        }
+        
+        @Override
+        public void doWork() {
+            try {
+                int step;
+                
+                if (checkUseCover.isSelected()) {
+                    step = 10000 / (tflFiles.model.size() + 1);
+                    updateNote(_("Creating cover page"));
+                    
+                    File coverFile = prepareCover();
+                    FormattedFile.viewFile(coverFile.getPath(), FileFormat.PostScript);
+                    setProgress(step);
+                } else {
+                    if (tflFiles.model.size() > 0)
+                        step = 10000 / tflFiles.model.size();
+                    else
+                        step = 0;
+                }
+                for (int i = 0; i < tflFiles.model.size(); i++) {
+                    HylaTFLItem item = (HylaTFLItem)tflFiles.model.get(i);
+                    updateNote(MessageFormat.format(_("Formatting {0}"), item.getText()));
+                    item.preview(SendWin.this);
+                    stepProgressBar(step);
+                }
+            } catch (Exception e1) {
+                showExceptionDialog(utils._("Error previewing the documents:"), e1);
+            }
+        } 
+    }
+    private class SendWorker extends ProgressWorker {
         private void setIfNotEmpty(Job j, String prop, String val) {
             try {
             if (val.length() >  0)
@@ -696,45 +697,26 @@ public class SendWin extends JDialog  {
             }
         }
         
-        public void actionPerformed(ActionEvent e) {
-            
-            tflFiles.commit();
-            tflNumbers.commit();
-            
-            if (!pollMode && tflFiles.model.size() == 0) {
-                if (checkUseCover.isSelected()) {
-                    if (JOptionPane.showConfirmDialog(SendWin.this, _("You haven't selected a file to transmit, so your fax will ONLY contain the cover page.\nContinue anyway?"), _("Continue?"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION)
-                        return;
-                } else {
-                    JOptionPane.showMessageDialog(SendWin.this, _("To send a fax you must select at least one file!"), _("Warning"), JOptionPane.INFORMATION_MESSAGE);
-                    return;
-                }
-            }
-            
-            if (tflNumbers.model.size() == 0) {
-                JOptionPane.showMessageDialog(SendWin.this, _("To send a fax you have to enter at least one phone number!"), _("Warning"), JOptionPane.INFORMATION_MESSAGE);
-                return;
-            }
-            
+        @Override
+        protected int calculateMaxProgress() {
             int maxProgress;
             maxProgress = 20 * tflFiles.model.size() + 15 * tflNumbers.model.size() + 10;
-            if (checkUseCover.isSelected())
+            if (checkUseCover != null && checkUseCover.isSelected())
                 maxProgress += 20;
-            ProgressMonitor pMon = new ProgressMonitor(SendWin.this, _("Sending fax"), _("Initialization"), 0, maxProgress);
-            pMon.setMillisToPopup(300);
-            pMon.setMillisToDecideToPopup(100);
-            
+            return maxProgress;
+        }
+        
+        @Override
+        public void doWork() {
             try {        
                 File coverFile = null;
                 FaxOptions fo = utils.getFaxOptions();                    
                 
-                int progress = 0;
                 if (!pollMode) {
                     if (checkUseCover.isSelected()) {
-                        pMon.setNote(_("Creating cover page"));
+                        updateNote(_("Creating cover page"));
                         coverFile = prepareCover();
-                        progress += 20;
-                        pMon.setProgress(progress);
+                        stepProgressBar(20);
                     }
                     
                     // Upload documents:
@@ -742,16 +724,16 @@ public class SendWin extends JDialog  {
                     
                     for (int i = 0; i < tflFiles.model.size(); i++) {
                         HylaTFLItem item = (HylaTFLItem)tflFiles.model.get(i);
-                        pMon.setNote(MessageFormat.format(_("Uploading {0}"), item.getText()));
+                        updateNote(MessageFormat.format(_("Uploading {0}"), item.getText()));
                         item.upload(hyfc);
-                        progress += 20;
-                        pMon.setProgress(progress);
+                        
+                        stepProgressBar(20);
                     }
                 }            
                 
                 for (int i = 0; i < tflNumbers.model.size(); i++) {
                     String number = tflNumbers.model.get(i).toString();
-                    pMon.setNote(MessageFormat.format(_("Creating job to {0}"), number));
+                    updateNote(MessageFormat.format(_("Creating job to {0}"), number));
                     
                     try {
                         String coverName = null;
@@ -763,22 +745,23 @@ public class SendWin extends JDialog  {
                         
                         Job j = hyfc.createJob();
                         
-                        progress += 5;
-                        pMon.setProgress(progress);
+                        stepProgressBar(5);
                         
                         j.setFromUser(fo.user);
                         j.setNotifyAddress(fo.notifyAddress);
                         j.setMaximumDials(fo.maxDial);
                         
-                        // Set general job information...
-                        setIfNotEmpty(j, "TOUSER", textToName.getText());
-                        setIfNotEmpty(j, "TOCOMPANY", textToCompany.getText());
-                        setIfNotEmpty(j, "TOLOCATION", textToLocation.getText());
-                        setIfNotEmpty(j, "TOVOICE", textToVoiceNumber.getText());
-                        setIfNotEmpty(j, "REGARDING", textSubject.getText());
-                        setIfNotEmpty(j, "FROMCOMPANY", fo.FromCompany);
-                        setIfNotEmpty(j, "FROMLOCATION", fo.FromLocation);
-                        setIfNotEmpty(j, "FROMVOICE", fo.FromVoiceNumber);
+                        if (!pollMode) {
+                            // Set general job information...
+                            setIfNotEmpty(j, "TOUSER", textToName.getText());
+                            setIfNotEmpty(j, "TOCOMPANY", textToCompany.getText());
+                            setIfNotEmpty(j, "TOLOCATION", textToLocation.getText());
+                            setIfNotEmpty(j, "TOVOICE", textToVoiceNumber.getText());
+                            setIfNotEmpty(j, "REGARDING", textSubject.getText());
+                            setIfNotEmpty(j, "FROMCOMPANY", fo.FromCompany);
+                            setIfNotEmpty(j, "FROMLOCATION", fo.FromLocation);
+                            setIfNotEmpty(j, "FROMVOICE", fo.FromVoiceNumber);
+                        }
                         
                         j.setDialstring(number);
                         j.setExternal(number); // needed to fix an error while sending multiple jobs
@@ -804,20 +787,17 @@ public class SendWin extends JDialog  {
                             fo.CustomCover = ftfCustomCover.getText();
                         }
                         
-                        progress += 5;
-                        pMon.setProgress(progress);
+                        stepProgressBar(5);
                         
                         hyfc.submit(j);   
                         
-                        progress += 5;
-                        pMon.setProgress(progress);
+                        stepProgressBar(5);
                     } catch (Exception e1) {
-                        //JOptionPane.showMessageDialog(ButtonSend, MessageFormat.format(_("An error occured while submitting the fax job for phone number \"{0}\" (will try to submit the fax to the other numbers anyway): "), number) + "\n" + e1.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
-                        ExceptionDialog.showExceptionDialog(SendWin.this, MessageFormat.format(_("An error occured while submitting the fax job for phone number \"{0}\" (will try to submit the fax to the other numbers anyway): "), number) , e1);
+                        showExceptionDialog(MessageFormat.format(_("An error occured while submitting the fax job for phone number \"{0}\" (will try to submit the fax to the other numbers anyway): "), number) , e1);
                     }
                 }
                 
-                pMon.setNote(_("Cleaning up"));
+                updateNote(_("Cleaning up"));
                 for (int i = 0; i < tflFiles.model.size(); i++) {
                     HylaTFLItem item = (HylaTFLItem)tflFiles.model.get(i);
                     item.cleanup();
@@ -825,16 +805,43 @@ public class SendWin extends JDialog  {
                 if (coverFile != null)
                     coverFile.delete();
                 
-                pMon.close();
-                dispose();
             } catch (Exception e1) {
                 //JOptionPane.showMessageDialog(ButtonSend, _("An error occured while submitting the fax: ") + "\n" + e1.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
-                ExceptionDialog.showExceptionDialog(SendWin.this, _("An error occured while submitting the fax: "), e1);
-                pMon.close();
+                showExceptionDialog(_("An error occured while submitting the fax: "), e1);
             } 
         }
+        
+        @Override
+        protected void done() {
+            dispose();
+        }
     }
-    
+    private class SendButtonListener implements ActionListener {
+               
+        public void actionPerformed(ActionEvent e) {
+            
+            tflFiles.commit();
+            tflNumbers.commit();
+            
+            if (!pollMode && tflFiles.model.size() == 0) {
+                if (checkUseCover.isSelected()) {
+                    if (JOptionPane.showConfirmDialog(SendWin.this, _("You haven't selected a file to transmit, so your fax will ONLY contain the cover page.\nContinue anyway?"), _("Continue?"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION)
+                        return;
+                } else {
+                    JOptionPane.showMessageDialog(SendWin.this, _("To send a fax you must select at least one file!"), _("Warning"), JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
+            }
+            
+            if (tflNumbers.model.size() == 0) {
+                JOptionPane.showMessageDialog(SendWin.this, _("To send a fax you have to enter at least one phone number!"), _("Warning"), JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            SendWorker wrk = new SendWorker();
+            wrk.startWork(SendWin.this, _("Sending fax"));
+        }
+    }
 }  
 
 abstract class HylaTFLItem extends TFLItem {
