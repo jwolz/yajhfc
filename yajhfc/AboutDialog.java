@@ -24,11 +24,8 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.Locale;
@@ -39,18 +36,21 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 
-public class AboutDialog extends JDialog {
+public class AboutDialog extends JDialog implements HyperlinkListener {
     
     public enum Mode { ABOUT, READMES };
     
     private static final String[] readmeFiles = 
-            { "README.txt", "FAQ.txt", "COPYING" };
+            { "README.txt", "doc/faq.html", "COPYING" };
     /**
      * Determines if the english version of the readmeFiles above
      * should be displayed in addition to the localized ones.
@@ -68,14 +68,44 @@ public class AboutDialog extends JDialog {
     //private ArrayList<JScrollPane> scrollTxt;
     private ClipboardPopup clpText;
     
-    private void loadFile(JTextArea text, String resName, boolean useLocalized) {
+    public void hyperlinkUpdate(HyperlinkEvent e) {
+        if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+            JEditorPane pane = (JEditorPane) e.getSource();
+            try {
+                URL u = e.getURL();
+                String proto = u.getProtocol();
+                if (proto.equals("file") || proto.equals("jar")) {
+                    pane.setPage(u);
+                } else {
+                    // NOP
+                    getToolkit().beep();
+                }
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        }
+    }
+    
+    private JScrollPane addScrollTxt(String resName, boolean useLocalized) {
+        
         URL txtURL;
         if (useLocalized)
-            txtURL = utils.getLocalizedFile(resName);
+            txtURL = utils.getLocalizedFile(resName, false);
         else
             txtURL = AboutDialog.class.getResource(resName);
         
+        if (txtURL == null)
+            return null;
+        
+        /*JTextArea text = new JTextArea();*/
+        JEditorPane text = new JEditorPane();
+        text.setEditable(false);
+        text.setFont(new Font("DialogInput", java.awt.Font.PLAIN, 12));
+        text.addMouseListener(clpText);
+        text.addHyperlinkListener(this);
+        
         try {
+            /*
             text.setText("");
             
             BufferedReader fIn = new BufferedReader(new InputStreamReader(txtURL.openStream(), Charset.forName("UTF-8")));
@@ -86,20 +116,14 @@ public class AboutDialog extends JDialog {
                 } else
                     break;
             }
-            fIn.close();
-            text.setCaretPosition(0);
+            fIn.close();*/
+            
+            text.putClientProperty("charset", "UTF-8");
+            text.setPage(txtURL);
+            //text.setCaretPosition(0);
         } catch (IOException e) {
             text.setText("Error loading text file " + resName + ".");
         }
-    }
-    
-    
-    private JScrollPane addScrollTxt(String resName, boolean useLocalized) {
-        JTextArea text = new JTextArea();
-        text.setEditable(false);
-        text.setFont(new Font("DialogInput", java.awt.Font.PLAIN, 12));
-        text.addMouseListener(clpText);
-        loadFile(text, resName, useLocalized);
         
         JScrollPane scroll = new JScrollPane(text);
         return scroll;
@@ -241,10 +265,14 @@ public class AboutDialog extends JDialog {
             break;
         case READMES:
             for (int i = 0; i < readmeFiles.length; i++) {
-                tabMain.addTab(readmeFiles[i], addScrollTxt("/" + readmeFiles[i], true));
+                JScrollPane tab = addScrollTxt("/" + readmeFiles[i], true);
+                if (tab != null)
+                    tabMain.addTab(readmeFiles[i], tab);
                 
-                if (addEnglishReadme[i] && (!utils.getLocale().equals(Locale.ENGLISH))) {
-                    tabMain.addTab(MessageFormat.format("{0} ({1})", readmeFiles[i], Locale.ENGLISH.getDisplayLanguage(utils.getLocale())), addScrollTxt("/" + readmeFiles[i], false));
+                if ((tab == null) || (addEnglishReadme[i] && (!utils.getLocale().equals(Locale.ENGLISH)))) {
+                    tab = addScrollTxt("/" + readmeFiles[i], false);
+                    if (tab != null)
+                        tabMain.addTab(MessageFormat.format("{0} ({1})", readmeFiles[i], Locale.ENGLISH.getDisplayLanguage(utils.getLocale())), tab);
                 }
             }
             this.setTitle(_("Documentation"));

@@ -11,10 +11,11 @@ if [ -z `which msgfmt` ]; then
 	exit 1 ;
 fi
 
-export CLASSPATH=$CLASSPATH:$PWD/jar
+export CLASSPATH=$CLASSPATH:$PWD/jar:$PWD/../gnu-hylafax
+export JAVAC="javac -target 1.5"
 
 echo 'Compiling *.java files ...'
-find yajhfc -name '*.java' -print0 | xargs --null javac
+find yajhfc -name '*.java' -print0 | xargs --null $JAVAC
 
 echo 'Compiling language files ...'
 

@@ -20,7 +20,11 @@ package yajhfc;
 
 
 import java.awt.Component;
+import java.awt.Dialog;
+import java.awt.Frame;
+import java.lang.reflect.InvocationTargetException;
 
+import javax.swing.JOptionPane;
 import javax.swing.ProgressMonitor;
 import javax.swing.SwingUtilities;
 
@@ -70,7 +74,24 @@ public abstract class ProgressWorker extends Thread {
         SwingUtilities.invokeLater(new ProgressUpdater(progress, pMon));
     }
     
-    public void startWork(Component parent, String text) {
+    public void displayExceptionDlg(String message, Exception ex) {
+        try {
+            SwingUtilities.invokeAndWait(new ExcDlgDisplayer(parent, ex, message));
+        } catch (InterruptedException e) {
+            // NOP
+        } catch (InvocationTargetException e) {
+            // NOP
+        }
+    }
+    
+    public void startWork(Dialog parent, String text) {
+        startWorkPriv(parent, text);
+    }
+    public void startWork(Frame parent, String text) {
+        startWorkPriv(parent, text);
+    }
+    
+    private void startWorkPriv(Component parent, String text) {
         initialize();
         pMon = new ProgressMonitor(parent, text, utils._("Initializing..."), 0, calculateMaxProgress());
         progress = 0;
@@ -94,6 +115,26 @@ public abstract class ProgressWorker extends Thread {
         });
     }
     
+    private static class ExcDlgDisplayer implements Runnable {
+        private Component parent;
+        private Exception ex;
+        private String msg;
+        
+        public ExcDlgDisplayer(Component parent, Exception ex, String msg) {
+            this.parent = parent;
+            this.ex = ex;
+            this.msg = msg;
+        }
+        
+        public void run() {
+            if (parent instanceof Dialog)
+                ExceptionDialog.showExceptionDialog((Dialog)parent, msg, ex);
+            else if (parent instanceof Frame)
+                ExceptionDialog.showExceptionDialog((Frame)parent, msg, ex);
+            else
+                JOptionPane.showMessageDialog(parent, msg + "\n" + ex.getMessage(), utils._("Error"), JOptionPane.ERROR_MESSAGE);;
+        }
+    }
     private static class ProgressUpdater implements Runnable {
         private int progress;
         private ProgressMonitor pMon;
