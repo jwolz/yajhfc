@@ -40,17 +40,25 @@ public abstract class ProgressWorker extends Thread {
     public abstract void doWork();
     
     /**
-     * Is called when the start method is called.
+     * Is called when the startWork method is called.
      */
     protected void initialize() {
         // NOP
     }
     
     /**
-     * Is called (in the event dispatching thread) after the work has been done.
+     * Is called (in the event dispatching thread) after the work has been done,
+     * but *before* the progress monitor is closed;
      */
     protected void done() {
-        // NOP;
+        // NOP
+    }
+    
+    /**
+     * Is called (in the event dispatching thread) after the progress monitor has been closed;
+     */
+    protected void pMonClosed() {
+        // NOP
     }
     
     /**
@@ -74,9 +82,19 @@ public abstract class ProgressWorker extends Thread {
         SwingUtilities.invokeLater(new ProgressUpdater(progress, pMon));
     }
     
-    public void displayExceptionDlg(String message, Exception ex) {
+    public void showExceptionDialog(String message, Exception ex) {
         try {
             SwingUtilities.invokeAndWait(new ExcDlgDisplayer(parent, ex, message));
+        } catch (InterruptedException e) {
+            // NOP
+        } catch (InvocationTargetException e) {
+            // NOP
+        }
+    }
+    
+    public void showMessageDialog(String message, String title, int msgType) {
+        try {
+            SwingUtilities.invokeAndWait(new MsgDlgDisplayer(parent, message, title, msgType));
         } catch (InterruptedException e) {
             // NOP
         } catch (InvocationTargetException e) {
@@ -111,10 +129,29 @@ public abstract class ProgressWorker extends Thread {
                 parent.setEnabled(true);
                 pMon.close();
                 pMon = null;
+                
+                pMonClosed();
             }
         });
     }
     
+    private static class MsgDlgDisplayer implements Runnable {
+        private Component parent;
+        private String msg;
+        private String title;
+        private int msgType;
+        
+        public void run() {
+            JOptionPane.showMessageDialog(parent, msg, title, msgType);
+        }
+        
+        public MsgDlgDisplayer(Component parent, String msg, String title, int msgType) {
+            this.parent = parent;
+            this.msg = msg;
+            this.title = title;
+            this.msgType = msgType;
+        }
+    }
     private static class ExcDlgDisplayer implements Runnable {
         private Component parent;
         private Exception ex;
