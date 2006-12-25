@@ -56,7 +56,7 @@ public class FileConverter implements PrintJobListener {
         this.flavor = flavor;
     }
     
-    public File covertToPSTemp(InputStream inStream) throws IOException, FileNotFoundException, ConversionException, PrintException {
+    public File convertToPSTemp(InputStream inStream) throws IOException, FileNotFoundException, ConversionException, PrintException {
         File tempFile = File.createTempFile("conv", ".ps");
         tempFile.deleteOnExit();
         

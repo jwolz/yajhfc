@@ -63,7 +63,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-import javax.swing.ProgressMonitor;
 import javax.swing.SpinnerNumberModel;
 
 import yajhfc.FormattedFile.FileFormat;
@@ -590,6 +589,15 @@ public class SendWin extends JDialog  {
         }
     }
             
+    private void setPaperSizes() {
+        PaperSize desiredSize = (PaperSize)ComboPaperSize.getSelectedItem();
+        for (int i = 0; i < tflFiles.model.size(); i++) {
+            HylaTFLItem item = (HylaTFLItem)tflFiles.model.get(i);
+
+            item.setDesiredPaperSize(desiredSize);
+        }
+    }
+    
     private File prepareCover() throws IOException, FileNotFoundException {
         FaxOptions fo = utils.getFaxOptions();   
         Faxcover cov;
@@ -662,6 +670,7 @@ public class SendWin extends JDialog  {
         public void doWork() {
             try {
                 int step;
+                setPaperSizes();
                 
                 if (checkUseCover.isSelected()) {
                     step = 10000 / (tflFiles.model.size() + 1);
@@ -713,6 +722,8 @@ public class SendWin extends JDialog  {
                 FaxOptions fo = utils.getFaxOptions();                    
                 
                 if (!pollMode) {
+                    setPaperSizes();
+                    
                     if (checkUseCover.isSelected()) {
                         updateNote(_("Creating cover page"));
                         coverFile = prepareCover();
@@ -846,11 +857,13 @@ public class SendWin extends JDialog  {
 
 abstract class HylaTFLItem extends TFLItem {
     protected String serverName = "<invalid>";
-
+    protected PaperSize desiredPaperSize = utils.papersizes[0];
+    
     public abstract void upload(HylaFAXClient hyfc) throws FileNotFoundException, IOException, ServerResponseException ;
     
     // May return null!
     public abstract InputStream getInputStream() throws FileNotFoundException, IOException;
+    
     
     /**
      * Previews the file in a viewer.
@@ -858,7 +871,7 @@ abstract class HylaTFLItem extends TFLItem {
     public boolean preview(Component parent) throws IOException, UnknownFormatException {
         FormattedFile previewFile = getPreviewFilename();
         if (previewFile == null) {
-            //JOptionPane.showMessageDialog(parent, MessageFormat.format(utils._("Preview is not supported for document \"{0}\"."), this.getText()), utils._("Preview"), JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(parent, MessageFormat.format(utils._("Preview is not supported for document \"{0}\"."), this.getText()), utils._("Preview"), JOptionPane.INFORMATION_MESSAGE);
             return false;
         }
         previewFile.view();
@@ -881,6 +894,14 @@ abstract class HylaTFLItem extends TFLItem {
     public void cleanup() {
         // NOP
     }
+    
+    public void setDesiredPaperSize(PaperSize newSize) {
+        desiredPaperSize = newSize;
+    }
+    
+    public PaperSize getDesiredPaperSize() {
+        return desiredPaperSize;
+    }
 }
 
 class LocalFileTFLItem extends HylaTFLItem {
@@ -891,11 +912,20 @@ class LocalFileTFLItem extends HylaTFLItem {
     private void convertFile(DocFlavor.INPUT_STREAM flavor) {
         FileConverter fconv = new FileConverter(flavor);
         try {
-            File f = fconv.covertToPSTemp(new FileInputStream(fileName));
+            fconv.paperSize = desiredPaperSize;
+            File f = fconv.convertToPSTemp(new FileInputStream(fileName));
             preparedFile = new FormattedFile(f, FileFormat.PostScript);
         }  catch (Exception e) {
             ExceptionDialog.showExceptionDialog((Dialog)null, MessageFormat.format(utils._("The document {0} could not get converted to PostScript. Reason:"), getText()), e);
         }        
+    }
+    
+    @Override
+    public void setDesiredPaperSize(PaperSize newSize) {
+        if (!newSize.equals(desiredPaperSize)) {
+            super.setDesiredPaperSize(newSize);
+            prepared = false;
+        }
     }
     
     protected void prepareFile() throws FileNotFoundException, IOException {
@@ -975,16 +1005,17 @@ class LocalFileTFLItem extends HylaTFLItem {
 }
 
 class StreamTFLItem extends HylaTFLItem {
-    protected File tempFile;
+    protected FormattedFile tempFile;
     
     @Override
     public void cleanup() {
-        tempFile.delete();
+        tempFile.file.delete();
+        tempFile = null;
     }
 
     @Override
     public InputStream getInputStream() throws FileNotFoundException {
-        return new FileInputStream(tempFile);
+        return new FileInputStream(tempFile.file);
     }
 
 
@@ -1002,6 +1033,11 @@ class StreamTFLItem extends HylaTFLItem {
     public boolean isMutable() {
         return false;
     }
+    
+    @Override
+    protected FormattedFile getPreviewFilename() {
+        return tempFile;
+    }
 
     @Override
     public void setText(String newText) {
@@ -1009,17 +1045,21 @@ class StreamTFLItem extends HylaTFLItem {
     }
     
     public StreamTFLItem(InputStream inStream) throws IOException, FileNotFoundException {
+        File tmp;
         // Copy input stream to a temporary file:
-        tempFile = File.createTempFile("submit", "tmp");
-        tempFile.deleteOnExit();
+        tmp = File.createTempFile("submit", ".tmp");
+        tmp.deleteOnExit();
         byte[] buf = new byte[8000];
         int len = 0;
-        FileOutputStream fOut = new FileOutputStream(tempFile);
+        FileOutputStream fOut = new FileOutputStream(tmp);
         BufferedInputStream fIn = new BufferedInputStream(inStream);
         while ((len = fIn.read(buf)) >= 0) {
             fOut.write(buf, 0, len);
         }
         fOut.close();
+        
+        tempFile = new FormattedFile(tmp);
+        tempFile.detectFormat();
     }
     
 }
