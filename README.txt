@@ -1,4 +1,4 @@
-README for YajHFC 0.2.7a
+README for YajHFC 0.3.0
 ========================
 
 ABOUT
@@ -28,9 +28,9 @@ Requirements:
 * Some program to view TIFF files (also see FAQ.txt for this)
 * Optional: A PostScript viewer (e.g. Ghostview)
 
-To install YajHFC just download the yajhfc-0_2_7a.jar file to some folder on your
+To install YajHFC just download the yajhfc-0_3_0.jar file to some folder on your
 file system.
-To execute it, use: "java -jar yajhfc-0_2_7a.jar"
+To execute it, use: "java -jar yajhfc-0_3_0.jar"
 (In Windows you usually can just double click the jar file as well.)
 
 LICENSE
@@ -44,7 +44,7 @@ SOURCE CODE
 
 YajHFC uses the following packages:
 (1) A slightly modified version of the gnu.hylafax package 
-    (originally from http://www.net-foundry.com/java/gnu/hylafax/)
+    (originally from http://gnu-hylafax.sf.net/)
     The source code of the modified version can be downloaded
     from the YajHFC home page.
 (2) TableLayout.jar 
@@ -60,6 +60,9 @@ YajHFC was originally written as a first more complicated
 
 CHANGES
 -------
+0.3.0:
+- Added support to convert pictures to PostScript before submitting a fax job
+- Added a "preview" button to the Send dialog
 
 0.2.7a:
 - Bugfix for a exception that occured when displaying "only own faxes"

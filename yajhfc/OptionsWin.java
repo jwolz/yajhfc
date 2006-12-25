@@ -1,7 +1,7 @@
 package yajhfc;
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005 Jonas Wolz
+ * Copyright (C) 2005-2006 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -81,6 +81,8 @@ public class OptionsWin extends JDialog {
     private ClipboardPopup clpDef;
     private JPanel panelServer, panelSend, panelPaths, panelCover, panelMisc;
     
+    private JCheckBox checkPreferTIFF;
+    
     private FaxOptions foEdit = null;
     private Vector<FmtItem> recvfmt, sentfmt, sendingfmt;
     
@@ -97,7 +99,7 @@ public class OptionsWin extends JDialog {
     }
     
     private void initialize() {
-        this.setSize(600, 430);
+        this.setSize(630, 460);
         this.setResizable(false);
         this.setTitle(_("Options"));
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -127,6 +129,7 @@ public class OptionsWin extends JDialog {
         checkPCLBug.setSelected(foEdit.pclBug);
         checkAskPassword.setSelected(foEdit.askPassword);
         checkAskAdminPassword.setSelected(foEdit.askAdminPassword);
+        checkPreferTIFF.setSelected(foEdit.preferRenderedTIFF);
         
         spinMaxDial.setValue(Integer.valueOf(foEdit.maxDial));
         spinMaxTry.setValue(Integer.valueOf(foEdit.maxTry));
@@ -179,7 +182,7 @@ public class OptionsWin extends JDialog {
             ButtonOK.setPreferredSize(buttonSize);
             PanelButtons.add(ButtonOK);
             
-            PanelButtons.add(Box.createRigidArea(new Dimension(20, 1)));
+            PanelButtons.add(Box.createRigidArea(new Dimension((int)border, 1)));
             
             Action actCancel = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
@@ -192,6 +195,8 @@ public class OptionsWin extends JDialog {
             ButtonCancel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "EscapePressed");
             ButtonCancel.setPreferredSize(buttonSize);
             PanelButtons.add(ButtonCancel);
+            
+            PanelButtons.add(Box.createHorizontalStrut((int)border));
         }
         return PanelButtons;
     }
@@ -244,7 +249,7 @@ public class OptionsWin extends JDialog {
         if (panelServer == null) {
             double[][] tablelay = {
                     {border, 0.22, border, 0.22, border, 0.22, border, TableLayout.FILL, border},
-                    new double[11]
+                    new double[12]
             };
             double rowh = 1 / (double)(tablelay[1].length - 2);
             tablelay[1][0] = 0;
@@ -280,6 +285,9 @@ public class OptionsWin extends JDialog {
             
             checkPasv = new JCheckBox(_("Use passive mode to fetch faxes"));
             
+            checkPreferTIFF = new JCheckBox("<html>" + _("Prefer rendered TIFF") + "</html>");
+            checkPreferTIFF.setToolTipText(_("Try to fetch the rendered TIFF from the HylaFAX server instead of the source file."));
+            
             addWithLabel(panelServer, textHost, _("Host name:"), "1, 2, 5, 2, f, c");
             addWithLabel(panelServer, textPort, _("Port:"), "7, 4, f, c");
             addWithLabel(panelServer, textUser, _("Username:"), "1, 4, 5, 4, f, c");
@@ -290,6 +298,7 @@ public class OptionsWin extends JDialog {
             panelServer.add(checkAskAdminPassword, "6, 8, 7, 8, f, c");
             
             panelServer.add(checkPasv, "1, 9, 7, 9");
+            panelServer.add(checkPreferTIFF, "1, 10, 7, 10");
         }
         return panelServer;
     }
@@ -314,7 +323,7 @@ public class OptionsWin extends JDialog {
             
             comboLang = new JComboBox(utils.AvailableLocales);
             spinOffset = SpinnerDateOffsetEditor.createJSpinner();
-            
+                        
             addWithLabel(panelMisc, comboLang, _("Language:"), "1, 1, 1, 1, f, c");
             addWithLabel(panelMisc, comboNewFaxAction, "<html>" + _("When a new fax is received:") + "</html>", "1, 3, 1, 3, f, c");
             addWithLabel(panelMisc, spinOffset, _("Date/Time offset:"), "1, 5, 1, 5, f, c");
@@ -540,6 +549,7 @@ public class OptionsWin extends JDialog {
                 foEdit.pclBug = checkPCLBug.isSelected();
                 foEdit.askPassword = checkAskPassword.isSelected();
                 foEdit.askAdminPassword = checkAskAdminPassword.isSelected();
+                foEdit.preferRenderedTIFF = checkPreferTIFF.isSelected();
                 
                 foEdit.recvfmt = recvfmt;
                 foEdit.sentfmt = sentfmt;

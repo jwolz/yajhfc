@@ -89,7 +89,7 @@ public class AboutDialog extends JDialog implements HyperlinkListener {
     private JScrollPane addScrollTxt(String resName, boolean useLocalized) {
         
         URL txtURL;
-        if (useLocalized)
+        if (useLocalized && !utils.getLocale().equals(Locale.ENGLISH))
             txtURL = utils.getLocalizedFile(resName, false);
         else
             txtURL = AboutDialog.class.getResource(resName);
