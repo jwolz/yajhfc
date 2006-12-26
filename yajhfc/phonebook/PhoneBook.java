@@ -83,23 +83,17 @@ public abstract class PhoneBook extends AbstractListModel {
         return (PhoneBookEntry)getElementAt(index);
     }
     
-    // Write the entry to the "database"
-    public abstract void writeEntry(PhoneBookEntry entry);
-    
-    // Just update the display in the JList
-    public void updateEntryInList(PhoneBookEntry entry) {
-        writeEntry(entry);
-    }
-    
-    public abstract void deleteEntry(PhoneBookEntry entry);
-    
     /**
      * Show dialog to select a new Phonebook.
      * Returns a descriptor if the user selected a valid one or null if user selects cancel
      */
     public abstract String browseForPhoneBook();
     
-    public abstract void openDefault();
+    public void openDefault() {
+        // do nothing...
+        // (this method only needs to get implemented if the phone book is a candidate 
+        //  to be returned by PhoneBookFactory.createDefault())
+    }
     
     public void open(String descriptor) {
         int pos = descriptor.indexOf(':');

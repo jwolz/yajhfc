@@ -57,7 +57,7 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
     protected JPopupMenu popup;
     protected boolean useUpDown;
     protected ArrayList<JComponent> localComponents;
-    
+    protected TFLItem lastSelection;
     
     public Action getUpAction() {
         if (upAction == null) {
@@ -156,11 +156,7 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
                         return;
                     }
                     TFLItem sel = (TFLItem)list.getSelectedValue();
-                    if (sel != null && sel.isMutable() && textField.getDocument().getLength() > 0) {
-                        sel.setText(textField.getText());
-                        // Hack to redraw the list:
-                        model.setElementAt(sel, list.getSelectedIndex());
-                    }
+                    modifyListItem(sel);
                 };
             };
             modifyAction.putValue(Action.NAME, utils._("Update"));
@@ -171,17 +167,34 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
         return modifyAction;
     }
     
+    protected void commitChanges(TFLItem sel) {
+        sel.setText(textField.getText());
+    }
+    
     protected TFLItem createListItem(String text) {
         return new DefTFLItem(text);
     }
     
+    protected void modifyListItem(TFLItem sel) {
+        if (sel != null && sel.isMutable() && textField.getDocument().getLength() > 0) {
+            commitChanges(sel);
+            // Hack to redraw the list:
+            //model.setElementAt(sel, list.getSelectedIndex());
+            list.repaint();
+        }
+    }
+    
+    public void addListItem(TFLItem newItem) {
+        if (!model.contains(newItem)) {// Elements should be unique
+            lastSelection = null;
+            model.addElement(newItem);
+            list.setSelectedIndex(model.getSize() - 1);
+        }
+    }
+    
     public void addListItem(String text) {
         if (text.length() > 0) {
-            TFLItem newItem = createListItem(text);
-            if (!model.contains(newItem)) {// Elements should be unique
-                model.addElement(newItem);
-                list.setSelectedIndex(model.getSize() - 1);
-            }
+            addListItem(createListItem(text));
         }
     }
     
@@ -306,6 +319,10 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
         int selIdx = list.getSelectedIndex();
         TFLItem sel = (TFLItem)list.getSelectedValue();
         
+        if (!e.getValueIsAdjusting() && lastSelection != null) {
+            modifyListItem(lastSelection);
+        }
+        
         getModifyAction().setEnabled(selIdx >= 0 && sel.isMutable());
         getRemoveAction().setEnabled(selIdx >= 0 && sel.isMutable());
         if (useUpDown) {
@@ -314,11 +331,16 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
         }
         
         if (sel != null && !e.getValueIsAdjusting()) {
-            if (sel.isMutable())
-                textField.setText(sel.getText());
-            else
-                textField.setText("");
-        }       
+            displayItem(sel);
+            lastSelection = sel;
+        }    
+    }
+    
+    protected void displayItem(TFLItem sel) {
+        if (sel.isMutable())
+            textField.setText(sel.getText());
+        else
+            textField.setText("");
     }
     
     public void changedUpdate(DocumentEvent e) {

@@ -56,6 +56,23 @@ public abstract class PhoneBookEntry {
      public abstract String getComment();
      public abstract void setComment(String newComment);
      
+     /**
+      * Deletes this entry from the phonebook
+      */
+     public abstract void delete();
+     
+     /**
+      * Commits all changes made by the get/set-Methods
+      */
+     public abstract void commit();
+     
+     /**
+      * Just update the displayed position (don't necessarily write through)
+      */
+     public void updateDisplay() {
+         commit();
+     }
+     
      public void copyFrom(PhoneBookEntry other) {
          setName(other.getName());
          setGivenName(other.getGivenName());

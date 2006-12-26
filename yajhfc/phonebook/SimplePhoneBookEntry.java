@@ -18,7 +18,7 @@ package yajhfc.phonebook;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-public class SimplePhoneBookEntry extends PhoneBookEntry {
+public abstract class SimplePhoneBookEntry extends PhoneBookEntry {
 
     public String surname;
     public String givenname;
