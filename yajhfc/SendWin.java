@@ -341,7 +341,43 @@ public class SendWin extends JDialog  {
             ButtonPhoneBook.setMaximumSize(d);
             TextNumber.setMaximumSize(d2);
             
-            tflNumbers = new TextFieldList(TextNumber, false);
+            tflNumbers = new TextFieldList(TextNumber, false) {
+                @Override
+                protected TFLItem createListItem(String text) {
+                    NumberTFLItem rv = new NumberTFLItem(text);
+                    if (!pollMode) {
+                        rv.company = textToCompany.getText();
+                        rv.location = textToLocation.getText();
+                        rv.name = textToName.getText();
+                        rv.voiceNumber = textToVoiceNumber.getText();
+                    }
+                    return rv;
+                }
+                
+                @Override
+                protected void commitChanges(TFLItem sel) {
+                    if (!pollMode) {
+                        NumberTFLItem numSel = (NumberTFLItem)sel;
+                        numSel.company = textToCompany.getText();
+                        numSel.location = textToLocation.getText();
+                        numSel.name = textToName.getText();
+                        numSel.voiceNumber = textToVoiceNumber.getText();
+                    }
+                    super.commitChanges(sel);
+                }
+                
+                @Override
+                protected void displayItem(TFLItem sel) {
+                    if (!pollMode) {
+                        NumberTFLItem numSel = (NumberTFLItem)sel;
+                        textToCompany.setText(numSel.company);
+                        textToLocation.setText(numSel.location);
+                        textToName.setText(numSel.name);
+                        textToVoiceNumber.setText(numSel.voiceNumber);
+                    }
+                    super.displayItem(sel);
+                }
+            };
             tflNumbers.addLocalComponent(ButtonPhoneBook);
             clpNumbers = new ClipboardPopup();
             clpNumbers.getPopupMenu().addSeparator();
@@ -545,7 +581,10 @@ public class SendWin extends JDialog  {
                     PhoneBookWin pbw = new PhoneBookWin(SendWin.this);
                     PhoneBookEntry pb = pbw.selectNumber();
                     if (pb != null) {
-                        TextNumber.setText(pb.getFaxNumber());
+                        NumberTFLItem nti = new NumberTFLItem(pb);
+                        tflNumbers.addListItem(nti);
+                        
+                        /*TextNumber.setText(pb.getFaxNumber());
                         tflNumbers.addListItem(pb.getFaxNumber());
                         
                         textToCompany.setText(pb.getCompany());
@@ -557,7 +596,7 @@ public class SendWin extends JDialog  {
                         if (pb.getGivenName().length() > 0)
                             name += pb.getGivenName() + " ";
                         name += pb.getName();
-                        textToName.setText(name);
+                        textToName.setText(name);*/
                     }
                 }
             });
@@ -598,10 +637,9 @@ public class SendWin extends JDialog  {
         }
     }
     
-    private File prepareCover() throws IOException, FileNotFoundException {
+    private Faxcover initFaxCover() throws IOException, FileNotFoundException {
         FaxOptions fo = utils.getFaxOptions();   
         Faxcover cov;
-        File coverFile;
 
         cov = new Faxcover();
         cov.pageCount = 0;
@@ -637,19 +675,33 @@ public class SendWin extends JDialog  {
 
         cov.comments = textToComments.getText();
         cov.regarding = textSubject.getText();
-        cov.toCompany = textToCompany.getText();
-        cov.toFaxNumber = TextNumber.getText();
-        cov.toLocation = textToLocation.getText();
-        cov.toName = textToName.getText();
-        cov.toVoiceNumber = textToVoiceNumber.getText();
-
+        
         cov.setPageSize(((PaperSize)ComboPaperSize.getSelectedItem()).size);
 
         if (checkCustomCover.isSelected())
             cov.coverTemplate = new File(ftfCustomCover.getText());
         else if (fo.useCustomDefaultCover)
             cov.coverTemplate = new File(fo.defaultCover);
-
+        
+        return cov;
+    }
+    private File makeCoverFile(Faxcover cov, NumberTFLItem to) throws IOException, FileNotFoundException {
+        File coverFile;
+        
+        if (to != null) {
+            cov.toCompany = to.company;
+            cov.toFaxNumber = to.faxNumber;
+            cov.toLocation = to.location;
+            cov.toName = to.name;
+            cov.toVoiceNumber = to.voiceNumber;
+        } else {
+            cov.toCompany = textToCompany.getText();
+            cov.toFaxNumber = TextNumber.getText();
+            cov.toLocation = textToLocation.getText();
+            cov.toName = textToName.getText();
+            cov.toVoiceNumber = textToVoiceNumber.getText();
+        }
+        
         // Create cover:
         coverFile = File.createTempFile("cover", ".tmp");
         coverFile.deleteOnExit();
@@ -676,7 +728,7 @@ public class SendWin extends JDialog  {
                     step = 10000 / (tflFiles.model.size() + 1);
                     updateNote(_("Creating cover page"));
                     
-                    File coverFile = prepareCover();
+                    File coverFile = makeCoverFile(initFaxCover(), (NumberTFLItem)tflNumbers.getList().getSelectedValue());
                     FormattedFile.viewFile(coverFile.getPath(), FileFormat.PostScript);
                     setProgress(step);
                 } else {
@@ -709,24 +761,25 @@ public class SendWin extends JDialog  {
         @Override
         protected int calculateMaxProgress() {
             int maxProgress;
-            maxProgress = 20 * tflFiles.model.size() + 15 * tflNumbers.model.size() + 10;
-            if (checkUseCover != null && checkUseCover.isSelected())
+            maxProgress = 20 * tflFiles.model.size() + 20 * tflNumbers.model.size() + 10;
+            if (checkUseCover != null && checkUseCover.isSelected()) {
                 maxProgress += 20;
+            }
             return maxProgress;
         }
         
         @Override
         public void doWork() {
             try {        
-                File coverFile = null;
+                //File coverFile = null;
+                Faxcover cover = null;
                 FaxOptions fo = utils.getFaxOptions();                    
                 
                 if (!pollMode) {
                     setPaperSizes();
                     
                     if (checkUseCover.isSelected()) {
-                        updateNote(_("Creating cover page"));
-                        coverFile = prepareCover();
+                        cover = initFaxCover();
                         stepProgressBar(20);
                     }
                     
@@ -743,16 +796,21 @@ public class SendWin extends JDialog  {
                 }            
                 
                 for (int i = 0; i < tflNumbers.model.size(); i++) {
-                    String number = tflNumbers.model.get(i).toString();
-                    updateNote(MessageFormat.format(_("Creating job to {0}"), number));
+                    NumberTFLItem numItem = (NumberTFLItem)tflNumbers.model.get(i);
+                    updateNote(MessageFormat.format(_("Creating job to {0}"), numItem.getText()));
                     
                     try {
                         String coverName = null;
-                        if (coverFile != null) {
+                        if (cover != null) {
+                            File coverFile = makeCoverFile(cover, numItem);
+
                             FileInputStream fi = new FileInputStream(coverFile);
                             coverName = hyfc.putTemporary(fi);
                             fi.close();
+                            
+                            coverFile.delete();
                         }
+                        stepProgressBar(5);
                         
                         Job j = hyfc.createJob();
                         
@@ -764,18 +822,18 @@ public class SendWin extends JDialog  {
                         
                         if (!pollMode) {
                             // Set general job information...
-                            setIfNotEmpty(j, "TOUSER", textToName.getText());
-                            setIfNotEmpty(j, "TOCOMPANY", textToCompany.getText());
-                            setIfNotEmpty(j, "TOLOCATION", textToLocation.getText());
-                            setIfNotEmpty(j, "TOVOICE", textToVoiceNumber.getText());
+                            setIfNotEmpty(j, "TOUSER", numItem.name);
+                            setIfNotEmpty(j, "TOCOMPANY", numItem.company);
+                            setIfNotEmpty(j, "TOLOCATION", numItem.location);
+                            setIfNotEmpty(j, "TOVOICE", numItem.voiceNumber);
                             setIfNotEmpty(j, "REGARDING", textSubject.getText());
                             setIfNotEmpty(j, "FROMCOMPANY", fo.FromCompany);
                             setIfNotEmpty(j, "FROMLOCATION", fo.FromLocation);
                             setIfNotEmpty(j, "FROMVOICE", fo.FromVoiceNumber);
                         }
                         
-                        j.setDialstring(number);
-                        j.setExternal(number); // needed to fix an error while sending multiple jobs
+                        j.setDialstring(numItem.faxNumber);
+                        j.setExternal(numItem.faxNumber); // needed to fix an error while sending multiple jobs
                         j.setMaximumTries(((Integer)SpinMaxTries.getValue()).intValue());
                         j.setNotifyType(((FaxStringProperty)ComboNotification.getSelectedItem()).type);
                         j.setPageDimension(((PaperSize)ComboPaperSize.getSelectedItem()).size);
@@ -804,7 +862,7 @@ public class SendWin extends JDialog  {
                         
                         stepProgressBar(5);
                     } catch (Exception e1) {
-                        showExceptionDialog(MessageFormat.format(_("An error occured while submitting the fax job for phone number \"{0}\" (will try to submit the fax to the other numbers anyway): "), number) , e1);
+                        showExceptionDialog(MessageFormat.format(_("An error occured while submitting the fax job for phone number \"{0}\" (will try to submit the fax to the other numbers anyway): "), numItem.getText()) , e1);
                     }
                 }
                 
@@ -813,8 +871,6 @@ public class SendWin extends JDialog  {
                     HylaTFLItem item = (HylaTFLItem)tflFiles.model.get(i);
                     item.cleanup();
                 }
-                if (coverFile != null)
-                    coverFile.delete();
                 
             } catch (Exception e1) {
                 //JOptionPane.showMessageDialog(ButtonSend, _("An error occured while submitting the fax: ") + "\n" + e1.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
@@ -851,6 +907,43 @@ public class SendWin extends JDialog  {
 
             SendWorker wrk = new SendWorker();
             wrk.startWork(SendWin.this, _("Sending fax"));
+        }
+    }
+    private static class NumberTFLItem extends TFLItem {
+        public String faxNumber;
+        public String name, company, location, voiceNumber;
+        
+        @Override
+        public String getText() {
+            return faxNumber;
+        }
+        
+        @Override
+        public void setText(String newText) {
+            faxNumber = newText;
+        }
+        
+        public void loadFromPBE(PhoneBookEntry pbe) {
+            faxNumber = pbe.getFaxNumber();
+            
+            company = pbe.getCompany();
+            location = pbe.getLocation();
+            voiceNumber = pbe.getVoiceNumber();
+            
+            name = "";
+            if (pbe.getTitle().length() > 0)
+                name += pbe.getTitle() + " ";
+            if (pbe.getGivenName().length() > 0)
+                name += pbe.getGivenName() + " ";
+            name += pbe.getName();
+        }
+        
+        public NumberTFLItem(String number) {
+            this.faxNumber = number;
+        }
+        
+        public NumberTFLItem(PhoneBookEntry pbe) {
+            loadFromPBE(pbe);
         }
     }
 }  

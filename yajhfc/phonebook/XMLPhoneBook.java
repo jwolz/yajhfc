@@ -65,22 +65,20 @@ public class XMLPhoneBook extends PhoneBook {
     
     @Override
     public PhoneBookEntry addNewEntry() {
-        XMLPhoneBookEntry pb = new XMLPhoneBookEntry();
+        XMLPhoneBookEntry pb = new XMLPhoneBookEntry(this);
         int pos = getInsertionPos(pb);
         list.add(pos, pb);
         fireIntervalAdded(this, pos, pos);
         return pb;
     }
 
-    @Override
-    public void deleteEntry(PhoneBookEntry entry) {
+    void deleteEntry(PhoneBookEntry entry) {
         int index = list.indexOf(entry);
         list.remove(index);
         fireIntervalRemoved(this, index, index);
     }
 
-    @Override
-    public void writeEntry(PhoneBookEntry entry) {
+    void writeEntry(PhoneBookEntry entry) {
         int oldpos = list.indexOf(entry);
         list.remove(oldpos);
         int pos = getInsertionPos(entry);
@@ -151,7 +149,7 @@ public class XMLPhoneBook extends PhoneBook {
         for (int i = 0; i < nl.getLength(); i++) {
             Node item = nl.item(i);
             if ((item.getNodeType() == Node.ELEMENT_NODE) && (item.getNodeName().equals("entry"))) {
-                XMLPhoneBookEntry entry = new XMLPhoneBookEntry();
+                XMLPhoneBookEntry entry = new XMLPhoneBookEntry(this);
                 entry.loadFromXML((Element)item);
                 list.add(entry);
             }

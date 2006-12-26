@@ -144,9 +144,9 @@ public final class PhoneBookWin extends JDialog
         pb.setComment(textComment.getText());
         
         if (updateOnly)
-            phoneBook.updateEntryInList(pb);
+            pb.updateDisplay();
         else
-            phoneBook.writeEntry(pb);
+            pb.commit();
     }
     
     private void closePhoneBook() {
@@ -213,7 +213,7 @@ public final class PhoneBookWin extends JDialog
             if (pb != null)
                 if (JOptionPane.showConfirmDialog(this, MessageFormat.format(_("Do you want to delete the entry for \"{0}\"?"), pb), "Delete entry", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     oldEntry = null;
-                    phoneBook.deleteEntry(pb);
+                    pb.delete();
                     writeToTextFields(null);
                 }
         } else if (e.getActionCommand().equals("close")) {

@@ -18,14 +18,28 @@ package yajhfc.phonebook;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class XMLPhoneBookEntry extends SimplePhoneBookEntry {
+    private XMLPhoneBook parent;
+    
+    public XMLPhoneBookEntry(XMLPhoneBook parent) {
+        this.parent = parent;
+    }
+    
+    @Override
+    public void commit() {
+        parent.writeEntry(this);
+    }
+    
+    @Override
+    public void delete() {
+        parent.deleteEntry(this);
+    }
+    
     public void saveToXML(Element el, Document doc) {
         java.lang.reflect.Field[] f = XMLPhoneBookEntry.class.getFields();
         
