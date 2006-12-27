@@ -112,6 +112,31 @@ public abstract class PhoneBook extends AbstractListModel {
     
     public abstract void close();
     
+    public boolean isFieldNameAvailable() {
+        return true;
+    }
+    public boolean isFieldGivenNameAvailable() {
+        return true;
+    }
+    public boolean isFieldTitleAvailable() {
+        return true;
+    }
+    public boolean isFieldCompanyAvailable() {
+        return true;
+    }
+    public boolean isFieldLocationAvailable() {
+        return true;
+    }
+    public boolean isFieldVoiceNumberAvailable() {
+        return true;
+    }
+    public boolean isFieldFaxNumberAvailable() {
+        return true;
+    }
+    public boolean isFieldCommentAvailable() {
+        return true;
+    }
+    
     public PhoneBook (Dialog parent) {
         this.parentDialog = parent;
     }

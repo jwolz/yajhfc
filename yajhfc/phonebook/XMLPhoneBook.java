@@ -49,14 +49,13 @@ public class XMLPhoneBook extends PhoneBook {
     
     private ArrayList<XMLPhoneBookEntry> list;
     private String fileName;
-    private DefaultPhoneBookEntryComparator pbeComparator;
     
     public void resort() {
-        Collections.sort(list, pbeComparator);
+        Collections.sort(list, DefaultPhoneBookEntryComparator.globalInstance);
     }
     
     private int getInsertionPos(PhoneBookEntry pbe) {
-        int res = Collections.binarySearch(list, pbe, pbeComparator);
+        int res = Collections.binarySearch(list, pbe, DefaultPhoneBookEntryComparator.globalInstance);
         if (res >= 0) // Element found?
             return res + 1;
         else
@@ -202,7 +201,6 @@ public class XMLPhoneBook extends PhoneBook {
         super(parent);
         
         list = new ArrayList<XMLPhoneBookEntry>();
-        pbeComparator = new DefaultPhoneBookEntryComparator();
     }
 
 }

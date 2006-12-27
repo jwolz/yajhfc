@@ -96,7 +96,6 @@ public final class PhoneBookWin extends JDialog
     }
     
     private void writeToTextFields(PhoneBookEntry pb) {
-        boolean enable;
         
         if (pb == null) {
             textSurname.setText("");
@@ -107,7 +106,17 @@ public final class PhoneBookWin extends JDialog
             textVoicenumber.setText("");
             textFaxnumber.setText("");
             textComment.setText("");
-            enable = false;
+            
+            textSurname.setEnabled(false);
+            textGivenname.setEnabled(false);
+            textTitle.setEnabled(false);
+            textCompany.setEnabled(false);
+            textLocation.setEnabled(false);
+            textVoicenumber.setEnabled(false);
+            textFaxnumber.setEnabled(false);
+            
+            scrollComment.setEnabled(false);
+            textComment.setEnabled(false);
         } else {
             textSurname.setText(pb.getName());
             textGivenname.setText(pb.getGivenName());
@@ -117,17 +126,17 @@ public final class PhoneBookWin extends JDialog
             textVoicenumber.setText(pb.getVoiceNumber());
             textFaxnumber.setText(pb.getFaxNumber());
             textComment.setText(pb.getComment());
-            enable = true;
+            
+            textSurname.setEnabled(phoneBook.isFieldNameAvailable());
+            textGivenname.setEnabled(phoneBook.isFieldGivenNameAvailable());
+            textTitle.setEnabled(phoneBook.isFieldTitleAvailable());
+            textCompany.setEnabled(phoneBook.isFieldCompanyAvailable());
+            textLocation.setEnabled(phoneBook.isFieldLocationAvailable());
+            textVoicenumber.setEnabled(phoneBook.isFieldVoiceNumberAvailable());
+            textFaxnumber.setEnabled(phoneBook.isFieldFaxNumberAvailable());
+            scrollComment.setEnabled(phoneBook.isFieldCommentAvailable());
+            textComment.setEnabled(phoneBook.isFieldCommentAvailable());
         }
-        
-        textSurname.setEnabled(enable);
-        textGivenname.setEnabled(enable);
-        textTitle.setEnabled(enable);
-        textCompany.setEnabled(enable);
-        textLocation.setEnabled(enable);
-        textVoicenumber.setEnabled(enable);
-        textFaxnumber.setEnabled(enable);
-        textComment.setEnabled(enable);
     }
     
     private void readFromTextFields(PhoneBookEntry pb, boolean updateOnly) {

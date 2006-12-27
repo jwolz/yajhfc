@@ -23,6 +23,8 @@ import java.util.Comparator;
 
 
 public class DefaultPhoneBookEntryComparator implements Comparator<PhoneBookEntry> {
+    public static DefaultPhoneBookEntryComparator globalInstance = new DefaultPhoneBookEntryComparator();
+    
     public int compare(PhoneBookEntry o1, PhoneBookEntry o2) {
         int res;
         String s, s2;
