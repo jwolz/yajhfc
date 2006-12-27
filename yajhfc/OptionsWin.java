@@ -285,7 +285,7 @@ public class OptionsWin extends JDialog {
             
             checkPasv = new JCheckBox(_("Use passive mode to fetch faxes"));
             
-            checkPreferTIFF = new JCheckBox("<html>" + _("Prefer rendered TIFF") + "</html>");
+            checkPreferTIFF = new JCheckBox("<html>" + _("Prefer rendered TIFF (experimental)") + "</html>");
             checkPreferTIFF.setToolTipText(_("Try to fetch the rendered TIFF from the HylaFAX server instead of the source file."));
             
             addWithLabel(panelServer, textHost, _("Host name:"), "1, 2, 5, 2, f, c");
