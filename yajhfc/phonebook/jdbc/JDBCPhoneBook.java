@@ -46,7 +46,7 @@ public class JDBCPhoneBook extends PhoneBook {
     ArrayList<JDBCPhoneBookEntry> deleted_items = new ArrayList<JDBCPhoneBookEntry>();
     ArrayList<DBKey> rowId = new ArrayList<DBKey>();
     
-    PreparedStatement insertStmt, deleteStmt, updateStmt/*, selectStmt*/;
+    //PreparedStatement insertStmt, deleteStmt, updateStmt/*, selectStmt*/;
     
     public static final String PB_Prefix = "JDBC";      // The prefix of this Phonebook type's descriptor
     public static final String PB_DisplayName = utils._("JDBC Phonebook"); // A user-readable name for this Phonebook type
@@ -252,7 +252,9 @@ public class JDBCPhoneBook extends PhoneBook {
         try {
             String password;
             if (settings.askForPWD) {
-                password = PasswordDialog.showPasswordDialog(parentDialog, utils._("Database password"), MessageFormat.format(utils._("Please enter the database password for user {0}.\nDatabase: {1}"), settings.user, settings.dbURL));
+                password = PasswordDialog.showPasswordDialog(parentDialog, utils._("Database password"), MessageFormat.format(utils._("Please enter the database password for user {0} (database: {1})."), settings.user, settings.dbURL));
+                if (password == null)
+                    return;
             } else {
                 password = settings.pwd;
             }
@@ -303,50 +305,51 @@ public class JDBCPhoneBook extends PhoneBook {
     }
 
     void commitToDB() {
-        try {
-        String query = getINSERTQuery();
-        if (utils.debugMode) {
-            System.out.println("JDBC phone book: INSERT query: " + query);
-        }
-        insertStmt = connection.prepareStatement(query);
-        
-        query = getUPDATEQuery();
-        if (utils.debugMode) {
-            System.out.println("JDBC phone book: UPDATE query: " + query);
-        }
-        updateStmt = connection.prepareStatement(query);
-        
-        query = getDELETEQuery();
-        if (utils.debugMode) {
-            System.out.println("JDBC phone book: DELETE query: " + query);
-        }
-        deleteStmt = connection.prepareStatement(query);
-        
-        connection.setAutoCommit(false);
-        
-        for (JDBCPhoneBookEntry e : items) {
-            try {
-                e.commitToDB();
-            } catch (SQLException ex) {
-                ExceptionDialog.showExceptionDialog(parentDialog, MessageFormat.format(utils._("Could not save the changes for entry {0}:"), e.toString()), ex);
-            }                
-        }
-        for (JDBCPhoneBookEntry e : deleted_items) {
-            try {
-                e.commitToDB();
-            } catch (SQLException ex) {
-                ExceptionDialog.showExceptionDialog(parentDialog, MessageFormat.format(utils._("Could not save the changes for entry {0}:"), e.toString()), ex);
-            } 
-        }
-        
-        connection.commit();
-        
-        insertStmt.close();
-        insertStmt = null;
-        updateStmt.close();
-        updateStmt = null;
-        deleteStmt.close();
-        deleteStmt = null;
+        PreparedStatement insertStmt, updateStmt, deleteStmt;
+        try {   
+            String query = getINSERTQuery();
+            if (utils.debugMode) {
+                System.out.println("JDBC phone book: INSERT query: " + query);
+            }
+            insertStmt = connection.prepareStatement(query);
+
+            query = getUPDATEQuery();
+            if (utils.debugMode) {
+                System.out.println("JDBC phone book: UPDATE query: " + query);
+            }
+            updateStmt = connection.prepareStatement(query);
+
+            query = getDELETEQuery();
+            if (utils.debugMode) {
+                System.out.println("JDBC phone book: DELETE query: " + query);
+            }
+            deleteStmt = connection.prepareStatement(query);
+
+            connection.setAutoCommit(false);
+
+            for (JDBCPhoneBookEntry e : deleted_items) {
+                try {
+                    e.commitToDB(insertStmt, updateStmt, deleteStmt);
+                } catch (SQLException ex) {
+                    ExceptionDialog.showExceptionDialog(parentDialog, MessageFormat.format(utils._("Could not save the changes for entry {0}:"), e.toString()), ex);
+                } 
+            }
+            for (JDBCPhoneBookEntry e : items) {
+                try {
+                    e.commitToDB(insertStmt, updateStmt, deleteStmt);
+                } catch (SQLException ex) {
+                    ExceptionDialog.showExceptionDialog(parentDialog, MessageFormat.format(utils._("Could not save the changes for entry {0}:"), e.toString()), ex);
+                }                
+            }
+
+            connection.commit();
+
+            insertStmt.close();
+            insertStmt = null;
+            updateStmt.close();
+            updateStmt = null;
+            deleteStmt.close();
+            deleteStmt = null;
         } catch (Exception e) {
             ExceptionDialog.showExceptionDialog(parentDialog, utils._("Could not save the phone book:"), e);
         }

@@ -1,8 +1,10 @@
 \documentclass[a4paper,10pt]{scrartcl}
-\usepackage[latin1]{inputenc}
+\usepackage{ucs}
+\usepackage[utf8x]{inputenc}
 \usepackage{url}
 \usepackage[left=3cm,right=3cm,top=2cm,bottom=2cm,nohead]{geometry}
 \usepackage[spanish]{babel}
+
 
 %opening
 \title{YajHFC FAQ}
@@ -14,125 +16,133 @@
 
 \tableofcontents
 
-\section{Installation}
-\subsection{¿Dónde puedo conseguir un visor de faxes para Windows?}
+\section{InstalaciÃ³n}
+\subsection{Â¿DÃ³nde puedo conseguir un visor de faxes para Windows?}
 
-Generalmente puedes utilizar cualquier programa que permita mostrar ficheros TIFF, aunque algunos de ellos muestran los faxes en una resolución baja con una anchura (a la mitad) incorrecta.
+Generalmente puedes utilizar cualquier programa que permita mostrar ficheros TIFF, aunque algunos de ellos muestran los faxes en una resoluciÃ³n baja con una anchura (a la mitad) incorrecta.
 
 Afortunadamente, las versiones recientes de Windows vienen con un programa 
-que hace ésto correctamente:
+que hace Ã©sto correctamente:
 
 \begin{description}
 \item[Windows 95/98/ME/2000:]
-puedes utilizar el programa que se encuentra en Accesorios / Imagen. 
-Para utilizarlo con YajHFC, utiliza el botón de exploración en \texttt{Línea de comandos 
-para el visor de faxes} y selecciona la ubicación de kodakimg.exe en tu disco duro.
+Puedes utilizar el programa que se encuentra en Accesorios / Imagen. 
+Para utilizarlo con YajHFC, utiliza el botÃ³n de exploraciÃ³n en \texttt{LÃ­nea de comandos 
+para el visor de faxes} y selecciona la ubicaciÃ³n de kodakimg.exe en tu disco duro.
 
 \item[Windows XP:]
-Puedes utilizar el programa integrado "Visor de imágenes y faxes". 
-Para utilizarlo, introduce el siguiente texto en "Línea de comandos para el visor de faxes":\\
+Puedes utilizar el programa integrado "Visor de imagenes y faxes". 
+Para utilizarlo, introduce el siguiente texto en "LÃ­nea de comandos para el visor de faxes":\\
       \verb#rundll32.exe shimgvw.dll,ImageView_Fullscreen %s#
  \end{description}
 
       
-\subsection{¿Dónde puedo obtener un visor de faxes para Linux/*BSD/... ?}
-\texttt{kfax} funciona muy bien, pero al igual que en Windows, puedes utilizar cualquier programa que pueda mostrar archivos TIFF, tan sólo busca en la base de paqueets de tu distribución (xloadimage \emph{no} funciona).
+\subsection{Â¿DÃ³nde puedo obtener un visor de faxes para Linux/*BSD/... ?}
+\texttt{kfax} funciona muy bien, pero al igual que en Windows, puedes utilizar cualquier programa que pueda mostrar archivos TIFF, tan sÃ³lo busca en la base de paquetes de tu distribuciÃ³n (xloadimage \emph{no} funciona).
 
 
-\subsection{¿Qué puedo utilizar como visor de faxes en Mac OS X?}
-Sólo tienes que introducir \verb#open %s# en \texttt{Línea de comandos para el visor de faxes".}
-Los faxes deberían abrirse con la aplicación predeterminada. 
+\subsection{Â¿QuÃ© puedo utilizar como visor de faxes en Mac OS X?}
+SÃ³lo tienes que introducir \verb#open %s# en \texttt{LÃ­nea de comandos para el visor de faxes".}
+Los faxes deberÃ­an abrirse con la aplicaciÃ³n predeterminada. 
 Gracias a Scott Harris por esta ayuda.
 
 
-\subsection{¿Dónde puedo obtener un visor PostScript?}
+\subsection{Â¿DÃ³nde puedo obtener un visor PostScript?}
 \begin{description}
 \item[Windows:] Utiliza Ghostview disponible en \url{http://www.cs.wisc.edu/~ghost/}\\
-\textbf{Nota:} también es posible utilizar la impresora de Acrobat Distiller
-(sólo disponible en la versión completa) para genera un fichero PDF 
+\textbf{Nota:} tambiÃ©n es posible utilizar el programa Acrobat
+(verificado sÃ³lo con la versiÃ³n completa) que permite abrir los ficheros PS 
 y visualizarlo al instante. Para ello hay que introducir la ruta al programa 
-en \texttt{Línea de comandos para el visor archivos PostScript}, generalmente:
-\verb#"C:\Archivos de programa\Adobe\Acrobat 5.0\Distillr\Acrodist.exe" %s#
+en \texttt{LÃ­nea de comandos para el visor archivos PostScript}, generalmente:
+\verb#""C:\Archivos de programa\Adobe\Acrobat 5.0\Acrobat\Acrobat.exe" %s#
 
 \item[Linux/*BSD/...:] Simplemente instala uno de los paquetes de visores PostScript 
 (por ejemplo: \texttt{gv, kghostview, gnome-gv, ...})
 \end{description}
 		
-\section{Usage of the program}	
+\section{UtilizaciÃ³n del programa}	
 
-\subsection{¿Cómo puedo editar las plantillas de las portadas?}
+\subsection{Â¿CÃ³mo puedo editar las plantillas de las portadas?}
 Las plantillas tienen que estar en el mismo formato PostScript especial 
-que utiliza el programa \texttt{faxcover} de HylaFAX. Revisa las siguiente ayuda 
-para saber cómo crear / modificar este tipo de archivos: \\
+que utiliza el programa \texttt{faxcover} de HylaFAX. Revisa la siguiente ayuda 
+para saber cÃ³mo crear / modificar este tipo de archivos: \\
 \url{http://www.hylafax.org/HylaFAQ/Q202.html}\\
 \url{http://www.hylafax.org/howto/tweaking.html}\\
 
+\subsection{Quiero acceder a la agenda telefÃ³nica por medio de JDBC pero YajHFC no encuentra el controlador aunque especifique la ruta correcta para llamar a Java.}
 
-\subsection{¿Por qué no se puede seleccionar (gris claro) la opción de \texttt{Ver->Sólo faxes propios}?}
+Si utilizas el argumento \texttt{-jar}, Java ignora la ruta definida por el usuario.
+Por tanto inicia YajHFC utilizando el siguiente comando (reemplaza \texttt{/ruta/a/controladorbdd.jar} y \texttt{/ruta/a/yajhfc.jar} con sus respectivas rutas reales y nombre de fichero (por supuesto):
+\begin{description}
+\item [Linux/Unix:] \verb#java -classpath /ruta/a/controaldorbdd.jar:/ruta/a/yajhfc.jar yajhfc.Launcher#
+\item [Windows:] \verb#java -classpath c:\ruta\a\controladorbdd.jar;c:\ruta\a\yajhfc.jar yajhfc.Launcher#
+\end{description}
 
-Actualmente YajHFC sólo puede filtrar las columnas visibles. Por lo que tienes que añadir la columna de "Propietario" a la table en la que quieres filtrar por propietario.
+\subsection{Â¿Por quÃ© no se puede seleccionar (gris claro) la opciÃ³n de \texttt{Ver->SÃ³lo faxes propios}?}
+
+Actualmente YajHFC sÃ³lo puede filtrar las columnas visibles. Por lo que tienes que aÃ±adir la columna de "Propietario" a la tabla en la que quieres filtrar por propietario.
 
 
-\subsection{¿Qué puedo poner como valor \texttt{igual a} en el cuadro de diálogo de filtrado personalizado? }
+\subsection{Â¿QuÃ© puedo poner como valor \texttt{igual a} en el cuadro de diÃ¡logo de filtrado personalizado? }
 
 Expresiones regulares. Puedes encontrar una breve referencia sobre la sintaxis permitida en
 \url{http://java.sun.com/j2se/1.5.0/docs/api/java/util/regex/Pattern.html}
 
-te en cuenta que las expresiones regulares no son lo mismo que los caracteres comodín:
-Por ejemplo, para obtener el mismo efecto que el comodín \verb.*. tienes que utilizar \verb#.*#
+ten en cuenta que las expresiones regulares no son lo mismo que los caracteres comodÃ­n:
+Por ejemplo, para obtener el mismo efecto que el comodÃ­n \verb.*. tienes que utilizar \verb#.*#
 y para simular el efecto de \verb#?# hay que utilizar \verb#.#.
 
-\subsection{¿Qué argumentos de línea de comandos entiende YajHFC?}
+\subsection{Â¿QuÃ© argumentos de lÃ­nea de comandos entiende YajHFC?}
 
 \begin{verbatim}
 Uso general:
 java -jar yajhfc.jar [--help] [--debug] [--admin] [--stdin | filename]
-Descripción de los argumentos:
+Descripcisn de los argumentos:
 filename    El nombre del archivo PostScript para enviar.
---stdin     Lee el archivo para enviar de una entrada estándar
+--stdin     Lee el archivo para enviar de una entrada estÃ¡ndar
 --admin     Inicia en modo administrador
---debug     Output some debugging information
---help      Displays this text
+--debug     Salida de informaciÃ³n de errores
+--help      Muestra este texto
 \end{verbatim}
 
 
 \subsection{ Cuando intento ver los faxes enviados siempre obtengo un mensaje de error 
    que dice \texttt{Formato de archivo PCL no soportado}, aunque todos los documentos 
-   están el formato PostScript/PDF.}
+   estÃ¡n el formato PostScript/PDF.}
 
-Verifica que la opción \texttt{Utilizar fichero PCL para la corrección de error} en el 
-cuadro de Opciones e inténtalo de nuevo.
+Verifica que la opciÃ³n \texttt{Utilizar fichero PCL para la correcciÃ³n de error} en el 
+cuadro de Opciones estÃ¡ seleccionada e intÃ©ntalo de nuevo.
  
 Algunas versiones de HylaFAX reportan 
 un tipo de fichero "PCL" para todos los documentos asociados con un trabajo. 
-Si esta opción está seleccionada, YajHFC intenta adivinar el tipo de fichero 
-utilizando la extensión si se reporta PCL (lo cual generalmente funciona bastante bien).
+Si esta opciÃ³n estÃ¡ seleccionada, YajHFC intenta adivinar el tipo de fichero 
+utilizando la extensiÃ³n si se reporta PCL (lo cual generalmente funciona bastante bien).
 
-\subsection{¿Qué significa la columna XYZ?}
+\subsection{Â¿QuÃ© significa la columna XYZ?}
 
-Yo tampoco lo sé exactamente porque la descripción de las columnas ha sido copiada del manual de  \verb#faxstat(1)# (JobFmt/RcvFmt), abreviada y traducida
+Yo tampoco lo sÃ© exactamente porque la descripciÃ³n de las columnas ha sido copiada del manual de  \verb#faxstat(1)# (JobFmt/RcvFmt), abreviada y traducida
 
-\section{Miscellaneous}
+\section{Varios}
 
-\subsection{¿Por qué se guardan las contraseñas en texto plano?}
+\subsection{Â¿Por quÃ© se guardan las contraseÃ±as en texto plano?}
 
-Simplemente porque no hay otro método que sea mejor.
-
-
-YajHFC  puede codificar/"encriptar" las contraseñas antes de almacenarlas, 
-pero si lo hace siempre es posible visualizar el código fuente para encontrarlas 
-y desencriptarlas (incluso aunque YajHFC fuera de código cerrado podrías reventarlas o experimentar un poco sobre cómo hacerlo).
+Simplemente porque no hay otro mÃ©todo que sea mejor.
 
 
-El único método seguro requeriría introducir una contraseña maestra cada vez que se inicia YajHFC, pero en mi opinión no es mejor que introducir la contraseña real.
+YajHFC puede codificar/"encriptar" las contraseÃ±as antes de almacenarlas, 
+pero si lo hace siempre es posible visualizar el cÃ³digo fuente para encontrarlas 
+y desencriptarlas (incluso aunque YajHFC fuera de cÃ³digo cerrado podrÃ­as reventarlas o experimentar un poco sobre cÃ³mo hacerlo).
 
 
-\subsection{¿Por qué escogiste ese nombre tan tonto?}
+El Ãºnico mitodo seguro requerirÃ­a introducir una contraseÃ±a maestra cada vez que se inicia YajHFC, pero en mi opiniÃ³n no es mejor que introducir la contraseÃ±a real.
 
-YajHFC empezó como "proyecto de prueba" para Java y la biblioteca \texttt{gnu.hylafax}
-y por lo tanto no tuvo un nombre "bonito". Después de trabajar un poco sobre ello, me di cuenta de que se volvería útil, por lo que elegí darle un nombre.
-Dado que estaba con la herramienta Yast de SuSE en ese momento y sabía 
-que había / hay otros clientes Java para HylaFAX, lo llamé "yet another" java hylafax client (en español, "otro cliente java para HylaFAX").
+
+\subsection{Â¿Por quÃ© escogiste ese nombre tan tonto?}
+
+YajHFC empezÃ³ como "proyecto de prueba" para Java y la biblioteca \texttt{gnu.hylafax}
+y por lo tanto no tuvo un nombre "bonito". DespuÃ©s de trabajar un poco sobre ello, me di cuenta de que se volverÃ­a Ãºtil, por lo que elegÃ­ darle un nombre.
+Dado que estaba con la herramienta Yast de SuSE en ese momento y sabÃ­a 
+que habÃ­a / hay otros clientes Java para HylaFAX, lo llamÃ© "yet another" java hylafax client (en espaÃ±ol, "otro cliente Java para HylaFAX").
  
 
 \end{document}

@@ -65,6 +65,15 @@ such files: \\
 \url{http://www.hylafax.org/HylaFAQ/Q202.html}\\
 \url{http://www.hylafax.org/howto/tweaking.html}\\
 
+\subsection{I want to access a phone book over JDBC, but YajHFC won't find the driver even if I specify a correct class path when invoking java.}
+
+If you use the \texttt{-jar} command line argument, java ignores a user defined class path.
+So, please start YajHFC using the following commands (replace \texttt{/path/to/dbdriver.jar} and \texttt{/path/to/yajhfc.jar} with the respective real paths and file names of course):
+\begin{description}
+\item [Linux/Unix:] \verb#java -classpath /path/to/dbdriver.jar:/path/to/yajhfc.jar yajhfc.Launcher#
+\item [Windows:] \verb#java -classpath c:\path\to\dbdriver.jar;c:\path\to\yajhfc.jar yajhfc.Launcher#
+\end{description}
+
 
 \subsection{Why is the \texttt{View->Only own faxes} menu item grayed out?}
 

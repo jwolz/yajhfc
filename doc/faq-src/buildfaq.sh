@@ -7,7 +7,13 @@ for F in faq*.tex; do
 	
 	pdflatex $F
 
-	latex2html -no_subdir -split 0 -html_version 3.2,latin1,unicode,utf8 -no_navigation $F
+	if grep -c '[[]utf8x]{inputenc}' $F; then
+		FILEENC=unicode ;
+	else
+		FILEENC=latin1,unicode,utf8 ;
+	fi
+
+	latex2html -no_subdir -split 0 -html_version 3.2,$FILEENC -no_navigation $F
 
 	cp $PREFIX.pdf $PREFIX.html $PREFIX.css ..	;
 done

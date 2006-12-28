@@ -1,4 +1,4 @@
-﻿README de YajHFC 0.2.6 
+﻿LÉEME (README) de YajHFC 0.3.0 
 ======================
 
 ACERCA DE
@@ -12,8 +12,8 @@ Características:
 * Soporte para plantillas de portada
 * Visor de envío y recepción de faxes
 * Agenda telefónica
-* Selección de columnas visibles
-* Disponible en dos idiomas: inglés y alemán
+* Selección de columnas visibles (seleccionable desde cuadro de diálogo)
+* Disponible en tres idiomas: Inglés, Alemán y Español
 
 Página principal: http://www.yajhfc.de.vu/
 email:    Jonas Wolz <jwolz@freenet.de>
@@ -23,19 +23,19 @@ INSTALACIÓN
 
 Requisitos:
 * JRE 5.0 (o superior) 
-* Servidor HylaFAX funcionando en red (obviamente ;-))
-* Algún programa para ver ficheros TIFF (revisa FAQ.txt)
+* Servidor HylaFAX funcionando en red (obviamente ;-) )
+* Algún programa para ver ficheros TIFF (revisar el fichero FAQ.txt)
 * Opcional: visor PostScript (por ejemplo, Ghostview)
 
-Para instalar YajHFC descarga el fichero yajhfc-0_2_6.jar en algún lugar tu disco.
-Para ejecutarlo, utiliza: "java -jar yajhfc-0_2_6.jar"
+Para instalar YajHFC descarga el fichero yajhfc-0_3_0.jar en algún lugar tu disco.
+Para ejecutarlo, utiliza: "java -jar yajhfc-0_3_0.jar"
 (En Windows seguramente sólo te haga falta ejecutarlo pulsando dos veces sobre el archivo).
 
 LICENCIA
 --------
 
 YajHFC es software libre licenciado bajo la GPL.
-Revisa el archivo (COPYIMG para más detalles.
+Revisa el archivo COPYIMG para más detalles.
 
 CÓDIGO FUENTE
 -------------
@@ -43,16 +43,36 @@ CÓDIGO FUENTE
 YajHFC utiliza los siguientes paquetes:
 
 (1) Una versión ligeramente modificada del paquete gnu.hylafax
-    (original de http://www.net-foundry.com/java/gnu/hylafax/)
+    (original de http://gnu-hylafax.sf.net/)
+    El código fuente de la versión modificada puede descargarse
+    desde la página de YajHFC.
 (2) Tablelayout.jar
     de https://tablelayout.dev.java.net/
 (3) "Java look and feel Graphics Repository" (jlfgr-1_0.jar) 
     de http://java.sun.com/developer/techDocs/hi/repository/ 
 
-YajHFC se escribió en un principio como un proyecto más complicado de Java (más avanzado que los programas "Hola mundo") utilizando la IDE Ecplipse.
+Las copias de los archivos requeridos también se pueden encontrar
+en el subdirectorio jar en el archivo original.
+
+YajHFC se escribió en un principio como un proyecto más complicado 
+de Java (más avanzado que los programas "Hola mundo") utilizando la IDE Eclipse.
 
 CAMBIOS
 -------
+
+0.3.0:
+- Se añade soporte para convertir las imágenes a PostScript antes de enviar el fax
+- Se añade un botón de "previsualización" en el cuadro de diálogo de Envío
+- Se añade soporte para agendas telefónicas en bases de datos SQL (utilizando JDBC)
+
+0.2.7a:
+- Se corrige un error que ocurría cuando se mostraban "sólo los propios faxes"
+
+0.2.7:
+- Se añade la traducción al español
+- Se añade una opción para seleccionar el idioma 
+- Soporte para añadir la diferencia horaria a los campos de fecha
+- Se corrije un error que causaba que se mostraran números incorrectos cuando se enviaban múltiples faxes
 
 0.2.6:
 - Pequeños ajustes para Windows 9x
@@ -78,7 +98,7 @@ CAMBIOS
 - Algunos cambios internos
 
 0.2:
-- Se añade soporte para la cubierta de fax
+- Se añade soporte para la portada de fax
 - Se añade soporte para la recepción de faxes
 
 POR HACER
