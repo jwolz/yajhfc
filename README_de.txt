@@ -1,4 +1,4 @@
-README für YajHFC 0.2.7
+﻿README für YajHFC 0.2.7
 =======================
 
 ÜBER

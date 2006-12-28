@@ -248,7 +248,9 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         try {
             String password;
             if (checkAskForPassword.isSelected()) {
-                password = PasswordDialog.showPasswordDialog(this, _("Database password"), MessageFormat.format(_("Please enter the database password for user {0}.\nDatabase: {1}"), textUserName.getText(), textURL.getText()));
+                password = PasswordDialog.showPasswordDialog(this, _("Database password"), MessageFormat.format(_("Please enter the database password for user {0} (database: {1})."), textUserName.getText(), textURL.getText()));
+                if (password == null)
+                    return false;
             } else {
                 password = textPassword.getText();
             }
@@ -270,13 +272,12 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
             if (o != null && !o.equals(""))
                 comboTable.setSelectedItem(o);
             
-            loadFieldNames();
         } catch (Exception e) {
             ExceptionDialog.showExceptionDialog(this, _("Could not connect to the database:"), e);
             return false;
         }
 
-        return true;
+        return loadFieldNames();
     }
     
     private void closeConnection() {

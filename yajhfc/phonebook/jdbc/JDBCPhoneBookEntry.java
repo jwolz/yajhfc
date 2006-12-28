@@ -171,7 +171,7 @@ public class JDBCPhoneBookEntry extends SimplePhoneBookEntry {
         return offset;
     }
     
-    void commitToDB() throws SQLException {
+    void commitToDB(PreparedStatement insertStmt, PreparedStatement updateStmt, PreparedStatement deleteStmt) throws SQLException {
         /*
             if (inserted) {
                 int off = setChangedValues(parent.updateStmt, 1);
@@ -205,17 +205,17 @@ public class JDBCPhoneBookEntry extends SimplePhoneBookEntry {
         case ENTRY_UNCHANGED:
             break;
         case ENTRY_CHANGED:
-            int off = setChangedValues(parent.updateStmt, 1);
-            setOriginalValues(parent.updateStmt, off);
-            parent.updateStmt.execute();
+            int off = setChangedValues(updateStmt, 1);
+            setOriginalValues(updateStmt, off);
+            updateStmt.execute();
             break;
         case ENTRY_NOTINSERTED:
-            setChangedValues(parent.insertStmt, 1);
-            parent.insertStmt.execute();
+            setChangedValues(insertStmt, 1);
+            insertStmt.execute();
             break;
         case ENTRY_DELETED:
-            setOriginalValues(parent.deleteStmt, 1);
-            parent.deleteStmt.execute();
+            setOriginalValues(deleteStmt, 1);
+            deleteStmt.execute();
             break;
         }
     }

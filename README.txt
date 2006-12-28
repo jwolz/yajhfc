@@ -63,6 +63,7 @@ CHANGES
 0.3.0:
 - Added support to convert pictures to PostScript before submitting a fax job
 - Added a "preview" button to the Send dialog
+- Added support for phone books in SQL databases (using JDBC)
 
 0.2.7a:
 - Bugfix for a exception that occured when displaying "only own faxes"
@@ -106,6 +107,5 @@ TODO
 
 The following features might be added in the future:
 
-* Support for phone books in SQL databases (via JDBC)
 * Support for phone books in LDAP databases
 
