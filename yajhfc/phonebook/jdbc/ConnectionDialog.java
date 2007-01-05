@@ -22,7 +22,8 @@ import info.clearthought.layout.TableLayout;
 import info.clearthought.layout.TableLayoutConstraints;
 
 import java.awt.Component;
-import java.awt.Window;
+import java.awt.Dialog;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -399,7 +400,12 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         dst.voiceNumber = getFieldComboSel(comboVoiceNumber);
     }
     
-    public ConnectionDialog(Window owner) {
+    public ConnectionDialog(Frame owner) {
+        super(owner, _("New JDBC phonebook"));
+     
+        initialize();
+    }
+    public ConnectionDialog(Dialog owner) {
         super(owner, _("New JDBC phonebook"));
      
         initialize();
