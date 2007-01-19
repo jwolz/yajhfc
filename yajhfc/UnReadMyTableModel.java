@@ -26,10 +26,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import javax.swing.event.EventListenerList;
 
@@ -47,7 +48,7 @@ class UnReadMyTableModel extends MyTableModel {
         listenerList.remove(UnreadItemListener.class, l);
     }
         
-    protected void fireNewUnreadItemsAvailable(Set<Object> items, boolean oldDataNull) {
+    protected void fireNewUnreadItemsAvailable(Collection<RecvYajJob> items, boolean oldDataNull) {
         // Guaranteed to return a non-null array
         Object[] listeners = listenerList.getListenerList();
         UnreadItemEvent evt = new UnreadItemEvent(this, items, oldDataNull);
@@ -71,7 +72,7 @@ class UnReadMyTableModel extends MyTableModel {
         Map<Object,Boolean> oldRead = getReadMap();
         super.setData(arg0);
         
-        HashSet<Object> newUnread = new HashSet<Object>();
+        ArrayList<RecvYajJob> newUnread = new ArrayList<RecvYajJob>();
         if (arg0 != null) {
             for ( int i=0; i < jobs.length; i++ ) {
                 RecvYajJob j = (RecvYajJob)jobs[i];
@@ -85,7 +86,7 @@ class UnReadMyTableModel extends MyTableModel {
                     if (val != null)
                         j.setRead(val);
                     else
-                        newUnread.add(j.getIDValue());
+                        newUnread.add(j);
                 }
             }
             if (newUnread.size() > 0)
