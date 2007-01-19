@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-12-27 17:23+0100\n"
+"POT-Creation-Date: 2007-01-19 21:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -39,7 +39,7 @@ msgstr ""
 
 #: ../AboutDialog.java:208 ../ExceptionDialog.java:65 ../OptionsWin.java:180
 #: ../PasswordDialog.java:59 ../filters/CustomFilterDialog.java:79
-#: ../phonebook/jdbc/ConnectionDialog.java:167
+#: ../phonebook/jdbc/ConnectionDialog.java:168
 msgid "OK"
 msgstr ""
 
@@ -93,9 +93,9 @@ msgstr ""
 #: ../OptionsWin.java:515 ../ProgressWorker.java:172 ../SendWin.java:649
 #: ../SendWin.java:654 ../filters/CustomFilterDialog.java:209
 #: ../filters/CustomFilterDialog.java:213 ../phonebook/PhoneBookWin.java:178
-#: ../phonebook/jdbc/ConnectionDialog.java:223
-#: ../phonebook/jdbc/ConnectionDialog.java:227
-#: ../phonebook/jdbc/ConnectionDialog.java:332
+#: ../phonebook/jdbc/ConnectionDialog.java:224
+#: ../phonebook/jdbc/ConnectionDialog.java:228
+#: ../phonebook/jdbc/ConnectionDialog.java:333
 msgid "Error"
 msgstr ""
 
@@ -350,7 +350,7 @@ msgstr ""
 msgid "Connect to the server in admin mode (e.g. to delete faxes)"
 msgstr ""
 
-#: ../mainwin.java:567 ../mainwin.java:1220
+#: ../mainwin.java:567 ../mainwin.java:1234
 msgid "Fax"
 msgstr ""
 
@@ -428,13 +428,13 @@ msgstr ""
 msgid "Faxes in the output queue"
 msgstr ""
 
-#: ../mainwin.java:1238
+#: ../mainwin.java:1252
 msgid "Extras"
 msgstr ""
 
 #: ../OptionsWin.java:192 ../PasswordDialog.java:73 ../SendWin.java:479
 #: ../filters/CustomFilterDialog.java:91
-#: ../phonebook/jdbc/ConnectionDialog.java:162
+#: ../phonebook/jdbc/ConnectionDialog.java:163
 msgid "Cancel"
 msgstr ""
 
@@ -456,7 +456,7 @@ msgid "Server settings"
 msgstr ""
 
 #: ../OptionsWin.java:273 ../OptionsWin.java:279
-#: ../phonebook/jdbc/ConnectionDialog.java:150
+#: ../phonebook/jdbc/ConnectionDialog.java:151
 msgid "Always ask"
 msgstr ""
 
@@ -482,11 +482,11 @@ msgstr ""
 msgid "Port:"
 msgstr ""
 
-#: ../OptionsWin.java:293 ../phonebook/jdbc/ConnectionDialog.java:176
+#: ../OptionsWin.java:293 ../phonebook/jdbc/ConnectionDialog.java:177
 msgid "Username:"
 msgstr ""
 
-#: ../OptionsWin.java:295 ../phonebook/jdbc/ConnectionDialog.java:178
+#: ../OptionsWin.java:295 ../phonebook/jdbc/ConnectionDialog.java:179
 msgid "Password:"
 msgstr ""
 
@@ -564,30 +564,30 @@ msgstr ""
 msgid "Fax cover page from:"
 msgstr ""
 
-#: ../OptionsWin.java:413 ../phonebook/jdbc/ConnectionDialog.java:186
+#: ../OptionsWin.java:413 ../phonebook/jdbc/ConnectionDialog.java:187
 msgid "Name:"
 msgstr ""
 
 #: ../OptionsWin.java:414 ../SendWin.java:284
 #: ../phonebook/PhoneBookWin.java:336
-#: ../phonebook/jdbc/ConnectionDialog.java:188
+#: ../phonebook/jdbc/ConnectionDialog.java:189
 msgid "Company:"
 msgstr ""
 
 #: ../OptionsWin.java:415 ../SendWin.java:285
 #: ../phonebook/PhoneBookWin.java:338
-#: ../phonebook/jdbc/ConnectionDialog.java:189
+#: ../phonebook/jdbc/ConnectionDialog.java:190
 msgid "Location:"
 msgstr ""
 
 #: ../OptionsWin.java:416 ../SendWin.java:286
 #: ../phonebook/PhoneBookWin.java:339
-#: ../phonebook/jdbc/ConnectionDialog.java:190
+#: ../phonebook/jdbc/ConnectionDialog.java:191
 msgid "Voice number:"
 msgstr ""
 
 #: ../OptionsWin.java:417 ../phonebook/PhoneBookWin.java:340
-#: ../phonebook/jdbc/ConnectionDialog.java:191
+#: ../phonebook/jdbc/ConnectionDialog.java:192
 msgid "Fax number:"
 msgstr ""
 
@@ -652,7 +652,7 @@ msgid "Subject:"
 msgstr ""
 
 #: ../SendWin.java:288 ../phonebook/PhoneBookWin.java:341
-#: ../phonebook/jdbc/ConnectionDialog.java:192
+#: ../phonebook/jdbc/ConnectionDialog.java:193
 msgid "Comments:"
 msgstr ""
 
@@ -1361,20 +1361,28 @@ msgstr ""
 msgid "GMT"
 msgstr ""
 
-#: ../utils.java:190
+#: ../utils.java:192
 msgid "No action"
 msgstr ""
 
-#: ../utils.java:191
+#: ../utils.java:193
 msgid "Beep"
 msgstr ""
 
-#: ../utils.java:192
+#: ../utils.java:194
 msgid "Bring to front"
 msgstr ""
 
-#: ../utils.java:193
+#: ../utils.java:195
 msgid "Beep & bring to front"
+msgstr ""
+
+#: ../utils.java:196
+msgid "Open in viewer"
+msgstr ""
+
+#: ../utils.java:197
+msgid "Beep & open in viewer"
 msgstr ""
 
 #: ../YajAutoLanguage.java:26
@@ -1497,7 +1505,7 @@ msgid "Delete selected entry"
 msgstr ""
 
 #: ../phonebook/PhoneBookWin.java:334
-#: ../phonebook/jdbc/ConnectionDialog.java:185
+#: ../phonebook/jdbc/ConnectionDialog.java:186
 msgid "Given name:"
 msgstr ""
 
@@ -1506,7 +1514,7 @@ msgid "Surname:"
 msgstr ""
 
 #: ../phonebook/PhoneBookWin.java:337
-#: ../phonebook/jdbc/ConnectionDialog.java:187
+#: ../phonebook/jdbc/ConnectionDialog.java:188
 msgid "Title:"
 msgstr ""
 
@@ -1558,70 +1566,71 @@ msgstr ""
 msgid "Error loading the phone book: "
 msgstr ""
 
-#: ../phonebook/jdbc/ConnectionDialog.java:170
+#: ../phonebook/jdbc/ConnectionDialog.java:171
 msgid "Test connection"
 msgstr ""
 
-#: ../phonebook/jdbc/ConnectionDialog.java:174
+#: ../phonebook/jdbc/ConnectionDialog.java:175
 msgid "Driver class:"
 msgstr ""
 
-#: ../phonebook/jdbc/ConnectionDialog.java:175
+#: ../phonebook/jdbc/ConnectionDialog.java:176
 msgid "Database URL:"
 msgstr ""
 
-#: ../phonebook/jdbc/ConnectionDialog.java:181
+#: ../phonebook/jdbc/ConnectionDialog.java:182
 msgid "Table:"
 msgstr ""
 
-#: ../phonebook/jdbc/ConnectionDialog.java:184
+#: ../phonebook/jdbc/ConnectionDialog.java:185
 msgid ""
 "Please select which database fields correspond to the Phonebook entry fields "
 "of YajHFC:"
 msgstr ""
 
-#: ../phonebook/jdbc/ConnectionDialog.java:223
+#: ../phonebook/jdbc/ConnectionDialog.java:224
 msgid "You have to specify a driver class."
 msgstr ""
 
-#: ../phonebook/jdbc/ConnectionDialog.java:227
+#: ../phonebook/jdbc/ConnectionDialog.java:228
 msgid "You have to specify a database URL."
 msgstr ""
 
-#: ../phonebook/jdbc/ConnectionDialog.java:245
+#: ../phonebook/jdbc/ConnectionDialog.java:246
 #: ../phonebook/jdbc/JDBCPhoneBook.java:249
 msgid "Could not load the specified driver class:"
 msgstr ""
 
-#: ../phonebook/jdbc/ConnectionDialog.java:251
+#: ../phonebook/jdbc/ConnectionDialog.java:252
 #: ../phonebook/jdbc/JDBCPhoneBook.java:255
 msgid "Database password"
 msgstr ""
 
-#: ../phonebook/jdbc/ConnectionDialog.java:251
+#: ../phonebook/jdbc/ConnectionDialog.java:252
 #: ../phonebook/jdbc/JDBCPhoneBook.java:255
 #, java-format
 msgid "Please enter the database password for user {0} (database: {1})."
 msgstr ""
 
-#: ../phonebook/jdbc/ConnectionDialog.java:276
+#: ../phonebook/jdbc/ConnectionDialog.java:277
 #: ../phonebook/jdbc/JDBCPhoneBook.java:273
 msgid "Could not connect to the database:"
 msgstr ""
 
-#: ../phonebook/jdbc/ConnectionDialog.java:320
+#: ../phonebook/jdbc/ConnectionDialog.java:321
 msgid "Could not get the field names:"
 msgstr ""
 
-#: ../phonebook/jdbc/ConnectionDialog.java:332
+#: ../phonebook/jdbc/ConnectionDialog.java:333
 msgid "You have to specify a database table."
 msgstr ""
 
-#: ../phonebook/jdbc/ConnectionDialog.java:340
+#: ../phonebook/jdbc/ConnectionDialog.java:341
 msgid "Connection to the database succeeded."
 msgstr ""
 
-#: ../phonebook/jdbc/ConnectionDialog.java:403
+#: ../phonebook/jdbc/ConnectionDialog.java:404
+#: ../phonebook/jdbc/ConnectionDialog.java:409
 msgid "New JDBC phonebook"
 msgstr ""
 
@@ -1645,12 +1654,12 @@ msgstr ""
 msgid "Could not load the phone book:"
 msgstr ""
 
-#: ../phonebook/jdbc/JDBCPhoneBook.java:333
-#: ../phonebook/jdbc/JDBCPhoneBook.java:340
+#: ../phonebook/jdbc/JDBCPhoneBook.java:334
+#: ../phonebook/jdbc/JDBCPhoneBook.java:341
 #, java-format
 msgid "Could not save the changes for entry {0}:"
 msgstr ""
 
-#: ../phonebook/jdbc/JDBCPhoneBook.java:353
+#: ../phonebook/jdbc/JDBCPhoneBook.java:354
 msgid "Could not save the phone book:"
 msgstr ""

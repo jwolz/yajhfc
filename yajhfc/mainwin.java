@@ -1112,6 +1112,20 @@ public final class mainwin extends JFrame {
                     if ((myopts.newFaxAction.type & utils.NEWFAX_BEEP) != 0) {
                         Toolkit.getDefaultToolkit().beep();
                     }
+                    if ((myopts.newFaxAction.type & utils.NEWFAX_VIEWER) != 0) {
+                        for (RecvYajJob j : evt.getItems()) {
+                            for (HylaServerFile hsf : j.getServerFilenames(hyfc)) {
+                                try {
+                                    hsf.view(hyfc, myopts);
+                                } catch (Exception e) {
+                                    if (utils.debugMode) {
+                                        System.out.println("Exception while trying to view new faxes:");
+                                        e.printStackTrace(System.out);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 };
             });
         }

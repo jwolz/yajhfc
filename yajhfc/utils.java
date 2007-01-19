@@ -181,16 +181,20 @@ public final class utils {
         recvfmt_FileName  
     };
     
+    // Basic actions when a new fax is detected.
+    // The constants should be powers of 2 to make it possible to combine several of them
     public static final int NEWFAX_NOACTION = 0;
     public static final int NEWFAX_BEEP = 1;
     public static final int NEWFAX_TOFRONT = 2;
-    public static final int NEWFAX_BOTH = NEWFAX_BEEP | NEWFAX_TOFRONT;
+    public static final int NEWFAX_VIEWER = 4;
     
     public static final FaxIntProperty[] newFaxActions = {
         new FaxIntProperty(_("No action"), NEWFAX_NOACTION),
         new FaxIntProperty(_("Beep"), NEWFAX_BEEP),
         new FaxIntProperty(_("Bring to front"), NEWFAX_TOFRONT),
-        new FaxIntProperty(_("Beep & bring to front"), NEWFAX_BOTH)
+        new FaxIntProperty(_("Beep & bring to front"), NEWFAX_BEEP | NEWFAX_TOFRONT),
+        new FaxIntProperty(_("Open in viewer"), NEWFAX_VIEWER),
+        new FaxIntProperty(_("Beep & open in viewer"), NEWFAX_VIEWER | NEWFAX_BEEP)
     };
     
     // Update this when new translations are added!

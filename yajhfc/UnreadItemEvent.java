@@ -18,14 +18,15 @@ package yajhfc;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+import java.util.Collection;
 import java.util.EventObject;
 import java.util.Set;
 
 class UnreadItemEvent extends EventObject {
-    private Set<Object> items = null;
+    private Collection<RecvYajJob> items = null;
     private boolean oldDataNull;
     
-    public Set<Object> getItems() {
+    public Collection<RecvYajJob> getItems() {
         return items;
     }
     
@@ -33,7 +34,11 @@ class UnreadItemEvent extends EventObject {
         return oldDataNull;
     }
     
-    public UnreadItemEvent(Object source, Set<Object> items, boolean oldDataNull) {
+    public UnReadMyTableModel getModel() {
+        return (UnReadMyTableModel)source;
+    }
+    
+    public UnreadItemEvent(UnReadMyTableModel source, Collection<RecvYajJob> items, boolean oldDataNull) {
         super(source);
         this.items = items;
         this.oldDataNull = oldDataNull;

@@ -2,13 +2,13 @@
 # This file is distributed under the same license as YajHFC package.
 # Copyright (C) Elsa Andrés.
 # Elsa Andrés <e.andres@ist-sci.com>, 2006.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: 2.0.6\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-12-27 17:22+0100\n"
+"POT-Creation-Date: 2007-01-19 21:32+0100\n"
 "PO-Revision-Date: 2006-09-08 13:05GMT\n"
 "Last-Translator: Elsa Andrés <e.andres@ist-sci.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -41,7 +41,7 @@ msgstr "Traducción en $LANGUAGE$ por {0}"
 
 #: ../AboutDialog.java:208 ../ExceptionDialog.java:65 ../OptionsWin.java:180
 #: ../PasswordDialog.java:59 ../filters/CustomFilterDialog.java:79
-#: ../phonebook/jdbc/ConnectionDialog.java:167
+#: ../phonebook/jdbc/ConnectionDialog.java:168
 msgid "OK"
 msgstr "Aceptar"
 
@@ -95,16 +95,18 @@ msgstr "Detalles"
 #: ../OptionsWin.java:515 ../ProgressWorker.java:172 ../SendWin.java:649
 #: ../SendWin.java:654 ../filters/CustomFilterDialog.java:209
 #: ../filters/CustomFilterDialog.java:213 ../phonebook/PhoneBookWin.java:178
-#: ../phonebook/jdbc/ConnectionDialog.java:223
-#: ../phonebook/jdbc/ConnectionDialog.java:227
-#: ../phonebook/jdbc/ConnectionDialog.java:332
+#: ../phonebook/jdbc/ConnectionDialog.java:224
+#: ../phonebook/jdbc/ConnectionDialog.java:228
+#: ../phonebook/jdbc/ConnectionDialog.java:333
 msgid "Error"
 msgstr "Error"
 
 #: ../FileConverter.java:78
 #, java-format
 msgid "Cannot find a PrintService to convert files of type {0} to Postscript!"
-msgstr "¡No se puede encontrar un servicio de impresión para convertir los archivos de tipo {0} a PostScript!"
+msgstr ""
+"¡No se puede encontrar un servicio de impresión para convertir los archivos "
+"de tipo {0} a PostScript!"
 
 #: ../FileConverter.java:113
 msgid "An error occured while converting the document to PostScript."
@@ -353,7 +355,7 @@ msgid "Connect to the server in admin mode (e.g. to delete faxes)"
 msgstr ""
 "Conectar al servidor en modo administrador (por ejemplo, para eliminar faxes)"
 
-#: ../mainwin.java:567 ../mainwin.java:1220
+#: ../mainwin.java:567 ../mainwin.java:1234
 msgid "Fax"
 msgstr "Fax"
 
@@ -432,13 +434,13 @@ msgstr "Transmisión"
 msgid "Faxes in the output queue"
 msgstr "Faxes en la cola de salida"
 
-#: ../mainwin.java:1238
+#: ../mainwin.java:1252
 msgid "Extras"
 msgstr "Extras"
 
 #: ../OptionsWin.java:192 ../PasswordDialog.java:73 ../SendWin.java:479
 #: ../filters/CustomFilterDialog.java:91
-#: ../phonebook/jdbc/ConnectionDialog.java:162
+#: ../phonebook/jdbc/ConnectionDialog.java:163
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -460,7 +462,7 @@ msgid "Server settings"
 msgstr "Opciones del servidor"
 
 #: ../OptionsWin.java:273 ../OptionsWin.java:279
-#: ../phonebook/jdbc/ConnectionDialog.java:150
+#: ../phonebook/jdbc/ConnectionDialog.java:151
 msgid "Always ask"
 msgstr "Preguntar siempre"
 
@@ -476,8 +478,9 @@ msgstr "Preferible TIFF renderizado (experimental)"
 msgid ""
 "Try to fetch the rendered TIFF from the HylaFAX server instead of the source "
 "file."
-msgstr "Intentar obtener TIFF renderizado del servidor HylaFAX en lugar del "
-"archivo original."
+msgstr ""
+"Intentar obtener TIFF renderizado del servidor HylaFAX en lugar del archivo "
+"original."
 
 #: ../OptionsWin.java:291
 msgid "Host name:"
@@ -487,11 +490,11 @@ msgstr "Nombre del equipo:"
 msgid "Port:"
 msgstr "Puerto:"
 
-#: ../OptionsWin.java:293 ../phonebook/jdbc/ConnectionDialog.java:176
+#: ../OptionsWin.java:293 ../phonebook/jdbc/ConnectionDialog.java:177
 msgid "Username:"
 msgstr "Nombre de usuario:"
 
-#: ../OptionsWin.java:295 ../phonebook/jdbc/ConnectionDialog.java:178
+#: ../OptionsWin.java:295 ../phonebook/jdbc/ConnectionDialog.java:179
 msgid "Password:"
 msgstr "Contraseña:"
 
@@ -571,30 +574,30 @@ msgstr "Número máximo de intentos:"
 msgid "Fax cover page from:"
 msgstr "Página de portada de fax de:"
 
-#: ../OptionsWin.java:413 ../phonebook/jdbc/ConnectionDialog.java:186
+#: ../OptionsWin.java:413 ../phonebook/jdbc/ConnectionDialog.java:187
 msgid "Name:"
 msgstr "Nombre:"
 
 #: ../OptionsWin.java:414 ../SendWin.java:284
 #: ../phonebook/PhoneBookWin.java:336
-#: ../phonebook/jdbc/ConnectionDialog.java:188
+#: ../phonebook/jdbc/ConnectionDialog.java:189
 msgid "Company:"
 msgstr "Empresa"
 
 #: ../OptionsWin.java:415 ../SendWin.java:285
 #: ../phonebook/PhoneBookWin.java:338
-#: ../phonebook/jdbc/ConnectionDialog.java:189
+#: ../phonebook/jdbc/ConnectionDialog.java:190
 msgid "Location:"
 msgstr "Dirección:"
 
 #: ../OptionsWin.java:416 ../SendWin.java:286
 #: ../phonebook/PhoneBookWin.java:339
-#: ../phonebook/jdbc/ConnectionDialog.java:190
+#: ../phonebook/jdbc/ConnectionDialog.java:191
 msgid "Voice number:"
 msgstr "Número de teléfono:"
 
 #: ../OptionsWin.java:417 ../phonebook/PhoneBookWin.java:340
-#: ../phonebook/jdbc/ConnectionDialog.java:191
+#: ../phonebook/jdbc/ConnectionDialog.java:192
 msgid "Fax number:"
 msgstr "Número de fax:"
 
@@ -664,7 +667,7 @@ msgid "Subject:"
 msgstr "Asunto:"
 
 #: ../SendWin.java:288 ../phonebook/PhoneBookWin.java:341
-#: ../phonebook/jdbc/ConnectionDialog.java:192
+#: ../phonebook/jdbc/ConnectionDialog.java:193
 msgid "Comments:"
 msgstr "Comentarios:"
 
@@ -692,8 +695,9 @@ msgstr "Previsualizar"
 msgid ""
 "Nothing to preview! (Neither a cover page nor a file to send has been "
 "selected.)"
-msgstr "¡No hay nada para previsualizar! (No se ha seleccionado ninguna "
-"portada ni archivo para enviar.)"
+msgstr ""
+"¡No hay nada para previsualizar! (No se ha seleccionado ninguna portada ni "
+"archivo para enviar.)"
 
 #: ../SendWin.java:501
 msgid "Previewing fax"
@@ -1382,21 +1386,29 @@ msgstr "Hora local"
 msgid "GMT"
 msgstr "GMT"
 
-#: ../utils.java:190
+#: ../utils.java:192
 msgid "No action"
 msgstr "No realizar ninguna acción"
 
-#: ../utils.java:191
+#: ../utils.java:193
 msgid "Beep"
 msgstr "Pitido"
 
-#: ../utils.java:192
+#: ../utils.java:194
 msgid "Bring to front"
 msgstr "Traer al frente"
 
-#: ../utils.java:193
+#: ../utils.java:195
 msgid "Beep & bring to front"
 msgstr "Pitido y traer al frente"
+
+#: ../utils.java:196
+msgid "Open in viewer"
+msgstr ""
+
+#: ../utils.java:197
+msgid "Beep & open in viewer"
+msgstr ""
 
 #: ../YajAutoLanguage.java:26
 msgid "(System default)"
@@ -1504,8 +1516,9 @@ msgstr "<sin nombre>"
 
 #: ../phonebook/PhoneBookWin.java:178
 msgid "Unknown Phonebook type selected, using default!"
-msgstr "¡El tipo de agenda telefónica seleccionada es desconocido, "
-"utilizando el predeterminado!"
+msgstr ""
+"¡El tipo de agenda telefónica seleccionada es desconocido, utilizando el "
+"predeterminado!"
 
 #: ../phonebook/PhoneBookWin.java:223
 #, java-format
@@ -1521,7 +1534,7 @@ msgid "Delete selected entry"
 msgstr "Eliminar elemento seleccionado"
 
 #: ../phonebook/PhoneBookWin.java:334
-#: ../phonebook/jdbc/ConnectionDialog.java:185
+#: ../phonebook/jdbc/ConnectionDialog.java:186
 msgid "Given name:"
 msgstr "Nombre:"
 
@@ -1530,7 +1543,7 @@ msgid "Surname:"
 msgstr "Apellido(s):"
 
 #: ../phonebook/PhoneBookWin.java:337
-#: ../phonebook/jdbc/ConnectionDialog.java:187
+#: ../phonebook/jdbc/ConnectionDialog.java:188
 msgid "Title:"
 msgstr "Tratamiento:"
 
@@ -1568,8 +1581,7 @@ msgstr "Agenda telefónica en XML"
 
 #: ../phonebook/XMLPhoneBook.java:48
 msgid "A Phonebook saving its entries as a XML file."
-msgstr "Una agenda telefónica guardando sus registros "
-"como archivo XML"
+msgstr "Una agenda telefónica guardando sus registros como archivo XML"
 
 #: ../phonebook/XMLPhoneBook.java:100
 msgid "Phonebook files"
@@ -1583,72 +1595,74 @@ msgstr "Error al guardar la agenda telefónica: "
 msgid "Error loading the phone book: "
 msgstr "Error al cargar la agenda telefónica: "
 
-#: ../phonebook/jdbc/ConnectionDialog.java:170
+#: ../phonebook/jdbc/ConnectionDialog.java:171
 msgid "Test connection"
 msgstr "Conexión de prueba"
 
-#: ../phonebook/jdbc/ConnectionDialog.java:174
+#: ../phonebook/jdbc/ConnectionDialog.java:175
 msgid "Driver class:"
 msgstr "Tipo de controlador:"
 
-#: ../phonebook/jdbc/ConnectionDialog.java:175
+#: ../phonebook/jdbc/ConnectionDialog.java:176
 msgid "Database URL:"
 msgstr "URL de la base de datos:"
 
-#: ../phonebook/jdbc/ConnectionDialog.java:181
+#: ../phonebook/jdbc/ConnectionDialog.java:182
 msgid "Table:"
 msgstr "Tabla:"
 
-#: ../phonebook/jdbc/ConnectionDialog.java:184
+#: ../phonebook/jdbc/ConnectionDialog.java:185
 msgid ""
 "Please select which database fields correspond to the Phonebook entry fields "
 "of YajHFC:"
-msgstr "Por favor, seleccione qué campos de la base de datos corresponden a los "
+msgstr ""
+"Por favor, seleccione qué campos de la base de datos corresponden a los "
 "campos de las entradas de la agenda telefónica de YajHFC:"
 
-#: ../phonebook/jdbc/ConnectionDialog.java:223
+#: ../phonebook/jdbc/ConnectionDialog.java:224
 msgid "You have to specify a driver class."
 msgstr "Tiene que especificar un tipo de controlador."
 
-#: ../phonebook/jdbc/ConnectionDialog.java:227
+#: ../phonebook/jdbc/ConnectionDialog.java:228
 msgid "You have to specify a database URL."
 msgstr "Tiene que especificar la URL de la base de datos."
 
-#: ../phonebook/jdbc/ConnectionDialog.java:245
+#: ../phonebook/jdbc/ConnectionDialog.java:246
 #: ../phonebook/jdbc/JDBCPhoneBook.java:249
 msgid "Could not load the specified driver class:"
 msgstr "No se puede cargar el tipo de controlador especificado:"
 
-#: ../phonebook/jdbc/ConnectionDialog.java:251
+#: ../phonebook/jdbc/ConnectionDialog.java:252
 #: ../phonebook/jdbc/JDBCPhoneBook.java:255
 msgid "Database password"
 msgstr "Contraseña de la base de datos"
 
-#: ../phonebook/jdbc/ConnectionDialog.java:251
+#: ../phonebook/jdbc/ConnectionDialog.java:252
 #: ../phonebook/jdbc/JDBCPhoneBook.java:255
 #, java-format
 msgid "Please enter the database password for user {0} (database: {1})."
-msgstr "Por favor, introduzca la contraseña para el usuario {0} (base "
-"de datos: {1})."
+msgstr ""
+"Por favor, introduzca la contraseña para el usuario {0} (base de datos: {1})."
 
-#: ../phonebook/jdbc/ConnectionDialog.java:276
+#: ../phonebook/jdbc/ConnectionDialog.java:277
 #: ../phonebook/jdbc/JDBCPhoneBook.java:273
 msgid "Could not connect to the database:"
 msgstr "No se puede conectar con la base de datos:"
 
-#: ../phonebook/jdbc/ConnectionDialog.java:320
+#: ../phonebook/jdbc/ConnectionDialog.java:321
 msgid "Could not get the field names:"
 msgstr "No se pueden obtener los nombres de los campos:"
 
-#: ../phonebook/jdbc/ConnectionDialog.java:332
+#: ../phonebook/jdbc/ConnectionDialog.java:333
 msgid "You have to specify a database table."
 msgstr "Tiene que espeficicar una tabla de la base de datos."
 
-#: ../phonebook/jdbc/ConnectionDialog.java:340
+#: ../phonebook/jdbc/ConnectionDialog.java:341
 msgid "Connection to the database succeeded."
 msgstr "Conexión a la base de datos establecida."
 
-#: ../phonebook/jdbc/ConnectionDialog.java:403
+#: ../phonebook/jdbc/ConnectionDialog.java:404
+#: ../phonebook/jdbc/ConnectionDialog.java:409
 msgid "New JDBC phonebook"
 msgstr "Nueva agenda telefónica JDBC"
 
@@ -1662,25 +1676,27 @@ msgstr "Agenda telefónica JDBC"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:53
 msgid "A Phonebook saving its entries in a relational database using JDBC."
-msgstr "Una agenda telefónica guardando sus registros en una base de datos "
+msgstr ""
+"Una agenda telefónica guardando sus registros en una base de datos "
 "relacional utilizando JDBC"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:283
 msgid "Cannot open phonebook since no database fields were selected!"
-msgstr "¡No es posible abrir la agenda telefónica debido a que no se "
-"han seleccionado los campos de la base de datos!"
+msgstr ""
+"¡No es posible abrir la agenda telefónica debido a que no se han "
+"seleccionado los campos de la base de datos!"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:303
 msgid "Could not load the phone book:"
 msgstr "No es posible cargar la agenda telefónica:"
 
-#: ../phonebook/jdbc/JDBCPhoneBook.java:333
-#: ../phonebook/jdbc/JDBCPhoneBook.java:340
+#: ../phonebook/jdbc/JDBCPhoneBook.java:334
+#: ../phonebook/jdbc/JDBCPhoneBook.java:341
 #, java-format
 msgid "Could not save the changes for entry {0}:"
 msgstr "No es posible guardar los cambios para el registro {0}:"
 
-#: ../phonebook/jdbc/JDBCPhoneBook.java:353
+#: ../phonebook/jdbc/JDBCPhoneBook.java:354
 msgid "Could not save the phone book:"
 msgstr "No es posible guardar la agenda telefónica:"
 
