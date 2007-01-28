@@ -29,77 +29,126 @@ import yajhfc.utils;
  *  Phone book implementations can override this in order to
  *  save status information.
  *  New PhoneBookEntry classes are only to be created by (non-abstract) PhoneBook implementations.
+ *  
  */
 public abstract class PhoneBookEntry {
-    
-     public abstract String getName();
-     public abstract void setName(String newName);
-     
-     public abstract String getGivenName();
-     public abstract void setGivenName(String newGivenName);
-     
-     public abstract String getTitle();
-     public abstract void setTitle(String newTitle);
-     
-     public abstract String getCompany();
-     public abstract void setCompany(String newCompany);
-     
-     public abstract String getLocation();
-     public abstract void setLocation(String newLocation);
-     
-     public abstract String getVoiceNumber();
-     public abstract void setVoiceNumber(String newVoiceNumber);
-     
-     public abstract String getFaxNumber();
-     public abstract void setFaxNumber(String newFaxNumber);
 
-     public abstract String getComment();
-     public abstract void setComment(String newComment);
-     
-     /**
-      * Deletes this entry from the phonebook
-      */
-     public abstract void delete();
-     
-     /**
-      * Commits all changes made by the get/set-Methods
-      */
-     public abstract void commit();
-     
-     /**
-      * Just update the displayed position (don't necessarily write through)
-      */
-     public void updateDisplay() {
-         commit();
-     }
-     
-     public void copyFrom(PhoneBookEntry other) {
-         setName(other.getName());
-         setGivenName(other.getGivenName());
-         setTitle(other.getTitle());
-         setCompany(other.getCompany());
-         setLocation(other.getLocation());
-         setVoiceNumber(other.getVoiceNumber());
-         setFaxNumber(other.getFaxNumber());
-         setComment(other.getComment());
-     }
-     
-     public String toString() {
-         String surname = getName();
-         String givenname = getGivenName();
-             
-         if (surname != null && surname.length() > 0) {
-             if (givenname != null && givenname.length() > 0)
-                 //return surname + ", " + givenname;
-                 return MessageFormat.format(utils._("{0} {1}"), givenname, surname);
-             else
-                 return surname;
-         } else {
-             if (givenname != null && givenname.length() > 0)
-                 return givenname;
-             else
-                 return utils._("<no name>");
-         }
-     }
-     
- }
+    public enum PBEntryField {
+        Name(utils._("Name")),
+        GivenName(utils._("Given name")),
+        Title(utils._("Title")),
+        Company(utils._("Company")),
+        Location(utils._("Location")),
+        VoiceNumber(utils._("Voice number")),
+        FaxNumber(utils._("Fax number")),
+        Comment(utils._("Comments"))
+        ;
+        
+        private String desc;
+        private PBEntryField(String desc) {
+            this.desc = desc;
+        }
+        
+        public String getDescription() {
+            return desc;
+        }
+        
+        public String toString() {
+            return desc;
+        }
+    }
+    
+    public String getPBField(PBEntryField field) {
+        switch (field) {
+        case Name:
+            return getName();
+        case GivenName:
+            return getGivenName();
+        case Title:
+            return getTitle();
+        case Company:
+            return getCompany();
+        case Location:
+            return getLocation();
+        case VoiceNumber:
+            return getVoiceNumber();
+        case FaxNumber:
+            return getFaxNumber();
+        case Comment:
+            return getComment();
+        default:
+            return null;
+        }
+    }
+    
+    public abstract String getName();
+    public abstract void setName(String newName);
+
+    public abstract String getGivenName();
+    public abstract void setGivenName(String newGivenName);
+
+    public abstract String getTitle();
+    public abstract void setTitle(String newTitle);
+
+    public abstract String getCompany();
+    public abstract void setCompany(String newCompany);
+
+    public abstract String getLocation();
+    public abstract void setLocation(String newLocation);
+
+    public abstract String getVoiceNumber();
+    public abstract void setVoiceNumber(String newVoiceNumber);
+
+    public abstract String getFaxNumber();
+    public abstract void setFaxNumber(String newFaxNumber);
+
+    public abstract String getComment();
+    public abstract void setComment(String newComment);
+
+    /**
+     * Deletes this entry from the phonebook
+     */
+    public abstract void delete();
+
+    /**
+     * Commits all changes made by the get/set-Methods
+     */
+    public abstract void commit();
+
+    /**
+     * Just update the displayed position (don't necessarily write through)
+     */
+    public void updateDisplay() {
+        commit();
+    }
+
+    public void copyFrom(PhoneBookEntry other) {
+        setName(other.getName());
+        setGivenName(other.getGivenName());
+        setTitle(other.getTitle());
+        setCompany(other.getCompany());
+        setLocation(other.getLocation());
+        setVoiceNumber(other.getVoiceNumber());
+        setFaxNumber(other.getFaxNumber());
+        setComment(other.getComment());
+    }
+
+    public String toString() {
+        String surname = getName();
+        String givenname = getGivenName();
+
+        if (surname != null && surname.length() > 0) {
+            if (givenname != null && givenname.length() > 0)
+                //return surname + ", " + givenname;
+                return MessageFormat.format(utils._("{0} {1}"), givenname, surname);
+            else
+                return surname;
+        } else {
+            if (givenname != null && givenname.length() > 0)
+                return givenname;
+            else
+                return utils._("<no name>");
+        }
+    }
+
+}

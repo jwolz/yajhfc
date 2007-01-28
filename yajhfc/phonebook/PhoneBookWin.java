@@ -85,7 +85,9 @@ public final class PhoneBookWin extends JDialog
     
     private ClipboardPopup defClPop;
     
-    private JMenuItem mnuAdd, mnuDel;
+    private JMenuItem mnuAdd, mnuDel, mnuSearch;
+    
+    private SearchWin searchWin;
     
     private boolean usedSelectButton;
     
@@ -166,11 +168,33 @@ public final class PhoneBookWin extends JDialog
         phoneBook.close();
     }
     
+    private void showSearchWin() {
+        if (searchWin == null) {
+            searchWin = new SearchWin(this);
+        }
+        if (searchWin.isVisible()) 
+            searchWin.toFront();
+        else
+            searchWin.setVisible(true);
+    }
+    
+    PhoneBook getPhoneBook() {
+        return phoneBook;
+    }
+    
+    void selectPhoneBookEntry(int index) {
+        listEntries.setSelectedIndex(index);
+    }
+    
+    int getSelectedPBEntry() {
+        return listEntries.getSelectedIndex();
+    }
+    
     private void openPhoneBook(String descriptor) {
         closePhoneBook();
         
-        //String descriptor = textDescriptor.getText();
         textDescriptor.setText(descriptor);
+        textDescriptor.setCaretPosition(0);
         
         if (descriptor != null && descriptor.length() > 0) {
             phoneBook = PhoneBookFactory.instanceForDescriptor(descriptor, this);
@@ -214,10 +238,11 @@ public final class PhoneBookWin extends JDialog
     }
     
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals("add")) {
+        String cmd = e.getActionCommand();
+        if (cmd.equals("add")) {
             PhoneBookEntry pb = phoneBook.addNewEntry();
             listEntries.setSelectedValue(pb, true);
-        } else if (e.getActionCommand().equals("del")) {
+        } else if (cmd.equals("del")) {
             PhoneBookEntry pb = (PhoneBookEntry)listEntries.getSelectedValue();
             if (pb != null)
                 if (JOptionPane.showConfirmDialog(this, MessageFormat.format(_("Do you want to delete the entry for \"{0}\"?"), pb), "Delete entry", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
@@ -225,18 +250,20 @@ public final class PhoneBookWin extends JDialog
                     pb.delete();
                     writeToTextFields(null);
                 }
-        } else if (e.getActionCommand().equals("close")) {
+        } else if (cmd.equals("close")) {
             usedSelectButton = false;
             dispose();
-        } else if (e.getActionCommand().equals("browse")) {
+        } else if (cmd.equals("browse")) {
             String newPB = phoneBook.browseForPhoneBook();
             if (newPB != null) {
                 //textDescriptor.setText(newPB);
                 openPhoneBook(newPB);
             }
-        } else if (e.getActionCommand().equals("select")) {
+        } else if (cmd.equals("select")) {
             usedSelectButton = true;
             setVisible(false);
+        } else if (cmd.equals("search")) {
+            showSearchWin();
         } else
             assert(false);
     }
@@ -441,9 +468,15 @@ public final class PhoneBookWin extends JDialog
         mnuDel.setEnabled(false);
         mnuDel.setActionCommand("del");
         mnuDel.addActionListener(this);
+        mnuSearch = new JMenuItem(utils._("Find..."), utils.loadIcon("general/Search"));
+        mnuSearch.setToolTipText(_("Search for an entry"));
+        mnuSearch.setActionCommand("search");
+        mnuSearch.addActionListener(this);
         
         entryMenu.add(mnuAdd);
         entryMenu.add(mnuDel);
+        entryMenu.add(new JSeparator());
+        entryMenu.add(mnuSearch);
         return entryMenu;
     }
     
@@ -467,6 +500,11 @@ public final class PhoneBookWin extends JDialog
                 
                 utils.getFaxOptions().phoneWinBounds = getBounds();
                 utils.getFaxOptions().lastPhonebook = phoneBook.getDescriptor();
+                
+                if (searchWin != null) {
+                    searchWin.dispose();
+                    searchWin = null;
+                }
             }
         });
         

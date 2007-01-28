@@ -484,7 +484,7 @@ public final class mainwin extends JFrame {
                                     jfc.setSelectedFile(new File(filename));
                                     
                                     jfc.resetChoosableFileFilters();
-                                    ExampleFileFilter curFilter = new ExampleFileFilter(hsf.getType(), hsf.getType() + _(" files"));
+                                    ExampleFileFilter curFilter = new ExampleFileFilter(hsf.getType().getDefaultExtension(), hsf.getType().getDescription());
                                     jfc.addChoosableFileFilter(curFilter);
                                     jfc.setFileFilter(curFilter);
                                     
@@ -1103,16 +1103,16 @@ public final class mainwin extends JFrame {
                     if (evt.isOldDataNull())
                         return;
                     
-                    if ((myopts.newFaxAction.type & utils.NEWFAX_TOFRONT) != 0) {
+                    if ((myopts.newFaxAction & utils.NEWFAX_TOFRONT) != 0) {
                         int state = getExtendedState();
                         if ((state & mainwin.ICONIFIED) != 0) 
                             setExtendedState(state & (~mainwin.ICONIFIED));
                         toFront();
                     }
-                    if ((myopts.newFaxAction.type & utils.NEWFAX_BEEP) != 0) {
+                    if ((myopts.newFaxAction & utils.NEWFAX_BEEP) != 0) {
                         Toolkit.getDefaultToolkit().beep();
                     }
-                    if ((myopts.newFaxAction.type & utils.NEWFAX_VIEWER) != 0) {
+                    if ((myopts.newFaxAction & utils.NEWFAX_VIEWER) != 0) {
                         for (RecvYajJob j : evt.getItems()) {
                             for (HylaServerFile hsf : j.getServerFilenames(hyfc)) {
                                 try {
@@ -1123,6 +1123,9 @@ public final class mainwin extends JFrame {
                                         e.printStackTrace(System.out);
                                     }
                                 }
+                            }
+                            if ((myopts.newFaxAction & utils.NEWFAX_MARKASREAD) != 0) {
+                                j.setRead(true);
                             }
                         }
                     }

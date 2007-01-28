@@ -56,12 +56,26 @@ public class FormattedFile {
         format = detectFileFormat(file.getPath());
     }
     
-    // Static methods:
-    
+
     public enum FileFormat {
-        PostScript, PDF, PCL, JPEG, PNG, GIF, TIFF, PlainText, Unknown
+        PostScript("ps"), PDF("pdf"), PCL("pcl"), JPEG("jpeg"), PNG("png"), GIF("gif"), TIFF("tiff"), PlainText("txt"), Unknown("");
+        
+        private String defaultExt;
+        
+        private FileFormat(String defaultExt) {
+            this.defaultExt = defaultExt;
+        }
+        
+        public String getDefaultExtension() {
+            return defaultExt;
+        }
+        
+        public String getDescription() {
+            return MessageFormat.format(utils._("{0} files"), toString());
+        }
     }
 
+    // Static methods:
     public static FileFormat detectFileFormat(String fileName) throws FileNotFoundException, IOException {
         FileInputStream fIn = new FileInputStream(fileName);
         byte[] data = new byte[maxSignatureLen];

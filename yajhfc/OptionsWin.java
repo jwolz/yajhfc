@@ -55,6 +55,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class OptionsWin extends JDialog {
     
@@ -63,6 +65,7 @@ public class OptionsWin extends JDialog {
     private JTabbedPane TabMain = null;
     private JPanel PanelCommon = null;
     private JPanel panelSendSettings = null;
+    private JPanel panelServerSettings;
     private fmtEditor PanelRecvFmt = null, PanelSentFmt = null, PanelSendingFmt = null;
         
     private JPanel PanelButtons;
@@ -70,7 +73,7 @@ public class OptionsWin extends JDialog {
     
     private JTextField textNotifyAddress, textHost, textUser, /*textViewer,*/ textPort;
     private JPasswordField textPassword, textAdminPassword;
-    private JComboBox comboTZone, comboNotify, comboPaperSize, comboResolution, comboNewFaxAction;
+    private JComboBox comboTZone, comboNotify, comboPaperSize, comboResolution; //, comboNewFaxAction;
     private JComboBox comboLang;
     private JCheckBox checkPasv, checkPCLBug, checkAskPassword, checkAskAdminPassword, checkUseCustomDefCover;
     private JSpinner spinMaxTry, spinMaxDial, spinOffset;
@@ -80,6 +83,10 @@ public class OptionsWin extends JDialog {
     private JTextField textFromFaxNumber, textFromName, textFromCompany, textFromLocation, textFromVoicenumber;
     private ClipboardPopup clpDef;
     private JPanel panelServer, panelSend, panelPaths, panelCover, panelMisc;
+    
+    private JPanel panelServerRetrieval, panelNewFaxAction;
+    private JCheckBox checkNewFax_Beep, checkNewFax_ToFront, checkNewFax_Open, checkNewFax_MarkAsRead;
+    private JSpinner spinStatusInterval, spinTableInterval;
     
     private JCheckBox checkPreferTIFF;
     
@@ -100,7 +107,7 @@ public class OptionsWin extends JDialog {
     
     private void initialize() {
         this.setSize(630, 460);
-        this.setResizable(false);
+        this.setResizable(true);
         this.setTitle(_("Options"));
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         clpDef = new ClipboardPopup();
@@ -122,7 +129,7 @@ public class OptionsWin extends JDialog {
         comboPaperSize.setSelectedItem(foEdit.paperSize);
         comboResolution.setSelectedItem(foEdit.resolution);
         comboTZone.setSelectedItem(foEdit.tzone);
-        comboNewFaxAction.setSelectedItem(foEdit.newFaxAction);
+        //comboNewFaxAction.setSelectedItem(foEdit.newFaxAction);
         comboLang.setSelectedItem(foEdit.locale);
         
         checkPasv.setSelected(foEdit.pasv);
@@ -131,9 +138,16 @@ public class OptionsWin extends JDialog {
         checkAskAdminPassword.setSelected(foEdit.askAdminPassword);
         checkPreferTIFF.setSelected(foEdit.preferRenderedTIFF);
         
+        checkNewFax_Beep.setSelected((foEdit.newFaxAction & utils.NEWFAX_BEEP) != 0);
+        checkNewFax_ToFront.setSelected((foEdit.newFaxAction & utils.NEWFAX_TOFRONT) != 0);
+        checkNewFax_Open.setSelected((foEdit.newFaxAction & utils.NEWFAX_VIEWER) != 0);
+        checkNewFax_MarkAsRead.setSelected((foEdit.newFaxAction & utils.NEWFAX_MARKASREAD) != 0);
+        
         spinMaxDial.setValue(Integer.valueOf(foEdit.maxDial));
         spinMaxTry.setValue(Integer.valueOf(foEdit.maxTry));
         spinOffset.setValue(foEdit.dateOffsetSecs);
+        spinTableInterval.setValue(foEdit.tableUpdateInterval / 1000.0);
+        spinStatusInterval.setValue(foEdit.statusUpdateInterval / 1000.0);
         
         ftfCustomDefCover.setText(foEdit.defaultCover);
         checkUseCustomDefCover.setSelected(foEdit.useCustomDefaultCover);
@@ -201,11 +215,26 @@ public class OptionsWin extends JDialog {
         return PanelButtons;
     }
     
+    private JPanel getPanelServerSettings() {
+        if (panelServerSettings == null) {
+            double[][] tablelay = {
+                    {border, 0.4, border, TableLayout.FILL, border},
+                    { border, TableLayout.FILL, border }
+            };
+            panelServerSettings = new JPanel(new TableLayout(tablelay));
+            
+            panelServerSettings.add(getPanelServerRetrieval(), "1,1");
+            panelServerSettings.add(getPanelServer(), "3,1");
+        }
+        return panelServerSettings;
+    }
+    
     private JTabbedPane getTabMain() {
         if (TabMain == null) {
             TabMain = new JTabbedPane(JTabbedPane.BOTTOM, JTabbedPane.WRAP_TAB_LAYOUT);
             
             TabMain.addTab(_("Common"), getPanelCommon());
+            TabMain.addTab(_("Server"), getPanelServerSettings());
             TabMain.addTab(_("Delivery"), getPanelSendSettings());
             TabMain.addTab(MessageFormat.format(_("Table \"{0}\""), _("Received")), getPanelRecvFmt());
             TabMain.addTab(MessageFormat.format(_("Table \"{0}\""), _("Sent")), getPanelSentFmt());
@@ -217,13 +246,14 @@ public class OptionsWin extends JDialog {
     private JPanel getPanelCommon() {        
         if (PanelCommon == null) {
             double[][] tablelay = {
-                    {border, TableLayout.FILL, border, 0.35, border},
-                    { border, 0.65, border, TableLayout.FILL, border }
+                    {border, 0.4, border, TableLayout.FILL, border},
+                    { border, 0.55, border, TableLayout.FILL, border }
             };
             PanelCommon = new JPanel(new TableLayout(tablelay));
             
-            PanelCommon.add(getPanelServer(), "1,1");
-            PanelCommon.add(getPanelMisc(), "3,1");
+            //PanelCommon.add(getPanelServer(), "1,1");
+            PanelCommon.add(getPanelMisc(), "1,1");
+            PanelCommon.add(getPanelNewFaxAction(), "3,1");
             PanelCommon.add(getPanelPaths(), "1,3,3,3");
         }
         return PanelCommon;
@@ -249,7 +279,7 @@ public class OptionsWin extends JDialog {
         if (panelServer == null) {
             double[][] tablelay = {
                     {border, 0.22, border, 0.22, border, 0.22, border, TableLayout.FILL, border},
-                    new double[12]
+                    new double[11]
             };
             double rowh = 1 / (double)(tablelay[1].length - 2);
             tablelay[1][0] = 0;
@@ -258,9 +288,8 @@ public class OptionsWin extends JDialog {
             tablelay[1][tablelay[1].length - 2] = TableLayout.FILL;
             
             panelServer = new JPanel(new TableLayout(tablelay));
-            panelServer.setBorder(BorderFactory.createTitledBorder(_("Server settings")));
+            panelServer.setBorder(BorderFactory.createTitledBorder(_("Connection settings:")));
                         
-            
             textHost = new JTextField();
             textHost.addMouseListener(clpDef);
             textPort = new JTextField();
@@ -285,9 +314,6 @@ public class OptionsWin extends JDialog {
             
             checkPasv = new JCheckBox(_("Use passive mode to fetch faxes"));
             
-            checkPreferTIFF = new JCheckBox("<html>" + _("Prefer rendered TIFF (experimental)") + "</html>");
-            checkPreferTIFF.setToolTipText(_("Try to fetch the rendered TIFF from the HylaFAX server instead of the source file."));
-            
             addWithLabel(panelServer, textHost, _("Host name:"), "1, 2, 5, 2, f, c");
             addWithLabel(panelServer, textPort, _("Port:"), "7, 4, f, c");
             addWithLabel(panelServer, textUser, _("Username:"), "1, 4, 5, 4, f, c");
@@ -298,7 +324,6 @@ public class OptionsWin extends JDialog {
             panelServer.add(checkAskAdminPassword, "6, 8, 7, 8, f, c");
             
             panelServer.add(checkPasv, "1, 9, 7, 9");
-            panelServer.add(checkPreferTIFF, "1, 10, 7, 10");
         }
         return panelServer;
     }
@@ -307,7 +332,7 @@ public class OptionsWin extends JDialog {
         if (panelMisc == null) {
             double[][] tablelay = {
                     {border, TableLayout.FILL, border},
-                    new double[8]
+                    new double[4]
             };
             double rowh = 1 / (double)(tablelay[1].length - 1);
             //tablelay[1][0] = border;
@@ -318,19 +343,85 @@ public class OptionsWin extends JDialog {
             panelMisc = new JPanel(new TableLayout(tablelay));
             panelMisc.setBorder(BorderFactory.createTitledBorder(_("Miscellaneous settings")));
             
-            comboNewFaxAction = new JComboBox(utils.newFaxActions);
-            checkPCLBug = new JCheckBox("<html>" + _("Use PCL file type bugfix") + "</html>");
+            //comboNewFaxAction = new JComboBox(utils.newFaxActions);
             
             comboLang = new JComboBox(utils.AvailableLocales);
-            spinOffset = SpinnerDateOffsetEditor.createJSpinner();
+
                         
             addWithLabel(panelMisc, comboLang, _("Language:"), "1, 1, 1, 1, f, c");
-            addWithLabel(panelMisc, comboNewFaxAction, "<html>" + _("When a new fax is received:") + "</html>", "1, 3, 1, 3, f, c");
-            addWithLabel(panelMisc, spinOffset, _("Date/Time offset:"), "1, 5, 1, 5, f, c");
-            spinOffset.setToolTipText(_("Offset to be added to dates received from the HylaFAX server before displaying them."));
-            panelMisc.add(checkPCLBug, "1, 6");
+            //addWithLabel(panelMisc, comboNewFaxAction, "<html>" + _("When a new fax is received:") + "</html>", "1, 3, 1, 3, f, c");
+
         }
         return panelMisc;
+    }
+    
+    private JPanel getPanelNewFaxAction() {
+        if (panelNewFaxAction == null) {
+            double[][] tablelay = {
+                    {border, 4*border, TableLayout.FILL, border},
+                    new double[6]
+            };
+            double rowh = 1 / (double)(tablelay[1].length - 2);
+            tablelay[1][0] = border;
+            tablelay[1][tablelay[1].length - 1] = border;
+            Arrays.fill(tablelay[1], 1, tablelay[1].length - 1, rowh);
+            tablelay[1][tablelay[1].length - 2] = TableLayout.FILL;
+            
+            panelNewFaxAction = new JPanel(new TableLayout(tablelay));
+            panelNewFaxAction.setBorder(BorderFactory.createTitledBorder(_("Actions after receiving a new fax:")));
+            
+            checkNewFax_Beep = new JCheckBox(_("Beep"));
+            checkNewFax_ToFront = new JCheckBox(_("Bring to front"));
+            checkNewFax_Open = new JCheckBox(_("Open in Viewer"));
+            checkNewFax_Open.addChangeListener(new ChangeListener() {
+               public void stateChanged(ChangeEvent e) {
+                   checkNewFax_MarkAsRead.setEnabled(checkNewFax_Open.isSelected());
+               }
+            });
+            checkNewFax_MarkAsRead = new JCheckBox(_("And mark as read"));
+            checkNewFax_MarkAsRead.setEnabled(false);
+            
+            panelNewFaxAction.add(checkNewFax_Beep, "1,1,2,1");
+            panelNewFaxAction.add(checkNewFax_ToFront, "1,2,2,2");
+            panelNewFaxAction.add(checkNewFax_Open, "1,3,2,3");
+            panelNewFaxAction.add(checkNewFax_MarkAsRead, "2,4");
+        }
+        return panelNewFaxAction;
+    }
+    
+    private JPanel getPanelServerRetrieval() {
+        if (panelServerRetrieval == null) {
+            double[][] tablelay = {
+                    {border, TableLayout.FILL, border},
+                    new double[11]
+            };
+            double rowh = 1 / (double)(tablelay[1].length - 1);
+            //tablelay[1][0] = border;
+            tablelay[1][tablelay[1].length - 1] = border;
+            Arrays.fill(tablelay[1], 0, tablelay[1].length - 1, rowh);
+            tablelay[1][tablelay[1].length - 2] = TableLayout.FILL;
+            
+            panelServerRetrieval = new JPanel(new TableLayout(tablelay));
+            panelServerRetrieval.setBorder(BorderFactory.createTitledBorder(_("General settings:")));
+            
+            checkPCLBug = new JCheckBox("<html>" + _("Use PCL file type bugfix") + "</html>");
+            spinOffset = SpinnerDateOffsetEditor.createJSpinner();
+            
+            spinStatusInterval = new JSpinner(new SpinnerNumberModel(1, 0.5, 600, 1));
+            spinTableInterval = new JSpinner(new SpinnerNumberModel(3, 0.5, 600, 1));
+            
+            checkPreferTIFF = new JCheckBox("<html>" + _("Prefer rendered TIFF (experimental)") + "</html>");
+            checkPreferTIFF.setToolTipText(_("Try to fetch the rendered TIFF from the HylaFAX server instead of the source file."));
+            
+            addWithLabel(panelServerRetrieval, spinOffset, _("Date/Time offset:"), "1, 1, 1, 1, f, c");
+            spinOffset.setToolTipText(_("Offset to be added to dates received from the HylaFAX server before displaying them."));
+            panelServerRetrieval.add(checkPCLBug, "1, 2, 1, 3");
+            panelServerRetrieval.add(checkPreferTIFF, "1, 4, 1, 5");
+            
+            addWithLabel(panelServerRetrieval, spinTableInterval, "<html>" + _("Table refresh interval (secs.):") + "</html>", "1, 7, 1, 7, f, c");
+            addWithLabel(panelServerRetrieval, spinStatusInterval, "<html>" + _("Server status refresh interval (secs.):") + "</html>", "1, 9, 1, 9, f, c"); 
+        }
+        return panelServerRetrieval;
     }
     
     private JPanel getPanelSend() {
@@ -493,7 +584,7 @@ public class OptionsWin extends JDialog {
         initialize();
     }
     
-    class ExeFileTextField extends FileTextField {
+    static class ExeFileTextField extends FileTextField {
         protected String readTextFieldFileName() {
             return this.getText().replaceAll("\"|%s", "").trim();
         };
@@ -524,6 +615,8 @@ public class OptionsWin extends JDialog {
                 foEdit.maxDial = ((Integer)spinMaxDial.getValue()).intValue();
                 foEdit.maxTry = ((Integer)spinMaxTry.getValue()).intValue();
                 foEdit.dateOffsetSecs = (Integer)spinOffset.getValue();
+                foEdit.tableUpdateInterval = (int)((Double)spinTableInterval.getValue() * 1000);
+                foEdit.statusUpdateInterval = (int)((Double)spinStatusInterval.getValue() * 1000);
                 
                 foEdit.notifyAddress = textNotifyAddress.getText();
                 foEdit.host = textHost.getText();
@@ -537,7 +630,7 @@ public class OptionsWin extends JDialog {
                 foEdit.paperSize = (PaperSize)comboPaperSize.getSelectedItem();
                 foEdit.resolution = (FaxIntProperty)comboResolution.getSelectedItem();
                 foEdit.tzone = (FaxStringProperty)comboTZone.getSelectedItem();
-                foEdit.newFaxAction = (FaxIntProperty)comboNewFaxAction.getSelectedItem();
+                //foEdit.newFaxAction = (FaxIntProperty)comboNewFaxAction.getSelectedItem();
                 
                 YajLanguage newLang = (YajLanguage)comboLang.getSelectedItem();
                 if (!newLang.equals(foEdit.locale)) {
@@ -550,6 +643,17 @@ public class OptionsWin extends JDialog {
                 foEdit.askPassword = checkAskPassword.isSelected();
                 foEdit.askAdminPassword = checkAskAdminPassword.isSelected();
                 foEdit.preferRenderedTIFF = checkPreferTIFF.isSelected();
+                
+                int val = 0;
+                if (checkNewFax_Beep.isSelected())
+                    val |= utils.NEWFAX_BEEP;
+                if (checkNewFax_ToFront.isSelected())
+                    val |= utils.NEWFAX_TOFRONT;
+                if (checkNewFax_Open.isSelected())
+                    val |= utils.NEWFAX_VIEWER;
+                if (checkNewFax_MarkAsRead.isSelected())
+                    val |= utils.NEWFAX_MARKASREAD;
+                foEdit.newFaxAction = val;
                 
                 foEdit.recvfmt = recvfmt;
                 foEdit.sentfmt = sentfmt;

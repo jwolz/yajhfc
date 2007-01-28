@@ -26,6 +26,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
+import yajhfc.FormattedFile.FileFormat;
+
 public class RecvYajJob extends YajJob {
     protected int fileNameCol;
     protected boolean read = false;
@@ -51,7 +53,7 @@ public class RecvYajJob extends YajJob {
     @Override
     public List<HylaServerFile> getServerFilenames(HylaFAXClient hyfc) {
         HylaServerFile[] result = new HylaServerFile[1];
-        result[0] = new HylaServerFile("recvq/" + getServerTIF(), "tif");
+        result[0] = new HylaServerFile("recvq/" + getServerTIF(), FileFormat.TIFF);
         return Arrays.asList(result);
     }
 

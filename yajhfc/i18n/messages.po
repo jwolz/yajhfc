@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-01-19 21:32+0100\n"
+"POT-Creation-Date: 2007-01-28 17:12+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,7 +37,7 @@ msgstr ""
 msgid "$LANGUAGE$ translation by {0}"
 msgstr ""
 
-#: ../AboutDialog.java:208 ../ExceptionDialog.java:65 ../OptionsWin.java:180
+#: ../AboutDialog.java:208 ../ExceptionDialog.java:65 ../OptionsWin.java:194
 #: ../PasswordDialog.java:59 ../filters/CustomFilterDialog.java:79
 #: ../phonebook/jdbc/ConnectionDialog.java:168
 msgid "OK"
@@ -77,7 +77,7 @@ msgid "Paste"
 msgstr ""
 
 #: ../ClipboardPopup.java:56 ../mainwin.java:374
-#: ../phonebook/PhoneBookWin.java:439
+#: ../phonebook/PhoneBookWin.java:466
 msgid "Delete"
 msgstr ""
 
@@ -90,9 +90,9 @@ msgid "Details"
 msgstr ""
 
 #: ../ExceptionDialog.java:178 ../ExceptionDialog.java:187
-#: ../OptionsWin.java:515 ../ProgressWorker.java:172 ../SendWin.java:649
+#: ../OptionsWin.java:606 ../ProgressWorker.java:172 ../SendWin.java:649
 #: ../SendWin.java:654 ../filters/CustomFilterDialog.java:209
-#: ../filters/CustomFilterDialog.java:213 ../phonebook/PhoneBookWin.java:178
+#: ../filters/CustomFilterDialog.java:213 ../phonebook/PhoneBookWin.java:202
 #: ../phonebook/jdbc/ConnectionDialog.java:224
 #: ../phonebook/jdbc/ConnectionDialog.java:228
 #: ../phonebook/jdbc/ConnectionDialog.java:333
@@ -144,7 +144,12 @@ msgstr ""
 msgid "Selected Columns:"
 msgstr ""
 
-#: ../FormattedFile.java:155 ../HylaServerFile.java:69
+#: ../FormattedFile.java:74
+#, java-format
+msgid "{0} files"
+msgstr ""
+
+#: ../FormattedFile.java:169
 #, java-format
 msgid "File format {0} not supported."
 msgstr ""
@@ -213,7 +218,7 @@ msgstr ""
 msgid "An error occured displaying the fax \"{0}\":"
 msgstr ""
 
-#: ../mainwin.java:329 ../OptionsWin.java:104 ../OptionsWin.java:545
+#: ../mainwin.java:329 ../OptionsWin.java:111 ../OptionsWin.java:638
 msgid "Options"
 msgstr ""
 
@@ -281,7 +286,7 @@ msgstr ""
 msgid "Shows the about dialog"
 msgstr ""
 
-#: ../mainwin.java:419 ../phonebook/PhoneBookWin.java:461
+#: ../mainwin.java:419 ../phonebook/PhoneBookWin.java:494
 msgid "Phone book"
 msgstr ""
 
@@ -306,15 +311,11 @@ msgstr ""
 msgid "Save {0} to"
 msgstr ""
 
-#: ../mainwin.java:487
-msgid " files"
-msgstr ""
-
 #: ../mainwin.java:505
 msgid "Select a directory to save the faxes in"
 msgstr ""
 
-#: ../mainwin.java:506 ../phonebook/PhoneBookWin.java:369
+#: ../mainwin.java:506 ../phonebook/PhoneBookWin.java:396
 msgid "Select"
 msgstr ""
 
@@ -350,7 +351,7 @@ msgstr ""
 msgid "Connect to the server in admin mode (e.g. to delete faxes)"
 msgstr ""
 
-#: ../mainwin.java:567 ../mainwin.java:1234
+#: ../mainwin.java:567 ../mainwin.java:1237
 msgid "Fax"
 msgstr ""
 
@@ -404,7 +405,7 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
-#: ../mainwin.java:1020 ../OptionsWin.java:210
+#: ../mainwin.java:1020 ../OptionsWin.java:239
 msgid "Received"
 msgstr ""
 
@@ -412,7 +413,7 @@ msgstr ""
 msgid "Received faxes"
 msgstr ""
 
-#: ../mainwin.java:1021 ../OptionsWin.java:211
+#: ../mainwin.java:1021 ../OptionsWin.java:240
 msgid "Sent"
 msgstr ""
 
@@ -420,7 +421,7 @@ msgstr ""
 msgid "Sent faxes"
 msgstr ""
 
-#: ../mainwin.java:1022 ../OptionsWin.java:212
+#: ../mainwin.java:1022 ../OptionsWin.java:241
 msgid "Transmitting"
 msgstr ""
 
@@ -428,194 +429,226 @@ msgstr ""
 msgid "Faxes in the output queue"
 msgstr ""
 
-#: ../mainwin.java:1252
+#: ../mainwin.java:1255
 msgid "Extras"
 msgstr ""
 
-#: ../OptionsWin.java:192 ../PasswordDialog.java:73 ../SendWin.java:479
+#: ../OptionsWin.java:206 ../PasswordDialog.java:73 ../SendWin.java:479
 #: ../filters/CustomFilterDialog.java:91
 #: ../phonebook/jdbc/ConnectionDialog.java:163
 msgid "Cancel"
 msgstr ""
 
-#: ../OptionsWin.java:208 ../SendWin.java:404
+#: ../OptionsWin.java:236 ../SendWin.java:404
 msgid "Common"
 msgstr ""
 
-#: ../OptionsWin.java:209
+#: ../OptionsWin.java:237
+msgid "Server"
+msgstr ""
+
+#: ../OptionsWin.java:238
 msgid "Delivery"
 msgstr ""
 
-#: ../OptionsWin.java:210 ../OptionsWin.java:211 ../OptionsWin.java:212
+#: ../OptionsWin.java:239 ../OptionsWin.java:240 ../OptionsWin.java:241
 #, java-format
 msgid "Table \"{0}\""
 msgstr ""
 
-#: ../OptionsWin.java:261
-msgid "Server settings"
+#: ../OptionsWin.java:291
+msgid "Connection settings:"
 msgstr ""
 
-#: ../OptionsWin.java:273 ../OptionsWin.java:279
+#: ../OptionsWin.java:302 ../OptionsWin.java:308
 #: ../phonebook/jdbc/ConnectionDialog.java:151
 msgid "Always ask"
 msgstr ""
 
-#: ../OptionsWin.java:286
+#: ../OptionsWin.java:315
 msgid "Use passive mode to fetch faxes"
 msgstr ""
 
-#: ../OptionsWin.java:288
+#: ../OptionsWin.java:317
+msgid "Host name:"
+msgstr ""
+
+#: ../OptionsWin.java:318
+msgid "Port:"
+msgstr ""
+
+#: ../OptionsWin.java:319 ../phonebook/jdbc/ConnectionDialog.java:177
+msgid "Username:"
+msgstr ""
+
+#: ../OptionsWin.java:321 ../phonebook/jdbc/ConnectionDialog.java:179
+msgid "Password:"
+msgstr ""
+
+#: ../OptionsWin.java:323
+msgid "Admin Password:"
+msgstr ""
+
+#: ../OptionsWin.java:344
+msgid "Miscellaneous settings"
+msgstr ""
+
+#: ../OptionsWin.java:351
+msgid "Language:"
+msgstr ""
+
+#: ../OptionsWin.java:371
+msgid "Actions after receiving a new fax:"
+msgstr ""
+
+#: ../OptionsWin.java:373
+msgid "Beep"
+msgstr ""
+
+#: ../OptionsWin.java:374
+msgid "Bring to front"
+msgstr ""
+
+#: ../OptionsWin.java:375
+msgid "Open in Viewer"
+msgstr ""
+
+#: ../OptionsWin.java:381
+msgid "And mark as read"
+msgstr ""
+
+#: ../OptionsWin.java:405
+msgid "General settings:"
+msgstr ""
+
+#: ../OptionsWin.java:407
+msgid "Use PCL file type bugfix"
+msgstr ""
+
+#: ../OptionsWin.java:413
 msgid "Prefer rendered TIFF (experimental)"
 msgstr ""
 
-#: ../OptionsWin.java:289
+#: ../OptionsWin.java:414
 msgid ""
 "Try to fetch the rendered TIFF from the HylaFAX server instead of the source "
 "file."
 msgstr ""
 
-#: ../OptionsWin.java:291
-msgid "Host name:"
-msgstr ""
-
-#: ../OptionsWin.java:292
-msgid "Port:"
-msgstr ""
-
-#: ../OptionsWin.java:293 ../phonebook/jdbc/ConnectionDialog.java:177
-msgid "Username:"
-msgstr ""
-
-#: ../OptionsWin.java:295 ../phonebook/jdbc/ConnectionDialog.java:179
-msgid "Password:"
-msgstr ""
-
-#: ../OptionsWin.java:297
-msgid "Admin Password:"
-msgstr ""
-
-#: ../OptionsWin.java:319
-msgid "Miscellaneous settings"
-msgstr ""
-
-#: ../OptionsWin.java:322
-msgid "Use PCL file type bugfix"
-msgstr ""
-
-#: ../OptionsWin.java:327
-msgid "Language:"
-msgstr ""
-
-#: ../OptionsWin.java:328
-msgid "When a new fax is received:"
-msgstr ""
-
-#: ../OptionsWin.java:329
+#: ../OptionsWin.java:416
 msgid "Date/Time offset:"
 msgstr ""
 
-#: ../OptionsWin.java:330
+#: ../OptionsWin.java:417
 msgid ""
 "Offset to be added to dates received from the HylaFAX server before "
 "displaying them."
 msgstr ""
 
-#: ../OptionsWin.java:349
+#: ../OptionsWin.java:421
+msgid "Table refresh interval (secs.):"
+msgstr ""
+
+#: ../OptionsWin.java:422
+msgid "Server status refresh interval (secs.):"
+msgstr ""
+
+#: ../OptionsWin.java:440
 msgid "Delivery settings"
 msgstr ""
 
-#: ../OptionsWin.java:362
+#: ../OptionsWin.java:453
 msgid "Use a custom default cover page:"
 msgstr ""
 
-#: ../OptionsWin.java:370 ../SendWin.java:257 ../SendWin.java:564
+#: ../OptionsWin.java:461 ../SendWin.java:257 ../SendWin.java:564
 msgid "Postscript files"
 msgstr ""
 
-#: ../OptionsWin.java:373
+#: ../OptionsWin.java:464
 msgid "E-mail address for notifications:"
 msgstr ""
 
-#: ../OptionsWin.java:374 ../SendWin.java:391
+#: ../OptionsWin.java:465 ../SendWin.java:391
 msgid "Notify when:"
 msgstr ""
 
-#: ../OptionsWin.java:375
+#: ../OptionsWin.java:466
 msgid "Time zone:"
 msgstr ""
 
-#: ../OptionsWin.java:376 ../SendWin.java:392
+#: ../OptionsWin.java:467 ../SendWin.java:392
 msgid "Resolution:"
 msgstr ""
 
-#: ../OptionsWin.java:377 ../SendWin.java:393
+#: ../OptionsWin.java:468 ../SendWin.java:393
 msgid "Paper size:"
 msgstr ""
 
-#: ../OptionsWin.java:378
+#: ../OptionsWin.java:469
 msgid "Maximum dials:"
 msgstr ""
 
-#: ../OptionsWin.java:379 ../SendWin.java:395
+#: ../OptionsWin.java:470 ../SendWin.java:395
 msgid "Maximum tries:"
 msgstr ""
 
-#: ../OptionsWin.java:400
+#: ../OptionsWin.java:491
 msgid "Fax cover page from:"
 msgstr ""
 
-#: ../OptionsWin.java:413 ../phonebook/jdbc/ConnectionDialog.java:187
+#: ../OptionsWin.java:504 ../phonebook/jdbc/ConnectionDialog.java:187
 msgid "Name:"
 msgstr ""
 
-#: ../OptionsWin.java:414 ../SendWin.java:284
-#: ../phonebook/PhoneBookWin.java:336
+#: ../OptionsWin.java:505 ../SendWin.java:284
+#: ../phonebook/PhoneBookWin.java:363
 #: ../phonebook/jdbc/ConnectionDialog.java:189
 msgid "Company:"
 msgstr ""
 
-#: ../OptionsWin.java:415 ../SendWin.java:285
-#: ../phonebook/PhoneBookWin.java:338
+#: ../OptionsWin.java:506 ../SendWin.java:285
+#: ../phonebook/PhoneBookWin.java:365
 #: ../phonebook/jdbc/ConnectionDialog.java:190
 msgid "Location:"
 msgstr ""
 
-#: ../OptionsWin.java:416 ../SendWin.java:286
-#: ../phonebook/PhoneBookWin.java:339
+#: ../OptionsWin.java:507 ../SendWin.java:286
+#: ../phonebook/PhoneBookWin.java:366
 #: ../phonebook/jdbc/ConnectionDialog.java:191
 msgid "Voice number:"
 msgstr ""
 
-#: ../OptionsWin.java:417 ../phonebook/PhoneBookWin.java:340
+#: ../OptionsWin.java:508 ../phonebook/PhoneBookWin.java:367
 #: ../phonebook/jdbc/ConnectionDialog.java:192
 msgid "Fax number:"
 msgstr ""
 
-#: ../OptionsWin.java:435
+#: ../OptionsWin.java:526
 msgid "Path settings"
 msgstr ""
 
-#: ../OptionsWin.java:442
+#: ../OptionsWin.java:533
 msgid ""
 "Command line for fax viewer: (insert %s as a placeholder for the filename)"
 msgstr ""
 
-#: ../OptionsWin.java:444
+#: ../OptionsWin.java:535
 msgid ""
 "Command line for Postscript viewer: (insert %s as a placeholder for the "
 "filename)"
 msgstr ""
 
-#: ../OptionsWin.java:515
+#: ../OptionsWin.java:606
 msgid "The selected default cover page can not be read."
 msgstr ""
 
-#: ../OptionsWin.java:545
+#: ../OptionsWin.java:638
 msgid ""
 "You must restart the program for the change of the language to take effect."
 msgstr ""
 
-#: ../OptionsWin.java:567
+#: ../OptionsWin.java:671
 msgid "Please enter a number."
 msgstr ""
 
@@ -651,7 +684,7 @@ msgstr ""
 msgid "Subject:"
 msgstr ""
 
-#: ../SendWin.java:288 ../phonebook/PhoneBookWin.java:341
+#: ../SendWin.java:288 ../phonebook/PhoneBookWin.java:368
 #: ../phonebook/jdbc/ConnectionDialog.java:193
 msgid "Comments:"
 msgstr ""
@@ -813,7 +846,7 @@ msgid "Moves the item downwards"
 msgstr ""
 
 #: ../TextFieldList.java:121 ../filters/CustomFilterDialog.java:107
-#: ../phonebook/PhoneBookWin.java:435
+#: ../phonebook/PhoneBookWin.java:462
 msgid "Add"
 msgstr ""
 
@@ -869,7 +902,7 @@ msgstr ""
 msgid "Destination Password"
 msgstr ""
 
-#: ../utils.java:63
+#: ../utils.java:63 ../phonebook/PhoneBookEntry.java:40
 msgid "Company"
 msgstr ""
 
@@ -933,7 +966,7 @@ msgstr ""
 msgid "Desired use of ECM (one-character symbol)"
 msgstr ""
 
-#: ../utils.java:72
+#: ../utils.java:72 ../phonebook/PhoneBookEntry.java:41
 msgid "Location"
 msgstr ""
 
@@ -1361,30 +1394,6 @@ msgstr ""
 msgid "GMT"
 msgstr ""
 
-#: ../utils.java:192
-msgid "No action"
-msgstr ""
-
-#: ../utils.java:193
-msgid "Beep"
-msgstr ""
-
-#: ../utils.java:194
-msgid "Bring to front"
-msgstr ""
-
-#: ../utils.java:195
-msgid "Beep & bring to front"
-msgstr ""
-
-#: ../utils.java:196
-msgid "Open in viewer"
-msgstr ""
-
-#: ../utils.java:197
-msgid "Beep & open in viewer"
-msgstr ""
-
 #: ../YajAutoLanguage.java:26
 msgid "(System default)"
 msgstr ""
@@ -1478,72 +1487,141 @@ msgstr ""
 msgid "matches"
 msgstr ""
 
-#: ../phonebook/PhoneBookEntry.java:94
+#: ../phonebook/PhoneBookEntry.java:37
+msgid "Name"
+msgstr ""
+
+#: ../phonebook/PhoneBookEntry.java:38
+msgid "Given name"
+msgstr ""
+
+#: ../phonebook/PhoneBookEntry.java:39
+msgid "Title"
+msgstr ""
+
+#: ../phonebook/PhoneBookEntry.java:42
+msgid "Voice number"
+msgstr ""
+
+#: ../phonebook/PhoneBookEntry.java:43
+msgid "Fax number"
+msgstr ""
+
+#: ../phonebook/PhoneBookEntry.java:44
+msgid "Comments"
+msgstr ""
+
+#: ../phonebook/PhoneBookEntry.java:143
 #, java-format
 msgid "{0} {1}"
 msgstr ""
 
-#: ../phonebook/PhoneBookEntry.java:101
+#: ../phonebook/PhoneBookEntry.java:150
 msgid "<no name>"
 msgstr ""
 
-#: ../phonebook/PhoneBookWin.java:178
+#: ../phonebook/PhoneBookWin.java:202
 msgid "Unknown Phonebook type selected, using default!"
 msgstr ""
 
-#: ../phonebook/PhoneBookWin.java:223
+#: ../phonebook/PhoneBookWin.java:248
 #, java-format
 msgid "Do you want to delete the entry for \"{0}\"?"
 msgstr ""
 
-#: ../phonebook/PhoneBookWin.java:279 ../phonebook/PhoneBookWin.java:436
+#: ../phonebook/PhoneBookWin.java:306 ../phonebook/PhoneBookWin.java:463
 msgid "Add new entry"
 msgstr ""
 
-#: ../phonebook/PhoneBookWin.java:283 ../phonebook/PhoneBookWin.java:440
+#: ../phonebook/PhoneBookWin.java:310 ../phonebook/PhoneBookWin.java:467
 msgid "Delete selected entry"
 msgstr ""
 
-#: ../phonebook/PhoneBookWin.java:334
+#: ../phonebook/PhoneBookWin.java:361
 #: ../phonebook/jdbc/ConnectionDialog.java:186
 msgid "Given name:"
 msgstr ""
 
-#: ../phonebook/PhoneBookWin.java:335
+#: ../phonebook/PhoneBookWin.java:362
 msgid "Surname:"
 msgstr ""
 
-#: ../phonebook/PhoneBookWin.java:337
+#: ../phonebook/PhoneBookWin.java:364
 #: ../phonebook/jdbc/ConnectionDialog.java:188
 msgid "Title:"
 msgstr ""
 
-#: ../phonebook/PhoneBookWin.java:365 ../phonebook/PhoneBookWin.java:419
+#: ../phonebook/PhoneBookWin.java:392 ../phonebook/PhoneBookWin.java:446
+#: ../phonebook/SearchWin.java:95
 msgid "Close"
 msgstr ""
 
-#: ../phonebook/PhoneBookWin.java:379
+#: ../phonebook/PhoneBookWin.java:406
 msgid "Phone book:"
 msgstr ""
 
-#: ../phonebook/PhoneBookWin.java:391
+#: ../phonebook/PhoneBookWin.java:418
 msgid "Import"
 msgstr ""
 
-#: ../phonebook/PhoneBookWin.java:393
+#: ../phonebook/PhoneBookWin.java:420
 msgid "Open"
 msgstr ""
 
-#: ../phonebook/PhoneBookWin.java:423
+#: ../phonebook/PhoneBookWin.java:450
 msgid "Phonebook"
 msgstr ""
 
-#: ../phonebook/PhoneBookWin.java:433
+#: ../phonebook/PhoneBookWin.java:460
 msgid "Entry"
 msgstr ""
 
-#: ../phonebook/PhoneBookWin.java:558
+#: ../phonebook/PhoneBookWin.java:471
+msgid "Find..."
+msgstr ""
+
+#: ../phonebook/PhoneBookWin.java:472
+msgid "Search for an entry"
+msgstr ""
+
+#: ../phonebook/PhoneBookWin.java:596
 msgid "Error executing the desired action:"
+msgstr ""
+
+#: ../phonebook/SearchWin.java:66
+msgid "No matching phone book entry found."
+msgstr ""
+
+#: ../phonebook/SearchWin.java:86
+msgid "Search"
+msgstr ""
+
+#: ../phonebook/SearchWin.java:100
+msgid "Forward"
+msgstr ""
+
+#: ../phonebook/SearchWin.java:102
+msgid "Backward"
+msgstr ""
+
+#: ../phonebook/SearchWin.java:107
+msgid "Case sensitive"
+msgstr ""
+
+#: ../phonebook/SearchWin.java:108
+msgid "Wrap Search"
+msgstr ""
+
+#: ../phonebook/SearchWin.java:111
+msgid "Direction:"
+msgstr ""
+
+#: ../phonebook/SearchWin.java:116
+msgid "Search options:"
+msgstr ""
+
+#: ../phonebook/SearchWin.java:146
+msgid "Find phone book entry"
 msgstr ""
 
 #: ../phonebook/XMLPhoneBook.java:47

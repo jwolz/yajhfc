@@ -1,7 +1,7 @@
 package yajhfc.phonebook;
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005 Jonas Wolz
+ * Copyright (C) 2005-2007 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,8 +20,11 @@ package yajhfc.phonebook;
 
 import java.awt.Dialog;
 import java.lang.reflect.Field;
+import java.util.regex.Pattern;
 
 import javax.swing.AbstractListModel;
+
+import yajhfc.filters.StringFilterOperator;
 
 /**
  * Abstract class describing a phone book
@@ -76,11 +79,94 @@ public abstract class PhoneBook extends AbstractListModel {
         }
     }
     
+    /**
+     * Searches for an entry in the phone book.
+     * @param startIndex
+     * The index to start searching at. Use -1 to start from the beginning (first or last item depending on searchBackwards)
+     * @param searchBackwards
+     * Search beginning at last item (true) in direction to the first one or beginning at the first item
+     * @param caseSensitive
+     * Should the search be case sensitive?
+     * @param field
+     * The phone book field to compare
+     * @param op
+     * The comparision operator
+     * @param compareValue
+     * The value to compare the field values with
+     * @return 
+     * The index of the matching index or -1 if none was found
+     */
+    public int findEntry(int startIndex, boolean searchBackwards, boolean caseSensitive, PhoneBookEntry.PBEntryField field, StringFilterOperator op, String compareValue) {
+        Pattern regEx = null;
+        int i, size, increment;
+        
+        if (op == StringFilterOperator.MATCHES) {
+            regEx = Pattern.compile(compareValue, caseSensitive ? 0 : (Pattern.CASE_INSENSITIVE|Pattern.UNICODE_CASE) );
+        } else if (!caseSensitive) {
+            compareValue = compareValue.toLowerCase();
+        }
+         
+        size = getSize();
+        
+        if (startIndex < 0) {
+            if (searchBackwards)
+                i = size - 1;
+            else
+                i = 0;
+        } else {
+            i = startIndex;
+        }
+        increment = searchBackwards ? -1 : 1;
+            
+        for (; i >= 0 && i < size; i+=increment) {
+            PhoneBookEntry pbe = readEntry(i);
+            String val = pbe.getPBField(field);
+            if (!caseSensitive)
+                val = val.toLowerCase();
+            
+            switch (op) {
+            case EQUAL:
+                if (val.equals(compareValue))
+                    return i;
+                break;
+            case NOTEQUAL:
+                if (!val.equals(compareValue))
+                    return i;
+                break;
+            case CONTAINS:
+                if (val.contains(compareValue)) 
+                    return i;
+                break;
+            case ENDSWITH:
+                if (val.endsWith(compareValue))
+                    return i;
+                break;
+            case STARTSWITH:
+                if (val.startsWith(compareValue))
+                    return i;
+                break;
+            case MATCHES:
+                if (regEx.matcher(val).matches()) 
+                    return i;
+                break;   
+            }
+        }
+        return -1;
+    }
+    
     public abstract PhoneBookEntry addNewEntry();
     
     // read entry
     public PhoneBookEntry readEntry(int index) {
         return (PhoneBookEntry)getElementAt(index);
+    }
+    
+    public int indexOf(PhoneBookEntry pbe) {
+        for (int i = 0; i < getSize(); i++) {
+            if (readEntry(i).equals(pbe))
+                return i;
+        }
+        return -1;
     }
     
     /**
