@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import yajhfc.FormattedFile.FileFormat;
+
 public class SentYajJob extends YajJob {
     //private Job curJob = null;
 
@@ -48,6 +50,7 @@ public class SentYajJob extends YajJob {
             String[] fields = files[i].split("\\s");
             String fileName = fields[1];
             String fileType = fields[0];
+            FileFormat fileFormat;
             
             if (utils.debugMode) {
                 System.out.println("Trying to access file " + fileName + "; type: " + fileType);
@@ -57,12 +60,16 @@ public class SentYajJob extends YajJob {
                 // Bugfix for certain HylaFAX versions that always return "PCL"
                 // as file type for all documents
                 if (utils.getFaxOptions().pclBug && fileType.equalsIgnoreCase("pcl")) {
-                    if (fileName.contains(".ps"))
-                        fileType = "ps";
-                    else if (fileName.contains(".pdf"))
-                        fileType = "pdf";
-                    else if (fileName.contains(".tif"))
-                        fileType = "tif";
+                        fileFormat = FileFormat.Unknown;
+                } else {
+                    if (fileType.equalsIgnoreCase("tif") || fileType.equalsIgnoreCase("tiff")) 
+                        fileFormat = FileFormat.TIFF;
+                    else if (fileType.equalsIgnoreCase("ps"))
+                        fileFormat = FileFormat.PostScript;
+                    else if(fileType.equalsIgnoreCase("pdf"))
+                        fileFormat = FileFormat.PDF;
+                    else
+                        fileFormat = FileFormat.Unknown;
                 }
                 
                 if (utils.getFaxOptions().preferRenderedTIFF) {
@@ -71,11 +78,11 @@ public class SentYajJob extends YajJob {
                     String tiff = findRenderedTIFF(hyfc, fileName);
                     if (tiff != null) {
                         fileName = tiff;
-                        fileType = "tif";
+                        fileFormat = FileFormat.TIFF;
                     }
                 }
                 
-                availFiles.add(new HylaServerFile(fileName, fileType));
+                availFiles.add(new HylaServerFile(fileName, fileFormat));
             } catch (FileNotFoundException e) {
                 // do nothing
                 //System.err.println(e.toString());

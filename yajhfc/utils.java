@@ -39,7 +39,7 @@ public final class utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2006 by Jonas Wolz";
-    public static final String AppVersion = "0.3.0";
+    public static final String AppVersion = "0.3.1pre";
     public static final String AuthorEMail = "Jonas Wolz &lt;jwolz@freenet.de&gt;";
     public static final String HomepageURL = "http://www.yajhfc.de.vu/"; 
     
@@ -187,7 +187,9 @@ public final class utils {
     public static final int NEWFAX_BEEP = 1;
     public static final int NEWFAX_TOFRONT = 2;
     public static final int NEWFAX_VIEWER = 4;
+    public static final int NEWFAX_MARKASREAD = 8;
     
+    /*
     public static final FaxIntProperty[] newFaxActions = {
         new FaxIntProperty(_("No action"), NEWFAX_NOACTION),
         new FaxIntProperty(_("Beep"), NEWFAX_BEEP),
@@ -196,6 +198,7 @@ public final class utils {
         new FaxIntProperty(_("Open in viewer"), NEWFAX_VIEWER),
         new FaxIntProperty(_("Beep & open in viewer"), NEWFAX_VIEWER | NEWFAX_BEEP)
     };
+    */
     
     // Update this when new translations are added!
     public static final YajLanguage[] AvailableLocales = {

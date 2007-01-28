@@ -31,13 +31,13 @@ import yajhfc.FormattedFile.FileFormat;
 
 public class HylaServerFile {
     protected String path;
-    protected String type;
+    protected FileFormat type;
     
     public String getPath() {
         return path;
     }
     
-    public String getType() {
+    public FileFormat getType() {
         return type;
     }
     
@@ -50,25 +50,29 @@ public class HylaServerFile {
         out.close();
     }
     
+    public String getDefaultExtension() {
+        if (type == FileFormat.Unknown) {
+            int pos = path.lastIndexOf('.');
+            if (pos < 0)
+                return "tmp";
+            else
+                return path.substring(pos+1);
+        } else
+            return type.getDefaultExtension();
+    }
+    
     public void view(HylaFAXClient hyfc, FaxOptions opts)
         throws IOException, FileNotFoundException, ServerResponseException, UnknownFormatException {
         
-        File tmptif = File.createTempFile("fax", "." + type);
-        FileFormat format;
+        File tmptif = File.createTempFile("fax", "." + getDefaultExtension());
         tmptif.deleteOnExit();
         
         download(hyfc, tmptif);        
         
-        if (type.equalsIgnoreCase("tif") || type.equalsIgnoreCase("tiff")) 
-            format = FileFormat.TIFF;
-        else if (type.equalsIgnoreCase("ps"))
-            format = FileFormat.PostScript;
-        else if(type.equalsIgnoreCase("pdf"))
-            format = FileFormat.PDF;
-        else
-            throw new UnknownFormatException(MessageFormat.format(utils._("File format {0} not supported."), type));
-        
-        FormattedFile.viewFile(tmptif.getPath(), format);
+        if (type == FileFormat.Unknown) { // Try to autodetect
+            type = FormattedFile.detectFileFormat(tmptif.getPath());
+        }
+        FormattedFile.viewFile(tmptif.getPath(), type);
     }
     
     @Override
@@ -76,7 +80,7 @@ public class HylaServerFile {
         return path;
     }
     
-    public HylaServerFile(String path, String type) {
+    public HylaServerFile(String path, FileFormat type) {
         this.path = path;
         this.type = type;
     }

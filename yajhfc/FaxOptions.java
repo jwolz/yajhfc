@@ -70,7 +70,8 @@ public class FaxOptions {
     public String CustomCover;
     public boolean useCover, useCustomCover;
     
-    public FaxIntProperty newFaxAction = utils.newFaxActions[3];
+    //public FaxIntProperty newFaxAction = utils.newFaxActions[3];
+    public int newFaxAction = utils.NEWFAX_BEEP | utils.NEWFAX_TOFRONT;
     public boolean pclBug = false;
     public boolean askPassword = false, askAdminPassword = true;
     public String AdminPassword = "";
@@ -244,8 +245,8 @@ public class FaxOptions {
                         dataarray = utils.resolutions;
                     else if (fName.equals("paperSize"))
                         dataarray = utils.papersizes;
-                    else if (fName.equals("newFaxAction"))
-                        dataarray = utils.newFaxActions;
+                    /*else if (fName.equals("newFaxAction"))
+                        dataarray = utils.newFaxActions;*/
                     else if (fName.equals("locale"))
                         dataarray = utils.AvailableLocales;
                     else {
