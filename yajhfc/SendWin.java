@@ -833,7 +833,7 @@ public class SendWin extends JDialog  {
                         }
                         
                         j.setDialstring(numItem.faxNumber);
-                        j.setExternal(numItem.faxNumber); // needed to fix an error while sending multiple jobs
+                        j.setProperty("EXTERNAL", numItem.faxNumber); // needed to fix an error while sending multiple jobs
                         j.setMaximumTries(((Integer)SpinMaxTries.getValue()).intValue());
                         j.setNotifyType(((FaxStringProperty)ComboNotification.getSelectedItem()).type);
                         j.setPageDimension(((PaperSize)ComboPaperSize.getSelectedItem()).size);

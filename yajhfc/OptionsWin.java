@@ -55,6 +55,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -74,7 +76,7 @@ public class OptionsWin extends JDialog {
     private JTextField textNotifyAddress, textHost, textUser, /*textViewer,*/ textPort;
     private JPasswordField textPassword, textAdminPassword;
     private JComboBox comboTZone, comboNotify, comboPaperSize, comboResolution; //, comboNewFaxAction;
-    private JComboBox comboLang;
+    private JComboBox comboLang, comboLookAndFeel;
     private JCheckBox checkPasv, checkPCLBug, checkAskPassword, checkAskAdminPassword, checkUseCustomDefCover;
     private JSpinner spinMaxTry, spinMaxDial, spinOffset;
     //private JButton buttonBrowseViewer;
@@ -92,9 +94,11 @@ public class OptionsWin extends JDialog {
     
     private FaxOptions foEdit = null;
     private Vector<FmtItem> recvfmt, sentfmt, sendingfmt;
+    private Vector<LF_Entry> lookAndFeels;
     
     private boolean modalResult;
-    private static double border = 5;
+    private boolean changedLF;
+    private static final double border = 5;
     
     // true if OK, false otherwise
     public boolean getModalResult() {
@@ -132,6 +136,16 @@ public class OptionsWin extends JDialog {
         //comboNewFaxAction.setSelectedItem(foEdit.newFaxAction);
         comboLang.setSelectedItem(foEdit.locale);
         
+        int lfPos = 0; 
+        for (int i=0; i<lookAndFeels.size(); i++) {
+            if (lookAndFeels.get(i).className.equals(foEdit.lookAndFeel)) {
+                lfPos = i;
+                break;
+            }
+        }
+        comboLookAndFeel.setSelectedIndex(lfPos);
+        //changedLF = false;
+        
         checkPasv.setSelected(foEdit.pasv);
         checkPCLBug.setSelected(foEdit.pclBug);
         checkAskPassword.setSelected(foEdit.askPassword);
@@ -162,6 +176,10 @@ public class OptionsWin extends JDialog {
             @Override
             public void windowClosed(WindowEvent e) {
                foEdit.optWinPos = getLocation();
+               
+               if (changedLF && !modalResult) {
+                   utils.setLookAndFeel(foEdit.lookAndFeel);
+               }
             }
         });
         
@@ -332,7 +350,7 @@ public class OptionsWin extends JDialog {
         if (panelMisc == null) {
             double[][] tablelay = {
                     {border, TableLayout.FILL, border},
-                    new double[4]
+                    new double[6]
             };
             double rowh = 1 / (double)(tablelay[1].length - 1);
             //tablelay[1][0] = border;
@@ -346,9 +364,26 @@ public class OptionsWin extends JDialog {
             //comboNewFaxAction = new JComboBox(utils.newFaxActions);
             
             comboLang = new JComboBox(utils.AvailableLocales);
-
+            
+            lookAndFeels = LF_Entry.getLookAndFeelList();
+            comboLookAndFeel = new JComboBox(lookAndFeels);
+            
+            
+            comboLookAndFeel.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    LF_Entry sel = (LF_Entry)comboLookAndFeel.getSelectedItem();
+                    if (changedLF || sel.className != foEdit.lookAndFeel) {
+                        utils.setLookAndFeel(sel.className);
                         
+                        SwingUtilities.updateComponentTreeUI(OptionsWin.this);
+                        changedLF = true;
+                    }
+                }
+            });
+            
+
             addWithLabel(panelMisc, comboLang, _("Language:"), "1, 1, 1, 1, f, c");
+            addWithLabel(panelMisc, comboLookAndFeel, _("Look and Feel:"), "1, 3, 1, 3, f, c");
             //addWithLabel(panelMisc, comboNewFaxAction, "<html>" + _("When a new fax is received:") + "</html>", "1, 3, 1, 3, f, c");
 
         }
@@ -598,6 +633,61 @@ public class OptionsWin extends JDialog {
         }
     }
     
+    static class LF_Entry {
+        public String name;
+        public String className;
+        
+        public LF_Entry(String name, String className) {
+            this.name = name;
+            this.className = className;
+        }
+        
+        public LF_Entry(UIManager.LookAndFeelInfo lfi) {
+            this(lfi.getName(), lfi.getClassName());
+        }
+        
+        public String toString() {
+            return name;
+        }
+        
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this)
+                return true;
+            if (obj instanceof LF_Entry) {
+                return ((LF_Entry)obj).className.equals(className);
+            } else if (obj instanceof String) {
+                return obj.equals(className);
+            }
+            return false;
+        }
+        
+        public static Vector<LF_Entry> getLookAndFeelList() {
+            UIManager.LookAndFeelInfo[] lfiList = UIManager.getInstalledLookAndFeels();
+            Vector<LF_Entry> entries = new Vector<LF_Entry>(lfiList.length + 2);
+            entries.add(new LF_Entry(utils._("(System native)"), FaxOptions.LOOKANDFEEL_SYSTEM));
+            entries.add(new LF_Entry(utils._("(Crossplatform)"), FaxOptions.LOOKANDFEEL_CROSSPLATFORM));
+            for (UIManager.LookAndFeelInfo lfi : lfiList) {
+                entries.add(new LF_Entry(lfi));
+            }
+            return entries;
+        }
+    }
+    
+   
+    // Does not work correctly :-(
+    /*
+     * Refreshes the Look&Feel for the complete application
+     */
+    private static void refreshLF() {
+        Frame[] frames = Frame.getFrames();
+        for (Frame f: frames) {
+            //refreshLF(f);
+            SwingUtilities.updateComponentTreeUI(f);
+        }
+    }
+
+    
     class ButtonOKActionListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             
@@ -631,6 +721,16 @@ public class OptionsWin extends JDialog {
                 foEdit.resolution = (FaxIntProperty)comboResolution.getSelectedItem();
                 foEdit.tzone = (FaxStringProperty)comboTZone.getSelectedItem();
                 //foEdit.newFaxAction = (FaxIntProperty)comboNewFaxAction.getSelectedItem();
+                
+                
+                String newLF = ((LF_Entry)comboLookAndFeel.getSelectedItem()).className;
+                if (!newLF.equals(foEdit.lookAndFeel)) {
+                    foEdit.lookAndFeel = newLF;
+                    //JOptionPane.showMessageDialog(OptionsWin.this, _("You must restart the program for a change of the look&feel to take effect."), _("Options"), JOptionPane.INFORMATION_MESSAGE);
+                    
+                    utils.setLookAndFeel(newLF);
+                    refreshLF();
+                }
                 
                 YajLanguage newLang = (YajLanguage)comboLang.getSelectedItem();
                 if (!newLang.equals(foEdit.locale)) {

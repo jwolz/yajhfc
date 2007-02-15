@@ -1,4 +1,4 @@
-README for YajHFC 0.3.0
+README for YajHFC 0.3.1
 ========================
 
 ABOUT
@@ -28,9 +28,9 @@ Requirements:
 * Some program to view TIFF files (also see FAQ.txt for this)
 * Optional: A PostScript viewer (e.g. Ghostview)
 
-To install YajHFC just download the yajhfc-0_3_0.jar file to some folder on your
+To install YajHFC just download the yajhfc-0_3_1.jar file to some folder on your
 file system.
-To execute it, use: "java -jar yajhfc-0_3_0.jar"
+To execute it, use: "java -jar yajhfc-0_3_1.jar"
 (In Windows you usually can just double click the jar file as well.)
 
 LICENSE
@@ -60,6 +60,13 @@ YajHFC was originally written as a first more complicated
 
 CHANGES
 -------
+0.3.1:
+- Changeable Look&Feel
+- Option to show new faxes in a viewer automatically
+- UI option to change polling intervals of the HylaFAX server added
+- A simple search dialog for the phone book has been added
+- YajHFC should now also run with the "stock" version of the gnu.hylafax library (not very well tested!)
+
 0.3.0:
 - Added support to convert pictures to PostScript before submitting a fax job
 - Added a "preview" button to the Send dialog

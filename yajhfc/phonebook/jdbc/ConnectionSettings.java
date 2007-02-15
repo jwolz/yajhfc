@@ -26,7 +26,7 @@ import yajhfc.utils;
 public class ConnectionSettings {
 
     public String driver = "";
-    public String dbURL = "";
+    public String dbURL = "jdbc:";
     public String user = "";
     public String pwd = "";
     public boolean askForPWD = false;
