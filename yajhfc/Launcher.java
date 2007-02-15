@@ -194,18 +194,14 @@ public final class Launcher {
             }
         }
     }
-    
+        
     static class NewInstRunner implements Runnable {
         String fileName;
         boolean useStdin;
         boolean adminMode;
         
         public void run() {
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (Exception e) {
-                System.err.println("Couldn't load native look&feel.");
-            }
+            utils.setLookAndFeel(utils.getFaxOptions().lookAndFeel);
             
             application = new mainwin(adminMode);
             application.setVisible(true);

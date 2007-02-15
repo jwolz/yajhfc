@@ -88,6 +88,10 @@ public class FaxOptions {
     
     public boolean preferRenderedTIFF = false;
     
+    public String lookAndFeel = LOOKANDFEEL_SYSTEM;
+    public static final String LOOKANDFEEL_SYSTEM = "!system!";
+    public static final String LOOKANDFEEL_CROSSPLATFORM = "!crossplatform!"; 
+    
     public FaxOptions() {
         this.host = "";
         this.port = 4559;

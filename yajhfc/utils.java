@@ -34,6 +34,7 @@ import java.util.ResourceBundle;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
+import javax.swing.UIManager;
 
 public final class utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
@@ -379,6 +380,29 @@ public final class utils {
             //win.setLocation(0,0);
         else
             win.setLocationByPlatform(true);
+    }
+    
+    public static boolean setLookAndFeel(String className) {
+        try {
+            String lfClass;
+            if (className.equals(FaxOptions.LOOKANDFEEL_SYSTEM)) {
+                lfClass = UIManager.getSystemLookAndFeelClassName();
+            } else if (className.equals(FaxOptions.LOOKANDFEEL_CROSSPLATFORM)) {
+                lfClass = UIManager.getCrossPlatformLookAndFeelClassName();
+            } else {
+                lfClass = className;
+            }
+            UIManager.setLookAndFeel(lfClass);
+            return true;
+        } catch (Exception e) {
+            System.err.println("Couldn't load look&feel: " + className);
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (Exception e1) {
+                System.err.println("Couldn't load native look&feel.");
+            }
+            return false;
+        }
     }
     
     public static URL getLocalizedFile(String path) {

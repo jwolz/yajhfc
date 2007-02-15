@@ -144,7 +144,7 @@ public final class mainwin extends JFrame {
     private Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward, actAdminMode;
     private ActionEnabler actChecker;
     
-    private Color defStatusBackground = null;
+    //private Color defStatusBackground = null;
     
     private static String _(String key) {
         return utils._(key);
@@ -794,7 +794,7 @@ public final class mainwin extends JFrame {
             getSentTableModel().setData(null);
             getSendingTableModel().setData(null);
             
-            getTextStatus().setBackground(defStatusBackground);
+            getTextStatus().setBackground(getDefStatusBackground());
             getTextStatus().setText(_("Disconnected."));
             
             menuView.setEnabled(false);
@@ -884,6 +884,7 @@ public final class mainwin extends JFrame {
                 }
                 if (authOK) {
                     // A reddish gray
+                    Color defStatusBackground = getDefStatusBackground();
                     TextStatus.setBackground(new Color(Math.min(defStatusBackground.getRed() + 40, 255), defStatusBackground.getGreen(), defStatusBackground.getBlue()));
                     this.setTitle(myopts.user + "@" + myopts.host + " (admin) - " +utils.AppName);
                 } else
@@ -1060,6 +1061,14 @@ public final class mainwin extends JFrame {
         return TableRecv;
     }
 
+    private Color getDefStatusBackground() {
+        Color rv;
+        rv = UIManager.getColor("control");
+        if (rv == null)
+            rv = new Color(230, 230, 230);
+        return rv;
+    }
+    
     /**
      * This method initializes jTextPane	
      * 	
@@ -1081,10 +1090,8 @@ public final class mainwin extends JFrame {
                 }
             };
             TextStatus.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
-            defStatusBackground = UIManager.getColor("control");
-            if (defStatusBackground == null)
-                defStatusBackground = new Color(230, 230, 230);
-            TextStatus.setBackground(defStatusBackground);
+
+            TextStatus.setBackground(getDefStatusBackground());
             TextStatus.setFont(new java.awt.Font("DialogInput", java.awt.Font.PLAIN, 12));
             TextStatus.setEditable(false);
         }
