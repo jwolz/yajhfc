@@ -33,6 +33,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
+import yajhfc.ClipboardPopup;
 import yajhfc.FmtItem;
 import yajhfc.FmtItemRenderer;
 import yajhfc.YajJobFilter;
@@ -144,6 +145,7 @@ public class FilterPanel extends JPanel implements ActionListener {
         
         textValue = new JTextField(20);
         textValue.setEnabled(false);
+        textValue.addMouseListener(new ClipboardPopup());
         
         buttonDelete = new JButton(utils.loadIcon("general/Delete"));
         buttonDelete.setToolTipText(utils._("Remove this condition"));

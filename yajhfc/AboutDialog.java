@@ -27,6 +27,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Properties;
@@ -146,10 +147,18 @@ public class AboutDialog extends JDialog implements HyperlinkListener {
         text.addMouseListener(clpText);
 
         Properties sp = System.getProperties();
+        String[] keys = new String[sp.size()];
+        
         Enumeration e = sp.propertyNames();
+        int i = 0;
         while (e.hasMoreElements()) {
-            String sKey = (String)e.nextElement();
-            text.append(sKey + "=" + sp.getProperty(sKey) + "\n");
+            keys[i++] = (String)e.nextElement();
+        }
+        
+        Arrays.sort(keys);
+        
+        for (i = 0; i < keys.length; i++) {
+            text.append(keys[i] + "=" + sp.getProperty(keys[i]) + "\n");
         }
         text.setCaretPosition(0);
         
