@@ -384,6 +384,7 @@ public final class PhoneBookWin extends JDialog
             textDescriptor = new JTextField();
             textDescriptor.setEditable(false);
             textDescriptor.setBackground(UIManager.getColor("Label.backgroundColor"));
+            textDescriptor.addMouseListener(getDefClPop());
             
             buttonBrowse = new JButton(utils.loadIcon("general/Open"));
             buttonBrowse.setActionCommand("browse");

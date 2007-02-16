@@ -407,7 +407,7 @@ public class OptionsWin extends JDialog {
             
             checkNewFax_Beep = new JCheckBox(_("Beep"));
             checkNewFax_ToFront = new JCheckBox(_("Bring to front"));
-            checkNewFax_Open = new JCheckBox(_("Open in Viewer"));
+            checkNewFax_Open = new JCheckBox(_("Open in viewer"));
             checkNewFax_Open.addChangeListener(new ChangeListener() {
                public void stateChanged(ChangeEvent e) {
                    checkNewFax_MarkAsRead.setEnabled(checkNewFax_Open.isSelected());

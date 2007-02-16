@@ -42,6 +42,7 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
+import yajhfc.ClipboardPopup;
 import yajhfc.utils;
 import yajhfc.filters.StringFilterOperator;
 
@@ -99,6 +100,7 @@ public final class SearchWin extends JDialog implements ActionListener {
             comboOp = new JComboBox(StringFilterOperator.values());
             
             textCondition = new JTextField(30);
+            textCondition.addMouseListener(new ClipboardPopup());
             
             buttonSearch = new JButton(utils._("Search"), utils.loadIcon("general/Search"));
             buttonSearch.setActionCommand("search");

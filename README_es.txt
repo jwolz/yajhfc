@@ -1,4 +1,4 @@
-﻿LÉEME (README) de YajHFC 0.3.0 
+﻿LÉEME (README) de YajHFC 0.3.1 
 ======================
 
 ACERCA DE
@@ -59,6 +59,13 @@ de Java (más avanzado que los programas "Hola mundo") utilizando la IDE Eclipse
 
 CAMBIOS
 -------
+
+0.3.1:
+- Interfaz intercambiable
+- Opción para mostrar los nuevos faxes en el visor de forma automática
+- Opción para cambiar el intervalo de verificación de faxes del servidor HylaFAX
+- Cuadro de diálogo sencillo para buscar en la agenda de teléfonos
+- YajHFC debería ejecutarse ahora con la versión incluida de la librería gnu.hylafax (¡no se ha verificado del todo!)
 
 0.3.0:
 - Se añade soporte para convertir las imágenes a PostScript antes de enviar el fax
