@@ -32,10 +32,10 @@ package yajhfc;
 
 import java.io.*;
 import java.net.*;
+import java.util.concurrent.TimeoutException;
 
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 public final class Launcher {
 
@@ -46,6 +46,12 @@ public final class Launcher {
     
     final static int codeSubmitStream = 1;
     final static int codeSubmitFile = 2;
+    final static int codeToForeground = 3;
+    
+    final static int responseOK = 0;
+    final static int responseNotConnected = 10;
+    final static int responseGeneralError = 1;
+    final static int responseUnknownOpCode = 255;
     
     private static InetAddress getLocalhost() 
         throws UnknownHostException {
@@ -53,9 +59,12 @@ public final class Launcher {
             return InetAddress.getByAddress(addr);
     }
     
+    private static File getLockFile() {
+        return new File(utils.getConfigDir() + "lock");
+    }
     
     private static Socket checkLock() {
-        File lock = new File(utils.getConfigDir() + "lock");
+        File lock = getLockFile();
         if (lock.exists()) {
             try {
                 BufferedReader filin = new BufferedReader(new FileReader(lock));
@@ -69,15 +78,15 @@ public final class Launcher {
                // do nothing
             }
         } 
-            
-        createLock(lock);
+
         return null;
     }
     
-    private static void createLock(File lock) {
+    private static void createLock() {
         final int portStart = 64007;
         final int portEnd = 65269;
         int port;
+        File lock = getLockFile();
         
         try {
             for (port = portStart; port <= portEnd; port++) {
@@ -118,11 +127,14 @@ public final class Launcher {
             "General usage:\n"+
             "java -jar yajhfc.jar [--help] [--debug] [--admin] [--stdin | filename]\n"+
             "Argument description:\n"+
-            "filename    The file name of a PostScript file to send.\n"+
-            "--stdin     Read the file to send from standard input"+
-            "--admin     Start up in admin mode"+
-            "--debug     Output some debugging information"+
-            "--help      Displays this text"
+            "filename     The file name of a PostScript file to send.\n"+
+            "--stdin      Read the file to send from standard input\n"+
+            "--admin      Start up in admin mode\n"+
+            "--debug      Output some debugging information\n"+
+            "--background If there is no already running instance, launch a new instance \n" +
+            "             and terminate (after submitting the file to send)\n" +
+            "--noclose    Do not close YajHFC after submitting the fax\n"+
+            "--help       Displays this text\n"
             );   
     }
     
@@ -135,6 +147,8 @@ public final class Launcher {
         String fileName = "";
         boolean useStdin = false;
         boolean adminMode = false;
+        boolean forkNewInst = false;
+        boolean closeAfterSubmit = true;
         utils.debugMode = false;
         
         for (int i = 0; i < args.length; i++) {
@@ -148,6 +162,10 @@ public final class Launcher {
                     adminMode = true;
                 else if (args[i].equals("--debug"))
                     utils.debugMode = true;
+                else if (args[i].equals("--background"))
+                    forkNewInst = true;
+                else if (args[i].equals("--noclose")) 
+                    closeAfterSubmit = false;
                 else
                     System.err.println(utils._("Unknown command line argument: ") + args[i]);
             } else if (args[i].startsWith("-"))
@@ -158,14 +176,83 @@ public final class Launcher {
         
         Socket oldinst = checkLock();
         
+        if (forkNewInst && (oldinst == null)) {
+            try {
+                int argcount = 4;
+                if (adminMode)
+                    argcount++;
+                if (utils.debugMode)
+                    argcount++;
+                if (!closeAfterSubmit)
+                    argcount++;
+                
+                String[] launchArgs = new String[argcount];
+                launchArgs[0] = System.getProperty("java.home") + File.separatorChar + "bin" + File.separatorChar + "java";
+                launchArgs[1] = "-classpath";
+                launchArgs[2] = System.getProperty("java.class.path");
+                launchArgs[3] = Launcher.class.getCanonicalName();
+                
+                int argidx = 4;
+                if (adminMode) {
+                    launchArgs[argidx] = "--admin";
+                    argidx++;
+                }
+                if (utils.debugMode) {
+                    launchArgs[argidx] = "--debug";
+                    argidx++;
+                }
+                if (!closeAfterSubmit) {
+                    launchArgs[argidx] = "--noclose";
+                    argidx++;
+                }
+                
+                if (utils.debugMode) {
+                    System.out.println("Launching new instance:");
+                    for (int i = 0; i < launchArgs.length; i++) {
+                        System.out.println("launchArgs[" + i + "] = " + launchArgs[i]);
+                    }
+                }
+                Runtime.getRuntime().exec(launchArgs);
+                
+                int time = 0;
+                if (utils.debugMode) {
+                    System.out.print("Waiting for new instance... ");
+                }
+                
+                do {
+                    Thread.sleep(200);
+                    time += 200;
+                    if (time > 20000) {
+                        throw new TimeoutException(utils._("The new instance did not start after 20 seconds."));
+                    }
+                    
+                    oldinst = checkLock();
+                } while (oldinst == null);
+                
+                if (utils.debugMode) {
+                    System.out.println("New instance has been started.");
+                }
+            } catch (Exception e) {
+                if (utils.debugMode) {
+                    System.out.println("Exception launching new instance:");
+                    e.printStackTrace(System.out);
+                }
+                JOptionPane.showMessageDialog(null, utils._("Cannot launch new program instance, continuing with the existing one!\nReason: ") + e.toString() );
+            }
+        }
+        
         if (oldinst == null) {
-            SwingUtilities.invokeLater(new NewInstRunner(fileName, useStdin, adminMode));
+            createLock();
+            SwingUtilities.invokeLater(new NewInstRunner(fileName, useStdin, adminMode, closeAfterSubmit));
             blockThread = new SockBlockAcceptor();
             blockThread.start();
         } else {            
             try {
+                OutputStream outStream = oldinst.getOutputStream();
+                InputStream inStream = oldinst.getInputStream();
+                
                 if (useStdin) { 
-                    BufferedOutputStream bufOut = new BufferedOutputStream(oldinst.getOutputStream());
+                    BufferedOutputStream bufOut = new BufferedOutputStream(outStream);
                     BufferedInputStream bufIn = new BufferedInputStream(System.in);
                     bufOut.write(codeSubmitStream);
                     byte[] buf = new byte[16000];
@@ -176,29 +263,46 @@ public final class Launcher {
                             bufOut.write(buf, 0, bytesRead);
                     } while (bytesRead >= 0);
                     bufIn.close();
-                    bufOut.close();                
+                    bufOut.flush();              
                 } else if ( fileName.length() > 0) {
-                    OutputStream outStream = oldinst.getOutputStream();
                     outStream.write(codeSubmitFile);
                     BufferedWriter bufOut = new BufferedWriter(new OutputStreamWriter(outStream));
                     File f = new File(fileName);
                     bufOut.write(f.getAbsolutePath() + "\n");
-                    bufOut.close();
+                    bufOut.flush();
+                } else if (forkNewInst) {
+                    outStream.write(codeToForeground);
                 } else {
+                    outStream.write(codeToForeground);
+                    
                     System.err.println(utils._("There already is a running instance!"));
-                    System.exit(1);
-                }       
-                oldinst.close();
+                }
+                outStream.flush();
+                oldinst.shutdownOutput();
+                
+                int response = inStream.read();
+                
+                if (!oldinst.isClosed()) {
+                    oldinst.close();
+                }
+                
+                if (response >= 0)
+                    System.exit(response);
+                else
+                    System.exit(responseGeneralError);
             } catch (IOException e) {
-                System.err.println("An error occured communicating with the old instance: " + e.getMessage());
+                System.err.println("An error occured communicating with the old instance: ");
+                e.printStackTrace();
+                System.exit(responseGeneralError);
             }
         }
     }
         
     static class NewInstRunner implements Runnable {
-        String fileName;
-        boolean useStdin;
-        boolean adminMode;
+        private String fileName;
+        private boolean useStdin;
+        private boolean adminMode;
+        private boolean closeAfterSubmit;
         
         public void run() {
             utils.setLookAndFeel(utils.getFaxOptions().lookAndFeel);
@@ -215,52 +319,96 @@ public final class Launcher {
                 else
                     sw.addLocalFile(fileName);
                 sw.setVisible(true);
-                application.dispose();
+                if (closeAfterSubmit)
+                    application.dispose();
             }
         }   
         
-        public NewInstRunner(String fileName, boolean useStdin, boolean adminMode) {
+        public NewInstRunner(String fileName, boolean useStdin, boolean adminMode, boolean closeAfterSubmit) {
             super();
             this.fileName = fileName;
             this.useStdin = useStdin;
             this.adminMode = adminMode;
+            this.closeAfterSubmit = closeAfterSubmit;
         }
     }
     
     static class SockBlockAcceptor extends Thread {
+        private int waitSubmitOK() throws InterruptedException  {
+            while (true) {
+                if (application != null) {
+                    switch (application.getSendReadyState()) {
+                    case Ready:
+                        return responseOK;
+                    case NotReady:
+                        return responseNotConnected;
+                    case NeedToWait:
+                        //NOP
+                    }
+                }
+                Thread.sleep(100);
+            }
+        }
+        
         @Override
         public void run() {
             while (isLocking) {
+                Socket srv = null;
+                InputStream strIn = null;
+                OutputStream strOut = null;
                 try {
-                    Socket srv = sockBlock.accept();
-                    InputStream strIn = srv.getInputStream();
+                    srv = sockBlock.accept();
+                    strIn = srv.getInputStream();
+                    strOut = srv.getOutputStream();
+
                     switch (strIn.read()) {
                     case codeSubmitStream:
-                        SwingUtilities.invokeAndWait(new SubmitRunner(strIn)); // Accept new faxes only sequentially
-                        srv.close();
+                        int ok = waitSubmitOK();
+                        if (ok == responseOK) {
+                            SwingUtilities.invokeAndWait(new SubmitRunner(strIn)); // Accept new faxes only sequentially
+                        }
+                        strOut.write(ok);
                         break;
                     case codeSubmitFile:
-                        BufferedReader bufR = new BufferedReader(new InputStreamReader(strIn));
-                        String fileName = bufR.readLine();
-                        SwingUtilities.invokeAndWait(new SubmitRunner(fileName)); // Accept new faxes only sequentially
-                        bufR.close();
-                        strIn.close();
-                        srv.close();
+                        ok = waitSubmitOK();
+                        if (ok == responseOK) {
+                            BufferedReader bufR = new BufferedReader(new InputStreamReader(strIn));
+                            String fileName = bufR.readLine();
+                            SwingUtilities.invokeAndWait(new SubmitRunner(fileName)); // Accept new faxes only sequentially
+                            //bufR.close();
+                        }
+                        strOut.write(ok);
                         break;
+                    case codeToForeground:
                     case -1: // Connection closed without sending any data
                         SwingUtilities.invokeLater(new Runnable() {
                             public void run() {
                                 application.toFront();
                             };
                         });
+                        if (!srv.isClosed()) {
+                            strOut.write(responseOK);
+                        }
                         break;
                     default:
                         System.err.println("Unknown code received.");
-                        strIn.close();
-                        srv.close();
+                        strOut.write(responseUnknownOpCode);
                     }
+                    
+                    strOut.flush();
                 } catch (Exception e) {
                     //System.err.println("Error listening for connections: "  + e.getMessage());
+                } finally {
+                    try {
+                        if (srv != null && !srv.isClosed()) {                        
+                            srv.close();
+                        }
+                        srv = null;
+                        strIn = null;
+                        strOut = null;
+                    } catch(Exception e) {
+                        // NOP
+                    }
                 }
             }
         }
@@ -275,7 +423,7 @@ public final class Launcher {
         String fileName = null;
         
         public void run() {
-            try {
+            //try {
                 application.toFront();
                 
                 SendWin sw = new SendWin(application.hyfc, application);
@@ -286,11 +434,11 @@ public final class Launcher {
                     sw.addLocalFile(fileName);
                 
                 sw.setVisible(true);
-                if (strIn != null)
+                /*if (strIn != null)
                     strIn.close();
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+            }*/
         }
         
         public SubmitRunner(String fileName) {

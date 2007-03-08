@@ -65,10 +65,12 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
@@ -126,8 +128,7 @@ public final class mainwin extends JFrame {
     
     HylaFAXClient hyfc = null;
     private FaxOptions myopts = null;
-    
-    //private javax.swing.Timer tmrStat;    
+      
     private java.util.Timer utmrTable;
     private TableRefresher tableRefresher = null;
     private StatusRefresher statRefresher = null;
@@ -142,9 +143,14 @@ public final class mainwin extends JFrame {
     
     // Actions:
     private Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward, actAdminMode;
+    private Action actRefresh;
     private ActionEnabler actChecker;
     
-    //private Color defStatusBackground = null;
+    
+    public enum SendReadyState {
+        Ready, NeedToWait, NotReady;
+    }
+    private SendReadyState sendReady = SendReadyState.NeedToWait;
     
     private static String _(String key) {
         return utils._(key);
@@ -185,7 +191,7 @@ public final class mainwin extends JFrame {
         }
         @Override
         protected void done() {
-            reloadTables();
+            refreshTables();
         }
         
         public DeleteWorker(TooltipJTable selTable) {
@@ -319,11 +325,17 @@ public final class mainwin extends JFrame {
     private void createActions(boolean adminState) {
         actOptions = new AbstractAction() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
+                SendReadyState oldState = sendReady;
+                sendReady = SendReadyState.NeedToWait;
+                
                 OptionsWin ow = new OptionsWin(myopts, mainwin.this);
                 ow.setModal(true);
                 ow.setVisible(true);
                 if (ow.getModalResult()) 
                     reconnectToServer();
+                else
+                    sendReady = oldState;
+                    
             }
         };
         actOptions.putValue(Action.NAME, _("Options") + "...");
@@ -335,7 +347,7 @@ public final class mainwin extends JFrame {
                 SendWin sw = new SendWin(hyfc, mainwin.this);
                 sw.setModal(true);
                 sw.setVisible(true);
-                reloadTables();
+                refreshTables();
             }
         };
         actSend.putValue(Action.NAME, _("Send") + "...");
@@ -534,7 +546,7 @@ public final class mainwin extends JFrame {
                 sw.setModal(true);
                 sw.addServerFile(filename);
                 sw.setVisible(true);
-                reloadTables();
+                refreshTables();
             }
         };
         actForward.putValue(Action.NAME, _("Forward fax..."));
@@ -559,6 +571,17 @@ public final class mainwin extends JFrame {
         actAdminMode.putValue(Action.SHORT_DESCRIPTION, _("Connect to the server in admin mode (e.g. to delete faxes)"));
         actAdminMode.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, adminState);
         
+        actRefresh = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                refreshStatus();
+                refreshTables();
+            };
+        };
+        actRefresh.putValue(Action.NAME, _("Refresh"));
+        actRefresh.putValue(Action.SHORT_DESCRIPTION, _("Refresh tables and server status"));
+        actRefresh.putValue(Action.SMALL_ICON, utils.loadIcon("general/Refresh"));
+        actRefresh.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
+        
         actChecker = new ActionEnabler();
     }
     
@@ -574,8 +597,16 @@ public final class mainwin extends JFrame {
         return tblPopup;
     }
     
-    void reloadTables() {
+    public void refreshTables() {
         tableRefresher.run();
+    }
+    
+    public void refreshStatus() {
+        statRefresher.run();
+    }
+    
+    public SendReadyState getSendReadyState() {
+        return sendReady;
     }
     
     private MouseListener getTblMouseListener() {
@@ -661,6 +692,8 @@ public final class mainwin extends JFrame {
             toolbar.add(actShow);
             toolbar.add(actDelete);
             toolbar.addSeparator();
+            toolbar.add(actRefresh);
+            toolbar.addSeparator();
             toolbar.add(actPhonebook);
         }
         return toolbar;
@@ -693,6 +726,8 @@ public final class mainwin extends JFrame {
             menuView.add(menuViewAll);
             menuView.add(menuViewOwn);
             menuView.add(menuViewCustom);
+            menuView.add(new JSeparator());
+            menuView.add(new JMenuItem(actRefresh));
             
             getTabMain().addChangeListener(menuViewListener);
         }
@@ -724,6 +759,8 @@ public final class mainwin extends JFrame {
             private boolean saved = false;
             
             public void windowClosing(java.awt.event.WindowEvent e) {
+                sendReady = SendReadyState.NotReady;
+                
                 doLogout();
                 menuViewListener.saveToOptions();
                 myopts.mainWinBounds = getBounds();
@@ -760,7 +797,7 @@ public final class mainwin extends JFrame {
     private void MyInit() { 
         myopts = utils.getFaxOptions();
         
-        utmrTable = new java.util.Timer("RefreshTimer");
+        utmrTable = new java.util.Timer("RefreshTimer", true);
         reloadTableColumnSettings();
         menuViewListener.loadFromOptions();
     }
@@ -825,6 +862,8 @@ public final class mainwin extends JFrame {
     }
     
     public void reconnectToServer() {
+        sendReady = SendReadyState.NeedToWait;
+        
         doLogout();
         
         if (myopts.host.length() == 0) { // Prompt for server if not set
@@ -921,11 +960,14 @@ public final class mainwin extends JFrame {
                 }
             });
             utmrTable.schedule(tableRefresher, 0, myopts.tableUpdateInterval);
+            
+            sendReady = SendReadyState.Ready;
         } catch (Exception e) {
             //JOptionPane.showMessageDialog(this, _("An error occured connecting to the server:") + "\n" + e.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
             hyfc = null;
             ExceptionDialog.showExceptionDialog(this, _("An error occured connecting to the server:"), e);
             //actOptions.actionPerformed(null);
+            sendReady = SendReadyState.NotReady;
         }
         
     }

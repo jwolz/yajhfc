@@ -1,0 +1,160 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[latin1]{inputenc}
+\usepackage{url}
+\usepackage[left=3cm,right=3cm,top=2cm,bottom=2cm,nohead]{geometry}
+\usepackage{ngerman}
+
+%opening
+\title{YajHFC FAQ}
+\author{}
+\date{}
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\section{Installation}
+\subsection{Woher bekomme ich einen Faxviewer für Windows?}
+
+Im Allgemeinen können Sie irgendein beliebiges Programm benutzen, das TIFF-Dateien anzeigen kann.
+Allerdings zeigen manche dieser Programme Faxe mit niedriger Auflösung gestaucht mit der falschen
+(halben) Höhe an.
+
+Glücklicherweise wird mit allen aktuellen Windowsversionen ein Programm mitgeliefert, das Faxe
+korrekt anzeigen kann.
+
+\begin{description}
+\item[Windows 95/98/ME/2000:]
+Sie können das unter Zubehör/Imaging zu findende Programm verwenden.
+Um dieses in YajHFC zu verwenden, klicken sie auf die Durchsuchen-Schaltfläche des
+\texttt{Befehlszeile für Faxviewer}-Eingabefelds, um \texttt{kodakimg.exe} auf ihrer Festplatte 
+zu suchen und auszuwählen.\\
+Diese Datei ist normalerweise entweder im Windows-Verzeichnis (Win 98/ME) \emph{oder} \\
+in \verb.Programme\Windows NT\Zubehör\ImageVue. (Win 2000) zu finden.
+       
+\item[Windows XP:]
+Sie können die integrierte "`Windows Bild- und Faxanzeige"' benutzen.
+Um diese mit YajHFC zu benutzen, geben Sie bitte den folgenden Text in das \texttt{Befehlszeile für Faxviewer}-Eingabefeld ein:\\
+\verb#rundll32.exe shimgvw.dll,ImageView_Fullscreen %s#
+ \end{description}
+
+      
+\subsection{Woher bekomme ich einen Faxviewer für Linux/*BSD/... ?}
+\texttt{kfax} funktioniert bei mir sehr gut, aber wie bei Windows können Sie auch
+hier ein beliebiges Programm verwenden, das TIFF-Dateien anzeigen kann; durchsuchen
+Sie am besten einfach die Paketdatenbank Ihrer Distribution.
+(xloadimage funktioniert (zumindest bei mir) jedoch \emph{nicht}).
+
+
+\subsection{Was sollte ich unter MacOS X als Faxviewer benutzen?}
+Geben Sie einfach \verb.open %s. in das \texttt{Befehlszeile für Faxviewer}-Eingabefeld ein.
+Die Faxe sollten nun mit der eingestellten Standardanwendung geöffnet werden.
+Danke an Scott Harris für diese Info.
+
+
+\subsection{Woher bekomme ich einen PostScript-Viewer?}
+\begin{description}
+\item[Windows:] Verwenden Sie am besten Ghostview von \url{http://www.cs.wisc.edu/~ghost/}
+\item[Linux/*BSD/...:] Installieren Sie am besten irgendeines der PostScript-Viewer-Pakete
+                (z.B. \texttt{gv, kghostview, gnome-gv, ...})
+\end{description}
+		
+\section{Benutzung des Programms}	
+
+\subsection{Wie kann ich Deckblattvorlagen bearbeiten?}
+Die Vorlagen müssen in dem gleichen speziellen PostScript-Format vorliegen,
+wie es auch von dem HylaFAX-\texttt{faxcover}-Programm verwendet wird.
+Schauen Sie bitte auf den folgenden Seiten nach, um Hinweise zu erhalten, wie 
+man solche Dateien anlegen bzw. bearbeiten kann (auf Englisch):\\
+\url{http://www.hylafax.org/HylaFAQ/Q202.html}\\
+\url{http://www.hylafax.org/howto/tweaking.html}\\
+
+\subsection{Ich möchte ein Telefonbuch über JDBC ansprechen, aber YajHFC kann den Treiber nicht finden, obwohl 
+ich einen korrekten "`class path"' angegeben habe.}
+
+Wenn das \texttt{-jar} Befehlszeilenargument angegeben wird, ignoriert Java einen angegebenen benutzerdefinierten
+class path.
+Starten Sie YajHFC in diesem Fall daher mit den folgenden Befehlen (\texttt{/pfad/zum/db-treiber.jar} und \texttt{/pfad/zu/yajhfc.jar} sind selbstverständlich durch die entsprechenden Dateinamen (mit Pfad) zu ersetzen ):
+\begin{description}
+\item [Linux/Unix:] \verb#java -classpath /pfad/zum/db-treiber.jar:/pfad/zu/yajhfc.jar yajhfc.Launcher#
+\item [Windows:] \verb#java -classpath c:\pfad\zum\db-treiber.jar;c:\pfad\zu\yajhfc.jar yajhfc.Launcher#
+\end{description}
+
+
+\subsection{Warum ist der Menüeintrag \texttt{Ansicht->Nur eigene Faxe} ausgegraut?}
+
+Momentan kann YajHFC nur auf sichtbaren Tabellenspalten filtern. Deshalb müssen Sie die Spalte "`Besitzer"' zu 
+einer Tabelle hinzufügen, wenn Sie dort auf den Besitzer filtern möchten.
+
+\subsection{Was kann beim \texttt{passt auf}-Operator im "`Benutzerdef. Filter"'-Dialog als Wert eingegeben werden?}
+
+Reguläre Ausdrücke (regular expressions). Eine Kurzreferenz (auf Englisch) über die verwandte Syntax 
+kann auf folgender Seite gefunden werden: 
+\url{http://java.sun.com/j2se/1.5.0/docs/api/java/util/regex/Pattern.html}
+
+Bitte beachten Sie, dass Reguläre Ausdrücke etwas anderes sind als Wildcards: 
+Beispielsweise müssen Sie, um den Effekt des \verb.*.-Wildcards zu erreichen, \verb#.*# eingeben und 
+für den Effekt des \verb#?#-Wildcards \verb#.#.
+
+\subsection{Welche Kommandozeilenargumente werden von YajHFC unterstützt?}
+
+\begin{verbatim}
+Allgemeine Syntax:
+java -jar yajhfc.jar [--help] [--debug] [--admin] [--stdin | Dateiname]
+Beschreibung der Argumente:
+Dateiname   Der Dateiname des zu sendenden Dokuments.
+--stdin     Das zu sendende Dokument von der Standardeingabe lesen.
+--admin     Im "Admin-Modus" starten.
+--debug     Debugging-Informationen ausgeben.
+--help      Zeigt diesen Text an.
+\end{verbatim}
+
+
+\subsection{Wenn ich Versandte Faxe anzeigen möchte, erhalte ich immer die Fehlermeldung 
+\texttt{Dateiformat PCL wird nicht unterstützt}, obwohl alle Dokumente im PostScript/PDF-Format sind.}
+
+Aktivieren Sie bitte das Kontrollfeld \texttt{PCL-Dateityp-Bugfix verwenden} im Optionen-Dialogfeld und
+versuchen Sie es nocheinmal.
+
+Einige HylaFAX-Versionen liefern inkorrekterweise den Dateityp "`PCL"' bei allen
+mit einem Faxauftrag verbundenen Dokumenten zurück.
+Wenn Sie dieses Kontrollfeld aktivieren, versucht YajHFC den Dateityp selbst herauszufinden,
+wenn als Typ PCL zurückgegeben wird (was üblicherweise recht gut funktioniert).
+
+\subsection{Was bedeutet die Tabellenspalte XYZ?}
+
+Höchstwahrscheinlich weiß ich das auch nicht so genau, da ich die
+Spaltenbeschreibungen einfach aus der \verb.faxstat(1).-man page (JobFmt/RcvFmt)
+herauskopiert und nach bestem Wissen ggf. abgekürzt und übersetzt habe.
+
+\section{Verschiedenes}
+
+\subsection{Warum werden Passwörter im Klartext gespeichert?}
+
+Kurz gesagt: Weil es keine Möglichkeit gibt, die wirklich besser wäre.
+
+YajHFC könnte die Passwörter natürlich irgendwie verschleiern/kodieren/"`verschlüsseln"',
+bevor sie gespeichert werden, aber wenn es das täte, könnte man immer in den Quellcode schauen,
+um herauszufinden, wie man diese wieder entschlüsselt (selbst wenn YajHFC Closed Source-Software wäre,
+könnte man es immer noch disassemblieren oder einfach etwas herumexperimentieren, um das
+herauszufinden).
+
+Die einzig wirklich sichere Methode würde es erfordern, beim Start von YajHFC immer ein "`Master-Passwort"'
+einzugeben, was meiner Meinung auch nicht einfacher/besser wäre, als jedesmal gleich das "`echte"' Passwort
+einzugeben.
+
+
+\subsection{Warum wurde dieser seltsame Name gewählt?}
+
+YajHFC war ursprünglich nur ein Testprojekt, um Java und die \texttt{gnu.hylafax}-Bibliothek besser
+kennenzulernen und hatte noch keinen "`schönen"' Namen.
+Als ich bisschen daran gearbeitet hatte, stellte ich fest, dass als Ergebnis in der Tat ein benutzbares
+Programm herausgekommen war, also beschloss ich dem Ganzen einen Namen zu geben.
+Da ich zur selben Zeit auch etwas mit SuSEs yast herumspielte und ich natürlich wusste, das schon sehr viele
+andere Java-HylaFAX-Clients gab und gibt, nannte ich das Programm einfach "`noch ein Java-HylaFAX-Client"'
+(\textbf{y}et \textbf{a}nother \textbf{J}ava \textbf{H}ylaFAX \textbf{c}lient).
+
+
+
+\end{document}

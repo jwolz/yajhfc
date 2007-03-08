@@ -442,8 +442,8 @@ public class OptionsWin extends JDialog {
             checkPCLBug = new JCheckBox("<html>" + _("Use PCL file type bugfix") + "</html>");
             spinOffset = SpinnerDateOffsetEditor.createJSpinner();
             
-            spinStatusInterval = new JSpinner(new SpinnerNumberModel(1, 0.5, 600, 1));
-            spinTableInterval = new JSpinner(new SpinnerNumberModel(3, 0.5, 600, 1));
+            spinStatusInterval = new JSpinner(new SpinnerNumberModel(1, 0.5, 86400, 1));
+            spinTableInterval = new JSpinner(new SpinnerNumberModel(3, 0.5, 86400, 1));
             
             checkPreferTIFF = new JCheckBox("<html>" + _("Prefer rendered TIFF (experimental)") + "</html>");
             checkPreferTIFF.setToolTipText(_("Try to fetch the rendered TIFF from the HylaFAX server instead of the source file."));
