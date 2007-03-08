@@ -14,6 +14,12 @@ buildtex() {
 	fi
 
 	latex2html -no_subdir -split 0 -html_version 3.2,$FILEENC -no_navigation $1
+	
+	if grep -c '\usepackage{ngerman}' $1; then # Fix for German quotes
+		mv $PREFIX.html $PREFIX.html.orig
+		sed -e 's/"`/„/g' -e "s/\"'/“/g" $PREFIX.html.orig > $PREFIX.html
+	fi
+
 
 	cp $PREFIX.pdf $PREFIX.html $PREFIX.css ..	;
 }

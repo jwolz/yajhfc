@@ -1,0 +1,78 @@
+<project name="YajHFC" default="dist" basedir=".">
+    <description>
+        simple example build file
+    </description>
+  <!-- set global properties for this build -->
+  <property name="src" location="."/>
+  <property name="jar-extra" location="jar"/>
+  <property name="jar-output" location="${jar-extra}/yajhfc.jar"/>
+  <property name="gnu.hylafax-dir" location="../gnu-hylafax"/>
+  <property name="build" location="build"/>
+  <property name="build.compiler" value="modern"/>
+
+  <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${build}"/>
+  </target>
+
+  <target name="compile" depends="init"
+        description="compile the source " >
+    <!-- Compile the java code from ${src} into ${build} -->
+    <javac srcdir="${src}" includes="yajhfc/**/*.java" destdir="${build}" source="1.5">
+      <classpath>
+    	<pathelement path="${classpath}"/>
+	<pathelement location="${gnu.hylafax-dir}"/>
+	<pathelement location="${jar-extra}"/>
+      </classpath>
+    </javac>
+
+  </target>
+
+  <target name="i18n" depends="init" description="Compiles and/or copies the translations">
+		<uptodate property="i18n.havePrecompiled">
+		  <srcfiles dir="${src}/yajhfc/i18n/" includes="*_*.po"/>
+		  <compositemapper>
+		    <mapper type="glob" from="m*.po" to="M*.class" />
+  		    <mapper type="glob" from="m*.po" to="M*$1.class" />
+  		  </compositemapper>
+		</uptodate>
+
+		<antcall target="i18n.msgfmt"/>
+		<antcall target="i18n.copy"/>
+  </target>
+
+  <target name="i18n.copy">
+        <mkdir dir="${build}/yajhfc/i18n"/>
+	<copy todir="${build}/yajhfc/i18n">
+	  <fileset dir="${src}/yajhfc/i18n/" includes="*.class"/>
+	</copy>
+  </target>
+  
+  <target name="i18n.msgfmt" unless="i18n.havePrecompiled">
+        <exec executable="/bin/sh" dir="${src}/yajhfc/i18n/" os="unix">
+	  <arg value="./fmtall.sh"/>
+	</exec>
+  </target>
+
+
+  <target name="dist" depends="compile,i18n"
+        description="generate the distribution" >
+
+    <!-- Put everything in ${build} into the MyProject-20061213.jar file -->
+    <jar jarfile="${jar-output}" manifest="${jar-extra}/manifest.txt">
+	<fileset dir="${build}"/>
+	<fileset dir="${jar-extra}" includes="info/**/*.class,toolbarButtonGraphics/**/*.gif"/>
+	<fileset dir="${gnu.hylafax-dir}" includes="**/*.class"/>
+	<fileset dir="." includes="COPYING,README*.txt,yajhfc/*.png,doc/*.html,doc/*.css,yajhfc/faxcover/*.ps"/>
+    </jar>
+  </target>
+
+  <target name="clean"
+        description="clean up" >
+    <!-- Delete the ${build} directory tree and the jar file -->
+    <delete dir="${build}"/>
+    <delete file="${jar-output}"/>
+  </target>
+</project>
