@@ -2,6 +2,7 @@
 \usepackage[latin1]{inputenc}
 \usepackage{url}
 \usepackage[left=3cm,right=3cm,top=2cm,bottom=2cm,nohead]{geometry}
+\usepackage[colorlinks=false,pdfborder=0 0 0]{hyperref}
 
 %opening
 \title{YajHFC FAQ}
@@ -94,17 +95,22 @@ for the effect of the wildcard \verb#?# use \verb#.#.
 
 \begin{verbatim}
 General usage:
-java -jar yajhfc.jar [--help] [--debug] [--admin] [--stdin | filename]
+java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose] 
+                     [--configdir=directory] [--stdin | filename]
 Argument description:
-filename    The file name of a PostScript file to send.
---stdin     Read the file to send from standard input
---admin     Start up in admin mode
---debug     Output some debugging information
---help      Displays this text
+filename     The file name of a PostScript file to send.
+--stdin      Read the file to send from standard input
+--admin      Start up in admin mode
+--debug      Output some debugging information
+--background If there is no already running instance, launch a new instance
+             and terminate (after submitting the file to send)
+--noclose    Do not close YajHFC after submitting the fax
+--configdir  Sets a configuration directory to use instead of ~/.yajhfc
+--help       Displays this text
 \end{verbatim}
 
 
-\subsection{ When trying to view sent faxes I always get an error message saying 
+\subsection{When trying to view sent faxes I always get an error message saying 
    \texttt{File format PCL not supported}, although all the documents are PostScript/PDF.}
 
 Check the \texttt{Use PCL file type bugfix} checkbox in the Options dialog and try again.
@@ -112,6 +118,15 @@ Check the \texttt{Use PCL file type bugfix} checkbox in the Options dialog and t
 Some HylaFAX versions incorrectly report a file type of ``PCL'' for all documents
 associated with a job. If this checkbox is checked, YajHFC tries to guess the
 file type if PCL is reported (which usually works pretty well).
+
+\subsection{YajHFC running under Windows sometimes saves its configuration in \texttt{C:\textbackslash .yajhfc} instead of \texttt{C:\textbackslash Documents and Settings\textbackslash USERNAME\textbackslash .yajhfc}}
+
+As a default YajHFC saves its configuration information in the subdirectory \texttt{.yajhfc} of the directory returned by
+the Java system property \texttt{user.home}.
+Sometimes some Java versions seem to not set this property correctly leading to the misbehaviour described above.
+
+As a workaround, you can set this property explicitely when starting YajHFC by using java's \texttt{-D} command line switch, for example: \\
+\texttt{java -Duser.home=\%USERPROFILE\% -jar "C:\textbackslash Program Files\textbackslash yajhfc.jar"}
 
 \subsection{What does the column XYZ mean?}
 

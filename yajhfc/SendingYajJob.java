@@ -29,9 +29,11 @@ public class SendingYajJob extends SentYajJob {
 
     @Override
     public void delete(HylaFAXClient hyfc) throws IOException, ServerResponseException {
-        Job job = getJob(hyfc);
-        //hyfc.suspend(job);
-        hyfc.kill(job);
+        synchronized (hyfc) {
+            Job job = getJob(hyfc);
+        //  hyfc.suspend(job);
+            hyfc.kill(job);
+        }
     }
     
     public SendingYajJob(Vector<FmtItem> cols, String[] stringData) {

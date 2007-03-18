@@ -3,6 +3,7 @@
 \usepackage{url}
 \usepackage[left=3cm,right=3cm,top=2cm,bottom=2cm,nohead]{geometry}
 \usepackage{ngerman}
+\usepackage[colorlinks=false,pdfborder=0 0 0]{hyperref}
 
 %opening
 \title{YajHFC FAQ}
@@ -101,13 +102,18 @@ für den Effekt des \verb#?#-Wildcards \verb#.#.
 
 \begin{verbatim}
 Allgemeine Syntax:
-java -jar yajhfc.jar [--help] [--debug] [--admin] [--stdin | Dateiname]
+java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose]
+                     [--configdir=directory] [--stdin | filename]
 Beschreibung der Argumente:
-Dateiname   Der Dateiname des zu sendenden Dokuments.
---stdin     Das zu sendende Dokument von der Standardeingabe lesen.
---admin     Im "Admin-Modus" starten.
---debug     Debugging-Informationen ausgeben.
---help      Zeigt diesen Text an.
+Dateiname    Der Dateiname des zu sendenden Dokuments.
+--stdin      Das zu sendende Dokument von der Standardeingabe lesen.
+--admin      Im "Admin-Modus" starten.
+--debug      Debugging-Informationen ausgeben.
+--background Falls es noch keine laufende Instanz gibt, starte eine neue
+             und terminiere (nach Absenden des zu sendenden Dokuments)
+--noclose    YajHFC nach Absenden des Dokuments nicht schließen
+--configdir  Setzt ein anstatt von ~/.yajhfc zu verwendendes Konfigurationsverzeichnis
+--help       Zeigt diesen Text an.
 \end{verbatim}
 
 
@@ -121,6 +127,14 @@ Einige HylaFAX-Versionen liefern inkorrekterweise den Dateityp "`PCL"' bei allen
 mit einem Faxauftrag verbundenen Dokumenten zurück.
 Wenn Sie dieses Kontrollfeld aktivieren, versucht YajHFC den Dateityp selbst herauszufinden,
 wenn als Typ PCL zurückgegeben wird (was üblicherweise recht gut funktioniert).
+
+\subsection{Unter Windows speichert YajHFC seine Konfiguration manchmal unter \texttt{C:\textbackslash .yajhfc} und nicht unter \texttt{C:\textbackslash Dokumente und Einstellungen\textbackslash BENUTZERNAME\textbackslash .yajhfc}}
+
+In der Standardeinstellung speichert YajHFC seine Konfigurationsinformationen im Unterverzeichnis \texttt{.yajhfc} des Verzeichnisses, das von der Java-System-Eigenschaft \texttt{user.home} zurückgeliefert wird.
+Einige Javaversionen scheinen diese Eigenschaft manchmal nicht korrekt zu setzen, was zu dem oben beschriebenen Fehlverhalten führt.
+
+Um diesen Fehler zu umgehen, können Sie diese Eigenschaft mittels des \texttt{-D}-Kommandozeilenarguments von Java explizit setzen, z.B.: \\
+\texttt{java -Duser.home=\%USERPROFILE\% -jar \dq C:\textbackslash Programme\textbackslash yajhfc.jar\dq}
 
 \subsection{Was bedeutet die Tabellenspalte XYZ?}
 

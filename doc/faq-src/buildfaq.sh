@@ -5,6 +5,9 @@ buildtex() {
 
 	PREFIX=${1%%.tex}
 	
+	if [ ! -f $PREFIX.toc -o $PREFIX.toc -ot $1 ]; then
+		pdflatex $1 ;
+	fi
 	pdflatex $1
 
 	if grep -c '[[]utf8x]{inputenc}' $1; then
@@ -26,7 +29,13 @@ buildtex() {
 
 if [ -z $1 ]; then
 	for F in *.tex; do
-		buildtex $F ;
+		PREFIX=${F%%.tex}
+		if [ ! -f ../$PREFIX.pdf -o ../$PREFIX.pdf -ot $F -o ! -f ../$PREFIX.html -o ../$PREFIX.html -ot $F ]; then
+			echo "Building PDF and HTML from $F ..."
+			buildtex $F > $PREFIX-output.log 2>&1;
+		else
+			echo "Output of $F is up to date." ;
+		fi ;
 	done ;
 else
 	buildtex $1 ;

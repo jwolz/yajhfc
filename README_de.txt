@@ -25,7 +25,7 @@ INSTALLATION
 Voraussetzungen:
 * JRE 5.0 oder höher
 * Selbstverständlich ein bereits eingerichteter HylaFAX-Server im Netzwerk ;-)
-* Ein Programm zum Betrachten von TIFF-Dateien (siehe auch FAQ.txt)
+* Ein Programm zum Betrachten von TIFF-Dateien (siehe auch die FAQ)
 * Optional: Ein PostScript-Betrachter (z.B. Ghostview)
 
 Um YajHFC zu installieren, speichern Sie einfach die Datei "yajhfc-0_3_2.jar" 

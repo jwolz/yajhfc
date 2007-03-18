@@ -493,10 +493,14 @@ public class SendWin extends JDialog  {
             buttonPreview = new JButton(_("Preview"), utils.loadIcon("general/PrintPreview"));
             buttonPreview.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    tflFiles.commit();
+                    tflNumbers.commit();
+                    
                     if (!checkUseCover.isSelected() && tflFiles.model.size() == 0) {
                         JOptionPane.showMessageDialog(SendWin.this, _("Nothing to preview! (Neither a cover page nor a file to send has been selected.)"), _("Preview"), JOptionPane.INFORMATION_MESSAGE);
                         return;
                     }
+                    
                     PreviewWorker wrk = new PreviewWorker();
                     wrk.startWork(SendWin.this, _("Previewing fax"));
                 }
@@ -784,14 +788,16 @@ public class SendWin extends JDialog  {
                     }
                     
                     // Upload documents:
-                    hyfc.type(HylaFAXClient.TYPE_IMAGE);
-                    
-                    for (int i = 0; i < tflFiles.model.size(); i++) {
-                        HylaTFLItem item = (HylaTFLItem)tflFiles.model.get(i);
-                        updateNote(MessageFormat.format(_("Uploading {0}"), item.getText()));
-                        item.upload(hyfc);
-                        
-                        stepProgressBar(20);
+                    synchronized (hyfc) {
+                        hyfc.type(HylaFAXClient.TYPE_IMAGE);
+
+                        for (int i = 0; i < tflFiles.model.size(); i++) {
+                            HylaTFLItem item = (HylaTFLItem)tflFiles.model.get(i);
+                            updateNote(MessageFormat.format(_("Uploading {0}"), item.getText()));
+                            item.upload(hyfc);
+
+                            stepProgressBar(20);
+                        }
                     }
                 }            
                 
@@ -812,53 +818,55 @@ public class SendWin extends JDialog  {
                         }
                         stepProgressBar(5);
                         
-                        Job j = hyfc.createJob();
-                        
-                        stepProgressBar(5);
-                        
-                        j.setFromUser(fo.user);
-                        j.setNotifyAddress(fo.notifyAddress);
-                        j.setMaximumDials(fo.maxDial);
-                        
-                        if (!pollMode) {
-                            // Set general job information...
-                            setIfNotEmpty(j, "TOUSER", numItem.name);
-                            setIfNotEmpty(j, "TOCOMPANY", numItem.company);
-                            setIfNotEmpty(j, "TOLOCATION", numItem.location);
-                            setIfNotEmpty(j, "TOVOICE", numItem.voiceNumber);
-                            setIfNotEmpty(j, "REGARDING", textSubject.getText());
-                            setIfNotEmpty(j, "FROMCOMPANY", fo.FromCompany);
-                            setIfNotEmpty(j, "FROMLOCATION", fo.FromLocation);
-                            setIfNotEmpty(j, "FROMVOICE", fo.FromVoiceNumber);
-                        }
-                        
-                        j.setDialstring(numItem.faxNumber);
-                        j.setProperty("EXTERNAL", numItem.faxNumber); // needed to fix an error while sending multiple jobs
-                        j.setMaximumTries(((Integer)SpinMaxTries.getValue()).intValue());
-                        j.setNotifyType(((FaxStringProperty)ComboNotification.getSelectedItem()).type);
-                        j.setPageDimension(((PaperSize)ComboPaperSize.getSelectedItem()).size);
-                        j.setVerticalResolution(((FaxIntProperty)ComboResolution.getSelectedItem()).type);
-                        j.setKilltime(utils.minutesToHylaTime(((Integer)SpinKillTime.getValue()).intValue()));  
-                        
-                        if (pollMode) 
-                            j.setProperty("POLL", "\"\" \"\"");
-                        else {               
-                            if (coverName != null)
-                                j.setProperty("COVER", coverName);
-                            
-                            for (int k = 0; k < tflFiles.model.size(); k++) {
-                                HylaTFLItem item = (HylaTFLItem)tflFiles.model.get(k);
-                                j.addDocument(item.getServerName());                        
+                        synchronized (hyfc) {
+                            Job j = hyfc.createJob();
+
+                            stepProgressBar(5);
+
+                            j.setFromUser(fo.user);
+                            j.setNotifyAddress(fo.notifyAddress);
+                            j.setMaximumDials(fo.maxDial);
+
+                            if (!pollMode) {
+                                // Set general job information...
+                                setIfNotEmpty(j, "TOUSER", numItem.name);
+                                setIfNotEmpty(j, "TOCOMPANY", numItem.company);
+                                setIfNotEmpty(j, "TOLOCATION", numItem.location);
+                                setIfNotEmpty(j, "TOVOICE", numItem.voiceNumber);
+                                setIfNotEmpty(j, "REGARDING", textSubject.getText());
+                                setIfNotEmpty(j, "FROMCOMPANY", fo.FromCompany);
+                                setIfNotEmpty(j, "FROMLOCATION", fo.FromLocation);
+                                setIfNotEmpty(j, "FROMVOICE", fo.FromVoiceNumber);
                             }
-                            
-                            fo.useCover = checkUseCover.isSelected();
-                            fo.useCustomCover = checkCustomCover.isSelected();
-                            fo.CustomCover = ftfCustomCover.getText();
+
+                            j.setDialstring(numItem.faxNumber);
+                            j.setProperty("EXTERNAL", numItem.faxNumber); // needed to fix an error while sending multiple jobs
+                            j.setMaximumTries(((Integer)SpinMaxTries.getValue()).intValue());
+                            j.setNotifyType(((FaxStringProperty)ComboNotification.getSelectedItem()).type);
+                            j.setPageDimension(((PaperSize)ComboPaperSize.getSelectedItem()).size);
+                            j.setVerticalResolution(((FaxIntProperty)ComboResolution.getSelectedItem()).type);
+                            j.setKilltime(utils.minutesToHylaTime(((Integer)SpinKillTime.getValue()).intValue()));  
+
+                            if (pollMode) 
+                                j.setProperty("POLL", "\"\" \"\"");
+                            else {               
+                                if (coverName != null)
+                                    j.setProperty("COVER", coverName);
+
+                                for (int k = 0; k < tflFiles.model.size(); k++) {
+                                    HylaTFLItem item = (HylaTFLItem)tflFiles.model.get(k);
+                                    j.addDocument(item.getServerName());                        
+                                }
+
+                                fo.useCover = checkUseCover.isSelected();
+                                fo.useCustomCover = checkCustomCover.isSelected();
+                                fo.CustomCover = ftfCustomCover.getText();
+                            }
+
+                            stepProgressBar(5);
+
+                            hyfc.submit(j);
                         }
-                        
-                        stepProgressBar(5);
-                        
-                        hyfc.submit(j);   
                         
                         stepProgressBar(5);
                     } catch (Exception e1) {
