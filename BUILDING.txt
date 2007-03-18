@@ -1,0 +1,56 @@
+Building YajHFC from source
+===========================
+
+1. Required software packages
+-----------------------------
+
+You will need to have the following software packages installed to build YajHFC:
+
+- A Java JDK, version >= 1.5.0 (http://java.sun.com/javase/downloads)
+- Apache Ant, version >= 1.6.2 (http://ant.apache.org/)
+- The gnu.hylafax library (either the version from the YajHFC homepage or from http://gnu-hylafax.sourceforge.net/)
+
+If you want to build YajHFC from CVS or modify translations, you will also need:
+- GNU gettext (http://www.gnu.org/software/gettext/)
+
+If you want to modify the documentation, you will also need:
+- pdflatex (i.e. from TeTeX, also see http://www.tug.org/)
+- latex2html (http://www.latex2html.org/)
+
+
+2. Build instructions
+---------------------
+
+To build YajHFC, simply go to the source directory (the directory where build.xml
+and this file reside in) and invoke the following command:
+
+ant dist
+
+This compiles YajHFC and creates the JAR file build/yajhfc.jar.
+That file can be used just like a jar downloaded from the YajHFC homepage.
+
+NOTES:
+~~~~~~
+a)
+The build file expects to find the gnu.hylafax library in the directory
+../gnu.hylafax/ (relative to the source directory). It is also expected to
+find the compiled .class files "directly" below this directory 
+(i.e. ../gnu-hylafax/gnu/hylafax/HylaFAXClient.class must exist).
+
+If you have installed the library somewhere else, you have to set the gnu.hylafax-dir property 
+at the ant command line, e.g. if it is installed in ~/java/gnu-hylafax, use:
+
+ant -Dgnu.hylafax-dir=~/java/gnu-hylafax dist
+
+If you use the library from http://gnu-hylafax.sourceforge.net/ you have to specify the
+"build" subdirectory here (e.g. -Dgnu.hylafax-dir=~/java/gnu.hylafax-0.0.9/build).
+
+b) 
+Currently building the documentation and the translations only works on a Unix-like system
+because a shell script is used in the build process (yajhfc/i18n/fmtall.sh and
+doc/faq-src/buildfaq.sh respectively). Creating Windows batch (or VBS/JScript) files with 
+the same functionality should be possible, however.
+Please also note that this is only a problem if you want to build YajHFC from CVS
+(or modify docs/translations) as the source archive contains precompiled
+translations and documentation.
+

@@ -4,7 +4,7 @@
 \usepackage{url}
 \usepackage[left=3cm,right=3cm,top=2cm,bottom=2cm,nohead]{geometry}
 \usepackage[spanish]{babel}
-
+\usepackage[colorlinks=false,pdfborder=0 0 0]{hyperref}
 
 %opening
 \title{YajHFC FAQ}
@@ -100,13 +100,18 @@ y para simular el efecto de \verb#?# hay que utilizar \verb#.#.
 
 \begin{verbatim}
 Uso general:
-java -jar yajhfc.jar [--help] [--debug] [--admin] [--stdin | filename]
-Descripcisn de los argumentos:
-filename    El nombre del archivo PostScript para enviar.
---stdin     Lee el archivo para enviar de una entrada estándar
---admin     Inicia en modo administrador
---debug     Salida de información de errores
---help      Muestra este texto
+java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose]
+                     [--configdir=directory] [--stdin | filename]
+Descripción de los argumentos:
+filename     El nombre del archivo PostScript para enviar.
+--stdin      Lee el archivo para enviar de una entrada estándar
+--admin      Inicia en modo administrador
+--debug      Salida de información de errores
+--background Si no hay ninguna instancia en ejecución, iniciar una nueva instancia
+             y terminar (después de enviar el archivo)
+--noclose    No cerrar YajHFC después de enviar el fax
+--configdir  Establece un directorio de configuración para utilizar en lugar de ~/.yajhfc
+--help       Muestra este texto
 \end{verbatim}
 
 
@@ -121,6 +126,15 @@ Algunas versiones de HylaFAX reportan
 un tipo de fichero "PCL" para todos los documentos asociados con un trabajo. 
 Si esta opción está seleccionada, YajHFC intenta adivinar el tipo de fichero 
 utilizando la extensión si se reporta PCL (lo cual generalmente funciona bastante bien).
+
+\subsection{Cuando YajHFC se ejecuta en Windows algunas veces guarda su configuración en \texttt{C:\textbackslash .yajhfc} en lugar de \texttt{C:\textbackslash Documents and Settings\textbackslash USERNAME\textbackslash .yajhfc}}
+
+De manera predeterminada, YajHFC guarda su configuración en el subdirectorio \texttt{.yajhfc} del directorio que devuelve
+la propiedad del sistema Java \texttt{user.home}.
+A veces, algunas versiones de Java parece que no establecen esta propiedad correctamente, lo que provoca dicho error.
+
+Para solucionar ésto, puedes establecer esta propiedad explícitamente cuando inicias YajHFC utilizando la línea de comandos de java \texttt{-D}, por ejemplo:\\
+\texttt{java -Duser.home=\%USERPROFILE\% -jar "C:\textbackslash Archivos de Programa\textbackslash yajhfc.jar"}
 
 \subsection{¿Qué significa la columna XYZ?}
 
@@ -146,7 +160,7 @@ El único mitodo seguro requeriría introducir una contraseña maestra cada vez 
 YajHFC empezó como "proyecto de prueba" para Java y la biblioteca \texttt{gnu.hylafax}
 y por lo tanto no tuvo un nombre "bonito". Después de trabajar un poco sobre ello, me di cuenta de que se volvería útil, por lo que elegí darle un nombre.
 Dado que estaba con la herramienta Yast de SuSE en ese momento y sabía 
-que había / hay otros clientes Java para HylaFAX, lo llamé "yet another" java hylafax client (en español, "otro cliente Java para HylaFAX").
+que había / hay otros clientes Java para HylaFAX, lo llamé "\textbf{y}et \textbf{a}nother \textbf{J}ava \textbf{H}ylaFAX \textbf{c}lient" (en español, "otro cliente Java para HylaFAX").
  
 
 \end{document}

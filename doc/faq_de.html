@@ -38,44 +38,46 @@ Contents</A>
 <!--Table of Contents-->
 
 <UL>
-<LI><A NAME="tex2html23"
+<LI><A NAME="tex2html24"
   HREF="faq_de.html#SECTION00020000000000000000">Installation</A>
 <UL>
-<LI><A NAME="tex2html24"
-  HREF="faq_de.html#SECTION00021000000000000000">Woher bekomme ich einen Faxviewer für Windows?</A>
 <LI><A NAME="tex2html25"
-  HREF="faq_de.html#SECTION00022000000000000000">Woher bekomme ich einen Faxviewer für Linux/*BSD/... ?</A>
+  HREF="faq_de.html#SECTION00021000000000000000">Woher bekomme ich einen Faxviewer für Windows?</A>
 <LI><A NAME="tex2html26"
-  HREF="faq_de.html#SECTION00023000000000000000">Was sollte ich unter MacOS X als Faxviewer benutzen?</A>
+  HREF="faq_de.html#SECTION00022000000000000000">Woher bekomme ich einen Faxviewer für Linux/*BSD/... ?</A>
 <LI><A NAME="tex2html27"
+  HREF="faq_de.html#SECTION00023000000000000000">Was sollte ich unter MacOS X als Faxviewer benutzen?</A>
+<LI><A NAME="tex2html28"
   HREF="faq_de.html#SECTION00024000000000000000">Woher bekomme ich einen PostScript-Viewer?</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html28"
+<LI><A NAME="tex2html29"
   HREF="faq_de.html#SECTION00030000000000000000">Benutzung des Programms</A>
 <UL>
-<LI><A NAME="tex2html29"
-  HREF="faq_de.html#SECTION00031000000000000000">Wie kann ich Deckblattvorlagen bearbeiten?</A>
 <LI><A NAME="tex2html30"
-  HREF="faq_de.html#SECTION00032000000000000000">Ich möchte ein Telefonbuch über JDBC ansprechen, aber YajHFC kann den Treiber nicht finden, obwohl ich einen korrekten „class path“ angegeben habe.</A>
+  HREF="faq_de.html#SECTION00031000000000000000">Wie kann ich Deckblattvorlagen bearbeiten?</A>
 <LI><A NAME="tex2html31"
-  HREF="faq_de.html#SECTION00033000000000000000">Warum ist der Menüeintrag Ansicht-&gt;Nur eigene Faxe ausgegraut?</A>
+  HREF="faq_de.html#SECTION00032000000000000000">Ich möchte ein Telefonbuch über JDBC ansprechen, aber YajHFC kann den Treiber nicht finden, obwohl ich einen korrekten „class path“ angegeben habe.</A>
 <LI><A NAME="tex2html32"
-  HREF="faq_de.html#SECTION00034000000000000000">Was kann beim passt auf-Operator im „Benutzerdef. Filter“-Dialog als Wert eingegeben werden?</A>
+  HREF="faq_de.html#SECTION00033000000000000000">Warum ist der Menüeintrag Ansicht-&gt;Nur eigene Faxe ausgegraut?</A>
 <LI><A NAME="tex2html33"
-  HREF="faq_de.html#SECTION00035000000000000000">Welche Kommandozeilenargumente werden von YajHFC unterstützt?</A>
+  HREF="faq_de.html#SECTION00034000000000000000">Was kann beim passt auf-Operator im „Benutzerdef. Filter“-Dialog als Wert eingegeben werden?</A>
 <LI><A NAME="tex2html34"
-  HREF="faq_de.html#SECTION00036000000000000000">Wenn ich Versandte Faxe anzeigen möchte, erhalte ich immer die Fehlermeldung Dateiformat PCL wird nicht unterstützt, obwohl alle Dokumente im PostScript/PDF-Format sind.</A>
+  HREF="faq_de.html#SECTION00035000000000000000">Welche Kommandozeilenargumente werden von YajHFC unterstützt?</A>
 <LI><A NAME="tex2html35"
-  HREF="faq_de.html#SECTION00037000000000000000">Was bedeutet die Tabellenspalte XYZ?</A>
+  HREF="faq_de.html#SECTION00036000000000000000">Wenn ich Versandte Faxe anzeigen möchte, erhalte ich immer die Fehlermeldung Dateiformat PCL wird nicht unterstützt, obwohl alle Dokumente im PostScript/PDF-Format sind.</A>
+<LI><A NAME="tex2html36"
+  HREF="faq_de.html#SECTION00037000000000000000">Unter Windows speichert YajHFC seine Konfiguration manchmal unter C:\.yajhfc und nicht unter C:\Dokumente und Einstellungen\BENUTZERNAME\.yajhfc</A>
+<LI><A NAME="tex2html37"
+  HREF="faq_de.html#SECTION00038000000000000000">Was bedeutet die Tabellenspalte XYZ?</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html36"
+<LI><A NAME="tex2html38"
   HREF="faq_de.html#SECTION00040000000000000000">Verschiedenes</A>
 <UL>
-<LI><A NAME="tex2html37"
+<LI><A NAME="tex2html39"
   HREF="faq_de.html#SECTION00041000000000000000">Warum werden Passwörter im Klartext gespeichert?</A>
-<LI><A NAME="tex2html38"
+<LI><A NAME="tex2html40"
   HREF="faq_de.html#SECTION00042000000000000000">Warum wurde dieser seltsame Name gewählt?</A>
 </UL></UL>
 <!--End of Table of Contents-->
@@ -230,13 +232,18 @@ Welche Kommandozeilenargumente werden von YajHFC unterstützt?</A>
 <P>
 <PRE>
 Allgemeine Syntax:
-java -jar yajhfc.jar [--help] [--debug] [--admin] [--stdin | Dateiname]
+java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose]
+                     [--configdir=directory] [--stdin | filename]
 Beschreibung der Argumente:
-Dateiname   Der Dateiname des zu sendenden Dokuments.
---stdin     Das zu sendende Dokument von der Standardeingabe lesen.
---admin     Im "Admin-Modus" starten.
---debug     Debugging-Informationen ausgeben.
---help      Zeigt diesen Text an.
+Dateiname    Der Dateiname des zu sendenden Dokuments.
+--stdin      Das zu sendende Dokument von der Standardeingabe lesen.
+--admin      Im "Admin-Modus" starten.
+--debug      Debugging-Informationen ausgeben.
+--background Falls es noch keine laufende Instanz gibt, starte eine neue
+             und terminiere (nach Absenden des zu sendenden Dokuments)
+--noclose    YajHFC nach Absenden des Dokuments nicht schließen
+--configdir  Setzt ein anstatt von ~/.yajhfc zu verwendendes Konfigurationsverzeichnis
+--help       Zeigt diesen Text an.
 </PRE>
 
 <P>
@@ -259,6 +266,20 @@ wenn als Typ PCL zurückgegeben wird (was üblicherweise recht gut funktioniert)
 <P>
 
 <H2><A NAME="SECTION00037000000000000000">
+Unter Windows speichert YajHFC seine Konfiguration manchmal unter <TT>C:\.yajhfc</TT> und nicht unter <TT>C:\Dokumente und Einstellungen\BENUTZERNAME\.yajhfc</TT></A>
+</H2>
+
+<P>
+In der Standardeinstellung speichert YajHFC seine Konfigurationsinformationen im Unterverzeichnis <TT>.yajhfc</TT> des Verzeichnisses, das von der Java-System-Eigenschaft <TT>user.home</TT> zurückgeliefert wird.
+Einige Javaversionen scheinen diese Eigenschaft manchmal nicht korrekt zu setzen, was zu dem oben beschriebenen Fehlverhalten führt.
+
+<P>
+Um diesen Fehler zu umgehen, können Sie diese Eigenschaft mittels des <TT>-D</TT>-Kommandozeilenarguments von Java explizit setzen, z.B.: 
+<BR><TT>java -Duser.home=%USERPROFILE% -jar C:\Programme\yajhfc.jar</TT>
+
+<P>
+
+<H2><A NAME="SECTION00038000000000000000">
 Was bedeutet die Tabellenspalte XYZ?</A>
 </H2>
 
@@ -329,11 +350,11 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>-no_subdir -split 0 -html_version 3.2,latin1,unicode,utf8 -no_navigation faq_de.tex</TT>
 <P>
-The translation was initiated by Jonas Wolz on 2007-03-08
+The translation was initiated by Jonas Wolz on 2007-03-16
 <BR><HR>
 <ADDRESS>
 Jonas Wolz
-2007-03-08
+2007-03-16
 </ADDRESS>
 </BODY>
 </HTML>

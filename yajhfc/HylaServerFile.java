@@ -45,8 +45,10 @@ public class HylaServerFile {
         throws IOException, FileNotFoundException, ServerResponseException {
         FileOutputStream out = new FileOutputStream(target);
         
-        hyfc.type(gnu.inet.ftp.FtpClientProtocol.TYPE_IMAGE);
-        hyfc.get(path, out);
+        synchronized (hyfc) {
+            hyfc.type(gnu.inet.ftp.FtpClientProtocol.TYPE_IMAGE);
+            hyfc.get(path, out);
+        }
         out.close();
     }
     

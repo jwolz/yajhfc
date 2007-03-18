@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: messages_de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-03-07 16:27+0100\n"
+"POT-Creation-Date: 2007-03-09 16:10+0100\n"
 "PO-Revision-Date: 2007-03-07 16:28GMT\n"
 "Last-Translator: Jonas Wolz <jwolz@freenet.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
@@ -93,8 +93,8 @@ msgid "Details"
 msgstr "Details"
 
 #: ../ExceptionDialog.java:178 ../ExceptionDialog.java:187
-#: ../OptionsWin.java:696 ../ProgressWorker.java:172 ../SendWin.java:649
-#: ../SendWin.java:654 ../filters/CustomFilterDialog.java:209
+#: ../OptionsWin.java:696 ../ProgressWorker.java:172 ../SendWin.java:653
+#: ../SendWin.java:658 ../filters/CustomFilterDialog.java:209
 #: ../filters/CustomFilterDialog.java:213 ../phonebook/PhoneBookWin.java:202
 #: ../phonebook/jdbc/ConnectionDialog.java:224
 #: ../phonebook/jdbc/ConnectionDialog.java:228
@@ -111,7 +111,8 @@ msgstr ""
 
 #: ../FileConverter.java:113
 msgid "An error occured while converting the document to PostScript."
-msgstr "Beim Konvertieren des Dokuments in PostScript ist ein Fehler aufgetreten."
+msgstr ""
+"Beim Konvertieren des Dokuments in PostScript ist ein Fehler aufgetreten."
 
 #: ../FileTextField.java:109
 msgid "Choose a file using a dialog"
@@ -159,15 +160,11 @@ msgstr "{0}-Dateien"
 msgid "File format {0} not supported."
 msgstr "Dateiformat {0} wird nicht unterstützt."
 
-#: ../Launcher.java:172 ../Launcher.java:174
-msgid "Unknown command line argument: "
-msgstr "Unbekanntes Befehlszeilenargument: "
-
-#: ../Launcher.java:228
+#: ../Launcher.java:241
 msgid "The new instance did not start after 20 seconds."
 msgstr "Die neue Instanz ist nach 20 Sekunden immer noch nicht gestartet."
 
-#: ../Launcher.java:242
+#: ../Launcher.java:255
 msgid ""
 "Cannot launch new program instance, continuing with the existing one!\n"
 "Reason: "
@@ -175,7 +172,7 @@ msgstr ""
 "Kann keine neue Programminstanz starten, verwende die bestehende weiter.\n"
 "Grund: "
 
-#: ../Launcher.java:280
+#: ../Launcher.java:293
 msgid "There already is a running instance!"
 msgstr "Es läuft bereits eine Programminstanz!"
 
@@ -228,7 +225,8 @@ msgstr "Fax anzeigen"
 #: ../mainwin.java:292
 #, java-format
 msgid "An error occured displaying the file {0} (job {1}):\n"
-msgstr "Beim Anzeigen der Datei {0} (für Auftrag {1}) ist ein Fehler aufgetreten:\n"
+msgstr ""
+"Beim Anzeigen der Datei {0} (für Auftrag {1}) ist ein Fehler aufgetreten:\n"
 
 #: ../mainwin.java:306
 #, java-format
@@ -420,7 +418,8 @@ msgstr "Admin-Passwort"
 #: ../mainwin.java:908
 #, java-format
 msgid "Please enter the administrative password for user \"{0}\"."
-msgstr "Bitte geben Sie das administrative Passwort für den Benutzer \"{0}\" ein."
+msgstr ""
+"Bitte geben Sie das administrative Passwort für den Benutzer \"{0}\" ein."
 
 #: ../mainwin.java:968
 msgid "An error occured connecting to the server:"
@@ -594,7 +593,7 @@ msgstr "Versandeinstellungen:"
 msgid "Use a custom default cover page:"
 msgstr "Benutzerdef. Standarddeckblatt benutzen:"
 
-#: ../OptionsWin.java:496 ../SendWin.java:257 ../SendWin.java:564
+#: ../OptionsWin.java:496 ../SendWin.java:257 ../SendWin.java:568
 msgid "Postscript files"
 msgstr "Postscript-Dateien"
 
@@ -662,8 +661,10 @@ msgid "Path settings"
 msgstr "Pfadeinstellungen"
 
 #: ../OptionsWin.java:568
-msgid "Command line for fax viewer: (insert %s as a placeholder for the filename)"
-msgstr "Befehlszeile für Faxviewer: (%s als Platzhalter für Dateinamen einfügen)"
+msgid ""
+"Command line for fax viewer: (insert %s as a placeholder for the filename)"
+msgstr ""
+"Befehlszeile für Faxviewer: (%s als Platzhalter für Dateinamen einfügen)"
 
 #: ../OptionsWin.java:570
 msgid ""
@@ -686,7 +687,8 @@ msgid "The selected default cover page can not be read."
 msgstr "Das ausgewählte Standarddeckblatt kann nicht gelesen werden."
 
 #: ../OptionsWin.java:738
-msgid "You must restart the program for the change of the language to take effect."
+msgid ""
+"You must restart the program for the change of the language to take effect."
 msgstr ""
 "Sie müssen das Programm neu starten, damit sich eine Änderung der Sprache "
 "auswirkt."
@@ -748,11 +750,11 @@ msgstr "Abbrechen nach (Minuten):"
 msgid "Cover page"
 msgstr "Deckblatt"
 
-#: ../SendWin.java:493 ../SendWin.java:497 ../SendWin.java:967
+#: ../SendWin.java:493 ../SendWin.java:500 ../SendWin.java:975
 msgid "Preview"
 msgstr "Vorschau"
 
-#: ../SendWin.java:497
+#: ../SendWin.java:500
 msgid ""
 "Nothing to preview! (Neither a cover page nor a file to send has been "
 "selected.)"
@@ -760,72 +762,72 @@ msgstr ""
 "Keine Dokumente für die Vorschau verfügbar! (Es wurden weder ein Deckblatt "
 "noch eine zu versendende Datei ausgewählt.)"
 
-#: ../SendWin.java:501
+#: ../SendWin.java:505
 msgid "Previewing fax"
 msgstr "Erstelle Faxvorschau"
 
-#: ../SendWin.java:563
+#: ../SendWin.java:567
 msgid "All supported formats"
 msgstr "Alle unterstützten Formate"
 
-#: ../SendWin.java:565
+#: ../SendWin.java:569
 msgid "PDF documents"
 msgstr "PDF-Dokumente"
 
-#: ../SendWin.java:566
+#: ../SendWin.java:570
 msgid "JPEG pictures"
 msgstr "JPEG-Bilder"
 
-#: ../SendWin.java:567
+#: ../SendWin.java:571
 msgid "GIF pictures"
 msgstr "GIF-Bilder"
 
-#: ../SendWin.java:568
+#: ../SendWin.java:572
 msgid "PNG pictures"
 msgstr "PNG-Bilder"
 
-#: ../SendWin.java:577
+#: ../SendWin.java:581
 msgid "Choose number from phone book"
 msgstr "Nummer aus dem Telefonbuch auswählen"
 
-#: ../SendWin.java:627
+#: ../SendWin.java:631
 msgid "An error occured reading the input: "
 msgstr "Beim Lesen der Eingabe ist ein Fehler aufgetreten:"
 
-#: ../SendWin.java:649
+#: ../SendWin.java:653
 #, java-format
 msgid "Can not read file \"{0}\"!"
 msgstr "Kann Datei \"{0}\" nicht lesen!"
 
-#: ../SendWin.java:654
+#: ../SendWin.java:658
 #, java-format
 msgid "Can not read default cover page file \"{0}\"!"
 msgstr "Kann Standarddeckblatt \"{0}\" nicht lesen!"
 
-#: ../SendWin.java:729
+#: ../SendWin.java:733
 msgid "Creating cover page"
 msgstr "Erstelle Deckblatt"
 
-#: ../SendWin.java:742
+#: ../SendWin.java:746
 #, java-format
 msgid "Formatting {0}"
 msgstr "Formatiere {0}"
 
-#: ../SendWin.java:747
+#: ../SendWin.java:751
 msgid "Error previewing the documents:"
 msgstr "Fehler beim Erzeugen der Vorschau für die Dokumente:"
 
-#: ../SendWin.java:791
+#: ../SendWin.java:796
 #, java-format
 msgid "Uploading {0}"
 msgstr "Lade {0} hoch"
 
-#: ../SendWin.java:800
+#: ../SendWin.java:806
 #, java-format
 msgid "Creating job to {0}"
 msgstr "Erstelle Auftrag für {0}"
 
-#: ../SendWin.java:865
+#: ../SendWin.java:873
 #, java-format
 msgid ""
 "An error occured while submitting the fax job for phone number \"{0}\" (will "
@@ -835,15 +837,15 @@ msgstr ""
 "aufgetreten (werde trotzdem versuchen, Faxe an die anderen Nummern zu "
 "verschicken)"
 
-#: ../SendWin.java:869
+#: ../SendWin.java:877
 msgid "Cleaning up"
 msgstr "Räume auf"
 
-#: ../SendWin.java:877
+#: ../SendWin.java:885
 msgid "An error occured while submitting the fax: "
 msgstr "Beim Abschicken des Faxes ist ein Fehler aufgetreten:"
 
-#: ../SendWin.java:895
+#: ../SendWin.java:903
 msgid ""
 "You haven't selected a file to transmit, so your fax will ONLY contain the "
 "cover page.\n"
@@ -853,38 +855,39 @@ msgstr ""
 "das Deckblatt umfassen.\n"
 "Trotzdem fortfahren?"
 
-#: ../SendWin.java:895
+#: ../SendWin.java:903
 msgid "Continue?"
 msgstr "Fortfahren?"
 
-#: ../SendWin.java:898
+#: ../SendWin.java:906
 msgid "To send a fax you must select at least one file!"
 msgstr "Sie müssen mindestens eine Datei auswählen, um ein Fax zu verschicken!"
 
-#: ../SendWin.java:898 ../SendWin.java:904
+#: ../SendWin.java:906 ../SendWin.java:912
 #: ../filters/CustomFilterDialog.java:220
 msgid "Warning"
 msgstr "Warnung"
 
-#: ../SendWin.java:904
+#: ../SendWin.java:912
 msgid "To send a fax you have to enter at least one phone number!"
-msgstr "Sie müssen mindestens eine Telefonnummer angeben, um ein Fax zu verschicken!"
+msgstr ""
+"Sie müssen mindestens eine Telefonnummer angeben, um ein Fax zu verschicken!"
 
-#: ../SendWin.java:909
+#: ../SendWin.java:917
 msgid "Sending fax"
 msgstr "Sende Fax"
 
-#: ../SendWin.java:967
+#: ../SendWin.java:975
 #, java-format
 msgid "Preview is not supported for document \"{0}\"."
 msgstr "Die Vorschau wird für das Dokument {0} nicht unterstützt."
 
-#: ../SendWin.java:1012
+#: ../SendWin.java:1020
 #, java-format
 msgid "The document {0} could not get converted to PostScript. Reason:"
 msgstr "Das Dokument {0} konnte nicht in PostScript konvertiert werden. Grund:"
 
-#: ../SendWin.java:1122
+#: ../SendWin.java:1130
 msgid "<stdin>"
 msgstr "<stdin>"
 
@@ -1803,3 +1806,5 @@ msgstr "Konnte die Änderungen für Eintrag {0} nicht speichern:"
 msgid "Could not save the phone book:"
 msgstr "Konnte das Telefonbuch nicht speichern:"
 
+#~ msgid "Unknown command line argument: "
+#~ msgstr "Unbekanntes Befehlszeilenargument: "

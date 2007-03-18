@@ -39,6 +39,10 @@ import javax.swing.SwingUtilities;
 
 public final class Launcher {
 
+    // Configuration directory as set on the command line
+    // Needs to be set *before* utils initializes in order to have an effect!
+    public static String cmdLineConfDir = null;
+    
     private static ServerSocket sockBlock = null;
     private static SockBlockAcceptor blockThread;
     private static mainwin application;
@@ -123,9 +127,9 @@ public final class Launcher {
     
     
     private static void printHelp() {
-        System.out.println(
+        System.out.print(
             "General usage:\n"+
-            "java -jar yajhfc.jar [--help] [--debug] [--admin] [--stdin | filename]\n"+
+            "java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose] [--configdir=directory] [--stdin | filename]\n"+
             "Argument description:\n"+
             "filename     The file name of a PostScript file to send.\n"+
             "--stdin      Read the file to send from standard input\n"+
@@ -134,6 +138,7 @@ public final class Launcher {
             "--background If there is no already running instance, launch a new instance \n" +
             "             and terminate (after submitting the file to send)\n" +
             "--noclose    Do not close YajHFC after submitting the fax\n"+
+            "--configdir  Sets a configuration directory to use instead of ~/.yajhfc\n" +
             "--help       Displays this text\n"
             );   
     }
@@ -149,7 +154,7 @@ public final class Launcher {
         boolean adminMode = false;
         boolean forkNewInst = false;
         boolean closeAfterSubmit = true;
-        utils.debugMode = false;
+        boolean debugMode = false;
         
         for (int i = 0; i < args.length; i++) {
             if (args[i].startsWith("--")) { // command line argument
@@ -161,18 +166,22 @@ public final class Launcher {
                 else if (args[i].equals("--admin"))
                     adminMode = true;
                 else if (args[i].equals("--debug"))
-                    utils.debugMode = true;
+                    debugMode = true;
                 else if (args[i].equals("--background"))
                     forkNewInst = true;
                 else if (args[i].equals("--noclose")) 
                     closeAfterSubmit = false;
+                else if (args[i].startsWith("--configdir="))
+                    cmdLineConfDir = args[i].substring(12); // 12 == "--configdir=".length()
                 else
-                    System.err.println(utils._("Unknown command line argument: ") + args[i]);
+                    System.err.println("Unknown command line argument: " + args[i]);
             } else if (args[i].startsWith("-"))
-                System.err.println(utils._("Unknown command line argument: ") + args[i]);
+                System.err.println("Unknown command line argument: " + args[i]);
             else // treat argument as file name to send
                 fileName = args[i];
         }
+        
+        utils.debugMode = debugMode;
         
         Socket oldinst = checkLock();
         
@@ -184,6 +193,8 @@ public final class Launcher {
                 if (utils.debugMode)
                     argcount++;
                 if (!closeAfterSubmit)
+                    argcount++;
+                if (cmdLineConfDir != null)
                     argcount++;
                 
                 String[] launchArgs = new String[argcount];
@@ -203,6 +214,10 @@ public final class Launcher {
                 }
                 if (!closeAfterSubmit) {
                     launchArgs[argidx] = "--noclose";
+                    argidx++;
+                }
+                if (cmdLineConfDir != null) {
+                    launchArgs[argidx] = "--configdir=" + cmdLineConfDir;
                     argidx++;
                 }
                 

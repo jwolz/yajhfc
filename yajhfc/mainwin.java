@@ -1595,8 +1595,10 @@ public final class mainwin extends JFrame {
             }        
             
             try {
-                hyfc.jobfmt(sentfmt);
-                lst = hyfc.getList("doneq");
+                synchronized (hyfc) {
+                    hyfc.jobfmt(sentfmt);
+                    lst = hyfc.getList("doneq");
+                }
                 if ((lastSentList == null) || !lst.equals(lastSentList)) {
                     String[][] data = new String[lst.size()][];
                     for (int i = 0; i < lst.size(); i++) 
@@ -1609,8 +1611,10 @@ public final class mainwin extends JFrame {
             }
             
             try {
-                hyfc.jobfmt(sendingfmt);
-                lst = hyfc.getList("sendq");
+                synchronized (hyfc) {
+                    hyfc.jobfmt(sendingfmt);
+                    lst = hyfc.getList("sendq");
+                }
                 if ((lastSendingList == null) || !lst.equals(lastSendingList)) {
                     String[][] data = new String[lst.size()][];
                     for (int i = 0; i < lst.size(); i++)

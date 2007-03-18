@@ -1,4 +1,4 @@
-﻿LÉEME (README) de YajHFC 0.3.1 
+LÉEME (README) de YajHFC 0.3.1 
 ======================
 
 ACERCA DE
@@ -60,6 +60,14 @@ de Java (más avanzado que los programas "Hola mundo") utilizando la IDE Eclipse
 CAMBIOS
 -------
 
+0.3.2:
+- Corrección de errores esporádicos cuando se envían faxes
+- Soporte para iniciar una nueva instancia del programa en segundo plano (útil para "impresoras de faxes")
+- Algunos parámetros adicionales nuevos de línea de comandos
+- Botón "Actualizar"
+- Fichero de construcción ant. incluido en las fuentes de distribución
+- Actualización de la documentación
+
 0.3.1:
 - Interfaz intercambiable
 - Opción para mostrar los nuevos faxes en el visor de forma automática
@@ -113,4 +121,17 @@ POR HACER
 
 Las siguientes características posiblemente se añadirán en el futuro:
 
-* Soporte para agenda telefónica en base de datos SQL (vía JDBC).
+* Soporte para agenda telefónica en base de datos LDAP.
+* Más traducciones (mirar abajo)
+
+YajHFC utiliza GNU gettext para las traducciones por lo que resulta muy sencillo 
+integrarlas en el programa.
+Para el traductor que crea una nueva traducción (sin traducir la documentación)
+le llevará unas pocas horas el trabajo inicial y una media hora por cada nueva
+traducción. No necesitas un conocimiento "avanzado" para hacerlo (básicamente
+sólo necesitas saber trabajar con un editor de textos, y si instalas un programa
+especializado resulta más sencillo aún).
+
+Así que, si te gustaría tener YajHFC traducido en tu idioma, los voluntarios
+son siempre bienvenidos. ;-)
+

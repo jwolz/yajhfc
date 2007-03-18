@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-03-07 16:27+0100\n"
+"POT-Creation-Date: 2007-03-17 17:25+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -90,8 +90,8 @@ msgid "Details"
 msgstr ""
 
 #: ../ExceptionDialog.java:178 ../ExceptionDialog.java:187
-#: ../OptionsWin.java:696 ../ProgressWorker.java:172 ../SendWin.java:649
-#: ../SendWin.java:654 ../filters/CustomFilterDialog.java:209
+#: ../OptionsWin.java:696 ../ProgressWorker.java:172 ../SendWin.java:653
+#: ../SendWin.java:658 ../filters/CustomFilterDialog.java:209
 #: ../filters/CustomFilterDialog.java:213 ../phonebook/PhoneBookWin.java:202
 #: ../phonebook/jdbc/ConnectionDialog.java:224
 #: ../phonebook/jdbc/ConnectionDialog.java:228
@@ -154,21 +154,17 @@ msgstr ""
 msgid "File format {0} not supported."
 msgstr ""
 
-#: ../Launcher.java:172 ../Launcher.java:174
-msgid "Unknown command line argument: "
-msgstr ""
-
-#: ../Launcher.java:228
+#: ../Launcher.java:241
 msgid "The new instance did not start after 20 seconds."
 msgstr ""
 
-#: ../Launcher.java:242
+#: ../Launcher.java:255
 msgid ""
 "Cannot launch new program instance, continuing with the existing one!\n"
 "Reason: "
 msgstr ""
 
-#: ../Launcher.java:280
+#: ../Launcher.java:293
 msgid "There already is a running instance!"
 msgstr ""
 
@@ -583,7 +579,7 @@ msgstr ""
 msgid "Use a custom default cover page:"
 msgstr ""
 
-#: ../OptionsWin.java:496 ../SendWin.java:257 ../SendWin.java:564
+#: ../OptionsWin.java:496 ../SendWin.java:257 ../SendWin.java:568
 msgid "Postscript files"
 msgstr ""
 
@@ -735,135 +731,135 @@ msgstr ""
 msgid "Cover page"
 msgstr ""
 
-#: ../SendWin.java:493 ../SendWin.java:497 ../SendWin.java:967
+#: ../SendWin.java:493 ../SendWin.java:500 ../SendWin.java:975
 msgid "Preview"
 msgstr ""
 
-#: ../SendWin.java:497
+#: ../SendWin.java:500
 msgid ""
 "Nothing to preview! (Neither a cover page nor a file to send has been "
 "selected.)"
 msgstr ""
 
-#: ../SendWin.java:501
+#: ../SendWin.java:505
 msgid "Previewing fax"
 msgstr ""
 
-#: ../SendWin.java:563
+#: ../SendWin.java:567
 msgid "All supported formats"
 msgstr ""
 
-#: ../SendWin.java:565
+#: ../SendWin.java:569
 msgid "PDF documents"
 msgstr ""
 
-#: ../SendWin.java:566
+#: ../SendWin.java:570
 msgid "JPEG pictures"
 msgstr ""
 
-#: ../SendWin.java:567
+#: ../SendWin.java:571
 msgid "GIF pictures"
 msgstr ""
 
-#: ../SendWin.java:568
+#: ../SendWin.java:572
 msgid "PNG pictures"
 msgstr ""
 
-#: ../SendWin.java:577
+#: ../SendWin.java:581
 msgid "Choose number from phone book"
 msgstr ""
 
-#: ../SendWin.java:627
+#: ../SendWin.java:631
 msgid "An error occured reading the input: "
 msgstr ""
 
-#: ../SendWin.java:649
+#: ../SendWin.java:653
 #, java-format
 msgid "Can not read file \"{0}\"!"
 msgstr ""
 
-#: ../SendWin.java:654
+#: ../SendWin.java:658
 #, java-format
 msgid "Can not read default cover page file \"{0}\"!"
 msgstr ""
 
-#: ../SendWin.java:729
+#: ../SendWin.java:733
 msgid "Creating cover page"
 msgstr ""
 
-#: ../SendWin.java:742
+#: ../SendWin.java:746
 #, java-format
 msgid "Formatting {0}"
 msgstr ""
 
-#: ../SendWin.java:747
+#: ../SendWin.java:751
 msgid "Error previewing the documents:"
 msgstr ""
 
-#: ../SendWin.java:791
+#: ../SendWin.java:796
 #, java-format
 msgid "Uploading {0}"
 msgstr ""
 
-#: ../SendWin.java:800
+#: ../SendWin.java:806
 #, java-format
 msgid "Creating job to {0}"
 msgstr ""
 
-#: ../SendWin.java:865
+#: ../SendWin.java:873
 #, java-format
 msgid ""
 "An error occured while submitting the fax job for phone number \"{0}\" (will "
 "try to submit the fax to the other numbers anyway): "
 msgstr ""
 
-#: ../SendWin.java:869
+#: ../SendWin.java:877
 msgid "Cleaning up"
 msgstr ""
 
-#: ../SendWin.java:877
+#: ../SendWin.java:885
 msgid "An error occured while submitting the fax: "
 msgstr ""
 
-#: ../SendWin.java:895
+#: ../SendWin.java:903
 msgid ""
 "You haven't selected a file to transmit, so your fax will ONLY contain the "
 "cover page.\n"
 "Continue anyway?"
 msgstr ""
 
-#: ../SendWin.java:895
+#: ../SendWin.java:903
 msgid "Continue?"
 msgstr ""
 
-#: ../SendWin.java:898
+#: ../SendWin.java:906
 msgid "To send a fax you must select at least one file!"
 msgstr ""
 
-#: ../SendWin.java:898 ../SendWin.java:904
+#: ../SendWin.java:906 ../SendWin.java:912
 #: ../filters/CustomFilterDialog.java:220
 msgid "Warning"
 msgstr ""
 
-#: ../SendWin.java:904
+#: ../SendWin.java:912
 msgid "To send a fax you have to enter at least one phone number!"
 msgstr ""
 
-#: ../SendWin.java:909
+#: ../SendWin.java:917
 msgid "Sending fax"
 msgstr ""
 
-#: ../SendWin.java:967
+#: ../SendWin.java:975
 #, java-format
 msgid "Preview is not supported for document \"{0}\"."
 msgstr ""
 
-#: ../SendWin.java:1012
+#: ../SendWin.java:1020
 #, java-format
 msgid "The document {0} could not get converted to PostScript. Reason:"
 msgstr ""
 
-#: ../SendWin.java:1122
+#: ../SendWin.java:1130
 msgid "<stdin>"
 msgstr ""
 

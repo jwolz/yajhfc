@@ -1,5 +1,5 @@
-README for YajHFC 0.3.1
-========================
+README for YajHFC 0.3.2
+=======================
 
 ABOUT
 -----
@@ -25,12 +25,12 @@ INSTALLATION
 Requirements:
 * JRE 5.0 or higher
 * A running hylafax server in your network (of course ;-) )
-* Some program to view TIFF files (also see FAQ.txt for this)
+* Some program to view TIFF files (also see the FAQ)
 * Optional: A PostScript viewer (e.g. Ghostview)
 
-To install YajHFC just download the yajhfc-0_3_1.jar file to some folder on your
+To install YajHFC just download the yajhfc-0_3_2.jar file to some folder on your
 file system.
-To execute it, use: "java -jar yajhfc-0_3_1.jar"
+To execute it, use: "java -jar yajhfc-0_3_2.jar"
 (In Windows you usually can just double click the jar file as well.)
 
 LICENSE
@@ -42,6 +42,9 @@ See the file COPYING for details.
 SOURCE CODE
 -----------
 
+For instructions describing how to build YajHFC from source
+please see the file BUILDING.txt in this directory.
+
 YajHFC uses the following packages:
 (1) A slightly modified version of the gnu.hylafax package 
     (originally from http://gnu-hylafax.sf.net/)
@@ -52,7 +55,7 @@ YajHFC uses the following packages:
 (3) "Java look and feel Graphics Repository" (jlfgr-1_0.jar) 
     from http://java.sun.com/developer/techDocs/hi/repository/
 
-Copies of the required files can also be found in the jar 
+Copies of some of the required files can also be found in the jar 
 subdirectory in the source archive.
 
 YajHFC was originally written as a first more complicated
@@ -60,6 +63,15 @@ YajHFC was originally written as a first more complicated
 
 CHANGES
 -------
+
+0.3.2:
+- Bugfix for sporadical errors while sending faxes
+- Support for launching a new instance in the background (useful for "fax printers")
+- Some additional new commandline parameters
+- Refresh button
+- ant build file included in the source distribution
+- documentation updates
+
 0.3.1:
 - Changeable Look&Feel
 - Option to show new faxes in a viewer automatically
@@ -115,4 +127,16 @@ TODO
 The following features might be added in the future:
 
 * Support for phone books in LDAP databases
+* More Translations? (see below)
+
+YajHFC uses GNU gettext for translations, so it is easy to integrate
+additional ones into the program.
+For the translator creating a new translation (without translating the 
+documentation) will require a few hours for the initial work and about
+an hour for every new release. You don't need "advanced" technical
+knowledge to do it (basically you only need to know how to work with a 
+text editor, by installing specialized software this gets even easier).
+
+So, if you would like to have YajHFC translated to your native language,
+volunteers are always welcome. ;-)
 

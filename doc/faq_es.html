@@ -38,44 +38,46 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <!--Table of Contents-->
 
 <UL>
-<LI><A NAME="tex2html23"
+<LI><A NAME="tex2html24"
   HREF="faq_es.html#SECTION00020000000000000000">Instalación</A>
 <UL>
-<LI><A NAME="tex2html24"
-  HREF="faq_es.html#SECTION00021000000000000000">¿Dónde puedo conseguir un visor de faxes para Windows?</A>
 <LI><A NAME="tex2html25"
-  HREF="faq_es.html#SECTION00022000000000000000">¿Dónde puedo obtener un visor de faxes para Linux/*BSD/... ?</A>
+  HREF="faq_es.html#SECTION00021000000000000000">¿Dónde puedo conseguir un visor de faxes para Windows?</A>
 <LI><A NAME="tex2html26"
-  HREF="faq_es.html#SECTION00023000000000000000">¿Qué puedo utilizar como visor de faxes en Mac OS X?</A>
+  HREF="faq_es.html#SECTION00022000000000000000">¿Dónde puedo obtener un visor de faxes para Linux/*BSD/... ?</A>
 <LI><A NAME="tex2html27"
+  HREF="faq_es.html#SECTION00023000000000000000">¿Qué puedo utilizar como visor de faxes en Mac OS X?</A>
+<LI><A NAME="tex2html28"
   HREF="faq_es.html#SECTION00024000000000000000">¿Dónde puedo obtener un visor PostScript?</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html28"
+<LI><A NAME="tex2html29"
   HREF="faq_es.html#SECTION00030000000000000000">Utilización del programa</A>
 <UL>
-<LI><A NAME="tex2html29"
-  HREF="faq_es.html#SECTION00031000000000000000">¿Cómo puedo editar las plantillas de las portadas?</A>
 <LI><A NAME="tex2html30"
-  HREF="faq_es.html#SECTION00032000000000000000">Quiero acceder a la agenda telefónica por medio de JDBC pero YajHFC no encuentra el controlador aunque especifique la ruta correcta para llamar a Java.</A>
+  HREF="faq_es.html#SECTION00031000000000000000">¿Cómo puedo editar las plantillas de las portadas?</A>
 <LI><A NAME="tex2html31"
-  HREF="faq_es.html#SECTION00033000000000000000">¿Por qué no se puede seleccionar (gris claro) la opción de Ver-&gt;Sólo faxes propios?</A>
+  HREF="faq_es.html#SECTION00032000000000000000">Quiero acceder a la agenda telefónica por medio de JDBC pero YajHFC no encuentra el controlador aunque especifique la ruta correcta para llamar a Java.</A>
 <LI><A NAME="tex2html32"
-  HREF="faq_es.html#SECTION00034000000000000000">¿Qué puedo poner como valor igual a en el cuadro de diálogo de filtrado personalizado? </A>
+  HREF="faq_es.html#SECTION00033000000000000000">¿Por qué no se puede seleccionar (gris claro) la opción de Ver-&gt;Sólo faxes propios?</A>
 <LI><A NAME="tex2html33"
-  HREF="faq_es.html#SECTION00035000000000000000">¿Qué argumentos de línea de comandos entiende YajHFC?</A>
+  HREF="faq_es.html#SECTION00034000000000000000">¿Qué puedo poner como valor igual a en el cuadro de diálogo de filtrado personalizado? </A>
 <LI><A NAME="tex2html34"
-  HREF="faq_es.html#SECTION00036000000000000000">Cuando intento ver los faxes enviados siempre obtengo un mensaje de error que dice Formato de archivo PCL no soportado, aunque todos los documentos están el formato PostScript/PDF.</A>
+  HREF="faq_es.html#SECTION00035000000000000000">¿Qué argumentos de línea de comandos entiende YajHFC?</A>
 <LI><A NAME="tex2html35"
-  HREF="faq_es.html#SECTION00037000000000000000">¿Qué significa la columna XYZ?</A>
+  HREF="faq_es.html#SECTION00036000000000000000">Cuando intento ver los faxes enviados siempre obtengo un mensaje de error que dice Formato de archivo PCL no soportado, aunque todos los documentos están el formato PostScript/PDF.</A>
+<LI><A NAME="tex2html36"
+  HREF="faq_es.html#SECTION00037000000000000000">Cuando YajHFC se ejecuta en Windows algunas veces guarda su configuración en C:&#92;.yajhfc en lugar de C:&#92;Documents and Settings&#92;USERNAME&#92;.yajhfc</A>
+<LI><A NAME="tex2html37"
+  HREF="faq_es.html#SECTION00038000000000000000">¿Qué significa la columna XYZ?</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html36"
+<LI><A NAME="tex2html38"
   HREF="faq_es.html#SECTION00040000000000000000">Varios</A>
 <UL>
-<LI><A NAME="tex2html37"
+<LI><A NAME="tex2html39"
   HREF="faq_es.html#SECTION00041000000000000000">¿Por qué se guardan las contraseñas en texto plano?</A>
-<LI><A NAME="tex2html38"
+<LI><A NAME="tex2html40"
   HREF="faq_es.html#SECTION00042000000000000000">¿Por qué escogiste ese nombre tan tonto?</A>
 </UL></UL>
 <!--End of Table of Contents-->
@@ -229,13 +231,18 @@ y para simular el efecto de <code>?</code> hay que utilizar <code>.</code>.
 <P>
 <PRE>
 Uso general:
-java -jar yajhfc.jar [--help] [--debug] [--admin] [--stdin | filename]
-Descripcisn de los argumentos:
-filename    El nombre del archivo PostScript para enviar.
---stdin     Lee el archivo para enviar de una entrada estándar
---admin     Inicia en modo administrador
---debug     Salida de información de errores
---help      Muestra este texto
+java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose]
+                     [--configdir=directory] [--stdin | filename]
+Descripción de los argumentos:
+filename     El nombre del archivo PostScript para enviar.
+--stdin      Lee el archivo para enviar de una entrada estándar
+--admin      Inicia en modo administrador
+--debug      Salida de información de errores
+--background Si no hay ninguna instancia en ejecución, iniciar una nueva instancia
+             y terminar (después de enviar el archivo)
+--noclose    No cerrar YajHFC después de enviar el fax
+--configdir  Establece un directorio de configuración para utilizar en lugar de ~/.yajhfc
+--help       Muestra este texto
 </PRE>
 
 <P>
@@ -259,6 +266,22 @@ utilizando la extensión si se reporta PCL (lo cual generalmente funciona bastan
 <P>
 
 <H2><A NAME="SECTION00037000000000000000">
+Cuando YajHFC se ejecuta en Windows algunas veces guarda su configuración en <TT>C:&#92;.yajhfc</TT> en lugar de <TT>C:&#92;Documents and Settings&#92;USERNAME&#92;.yajhfc</TT></A>
+</H2>
+
+<P>
+De manera predeterminada, YajHFC guarda su configuración en el subdirectorio <TT>.yajhfc</TT> del directorio que devuelve
+la propiedad del sistema Java <TT>user.home</TT>.
+A veces, algunas versiones de Java parece que no establecen esta propiedad correctamente, lo que provoca dicho error.
+
+<P>
+Para solucionar ésto, puedes establecer esta propiedad explícitamente cuando inicias YajHFC utilizando la línea de comandos de java <TT>-D</TT>, por ejemplo:
+<BR>
+<TT>java -Duser.home=%USERPROFILE% -jar "C:&#92;Archivos de Programa&#92;yajhfc.jar"</TT>
+
+<P>
+
+<H2><A NAME="SECTION00038000000000000000">
 ¿Qué significa la columna XYZ?</A>
 </H2>
 
@@ -298,7 +321,7 @@ El único mitodo seguro requeriría introducir una contraseña maestra cada vez 
 YajHFC empezó como "proyecto de prueba" para Java y la biblioteca <TT>gnu.hylafax</TT>
 y por lo tanto no tuvo un nombre "bonito". Después de trabajar un poco sobre ello, me di cuenta de que se volvería útil, por lo que elegí darle un nombre.
 Dado que estaba con la herramienta Yast de SuSE en ese momento y sabía 
-que había / hay otros clientes Java para HylaFAX, lo llamé "yet another" java hylafax client (en español, "otro cliente Java para HylaFAX").
+que había / hay otros clientes Java para HylaFAX, lo llamé "<B>y</B>et <B>a</B>nother <B>J</B>ava <B>H</B>ylaFAX <B>c</B>lient" (en español, "otro cliente Java para HylaFAX").
 
 <P>
 
@@ -320,11 +343,11 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>-no_subdir -split 0 -html_version 3.2,unicode -no_navigation faq_es.tex</TT>
 <P>
-The translation was initiated by Jonas Wolz on 2007-03-08
+The translation was initiated by Jonas Wolz on 2007-03-18
 <BR><HR>
 <ADDRESS>
 Jonas Wolz
-2007-03-08
+2007-03-18
 </ADDRESS>
 </BODY>
 </HTML>

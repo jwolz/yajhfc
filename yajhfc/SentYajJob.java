@@ -34,16 +34,16 @@ public class SentYajJob extends YajJob {
     //private Job curJob = null;
 
     public Job getJob(HylaFAXClient hyfc) throws ServerResponseException, IOException {
-        /*if (curJob == null) {
-            curJob =*/ return hyfc.getJob((Integer)getData(columns.indexOf(utils.jobfmt_JobID)));
-        //}
-        //return curJob;
+        return hyfc.getJob((Integer)getData(columns.indexOf(utils.jobfmt_JobID)));
     }
     
     @Override
     public List<HylaServerFile> getServerFilenames(HylaFAXClient hyfc) throws IOException, ServerResponseException {
-        String[] files = getJob(hyfc).getDocumentName().split("\n");
+        String[] files;
         ArrayList<HylaServerFile> availFiles = new ArrayList<HylaServerFile>();
+        synchronized (hyfc) {
+            files = getJob(hyfc).getDocumentName().split("\n");
+        }
         
         // The last entry is "End of Documents"!
         for (int i = 0; i < files.length - 1; i++) {
@@ -138,7 +138,9 @@ public class SentYajJob extends YajJob {
     @Override
     public void delete(HylaFAXClient hyfc) throws IOException,
             ServerResponseException {
-        hyfc.delete(getJob(hyfc));
+        synchronized (hyfc) {
+            hyfc.delete(getJob(hyfc));
+        }
     }
     
     @Override
