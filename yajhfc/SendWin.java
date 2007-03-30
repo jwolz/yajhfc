@@ -1,7 +1,7 @@
 package yajhfc;
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005-2006 Jonas Wolz
+ * Copyright (C) 2005-2007 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,12 +20,9 @@ package yajhfc;
 
 import gnu.hylafax.HylaFAXClient;
 import gnu.hylafax.Job;
-import gnu.inet.ftp.ServerResponseException;
 import info.clearthought.layout.TableLayout;
 import info.clearthought.layout.TableLayoutConstraints;
 
-import java.awt.Component;
-import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
@@ -33,7 +30,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -44,7 +40,6 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import javax.print.DocFlavor;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Box;
@@ -619,8 +614,8 @@ public class SendWin extends JDialog  {
         tflFiles.addListItem(fileName);
     }
     
-    public void addServerFile(String serverFileName) {
-        tflFiles.model.addElement(new ServerFileTFLItem(serverFileName));
+    public void addServerFile(HylaServerFile serverFile) {
+        tflFiles.model.addElement(new ServerFileTFLItem(serverFile));
     }
     
     public void addInputStream(InputStream inStream) {
@@ -630,6 +625,19 @@ public class SendWin extends JDialog  {
             //JOptionPane.showMessageDialog(ButtonSend, _("An error occured reading the input: ") + "\n" + e.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
             ExceptionDialog.showExceptionDialog(this, _("An error occured reading the input: "), e);
         }
+    }
+    
+    public void addRecipient(String faxNumber, String name, String company, String location, String voiceNumber) {
+        NumberTFLItem tfl = new NumberTFLItem(faxNumber);
+        tfl.name = name;
+        tfl.company = company;
+        tfl.location = location;
+        tfl.voiceNumber = voiceNumber;
+        tflNumbers.addListItem(tfl);
+    }
+    
+    public void setSubject(String subject) {
+        textSubject.setText(subject);
     }
             
     private void setPaperSizes() {
@@ -744,7 +752,7 @@ public class SendWin extends JDialog  {
                 for (int i = 0; i < tflFiles.model.size(); i++) {
                     HylaTFLItem item = (HylaTFLItem)tflFiles.model.get(i);
                     updateNote(MessageFormat.format(_("Formatting {0}"), item.getText()));
-                    item.preview(SendWin.this);
+                    item.preview(SendWin.this, hyfc);
                     stepProgressBar(step);
                 }
             } catch (Exception e1) {
@@ -956,243 +964,10 @@ public class SendWin extends JDialog  {
     }
 }  
 
-abstract class HylaTFLItem extends TFLItem {
-    protected String serverName = "<invalid>";
-    protected PaperSize desiredPaperSize = utils.papersizes[0];
-    
-    public abstract void upload(HylaFAXClient hyfc) throws FileNotFoundException, IOException, ServerResponseException ;
-    
-    // May return null!
-    public abstract InputStream getInputStream() throws FileNotFoundException, IOException;
-    
-    
-    /**
-     * Previews the file in a viewer.
-     */
-    public boolean preview(Component parent) throws IOException, UnknownFormatException {
-        FormattedFile previewFile = getPreviewFilename();
-        if (previewFile == null) {
-            JOptionPane.showMessageDialog(parent, MessageFormat.format(utils._("Preview is not supported for document \"{0}\"."), this.getText()), utils._("Preview"), JOptionPane.INFORMATION_MESSAGE);
-            return false;
-        }
-        previewFile.view();
-        return true;
-    }
-    
-    /**
-     * Returns a local file to be used by the default implementation of preview().
-     * Return null if preview is not supported.
-     * @return
-     */
-    protected FormattedFile getPreviewFilename() {
-        return null;
-    }
-    
-    public String getServerName() {
-        return serverName;
-    }
-    
-    public void cleanup() {
-        // NOP
-    }
-    
-    public void setDesiredPaperSize(PaperSize newSize) {
-        desiredPaperSize = newSize;
-    }
-    
-    public PaperSize getDesiredPaperSize() {
-        return desiredPaperSize;
-    }
-}
-
-class LocalFileTFLItem extends HylaTFLItem {
-    protected String fileName;
-    protected boolean prepared = false;
-    protected FormattedFile preparedFile;
-    
-    private void convertFile(DocFlavor.INPUT_STREAM flavor) {
-        FileConverter fconv = new FileConverter(flavor);
-        try {
-            fconv.paperSize = desiredPaperSize;
-            File f = fconv.convertToPSTemp(new FileInputStream(fileName));
-            preparedFile = new FormattedFile(f, FileFormat.PostScript);
-        }  catch (Exception e) {
-            ExceptionDialog.showExceptionDialog((Dialog)null, MessageFormat.format(utils._("The document {0} could not get converted to PostScript. Reason:"), getText()), e);
-        }        
-    }
-    
-    @Override
-    public void setDesiredPaperSize(PaperSize newSize) {
-        if (!newSize.equals(desiredPaperSize)) {
-            super.setDesiredPaperSize(newSize);
-            prepared = false;
-        }
-    }
-    
-    protected void prepareFile() throws FileNotFoundException, IOException {
-        if (prepared)
-            return;
-        
-        FileFormat format = FormattedFile.detectFileFormat(fileName);
-        switch (format) { 
-        case JPEG:
-            convertFile(DocFlavor.INPUT_STREAM.JPEG);
-            break;
-        case GIF:
-            convertFile(DocFlavor.INPUT_STREAM.GIF);
-            break;
-        case PNG:
-            convertFile(DocFlavor.INPUT_STREAM.PNG);
-            break;
-        /*case PlainText:
-            convertFile(DocFlavor.INPUT_STREAM.TEXT_PLAIN_HOST);
-            break;*/
-        /*case Unknown:
-            if (JOptionPane.showConfirmDialog(null, MessageFormat.format(utils._("The document \"{0}\" has a unknown data format. It might not get transferred by HylaFAX. Use it anyway?"), getText()), utils._("Unknown format"), JOptionPane.QUESTION_MESSAGE | JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                preparedFile = new FormattedFile(fileName, FileFormat.Unknown);
-            } else {
-                preparedFile = null;
-            }
-            break;
-        */
-        default: // PostScript, PDF, TIFF, ...
-            preparedFile = new FormattedFile(fileName, format);
-            break;
-        }
-        prepared = true;
-    }
-    
-    @Override
-    protected FormattedFile getPreviewFilename() {
-        try {
-            prepareFile();
-        } catch (Exception ex) {
-            return null;
-        }
-        
-        return preparedFile;
-    }
-    
-    @Override
-    public InputStream getInputStream() throws FileNotFoundException, IOException {
-        prepareFile();
-        if (preparedFile == null) 
-            return null;
-        
-        return new FileInputStream(preparedFile.file);
-    }
-
-    @Override
-    public void upload(HylaFAXClient hyfc) throws FileNotFoundException, IOException, ServerResponseException {
-        serverName = hyfc.putTemporary(getInputStream());
-    }
-
-    @Override
-    public String getText() {
-        return fileName;
-    }
-
-    @Override
-    public void setText(String newText) {
-        if (!fileName.equals(newText)) {
-            fileName = newText;
-            prepared = false;
-        }        
-    }
-    
-    public LocalFileTFLItem(String fileName) {
-        this.fileName = fileName;
-    }
-}
-
-class StreamTFLItem extends HylaTFLItem {
-    protected FormattedFile tempFile;
-    
-    @Override
-    public void cleanup() {
-        tempFile.file.delete();
-        tempFile = null;
-    }
-
-    @Override
-    public InputStream getInputStream() throws FileNotFoundException {
-        return new FileInputStream(tempFile.file);
-    }
 
 
-    @Override
-    public void upload(HylaFAXClient hyfc) throws FileNotFoundException, IOException, ServerResponseException {
-        serverName = hyfc.putTemporary(getInputStream());
-    }
 
-    @Override
-    public String getText() {
-        return utils._("<stdin>");
-    }
 
-    @Override
-    public boolean isMutable() {
-        return false;
-    }
-    
-    @Override
-    protected FormattedFile getPreviewFilename() {
-        return tempFile;
-    }
 
-    @Override
-    public void setText(String newText) {
-        throw new IllegalArgumentException("StreamTFLItem is immutable!");
-    }
-    
-    public StreamTFLItem(InputStream inStream) throws IOException, FileNotFoundException {
-        File tmp;
-        // Copy input stream to a temporary file:
-        tmp = File.createTempFile("submit", ".tmp");
-        tmp.deleteOnExit();
-        byte[] buf = new byte[8000];
-        int len = 0;
-        FileOutputStream fOut = new FileOutputStream(tmp);
-        BufferedInputStream fIn = new BufferedInputStream(inStream);
-        while ((len = fIn.read(buf)) >= 0) {
-            fOut.write(buf, 0, len);
-        }
-        fOut.close();
-        
-        tempFile = new FormattedFile(tmp);
-        tempFile.detectFormat();
-    }
-    
-}
 
-class ServerFileTFLItem extends HylaTFLItem {
-    
-    @Override
-    public InputStream getInputStream() throws FileNotFoundException {
-        return null;
-    }
 
-    @Override
-    public void upload(HylaFAXClient hyfc) throws FileNotFoundException, IOException, ServerResponseException {
-        // NOP
-    }
-
-    @Override
-    public String getText() {
-        return "@server:" + serverName;
-    }
-
-    @Override
-    public boolean isMutable() {
-        return false;
-    }
-
-    @Override
-    public void setText(String newText) {
-        throw new IllegalArgumentException("ServerFileTFLItem is immutable!");
-    }
-    
-    public ServerFileTFLItem(String serverFile) {
-        this.serverName = serverFile;
-    }
-}

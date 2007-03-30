@@ -32,7 +32,13 @@ import yajhfc.FormattedFile.FileFormat;
 
 public class SentYajJob extends YajJob {
     //private Job curJob = null;
-
+    private boolean haveError;
+    
+    @Override
+    public boolean isError() {
+        return haveError;
+    }
+    
     public Job getJob(HylaFAXClient hyfc) throws ServerResponseException, IOException {
         return hyfc.getJob((Integer)getData(columns.indexOf(utils.jobfmt_JobID)));
     }
@@ -150,5 +156,18 @@ public class SentYajJob extends YajJob {
 
     public SentYajJob(Vector<FmtItem> cols, String[] stringData) {
         super(cols, stringData);
+        
+        int idx = columns.indexOf(utils.jobfmt_Jobstate);
+        if (idx >= 0) {
+            String status = getStringData(idx);
+            haveError = (status.equals("F") || status.equals("?"));
+        } else {
+            idx = columns.indexOf(utils.jobfmt_Status);
+            if (idx >= 0) {
+                haveError = (getStringData(idx).length() > 0);
+            } else {
+                haveError = false; // Actually undetermined...
+            }
+        }
     }
 }

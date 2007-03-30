@@ -19,6 +19,7 @@ package yajhfc;
  */
 
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
@@ -134,9 +135,20 @@ public class TooltipJTable extends JTable {
     @Override
     public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
         Component comp = super.prepareRenderer(renderer, row, column);
-        Font customFnt = getRealModel().getCellFont(getSorter().modelIndex(row), getColumnModel().getColumn(column).getModelIndex());
+        
+        int realRow = getSorter().modelIndex(row);
+        int realCol =  getColumnModel().getColumn(column).getModelIndex(); 
+        MyTableModel realModel = getRealModel(); 
+        
+        Font customFnt = realModel.getCellFont(realRow, realCol);
         if (customFnt != null)
             comp.setFont(customFnt);
+        
+        if (!isCellSelected(row, column)) {
+            Color customColor = realModel.getCellBackgroundColor(realRow, realCol);
+            comp.setBackground(customColor);
+        }
+        
         return comp;
     }
 }

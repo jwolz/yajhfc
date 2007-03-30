@@ -40,7 +40,7 @@ public final class utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2007 by Jonas Wolz";
-    public static final String AppVersion = "0.3.2";
+    public static final String AppVersion = "0.3.3pre";
     public static final String AuthorEMail = "Jonas Wolz &lt;jwolz@freenet.de&gt;";
     public static final String HomepageURL = "http://www.yajhfc.de.vu/"; 
     
@@ -56,6 +56,12 @@ public final class utils {
     
     public static final FmtItem jobfmt_Owner =
         new FmtItem("o", _("Owner"),  _("Job owner"));
+    
+    public static final FmtItem jobfmt_Jobstate =
+        new FmtItem("a", _("Job state"), _("Job state (one-character symbol)"));
+    
+    public static final FmtItem jobfmt_Status =
+        new FmtItem("s", _("Status"), _("Job status information from last failure"));
     
     public static final FmtItem[] jobfmts =
     { 
@@ -85,7 +91,7 @@ public final class utils {
             new FmtItem("X", _("Job type"), _("Job type (one-character symbol)")), 
             new FmtItem("Y", _("Scheduled time"), _("Scheduled date and time"), new HylaDateField("yyyy/MM/dd HH.mm.ss", _("dd/MM/yyyy HH:mm:ss"))), 
             new FmtItem("Z", _("Scheduled time in seconds since the UNIX epoch")), 
-            new FmtItem("a", _("Job state"), _("Job state (one-character symbol)")), 
+            jobfmt_Jobstate, 
             new FmtItem("b", _("# consecutive failed tries"), Integer.class), 
             new FmtItem("c", _("Client machine name")), 
             new FmtItem("d", _("Total # dials"), Integer.class), 
@@ -103,7 +109,7 @@ public final class utils {
             new FmtItem("p", _("# pages"), _("# pages transmitted"), Integer.class), 
             new FmtItem("q", _("Retry time"), _("Job retry time (MM::SS)")/*, new HylaDateField("mm:ss", _("mm:ss"))*/), 
             new FmtItem("r", _("Resolution"), _("Document resolution in lines/inch"), Integer.class), 
-            new FmtItem("s", _("Status"), _("Job status information from last failure")), 
+            jobfmt_Status, 
             new FmtItem("t", _("Tries"), _("Total # tries attempted"), Integer.class), 
             new FmtItem("u", _("Max. tries"), _("Maximum # tries"), Integer.class), 
             new FmtItem("v", _("Specified number"), _("Client-specified dialstring")), 

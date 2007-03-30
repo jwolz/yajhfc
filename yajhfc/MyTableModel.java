@@ -18,6 +18,7 @@ package yajhfc;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+import java.awt.Color;
 import java.awt.Font;
 import java.util.Arrays;
 import java.util.Vector;
@@ -41,6 +42,9 @@ public class MyTableModel extends AbstractTableModel {
     
     public Vector<FmtItem> columns;
     
+    private static final Color defErrorColor = new Color(255, 230, 230);
+    
+    public Color errorColor = defErrorColor;
     
     public void setJobFilter(YajJobFilter jobFilter) {
         this.jobFilter = jobFilter;
@@ -60,6 +64,22 @@ public class MyTableModel extends AbstractTableModel {
      */
     public Font getCellFont(int row, int col) {
         return null;
+    }
+    
+    /**
+     * Returns a custom background color for the table cell.
+     * A return value of null means "use default color"
+     * @param row
+     * @param col
+     * @param cellSelected
+     * @return
+     */
+    public Color getCellBackgroundColor(int row, int col) {       
+        if (getJob(row).isError()) {
+            return errorColor;
+        } else {
+            return null;
+        }
     }
     
     protected YajJob createYajJob(String[] data) {
