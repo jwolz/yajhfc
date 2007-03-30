@@ -117,6 +117,14 @@ public abstract class YajJob {
     }
     
     /**
+     * Returns if this Job had an error.
+     * @return
+     */
+    public boolean isError() {
+        return false;
+    }
+    
+    /**
      * Returns the associated Files for this Job.
      * @param hyfc
      * HylaFAXClient to use as connection.

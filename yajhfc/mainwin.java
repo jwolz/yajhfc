@@ -19,6 +19,7 @@ package yajhfc;
  */
 
 import gnu.hylafax.HylaFAXClient;
+import gnu.hylafax.Job;
 import gnu.inet.ftp.ServerResponseException;
 
 import java.awt.BorderLayout;
@@ -36,8 +37,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -54,7 +53,6 @@ import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -143,7 +141,7 @@ public final class mainwin extends JFrame {
     
     // Actions:
     private Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward, actAdminMode;
-    private Action actRefresh;
+    private Action actRefresh, actResend;
     private ActionEnabler actChecker;
     
     
@@ -285,7 +283,7 @@ public final class mainwin extends JFrame {
                         int step = 1000 / serverFiles.size();
                         for(HylaServerFile hsf : serverFiles) {
                             try {
-                                hsf.view(hyfc, myopts);
+                                hsf.view(hyfc);
                                 //System.out.println(hsf.getPath());
                             } catch (Exception e1) {
                                 //JOptionPane.showMessageDialog(mainwin.this, MessageFormat.format(_("An error occured displaying the file {0} (job {1}):\n"), hsf.getPath(), yj.getIDValue()) + e1.getMessage() , _("Error"), JOptionPane.ERROR_MESSAGE);
@@ -533,9 +531,9 @@ public final class mainwin extends JFrame {
                 if (TabMain.getSelectedComponent() != scrollRecv || TableRecv.getSelectedRow() < 0)
                     return;
                 
-                String filename;
+                HylaServerFile file;
                 try {
-                    filename = TableRecv.getJobForRow(TableRecv.getSelectedRow()).getServerFilenames(hyfc).get(0).getPath();
+                    file = TableRecv.getJobForRow(TableRecv.getSelectedRow()).getServerFilenames(hyfc).get(0);
                 } catch (Exception e1) {
                     //JOptionPane.showMessageDialog(mainwin.this, _("Couldn't get a filename for the fax:\n") + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
                     ExceptionDialog.showExceptionDialog(mainwin.this, _("Couldn't get a filename for the fax:"), e1);
@@ -544,9 +542,10 @@ public final class mainwin extends JFrame {
                 
                 SendWin sw = new SendWin(hyfc, mainwin.this);
                 sw.setModal(true);
-                sw.addServerFile(filename);
+                sw.addServerFile(file);
                 sw.setVisible(true);
                 refreshTables();
+                
             }
         };
         actForward.putValue(Action.NAME, _("Forward fax..."));
@@ -582,6 +581,52 @@ public final class mainwin extends JFrame {
         actRefresh.putValue(Action.SMALL_ICON, utils.loadIcon("general/Refresh"));
         actRefresh.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
         
+        actResend = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                TooltipJTable selTable = (TooltipJTable)((JScrollPane)TabMain.getSelectedComponent()).getViewport().getView();
+                if (!(selTable == TableSent && selTable != TableSending) || selTable.getSelectedRow() < 0)
+                    return;
+                
+                SentYajJob job = (SentYajJob)selTable.getJobForRow(selTable.getSelectedRow());
+                
+                List<HylaServerFile> files;
+                String number, voiceNumber, company, name, location, subject;
+
+                try {
+                    synchronized (hyfc) {
+                        files = job.getServerFilenames(hyfc);
+                        
+                        Job hyJob = job.getJob(hyfc);
+                        number = hyJob.getDialstring();
+                        name = hyJob.getProperty("TOUSER");
+                        company = hyJob.getProperty("TOCOMPANY");
+                        location = hyJob.getProperty("TOLOCATION");
+                        voiceNumber = hyJob.getProperty("TOVOICE");
+                        subject = hyJob.getProperty("REGARDING");
+                    }
+                } catch (Exception e1) {
+                    //JOptionPane.showMessageDialog(mainwin.this, _("Couldn't get a filename for the fax:\n") + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                    ExceptionDialog.showExceptionDialog(mainwin.this, _("Couldn't get data to resend the fax."), e1);
+                    return;
+                }
+                
+                SendWin sw = new SendWin(hyfc, mainwin.this);
+                sw.setModal(true);
+                
+                for (HylaServerFile hysf : files) {
+                    sw.addServerFile(hysf);
+                }
+                sw.addRecipient(number, name, company, location, voiceNumber);
+                sw.setSubject(subject);
+                
+                sw.setVisible(true);
+                refreshTables();
+            };
+        };
+        actResend.putValue(Action.NAME, _("Resend fax..."));
+        actResend.putValue(Action.SHORT_DESCRIPTION, _("Resend the fax"));
+        //actResend.putValue(Action.SMALL_ICON, utils.loadIcon("general/Refresh"));
+        
         actChecker = new ActionEnabler();
     }
     
@@ -590,6 +635,10 @@ public final class mainwin extends JFrame {
             tblPopup = new JPopupMenu(_("Fax"));
             tblPopup.add(new JMenuItem(actShow));
             tblPopup.add(new JMenuItem(actFaxSave));
+            tblPopup.addSeparator();
+            tblPopup.add(new JMenuItem(actForward));
+            tblPopup.add(new JMenuItem(actResend));
+            tblPopup.addSeparator();
             tblPopup.add(new JMenuItem(actDelete));
             tblPopup.addSeparator();
             tblPopup.add(new ActionJCheckBoxMenuItem(actFaxRead));
@@ -1165,7 +1214,7 @@ public final class mainwin extends JFrame {
                         for (RecvYajJob j : evt.getItems()) {
                             for (HylaServerFile hsf : j.getServerFilenames(hyfc)) {
                                 try {
-                                    hsf.view(hyfc, myopts);
+                                    hsf.view(hyfc);
                                 } catch (Exception e) {
                                     if (utils.debugMode) {
                                         System.out.println("Exception while trying to view new faxes:");
@@ -1287,6 +1336,7 @@ public final class mainwin extends JFrame {
             menuFax.add(getSendMenuItem());
             menuFax.add(new JMenuItem(actPoll));
             menuFax.add(new JMenuItem(actForward));
+            menuFax.add(new JMenuItem(actResend));
             menuFax.addSeparator();
             menuFax.add(getShowMenuItem());
             menuFax.add(new JMenuItem(actFaxSave));
@@ -1504,6 +1554,7 @@ public final class mainwin extends JFrame {
             boolean showState = false;
             boolean deleteState = false;
             boolean faxReadState = false, faxReadSelected = false;
+            boolean resendState = false;
             
             if (TabMain.getSelectedComponent() == scrollRecv) { // Received Table active
                 if (TableRecv.getSelectedRow() >= 0) {
@@ -1516,11 +1567,13 @@ public final class mainwin extends JFrame {
                 if (TableSent.getSelectedRow() >= 0) {
                     deleteState = true;
                     showState = true;
+                    resendState = true;
                 }
             } else if (TabMain.getSelectedComponent() == scrollSending) { // Sending Table
                 if (TableSending.getSelectedRow() >= 0) {
                     deleteState = true;
                     showState = true;
+                    resendState = true;
                 }
             } 
             
@@ -1529,6 +1582,7 @@ public final class mainwin extends JFrame {
             actDelete.setEnabled(deleteState);
             actFaxRead.setEnabled(faxReadState);
             actForward.setEnabled(faxReadState);
+            actResend.setEnabled(resendState);
             actFaxRead.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, faxReadSelected);
         }
     }
@@ -1648,45 +1702,4 @@ public final class mainwin extends JFrame {
     }
 }  
 
-class ActionJCheckBoxMenuItem extends JCheckBoxMenuItem {
-    
-    public static final String SELECTED_PROPERTY = "selected";
-    
-    @Override
-    protected PropertyChangeListener createActionPropertyChangeListener(Action a) {
-        return new MyPropertyChangeListener(super.createActionPropertyChangeListener(a));
-    }
-    
-    @Override
-    protected void configurePropertiesFromAction(Action a) {
-        Boolean selValue = (Boolean)a.getValue(SELECTED_PROPERTY);
-        if (selValue != null)
-            setSelected(selValue);
-        
-        super.configurePropertiesFromAction(a);
-    }
-    
-    public ActionJCheckBoxMenuItem() {
-        super();
-    }
-    
-    public ActionJCheckBoxMenuItem(Action a) {
-        super(a);
-    }
-    
-    // Wrapper to update the Selected property as needed
-    private class MyPropertyChangeListener implements PropertyChangeListener {
-        private PropertyChangeListener orgPCL = null;
-        
-        public void propertyChange(PropertyChangeEvent evt) {
-            if (evt.getPropertyName().equals(SELECTED_PROPERTY)) {
-                setSelected((Boolean)evt.getNewValue());
-            }
-            orgPCL.propertyChange(evt);                
-        }
-        
-        public MyPropertyChangeListener(PropertyChangeListener orgPCL) {
-            this.orgPCL = orgPCL;
-        }
-    }
-}
+

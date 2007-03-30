@@ -63,7 +63,7 @@ public class HylaServerFile {
             return type.getDefaultExtension();
     }
     
-    public void view(HylaFAXClient hyfc, FaxOptions opts)
+    public void view(HylaFAXClient hyfc)
         throws IOException, FileNotFoundException, ServerResponseException, UnknownFormatException {
         
         File tmptif = File.createTempFile("fax", "." + getDefaultExtension());
