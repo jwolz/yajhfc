@@ -75,7 +75,7 @@ public class MyTableModel extends AbstractTableModel {
      * @return
      */
     public Color getCellBackgroundColor(int row, int col) {       
-        if (getJob(row).isError()) {
+        if (utils.getFaxOptions().markFailedJobs && getJob(row).isError()) {
             return errorColor;
         } else {
             return null;

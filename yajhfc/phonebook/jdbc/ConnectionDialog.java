@@ -94,7 +94,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         container.add(comp, c);
         
         c.col1 = c.col2 = c.col1 - 2;
-        c.vAlign = TableLayoutConstraints.BOTTOM;
+        c.vAlign = TableLayoutConstraints.CENTER;
         c.hAlign = TableLayoutConstraints.LEFT;
         container.add(lbl, c);
         

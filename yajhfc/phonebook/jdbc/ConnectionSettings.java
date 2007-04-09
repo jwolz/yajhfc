@@ -18,13 +18,9 @@ package yajhfc.phonebook.jdbc;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
+import yajhfc.phonebook.GeneralConnectionSettings;
 
-import yajhfc.utils;
-
-public class ConnectionSettings {
-
+public class ConnectionSettings extends GeneralConnectionSettings {
     public String driver = "";
     public String dbURL = "jdbc:";
     public String user = "";
@@ -32,106 +28,15 @@ public class ConnectionSettings {
     public boolean askForPWD = false;
     public String table = "";
     
-    public String name = "";
-    public String givenName = "";
-    public String title = "";
-    public String location = "";
-    public String company = "";
-    public String faxNumber = "";
-    public String voiceNumber = "";
-    public String comment = "";
-    
-    private static final String separator = ";";
-    private static final char escapeChar = '~';
-    
-    public static String noField = "<none>";
-    public static String noField_translated = utils._("<none>");
-    
-    public static boolean isNoField(String fieldName) {
-        return (fieldName.length() == 0 || fieldName.equals(noField));
-    }
-    
-    public void copyFrom(ConnectionSettings other) {
-        if (other == null)
-            return;
-        
-        for (Field f : getClass().getFields()) {
-            if (Modifier.isStatic(f.getModifiers()))
-                continue;
-            if (Modifier.isFinal(f.getModifiers()))
-                continue;
-            
-            try {
-                f.set(this, f.get(other));
-            } catch (Exception e) {
-                //NOP
-            }
-        }
-    }
-    
-    public String saveToString() {
-        StringBuilder builder = new StringBuilder();
-        for (Field f : getClass().getFields()) {
-            if (Modifier.isStatic(f.getModifiers()))
-                continue;
-            if (Modifier.isFinal(f.getModifiers()))
-                continue;
-            
-            try {
-                String val;
-                val = f.get(this).toString();
-                val = utils.escapeChars(val, separator, escapeChar) ;
-                builder.append(f.getName());
-                builder.append('=');
-                builder.append(val);
-                builder.append(separator);
-            } catch (Exception e) {
-                //NOP
-            }
-        }
-        
-        return builder.toString();
-    }
-    
-    public void loadFromString(String input) {
-        String[] tokens = input.split(separator);
-        for (String line : tokens) {
-            int pos = line.indexOf('=');
-            if (pos < 0)
-                continue;
-            
-            String fieldName = line.substring(0, pos);
-            String value = utils.unEscapeChars(line.substring(pos+1), separator, escapeChar);
-            try {
-                Field f = getClass().getField(fieldName);
-                Class<?> f_class = f.getType();
-                if (f_class == String.class) {
-                    f.set(this, value);
-                } else if (f_class == Boolean.TYPE || f_class == Boolean.class) {
-                    f.set(this, Boolean.valueOf(value));
-                } else {
-                    System.err.println("Unsupported field type: " + f_class.getName());
-                }
-            } catch (NoSuchFieldException e) {
-                System.err.println("Unknown field " + fieldName);
-            } catch (Exception e) {
-                System.err.println("Exception loading fields:");
-                e.printStackTrace();
-            }
-        }
+    public ConnectionSettings(String serialized) {
+        super(serialized);
     }
     
     public ConnectionSettings() {
         super();
     }
     
-    public ConnectionSettings(String serialized) {
-        this();
-        loadFromString(serialized);
-    }
-    
     public ConnectionSettings(ConnectionSettings src) {
-        this();
-        copyFrom(src);
+        super(src);
     }
 }

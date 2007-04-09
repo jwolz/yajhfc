@@ -1,4 +1,4 @@
-README for YajHFC 0.3.2
+README for YajHFC 0.3.3
 =======================
 
 ABOUT
@@ -28,9 +28,9 @@ Requirements:
 * Some program to view TIFF files (also see the FAQ)
 * Optional: A PostScript viewer (e.g. Ghostview)
 
-To install YajHFC just download the yajhfc-0_3_2.jar file to some folder on your
+To install YajHFC just download the yajhfc-0_3_3.jar file to some folder on your
 file system.
-To execute it, use: "java -jar yajhfc-0_3_2.jar"
+To execute it, use: "java -jar yajhfc-0_3_3.jar"
 (In Windows you usually can just double click the jar file as well.)
 
 LICENSE
@@ -63,6 +63,12 @@ YajHFC was originally written as a first more complicated
 
 CHANGES
 -------
+
+0.3.3:
+- Support for resending faxes
+- Support for printing the list of faxes
+- Colored background for failed fax jobs
+- Read only LDAP phone book support added
 
 0.3.2:
 - Bugfix for sporadical errors while sending faxes
@@ -126,7 +132,6 @@ TODO
 
 The following features might be added in the future:
 
-* Support for phone books in LDAP databases
 * More Translations? (see below)
 
 YajHFC uses GNU gettext for translations, so it is easy to integrate

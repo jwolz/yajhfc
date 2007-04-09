@@ -20,11 +20,15 @@ package yajhfc.phonebook;
 
 import java.awt.Dialog;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileLock;
 import java.util.ArrayList;
 import java.util.Collections;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -49,6 +53,7 @@ public class XMLPhoneBook extends PhoneBook {
     
     private ArrayList<XMLPhoneBookEntry> list;
     private String fileName;
+    private boolean isOpened = false;
     
     public void resort() {
         Collections.sort(list, DefaultPhoneBookEntryComparator.globalInstance);
@@ -110,6 +115,9 @@ public class XMLPhoneBook extends PhoneBook {
 
     @Override
     public void close() {
+        if (!isOpen())
+            return;
+        
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -130,7 +138,8 @@ public class XMLPhoneBook extends PhoneBook {
             transformer.transform(source, result);
         } catch (Exception e) {
             ExceptionDialog.showExceptionDialog(parentDialog, utils._("Error saving the phone book: "), e);
-        }
+        } 
+        isOpened = false;
     }
 
     public void saveToXML(Element el, Document doc) {
@@ -158,12 +167,12 @@ public class XMLPhoneBook extends PhoneBook {
         fireContentsChanged(this, 0, list.size() - 1);
     }
     
-    public void openDefault() {
+    public void openDefault() throws PhoneBookException  {
         open(PB_Prefix + ":" + utils.getConfigDir() + "default.phonebook");
     }
     
     @Override
-    protected void openInternal(String descriptor) {       
+    protected void openInternal(String descriptor) throws PhoneBookException {       
 /*        for (int i = 0; i < 20; i++) {
             XMLPhoneBookEntry pb = new XMLPhoneBookEntry();
             
@@ -178,8 +187,10 @@ public class XMLPhoneBook extends PhoneBook {
         list.clear();
         
         File file = new File(fileName);
-        if (!file.exists())
+        if (!file.exists()) {
+            isOpened = true;
             return;
+        }
         
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -191,12 +202,17 @@ public class XMLPhoneBook extends PhoneBook {
             
             loadFromXML(root);
         } catch (Exception e) {
-            //JOptionPane.showMessageDialog(null, utils._("Error loading the phone book: ") + e.getLocalizedMessage());
-            ExceptionDialog.showExceptionDialog(parentDialog, utils._("Error loading the phone book: "), e);
-        }
+            throw new PhoneBookException(e, false);
+        } 
         
+        isOpened = true;
     }
 
+    @Override
+    public boolean isOpen() {
+        return isOpened;
+    }
+    
     public XMLPhoneBook(Dialog parent) {
         super(parent);
         

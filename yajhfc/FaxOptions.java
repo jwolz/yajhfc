@@ -87,6 +87,7 @@ public class FaxOptions {
     public int dateOffsetSecs = 0;
     
     public boolean preferRenderedTIFF = false;
+    public boolean markFailedJobs = true;
     
     public String lookAndFeel = LOOKANDFEEL_SYSTEM;
     public static final String LOOKANDFEEL_SYSTEM = "!system!";
@@ -145,8 +146,8 @@ public class FaxOptions {
         phoneWinBounds = null;
         mainwinLastTab = 0;
         
-        statusUpdateInterval = 1000;
-        tableUpdateInterval = 5000;
+        statusUpdateInterval = 2000;
+        tableUpdateInterval = 6000;
         //recvReadState = "";
         
         lastPhonebook = "";

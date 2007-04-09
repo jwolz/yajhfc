@@ -1,7 +1,7 @@
-package yajhfc;
+package yajhfc.phonebook;
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2006 Jonas Wolz
+ * Copyright (C) 2005-2007 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,29 +18,27 @@ package yajhfc;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-import java.util.Locale;
-
-public class YajLanguage extends MyManualMapObject {
+public class PhoneBookException extends Exception {
     
-    protected Locale locale;
+    private boolean alreadyDisplayed;
     
-    public String toString() {
-        if (utils.getLocale().getLanguage().equals(locale.getLanguage()))
-            return locale.getDisplayLanguage(utils.getLocale());
-        else 
-            return locale.getDisplayLanguage(locale) + " (" + locale.getDisplayLanguage(utils.getLocale()) + ")";
+    public boolean messageAlreadyDisplayed() {
+        return alreadyDisplayed;
     }
     
-    public Locale getLocale() {
-        return locale;
-    }
-    
-    @Override
-    public Object getKey() {
-        return locale.getLanguage();
+    public PhoneBookException(String message, boolean alreadyDisplayed) {
+        super(message);
+        this.alreadyDisplayed = alreadyDisplayed;
     }
 
-    public YajLanguage(Locale locale) {
-        this.locale = locale;
+    public PhoneBookException(Throwable cause, boolean alreadyDisplayed) {
+        super(cause.getMessage(), cause);
+        this.alreadyDisplayed = alreadyDisplayed;
     }
+
+    public PhoneBookException(String message, Throwable cause, boolean alreadyDisplayed) {
+        super(message, cause);
+        this.alreadyDisplayed = alreadyDisplayed;
+    }
+
 }
