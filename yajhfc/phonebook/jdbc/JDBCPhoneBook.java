@@ -38,6 +38,7 @@ import yajhfc.utils;
 import yajhfc.phonebook.DefaultPhoneBookEntryComparator;
 import yajhfc.phonebook.PhoneBook;
 import yajhfc.phonebook.PhoneBookEntry;
+import yajhfc.phonebook.PhoneBookException;
 
 public class JDBCPhoneBook extends PhoneBook {
     ConnectionSettings settings;
@@ -240,14 +241,14 @@ public class JDBCPhoneBook extends PhoneBook {
     }
     
     @Override
-    protected void openInternal(String descriptorWithoutPrefix) {
+    protected void openInternal(String descriptorWithoutPrefix) throws PhoneBookException {
         settings = new ConnectionSettings(descriptorWithoutPrefix);
 
         try {
             Class.forName(settings.driver);
         } catch (Exception e) {
             ExceptionDialog.showExceptionDialog(parentDialog, utils._("Could not load the specified driver class:"), e);
-            return;
+            throw new PhoneBookException(e, true);
         }
         try {
             String password;
@@ -272,7 +273,7 @@ public class JDBCPhoneBook extends PhoneBook {
         } catch (Exception e) {
             ExceptionDialog.showExceptionDialog(parentDialog, utils._("Could not connect to the database:"), e);
             connection = null;
-            return;
+            throw new PhoneBookException(e, true);
         }
         try {
             String query = getSELECTQuery();
@@ -301,7 +302,13 @@ public class JDBCPhoneBook extends PhoneBook {
             
         } catch (Exception e) {
             ExceptionDialog.showExceptionDialog(parentDialog, utils._("Could not load the phone book:"), e);
+            throw new PhoneBookException(e, true);
         }
+    }
+    
+    @Override
+    public boolean isOpen() {
+        return (connection != null);
     }
 
     void commitToDB() {

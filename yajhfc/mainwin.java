@@ -37,11 +37,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
+import java.awt.print.PrinterException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.util.Date;
 import java.util.List;
@@ -53,6 +55,7 @@ import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -71,6 +74,7 @@ import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.JTable.PrintMode;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -121,6 +125,8 @@ public final class mainwin extends JFrame {
     private JMenuItem DeleteMenuItem = null;
     private JMenuItem SendMenuItem = null;    
     
+    private JCheckBoxMenuItem menuMarkError;
+    
     private JRadioButtonMenuItem menuViewAll, menuViewOwn, menuViewCustom;
     private ButtonGroup viewGroup;
     
@@ -130,7 +136,7 @@ public final class mainwin extends JFrame {
     private java.util.Timer utmrTable;
     private TableRefresher tableRefresher = null;
     private StatusRefresher statRefresher = null;
-    
+   
     private MouseListener tblMouseListener;
     private KeyListener tblKeyListener;
     private DefaultTableCellRenderer hylaDateRenderer;
@@ -141,7 +147,7 @@ public final class mainwin extends JFrame {
     
     // Actions:
     private Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward, actAdminMode;
-    private Action actRefresh, actResend;
+    private Action actRefresh, actResend, actPrintTable;
     private ActionEnabler actChecker;
     
     
@@ -606,7 +612,7 @@ public final class mainwin extends JFrame {
                     }
                 } catch (Exception e1) {
                     //JOptionPane.showMessageDialog(mainwin.this, _("Couldn't get a filename for the fax:\n") + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
-                    ExceptionDialog.showExceptionDialog(mainwin.this, _("Couldn't get data to resend the fax."), e1);
+                    ExceptionDialog.showExceptionDialog(mainwin.this, _("Could not get all of the job information necessary to resend the fax:"), e1);
                     return;
                 }
                 
@@ -625,7 +631,25 @@ public final class mainwin extends JFrame {
         };
         actResend.putValue(Action.NAME, _("Resend fax..."));
         actResend.putValue(Action.SHORT_DESCRIPTION, _("Resend the fax"));
-        //actResend.putValue(Action.SMALL_ICON, utils.loadIcon("general/Refresh"));
+        actResend.putValue(Action.SMALL_ICON, utils.loadIcon("general/Export"));
+        
+        actPrintTable = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                TooltipJTable selTable = (TooltipJTable)((JScrollPane)TabMain.getSelectedComponent()).getViewport().getView();
+                try {
+                    MessageFormat header = new MessageFormat(TabMain.getToolTipTextAt(TabMain.getSelectedIndex()));
+                    Date now = new Date();
+                    MessageFormat footer = new MessageFormat("'" + DateFormat.getDateInstance(DateFormat.SHORT, utils.getLocale()).format(now) + " " + DateFormat.getTimeInstance(DateFormat.SHORT, utils.getLocale()).format(now) + "' - " + utils._("page {0}"));
+                    
+                    selTable.print(PrintMode.FIT_WIDTH, header, footer);
+                } catch (PrinterException pe) {
+                    ExceptionDialog.showExceptionDialog(mainwin.this, utils._("Error printing the table:"), pe);
+                }
+            };
+        };
+        actPrintTable.putValue(Action.NAME, _("Print table..."));
+        actPrintTable.putValue(Action.SHORT_DESCRIPTION, _("Prints the currently displayed table"));
+        actPrintTable.putValue(Action.SMALL_ICON, utils.loadIcon("general/Print"));
         
         actChecker = new ActionEnabler();
     }
@@ -767,6 +791,11 @@ public final class mainwin extends JFrame {
             menuViewCustom.setActionCommand("view_custom");
             menuViewCustom.addActionListener(menuViewListener);
             
+            menuMarkError = new JCheckBoxMenuItem(_("Mark failed jobs"));
+            menuMarkError.setActionCommand("mark_failed");
+            menuMarkError.addActionListener(menuViewListener);
+            menuMarkError.setSelected(utils.getFaxOptions().markFailedJobs);
+            
             viewGroup = new ButtonGroup();
             viewGroup.add(menuViewAll);
             viewGroup.add(menuViewOwn);
@@ -775,6 +804,8 @@ public final class mainwin extends JFrame {
             menuView.add(menuViewAll);
             menuView.add(menuViewOwn);
             menuView.add(menuViewCustom);
+            menuView.add(new JSeparator());
+            menuView.add(menuMarkError);
             menuView.add(new JSeparator());
             menuView.add(new JMenuItem(actRefresh));
             
@@ -1354,6 +1385,8 @@ public final class mainwin extends JFrame {
             menuExtras = new JMenu(_("Extras"));
             menuExtras.add(actPhonebook);
             menuExtras.addSeparator();
+            menuExtras.add(new JMenuItem(actPrintTable));
+            menuExtras.addSeparator();
             menuExtras.add(getOptionsMenuItem());
             menuExtras.addSeparator();
             menuExtras.add(new ActionJCheckBoxMenuItem(actAdminMode));
@@ -1438,6 +1471,11 @@ public final class mainwin extends JFrame {
                     if (lastSel[selTab] != menuViewCustom)
                             resetLastSel(selTab);
                 }
+            } else if (cmd.equals("mark_failed")) {
+                myopts.markFailedJobs = menuMarkError.isSelected();
+                
+                TooltipJTable selTable = (TooltipJTable)((JScrollPane)TabMain.getSelectedComponent()).getViewport().getView();
+                selTable.repaint();
             }
         }
         

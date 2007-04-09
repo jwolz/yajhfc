@@ -4,6 +4,7 @@ import java.awt.Dialog;
 import java.util.ArrayList;
 
 import yajhfc.phonebook.jdbc.JDBCPhoneBook;
+import yajhfc.phonebook.ldap.LDAPPhoneBook;
 
 /*
  * YAJHFC - Yet another Java Hylafax client
@@ -32,6 +33,7 @@ public class PhoneBookFactory {
         PhonebookTypes = new ArrayList<PhoneBookType>();
         PhonebookTypes.add(new PhoneBookType(XMLPhoneBook.class));
         PhonebookTypes.add(new PhoneBookType(JDBCPhoneBook.class));
+        PhonebookTypes.add(new PhoneBookType(LDAPPhoneBook.class));
     }
     
     public static PhoneBook instanceForDescriptor(String descriptor, Dialog parent) {

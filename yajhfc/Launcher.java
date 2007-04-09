@@ -30,8 +30,25 @@ package yajhfc;
  * experience knows a better way to accomplish this functionality, please let me know.
  */
 
-import java.io.*;
-import java.net.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import javax.swing.JOptionPane;
@@ -50,12 +67,15 @@ public final class Launcher {
     
     final static int codeSubmitStream = 1;
     final static int codeSubmitFile = 2;
+    final static int codeMultiSubmitFile = 4;
     final static int codeToForeground = 3;
     
     final static int responseOK = 0;
     final static int responseNotConnected = 10;
     final static int responseGeneralError = 1;
     final static int responseUnknownOpCode = 255;
+    
+    final static String multiFileEOF = "\003\004"; // ETX + EOT
     
     private static InetAddress getLocalhost() 
         throws UnknownHostException {
@@ -129,7 +149,7 @@ public final class Launcher {
     private static void printHelp() {
         System.out.print(
             "General usage:\n"+
-            "java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose] [--configdir=directory] [--stdin | filename]\n"+
+            "java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose] [--configdir=directory] [--stdin | filename ...]\n"+
             "Argument description:\n"+
             "filename     The file name of a PostScript file to send.\n"+
             "--stdin      Read the file to send from standard input\n"+
@@ -149,7 +169,7 @@ public final class Launcher {
      */
     public static void main(String[] args) {
         // parse command line
-        String fileName = "";
+        ArrayList<String> fileNames = new ArrayList<String>();
         boolean useStdin = false;
         boolean adminMode = false;
         boolean forkNewInst = false;
@@ -178,7 +198,7 @@ public final class Launcher {
             } else if (args[i].startsWith("-"))
                 System.err.println("Unknown command line argument: " + args[i]);
             else // treat argument as file name to send
-                fileName = args[i];
+                fileNames.add(args[i]);
         }
         
         utils.debugMode = debugMode;
@@ -258,7 +278,7 @@ public final class Launcher {
         
         if (oldinst == null) {
             createLock();
-            SwingUtilities.invokeLater(new NewInstRunner(fileName, useStdin, adminMode, closeAfterSubmit));
+            SwingUtilities.invokeLater(new NewInstRunner(fileNames, useStdin, adminMode, closeAfterSubmit));
             blockThread = new SockBlockAcceptor();
             blockThread.start();
         } else {            
@@ -279,11 +299,14 @@ public final class Launcher {
                     } while (bytesRead >= 0);
                     bufIn.close();
                     bufOut.flush();              
-                } else if ( fileName.length() > 0) {
-                    outStream.write(codeSubmitFile);
+                } else if ( fileNames != null && fileNames.size() > 0) {
+                    outStream.write(codeMultiSubmitFile);
                     BufferedWriter bufOut = new BufferedWriter(new OutputStreamWriter(outStream));
-                    File f = new File(fileName);
-                    bufOut.write(f.getAbsolutePath() + "\n");
+                    for (String fileName : fileNames) {
+                        File f = new File(fileName);
+                        bufOut.write(f.getAbsolutePath() + "\n");
+                    }
+                    bufOut.write(multiFileEOF + "\n");
                     bufOut.flush();
                 } else if (forkNewInst) {
                     outStream.write(codeToForeground);
@@ -314,7 +337,7 @@ public final class Launcher {
     }
         
     static class NewInstRunner implements Runnable {
-        private String fileName;
+        private List<String> fileNames;
         private boolean useStdin;
         private boolean adminMode;
         private boolean closeAfterSubmit;
@@ -326,22 +349,24 @@ public final class Launcher {
             application.setVisible(true);
             application.reconnectToServer();
             
-            if (fileName.length() > 0 || useStdin) {
+            if ((fileNames != null && fileNames.size() > 0) || useStdin) {
                 SendWin sw = new SendWin(application.hyfc, application);
                 sw.setModal(true);
                 if (useStdin)
                     sw.addInputStream(System.in);
-                else
-                    sw.addLocalFile(fileName);
+                else {
+                    for (String fileName : fileNames)
+                        sw.addLocalFile(fileName);
+                }
                 sw.setVisible(true);
                 if (closeAfterSubmit)
                     application.dispose();
             }
         }   
         
-        public NewInstRunner(String fileName, boolean useStdin, boolean adminMode, boolean closeAfterSubmit) {
+        public NewInstRunner(List<String> fileNames, boolean useStdin, boolean adminMode, boolean closeAfterSubmit) {
             super();
-            this.fileName = fileName;
+            this.fileNames = fileNames;
             this.useStdin = useStdin;
             this.adminMode = adminMode;
             this.closeAfterSubmit = closeAfterSubmit;
@@ -388,8 +413,27 @@ public final class Launcher {
                         ok = waitSubmitOK();
                         if (ok == responseOK) {
                             BufferedReader bufR = new BufferedReader(new InputStreamReader(strIn));
-                            String fileName = bufR.readLine();
-                            SwingUtilities.invokeAndWait(new SubmitRunner(fileName)); // Accept new faxes only sequentially
+                            String[] fileNames = new String[1];
+                            fileNames[0] = bufR.readLine();
+                            
+                            SwingUtilities.invokeAndWait(new SubmitRunner(Arrays.asList(fileNames))); // Accept new faxes only sequentially
+                            //bufR.close();
+                        }
+                        strOut.write(ok);
+                        break;
+                    case codeMultiSubmitFile:
+                        ok = waitSubmitOK();
+                        if (ok == responseOK) {
+                            BufferedReader bufR = new BufferedReader(new InputStreamReader(strIn));
+                            ArrayList<String> fileNames = new ArrayList<String>();
+                            String line = bufR.readLine();
+                            
+                            while (!line.equals(multiFileEOF)) {
+                                fileNames.add(line);
+                                line = bufR.readLine();
+                            }
+                            
+                            SwingUtilities.invokeAndWait(new SubmitRunner(fileNames)); // Accept new faxes only sequentially
                             //bufR.close();
                         }
                         strOut.write(ok);
@@ -435,7 +479,7 @@ public final class Launcher {
     
     static class SubmitRunner implements Runnable {
         InputStream strIn = null;
-        String fileName = null;
+        List<String> fileNames = null;
         
         public void run() {
             //try {
@@ -445,8 +489,10 @@ public final class Launcher {
                 sw.setModal(true);
                 if (strIn != null)
                     sw.addInputStream(strIn);
-                else
-                    sw.addLocalFile(fileName);
+                else {
+                    for (String fileName : fileNames)
+                        sw.addLocalFile(fileName);
+                }
                 
                 sw.setVisible(true);
                 /*if (strIn != null)
@@ -456,9 +502,9 @@ public final class Launcher {
             }*/
         }
         
-        public SubmitRunner(String fileName) {
+        public SubmitRunner(List<String> fileNames) {
             super();
-            this.fileName = fileName;
+            this.fileNames = fileNames;
         }
         
         public SubmitRunner(InputStream strIn) {

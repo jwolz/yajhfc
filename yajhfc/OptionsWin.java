@@ -333,7 +333,7 @@ public class OptionsWin extends JDialog {
             checkPasv = new JCheckBox(_("Use passive mode to fetch faxes"));
             
             addWithLabel(panelServer, textHost, _("Host name:"), "1, 2, 5, 2, f, c");
-            addWithLabel(panelServer, textPort, _("Port:"), "7, 4, f, c");
+            addWithLabel(panelServer, textPort, _("Port:"), "7, 2, f, c");
             addWithLabel(panelServer, textUser, _("Username:"), "1, 4, 5, 4, f, c");
             //addWithLabel(panelServer, textPassword, _("Password:"), "5, 4, 7, 4, f, c");
             addWithLabel(panelServer, textPassword, _("Password:"), "1, 6, 5, 6, f, c");

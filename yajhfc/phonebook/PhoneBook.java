@@ -175,13 +175,13 @@ public abstract class PhoneBook extends AbstractListModel {
      */
     public abstract String browseForPhoneBook();
     
-    public void openDefault() {
+    public void openDefault() throws PhoneBookException  {
         // do nothing...
         // (this method only needs to get implemented if the phone book is a candidate 
         //  to be returned by PhoneBookFactory.createDefault())
     }
     
-    public void open(String descriptor) {
+    public void open(String descriptor) throws PhoneBookException {
         int pos = descriptor.indexOf(':');
         if (pos >= 0) {
             strDescriptor = descriptor;
@@ -192,9 +192,11 @@ public abstract class PhoneBook extends AbstractListModel {
         }
     }
     
+    public abstract boolean isOpen();
+    
     public abstract void resort();
     
-    protected abstract void openInternal(String descriptorWithoutPrefix);
+    protected abstract void openInternal(String descriptorWithoutPrefix) throws PhoneBookException;
     
     public abstract void close();
     
@@ -221,6 +223,10 @@ public abstract class PhoneBook extends AbstractListModel {
     }
     public boolean isFieldCommentAvailable() {
         return true;
+    }
+    
+    public boolean isReadOnly() {
+        return false;
     }
     
     public PhoneBook (Dialog parent) {
