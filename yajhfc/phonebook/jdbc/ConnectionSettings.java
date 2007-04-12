@@ -29,7 +29,8 @@ public class ConnectionSettings extends GeneralConnectionSettings {
     public String table = "";
     
     public ConnectionSettings(String serialized) {
-        super(serialized);
+        super();
+        loadFromString(serialized);
     }
     
     public ConnectionSettings() {
@@ -37,6 +38,7 @@ public class ConnectionSettings extends GeneralConnectionSettings {
     }
     
     public ConnectionSettings(ConnectionSettings src) {
-        super(src);
+        super();
+        copyFrom(src);
     }
 }

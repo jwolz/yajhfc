@@ -27,6 +27,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.MenuShortcut;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -329,11 +330,14 @@ public final class mainwin extends JFrame {
     private void createActions(boolean adminState) {
         actOptions = new AbstractAction() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
+                utils.setWaitCursor(null);
+                
                 SendReadyState oldState = sendReady;
                 sendReady = SendReadyState.NeedToWait;
                 
                 OptionsWin ow = new OptionsWin(myopts, mainwin.this);
                 ow.setModal(true);
+                utils.unsetWaitCursorOnOpen(null, ow);
                 ow.setVisible(true);
                 if (ow.getModalResult()) 
                     reconnectToServer();
@@ -348,8 +352,10 @@ public final class mainwin extends JFrame {
         
         actSend = new AbstractAction() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
+                utils.setWaitCursor(null);
                 SendWin sw = new SendWin(hyfc, mainwin.this);
                 sw.setModal(true);
+                utils.unsetWaitCursorOnOpen(null, sw);
                 sw.setVisible(true);
                 refreshTables();
             }
@@ -360,8 +366,10 @@ public final class mainwin extends JFrame {
         
         actPoll = new AbstractAction() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
+                utils.setWaitCursor(null);
                 SendWin sw = new SendWin(hyfc, mainwin.this, true);
                 sw.setModal(true);
+                utils.unsetWaitCursorOnOpen(null, sw);
                 sw.setVisible(true);
             }
         };
@@ -415,9 +423,11 @@ public final class mainwin extends JFrame {
         
         actAbout = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
+                utils.setWaitCursor(null);
                 //JOptionPane.showMessageDialog(aboutMenuItem.getComponent(), utils.AppName + "\n\n" + _("by Jonas Wolz"), _("About"), JOptionPane.INFORMATION_MESSAGE);
                 AboutDialog aDlg = new AboutDialog(mainwin.this);
                 aDlg.setMode(AboutDialog.Mode.ABOUT);
+                utils.unsetWaitCursorOnOpen(null, aDlg);
                 aDlg.setVisible(true);
             }
         };
@@ -427,8 +437,10 @@ public final class mainwin extends JFrame {
         
         actPhonebook = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
+                utils.setWaitCursor(null);
                 PhoneBookWin pbw = new PhoneBookWin(mainwin.this);
                 pbw.setModal(true);
+                utils.unsetWaitCursorOnOpen(null, pbw);
                 pbw.setVisible(true);
             }
         };
@@ -438,8 +450,10 @@ public final class mainwin extends JFrame {
         
         actReadme = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
+                utils.setWaitCursor(null);
                 AboutDialog aDlg = new AboutDialog(mainwin.this);
                 aDlg.setMode(AboutDialog.Mode.READMES);
+                utils.unsetWaitCursorOnOpen(null, aDlg);
                 aDlg.setVisible(true);
             }
         };
@@ -560,6 +574,7 @@ public final class mainwin extends JFrame {
         
         actAdminMode = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
+                utils.setWaitCursor(null);
                 Boolean state = (Boolean)getValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY);
                 boolean newState;
                 if (state == null)
@@ -570,6 +585,7 @@ public final class mainwin extends JFrame {
                 actAdminMode.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, newState);
                 
                 reconnectToServer();
+                utils.unsetWaitCursor(null);
             };
         };
         actAdminMode.putValue(Action.NAME, _("Admin mode"));
@@ -578,8 +594,10 @@ public final class mainwin extends JFrame {
         
         actRefresh = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
+                utils.setWaitCursor(null);
                 refreshStatus();
                 refreshTables();
+                utils.unsetWaitCursor(null);
             };
         };
         actRefresh.putValue(Action.NAME, _("Refresh"));
@@ -588,11 +606,12 @@ public final class mainwin extends JFrame {
         actRefresh.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
         
         actResend = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {                
                 TooltipJTable selTable = (TooltipJTable)((JScrollPane)TabMain.getSelectedComponent()).getViewport().getView();
                 if (!(selTable == TableSent && selTable != TableSending) || selTable.getSelectedRow() < 0)
                     return;
                 
+                utils.setWaitCursor(null);
                 SentYajJob job = (SentYajJob)selTable.getJobForRow(selTable.getSelectedRow());
                 
                 List<HylaServerFile> files;
@@ -612,6 +631,7 @@ public final class mainwin extends JFrame {
                     }
                 } catch (Exception e1) {
                     //JOptionPane.showMessageDialog(mainwin.this, _("Couldn't get a filename for the fax:\n") + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                    utils.unsetWaitCursor(null);
                     ExceptionDialog.showExceptionDialog(mainwin.this, _("Could not get all of the job information necessary to resend the fax:"), e1);
                     return;
                 }
@@ -625,6 +645,7 @@ public final class mainwin extends JFrame {
                 sw.addRecipient(number, name, company, location, voiceNumber);
                 sw.setSubject(subject);
                 
+                utils.unsetWaitCursorOnOpen(null, sw);
                 sw.setVisible(true);
                 refreshTables();
             };
@@ -1489,9 +1510,11 @@ public final class mainwin extends JFrame {
         public void stateChanged(ChangeEvent e) {
             MyTableModel model = ((TooltipJTable)((JScrollPane)TabMain.getSelectedComponent()).getViewport().getView()).getRealModel();
             boolean viewOwnState  = ownFilterOK(model);
+            boolean markErrorState = canMarkError(model);
             
             resetLastSel(TabMain.getSelectedIndex());
             menuViewOwn.setEnabled(viewOwnState);
+            menuMarkError.setEnabled(markErrorState);
             if ((!viewOwnState && menuViewOwn.isSelected())) {
                 menuViewAll.setSelected(true);
                 model.setJobFilter(null);
@@ -1500,6 +1523,15 @@ public final class mainwin extends JFrame {
         
         private YajJobFilter getOwnFilterFor(MyTableModel model) {
             return new StringFilter((model == recvTableModel ? utils.recvfmt_Owner : utils.jobfmt_Owner), StringFilterOperator.EQUAL, myopts.user);
+        }
+        
+        private boolean canMarkError(MyTableModel model) {
+            if (model == sentTableModel || model == sendingTableModel) { 
+                return model.columns.contains(utils.jobfmt_Jobstate) || model.columns.contains(utils.jobfmt_Status);
+            } else if (model == recvTableModel) { 
+                return myopts.recvfmt.contains(utils.recvfmt_ErrorDesc);
+            } else
+                return false;
         }
         
         private boolean ownFilterOK(MyTableModel model) {

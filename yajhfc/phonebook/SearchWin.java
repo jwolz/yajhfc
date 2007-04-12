@@ -65,7 +65,11 @@ public final class SearchWin extends JDialog implements ActionListener {
             int idx, startIdx;
             startIdx = owner.getSelectedPBEntry();
             do {
-                idx = owner.getPhoneBook().findEntry(startIdx + (radioBackward.isSelected() ? -1 : 1),
+                PhoneBook pb = owner.getCurrentPhoneBook();
+                if (pb == null)
+                    return;
+                
+                idx = pb.findEntry(startIdx + (radioBackward.isSelected() ? -1 : 1),
                         radioBackward.isSelected(),
                         checkCaseSensitive.isSelected(),
                         (PhoneBookEntry.PBEntryField)comboFields.getSelectedItem(),

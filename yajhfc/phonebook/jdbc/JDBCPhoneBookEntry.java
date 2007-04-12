@@ -36,6 +36,8 @@ public class JDBCPhoneBookEntry extends SimplePhoneBookEntry {
     static final int ENTRY_CHANGED = 3;
     static final int ENTRY_DELETED = 4;
     
+    private boolean dirty = false;
+    
     JDBCPhoneBookEntry(JDBCPhoneBook parent) {
         this.parent = parent;
         rowKeys = new Object[parent.rowId.size()];
@@ -66,6 +68,7 @@ public class JDBCPhoneBookEntry extends SimplePhoneBookEntry {
         
         readKeys(rs);
         entryStatus = ENTRY_UNCHANGED;
+        dirty = false;
     }
     private void readKeys(ResultSet rs) throws SQLException {
         for (int i = 0; i < parent.rowId.size(); i++) {
@@ -222,15 +225,20 @@ public class JDBCPhoneBookEntry extends SimplePhoneBookEntry {
     
     @Override
     public void updateDisplay() {
-        parent.updatePosition(this);
+        if (dirty) {
+            parent.updatePosition(this);
+        }
     }
     
     @Override
     public void commit() {
-        parent.updatePosition(this);
-        
-        if (entryStatus == ENTRY_UNCHANGED)
-            entryStatus = ENTRY_CHANGED;
+        if (dirty) {
+            parent.updatePosition(this);
+
+            if (entryStatus == ENTRY_UNCHANGED)
+                entryStatus = ENTRY_CHANGED;
+            dirty = false;
+        }
     }
 
     @Override
@@ -241,6 +249,70 @@ public class JDBCPhoneBookEntry extends SimplePhoneBookEntry {
         }
             
         parent.removeFromList(this);
+    }
+
+    @Override
+    public void setComment(String newComment) {
+        if (!newComment.equals(comment)) {
+            dirty = true;
+            super.setComment(newComment);
+        }     
+    }
+
+    @Override
+    public void setCompany(String newCompany) {
+        if (!newCompany.equals(company)) {
+            dirty = true;
+            super.setCompany(newCompany);
+        }
+    }
+
+    @Override
+    public void setFaxNumber(String newFaxNumber) {
+        if (!newFaxNumber.equals(faxnumber)) {
+            dirty = true;
+            super.setFaxNumber(newFaxNumber);
+        }
+    }
+
+    @Override
+    public void setGivenName(String newGivenName) {
+        if (!newGivenName.equals(givenname)) {
+            dirty = true;
+            super.setGivenName(newGivenName);
+        }
+    }
+
+    @Override
+    public void setLocation(String newLocation) {
+        if (!newLocation.equals(location)) {
+            dirty = true;
+            super.setLocation(newLocation);
+        }
+    }
+
+    @Override
+    public void setName(String newName) {
+        if (!newName.equals(surname)) {
+            dirty = true;
+            super.setName(newName);
+        }
+    }
+
+    @Override
+    public void setTitle(String newTitle) {
+        if (!newTitle.equals(title)) {
+            dirty = true;
+            super.setTitle(newTitle);
+        }
+    }
+
+    @Override
+    public void setVoiceNumber(String newVoiceNumber) {
+        if (!newVoiceNumber.equals(voicenumber)) {
+            dirty = true;
+            super.setVoiceNumber(newVoiceNumber);
+        }
     } 
 
 }

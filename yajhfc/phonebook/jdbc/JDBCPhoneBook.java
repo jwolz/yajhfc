@@ -398,6 +398,16 @@ public class JDBCPhoneBook extends PhoneBook {
         return items.size();
     }
 
+    @Override
+    public String getDisplayCaption() {
+        String rv = settings.dbURL;
+
+        if (rv.length() > 30)
+            return rv.substring(0, 27) + "...";
+        else
+            return rv;
+    }
+    
     public boolean isFieldNameAvailable() {
         return (!ConnectionSettings.isNoField(settings.name));
     }

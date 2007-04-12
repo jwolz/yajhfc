@@ -31,7 +31,7 @@ Para utilizarlo con YajHFC, utiliza el botón de exploración en \texttt{Línea 
 para el visor de faxes} y selecciona la ubicación de kodakimg.exe en tu disco duro.
 
 \item[Windows XP:]
-Puedes utilizar el programa integrado "Visor de imagenes y faxes". 
+Puedes utilizar el programa integrado "Visor de imágenes y faxes". 
 Para utilizarlo, introduce el siguiente texto en "Línea de comandos para el visor de faxes":\\
       \verb#rundll32.exe shimgvw.dll,ImageView_Fullscreen %s#
  \end{description}
@@ -86,6 +86,14 @@ Por tanto inicia YajHFC utilizando el siguiente comando (reemplaza \texttt{/ruta
 
 Actualmente YajHFC sólo puede filtrar las columnas visibles. Por lo que tienes que añadir la columna de "Propietario" a la tabla en la que quieres filtrar por propietario.
 
+\subsection{¿Por qué no se puede seleccionar (gris claro) la opción de \texttt{Ver->Mostrar trabajos con errores}?}
+
+Por la misma razón que el apartado anterior: actualmente, YajHFC sólo puede trabajar con las columnas que están visibles.
+Para mostrar los trabajos de fax erróneos es necesario que las siguientes columnas sean visibles:
+\begin{description}
+\item[Pestaña Recibidos:] \texttt{Descripción del error}
+\item[Pestaña Enviados / Transmisión:] \texttt{Estado del trabajo} \emph{or} \texttt{Estado}
+\end{description}
 
 \subsection{¿Qué puedo poner como valor \texttt{igual a} en el cuadro de diálogo de filtrado personalizado? }
 
@@ -115,7 +123,7 @@ filename     El nombre del archivo PostScript para enviar.
 \end{verbatim}
 
 
-\subsection{ Cuando intento ver los faxes enviados siempre obtengo un mensaje de error 
+\subsection{Cuando intento ver los faxes enviados siempre obtengo un mensaje de error 
    que dice \texttt{Formato de archivo PCL no soportado}, aunque todos los documentos 
    están el formato PostScript/PDF.}
 

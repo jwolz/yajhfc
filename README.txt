@@ -66,9 +66,11 @@ CHANGES
 
 0.3.3:
 - Support for resending faxes
-- Support for printing the list of faxes
+- Printing the tables with received/sent faxes supported
 - Colored background for failed fax jobs
 - Read only LDAP phone book support added
+- Support for multiple open phone books
+- Windows setup program with automatic "fax printer" installation
 
 0.3.2:
 - Bugfix for sporadical errors while sending faxes

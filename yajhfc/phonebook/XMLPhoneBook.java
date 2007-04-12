@@ -167,10 +167,6 @@ public class XMLPhoneBook extends PhoneBook {
         fireContentsChanged(this, 0, list.size() - 1);
     }
     
-    public void openDefault() throws PhoneBookException  {
-        open(PB_Prefix + ":" + utils.getConfigDir() + "default.phonebook");
-    }
-    
     @Override
     protected void openInternal(String descriptor) throws PhoneBookException {       
 /*        for (int i = 0; i < 20; i++) {
@@ -211,6 +207,19 @@ public class XMLPhoneBook extends PhoneBook {
     @Override
     public boolean isOpen() {
         return isOpened;
+    }
+    
+    @Override
+    public String getDisplayCaption() {
+        String rv = PB_Prefix + ":";
+        int desiredLen = 30 - rv.length();
+        
+        if (fileName.length() > desiredLen)
+            rv += "..." + fileName.substring(fileName.length() - desiredLen - 3);
+        else
+            rv += fileName;
+        
+        return rv;
     }
     
     public XMLPhoneBook(Dialog parent) {

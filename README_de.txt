@@ -17,7 +17,7 @@ Features:
 * Unterstützt drei Sprachen: Deutsch, Englisch und Spanisch
 
 Homepage: http://www.yajhfc.de.vu/
-E-Mail:    Jonas Wolz <jwolz@freenet.de>
+E-Mail:   Jonas Wolz <jwolz@freenet.de>
 
 INSTALLATION
 ------------
