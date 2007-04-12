@@ -153,9 +153,11 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         };
         checkAskForPassword.addChangeListener(credentialListener);
         checkDoAuth.addChangeListener(credentialListener);
+        credentialListener.stateChanged(null);
         
         textFilter = new JTextField();
         textFilter.addMouseListener(clpPop);
+        textFilter.setToolTipText(utils._("RFC 2254 Filter expression (e.g. \"objectClass=person\") selecting the directory entries to include. Leave blank to include all."));
         
         checkSearchSubtree = new JCheckBox(_("Also search subtrees"));
         
@@ -241,10 +243,10 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
             JOptionPane.showMessageDialog(this, _("You have to specify a server name and port."), _("Error"), JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        if (textBaseDN.getDocument().getLength() == 0) {
+        /*if (textBaseDN.getDocument().getLength() == 0) {
             JOptionPane.showMessageDialog(this, _("You have to specify a Base DN."), _("Error"), JOptionPane.ERROR_MESSAGE);
             return false;
-        }
+        }*/
         return true;
     }
     
@@ -293,11 +295,12 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
             res.close();
             
             ctx.close();
+            
+            return true;
         } catch (NamingException e) {
             ExceptionDialog.showExceptionDialog(this, _("Could not connect to the LDAP server:"), e);
+            return false;
         }
-        
-        return true;
     }
     
     

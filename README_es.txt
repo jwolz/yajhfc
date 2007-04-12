@@ -1,4 +1,4 @@
-LÉEME (README) de YajHFC 0.3.1 
+﻿LÉEME (README) de YajHFC 0.3.1 
 ======================
 
 ACERCA DE
@@ -59,6 +59,15 @@ de Java (más avanzado que los programas "Hola mundo") utilizando la IDE Eclipse
 
 CAMBIOS
 -------
+
+0.3.3:
+- Soporte para reenvío de faxes
+- Soporte para impresión de tablas con listado de faxes recibidos / enviados
+- Color de fondo distinto para trabajos de fax erróneos
+- Soporte añadido para agenda telefónica LDAP de sólo lectura
+- Soporte para apertura múltiple de agendas telefónicas
+- Programa de instalación para Windows con instalación automática de "impresora de fax"
+
 
 0.3.2:
 - Corrección de errores esporádicos cuando se envían faxes

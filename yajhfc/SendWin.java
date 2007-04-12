@@ -577,7 +577,9 @@ public class SendWin extends JDialog  {
             
             ButtonPhoneBook.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    utils.setWaitCursor(SendWin.this);
                     PhoneBookWin pbw = new PhoneBookWin(SendWin.this);
+                    utils.unsetWaitCursorOnOpen(SendWin.this, pbw);
                     PhoneBookEntry pb = pbw.selectNumber();
                     if (pb != null) {
                         NumberTFLItem nti = new NumberTFLItem(pb);

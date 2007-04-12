@@ -175,12 +175,6 @@ public abstract class PhoneBook extends AbstractListModel {
      */
     public abstract String browseForPhoneBook();
     
-    public void openDefault() throws PhoneBookException  {
-        // do nothing...
-        // (this method only needs to get implemented if the phone book is a candidate 
-        //  to be returned by PhoneBookFactory.createDefault())
-    }
-    
     public void open(String descriptor) throws PhoneBookException {
         int pos = descriptor.indexOf(':');
         if (pos >= 0) {
@@ -223,6 +217,15 @@ public abstract class PhoneBook extends AbstractListModel {
     }
     public boolean isFieldCommentAvailable() {
         return true;
+    }
+    
+    /**
+     * Return a caption for display to users.
+     * Should be shortened to 30 chars or less.
+     * @return
+     */
+    public String getDisplayCaption() {
+        return getDescriptor().substring(0, 30);
     }
     
     public boolean isReadOnly() {

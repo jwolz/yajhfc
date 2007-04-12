@@ -22,7 +22,12 @@ import gnu.hylafax.HylaFAXClientProtocol;
 import gnu.hylafax.Job;
 import gnu.hylafax.Pagesize;
 
+import java.awt.Cursor;
+import java.awt.Dialog;
+import java.awt.Frame;
 import java.awt.Window;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.net.URL;
@@ -40,7 +45,7 @@ public final class utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2007 by Jonas Wolz";
-    public static final String AppVersion = "0.3.3pre";
+    public static final String AppVersion = "0.3.3";
     public static final String AuthorEMail = "Jonas Wolz &lt;jwolz@freenet.de&gt;";
     public static final String HomepageURL = "http://www.yajhfc.de.vu/"; 
     
@@ -125,12 +130,15 @@ public final class utils {
     public static final FmtItem recvfmt_Owner
         = new FmtItem("o", _("Owner"), _("File owner"));
     
+    public static final FmtItem recvfmt_ErrorDesc 
+        = new FmtItem("e", _("Error description"), _("Error description if an error occurred during receive"));
+    
     public static final FmtItem[] recvfmts = {
             new FmtItem("Y", _("Time/Date"),  _("Extended representation of the time when the receive happened"), new HylaDateField("yyyy:MM:dd HH:mm:ss", _("dd/MM/yyyy HH:mm:ss"))), 
             new FmtItem("a", _("SubAddress"), _("SubAddress received from sender (if any)")), 
             new FmtItem("b", _("Speed"), _("Signalling rate used during receive"), Integer.class), 
             new FmtItem("d", _("Format"), _("Data format used during receive")), 
-            new FmtItem("e", _("Error description"), _("Error description if an error occurred during receive")), 
+            recvfmt_ErrorDesc, 
             //new FmtItem("f", "Document filename (relative to the recvq directory)"), 
             recvfmt_FileName,
             new FmtItem("h", _("Time to receive"), _("Time spent receiving document (HH:MM:SS)"), new HylaDateField("m:ss", _("mm:ss"))), 
@@ -453,6 +461,41 @@ public final class utils {
             return utils.class.getResource(path);
         else
             return null;
+    }
+    
+    private static class WaitCursorUnsetter extends WindowAdapter {
+        private Dialog dlgToSet;
+        
+        @Override
+        public void windowOpened(WindowEvent e) {
+           unsetWaitCursor(dlgToSet);
+           e.getWindow().removeWindowListener(this);
+        }
+        
+        public WaitCursorUnsetter(Dialog dlgToSet) {
+            this.dlgToSet = dlgToSet;
+        }
+    }
+    public static void unsetWaitCursorOnOpen(Dialog dlgToSet, Window target) {
+        target.addWindowListener(new WaitCursorUnsetter(dlgToSet));
+    }
+    
+    public static void setWaitCursor(Dialog dlgToSet) {
+        Cursor waitCursor = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
+        if (dlgToSet != null)
+            dlgToSet.setCursor(waitCursor);
+        for (Frame f : Frame.getFrames()) {
+            f.setCursor(waitCursor);
+        }
+    }
+    
+    public static void unsetWaitCursor(Dialog dlgToSet) {
+        Cursor defCursor = Cursor.getDefaultCursor();
+        if (dlgToSet != null)
+            dlgToSet.setCursor(defCursor);
+        for (Frame f : Frame.getFrames()) {
+            f.setCursor(defCursor);
+        }
     }
 }
 

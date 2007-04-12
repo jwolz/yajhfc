@@ -146,6 +146,17 @@ public class LDAPPhoneBook extends PhoneBook {
     }
 
     @Override
+    public String getDisplayCaption() {
+        String rv = PB_Prefix + ":" + settings.serverName + "/" + settings.baseDN;
+
+        
+        if (rv.length() > 30)
+            return rv.substring(0, 27) + "...";
+        else
+            return rv;
+    }
+    
+    @Override
     public void resort() {
         Collections.sort(entries, DefaultPhoneBookEntryComparator.globalInstance);
     }

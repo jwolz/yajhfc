@@ -121,6 +121,7 @@ public abstract class YajJob {
      * @return
      */
     public boolean isError() {
+        // Also update mainwin.MenuViewListener if this is changed!
         return false;
     }
     

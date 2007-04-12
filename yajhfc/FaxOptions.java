@@ -26,7 +26,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 
@@ -60,7 +62,7 @@ public class FaxOptions {
     
     public int statusUpdateInterval, tableUpdateInterval;
     
-    public String lastPhonebook;
+    //public String lastPhonebook;
     
     public String FromFaxNumber;
     public String FromVoiceNumber;
@@ -92,6 +94,9 @@ public class FaxOptions {
     public String lookAndFeel = LOOKANDFEEL_SYSTEM;
     public static final String LOOKANDFEEL_SYSTEM = "!system!";
     public static final String LOOKANDFEEL_CROSSPLATFORM = "!crossplatform!"; 
+    
+    public ArrayList<String> phoneBooks = new ArrayList<String>();
+    public int lastSelectedPhonebook = 0;
     
     public FaxOptions() {
         this.host = "";
@@ -150,7 +155,7 @@ public class FaxOptions {
         tableUpdateInterval = 6000;
         //recvReadState = "";
         
-        lastPhonebook = "";
+        //lastPhonebook = "";
         
         FromFaxNumber = "";
         FromVoiceNumber = "";
@@ -197,6 +202,12 @@ public class FaxOptions {
                 } else if (val instanceof Point) {
                     Point pval = (Point)val;
                     p.setProperty(name, "" + pval.x + sep + pval.y);
+                } else if (val instanceof List) {
+                    List lst = (List)val;
+                    int idx = 0;
+                    for (Object o : lst) {
+                        p.setProperty(name + "." + (++idx), (String)o);
+                    }
                 } else
                     System.err.println("Unknown field type " + val.getClass().getName());
             } catch (Exception e) {
@@ -227,10 +238,28 @@ public class FaxOptions {
             return;
         }
         
+        // Clear all lists:
+        phoneBooks.clear();
+        
         Enumeration e = p.propertyNames();
         while (e.hasMoreElements()) {
-            String fName = (String)e.nextElement();
+            String propName = (String)e.nextElement();
+            
+            // Special case for old "lastPhonebook" property
+            if (propName.equals("lastPhonebook")) {
+                phoneBooks.add(p.getProperty(propName));
+                continue;
+            }
+            
             try {
+                String fName;
+                int pntIdx = propName.indexOf('.');
+                if (pntIdx >= 0) { //Lists
+                    fName = propName.substring(0, pntIdx); // Cut off parts right of point
+                } else {
+                    fName = propName;
+                }
+                
                 Field f = FaxOptions.class.getField(fName);
                 Class fcls = f.getType();
                 if (String.class.isAssignableFrom(fcls))
@@ -299,10 +328,13 @@ public class FaxOptions {
                 } else if (Point.class.isAssignableFrom(fcls)) {
                     String [] v =  p.getProperty(fName).split(sepregex);
                     f.set(this, new Point(Integer.parseInt(v[0]), Integer.parseInt(v[1])));
+                } else if (List.class.isAssignableFrom(fcls)) {
+                    List lst = (List)f.get(this);
+                    lst.add(p.getProperty(propName));
                 } else
                     System.err.println("Unknown field type " + fcls.getName());
             } catch (Exception e1) {
-                System.err.println("Couldn't load setting for " + fName + ": " + e1.getMessage());
+                System.err.println("Couldn't load setting for " + propName + ": " + e1.getMessage());
             }
         }
     }

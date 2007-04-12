@@ -149,17 +149,4 @@ public class GeneralConnectionSettings {
         }
     }
     
-    public GeneralConnectionSettings() {
-        super();
-    }
-    
-    public GeneralConnectionSettings(String serialized) {
-        this();
-        loadFromString(serialized);
-    }
-    
-    public GeneralConnectionSettings(GeneralConnectionSettings src) {
-        this();
-        copyFrom(src);
-    }
 }

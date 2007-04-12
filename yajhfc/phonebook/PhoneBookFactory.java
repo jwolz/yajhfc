@@ -3,6 +3,7 @@ package yajhfc.phonebook;
 import java.awt.Dialog;
 import java.util.ArrayList;
 
+import yajhfc.utils;
 import yajhfc.phonebook.jdbc.JDBCPhoneBook;
 import yajhfc.phonebook.ldap.LDAPPhoneBook;
 
@@ -39,7 +40,7 @@ public class PhoneBookFactory {
     public static PhoneBook instanceForDescriptor(String descriptor, Dialog parent) {
         int pos = descriptor.indexOf(':');
         if (pos <= 0) {
-            return createDefault(parent);
+            return new XMLPhoneBook(parent); //Compatibility with old versions (-> no prefix)
         } else
             return instanceForPrefix(descriptor.substring(0, pos), parent);
     }
@@ -52,7 +53,7 @@ public class PhoneBookFactory {
         return null;
     }
     
-    public static PhoneBook createDefault(Dialog parent) {
-        return new XMLPhoneBook(parent);
+    public static String getDefaultPhonebookDescriptor() {
+        return XMLPhoneBook.PB_Prefix + ":" + utils.getConfigDir() + "default.phonebook";
     }
 }

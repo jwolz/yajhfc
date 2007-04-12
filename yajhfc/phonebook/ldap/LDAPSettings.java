@@ -22,9 +22,9 @@ import yajhfc.phonebook.GeneralConnectionSettings;
 
 
 public class LDAPSettings extends GeneralConnectionSettings {
-    public String serverName = "suse101-vmw";
+    public String serverName = ""; //"suse101-vmw";
     public int port = 389;
-    public String baseDN = "o=Scalix";
+    public String baseDN = ""; //"o=Scalix";
     public boolean useAuth = false;
     public String bindDN = "";
     public String credential = "";
@@ -59,7 +59,7 @@ public class LDAPSettings extends GeneralConnectionSettings {
         company = "o";
         voiceNumber = "telephoneNumber";
         faxNumber = "facsimileTelephoneNumber";
-        comment = "";
+        comment = "description";
     }
     
     public LDAPSettings(String serialized) {

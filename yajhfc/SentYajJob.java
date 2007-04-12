@@ -36,7 +36,8 @@ public class SentYajJob extends YajJob {
     
     @Override
     public boolean isError() {
-        return haveError;
+        // Also update mainwin.MenuViewListener if this is changed!
+        return haveError; 
     }
     
     public Job getJob(HylaFAXClient hyfc) throws ServerResponseException, IOException {
@@ -157,16 +158,18 @@ public class SentYajJob extends YajJob {
     public SentYajJob(Vector<FmtItem> cols, String[] stringData) {
         super(cols, stringData);
         
+        // Also update mainwin.MenuViewListener if this is changed!
         int idx = columns.indexOf(utils.jobfmt_Jobstate);
         if (idx >= 0) {
             String status = getStringData(idx);
-            haveError = (status.equals("F") || status.equals("?"));
+            haveError = (status != null) && (status.equals("F") || status.equals("?"));
         } else {
             idx = columns.indexOf(utils.jobfmt_Status);
             if (idx >= 0) {
-                haveError = (getStringData(idx).length() > 0);
+                String errorDesc = getStringData(idx);
+                haveError = (errorDesc != null) && (errorDesc.length() > 0);
             } else {
-                haveError = false; // Actually undetermined...
+                haveError = false; // Actually undetermined, but we are optimistic ;-)
             }
         }
     }

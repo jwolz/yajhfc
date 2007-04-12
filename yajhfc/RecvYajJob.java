@@ -32,6 +32,14 @@ public class RecvYajJob extends YajJob {
     protected int fileNameCol;
     protected boolean read = false;
     
+    private boolean haveError;
+    
+    @Override
+    public boolean isError() {
+        // Also update mainwin.MenuViewListener if this is changed!
+        return haveError; 
+    }
+    
     public boolean isRead() {
         return read;
     }
@@ -69,5 +77,14 @@ public class RecvYajJob extends YajJob {
     
     public RecvYajJob(Vector<FmtItem> cols, String[] stringData) {
         super(cols, stringData);
+        
+        // Also update mainwin.MenuViewListener if this is changed!
+        int idx = columns.indexOf(utils.recvfmt_ErrorDesc);
+        if (idx >= 0) {
+            String errorDesc = getStringData(idx);
+            haveError = (errorDesc != null) && (errorDesc.length() > 0);
+        } else {
+            haveError = false; // Actually undetermined, but we are optimistic ;-)
+        }
     }
 }
