@@ -45,7 +45,7 @@ public final class utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2007 by Jonas Wolz";
-    public static final String AppVersion = "0.3.3";
+    public static final String AppVersion = "0.3.4pre";
     public static final String AuthorEMail = "Jonas Wolz &lt;jwolz@freenet.de&gt;";
     public static final String HomepageURL = "http://www.yajhfc.de.vu/"; 
     
@@ -219,6 +219,7 @@ public final class utils {
     public static final YajLanguage[] AvailableLocales = {
         new YajAutoLanguage(),
         new YajLanguage(Locale.ENGLISH),
+        new YajLanguage(Locale.FRENCH),
         new YajLanguage(Locale.GERMAN),
         new YajLanguage(new Locale("es"))
     };
