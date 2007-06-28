@@ -1,0 +1,147 @@
+LISEZ MOI for YajHFC 0.3.3
+==========================
+
+A PROPOS DE
+-----------
+
+YajHFC (Yet Another Java HylaFAX Client) est un client pour le serveur de fax Hylafax
+(http://www.hylafax.org/) ecrit en Java.
+
+Caracteristiques:
+* Faxer des documents au format PostScript ou PDF
+* Reception de faxes
+* Support de la generation de pages de couvertures depuis des modeles
+* Visualiser les faxs envoyes et recus
+* Carnet d'adresse
+* Parametrage des colonnes affichees par boite de dialogue
+* Support de quatres langues : Anglais, Allemand, Espagnol and Francais
+
+Page d'accueil: http://www.yajhfc.de.vu/
+email:    Jonas Wolz <jwolz@freenet.de>
+
+INSTALLATION
+------------
+
+Pres requis:
+* JRE 5.0 ou superieur
+* Un serveur Hylafax operationnel sur votre reseau (bien sur ;-) )
+* Un programme pour visualiser les fichiers TIFF (voir aussi les FAQ)
+* Optionnel: Un visualiseur Postscript (e.g. Ghostview)
+
+Pour Installer YajHFC Telechargez le fichier yajhfc-0_3_3.jar dans un repertoire
+sur votre machine.
+Pour l'executer, utilisez la commande: "java -jar yajhfc-0_3_3.jar"
+(Sous Windows vous pouvez habituellement double cliquer sur le fichier jar.)
+
+LICENCE
+-------
+
+YajHFC est un logiciel libre sous licence GPL.
+Visualisez le fichier COPYING pour plus de details.
+
+CODE SOURCE
+-----------
+Pour les instructions decrivants comment compiler YajHFC depuis les sources
+SVP visualisez le fichier BUILDING.txt dans ce repertoire.
+YajHFC utilise les paquets suivants :
+(1) une version legerement modifiee du paquet gnu.hylafax
+    (version officielle : http://gnu-hylafax.sf.net/)
+    Le code source de la version modifiee peut etre telecharge
+    depuis la page d'accueil de YajHFC.
+(2) TableLayout.jar
+    depuis https://tablelayout.dev.java.net/
+(3) "Java look and feel Graphics Repository" (jlfgr-1_0.jar)
+    depuis http://java.sun.com/developer/techDocs/hi/repository/
+
+Des copies de certains des fichiers pres requis peuvent etre trouves 
+dans le sous repertoire jar de l'archive des sources.
+
+YajHFC a ete originellement ecrit comme un premier projet Java
+(plus que les programmes "Hello world" avances) plus complexe utilisant l'IDE Eclipse.
+
+MODIFICATIONS
+-------------
+
+0.3.3:
+- Support du renvoi de faxs
+- Impression des tables faxs recus/envoyes supporte
+- Fond en couleur pour les travaux echoues
+- Annuaire telephonique LDAP supporte en lecture seule
+- Support de l'ouverture de plusieurs annuaires telephoniques
+- Programme d'installation automatique Windows avec une "imprimante fax"
+
+0.3.2:
+- Correction de bug pour des erreur sporadiques lors de l'envoie de fax
+- Support du lancement d'une nouvelle instance en tache de fond (Utile pour "imprimantes fax")
+- Quelques parametres de ligne de commande supplementaires
+- Bouton de rafraichissement de l'ecran
+- Fichier de compilation ant inclu dans la distribution des sources
+- Mise à jour de la documentation
+
+0.3.1:
+- Apparence modifiable
+- option pour afficher les nouveaux faxs automatiquement dans un visualiseur
+- UI option pour modifier l'intervalle de mise à jour de la boite de reception du serveur HylaFAX
+- Boite de dialogue de recherche dans l'annuaire telephonique
+- YajHFC devrait maintenant fonctionner avec la version officielle de la bibliotheque gnu.hylafax (Pas entierement teste!)
+
+0.3.0:
+- Support de la convertion des images en postscript avant d'envoyer un fax
+- Bouton de pre visualisation ajoute à la boite de dialogue d'envoi
+- Support des annuaires dans des bases SQL (utilsation de JDBC)
+
+0.2.7a:
+- Correction de Bug pour une exception qui apparaissait a l'affichage "uniquement mes faxs"
+
+0.2.7:
+- Ajout de la tracduction espagnole
+- Ajout d'une option de selection de langue
+- Support du decalage horaire pour les valeurs dates
+- Correction de Bug qui affichait un mauvais numero lors de l'envoi des faxs multiples
+
+
+0.2.6:
+- Petit changements pour windows 98
+
+0.2.5:
+- Petites corections de Bugs
+
+0.2.4:
+- Support des filtres
+- Support du mode administrateur
+
+0.2.3:
+- Support des envois multiples , numeros/fichiers
+- Renvois/Sauvegarde des faxs
+- Changements internes
+
+0.2.2:
+- Support "Fenetre toujours visible"/bip sur arrivee de fax
+
+0.2.1:
+- Statut Lu/Non lupour les fax recus
+- Les anuaires sont maintenant tries
+- Quelques changements internes
+
+0.2:
+- Support des page de garde de fax
+- Support de la file d'envoi de fax
+
+A FAIRE
+-------
+
+Les fonctions suivantes devraient etre ajoutees dans le futur:
+
+* Plus de traductions? (Voir ci dessous)
+
+YajHFC utilise GNU gettext pour les traductions, aussi, il est facile d'integrer
+d'autres langues dans le programme.
+Pour les traducteurs qui creent une nouvelle traduction (sans traduire la documentation)
+cela demandera quelques heures pour le travail initial et approxivement
+une heure pour chaque nouvelle version.
+Vous n'avez pas besoin de competences techniques "avancees" pour faire cela
+(Basiquement vous avez seulement besoin de savoir utiliser un editeur de texte,
+en installant un logiciel specialise, c'est un peu plus facile).
+
+Aussi, si vous voulez avoir YajHFC traduit dans votre langue,
+les volontaires sont toujours les bienvenus. ;-)
