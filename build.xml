@@ -5,18 +5,41 @@
 	<!-- set global properties for this build -->
 	<property name="src" location="."/>
 	<property name="jar-extra" location="jar"/>
+	<property name="build.compiler" value="modern"/>
+
+	<property file="build.properties"/>
 	<property name="gnu.hylafax-dir" location="../gnu-hylafax"/>
 	<property name="build" location="build"/>
 	<property name="jar-output" location="${build}/yajhfc.jar"/>
 	<property name="srczip-output" location="${build}/yajhfc-src.zip"/>
-	<property name="build.compiler" value="modern"/>
+
+	<fileset dir="${gnu.hylafax-dir}" id="fs.gnu.hylafax-jar-core">
+		<filename name="lib/gnu-hylafax-core-*.jar"/>
+	</fileset>
+	<fileset dir="${gnu.hylafax-dir}" id="fs.gnu.hylafax-jar-inet-ftp">
+		<filename name="lib/gnu-hylafax-inet-ftp-*.jar"/>
+	</fileset>
+	<property name="gnu.hylafax-jar-core" refid="fs.gnu.hylafax-jar-core"/>
+	<property name="gnu.hylafax-jar-inet-ftp" refid="fs.gnu.hylafax-jar-inet-ftp"/>
 
 	<target name="init">
+		<available file="${gnu.hylafax-dir}/gnu/hylafax/HylaFAXClient.class" property="gnu.hylafax.haveClassDir"/>
+		<condition property="gnu.hylafax.haveJars">
+			<and>
+				<isfalse   value="${gnu.hylafax.haveClassDir}"/>
+				<available file="${gnu.hylafax-dir}/${gnu.hylafax-jar-core}"/>
+				<available file="${gnu.hylafax-dir}/${gnu.hylafax-jar-inet-ftp}"/>
+			</and>
+		</condition>
+
+	
 		<fail message="gnu.hylafax library not found in path ${gnu.hylafax-dir}. Use -Dgnu.hylafax-dir=$$dirname to specify the correct path.">
 			<condition>
 				<not>
-					<!-- Test only for one file for simplicity -->
-					<available file="${gnu.hylafax-dir}/gnu/hylafax/HylaFAXClient.class"/>
+					<or>
+						<istrue value="${gnu.hylafax.haveClassDir}"/>
+						<istrue value="${gnu.hylafax.haveJars}"/>
+					</or>
 				</not>
 			</condition>
 		</fail>
@@ -34,14 +57,33 @@
 				<mapper type="glob" from="m*.po" to="M*$1.class" />
 			</compositemapper>
 		</uptodate>
+
+		<condition property="gnu.hylafax.classFileLocation" value="${gnu.hylafax-dir}" else="${build}/gnu.hylafax">
+			<istrue value="${gnu.hylafax.haveClassDir}"/>
+		</condition>
+		<antcall target="init.unjar-gnuhylafax"/>
 	</target>
+	<target name="init.unjar-gnuhylafax" if="gnu.hylafax.haveJars">
+		<mkdir dir="${gnu.hylafax.classFileLocation}"/>
+		<unjar src="${gnu.hylafax-dir}/${gnu.hylafax-jar-core}" dest="${gnu.hylafax.classFileLocation}">
+			<patternset>
+				<include name="**/*.class"/>
+			</patternset>
+		</unjar>
+		<unjar src="${gnu.hylafax-dir}/${gnu.hylafax-jar-inet-ftp}" dest="${gnu.hylafax.classFileLocation}">
+			<patternset>
+				<include name="**/*.class"/>
+			</patternset>
+		</unjar>
+	</target>
+
 
 	<target name="compile" depends="init" description="compile the source code" >
 		<!-- Compile the java code from ${src} into ${build} -->
 		<javac srcdir="${src}" includes="yajhfc/**/*.java" destdir="${build}" source="1.5" target="1.5" debug="true" debuglevel="lines,source">
 			<classpath>
 				<pathelement path="${classpath}"/>
-				<pathelement location="${gnu.hylafax-dir}"/>
+				<pathelement location="${gnu.hylafax.classFileLocation}"/>
 				<pathelement location="${jar-extra}"/>
 			</classpath>
 		</javac>
@@ -70,10 +112,10 @@
 
 	<target name="dist" depends="compile,i18n,doc" description="generate the distribution" >
 		<jar jarfile="${jar-output}" manifest="${jar-extra}/manifest.txt">
-			<fileset dir="${build}" excludes="*.zip,*.jar"/>
+			<fileset dir="${build}" includes="yajhfc/**"/>
 			<fileset dir="${src}" includes="yajhfc/i18n/*.class"/>
 			<fileset dir="${jar-extra}" includes="info/**/*.class,toolbarButtonGraphics/**/*.gif"/>
-			<fileset dir="${gnu.hylafax-dir}" includes="**/*.class"/>
+			<fileset dir="${gnu.hylafax.classFileLocation}" includes="**/*.class"/>
 			<fileset dir="${src}" includes="COPYING,README*.txt,yajhfc/*.png,doc/*.html,doc/*.css,yajhfc/faxcover/*.ps"/>
 		</jar>
 	</target>

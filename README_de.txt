@@ -28,9 +28,10 @@ Voraussetzungen:
 * Ein Programm zum Betrachten von TIFF-Dateien (siehe auch die FAQ)
 * Optional: Ein PostScript-Betrachter (z.B. Ghostview)
 
-Um YajHFC zu installieren, speichern Sie einfach die Datei "yajhfc-0_3_2.jar" 
-im gewünschten Verzeichnis auf Ihrer Festplatte.
-Um das Programm auszuführen, verwenden Sie bitte folgenden Befehl: "java -jar yajhfc-0_3_2.jar"
+Um YajHFC zu installieren, speichern Sie einfach die Datei "yajhfc-X_Y_Z.jar" 
+im gewünschten Verzeichnis auf Ihrer Festplatte (X_Y_Z steht dabei für die gewünschte Version,
+z.B. yajhfc-0_3_4.jar für YajHFC 0.3.4).
+Um das Programm auszuführen, verwenden Sie bitte folgenden Befehl: "java -jar yajhfc-X_Y_Z.jar"
 (Unter Windows können Sie i.d.R. auch einfach auf die Datei doppelklicken.)
 
 LIZENZ

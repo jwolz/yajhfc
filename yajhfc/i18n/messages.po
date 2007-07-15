@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-04-11 12:51+0200\n"
+"POT-Creation-Date: 2007-07-14 16:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,7 +44,7 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
-#: ../AboutDialog.java:270 ../mainwin.java:434
+#: ../AboutDialog.java:270 ../mainwin.java:512
 msgid "About"
 msgstr ""
 
@@ -61,7 +61,7 @@ msgstr ""
 msgid "About {0}"
 msgstr ""
 
-#: ../AboutDialog.java:287 ../mainwin.java:460
+#: ../AboutDialog.java:287 ../mainwin.java:538
 msgid "Documentation"
 msgstr ""
 
@@ -77,7 +77,7 @@ msgstr ""
 msgid "Paste"
 msgstr ""
 
-#: ../ClipboardPopup.java:56 ../mainwin.java:398
+#: ../ClipboardPopup.java:56 ../mainwin.java:476
 #: ../phonebook/PhoneBookWin.java:336
 msgid "Delete"
 msgstr ""
@@ -166,17 +166,17 @@ msgstr ""
 msgid "Preview"
 msgstr ""
 
-#: ../Launcher.java:261
+#: ../Launcher.java:324
 msgid "The new instance did not start after 20 seconds."
 msgstr ""
 
-#: ../Launcher.java:275
+#: ../Launcher.java:338
 msgid ""
 "Cannot launch new program instance, continuing with the existing one!\n"
 "Reason: "
 msgstr ""
 
-#: ../Launcher.java:316
+#: ../Launcher.java:399
 msgid "There already is a running instance!"
 msgstr ""
 
@@ -185,315 +185,357 @@ msgstr ""
 msgid "The document {0} could not get converted to PostScript. Reason:"
 msgstr ""
 
-#: ../mainwin.java:189
+#: ../mainwin.java:185
 msgid "Error deleting a fax:\n"
 msgstr ""
 
-#: ../mainwin.java:191
+#: ../mainwin.java:187
 #, java-format
 msgid "Error deleting the fax \"{0}\":\n"
 msgstr ""
 
-#: ../mainwin.java:226
+#: ../mainwin.java:222
 #, java-format
 msgid "Saving fax {0}"
 msgstr ""
 
-#: ../mainwin.java:241 ../mainwin.java:525
+#: ../mainwin.java:237 ../mainwin.java:603
 #, java-format
 msgid "An error occured saving the file {0} (job {1}):"
 msgstr ""
 
-#: ../mainwin.java:246 ../mainwin.java:531
+#: ../mainwin.java:242 ../mainwin.java:609
 msgid "An error occured saving the fax:"
 msgstr ""
 
-#: ../mainwin.java:254
+#: ../mainwin.java:250
 #, java-format
 msgid "{0} files saved to directory {1}."
 msgstr ""
 
-#: ../mainwin.java:254
+#: ../mainwin.java:250
 msgid "Faxes saved"
 msgstr ""
 
-#: ../mainwin.java:279
+#: ../mainwin.java:275
 #, java-format
 msgid "Displaying fax {0}"
 msgstr ""
 
-#: ../mainwin.java:286 ../mainwin.java:503
+#: ../mainwin.java:282 ../mainwin.java:581
 #, java-format
 msgid "No document files available for the fax \"{0}\"."
 msgstr ""
 
-#: ../mainwin.java:286 ../mainwin.java:503
+#: ../mainwin.java:282 ../mainwin.java:581
 msgid "Display fax"
 msgstr ""
 
-#: ../mainwin.java:297
+#: ../mainwin.java:293
 #, java-format
 msgid "An error occured displaying the file {0} (job {1}):\n"
 msgstr ""
 
-#: ../mainwin.java:311
+#: ../mainwin.java:307
 #, java-format
 msgid "An error occured displaying the fax \"{0}\":"
 msgstr ""
 
-#: ../mainwin.java:349 ../OptionsWin.java:115 ../OptionsWin.java:738
+#: ../mainwin.java:349
+msgid "Error suspending a fax job:\n"
+msgstr ""
+
+#: ../mainwin.java:351
+#, java-format
+msgid "Error suspending the fax job \"{0}\":\n"
+msgstr ""
+
+#: ../mainwin.java:390
+msgid "Error resuming a fax job:\n"
+msgstr ""
+
+#: ../mainwin.java:392
+#, java-format
+msgid "Error resuming the fax job \"{0}\":\n"
+msgstr ""
+
+#: ../mainwin.java:427 ../OptionsWin.java:115 ../OptionsWin.java:738
 msgid "Options"
 msgstr ""
 
-#: ../mainwin.java:350
+#: ../mainwin.java:428
 msgid "Shows the Options dialog"
 msgstr ""
 
-#: ../mainwin.java:363 ../SendWin.java:450
+#: ../mainwin.java:441 ../SendWin.java:450
 msgid "Send"
 msgstr ""
 
-#: ../mainwin.java:364
+#: ../mainwin.java:442
 msgid "Shows the send fax dialog"
 msgstr ""
 
-#: ../mainwin.java:376 ../SendWin.java:447
+#: ../mainwin.java:454 ../SendWin.java:447
 msgid "Poll"
 msgstr ""
 
-#: ../mainwin.java:377
+#: ../mainwin.java:455
 msgid "Shows the poll fax dialog"
 msgstr ""
 
-#: ../mainwin.java:387
+#: ../mainwin.java:465
 msgid "Do you really want to cancel the selected fax jobs?"
 msgstr ""
 
-#: ../mainwin.java:389
+#: ../mainwin.java:467
 msgid "Do you really want to delete the selected faxes?"
 msgstr ""
 
-#: ../mainwin.java:391
+#: ../mainwin.java:469
 msgid "Delete faxes"
 msgstr ""
 
-#: ../mainwin.java:393
+#: ../mainwin.java:471
 msgid "Deleting faxes"
 msgstr ""
 
-#: ../mainwin.java:399
+#: ../mainwin.java:477
 msgid "Deletes the selected fax"
 msgstr ""
 
-#: ../mainwin.java:407
+#: ../mainwin.java:485
 msgid "Viewing faxes"
 msgstr ""
 
-#: ../mainwin.java:410
+#: ../mainwin.java:488
 msgid "Show"
 msgstr ""
 
-#: ../mainwin.java:411
+#: ../mainwin.java:489
 msgid "Displays the selected fax"
 msgstr ""
 
-#: ../mainwin.java:420
+#: ../mainwin.java:498
 msgid "Exit"
 msgstr ""
 
-#: ../mainwin.java:421
+#: ../mainwin.java:499
 msgid "Exits the application"
 msgstr ""
 
-#: ../mainwin.java:435
+#: ../mainwin.java:513
 msgid "Shows the about dialog"
 msgstr ""
 
-#: ../mainwin.java:447 ../phonebook/PhoneBookWin.java:365
+#: ../mainwin.java:525 ../phonebook/PhoneBookWin.java:365
 msgid "Phone book"
 msgstr ""
 
-#: ../mainwin.java:448
+#: ../mainwin.java:526
 msgid "Display/edit the phone book"
 msgstr ""
 
-#: ../mainwin.java:461
+#: ../mainwin.java:539
 msgid "Shows the README files"
 msgstr ""
 
-#: ../mainwin.java:488
+#: ../mainwin.java:566
 msgid "Marked as read"
 msgstr ""
 
-#: ../mainwin.java:489
+#: ../mainwin.java:567
 msgid "Marks the selected fax as read/unread"
 msgstr ""
 
-#: ../mainwin.java:513
+#: ../mainwin.java:591
 #, java-format
 msgid "Save {0} to"
 msgstr ""
 
-#: ../mainwin.java:535
+#: ../mainwin.java:613
 msgid "Select a directory to save the faxes in"
 msgstr ""
 
-#: ../mainwin.java:536 ../phonebook/PhoneBookPanel.java:519
+#: ../mainwin.java:614 ../phonebook/PhoneBookPanel.java:519
 msgid "Select"
 msgstr ""
 
-#: ../mainwin.java:540
+#: ../mainwin.java:618
 msgid "Saving faxes"
 msgstr ""
 
-#: ../mainwin.java:545
+#: ../mainwin.java:623
 msgid "Save fax..."
 msgstr ""
 
-#: ../mainwin.java:546
+#: ../mainwin.java:624
 msgid "Saves the selected fax on disk"
 msgstr ""
 
-#: ../mainwin.java:559
+#: ../mainwin.java:637
 msgid "Couldn't get a filename for the fax:"
 msgstr ""
 
-#: ../mainwin.java:571
+#: ../mainwin.java:649
 msgid "Forward fax..."
 msgstr ""
 
-#: ../mainwin.java:572
+#: ../mainwin.java:650
 msgid "Forwards the fax"
 msgstr ""
 
-#: ../mainwin.java:591
+#: ../mainwin.java:669
 msgid "Admin mode"
 msgstr ""
 
-#: ../mainwin.java:592
+#: ../mainwin.java:670
 msgid "Connect to the server in admin mode (e.g. to delete faxes)"
 msgstr ""
 
-#: ../mainwin.java:603
+#: ../mainwin.java:681
 msgid "Refresh"
 msgstr ""
 
-#: ../mainwin.java:604
+#: ../mainwin.java:682
 msgid "Refresh tables and server status"
 msgstr ""
 
-#: ../mainwin.java:635
+#: ../mainwin.java:713
 msgid "Could not get all of the job information necessary to resend the fax:"
 msgstr ""
 
-#: ../mainwin.java:653
+#: ../mainwin.java:731
 msgid "Resend fax..."
 msgstr ""
 
-#: ../mainwin.java:654
+#: ../mainwin.java:732
 msgid "Resend the fax"
 msgstr ""
 
-#: ../mainwin.java:663
+#: ../mainwin.java:741
 #, java-format
 msgid "page {0}"
 msgstr ""
 
-#: ../mainwin.java:667
+#: ../mainwin.java:745
 msgid "Error printing the table:"
 msgstr ""
 
-#: ../mainwin.java:671
+#: ../mainwin.java:749
 msgid "Print table..."
 msgstr ""
 
-#: ../mainwin.java:672
+#: ../mainwin.java:750
 msgid "Prints the currently displayed table"
 msgstr ""
 
-#: ../mainwin.java:680 ../mainwin.java:1387
+#: ../mainwin.java:757
+msgid "Suspending jobs"
+msgstr ""
+
+#: ../mainwin.java:760
+msgid "Suspend"
+msgstr ""
+
+#: ../mainwin.java:761
+msgid "Suspends the transfer of the selected fax"
+msgstr ""
+
+#: ../mainwin.java:768
+msgid "Resuming jobs"
+msgstr ""
+
+#: ../mainwin.java:771
+msgid "Resume"
+msgstr ""
+
+#: ../mainwin.java:772
+msgid "Resumes the transfer of the selected fax"
+msgstr ""
+
+#: ../mainwin.java:780 ../mainwin.java:1485
 msgid "Fax"
 msgstr ""
 
-#: ../mainwin.java:798
+#: ../mainwin.java:906
 msgid "View"
 msgstr ""
 
-#: ../mainwin.java:802
+#: ../mainwin.java:910
 msgid "All faxes"
 msgstr ""
 
-#: ../mainwin.java:807
+#: ../mainwin.java:915
 msgid "Only own faxes"
 msgstr ""
 
-#: ../mainwin.java:811
+#: ../mainwin.java:919
 msgid "Custom filter..."
 msgstr ""
 
-#: ../mainwin.java:815
+#: ../mainwin.java:923
 msgid "Mark failed jobs"
 msgstr ""
 
-#: ../mainwin.java:936
+#: ../mainwin.java:1040
 msgid "Disconnected."
 msgstr ""
 
-#: ../mainwin.java:983
+#: ../mainwin.java:1087
 msgid "User password"
 msgstr ""
 
-#: ../mainwin.java:983
+#: ../mainwin.java:1087
 #, java-format
 msgid "Please enter the password for user \"{0}\"."
 msgstr ""
 
-#: ../mainwin.java:994 ../mainwin.java:1017
+#: ../mainwin.java:1098 ../mainwin.java:1121
 msgid "An error occured in response to the password:"
 msgstr ""
 
-#: ../mainwin.java:1009
+#: ../mainwin.java:1113
 msgid "Admin password"
 msgstr ""
 
-#: ../mainwin.java:1009
+#: ../mainwin.java:1113
 #, java-format
 msgid "Please enter the administrative password for user \"{0}\"."
 msgstr ""
 
-#: ../mainwin.java:1069
+#: ../mainwin.java:1167
 msgid "An error occured connecting to the server:"
 msgstr ""
 
-#: ../mainwin.java:1122
+#: ../mainwin.java:1220
 msgid "Help"
 msgstr ""
 
-#: ../mainwin.java:1164 ../OptionsWin.java:257
+#: ../mainwin.java:1262 ../OptionsWin.java:257
 msgid "Received"
 msgstr ""
 
-#: ../mainwin.java:1164
+#: ../mainwin.java:1262
 msgid "Received faxes"
 msgstr ""
 
-#: ../mainwin.java:1165 ../OptionsWin.java:258
+#: ../mainwin.java:1263 ../OptionsWin.java:258
 msgid "Sent"
 msgstr ""
 
-#: ../mainwin.java:1165
+#: ../mainwin.java:1263
 msgid "Sent faxes"
 msgstr ""
 
-#: ../mainwin.java:1166 ../OptionsWin.java:259
+#: ../mainwin.java:1264 ../OptionsWin.java:259
 msgid "Transmitting"
 msgstr ""
 
-#: ../mainwin.java:1166
+#: ../mainwin.java:1264
 msgid "Faxes in the output queue"
 msgstr ""
 
-#: ../mainwin.java:1406
+#: ../mainwin.java:1507
 msgid "Extras"
 msgstr ""
 

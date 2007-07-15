@@ -19,18 +19,12 @@ package yajhfc;
  */
 
 import java.awt.Font;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.event.EventListenerList;
 
@@ -123,19 +117,8 @@ class UnReadMyTableModel extends MyTableModel {
             return unreadFont;
     }
     
-    public void readFromStream(InputStream fin) throws IOException {
-        
-        BufferedReader bIn = new BufferedReader(new InputStreamReader(fin));
-        
-        HashSet<String> oldRead = new HashSet<String>();
-        String line = null;
-        while ((line = bIn.readLine()) != null) {
-            line = line.trim();
-            if (!line.startsWith("#") && line.length() > 0) {
-                oldRead.add(line);
-            }
-        }
-        bIn.close();
+    public void loadReadState(PersistentReadState loadFrom) {
+        Set<String> oldRead = loadFrom.loadReadFaxes();
         
         for ( int i=0; i < jobs.length; i++ ) {
             RecvYajJob j = (RecvYajJob)jobs[i];
@@ -144,20 +127,16 @@ class UnReadMyTableModel extends MyTableModel {
         }
     }
     
-    public void storeToStream(OutputStream fOut) throws IOException {
-        if (jobs != null) { // Only write the configuration if there is a valid list of jobs
-            BufferedWriter bOut = new BufferedWriter(new OutputStreamWriter(fOut));
-            
-            bOut.write("# " + utils.AppShortName + " " + utils.AppVersion + " configuration file\n");
-            bOut.write("# This file contains a list of faxes considered read\n\n");
-            
-            for ( int i=0; i < jobs.length; i++ ) {
-                RecvYajJob j = (RecvYajJob)jobs[i];
-                if (j.isRead())
-                    bOut.write(j.getIDValue().toString() + "\n");
+    public void storeReadState(PersistentReadState storeTo) {
+        List<String> readFaxes = new ArrayList<String>();
+        for ( int i=0; i < jobs.length; i++ ) {
+            RecvYajJob j = (RecvYajJob)jobs[i];
+            if (j.isRead()) {
+                readFaxes.add(j.getIDValue().toString());
             }
-            bOut.close();
         }
+        
+        storeTo.persistReadState(readFaxes);
     }
     
     /*public String getStateString() {

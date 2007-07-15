@@ -252,15 +252,21 @@ y para simular el efecto de <code>?</code> hay que utilizar <code>.</code>.
 <PRE>
 Uso general:
 java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose]
-                     [--configdir=directory] [--stdin | filename]
+         [--configdir=directory] [--loadplugin=filename]
+         [--showtab=0|R|1|S|2|T] [--recipient=...] [--stdin | filename ...]
 Descripción de los argumentos:
 filename     El nombre del archivo PostScript para enviar.
 --stdin      Lee el archivo para enviar de una entrada estándar
+--recipient  Specifies the phone number of a recipient to send the fax to.
+             You may specify multiple arguments for multiple recipients.
 --admin      Inicia en modo administrador
 --debug      Salida de información de errores
 --background Si no hay ninguna instancia en ejecución, iniciar una nueva instancia
              y terminar (después de enviar el archivo)
 --noclose    No cerrar YajHFC después de enviar el fax
+--showtab    Sets the tab to display on startup. Specify 0 or R for the "Received",
+             1 or S for the "Sent" or 2 or T for the "Transmitting" tab.
+--loadplugin Specifies the jar file of a YajHFC plugin to load
 --configdir  Establece un directorio de configuración para utilizar en lugar de ~/.yajhfc
 --help       Muestra este texto
 </PRE>
@@ -363,11 +369,11 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>-no_subdir -split 0 -html_version 3.2,unicode -no_navigation faq_es.tex</TT>
 <P>
-The translation was initiated by Jonas Wolz on 2007-04-12
+The translation was initiated by Jonas Wolz on 2007-07-14
 <BR><HR>
 <ADDRESS>
 Jonas Wolz
-2007-04-12
+2007-07-14
 </ADDRESS>
 </BODY>
 </HTML>
