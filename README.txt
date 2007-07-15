@@ -1,4 +1,4 @@
-README for YajHFC 0.3.3
+README for YajHFC 0.3.4
 =======================
 
 ABOUT
@@ -14,7 +14,7 @@ Features:
 * Viewing sent and received faxes
 * Phone book
 * Visible table columns may be selected in a dialog
-* Supports three languages: English, German and Spanish
+* Supports four languages: English, French, German and Spanish
 
 Homepage: http://www.yajhfc.de.vu/
 email:    Jonas Wolz <jwolz@freenet.de>
@@ -28,9 +28,9 @@ Requirements:
 * Some program to view TIFF files (also see the FAQ)
 * Optional: A PostScript viewer (e.g. Ghostview)
 
-To install YajHFC just download the yajhfc-0_3_3.jar file to some folder on your
+To install YajHFC just download the yajhfc-0_3_4.jar file to some folder on your
 file system.
-To execute it, use: "java -jar yajhfc-0_3_3.jar"
+To execute it, use: "java -jar yajhfc-0_3_4.jar"
 (In Windows you usually can just double click the jar file as well.)
 
 LICENSE
@@ -46,16 +46,14 @@ For instructions describing how to build YajHFC from source
 please see the file BUILDING.txt in this directory.
 
 YajHFC uses the following packages:
-(1) A slightly modified version of the gnu.hylafax package 
-    (originally from http://gnu-hylafax.sf.net/)
-    The source code of the modified version can be downloaded
-    from the YajHFC home page.
+(1) The gnu.hylafax library (core and inet-ftp package) 
+    from http://gnu-hylafax.sourceforge.net/
 (2) TableLayout.jar 
     from https://tablelayout.dev.java.net/
 (3) "Java look and feel Graphics Repository" (jlfgr-1_0.jar) 
     from http://java.sun.com/developer/techDocs/hi/repository/
 
-Copies of some of the required files can also be found in the jar 
+Copies of the required files from (2) and (3) can also be found in the jar 
 subdirectory in the source archive.
 
 YajHFC was originally written as a first more complicated
@@ -63,6 +61,13 @@ YajHFC was originally written as a first more complicated
 
 CHANGES
 -------
+
+0.3.4:
+- Support to specify recipients on the command line
+- Suspend/Resume for fax jobs
+- French translation added
+- Initially displayed tab can be set by a command line argument
+- The "stock" gnu.hylafax library is now used by default (which fixes some bugs)
 
 0.3.3:
 - Support for resending faxes

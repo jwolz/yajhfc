@@ -36,6 +36,21 @@ public class SendingYajJob extends SentYajJob {
         }
     }
     
+    public void suspend(HylaFAXClient hyfc) throws IOException, ServerResponseException {
+        synchronized (hyfc) {
+            Job job = getJob(hyfc);
+
+            hyfc.suspend(job);
+        }
+    }
+    
+    public void resume(HylaFAXClient hyfc) throws IOException, ServerResponseException {
+        synchronized (hyfc) {
+            Job job = getJob(hyfc);
+            hyfc.submit(job);
+        }
+    }
+    
     public SendingYajJob(Vector<FmtItem> cols, String[] stringData) {
         super(cols, stringData);
     }

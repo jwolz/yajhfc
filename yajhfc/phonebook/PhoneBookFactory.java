@@ -28,7 +28,7 @@ import yajhfc.phonebook.ldap.LDAPPhoneBook;
 
 public class PhoneBookFactory {
 
-    public static ArrayList<PhoneBookType> PhonebookTypes;
+    public static final ArrayList<PhoneBookType> PhonebookTypes;
     
     static {
         PhonebookTypes = new ArrayList<PhoneBookType>();

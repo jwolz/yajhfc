@@ -69,6 +69,8 @@ public final class Launcher {
     final static int codeSubmitFile = 2;
     final static int codeMultiSubmitFile = 4;
     final static int codeToForeground = 3;
+    final static int codeAddRecipients = 5;
+    final static int codeQuit = 255;
     
     final static int responseOK = 0;
     final static int responseNotConnected = 10;
@@ -149,20 +151,43 @@ public final class Launcher {
     private static void printHelp() {
         System.out.print(
             "General usage:\n"+
-            "java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose] [--configdir=directory] [--stdin | filename ...]\n"+
+            "java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose] \n" +
+            "         [--configdir=directory] [--loadplugin=filename] \n" +
+            "         [--showtab=0|R|1|S|2|T] [--recipient=...] [--stdin | filename ...]\n"+
             "Argument description:\n"+
-            "filename     The file name of a PostScript file to send.\n"+
+            "filename     One or more file names of PostScript files to send.\n"+
             "--stdin      Read the file to send from standard input\n"+
+            "--recipient  Specifies the phone number of a recipient to send the fax to.\n"+
+            "             You may specify multiple arguments for multiple recipients.\n"+
             "--admin      Start up in admin mode\n"+
             "--debug      Output some debugging information\n"+
             "--background If there is no already running instance, launch a new instance \n" +
             "             and terminate (after submitting the file to send)\n" +
             "--noclose    Do not close YajHFC after submitting the fax\n"+
+            "--showtab    Sets the tab to display on startup. Specify 0 or R for the \"Received\", \n"+
+            "             1 or S for the \"Sent\" or 2 or T for the \"Transmitting\" tab.\n"+
+            "--loadplugin Specifies the jar file of a YajHFC plugin to load\n"+
             "--configdir  Sets a configuration directory to use instead of ~/.yajhfc\n" +
             "--help       Displays this text\n"
             );   
     }
     
+    /**
+     * Strips quotes (" or ') at the beginning and end of the specified String
+     * @param str
+     * @return
+     */
+    public static String stripQuotes(String str)
+    {
+        char c = str.charAt(0);
+        if (c == '\"' || c == '\'') {
+            c = str.charAt(str.length()-1);
+            if (c == '\"' || c == '\'') {
+                return str.substring(1, str.length()-2);
+            }
+        }
+        return str;
+    }
     
     /**
      * Launches this application
@@ -170,11 +195,14 @@ public final class Launcher {
     public static void main(String[] args) {
         // parse command line
         ArrayList<String> fileNames = new ArrayList<String>();
+        ArrayList<String> recipients = new ArrayList<String>();
+        ArrayList<File> jars = new ArrayList<File>();
         boolean useStdin = false;
         boolean adminMode = false;
         boolean forkNewInst = false;
         boolean closeAfterSubmit = true;
         boolean debugMode = false;
+        int selectedTab = -1;
         
         for (int i = 0; i < args.length; i++) {
             if (args[i].startsWith("--")) { // command line argument
@@ -192,15 +220,41 @@ public final class Launcher {
                 else if (args[i].equals("--noclose")) 
                     closeAfterSubmit = false;
                 else if (args[i].startsWith("--configdir="))
-                    cmdLineConfDir = args[i].substring(12); // 12 == "--configdir=".length()
-                else
+                    cmdLineConfDir = stripQuotes(args[i].substring(12)); // 12 == "--configdir=".length()
+                else if (args[i].startsWith("--recipient="))
+                    recipients.add(stripQuotes(args[i].substring(12))); // 12 == "--recipient=".length()
+                else if (args[i].startsWith("--showtab=") && args[i].length() > 10) { // 10 == ""--showtab="".length()
+                    switch (args[i].charAt(10)) {
+                    case '0':
+                    case 'R':
+                    case 'r':
+                        selectedTab = 0;
+                        break;
+                    case '1':
+                    case 'S':
+                    case 's':
+                        selectedTab = 1;
+                        break;
+                    case '2':
+                    case 'T':
+                    case 't':
+                        selectedTab = 2;
+                        break;
+                    default:
+                        System.err.println("Unknown tab: " + args[i].substring(10));
+                    }
+                } else if (args[i].startsWith("--loadplugin=")) {
+                    jars.add(new File(stripQuotes(args[i].substring("--loadplugin=".length()))));
+                } else {
                     System.err.println("Unknown command line argument: " + args[i]);
+                }
             } else if (args[i].startsWith("-"))
                 System.err.println("Unknown command line argument: " + args[i]);
             else // treat argument as file name to send
                 fileNames.add(args[i]);
         }
         
+        // IMPORTANT: Don't access utils before this line!
         utils.debugMode = debugMode;
         
         Socket oldinst = checkLock();
@@ -216,6 +270,9 @@ public final class Launcher {
                     argcount++;
                 if (cmdLineConfDir != null)
                     argcount++;
+                if (selectedTab >= 0)
+                    argcount++;
+                argcount += jars.size();
                 
                 String[] launchArgs = new String[argcount];
                 launchArgs[0] = System.getProperty("java.home") + File.separatorChar + "bin" + File.separatorChar + "java";
@@ -239,6 +296,13 @@ public final class Launcher {
                 if (cmdLineConfDir != null) {
                     launchArgs[argidx] = "--configdir=" + cmdLineConfDir;
                     argidx++;
+                }
+                if (selectedTab >= 0) {
+                    launchArgs[argidx] = "--showtab=" + selectedTab;
+                    argidx++;
+                }
+                for (File jar : jars) {
+                    launchArgs[argidx++] = "--loadplugin=\"" + jar.getAbsolutePath() + "\"";;
                 }
                 
                 if (utils.debugMode) {
@@ -278,13 +342,33 @@ public final class Launcher {
         
         if (oldinst == null) {
             createLock();
-            SwingUtilities.invokeLater(new NewInstRunner(fileNames, useStdin, adminMode, closeAfterSubmit));
+            // Load plugins:
+            for (File jar : jars) {
+                try {
+                    PluginManager.addPlugin(jar);
+                } catch (IOException e) {
+                    System.err.println("Error loading the plugin " + jar + ": ");
+                    e.printStackTrace();
+                }
+            }
+            SwingUtilities.invokeLater(new NewInstRunner(fileNames, useStdin, recipients, adminMode, closeAfterSubmit, selectedTab));
             blockThread = new SockBlockAcceptor();
             blockThread.start();
         } else {            
             try {
                 OutputStream outStream = oldinst.getOutputStream();
                 InputStream inStream = oldinst.getInputStream();
+                
+                if (recipients.size() > 0)
+                {
+                    outStream.write(codeAddRecipients);
+                    BufferedWriter bufOut = new BufferedWriter(new OutputStreamWriter(outStream));
+                    for (String number : recipients) {
+                        bufOut.write(number + "\n");
+                    }
+                    bufOut.write(multiFileEOF + "\n");
+                    bufOut.flush();
+                }
                 
                 if (useStdin) { 
                     BufferedOutputStream bufOut = new BufferedOutputStream(outStream);
@@ -315,6 +399,7 @@ public final class Launcher {
                     
                     System.err.println(utils._("There already is a running instance!"));
                 }
+                outStream.write(codeQuit);
                 outStream.flush();
                 oldinst.shutdownOutput();
                 
@@ -336,11 +421,10 @@ public final class Launcher {
         }
     }
         
-    static class NewInstRunner implements Runnable {
-        private List<String> fileNames;
-        private boolean useStdin;
-        private boolean adminMode;
-        private boolean closeAfterSubmit;
+    static class NewInstRunner extends SubmitRunner {
+        protected boolean adminMode;
+        protected boolean closeAfterSubmit;
+        protected int selectedTab;
         
         public void run() {
             utils.setLookAndFeel(utils.getFaxOptions().lookAndFeel);
@@ -348,28 +432,22 @@ public final class Launcher {
             application = new mainwin(adminMode);
             application.setVisible(true);
             application.reconnectToServer();
+            if (selectedTab >= 0) {
+                application.setSelectedTab(selectedTab);
+            }
             
-            if ((fileNames != null && fileNames.size() > 0) || useStdin) {
-                SendWin sw = new SendWin(application.hyfc, application);
-                sw.setModal(true);
-                if (useStdin)
-                    sw.addInputStream(System.in);
-                else {
-                    for (String fileName : fileNames)
-                        sw.addLocalFile(fileName);
-                }
-                sw.setVisible(true);
+            if ((fileNames != null && fileNames.size() > 0) || this.inStream != null) {
+                doSubmit();
                 if (closeAfterSubmit)
                     application.dispose();
             }
         }   
         
-        public NewInstRunner(List<String> fileNames, boolean useStdin, boolean adminMode, boolean closeAfterSubmit) {
-            super();
-            this.fileNames = fileNames;
-            this.useStdin = useStdin;
+        public NewInstRunner(List<String> fileNames, boolean useStdin, List<String> recipients, boolean adminMode, boolean closeAfterSubmit, int selectedTab) {
+            super(fileNames, useStdin ? System.in : null, recipients);
             this.adminMode = adminMode;
             this.closeAfterSubmit = closeAfterSubmit;
+            this.selectedTab = selectedTab;
         }
     }
     
@@ -396,65 +474,88 @@ public final class Launcher {
                 Socket srv = null;
                 InputStream strIn = null;
                 OutputStream strOut = null;
+                List<String> recipients = null;
+                
                 try {
                     srv = sockBlock.accept();
                     strIn = srv.getInputStream();
                     strOut = srv.getOutputStream();
+                    boolean doLoop = true;
 
-                    switch (strIn.read()) {
-                    case codeSubmitStream:
-                        int ok = waitSubmitOK();
-                        if (ok == responseOK) {
-                            SwingUtilities.invokeAndWait(new SubmitRunner(strIn)); // Accept new faxes only sequentially
-                        }
-                        strOut.write(ok);
-                        break;
-                    case codeSubmitFile:
-                        ok = waitSubmitOK();
-                        if (ok == responseOK) {
+                    do {
+                        switch (strIn.read()) {
+                        case codeSubmitStream:
+                            int ok = waitSubmitOK();
+                            if (ok == responseOK) {
+                                SwingUtilities.invokeAndWait(new SubmitRunner(strIn, recipients)); // Accept new faxes only sequentially
+                                recipients = null;
+                            }
+                            strOut.write(ok);
+                            break;
+                        case codeSubmitFile:
+                            ok = waitSubmitOK();
+                            if (ok == responseOK) {
+                                BufferedReader bufR = new BufferedReader(new InputStreamReader(strIn));
+                                String[] fileNames = { bufR.readLine() };
+
+                                SwingUtilities.invokeAndWait(new SubmitRunner(Arrays.asList(fileNames), recipients)); // Accept new faxes only sequentially
+                                recipients = null;
+                                //bufR.close();
+                            }
+                            strOut.write(ok);
+                            break;
+                        case codeMultiSubmitFile:
+                            ok = waitSubmitOK();
+                            if (ok == responseOK) {
+                                BufferedReader bufR = new BufferedReader(new InputStreamReader(strIn));
+                                ArrayList<String> fileNames = new ArrayList<String>();
+                                String line = bufR.readLine();
+
+                                while (!line.equals(multiFileEOF)) {
+                                    fileNames.add(line);
+                                    line = bufR.readLine();
+                                }
+
+                                SwingUtilities.invokeAndWait(new SubmitRunner(fileNames, recipients)); // Accept new faxes only sequentially
+                                recipients = null;
+                                //bufR.close();
+                            }
+                            strOut.write(ok);
+                            break;
+                        case codeAddRecipients:
+                        {
+                            recipients = new ArrayList<String>();
                             BufferedReader bufR = new BufferedReader(new InputStreamReader(strIn));
-                            String[] fileNames = new String[1];
-                            fileNames[0] = bufR.readLine();
-                            
-                            SwingUtilities.invokeAndWait(new SubmitRunner(Arrays.asList(fileNames))); // Accept new faxes only sequentially
-                            //bufR.close();
-                        }
-                        strOut.write(ok);
-                        break;
-                    case codeMultiSubmitFile:
-                        ok = waitSubmitOK();
-                        if (ok == responseOK) {
-                            BufferedReader bufR = new BufferedReader(new InputStreamReader(strIn));
-                            ArrayList<String> fileNames = new ArrayList<String>();
                             String line = bufR.readLine();
-                            
+
                             while (!line.equals(multiFileEOF)) {
-                                fileNames.add(line);
+                                recipients.add(line);
                                 line = bufR.readLine();
                             }
-                            
-                            SwingUtilities.invokeAndWait(new SubmitRunner(fileNames)); // Accept new faxes only sequentially
-                            //bufR.close();
-                        }
-                        strOut.write(ok);
+                        }    
                         break;
-                    case codeToForeground:
-                    case -1: // Connection closed without sending any data
-                        SwingUtilities.invokeLater(new Runnable() {
-                            public void run() {
-                                application.toFront();
-                            };
-                        });
-                        if (!srv.isClosed()) {
-                            strOut.write(responseOK);
+                        case codeToForeground:
+                        case -1: // Connection closed without sending any data
+                            SwingUtilities.invokeLater(new Runnable() {
+                                public void run() {
+                                    application.toFront();
+                                };
+                            });
+                            if (!srv.isClosed()) {
+                                strOut.write(responseOK);
+                            }
+                            break;
+                        case codeQuit:
+                            doLoop = false;
+                            break;
+                        default:
+                            System.err.println("Unknown code received.");
+                            strOut.write(responseUnknownOpCode);
+                            break;
                         }
-                        break;
-                    default:
-                        System.err.println("Unknown code received.");
-                        strOut.write(responseUnknownOpCode);
-                    }
-                    
-                    strOut.flush();
+
+                        strOut.flush();
+                    } while (doLoop && !srv.isClosed());
                 } catch (Exception e) {
                     //System.err.println("Error listening for connections: "  + e.getMessage());
                 } finally {
@@ -478,38 +579,46 @@ public final class Launcher {
     }
     
     static class SubmitRunner implements Runnable {
-        InputStream strIn = null;
-        List<String> fileNames = null;
+        protected InputStream inStream;
+        protected List<String> fileNames;
+        protected List<String> recipients;
         
         public void run() {
-            //try {
-                application.toFront();
-                
-                SendWin sw = new SendWin(application.hyfc, application);
-                sw.setModal(true);
-                if (strIn != null)
-                    sw.addInputStream(strIn);
-                else {
-                    for (String fileName : fileNames)
-                        sw.addLocalFile(fileName);
-                }
-                
-                sw.setVisible(true);
-                /*if (strIn != null)
-                    strIn.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }*/
+            application.toFront();
+            doSubmit();
         }
         
-        public SubmitRunner(List<String> fileNames) {
+        protected void doSubmit() {                       
+            SendWin sw = new SendWin(application.hyfc, application);
+            sw.setModal(true);
+            if (inStream != null) {                
+                sw.addInputStream(inStream);
+            } else {
+                for (String fileName : fileNames)
+                    sw.addLocalFile(fileName);
+            }
+            if (recipients != null && recipients.size() > 0) {
+                for (String num : recipients) {
+                    sw.addRecipient(num, "", "", "", "");
+                }
+            }
+            sw.setVisible(true);
+        }
+        
+        public SubmitRunner(List<String> fileNames, InputStream strIn, List<String> recipients) {
             super();
             this.fileNames = fileNames;
+            this.inStream = strIn;
+            this.recipients = recipients;
         }
         
-        public SubmitRunner(InputStream strIn) {
-            super();
-            this.strIn = strIn;
+        
+        public SubmitRunner(List<String> fileNames, List<String> recipients) {
+            this(fileNames, null, recipients);
+        }
+        
+        public SubmitRunner(InputStream strIn, List<String> recipients) {
+            this(null, strIn, recipients);
         }
     }
 }

@@ -27,7 +27,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.MenuShortcut;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,10 +39,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.print.PrinterException;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.util.Date;
@@ -90,6 +85,7 @@ import yajhfc.filters.StringFilterOperator;
 import yajhfc.phonebook.PhoneBookWin;
 
 
+@SuppressWarnings("serial")
 public final class mainwin extends JFrame {
     
     private JPanel jContentPane = null;
@@ -148,7 +144,7 @@ public final class mainwin extends JFrame {
     
     // Actions:
     private Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward, actAdminMode;
-    private Action actRefresh, actResend, actPrintTable;
+    private Action actRefresh, actResend, actPrintTable, actSuspend, actResume;
     private ActionEnabler actChecker;
     
     
@@ -322,6 +318,88 @@ public final class mainwin extends JFrame {
         }
         
         public ShowWorker(TooltipJTable selTable) {
+            this.selTable = selTable;
+        }
+    }
+    // Worker classes:
+    private class SuspendWorker extends ProgressWorker {
+        private TooltipJTable selTable;
+        
+        @Override
+        protected int calculateMaxProgress() {
+            return 20 + 10*selTable.getSelectedRowCount();
+        }
+        
+        @Override
+        public void doWork() {
+            int[] selRows =  selTable.getSelectedRows();
+
+            for (int i : selRows) {
+                SendingYajJob yj = null;
+                try {
+                    yj = (SendingYajJob)selTable.getJobForRow(i);
+                    updateNote(MessageFormat.format("Suspending job {0}", yj.getIDValue()));
+                    
+                    yj.suspend(hyfc);
+                    
+                    stepProgressBar(10);
+                } catch (Exception e1) {
+                    String msgText;
+                    if (yj == null)
+                        msgText = _("Error suspending a fax job:\n");
+                    else
+                        msgText = MessageFormat.format(_("Error suspending the fax job \"{0}\":\n"), yj.getIDValue());
+                    showExceptionDialog(msgText, e1);
+                }
+            }
+        }
+        @Override
+        protected void done() {
+            refreshTables();
+        }
+        
+        public SuspendWorker(TooltipJTable selTable) {
+            this.selTable = selTable;
+        }
+    }
+    // Worker classes:
+    private class ResumeWorker extends ProgressWorker {
+        private TooltipJTable selTable;
+        
+        @Override
+        protected int calculateMaxProgress() {
+            return 20 + 10*selTable.getSelectedRowCount();
+        }
+        
+        @Override
+        public void doWork() {
+            int[] selRows =  selTable.getSelectedRows();
+
+            for (int i : selRows) {
+                SendingYajJob yj = null;
+                try {
+                    yj = (SendingYajJob)selTable.getJobForRow(i);
+                    updateNote(MessageFormat.format("Resuming job {0}", yj.getIDValue()));
+                    
+                    yj.resume(hyfc);
+                    
+                    stepProgressBar(10);
+                } catch (Exception e1) {
+                    String msgText;
+                    if (yj == null)
+                        msgText = _("Error resuming a fax job:\n");
+                    else
+                        msgText = MessageFormat.format(_("Error resuming the fax job \"{0}\":\n"), yj.getIDValue());
+                    showExceptionDialog(msgText, e1);
+                }
+            }
+        }
+        @Override
+        protected void done() {
+            refreshTables();
+        }
+        
+        public ResumeWorker(TooltipJTable selTable) {
             this.selTable = selTable;
         }
     }
@@ -672,6 +750,28 @@ public final class mainwin extends JFrame {
         actPrintTable.putValue(Action.SHORT_DESCRIPTION, _("Prints the currently displayed table"));
         actPrintTable.putValue(Action.SMALL_ICON, utils.loadIcon("general/Print"));
         
+        actSuspend = new AbstractAction() {
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                TooltipJTable selTable = (TooltipJTable)((JScrollPane)TabMain.getSelectedComponent()).getViewport().getView();
+                SuspendWorker wrk = new SuspendWorker(selTable);
+                wrk.startWork(mainwin.this, _("Suspending jobs"));
+            }
+        };
+        actSuspend.putValue(Action.NAME, _("Suspend"));
+        actSuspend.putValue(Action.SHORT_DESCRIPTION, _("Suspends the transfer of the selected fax"));
+        actSuspend.putValue(Action.SMALL_ICON, utils.loadIcon("media/Pause"));
+        
+        actResume = new AbstractAction() {
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                TooltipJTable selTable = (TooltipJTable)((JScrollPane)TabMain.getSelectedComponent()).getViewport().getView();
+                ResumeWorker wrk = new ResumeWorker(selTable);
+                wrk.startWork(mainwin.this, _("Resuming jobs"));
+            }
+        };
+        actResume.putValue(Action.NAME, _("Resume"));
+        actResume.putValue(Action.SHORT_DESCRIPTION, _("Resumes the transfer of the selected fax"));
+        actResume.putValue(Action.SMALL_ICON, utils.loadIcon("media/Play"));
+        
         actChecker = new ActionEnabler();
     }
     
@@ -701,6 +801,11 @@ public final class mainwin extends JFrame {
     
     public SendReadyState getSendReadyState() {
         return sendReady;
+    }
+    
+    public void setSelectedTab(int index)
+    {
+        getTabMain().setSelectedIndex(index);
     }
     
     private MouseListener getTblMouseListener() {
@@ -789,6 +894,9 @@ public final class mainwin extends JFrame {
             toolbar.add(actRefresh);
             toolbar.addSeparator();
             toolbar.add(actPhonebook);
+            toolbar.addSeparator();
+            toolbar.add(actResume);
+            toolbar.add(actSuspend);
         }
         return toolbar;
     }
@@ -916,11 +1024,7 @@ public final class mainwin extends JFrame {
                 myopts.sendingColState = getTableSending().getColumnCfgString();
                 
                 //myopts.recvReadState = recvTableModel.getStateString();
-                try {
-                    recvTableModel.storeToStream(new FileOutputStream(utils.getConfigDir() + "recvread"));
-                } catch (IOException e) {
-                    System.err.println("Error storing read state: " + e.getMessage());
-                }
+                recvTableModel.storeReadState(PersistentReadState.CURRENT);
                 
                 hyfc.quit();
             }
@@ -1051,13 +1155,7 @@ public final class mainwin extends JFrame {
             tableRefresher.run();
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
-                    try {
-                        recvTableModel.readFromStream(new FileInputStream(utils.getConfigDir() + "recvread"));
-                    } catch (FileNotFoundException e) { 
-                        // No file yet - keep empty
-                    } catch (IOException e) {
-                        System.err.println("Error reading read status: " + e.getMessage());
-                    } 
+                    recvTableModel.loadReadState(PersistentReadState.CURRENT);
                 }
             });
             utmrTable.schedule(tableRefresher, 0, myopts.tableUpdateInterval);
@@ -1394,6 +1492,9 @@ public final class mainwin extends JFrame {
             menuFax.add(new JMenuItem(actFaxSave));
             menuFax.add(getDeleteMenuItem());
             menuFax.addSeparator();
+            menuFax.add(new JMenuItem(actResume));
+            menuFax.add(new JMenuItem(actSuspend));
+            menuFax.addSeparator();
             menuFax.add(new ActionJCheckBoxMenuItem(actFaxRead));
             menuFax.addSeparator();
             menuFax.add(getExitMenuItem());
@@ -1625,6 +1726,7 @@ public final class mainwin extends JFrame {
             boolean deleteState = false;
             boolean faxReadState = false, faxReadSelected = false;
             boolean resendState = false;
+            boolean suspResumeState = false;
             
             if (TabMain.getSelectedComponent() == scrollRecv) { // Received Table active
                 if (TableRecv.getSelectedRow() >= 0) {
@@ -1644,6 +1746,7 @@ public final class mainwin extends JFrame {
                     deleteState = true;
                     showState = true;
                     resendState = true;
+                    suspResumeState = true;
                 }
             } 
             
@@ -1653,6 +1756,8 @@ public final class mainwin extends JFrame {
             actFaxRead.setEnabled(faxReadState);
             actForward.setEnabled(faxReadState);
             actResend.setEnabled(resendState);
+            actSuspend.setEnabled(suspResumeState);
+            actResume.setEnabled(suspResumeState);
             actFaxRead.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, faxReadSelected);
         }
     }

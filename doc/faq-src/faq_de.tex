@@ -112,15 +112,21 @@ für den Effekt des \verb#?#-Wildcards \verb#.#.
 \begin{verbatim}
 Allgemeine Syntax:
 java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose]
-                     [--configdir=directory] [--stdin | filename]
+         [--configdir=directory] [--loadplugin=filename]
+         [--showtab=0|R|1|S|2|T] [--recipient=...] [--stdin | filename ...]
 Beschreibung der Argumente:
-Dateiname    Der Dateiname des zu sendenden Dokuments.
+Dateiname    Ein oder mehrere Dateinamen der zu sendenden Dokumente.
 --stdin      Das zu sendende Dokument von der Standardeingabe lesen.
+--recipient  Gibt die Telefonnummer des Faxempfängers an.
+             Sie können mehrere Argumente für mehrere Empfänger angeben.
 --admin      Im "Admin-Modus" starten.
 --debug      Debugging-Informationen ausgeben.
 --background Falls es noch keine laufende Instanz gibt, starte eine neue
              und terminiere (nach Absenden des zu sendenden Dokuments)
 --noclose    YajHFC nach Absenden des Dokuments nicht schließen
+--showtab    Setzt den beim Start anzuzeigenden Tab. Geben Sie 0 oder R für den Tab "Empfangen",
+             1 oder S für "Gesendet" oder 2 oder T für "Sendend" an.
+--loadplugin Gibt die JAR-Datei eines zu ladenden YajHFC-Plugins an.
 --configdir  Setzt ein anstatt von ~/.yajhfc zu verwendendes Konfigurationsverzeichnis
 --help       Zeigt diesen Text an.
 \end{verbatim}
@@ -174,7 +180,7 @@ YajHFC war ursprünglich nur ein Testprojekt, um Java und die \texttt{gnu.hylafax
 kennenzulernen und hatte noch keinen "`schönen"' Namen.
 Als ich bisschen daran gearbeitet hatte, stellte ich fest, dass als Ergebnis in der Tat ein benutzbares
 Programm herausgekommen war, also beschloss ich dem Ganzen einen Namen zu geben.
-Da ich zur selben Zeit auch etwas mit SuSEs yast herumspielte und ich natürlich wusste, das schon sehr viele
+Da ich zur selben Zeit auch etwas mit SuSEs yast herumspielte und ich natürlich wusste, dass es schon sehr viele
 andere Java-HylaFAX-Clients gab und gibt, nannte ich das Programm einfach "`noch ein Java-HylaFAX-Client"'
 (\textbf{y}et \textbf{a}nother \textbf{J}ava \textbf{H}ylaFAX \textbf{c}lient).
 

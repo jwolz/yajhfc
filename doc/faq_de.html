@@ -253,15 +253,21 @@ Welche Kommandozeilenargumente werden von YajHFC unterstützt?</A>
 <PRE>
 Allgemeine Syntax:
 java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose]
-                     [--configdir=directory] [--stdin | filename]
+         [--configdir=directory] [--loadplugin=filename]
+         [--showtab=0|R|1|S|2|T] [--recipient=...] [--stdin | filename ...]
 Beschreibung der Argumente:
-Dateiname    Der Dateiname des zu sendenden Dokuments.
+Dateiname    Ein oder mehrere Dateinamen der zu sendenden Dokumente.
 --stdin      Das zu sendende Dokument von der Standardeingabe lesen.
+--recipient  Gibt die Telefonnummer des Faxempfängers an.
+             Sie können mehrere Argumente für mehrere Empfänger angeben.
 --admin      Im "Admin-Modus" starten.
 --debug      Debugging-Informationen ausgeben.
 --background Falls es noch keine laufende Instanz gibt, starte eine neue
              und terminiere (nach Absenden des zu sendenden Dokuments)
 --noclose    YajHFC nach Absenden des Dokuments nicht schließen
+--showtab    Setzt den beim Start anzuzeigenden Tab. Geben Sie 0 oder R für den Tab "Empfangen",
+             1 oder S für "Gesendet" oder 2 oder T für "Sendend" an.
+--loadplugin Gibt die JAR-Datei eines zu ladenden YajHFC-Plugins an.
 --configdir  Setzt ein anstatt von ~/.yajhfc zu verwendendes Konfigurationsverzeichnis
 --help       Zeigt diesen Text an.
 </PRE>
@@ -370,11 +376,11 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>-no_subdir -split 0 -html_version 3.2,latin1,unicode,utf8 -no_navigation faq_de.tex</TT>
 <P>
-The translation was initiated by Jonas Wolz on 2007-04-11
+The translation was initiated by Jonas Wolz on 2007-07-14
 <BR><HR>
 <ADDRESS>
 Jonas Wolz
-2007-04-11
+2007-07-14
 </ADDRESS>
 </BODY>
 </HTML>

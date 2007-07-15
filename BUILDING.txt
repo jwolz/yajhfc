@@ -7,8 +7,8 @@ Building YajHFC from source
 You will need to have the following software packages installed to build YajHFC:
 
 - A Java JDK, version >= 1.5.0 (http://java.sun.com/javase/downloads)
-- Apache Ant, version >= 1.6.2 (http://ant.apache.org/)
-- The gnu.hylafax library (either the version from the YajHFC homepage or from http://gnu-hylafax.sourceforge.net/)
+- Apache Ant, version >= 1.7.0 (http://ant.apache.org/)
+- The gnu.hylafax library (http://gnu-hylafax.sourceforge.net/)
 
 If you want to build YajHFC from CVS or modify translations, you will also need:
 - GNU gettext (http://www.gnu.org/software/gettext/)
@@ -21,8 +21,16 @@ If you want to modify the documentation, you will also need:
 2. Build instructions
 ---------------------
 
-To build YajHFC, simply go to the source directory (the directory where build.xml
-and this file reside in) and invoke the following command:
+To build YajHFC, go to the source directory (the directory where build.xml
+and this file reside in) and perform the following steps:
+
+i)
+Edit the file build.properties to specify the location of the gnu.hylafax library.
+Usually you only have to set the gnu.hylafax-dir property to do so.
+If the build file insists that the library can not be found, please see note a) below.
+
+ii)
+Invoke the following command:
 
 ant dist
 
@@ -32,18 +40,27 @@ That file can be used just like a jar downloaded from the YajHFC homepage.
 NOTES:
 ~~~~~~
 a)
-The build file expects to find the gnu.hylafax library in the directory
-../gnu.hylafax/ (relative to the source directory). It is also expected to
-find the compiled .class files "directly" below this directory 
-(i.e. ../gnu-hylafax/gnu/hylafax/HylaFAXClient.class must exist).
+Currently the build file supports two layouts of the gnu.hylafax directory (the build file 
+automatically detects which one to use):
 
-If you have installed the library somewhere else, you have to set the gnu.hylafax-dir property 
-at the ant command line, e.g. if it is installed in ~/java/gnu-hylafax, use:
+i) "Class file directory":
+In this case it is expected to find the compiled .class files "directly" below the directory 
+(i.e. ${gnu.hylafax-dir}/gnu/hylafax/HylaFAXClient.class must exist).
 
-ant -Dgnu.hylafax-dir=~/java/gnu-hylafax dist
 
-If you use the library from http://gnu-hylafax.sourceforge.net/ you have to specify the
-"build" subdirectory here (e.g. -Dgnu.hylafax-dir=~/java/gnu.hylafax-0.0.9/build).
+ii) JARs:
+In this case it is expected to find both the files ${gnu.hylafax-dir}/lib/gnu-hylafax-core-*.jar
+and ${gnu.hylafax-dir}/lib/gnu-hylafax-inet-ftp-*.jar.
+
+"*" in the name above is just a normal wildcard (to make it independent from the actual version
+of the library; for example the files will actually be named "gnu-hylafax-inet-ftp-1.0.0-b2.jar"
+and "gnu-hylafax-core-1.0.0-b2.jar").
+
+When you have downloaded a distribution from http://gnu-hylafax.sourceforge.net
+usually layout (ii) will be used.
+If you are sure that you have specified the right directory in build.properties
+and the JARs are still not found, please try setting gnu.hylafax-jar-core and
+gnu.hylafax-jar-inet-ftp, too.
 
 b) 
 Currently building the documentation and the translations only works on a Unix-like system

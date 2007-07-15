@@ -103,16 +103,22 @@ for the effect of the wildcard \verb#?# use \verb#.#.
 
 \begin{verbatim}
 General usage:
-java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose] 
-                     [--configdir=directory] [--stdin | filename]
+java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose]
+         [--configdir=directory] [--loadplugin=filename]
+         [--showtab=0|R|1|S|2|T] [--recipient=...] [--stdin | filename ...]
 Argument description:
-filename     The file name of a PostScript file to send.
+filename     One or more file names of PostScript files to send.
 --stdin      Read the file to send from standard input
+--recipient  Specifies the phone number of a recipient to send the fax to.
+             You may specify multiple arguments for multiple recipients.
 --admin      Start up in admin mode
 --debug      Output some debugging information
 --background If there is no already running instance, launch a new instance
              and terminate (after submitting the file to send)
 --noclose    Do not close YajHFC after submitting the fax
+--showtab    Sets the tab to display on startup. Specify 0 or R for the "Received",
+             1 or S for the "Sent" or 2 or T for the "Transmitting" tab.
+--loadplugin Specifies the jar file of a YajHFC plugin to load
 --configdir  Sets a configuration directory to use instead of ~/.yajhfc
 --help       Displays this text
 \end{verbatim}
