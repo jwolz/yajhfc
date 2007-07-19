@@ -1828,6 +1828,7 @@ public final class mainwin extends JFrame {
                         SwingUtilities.invokeLater(new Runnable() {
                             public void run() {
                                 recvTableModel.loadReadState(PersistentReadState.CURRENT);
+                                TableRecv.repaint();
                             }
                         });
                         didFirstRun = true;
