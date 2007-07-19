@@ -30,8 +30,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.PrintStream;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Properties;
@@ -45,11 +47,12 @@ public final class utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2007 by Jonas Wolz";
-    public static final String AppVersion = "0.3.4pre";
+    public static final String AppVersion = "0.3.4";
     public static final String AuthorEMail = "Jonas Wolz &lt;jwolz@freenet.de&gt;";
     public static final String HomepageURL = "http://www.yajhfc.de.vu/"; 
     
     public static boolean debugMode = false;
+    public static PrintStream debugOut = System.out;
     
     private static FaxOptions theoptions = null;
     private static ResourceBundle msgs = null;
@@ -497,6 +500,31 @@ public final class utils {
         for (Frame f : Frame.getFrames()) {
             f.setCursor(defCursor);
         }
+    }
+    
+    /**
+     * Splits the String at the locations of splitChar (just like String.split()).
+     * This should be much faster than String.split(), however.
+     * @param str
+     * @param splitChar
+     * @return
+     */
+    public static String[] fastSplit(String str, char splitChar) {
+        ArrayList<String> resList = new ArrayList<String>();
+        
+        int pos = 0;
+        int charPos = str.indexOf(splitChar);        
+        while (charPos > -1) {
+            resList.add(str.substring(pos, charPos));
+            pos = charPos + 1;
+            charPos = str.indexOf(splitChar, pos);
+        }
+        // Do not include a trailing empty String
+        if (pos < str.length()) {
+            resList.add(str.substring(pos));
+        }
+        
+        return resList.toArray(new String[resList.size()]);
     }
 }
 

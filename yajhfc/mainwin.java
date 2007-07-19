@@ -1024,7 +1024,9 @@ public final class mainwin extends JFrame {
                 myopts.sendingColState = getTableSending().getColumnCfgString();
                 
                 //myopts.recvReadState = recvTableModel.getStateString();
-                recvTableModel.storeReadState(PersistentReadState.CURRENT);
+                if (tableRefresher != null && tableRefresher.didFirstRun) {
+                    recvTableModel.storeReadState(PersistentReadState.CURRENT);
+                }
                 
                 hyfc.quit();
             }
@@ -1151,13 +1153,10 @@ public final class mainwin extends JFrame {
             utmrTable.schedule(statRefresher, 0, myopts.statusUpdateInterval);
             
             tableRefresher = new TableRefresher(utils.VectorToString(myopts.sentfmt, "|"), utils.VectorToString(myopts.sendingfmt, "|"));
-            // Read the read/unread status *after* the table contents has been set 
-            tableRefresher.run();
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    recvTableModel.loadReadState(PersistentReadState.CURRENT);
-                }
-            });
+            
+            //// Read the read/unread status *after* the table contents has been set 
+            //tableRefresher.run();
+
             utmrTable.schedule(tableRefresher, 0, myopts.tableUpdateInterval);
             
             sendReady = SendReadyState.Ready;
@@ -1367,8 +1366,8 @@ public final class mainwin extends JFrame {
                                     hsf.view(hyfc);
                                 } catch (Exception e) {
                                     if (utils.debugMode) {
-                                        System.out.println("Exception while trying to view new faxes:");
-                                        e.printStackTrace(System.out);
+                                        utils.debugOut.println("Exception while trying to view new faxes:");
+                                        e.printStackTrace(utils.debugOut);
                                     }
                                 }
                             }
@@ -1799,6 +1798,7 @@ public final class mainwin extends JFrame {
         private String sentfmt, sendingfmt;
         private Vector lastRecvList = null, lastSentList = null, lastSendingList = null;
         private boolean cancelled = false;
+        public boolean didFirstRun = false;
         
         public synchronized boolean doCancel() {
             cancelled = true;
@@ -1811,13 +1811,28 @@ public final class mainwin extends JFrame {
             
             Vector lst;
             try {
+                //System.out.println(System.currentTimeMillis() + ": Getting list...");
                 lst = hyfc.getList("recvq");
+                //System.out.println(System.currentTimeMillis() + ": Got list...");
                 if ((lastRecvList == null) || !lst.equals(lastRecvList)) {
                     String[][] data = new String[lst.size()][];
-                    for (int i = 0; i < lst.size(); i++)
-                        data[i] = ((String)lst.get(i)).split("\\|");
+                    for (int i = 0; i < lst.size(); i++) {
+                        //data[i] = ((String)lst.get(i)).split("\\|");
+                        data[i] = utils.fastSplit((String)lst.get(i), '|');
+                    }
                     SwingUtilities.invokeLater(new TableDataRunner(recvTableModel, data));
                     lastRecvList = lst;
+                    
+                    if (!didFirstRun) {
+                        // Read the read/unread status *after* the table contents has been set 
+                        SwingUtilities.invokeLater(new Runnable() {
+                            public void run() {
+                                recvTableModel.loadReadState(PersistentReadState.CURRENT);
+                            }
+                        });
+                        didFirstRun = true;
+                    }
+                    //System.out.println(System.currentTimeMillis() + ": Did invokeLater()");
                 }
             } catch (Exception e) {
                 System.err.println("An error occured refreshing the tables: " + e.getMessage());
@@ -1830,8 +1845,10 @@ public final class mainwin extends JFrame {
                 }
                 if ((lastSentList == null) || !lst.equals(lastSentList)) {
                     String[][] data = new String[lst.size()][];
-                    for (int i = 0; i < lst.size(); i++) 
-                        data[i] = ((String)lst.get(i)).split("\\|");
+                    for (int i = 0; i < lst.size(); i++) {
+                        //data[i] = ((String)lst.get(i)).split("\\|");
+                        data[i] = utils.fastSplit((String)lst.get(i), '|');
+                    }
                     SwingUtilities.invokeLater(new TableDataRunner(sentTableModel, data));
                     lastSentList = lst;
                 }
@@ -1846,8 +1863,10 @@ public final class mainwin extends JFrame {
                 }
                 if ((lastSendingList == null) || !lst.equals(lastSendingList)) {
                     String[][] data = new String[lst.size()][];
-                    for (int i = 0; i < lst.size(); i++)
-                        data[i] = ((String)lst.get(i)).split("\\|");
+                    for (int i = 0; i < lst.size(); i++) {
+                        //data[i] = ((String)lst.get(i)).split("\\|");
+                        data[i] = utils.fastSplit((String)lst.get(i), '|');
+                    }
                     SwingUtilities.invokeLater(new TableDataRunner(sendingTableModel, data));
                     lastSendingList = lst;
                 }
@@ -1866,7 +1885,9 @@ public final class mainwin extends JFrame {
             private MyTableModel tm;
                     
             public void run() {
+                //System.out.println(System.currentTimeMillis() + ": About to set data...");
                 tm.setData(data);         
+                //System.out.println(System.currentTimeMillis() + ": Set data.");
             }
             
             public TableDataRunner(MyTableModel tm, String[][] data) {

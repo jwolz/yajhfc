@@ -116,7 +116,7 @@ public class FileConverter implements PrintJobListener {
     
     public void printDataTransferCompleted(PrintJobEvent pje) {
         // NOP
-        System.out.println("printDataTransferCompleted");
+        //System.out.println("printDataTransferCompleted");
     }
 
     public void printJobCompleted(PrintJobEvent pje) {
@@ -137,7 +137,7 @@ public class FileConverter implements PrintJobListener {
 
     public void printJobRequiresAttention(PrintJobEvent pje) {
         //NOP
-        System.out.println("printJobRequiresAttention");
+        //System.out.println("printJobRequiresAttention");
     }       
     
     public static class ConversionException extends Exception {

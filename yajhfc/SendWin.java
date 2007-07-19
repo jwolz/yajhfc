@@ -171,7 +171,7 @@ public class SendWin extends JDialog  {
         getComboNotification().setSelectedItem(fo.notifyWhen);
         
         getSpinMaxTries().setValue(Integer.valueOf(fo.maxTry));
-        
+        getSpinKillTime().setValue(fo.killTime);
         
         this.addWindowListener(new WindowAdapter() {
             @Override

@@ -253,7 +253,7 @@ public final class Launcher {
             else // treat argument as file name to send
                 fileNames.add(args[i]);
         }
-        
+                
         // IMPORTANT: Don't access utils before this line!
         utils.debugMode = debugMode;
         
@@ -306,16 +306,16 @@ public final class Launcher {
                 }
                 
                 if (utils.debugMode) {
-                    System.out.println("Launching new instance:");
+                    utils.debugOut.println("Launching new instance:");
                     for (int i = 0; i < launchArgs.length; i++) {
-                        System.out.println("launchArgs[" + i + "] = " + launchArgs[i]);
+                        utils.debugOut.println("launchArgs[" + i + "] = " + launchArgs[i]);
                     }
                 }
                 Runtime.getRuntime().exec(launchArgs);
                 
                 int time = 0;
                 if (utils.debugMode) {
-                    System.out.print("Waiting for new instance... ");
+                    utils.debugOut.print("Waiting for new instance... ");
                 }
                 
                 do {
@@ -329,18 +329,21 @@ public final class Launcher {
                 } while (oldinst == null);
                 
                 if (utils.debugMode) {
-                    System.out.println("New instance has been started.");
+                    utils.debugOut.println("New instance has been started.");
                 }
             } catch (Exception e) {
                 if (utils.debugMode) {
-                    System.out.println("Exception launching new instance:");
-                    e.printStackTrace(System.out);
+                    utils.debugOut.println("Exception launching new instance:");
+                    e.printStackTrace(utils.debugOut);
                 }
                 JOptionPane.showMessageDialog(null, utils._("Cannot launch new program instance, continuing with the existing one!\nReason: ") + e.toString() );
             }
         }
         
         if (oldinst == null) {
+            if (utils.debugMode) {
+                utils.debugOut.println("No old instance found, creating lock...");
+            }
             createLock();
             // Load plugins:
             for (File jar : jars) {
@@ -354,8 +357,14 @@ public final class Launcher {
             SwingUtilities.invokeLater(new NewInstRunner(fileNames, useStdin, recipients, adminMode, closeAfterSubmit, selectedTab));
             blockThread = new SockBlockAcceptor();
             blockThread.start();
+            if (utils.debugMode) {
+                utils.debugOut.println("Lock and listener created.");
+            }
         } else {            
             try {
+                if (utils.debugMode) {
+                    utils.debugOut.println("Found old instance at: " + oldinst);
+                }
                 OutputStream outStream = oldinst.getOutputStream();
                 InputStream inStream = oldinst.getInputStream();
                 
@@ -368,6 +377,15 @@ public final class Launcher {
                     }
                     bufOut.write(multiFileEOF + "\n");
                     bufOut.flush();
+                    
+                    int response = inStream.read();
+                    if (response != 0) {
+                        if (response > 0) {
+                            System.exit(response);
+                        } else {
+                            System.exit(responseGeneralError);
+                        }
+                    }
                 }
                 
                 if (useStdin) { 
@@ -407,6 +425,10 @@ public final class Launcher {
                 
                 if (!oldinst.isClosed()) {
                     oldinst.close();
+                }
+                
+                if (utils.debugMode) {
+                    utils.debugOut.println("Submitted information to old inst, terminating with code " + response);
                 }
                 
                 if (response >= 0)
@@ -485,12 +507,18 @@ public final class Launcher {
                     do {
                         switch (strIn.read()) {
                         case codeSubmitStream:
+                            if (utils.debugMode) {
+                                utils.debugOut.println("Received codeSubmitStream:");
+                            }
                             int ok = waitSubmitOK();
                             if (ok == responseOK) {
                                 SwingUtilities.invokeAndWait(new SubmitRunner(strIn, recipients)); // Accept new faxes only sequentially
                                 recipients = null;
                             }
                             strOut.write(ok);
+                            if (utils.debugMode) {
+                                utils.debugOut.println("Wrote response: " + ok);
+                            }
                             break;
                         case codeSubmitFile:
                             ok = waitSubmitOK();
@@ -505,6 +533,9 @@ public final class Launcher {
                             strOut.write(ok);
                             break;
                         case codeMultiSubmitFile:
+                            if (utils.debugMode) {
+                                utils.debugOut.println("Received codeMultiSubmitFiles:");
+                            }
                             ok = waitSubmitOK();
                             if (ok == responseOK) {
                                 BufferedReader bufR = new BufferedReader(new InputStreamReader(strIn));
@@ -512,6 +543,9 @@ public final class Launcher {
                                 String line = bufR.readLine();
 
                                 while (!line.equals(multiFileEOF)) {
+                                    if (utils.debugMode) {
+                                        utils.debugOut.println(line);
+                                    }
                                     fileNames.add(line);
                                     line = bufR.readLine();
                                 }
@@ -521,17 +555,28 @@ public final class Launcher {
                                 //bufR.close();
                             }
                             strOut.write(ok);
+                            if (utils.debugMode) {
+                                utils.debugOut.println("Wrote response: " + ok);
+                            }
                             break;
                         case codeAddRecipients:
                         {
+                            if (utils.debugMode) {
+                                utils.debugOut.println("Received codeAddRecipients:");
+                            }
                             recipients = new ArrayList<String>();
                             BufferedReader bufR = new BufferedReader(new InputStreamReader(strIn));
                             String line = bufR.readLine();
 
                             while (!line.equals(multiFileEOF)) {
+                                if (utils.debugMode) {
+                                    utils.debugOut.println(line);
+                                }
                                 recipients.add(line);
                                 line = bufR.readLine();
                             }
+                            
+                            strOut.write(responseOK);
                         }    
                         break;
                         case codeToForeground:
@@ -556,8 +601,15 @@ public final class Launcher {
 
                         strOut.flush();
                     } while (doLoop && !srv.isClosed());
+                    
+                    if (utils.debugMode) {
+                        utils.debugOut.println("Closed connection cleanly.");
+                    }
                 } catch (Exception e) {
-                    //System.err.println("Error listening for connections: "  + e.getMessage());
+                    if (utils.debugMode) {
+                        utils.debugOut.println("Maybe error listening for connections:" );
+                        e.printStackTrace(utils.debugOut);
+                    }
                 } finally {
                     try {
                         if (srv != null && !srv.isClosed()) {                        

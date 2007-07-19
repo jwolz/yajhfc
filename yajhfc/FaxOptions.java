@@ -54,6 +54,7 @@ public class FaxOptions {
     
     public int maxTry; 
     public int maxDial;
+    public int killTime = 180;
     
     public Rectangle mainWinBounds, phoneWinBounds, customFilterBounds = null;
     public Point sendWinPos, optWinPos;
@@ -169,8 +170,8 @@ public class FaxOptions {
     }
     
     
-    private static final String sep = "|";
-    private static final String sepregex = "\\|";
+    private static final char sep = '|';
+    //private static final String sepregex = "\\|";
     
     public void storeToFile(String fileName) {
         Properties p = new Properties();
@@ -294,7 +295,7 @@ public class FaxOptions {
                         System.err.println("Unknown value for MyManualMapObject field " + fName);
                 }
                 else if (Vector.class.isAssignableFrom(fcls)) {
-                    String[] fields = p.getProperty(fName).split(sepregex);
+                    String[] fields = utils.fastSplit(p.getProperty(fName), sep);
                     FmtItem[] dataarray, required;
                     Vector<FmtItem> vecres = new Vector<FmtItem>();
                     
@@ -323,10 +324,10 @@ public class FaxOptions {
                     utils.addUniqueToVec(vecres, required);
                     f.set(this, vecres);
                 } else if (Rectangle.class.isAssignableFrom(fcls)) {
-                    String [] v =  p.getProperty(fName).split(sepregex);
+                    String [] v =  utils.fastSplit(p.getProperty(fName), sep);
                     f.set(this, new Rectangle(Integer.parseInt(v[0]), Integer.parseInt(v[1]), Integer.parseInt(v[2]), Integer.parseInt(v[3])));
                 } else if (Point.class.isAssignableFrom(fcls)) {
-                    String [] v =  p.getProperty(fName).split(sepregex);
+                    String [] v =  utils.fastSplit(p.getProperty(fName), sep);
                     f.set(this, new Point(Integer.parseInt(v[0]), Integer.parseInt(v[1])));
                 } else if (List.class.isAssignableFrom(fcls)) {
                     List lst = (List)f.get(this);

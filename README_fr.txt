@@ -1,4 +1,4 @@
-LISEZ MOI for YajHFC 0.3.3
+LISEZ MOI for YajHFC 0.3.4
 ==========================
 
 A PROPOS DE
@@ -28,9 +28,9 @@ Pres requis:
 * Un programme pour visualiser les fichiers TIFF (voir aussi les FAQ)
 * Optionnel: Un visualiseur Postscript (e.g. Ghostview)
 
-Pour Installer YajHFC Telechargez le fichier yajhfc-0_3_3.jar dans un repertoire
+Pour Installer YajHFC Telechargez le fichier yajhfc-0_3_4.jar dans un repertoire
 sur votre machine.
-Pour l'executer, utilisez la commande: "java -jar yajhfc-0_3_3.jar"
+Pour l'executer, utilisez la commande: "java -jar yajhfc-0_3_4.jar"
 (Sous Windows vous pouvez habituellement double cliquer sur le fichier jar.)
 
 LICENCE
@@ -44,16 +44,14 @@ CODE SOURCE
 Pour les instructions decrivants comment compiler YajHFC depuis les sources
 SVP visualisez le fichier BUILDING.txt dans ce repertoire.
 YajHFC utilise les paquets suivants :
-(1) une version legerement modifiee du paquet gnu.hylafax
-    (version officielle : http://gnu-hylafax.sf.net/)
-    Le code source de la version modifiee peut etre telecharge
-    depuis la page d'accueil de YajHFC.
+(1) La librairie gnu.hylafax (paquets core et inet-ftp)
+	depuis http://gnu-hylafax.sourceforge.net
 (2) TableLayout.jar
     depuis https://tablelayout.dev.java.net/
 (3) "Java look and feel Graphics Repository" (jlfgr-1_0.jar)
     depuis http://java.sun.com/developer/techDocs/hi/repository/
 
-Des copies de certains des fichiers pres requis peuvent etre trouves 
+Des copies des fichiers requis peuvent etre trouves 
 dans le sous repertoire jar de l'archive des sources.
 
 YajHFC a ete originellement ecrit comme un premier projet Java
@@ -61,6 +59,13 @@ YajHFC a ete originellement ecrit comme un premier projet Java
 
 MODIFICATIONS
 -------------
+
+0.3.4:
+- Support de la specification du recipiendaire en ligne de commande
+- Suspendre/Reprendre les travaux de fax
+- Traduction francaise ajoutee
+- Onglet affiche au demarrage peut etre specifie en ligne de commande
+- La version "standard" de la librairie gnu.hylafax est maintenant utilisee par defaut (cela corrige certains bugs)
 
 0.3.3:
 - Support du renvoi de faxs

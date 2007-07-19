@@ -87,7 +87,7 @@ public class TooltipJTable extends JTable {
         if ((newCfg == null) || (newCfg.length() == 0))
             return;
         
-        String[] cfg = newCfg.split("\\|");            
+        String[] cfg = utils.fastSplit(newCfg, '|'); //newCfg.split("\\|");            
         if (cfg.length < 1)
             return;
         

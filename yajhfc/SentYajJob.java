@@ -60,7 +60,7 @@ public class SentYajJob extends YajJob {
             FileFormat fileFormat;
             
             if (utils.debugMode) {
-                System.out.println("Trying to access file " + fileName + "; type: " + fileType);
+                utils.debugOut.println("Trying to access file " + fileName + "; type: " + fileType);
             }
             try {
                 hyfc.stat(fileName); // will throw FileNotFoundException if file doesn't exist
@@ -94,7 +94,7 @@ public class SentYajJob extends YajJob {
                 // do nothing
                 //System.err.println(e.toString());
                 if (utils.debugMode) {
-                    e.printStackTrace(System.out);
+                    e.printStackTrace(utils.debugOut);
                 }
             }
         }
@@ -107,7 +107,7 @@ public class SentYajJob extends YajJob {
      */
     private String findRenderedTIFF(HylaFAXClient hyfc, String serverName) {
         if (utils.debugMode)
-            System.out.println("Trying to find the rendered TIFF for " + serverName);
+            utils.debugOut.println("Trying to find the rendered TIFF for " + serverName);
             
         int pos = serverName.indexOf('/');
         if (pos < 0)
@@ -125,7 +125,7 @@ public class SentYajJob extends YajJob {
                 if (file.startsWith(searchPrefix)) {
                     file = dir + file;
                     if (utils.debugMode)
-                        System.out.println("Found a TIFF: " + file);
+                        utils.debugOut.println("Found a TIFF: " + file);
                     
                     hyfc.stat(file); //Throws an exception if the TIFF is not accessible...
                     
@@ -135,8 +135,8 @@ public class SentYajJob extends YajJob {
             return null; //Nothing found;
         } catch (Exception ex) {
             if (utils.debugMode) {
-                System.out.println("Got an exception:");
-                ex.printStackTrace(System.out);
+                utils.debugOut.println("Got an exception:");
+                ex.printStackTrace(utils.debugOut);
             }
             return null;
         }
