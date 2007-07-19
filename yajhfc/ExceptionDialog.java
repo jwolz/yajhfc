@@ -134,8 +134,8 @@ public class ExceptionDialog extends JDialog implements ActionListener, Componen
             lblExceptionText.addComponentListener(this);
         
         if (utils.debugMode) {
-            System.out.println("EXCEPTION occured: " + message);
-            exc.printStackTrace(System.out);
+            utils.debugOut.println("EXCEPTION occured: " + message);
+            exc.printStackTrace(utils.debugOut);
         }
     }
     

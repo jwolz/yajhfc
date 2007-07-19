@@ -1,0 +1,375 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>YajHFC FAQ</TITLE>
+<META NAME="description" CONTENT="YajHFC FAQ">
+<META NAME="keywords" CONTENT="faq_fr">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="faq_fr.css">
+
+</HEAD>
+
+<BODY >
+
+<P>
+<H1 ALIGN="CENTER">YajHFC FAQ</H1>
+<DIV>
+
+</DIV>
+
+<P>
+<BR>
+
+<H2><A NAME="SECTION00010000000000000000">
+Contents</A>
+</H2>
+<!--Table of Contents-->
+
+<UL>
+<LI><A NAME="tex2html25"
+  HREF="faq_fr.html#SECTION00020000000000000000">Installation</A>
+<UL>
+<LI><A NAME="tex2html26"
+  HREF="faq_fr.html#SECTION00021000000000000000">Ou trouver un visioneur de fax pour Windows?</A>
+<LI><A NAME="tex2html27"
+  HREF="faq_fr.html#SECTION00022000000000000000">Ou Trouver un visualiseur de fax pour Linux/*BSD/... ?</A>
+<LI><A NAME="tex2html28"
+  HREF="faq_fr.html#SECTION00023000000000000000">Que devrai je utiliser comme visualiseur sur Mac OS X?</A>
+<LI><A NAME="tex2html29"
+  HREF="faq_fr.html#SECTION00024000000000000000">Ou trouver un visualiseur PostsScript?</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html30"
+  HREF="faq_fr.html#SECTION00030000000000000000">Utilisation du programme</A>
+<UL>
+<LI><A NAME="tex2html31"
+  HREF="faq_fr.html#SECTION00031000000000000000">Comment éditer les modèles de page de garde?</A>
+<LI><A NAME="tex2html32"
+  HREF="faq_fr.html#SECTION00032000000000000000">J voudrais accéder à un annuiaire téléphonique au travers de JDBC, maist YajHFC ne trouve pas les drivers même si je spécifie un "class path" correct au chargement de la machine virtuelle java.</A>
+<LI><A NAME="tex2html33"
+  HREF="faq_fr.html#SECTION00033000000000000000">Pourquoi le menu Visualiser-&gt;Seulement ses propres fax est-il grisé?</A>
+<LI><A NAME="tex2html34"
+  HREF="faq_fr.html#SECTION00034000000000000000">Pourquoi le menu Visualiser-&gt;Marquer les travaux échoués est il grisé?</A>
+<LI><A NAME="tex2html35"
+  HREF="faq_fr.html#SECTION00035000000000000000">Quelles valeurs puis je entrer comme matches opérateurs dans le champ des filtres personnalisés?</A>
+<LI><A NAME="tex2html36"
+  HREF="faq_fr.html#SECTION00036000000000000000">Quels arguments de ligne de commande YajHFC accepte ?</A>
+<LI><A NAME="tex2html37"
+  HREF="faq_fr.html#SECTION00037000000000000000">Quand j'essaie de visualiser les fax envoyés, j'ai toujours un message d'erreur disant Format de fichier PCL non supporté, bien que tous les documents soient en PostScript/PDF.</A>
+<LI><A NAME="tex2html38"
+  HREF="faq_fr.html#SECTION00038000000000000000">YajHFC fonctionnant sous windows sauve quelquefois sa configuration dans C:\.yajhfc au lieu de C:\Documents and Settings\USERNAME\.yajhfc</A>
+<LI><A NAME="tex2html39"
+  HREF="faq_fr.html#SECTION00039000000000000000">Que veux dire la colonne XYZ ?</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html40"
+  HREF="faq_fr.html#SECTION00040000000000000000">Divers</A>
+<UL>
+<LI><A NAME="tex2html41"
+  HREF="faq_fr.html#SECTION00041000000000000000">Pourquoi les mots de passe sont il stockés en clair ?</A>
+<LI><A NAME="tex2html42"
+  HREF="faq_fr.html#SECTION00042000000000000000">Pourquoi avez vous choisi ce nom stupide ?</A>
+</UL></UL>
+<!--End of Table of Contents-->
+<P>
+
+<H1><A NAME="SECTION00020000000000000000">
+Installation</A>
+</H1>
+
+<H2><A NAME="SECTION00021000000000000000">
+Ou trouver un visioneur de fax pour Windows?</A>
+</H2>
+
+<P>
+Vous pouvez utiliser n'importe quel programme qui peut afficher les fichier TIFF,  cependant
+certains affichent les faxs avec une basse résolution avec une (demi) taille incorrecte.
+some of them display faxes in low resolution with an incorrect (half) height.
+
+<P>
+Heureusement, tous les systèmes Windows récents sont livrés avec un programme qui le fait correctement:
+
+<P>
+<DL>
+<DT><STRONG>Windows 95/98/ME/2000:</STRONG></DT>
+<DD>Vous pouvez utiliser l'application Imaging du menu Accessoires.
+      Pour l'utiliser avec YaHFC, cliquez sur le bouton de parcours des fichiers <TT>Ligne de commande pour visualiser les fax</TT>
+      pour trouver le programme <TT>kodakimg.exe</TT> sur votre disque dur.
+<BR>
+Ce fichier est habituellement dasn le répertoire Windows (Win 98/ME) <I>ou</I> 
+<BR>
+dans <code>Program Files\Windows NT\Accessoires\ImageVue</code> (Win 2k).
+
+<P>
+</DD>
+<DT><STRONG>Windows XP:</STRONG></DT>
+<DD>Vous pouvez utiliser le "visualiseur d'images et de fax" intégré (Désolé, Je ne connais pas son emplacement exact).
+      Pour l'utiliser,entrez le texte suivant dans le champ <TT>Ligne de commande pour visualiser les fax</TT> boite:
+<BR>      <code>rundll32.exe shimgvw.dll,ImageView_Fullscreen %s</code>
+ 
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00022000000000000000">
+Ou Trouver un visualiseur de fax pour Linux/*BSD/... ?</A>
+</H2>
+<TT>kfax</TT> fonctionne très bien pour moi, mais comme pour Windows, vous pouvez utiliser n'importe quel programme
+capable d'afficher les fichiersTIFF , cherchez dans la base des paquets de votre distribution
+(xloadimage ne fonctionne cependant <I>pas</I> pour moi).
+
+<P>
+
+<H2><A NAME="SECTION00023000000000000000">
+Que devrai je utiliser comme visualiseur sur  Mac OS X?</A>
+</H2>
+Entrez seulement <code>open %s</code> dans le champ <TT>Ligne de commande pour visualiser les fax</TT> .
+Le faxs devrait automatiquement s'ouvrir avec l'application par défaut.
+Merci à Scott Harris pour cette information.
+
+<P>
+
+<H2><A NAME="SECTION00024000000000000000">
+Ou trouver un visualiseur PostsScript?</A>
+</H2>
+<DL>
+<DT><STRONG>Windows:</STRONG></DT>
+<DD>Utilisez Ghostview depuis <TT><A NAME="tex2html1"
+  HREF="http://www.cs.wisc.edu/~ghost/">http://www.cs.wisc.edu/~ghost/</A></TT>
+</DD>
+<DT><STRONG>Linux/*BSD/...:</STRONG></DT>
+<DD>Installez seulement un paquet Visualiseur Postscript
+                (i.e. <TT>gv, kghostview, gnome-gv, ...</TT>)
+</DD>
+</DL>
+
+<P>
+
+<H1><A NAME="SECTION00030000000000000000">
+Utilisation du programme</A>
+</H1>	
+
+<P>
+
+<H2><A NAME="SECTION00031000000000000000">
+Comment éditer les modèles de page de garde?</A>
+</H2>
+Les modèles doivent être au même format Postscript que ceux utilisés par le programme HylaFAX
+<TT>faxcover</TT> . Lisez les pages suivantes pour voir comment  créer/éditer
+de tels fichiers: 
+<BR><TT><A NAME="tex2html2"
+  HREF="http://www.hylafax.org/HylaFAQ/Q202.html">http://www.hylafax.org/HylaFAQ/Q202.html</A></TT>
+<BR><TT><A NAME="tex2html3"
+  HREF="http://www.hylafax.org/howto/tweaking.html">http://www.hylafax.org/howto/tweaking.html</A></TT>
+<BR>
+<P>
+
+<H2><A NAME="SECTION00032000000000000000">
+J voudrais accéder à un annuiaire téléphonique au travers de JDBC, maist YajHFC ne trouve pas les drivers même si je spécifie un  "class path" correct au chargement de la machine virtuelle java.</A>
+</H2>
+
+<P>
+Si vous utilisez l'argument de ligne de commande <TT>-jar</TT> , java ignore les "class path" utilisateur.
+Aussi,Démarrez YajHFC en utilisant les commandes suivantes (remplacez <TT>/path/to/dbdriver.jar</TT> et <TT>/path/to/yajhfc.jar</TT> par les répertoires et nom des fichiers respectifs réels bien sur):
+<DL>
+<DT><STRONG>Linux/Unix:</STRONG></DT>
+<DD><code>java -classpath /path/to/dbdriver.jar:/path/to/yajhfc.jar yajhfc.Launcher</code>
+</DD>
+<DT><STRONG>Windows:</STRONG></DT>
+<DD><code>java -classpath c:\path\to\dbdriver.jar;c:\path\to\yajhfc.jar yajhfc.Launcher</code>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00033000000000000000">
+Pourquoi le menu <TT>Visualiser-&gt;Seulement ses propres fax</TT> est-il grisé?</A>
+</H2>
+
+<P>
+Actuellement, YajHFC ne peut filtrer que sur les colonnes affichées. Vous devez donc ajouter
+la colonne “Propriétaire” a la table si vous voulez filter par proriétaire.
+
+<P>
+
+<H2><A NAME="SECTION00034000000000000000">
+Pourquoi le menu <TT>Visualiser-&gt;Marquer les travaux échoués</TT> est il grisé?</A>
+</H2>
+
+<P>
+Pour la même raison que dans le paragraphe précédent : Actuellement YajHFC ne peut travailler que sur les colonnes affichées.
+Pour détecter les travaux échoués il faut que les colonnes suivantes soit affichées:
+<DL>
+<DT><STRONG>Fax Reçus:</STRONG></DT>
+<DD><TT>Description de l'erreur</TT>
+</DD>
+<DT><STRONG>Fax Envoyés/Transmition:</STRONG></DT>
+<DD><TT>Statut</TT> <I>ou</I> <TT>Statut</TT>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00035000000000000000">
+Quelles valeurs puis je entrer comme <TT>matches</TT> opérateurs dans le champ des filtres personnalisés?</A>
+</H2>
+
+<P>
+Expressions régulières, Un court manuel de référence sur les syntaxes acceptées se trouve à l'adresse :
+<TT><A NAME="tex2html4"
+  HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/util/regex/Pattern.html">http://java.sun.com/j2se/1.5.0/docs/api/java/util/regex/Pattern.html</A></TT>
+<P>
+Notez que les expressions régulières ne sont pas identiques aux "wildcards : 
+Par exemple, pour avoir l'effet de <code>*</code> "wildcard", vous devez utiliser <code>.*</code> and 
+pour l'effet du "wildcard" <code>?</code> use <code>.</code>.
+
+<P>
+
+<H2><A NAME="SECTION00036000000000000000">
+Quels arguments de ligne de commande YajHFC accepte ?</A>
+</H2>
+
+<P>
+<PRE>
+Usage Général :
+java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose] 
+                     [--configdir=directory] [--stdin | filename]
+Description des Arguments :
+filename     Un ou plusieurs nom de fichier à envoyer.
+--stdin      Lit le fichier depuis l'entrée standard
+--recipient  Sépcifie le numéro de téléphone du récipiendaire auquel envoyer le fax.
+             Vous devez spécifier plusieurs arguments pour des recipiendaires multiples.
+--admin      Démarre en mode Administrateur
+--debug      Affiche des information de deboggage.
+--background S'il n'y a pas d'instance en cours, démarre une nouvelle instance
+             et la termine (après avoir soumis le fichier à envoyer)
+--noclose    Ne pas fermer YajHFC après la soumission du fax
+--showtab    Spécifie l'onglet à afficher au démarrage. Spécifiez 0 ou R pour l'onglet "Reçus",
+             1 ou S pour l'onglet "Envoyés" ou 2 ou T pour l'onglet "Transmission".
+--loadplugin Spécifie le fichier jar de plugin YajHFC à charger
+--configdir  Répertoire de configuration à utiliser au lieu de  ~/.yajhfc
+--help       Affiche ce texte
+</PRE>
+
+<P>
+
+<H2><A NAME="SECTION00037000000000000000">
+Quand j'essaie de visualiser les fax envoyés, j'ai toujours un message d'erreur disant
+   <TT>Format de fichier PCL non supporté</TT>, bien que tous les documents soient en PostScript/PDF.</A>
+</H2>
+
+<P>
+Cochez la case  <TT>Utilisez le type de fichier PCL bugfix</TT> dans la boite de dialogue des options et essayez à nouveau.
+
+<P>
+Certaine version de HylaFAX rapportent de façon incorrecte les fichiers “PCL” pour tous les documents
+associés à un travail. Si cette case à cocher est active, YajHFC essaie de trouver 
+le type de fichier PCL s'il est rapporté (Ceci fonctionne en général assez bien).
+
+<P>
+
+<H2><A NAME="SECTION00038000000000000000">
+YajHFC fonctionnant sous windows sauve quelquefois sa configuration dans <TT>C:\.yajhfc</TT> au lieu de <TT>C:\Documents and Settings\USERNAME\.yajhfc</TT></A>
+</H2>
+
+<P>
+Par défaut YajHFC sauve ses informations de configuration dans le sous répertoire <TT>.yajhfc</TT> du répertoire retourné par 
+la propriété système java <TT>user.home</TT>.
+Quelquefois des versions de java semblent ne pas affecter correctement cette variable d'environnement ce qui explique le problème ci dessus.
+
+<P>
+Comme contournement, vous pouvez affecter cette variable explicitement au lancement de YajHFC en utilisant l'option java <TT>-D</TT> en ligne de commande, par exemple: 
+<BR><TT>java -Duser.home=%USERPROFILE% -jar "C:\Program Files\yajhfc.jar"</TT>
+
+<P>
+
+<H2><A NAME="SECTION00039000000000000000">
+Que veux dire la colonne XYZ ?</A>
+</H2>
+
+<P>
+Très probablement, je ne sais pas exactement car la description des colonnes sont 
+simplement copiées de la page de manuel <code>faxstat(1)</code> (JobFmt/RcvFmt) et  
+abrégées/traduites.
+
+<P>
+
+<H1><A NAME="SECTION00040000000000000000">
+Divers</A>
+</H1>
+
+<P>
+
+<H2><A NAME="SECTION00041000000000000000">
+Pourquoi les mots de passe sont il stockés en clair ?</A>
+</H2>
+
+<P>
+Simplement car il n'y a pas de méthode beaucoup meilleure.
+
+<P>
+YajHFC pourrait encoder/“crypter” les mots de passe avant de les stocker, mais si cela le faisait, 
+vous pourriez toujours regarder le code source et trouver comment les décrypter
+(même si YajHFC était un logiciel fermé (propriétaire) vous pourriez le désassembler
+ou expérimenter pour les retrouver ).
+
+<P>
+La seule méthode sure vous demanderait d'entrer le mot de passe a chaque
+exécutions de YajHFC, mais à mon avis cela n'apporterait pas de plus pour
+entrer le  “vrai” mot de passe.
+
+<P>
+
+<H2><A NAME="SECTION00042000000000000000">
+Pourquoi avez vous choisi ce nom stupide ?</A>
+</H2>
+
+<P>
+YajHFC a démarré comme un projet de test pour  Java et la librairie <TT>gnu.hylafax</TT> aussi
+je n'avais pas de  “joli” nom. Après un moment de travail dessus, j'ai vu que cela devenait
+utilisable, j'ai donc choisi de le nommer.
+Comme je travaillais aussi sur SuSE  Linux a ce moment je savais qu'il
+y avait déjà de nombreux projets clients java hylfax, Je l'ai simplement appellé
+“<B>y</B>et <B>a</B>nother <B>J</B>ava <B>H</B>ylaFAX <B>c</B>lient”. 
+
+<P>
+
+<H1><A NAME="SECTION00050000000000000000">
+About this document ...</A>
+</H1>
+ <STRONG>YajHFC FAQ</STRONG><P>
+This document was generated using the
+<A HREF="http://www.latex2html.org/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 2002-2-1 (1.71)
+<P>
+Copyright © 1993, 1994, 1995, 1996,
+Nikos Drakos, 
+Computer Based Learning Unit, University of Leeds.
+<BR>
+Copyright © 1997, 1998, 1999,
+<A HREF="http://www.maths.mq.edu.au/~ross/">Ross Moore</A>, 
+Mathematics Department, Macquarie University, Sydney.
+<P>
+The command line arguments were: <BR>
+ <STRONG>latex2html</STRONG> <TT>-no_subdir -split 0 -html_version 3.2,latin1,unicode,utf8 -no_navigation faq_fr.tex</TT>
+<P>
+The translation was initiated by Jonas Wolz on 2007-07-19
+<BR><HR>
+<ADDRESS>
+Jonas Wolz
+2007-07-19
+</ADDRESS>
+</BODY>
+</HTML>

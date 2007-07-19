@@ -278,7 +278,7 @@ public class JDBCPhoneBook extends PhoneBook {
         try {
             String query = getSELECTQuery();
             if (utils.debugMode) {
-                System.out.println("JDBC phone book: SELECT query: " + query);
+                utils.debugOut.println("JDBC phone book: SELECT query: " + query);
             }
             if (query == null) {
                 JOptionPane.showMessageDialog(parentDialog, utils._("Cannot open phonebook since no database fields were selected!"));
@@ -316,19 +316,19 @@ public class JDBCPhoneBook extends PhoneBook {
         try {   
             String query = getINSERTQuery();
             if (utils.debugMode) {
-                System.out.println("JDBC phone book: INSERT query: " + query);
+                utils.debugOut.println("JDBC phone book: INSERT query: " + query);
             }
             insertStmt = connection.prepareStatement(query);
 
             query = getUPDATEQuery();
             if (utils.debugMode) {
-                System.out.println("JDBC phone book: UPDATE query: " + query);
+                utils.debugOut.println("JDBC phone book: UPDATE query: " + query);
             }
             updateStmt = connection.prepareStatement(query);
 
             query = getDELETEQuery();
             if (utils.debugMode) {
-                System.out.println("JDBC phone book: DELETE query: " + query);
+                utils.debugOut.println("JDBC phone book: DELETE query: " + query);
             }
             deleteStmt = connection.prepareStatement(query);
 

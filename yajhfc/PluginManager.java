@@ -87,7 +87,7 @@ public class PluginManager {
      */
     public static Class<?> loadPluginClass(File pluginJar, String className) throws MalformedURLException, ClassNotFoundException {
         if (utils.debugMode) {
-            System.out.println("Loading class " + className + " from file " + pluginJar);
+            utils.debugOut.println("Loading class " + className + " from file " + pluginJar);
         }
         URLClassLoader clsLoader = new URLClassLoader(new URL[] { pluginJar.toURI().toURL() });
         Class<?> rv = clsLoader.loadClass(className);

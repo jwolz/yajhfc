@@ -78,7 +78,7 @@ public class OptionsWin extends JDialog {
     private JComboBox comboTZone, comboNotify, comboPaperSize, comboResolution; //, comboNewFaxAction;
     private JComboBox comboLang, comboLookAndFeel;
     private JCheckBox checkPasv, checkPCLBug, checkAskPassword, checkAskAdminPassword, checkUseCustomDefCover;
-    private JSpinner spinMaxTry, spinMaxDial, spinOffset;
+    private JSpinner spinMaxTry, spinMaxDial, spinOffset, spinKillTime;
     //private JButton buttonBrowseViewer;
     private FileTextField ftfFaxViewer, ftfPSViewer, ftfCustomDefCover;
     
@@ -105,7 +105,7 @@ public class OptionsWin extends JDialog {
         return modalResult;
     }
     
-    private String _(String key) {
+    private static String _(String key) {
         return utils._(key);
     }
     
@@ -162,6 +162,7 @@ public class OptionsWin extends JDialog {
         spinOffset.setValue(foEdit.dateOffsetSecs);
         spinTableInterval.setValue(foEdit.tableUpdateInterval / 1000.0);
         spinStatusInterval.setValue(foEdit.statusUpdateInterval / 1000.0);
+        spinKillTime.setValue(foEdit.killTime);
         
         ftfCustomDefCover.setText(foEdit.defaultCover);
         checkUseCustomDefCover.setSelected(foEdit.useCustomDefaultCover);
@@ -484,6 +485,7 @@ public class OptionsWin extends JDialog {
             
             spinMaxDial = new JSpinner(new SpinnerNumberModel(12, 1, 100, 1));
             spinMaxTry = new JSpinner(new SpinnerNumberModel(6, 1, 100, 1));
+            spinKillTime= new JSpinner(new SpinnerNumberModel(180, 0, 2000, 15));
             
             checkUseCustomDefCover = new JCheckBox(_("Use a custom default cover page:"));
             checkUseCustomDefCover.addItemListener(new ItemListener() {
@@ -498,9 +500,10 @@ public class OptionsWin extends JDialog {
             
             addWithLabel(panelSend, textNotifyAddress, _("E-mail address for notifications:"), "1, 2, 3, 2, f, c");
             addWithLabel(panelSend, comboNotify, _("Notify when:"), "1, 4, 3, 4, f, c");
-            addWithLabel(panelSend, comboTZone, _("Time zone:"), "1, 6, 3, 6, f, c");
-            addWithLabel(panelSend, comboResolution, _("Resolution:"), "1, 8, f, c");
-            addWithLabel(panelSend, comboPaperSize, _("Paper size:"), "3, 8, f, c" );
+            addWithLabel(panelSend, comboTZone, _("Time zone:"), "1, 6, f, c");
+            addWithLabel(panelSend, comboResolution, _("Resolution:"), "3, 6, f, c");
+            addWithLabel(panelSend, comboPaperSize, _("Paper size:"), "1, 8, f, c" );
+            addWithLabel(panelSend, spinKillTime, _("Cancel job after (minutes):"), "3, 8, f, c");
             addWithLabel(panelSend, spinMaxDial, _("Maximum dials:"), "1, 10, f, c");
             addWithLabel(panelSend, spinMaxTry, _("Maximum tries:"), "3, 10, f, c");    
             
@@ -707,6 +710,7 @@ public class OptionsWin extends JDialog {
                 foEdit.dateOffsetSecs = (Integer)spinOffset.getValue();
                 foEdit.tableUpdateInterval = (int)((Double)spinTableInterval.getValue() * 1000);
                 foEdit.statusUpdateInterval = (int)((Double)spinStatusInterval.getValue() * 1000);
+                foEdit.killTime = (Integer)spinKillTime.getValue();
                 
                 foEdit.notifyAddress = textNotifyAddress.getText();
                 foEdit.host = textHost.getText();

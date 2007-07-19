@@ -49,6 +49,10 @@ public class StringFilter implements YajJobFilter {
         if (column == null || compareValue == null || operator == null || colIdx < 0)
             return true;
         String value = job.getStringData(colIdx);
+        if (value == null)
+        {
+            value = "";
+        }
         switch (operator) {
         case EQUAL:
             return value.equals((String)compareValue);

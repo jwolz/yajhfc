@@ -151,7 +151,7 @@ public class FilterCreator {
     }
     
     public static YajJobFilter stringToFilter(String spec, Vector<FmtItem> columns) {
-        String [] flt1 = spec.split("!");
+        String [] flt1 = utils.fastSplit(spec, '!'); //spec.split("!");
         
         AndFilter af;
         if (flt1[0].equals("|")) {
@@ -164,7 +164,7 @@ public class FilterCreator {
         }
         
         for (int i = 1; i < flt1.length; i++) {
-            String[] flt2 = flt1[i].split("\\$");
+            String[] flt2 = utils.fastSplit(flt1[i], '$'); //flt1[i].split("\\$");
             if (flt2.length != 4) {
                 System.err.println("Unknown filter specification in stringToFilter: " + flt1[i]);
                 continue;
