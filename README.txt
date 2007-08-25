@@ -62,6 +62,11 @@ YajHFC was originally written as a first more complicated
 CHANGES
 -------
 
+0.3.4a:
+- Bug fix release: 
+  In 0.3.4 an extra character was appended when a fax was submitted by
+  standard input to an already running instance
+
 0.3.4:
 - Support to specify recipients on the command line
 - Suspend/Resume for fax jobs

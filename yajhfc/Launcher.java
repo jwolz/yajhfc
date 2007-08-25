@@ -417,7 +417,7 @@ public final class Launcher {
                     
                     System.err.println(utils._("There already is a running instance!"));
                 }
-                outStream.write(codeQuit);
+                //outStream.write(codeQuit);
                 outStream.flush();
                 oldinst.shutdownOutput();
                 

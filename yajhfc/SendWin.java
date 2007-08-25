@@ -250,7 +250,11 @@ public class SendWin extends JDialog  {
             
             ftfCustomCover = new FileTextField();
             ftfCustomCover.setFileFilters(new ExampleFileFilter("ps", _("Postscript files")));
-            ftfCustomCover.setText(fo.CustomCover);
+            if (fo.CustomCover != null && fo.CustomCover.length() > 0) {
+                ftfCustomCover.setText(fo.CustomCover);
+            } else {
+                ftfCustomCover.setText(fo.defaultCover);
+            }
             
             textToName = new JTextField();
             textToCompany = new JTextField();
@@ -855,6 +859,7 @@ public class SendWin extends JDialog  {
                             j.setNotifyType(((FaxStringProperty)ComboNotification.getSelectedItem()).type);
                             j.setPageDimension(((PaperSize)ComboPaperSize.getSelectedItem()).size);
                             j.setVerticalResolution(((FaxIntProperty)ComboResolution.getSelectedItem()).type);
+                            j.setSendTime("NOW"); // bug fix 
                             j.setKilltime(utils.minutesToHylaTime(((Integer)SpinKillTime.getValue()).intValue()));  
 
                             if (pollMode) 

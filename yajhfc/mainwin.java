@@ -792,11 +792,21 @@ public final class mainwin extends JFrame {
     }
     
     public void refreshTables() {
-        tableRefresher.run();
+        utmrTable.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                tableRefresher.run();
+            }
+        }, 0);
     }
     
     public void refreshStatus() {
-        statRefresher.run();
+        utmrTable.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                statRefresher.run();
+            }
+        }, 0);
     }
     
     public SendReadyState getSendReadyState() {
