@@ -317,7 +317,7 @@ public class PhoneBookPanel extends JPanel
             return (Dialog)SwingUtilities.getWindowAncestor(this);
         }
         
-        private void writeToTextFields(PhoneBookEntry pb) {
+        void writeToTextFields(PhoneBookEntry pb) {
             
             if (pb == null) {
                 textSurname.setText("");
@@ -371,7 +371,7 @@ public class PhoneBookPanel extends JPanel
             }
         }
         
-        private void readFromTextFields(PhoneBookEntry pb, boolean updateOnly) {
+        void readFromTextFields(PhoneBookEntry pb, boolean updateOnly) {
             if (pb == null)
                return; 
             
@@ -549,7 +549,7 @@ public class PhoneBookPanel extends JPanel
             initialize();
         }
         
-        private class EntryTextFieldListener implements ActionListener, FocusListener {
+        class EntryTextFieldListener implements ActionListener, FocusListener {
 
             public void actionPerformed(ActionEvent e) {
                 updateListEntries();

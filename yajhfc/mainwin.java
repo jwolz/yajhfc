@@ -69,6 +69,7 @@ import javax.swing.JTextPane;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.TransferHandler;
 import javax.swing.UIManager;
 import javax.swing.JTable.PrintMode;
 import javax.swing.border.BevelBorder;
@@ -88,72 +89,74 @@ import yajhfc.phonebook.PhoneBookWin;
 @SuppressWarnings("serial")
 public final class mainwin extends JFrame {
     
-    private JPanel jContentPane = null;
+    protected JPanel jContentPane = null;
     
-    private JToolBar toolbar;
+    protected JToolBar toolbar;
     
-    private JTabbedPane TabMain = null;
+    protected JTabbedPane TabMain = null;
     
-    private JScrollPane scrollRecv = null;
-    private JScrollPane scrollSent = null;
-    private JScrollPane scrollSending = null;
+    protected JScrollPane scrollRecv = null;
+    protected JScrollPane scrollSent = null;
+    protected JScrollPane scrollSending = null;
     
-    private TooltipJTable TableRecv = null;
-    private TooltipJTable TableSent = null;
-    private TooltipJTable TableSending = null;
+    protected TooltipJTable TableRecv = null;
+    protected TooltipJTable TableSent = null;
+    protected TooltipJTable TableSending = null;
     
-    private UnReadMyTableModel recvTableModel = null;  
-    private MyTableModel sentTableModel = null;  
-    private MyTableModel sendingTableModel = null; 
+    protected UnReadMyTableModel recvTableModel = null;  
+    protected MyTableModel sentTableModel = null;  
+    protected MyTableModel sendingTableModel = null; 
     
-    private JTextPane TextStatus = null;
+    protected JTextPane TextStatus = null;
     
-    private JMenuBar jJMenuBar = null;
+    protected JMenuBar jJMenuBar = null;
     
-    private JMenu menuFax = null;
-    private JMenu menuView = null;
-    private JMenu menuExtras = null;
-    private JMenu helpMenu = null;
+    protected JMenu menuFax = null;
+    protected JMenu menuView = null;
+    protected JMenu menuExtras = null;
+    protected JMenu helpMenu = null;
     
-    private JMenuItem exitMenuItem = null;
-    private JMenuItem aboutMenuItem = null;
-    private JMenuItem optionsMenuItem = null;
-    private JMenuItem ShowMenuItem = null;
-    private JMenuItem DeleteMenuItem = null;
-    private JMenuItem SendMenuItem = null;    
+    protected JMenuItem exitMenuItem = null;
+    protected JMenuItem aboutMenuItem = null;
+    protected JMenuItem optionsMenuItem = null;
+    protected JMenuItem ShowMenuItem = null;
+    protected JMenuItem DeleteMenuItem = null;
+    protected JMenuItem SendMenuItem = null;    
     
-    private JCheckBoxMenuItem menuMarkError;
+    protected JCheckBoxMenuItem menuMarkError;
     
-    private JRadioButtonMenuItem menuViewAll, menuViewOwn, menuViewCustom;
-    private ButtonGroup viewGroup;
+    protected JRadioButtonMenuItem menuViewAll, menuViewOwn, menuViewCustom;
+    protected ButtonGroup viewGroup;
     
     HylaFAXClient hyfc = null;
-    private FaxOptions myopts = null;
+    protected FaxOptions myopts = null;
       
-    private java.util.Timer utmrTable;
-    private TableRefresher tableRefresher = null;
-    private StatusRefresher statRefresher = null;
+    protected java.util.Timer utmrTable;
+    protected TableRefresher tableRefresher = null;
+    protected StatusRefresher statRefresher = null;
    
-    private MouseListener tblMouseListener;
-    private KeyListener tblKeyListener;
-    private DefaultTableCellRenderer hylaDateRenderer;
+    protected MouseListener tblMouseListener;
+    protected KeyListener tblKeyListener;
+    protected DefaultTableCellRenderer hylaDateRenderer;
     
-    private JPopupMenu tblPopup;
+    protected JPopupMenu tblPopup;
     
-    private MenuViewListener menuViewListener;
+    protected ProgressPanel tablePanel;
+    
+    protected MenuViewListener menuViewListener;
     
     // Actions:
-    private Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward, actAdminMode;
-    private Action actRefresh, actResend, actPrintTable, actSuspend, actResume;
-    private ActionEnabler actChecker;
+    protected Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward, actAdminMode;
+    protected Action actRefresh, actResend, actPrintTable, actSuspend, actResume, actClipCopy;
+    protected ActionEnabler actChecker;
     
     
     public enum SendReadyState {
         Ready, NeedToWait, NotReady;
     }
-    private SendReadyState sendReady = SendReadyState.NeedToWait;
+    protected SendReadyState sendReady = SendReadyState.NeedToWait;
     
-    private static String _(String key) {
+    static String _(String key) {
         return utils._(key);
     }
     
@@ -174,7 +177,7 @@ public final class mainwin extends JFrame {
                 YajJob yj = null;
                 try {
                     yj = selTable.getJobForRow(i);
-                    updateNote(MessageFormat.format("Deleting fax {0}", yj.getIDValue()));
+                    updateNote(MessageFormat.format(_("Deleting fax {0}"), yj.getIDValue()));
                     
                     yj.delete(hyfc);
                     
@@ -197,6 +200,8 @@ public final class mainwin extends JFrame {
         
         public DeleteWorker(TooltipJTable selTable) {
             this.selTable = selTable;
+            this.progressMonitor = tablePanel;
+            this.setCloseOnExit(false);
         }
     }
     private class MultiSaveWorker extends ProgressWorker {
@@ -338,7 +343,7 @@ public final class mainwin extends JFrame {
                 SendingYajJob yj = null;
                 try {
                     yj = (SendingYajJob)selTable.getJobForRow(i);
-                    updateNote(MessageFormat.format("Suspending job {0}", yj.getIDValue()));
+                    updateNote(MessageFormat.format(_("Suspending job {0}"), yj.getIDValue()));
                     
                     yj.suspend(hyfc);
                     
@@ -360,6 +365,8 @@ public final class mainwin extends JFrame {
         
         public SuspendWorker(TooltipJTable selTable) {
             this.selTable = selTable;
+            this.progressMonitor = tablePanel;
+            this.setCloseOnExit(false);
         }
     }
     // Worker classes:
@@ -379,7 +386,7 @@ public final class mainwin extends JFrame {
                 SendingYajJob yj = null;
                 try {
                     yj = (SendingYajJob)selTable.getJobForRow(i);
-                    updateNote(MessageFormat.format("Resuming job {0}", yj.getIDValue()));
+                    updateNote(MessageFormat.format(_("Resuming job {0}"), yj.getIDValue()));
                     
                     yj.resume(hyfc);
                     
@@ -401,6 +408,8 @@ public final class mainwin extends JFrame {
         
         public ResumeWorker(TooltipJTable selTable) {
             this.selTable = selTable;
+            this.progressMonitor = tablePanel;
+            this.setCloseOnExit(false);
         }
     }
     
@@ -435,7 +444,9 @@ public final class mainwin extends JFrame {
                 sw.setModal(true);
                 utils.unsetWaitCursorOnOpen(null, sw);
                 sw.setVisible(true);
-                refreshTables();
+                if (sw.modalResult) {
+                    refreshTables();
+                }
             }
         };
         actSend.putValue(Action.NAME, _("Send") + "...");
@@ -772,6 +783,16 @@ public final class mainwin extends JFrame {
         actResume.putValue(Action.SHORT_DESCRIPTION, _("Resumes the transfer of the selected fax"));
         actResume.putValue(Action.SMALL_ICON, utils.loadIcon("media/Play"));
         
+        actClipCopy = new AbstractAction() {
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                TooltipJTable selTable = (TooltipJTable)((JScrollPane)TabMain.getSelectedComponent()).getViewport().getView();
+                selTable.getTransferHandler().exportToClipboard(selTable, Toolkit.getDefaultToolkit().getSystemClipboard(), TransferHandler.COPY);
+            }
+        };
+        actClipCopy.putValue(Action.NAME, _("Copy"));
+        actClipCopy.putValue(Action.SHORT_DESCRIPTION, _("Copies the selected table items to the clipboard"));
+        actClipCopy.putValue(Action.SMALL_ICON, utils.loadIcon("general/Copy"));
+        
         actChecker = new ActionEnabler();
     }
     
@@ -780,6 +801,8 @@ public final class mainwin extends JFrame {
             tblPopup = new JPopupMenu(_("Fax"));
             tblPopup.add(new JMenuItem(actShow));
             tblPopup.add(new JMenuItem(actFaxSave));
+            tblPopup.addSeparator();
+            tblPopup.add(new JMenuItem(actClipCopy));
             tblPopup.addSeparator();
             tblPopup.add(new JMenuItem(actForward));
             tblPopup.add(new JMenuItem(actResend));
@@ -792,21 +815,13 @@ public final class mainwin extends JFrame {
     }
     
     public void refreshTables() {
-        utmrTable.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                tableRefresher.run();
-            }
-        }, 0);
+        tablePanel.showIndeterminateProgress(_("Fetching fax list..."));
+        
+        utmrTable.schedule(new TimerTaskWrapper(tableRefresher), 0);
     }
     
     public void refreshStatus() {
-        utmrTable.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                statRefresher.run();
-            }
-        }, 0);
+        utmrTable.schedule(new TimerTaskWrapper(statRefresher), 0);
     }
     
     public SendReadyState getSendReadyState() {
@@ -1021,7 +1036,7 @@ public final class mainwin extends JFrame {
         menuViewListener.loadFromOptions();
     }
     
-    private void doLogout() {
+    void doLogout() {
         try {
             if (tableRefresher != null)
                 tableRefresher.doCancel();
@@ -1088,6 +1103,7 @@ public final class mainwin extends JFrame {
             return;
         }
         
+        tablePanel.showIndeterminateProgress(_("Logging in..."));
         hyfc = new HylaFAXClient();
         hyfc.setDebug(utils.debugMode);
         try {
@@ -1100,6 +1116,7 @@ public final class mainwin extends JFrame {
                         if (pwd == null) { // User cancelled
                             hyfc.quit();
                             hyfc = null;
+                            tablePanel.hideProgress();
                             return;
                         } else
                             try {
@@ -1162,6 +1179,8 @@ public final class mainwin extends JFrame {
             statRefresher = new StatusRefresher();
             utmrTable.schedule(statRefresher, 0, myopts.statusUpdateInterval);
             
+            tablePanel.showIndeterminateProgress(_("Fetching fax list..."));
+            
             tableRefresher = new TableRefresher(utils.VectorToString(myopts.sentfmt, "|"), utils.VectorToString(myopts.sendingfmt, "|"));
             
             //// Read the read/unread status *after* the table contents has been set 
@@ -1173,6 +1192,7 @@ public final class mainwin extends JFrame {
         } catch (Exception e) {
             //JOptionPane.showMessageDialog(this, _("An error occured connecting to the server:") + "\n" + e.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
             hyfc = null;
+            tablePanel.hideProgress();
             ExceptionDialog.showExceptionDialog(this, _("An error occured connecting to the server:"), e);
             //actOptions.actionPerformed(null);
             sendReady = SendReadyState.NotReady;
@@ -1192,11 +1212,15 @@ public final class mainwin extends JFrame {
             jContentPane = new JPanel();
             jContentPane.setLayout(new BorderLayout());
             
+            tablePanel = new ProgressPanel();
+            
             Box box = Box.createVerticalBox();
             box.add(getTabMain());
             box.add(getTextStatus());
             
-            jContentPane.add(box, BorderLayout.CENTER);
+            tablePanel.setContentComponent(box);
+            
+            jContentPane.add(tablePanel, BorderLayout.CENTER);
             jContentPane.add(getToolbar(), BorderLayout.NORTH);
         }
         return jContentPane;
@@ -1516,6 +1540,7 @@ public final class mainwin extends JFrame {
             menuExtras = new JMenu(_("Extras"));
             menuExtras.add(actPhonebook);
             menuExtras.addSeparator();
+            menuExtras.add(new JMenuItem(actClipCopy));
             menuExtras.add(new JMenuItem(actPrintTable));
             menuExtras.addSeparator();
             menuExtras.add(getOptionsMenuItem());
@@ -1767,6 +1792,8 @@ public final class mainwin extends JFrame {
             actResend.setEnabled(resendState);
             actSuspend.setEnabled(suspResumeState);
             actResume.setEnabled(suspResumeState);
+            actClipCopy.setEnabled(showState);
+            
             actFaxRead.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, faxReadSelected);
         }
     }
@@ -1806,7 +1833,7 @@ public final class mainwin extends JFrame {
     
     class TableRefresher extends TimerTask {
         private String sentfmt, sendingfmt;
-        private Vector lastRecvList = null, lastSentList = null, lastSendingList = null;
+        private Vector<?> lastRecvList = null, lastSentList = null, lastSendingList = null;
         private boolean cancelled = false;
         public boolean didFirstRun = false;
         
@@ -1819,7 +1846,7 @@ public final class mainwin extends JFrame {
             if (cancelled)
                 return;
             
-            Vector lst;
+            Vector<?> lst;
             try {
                 //System.out.println(System.currentTimeMillis() + ": Getting list...");
                 lst = hyfc.getList("recvq");
@@ -1884,6 +1911,15 @@ public final class mainwin extends JFrame {
             } catch (Exception e) {
                 System.err.println("An error occured refreshing the tables: " + e.getMessage());
             }
+            
+            if (tablePanel.isShowingProgress()) {
+                SwingUtilities.invokeLater(new Runnable() 
+                {
+                    public void run() {
+                        tablePanel.hideProgress();
+                    }
+                });
+            }
         }
         
         public TableRefresher(String sentfmt, String sendingfmt) {
@@ -1905,6 +1941,19 @@ public final class mainwin extends JFrame {
                 this.tm = tm;
                 this.data = data;
             }
+        }
+    }
+    
+    static class TimerTaskWrapper extends TimerTask {
+        protected Runnable wrapped;
+        
+        @Override
+        public void run() {
+            wrapped.run();
+        }
+        
+        public TimerTaskWrapper(Runnable wrapped) {
+            this.wrapped = wrapped;
         }
     }
 }  

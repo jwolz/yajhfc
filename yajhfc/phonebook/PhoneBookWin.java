@@ -49,19 +49,18 @@ import yajhfc.phonebook.PhoneBookPanel.EnableEventObj;
 public final class PhoneBookWin extends JDialog 
     implements ActionListener, PhoneBookPanel.PBPanelListener {
 
-    private JPanel jContentPane;
-    private JTabbedPane tabPhonebooks;
+    JPanel jContentPane;
+    JTabbedPane tabPhonebooks;
         
-    private JMenu pbMenu, importMenu, openMenu, entryMenu;
+    JMenu pbMenu, importMenu, openMenu, entryMenu;
     
-    private JMenuItem mnuAdd, mnuDel, mnuSearch;
+    JMenuItem mnuAdd, mnuDel, mnuSearch;
     
-    private Action listRemoveAction;
+    Action listRemoveAction;
     
-    private SearchWin searchWin;
+    SearchWin searchWin;
     
-    private boolean usedSelectButton = false, selBtnVisible = false;
-    
+    boolean usedSelectButton = false, selBtnVisible = false;
     //private final double border = 5;
     
     private void setSelBtnVisible(boolean b) {
@@ -109,7 +108,7 @@ public final class PhoneBookWin extends JDialog
             return -1;
     }
     
-    private void addPhoneBook(String descriptor) {
+    void addPhoneBook(String descriptor) {
         // Try to check if the phone book has already been added:
         for (int i = 0; i < tabPhonebooks.getTabCount(); i++) {
             PhoneBook pb = ((PhoneBookPanel)tabPhonebooks.getComponent(i)).getPhoneBook();
@@ -132,7 +131,7 @@ public final class PhoneBookWin extends JDialog
         tabPhonebooks.setSelectedIndex(newIdx);
     }
     
-    private void closeCurrentPhoneBook() {
+    void closeCurrentPhoneBook() {
         PhoneBookPanel pbp = getCurrentPBPanel();
         if (pbp != null) {
             pbp.closePhoneBook();
@@ -142,7 +141,7 @@ public final class PhoneBookWin extends JDialog
         }
     }
     
-    private void closeAndSaveAllPhonebooks() {
+    void closeAndSaveAllPhonebooks() {
         List<String> pbList = utils.getFaxOptions().phoneBooks;
         pbList.clear();
         
@@ -155,7 +154,7 @@ public final class PhoneBookWin extends JDialog
         checkMenuEnable();
     }
     
-    private void checkMenuEnable() {
+    void checkMenuEnable() {
         boolean haveTabs = (tabPhonebooks.getTabCount() > 0);
         boolean delOK = false, writeOK = false, browseOK = false;
         if (haveTabs) {
@@ -199,14 +198,14 @@ public final class PhoneBookWin extends JDialog
         return JOptionPane.showInputDialog(PhoneBookWin.this, utils._("Please enter the phone book descriptor to open."), title, JOptionPane.QUESTION_MESSAGE);
     }
     
-    private void doDescOpen() {
+    void doDescOpen() {
         String desc = promptForDescriptor(utils._("Open by descriptor"));
         if (desc != null) {
             addPhoneBook(desc);
         }
     }
     
-    private void doDescImport() {
+    void doDescImport() {
         if (getCurrentPhoneBook().isReadOnly()) 
             return;
         

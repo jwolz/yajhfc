@@ -30,7 +30,7 @@ import javax.swing.text.NumberFormatter;
 // For use with a number model that limits the number of seconds shown.
 public class SpinnerDateOffsetEditor extends javax.swing.JSpinner.DefaultEditor {
     
-    private static class DateOffsetFormatter extends JFormattedTextField.AbstractFormatter {
+    protected static class DateOffsetFormatter extends JFormattedTextField.AbstractFormatter {
         /**
          * Number of columns used in the format:
          */

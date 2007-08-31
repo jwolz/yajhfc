@@ -149,7 +149,7 @@ public class AboutDialog extends JDialog implements HyperlinkListener {
         Properties sp = System.getProperties();
         String[] keys = new String[sp.size()];
         
-        Enumeration e = sp.propertyNames();
+        Enumeration<?> e = sp.propertyNames();
         int i = 0;
         while (e.hasMoreElements()) {
             keys[i++] = (String)e.nextElement();

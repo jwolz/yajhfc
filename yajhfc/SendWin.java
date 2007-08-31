@@ -21,6 +21,7 @@ package yajhfc;
 import gnu.hylafax.HylaFAXClient;
 import gnu.hylafax.Job;
 import info.clearthought.layout.TableLayout;
+import info.clearthought.layout.TableLayoutConstants;
 import info.clearthought.layout.TableLayoutConstraints;
 
 import java.awt.Dimension;
@@ -66,54 +67,56 @@ import yajhfc.phonebook.PhoneBookEntry;
 import yajhfc.phonebook.PhoneBookWin;
 
 
-public class SendWin extends JDialog  {
-    private final int border = 10;
+public final class SendWin extends JDialog  {
+  
+    JPanel jContentPane = null;
+    JButton ButtonSend = null;
+    JButton ButtonCancel = null;
     
-    private JPanel jContentPane = null;
-    private JButton ButtonSend = null;
-    private JButton ButtonCancel = null;
-    
-    private JTabbedPane tabMain = null;
+    JTabbedPane tabMain = null;
     
     // Common:
-    private JPanel paneCommon = null;
+    JPanel paneCommon = null;
     
-    private JButton ButtonPhoneBook = null;
-    private JTextField TextNumber = null;
+    JButton ButtonPhoneBook = null;
+    JTextField TextNumber = null;
     
-    private JComboBox ComboResolution = null;
-    private JComboBox ComboPaperSize = null;
-    private JComboBox ComboNotification = null;
+    JComboBox ComboResolution = null;
+    JComboBox ComboPaperSize = null;
+    JComboBox ComboNotification = null;
     
-    private JSpinner SpinKillTime = null;
-    private JSpinner SpinMaxTries = null;
+    JSpinner SpinKillTime = null;
+    JSpinner SpinMaxTries = null;
     
-    //private JLabel lblFilename = null;
-    private FileTextField ftfFilename = null;
+    //JLabel lblFilename = null;
+    FileTextField ftfFilename = null;
     
-    private TextFieldList tflNumbers, tflFiles;    
+    TextFieldList tflNumbers, tflFiles;    
     
     // Cover:
-    private JPanel paneCover = null; 
+    JPanel paneCover = null; 
     
-    private JCheckBox checkUseCover = null;
-    private JCheckBox checkCustomCover = null;
-    private FileTextField ftfCustomCover = null;
+    JCheckBox checkUseCover = null;
+    JCheckBox checkCustomCover = null;
+    FileTextField ftfCustomCover = null;
     
-    private ArrayList<JComponent> coverComps = null;
-    private JTextField textToName = null;
-    private JTextField textToCompany = null;
-    private JTextField textToLocation = null;
-    private JTextField textToVoiceNumber = null;
-    private JTextField textSubject = null;
-    private JScrollPane scrollToComments = null;
-    private JTextArea textToComments = null;
-    private JButton buttonPreview;
+    ArrayList<JComponent> coverComps = null;
+    JTextField textToName = null;
+    JTextField textToCompany = null;
+    JTextField textToLocation = null;
+    JTextField textToVoiceNumber = null;
+    JTextField textSubject = null;
+    JScrollPane scrollToComments = null;
+    JTextArea textToComments = null;
+    JButton buttonPreview;
     
-    private ClipboardPopup defClPop, clpNumbers, clpFiles;
+    ClipboardPopup defClPop, clpNumbers, clpFiles;
     
-    private boolean pollMode = false;
-    private static final Dimension buttonSize = new Dimension(120, 27);
+    boolean pollMode = false;
+    boolean modalResult = false;
+    
+    static final Dimension buttonSize = new Dimension(120, 27);
+    static final int border = 10;
     
     HylaFAXClient hyfc;
     
@@ -125,14 +128,14 @@ public class SendWin extends JDialog  {
         JLabel lbl = new JLabel(text);
         lbl.setLabelFor(comp);
         c.row1 = c.row2 = c.row1 - 1;
-        c.vAlign = TableLayoutConstraints.BOTTOM;
-        c.hAlign = TableLayoutConstraints.LEFT;
+        c.vAlign = TableLayoutConstants.BOTTOM;
+        c.hAlign = TableLayoutConstants.LEFT;
         pane.add(lbl, c); 
         
         return lbl;
     }
     
-    private String _(String key) {
+    static String _(String key) {
         return utils._(key);
     }
     
@@ -196,6 +199,14 @@ public class SendWin extends JDialog  {
 
     }
 
+    @Override
+    public void setVisible(boolean b) {
+        if (b) {
+            modalResult = false; //Reset the modal result
+        }
+        super.setVisible(b);
+    }
+    
     private JLabel addCoverComp(JComponent comp, String lblText, String layout) {
         JLabel lbl = addWithLabel(paneCover, comp, lblText, layout);
         coverComps.add(comp);
@@ -203,7 +214,7 @@ public class SendWin extends JDialog  {
         return lbl;
     }
     
-    private void enableCoverComps(boolean state) {
+    void enableCoverComps(boolean state) {
         for (JComponent comp: coverComps)
             comp.setEnabled(state);
         ftfCustomCover.setEnabled(checkCustomCover.isSelected() && state);
@@ -646,7 +657,7 @@ public class SendWin extends JDialog  {
         textSubject.setText(subject);
     }
             
-    private void setPaperSizes() {
+    void setPaperSizes() {
         PaperSize desiredSize = (PaperSize)ComboPaperSize.getSelectedItem();
         for (int i = 0; i < tflFiles.model.size(); i++) {
             HylaTFLItem item = (HylaTFLItem)tflFiles.model.get(i);
@@ -655,7 +666,7 @@ public class SendWin extends JDialog  {
         }
     }
     
-    private Faxcover initFaxCover() throws IOException, FileNotFoundException {
+    Faxcover initFaxCover() throws IOException, FileNotFoundException {
         FaxOptions fo = utils.getFaxOptions();   
         Faxcover cov;
 
@@ -703,7 +714,7 @@ public class SendWin extends JDialog  {
         
         return cov;
     }
-    private File makeCoverFile(Faxcover cov, NumberTFLItem to) throws IOException, FileNotFoundException {
+    File makeCoverFile(Faxcover cov, NumberTFLItem to) throws IOException, FileNotFoundException {
         File coverFile;
         
         if (to != null) {
@@ -730,7 +741,7 @@ public class SendWin extends JDialog  {
         return coverFile;
     }
 
-    private class PreviewWorker extends ProgressWorker {
+    class PreviewWorker extends ProgressWorker {
         
         protected int calculateMaxProgress() {
             return 10000;
@@ -766,7 +777,7 @@ public class SendWin extends JDialog  {
             }
         } 
     }
-    private class SendWorker extends ProgressWorker {
+    class SendWorker extends ProgressWorker {
         private void setIfNotEmpty(Job j, String prop, String val) {
             try {
             if (val.length() >  0)
@@ -906,7 +917,7 @@ public class SendWin extends JDialog  {
             dispose();
         }
     }
-    private class SendButtonListener implements ActionListener {
+    class SendButtonListener implements ActionListener {
                
         public void actionPerformed(ActionEvent e) {
             
@@ -930,9 +941,10 @@ public class SendWin extends JDialog  {
 
             SendWorker wrk = new SendWorker();
             wrk.startWork(SendWin.this, _("Sending fax"));
+            modalResult = true;
         }
     }
-    private static class NumberTFLItem extends TFLItem {
+    static class NumberTFLItem extends TFLItem {
         public String faxNumber;
         public String name, company, location, voiceNumber;
         
