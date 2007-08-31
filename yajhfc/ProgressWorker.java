@@ -28,12 +28,13 @@ import javax.swing.JOptionPane;
 import javax.swing.ProgressMonitor;
 import javax.swing.SwingUtilities;
 
-public abstract class ProgressWorker extends Thread {
+public abstract class ProgressWorker extends Thread{
     
-    protected ProgressMonitor pMon;
-    private int progress;
-    private Component parent;
-    
+    protected ProgressUI progressMonitor;
+    protected int progress;
+    protected Component parent;
+    protected boolean closeOnExit = true;
+ 
     /**
      * Does the actual work. Is run in a separate thread.
      */
@@ -69,19 +70,51 @@ public abstract class ProgressWorker extends Thread {
     }
     
     public void updateNote(String note) {
-        SwingUtilities.invokeLater(new NoteUpdater(note, pMon));
+        SwingUtilities.invokeLater(new NoteUpdater(note, progressMonitor));
     }
     
     public void stepProgressBar(int step) {
         progress += step;
-        SwingUtilities.invokeLater(new ProgressUpdater(progress, pMon));
+        SwingUtilities.invokeLater(new ProgressUpdater(progress, progressMonitor));
     }
     
     public void setProgress(int progress) {
         this.progress = progress;
-        SwingUtilities.invokeLater(new ProgressUpdater(progress, pMon));
+        SwingUtilities.invokeLater(new ProgressUpdater(progress, progressMonitor));
     }
     
+    /**
+     * Returns the progress monitor used by this ProgressWorker
+     * @return
+     */
+    public ProgressUI getProgressMonitor() {
+        return progressMonitor;
+    }
+
+    /**
+     * Sets the progress monitor to be used by this progress worker. 
+     * <br>
+     * If this is null, a default progress monitor is created and used when startWork is called.
+     * @param progressMonitor
+     */
+    public void setProgressMonitor(ProgressUI progressMonitor) {
+        if (isAlive())
+            throw new IllegalStateException("Can not set progress monitor after thread has been started.");
+        this.progressMonitor = progressMonitor;
+    }
+
+    public boolean isCloseOnExit() {
+        return closeOnExit;
+    }
+
+    /**
+     * If set to false the progress monitor is not closed on exit.
+     * @param closeOnExit
+     */
+    public void setCloseOnExit(boolean closeOnExit) {
+        this.closeOnExit = closeOnExit;
+    }
+
     public void showExceptionDialog(String message, Exception ex) {
         try {
             SwingUtilities.invokeAndWait(new ExcDlgDisplayer(parent, ex, message));
@@ -111,28 +144,39 @@ public abstract class ProgressWorker extends Thread {
     
     private void startWorkPriv(Component parent, String text) {
         initialize();
-        pMon = new ProgressMonitor(parent, text, utils._("Initializing..."), 0, calculateMaxProgress());
+        if (progressMonitor == null) {
+            progressMonitor = new MyProgressMonitor(parent, text, utils._("Initializing..."), 0, calculateMaxProgress());
+        } else {
+            progressMonitor.showDeterminateProgress(text, utils._("Initializing..."), 0, calculateMaxProgress());
+        }
         progress = 0;
-        parent.setEnabled(false);
-        this.parent = parent;
+        //parent.setEnabled(false);
+        this.parent = parent;        
         
         start();
     }
     
     @Override
     public void run() {
-        doWork();
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                done();
-                
-                parent.setEnabled(true);
-                pMon.close();
-                pMon = null;
-                
-                pMonClosed();
-            }
-        });
+        try {
+            doWork();
+        } finally {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    
+                    done();
+
+                    parent.setEnabled(true);
+                    if (closeOnExit) {
+                        progressMonitor.close();
+                        if (progressMonitor instanceof MyProgressMonitor) {
+                            progressMonitor = null;
+                        }
+                        pMonClosed();
+                    }
+                }
+            });
+        }
     }
     
     private static class MsgDlgDisplayer implements Runnable {
@@ -174,30 +218,60 @@ public abstract class ProgressWorker extends Thread {
     }
     private static class ProgressUpdater implements Runnable {
         private int progress;
-        private ProgressMonitor pMon;
+        private ProgressUI pMon;
         
         public void run() {
             if (pMon != null)
                 pMon.setProgress(progress);
         }
         
-        public ProgressUpdater(int progress, ProgressMonitor pMon) {
+        public ProgressUpdater(int progress, ProgressUI pMon) {
             this.progress = progress;
             this.pMon = pMon;
         }
     }
     private static class NoteUpdater implements Runnable {
         private String note;
-        private ProgressMonitor pMon;
+        private ProgressUI pMon;
         
         public void run() {
             if (pMon != null)
                 pMon.setNote(note);
         }
         
-        public NoteUpdater(String note, ProgressMonitor pMon) {
+        public NoteUpdater(String note, ProgressUI pMon) {
             this.note = note;
             this.pMon = pMon;
+        }
+    }
+    
+    /**
+     * Interface implementing the progress methods used by the ProgressWorker
+     * @author jonas
+     *
+     */
+    public interface ProgressUI {
+        public void close();
+        public void setNote(String note);
+        public void setProgress(int progress);
+        
+        public void showDeterminateProgress(String message, String initialNote, int min, int max);
+    }
+    
+    /**
+     * Wrapper class around ProgressMonitor implementing the ProgressUI interface
+     * @author jonas
+     *
+     */
+    protected static class MyProgressMonitor extends ProgressMonitor implements ProgressUI {
+        public MyProgressMonitor(Component parentComponent, Object message,
+                String note, int min, int max) {
+            super(parentComponent, message, note, min, max);
+        }
+
+        public void showDeterminateProgress(String message, String initialNote, int min,
+                int max) {
+            throw new IllegalStateException("Can not reinitialize a progress monitor.");            
         }
     }
 }

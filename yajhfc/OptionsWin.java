@@ -62,50 +62,50 @@ import javax.swing.event.ChangeListener;
 
 public class OptionsWin extends JDialog {
     
-    private JPanel jContentPane = null;
+    JPanel jContentPane = null;
     
-    private JTabbedPane TabMain = null;
-    private JPanel PanelCommon = null;
-    private JPanel panelSendSettings = null;
-    private JPanel panelServerSettings;
-    private fmtEditor PanelRecvFmt = null, PanelSentFmt = null, PanelSendingFmt = null;
+    JTabbedPane TabMain = null;
+    JPanel PanelCommon = null;
+    JPanel panelSendSettings = null;
+    JPanel panelServerSettings;
+    fmtEditor PanelRecvFmt = null, PanelSentFmt = null, PanelSendingFmt = null;
         
-    private JPanel PanelButtons;
-    private JButton ButtonOK, ButtonCancel;
+    JPanel PanelButtons;
+    JButton ButtonOK, ButtonCancel;
     
-    private JTextField textNotifyAddress, textHost, textUser, /*textViewer,*/ textPort;
-    private JPasswordField textPassword, textAdminPassword;
-    private JComboBox comboTZone, comboNotify, comboPaperSize, comboResolution; //, comboNewFaxAction;
-    private JComboBox comboLang, comboLookAndFeel;
-    private JCheckBox checkPasv, checkPCLBug, checkAskPassword, checkAskAdminPassword, checkUseCustomDefCover;
-    private JSpinner spinMaxTry, spinMaxDial, spinOffset, spinKillTime;
-    //private JButton buttonBrowseViewer;
-    private FileTextField ftfFaxViewer, ftfPSViewer, ftfCustomDefCover;
+    JTextField textNotifyAddress, textHost, textUser, /*textViewer,*/ textPort;
+    JPasswordField textPassword, textAdminPassword;
+    JComboBox comboTZone, comboNotify, comboPaperSize, comboResolution; //, comboNewFaxAction;
+    JComboBox comboLang, comboLookAndFeel;
+    JCheckBox checkPasv, checkPCLBug, checkAskPassword, checkAskAdminPassword, checkUseCustomDefCover;
+    JSpinner spinMaxTry, spinMaxDial, spinOffset, spinKillTime;
+    //JButton buttonBrowseViewer;
+    FileTextField ftfFaxViewer, ftfPSViewer, ftfCustomDefCover;
     
-    private JTextField textFromFaxNumber, textFromName, textFromCompany, textFromLocation, textFromVoicenumber;
-    private ClipboardPopup clpDef;
-    private JPanel panelServer, panelSend, panelPaths, panelCover, panelMisc;
+    JTextField textFromFaxNumber, textFromName, textFromCompany, textFromLocation, textFromVoicenumber;
+    ClipboardPopup clpDef;
+    JPanel panelServer, panelSend, panelPaths, panelCover, panelMisc;
     
-    private JPanel panelServerRetrieval, panelNewFaxAction;
-    private JCheckBox checkNewFax_Beep, checkNewFax_ToFront, checkNewFax_Open, checkNewFax_MarkAsRead;
-    private JSpinner spinStatusInterval, spinTableInterval;
+    JPanel panelServerRetrieval, panelNewFaxAction;
+    JCheckBox checkNewFax_Beep, checkNewFax_ToFront, checkNewFax_Open, checkNewFax_MarkAsRead;
+    JSpinner spinStatusInterval, spinTableInterval;
     
-    private JCheckBox checkPreferTIFF;
+    JCheckBox checkPreferTIFF;
     
-    private FaxOptions foEdit = null;
-    private Vector<FmtItem> recvfmt, sentfmt, sendingfmt;
-    private Vector<LF_Entry> lookAndFeels;
+    FaxOptions foEdit = null;
+    Vector<FmtItem> recvfmt, sentfmt, sendingfmt;
+    Vector<LF_Entry> lookAndFeels;
     
-    private boolean modalResult;
-    private boolean changedLF;
-    private static final double border = 5;
+    boolean modalResult;
+    boolean changedLF;
+    static final double border = 5;
     
     // true if OK, false otherwise
     public boolean getModalResult() {
         return modalResult;
     }
     
-    private static String _(String key) {
+    static String _(String key) {
         return utils._(key);
     }
     
@@ -682,7 +682,7 @@ public class OptionsWin extends JDialog {
     /*
      * Refreshes the Look&Feel for the complete application
      */
-    private static void refreshLF() {
+    static void refreshLF() {
         Frame[] frames = Frame.getFrames();
         for (Frame f: frames) {
             //refreshLF(f);

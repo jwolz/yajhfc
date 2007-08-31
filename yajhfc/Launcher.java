@@ -60,9 +60,9 @@ public final class Launcher {
     // Needs to be set *before* utils initializes in order to have an effect!
     public static String cmdLineConfDir = null;
     
-    private static ServerSocket sockBlock = null;
-    private static SockBlockAcceptor blockThread;
-    private static mainwin application;
+    static ServerSocket sockBlock = null;
+    static SockBlockAcceptor blockThread;
+    static mainwin application;
     static boolean isLocking = false;
     
     final static int codeSubmitStream = 1;
