@@ -20,7 +20,6 @@ package yajhfc;
 
 import java.util.Collection;
 import java.util.EventObject;
-import java.util.Set;
 
 class UnreadItemEvent extends EventObject {
     private Collection<RecvYajJob> items = null;

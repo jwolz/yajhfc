@@ -105,6 +105,7 @@ public class SentYajJob extends YajJob {
     /**
      * Tries to find a rendered TIFF on the server for the file "serverName".
      */
+    @SuppressWarnings("unchecked")
     private String findRenderedTIFF(HylaFAXClient hyfc, String serverName) {
         if (utils.debugMode)
             utils.debugOut.println("Trying to find the rendered TIFF for " + serverName);

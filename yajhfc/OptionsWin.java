@@ -715,10 +715,10 @@ public class OptionsWin extends JDialog {
                 foEdit.notifyAddress = textNotifyAddress.getText();
                 foEdit.host = textHost.getText();
                 foEdit.user = textUser.getText();
-                foEdit.pass = textPassword.getText();
+                foEdit.pass = new String(textPassword.getPassword());
                 foEdit.faxViewer = ftfFaxViewer.getText();
                 foEdit.psViewer = ftfPSViewer.getText();
-                foEdit.AdminPassword = textAdminPassword.getText();
+                foEdit.AdminPassword = new String(textAdminPassword.getPassword());
                 
                 foEdit.notifyWhen = (FaxStringProperty)comboNotify.getSelectedItem();
                 foEdit.paperSize = (PaperSize)comboPaperSize.getSelectedItem();

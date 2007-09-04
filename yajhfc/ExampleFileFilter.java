@@ -65,6 +65,7 @@ import javax.swing.filechooser.*;
  * @version 1.16 07/26/04
  * @author Jeff Dinkins
  */
+@SuppressWarnings("unchecked")
 public class ExampleFileFilter extends FileFilter {
 
     /*private static String TYPE_UNKNOWN = "Type Unknown";

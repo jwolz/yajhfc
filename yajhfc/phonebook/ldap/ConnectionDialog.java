@@ -269,7 +269,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
                     if (password == null)
                         return false;
                 } else {
-                    password = textPassword.getText();
+                    password = new String(textPassword.getPassword());
                 }
                 env.put(Context.SECURITY_CREDENTIALS, password);
             } else {
@@ -355,7 +355,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         dst.givenName = textGivenName.getText();
         dst.location = textLocation.getText();
         dst.name = textName.getText();
-        dst.credential = textPassword.getText();
+        dst.credential = new String(textPassword.getPassword());
         dst.port = Integer.parseInt(textPort.getText());
         dst.serverName = textServerName.getText();
         dst.title = textTitle.getText();

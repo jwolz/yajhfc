@@ -28,10 +28,10 @@ import yajhfc.phonebook.PhoneBookEntry;
 public class LDAPPhoneBookEntry extends PhoneBookEntry {
 
     private String[] data;
-    private LDAPPhoneBook parent;
+    //private LDAPPhoneBook parent;
     
     LDAPPhoneBookEntry(LDAPPhoneBook parent, SearchResult res){
-        this.parent = parent;
+        //this.parent = parent;
         
         Attributes attrs = res.getAttributes();
         LDAPSettings settings = parent.settings;

@@ -18,10 +18,11 @@
  */
 package yajhfc;
 
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.LayoutManager;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -49,14 +50,7 @@ public class ProgressPanel extends JLayeredPane implements ProgressWorker.Progre
     
     protected static final int inset = 6;
     
-    public ProgressPanel() {
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                relayout();
-            }
-        });
-        
+    public ProgressPanel() {     
         progressPanel = new JPanel(null);
         progressPanel.setLayout(new BoxLayout(progressPanel, BoxLayout.Y_AXIS));
         progressPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -78,6 +72,28 @@ public class ProgressPanel extends JLayeredPane implements ProgressWorker.Progre
         add(progressPanel, JLayeredPane.MODAL_LAYER);
         
         add(alphaPanel, JLayeredPane.MODAL_LAYER-1);
+        
+        setLayout(new LayoutManager() {
+            public void layoutContainer(Container parent) {
+                relayout();
+            }
+
+            public Dimension minimumLayoutSize(Container parent) {
+                return contentComponent.getMinimumSize();
+            }
+
+            public Dimension preferredLayoutSize(Container parent) {
+                return contentComponent.getPreferredSize();
+            }
+
+            public void removeLayoutComponent(Component comp) {
+                //stub
+            }
+            
+            public void addLayoutComponent(String name, Component comp) {
+                // stub
+            }
+        });
     }
 
     public JComponent getContentComponent() {
