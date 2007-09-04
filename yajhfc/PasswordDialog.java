@@ -29,7 +29,6 @@ import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Box;
-import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -59,7 +58,7 @@ public class PasswordDialog extends JDialog {
         btnOK = new JButton(utils._("OK"));
         btnOK.addActionListener(new ActionListener() {
            public void actionPerformed(ActionEvent e) {
-               returnValue = passField.getText();
+               returnValue = new String(passField.getPassword());
                dispose();
             }             
         });

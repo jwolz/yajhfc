@@ -71,7 +71,6 @@ public class MyTableModel extends AbstractTableModel {
      * A return value of null means "use default color"
      * @param row
      * @param col
-     * @param cellSelected
      * @return
      */
     public Color getCellBackgroundColor(int row, int col) {       
@@ -80,6 +79,17 @@ public class MyTableModel extends AbstractTableModel {
         } else {
             return null;
         }
+    }
+    
+    /**
+     * Returns a custom foreground color for the table cell.
+     * A return value of null means "use default color"
+     * @param row
+     * @param col
+     * @return
+     */
+    public Color getCellForegroundColor(int row, int col) {  
+        return null;
     }
     
     protected YajJob createYajJob(String[] data) {

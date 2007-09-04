@@ -253,7 +253,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
                 if (password == null)
                     return false;
             } else {
-                password = textPassword.getText();
+                password = new String(textPassword.getPassword());
             }
             conn = DriverManager.getConnection(textURL.getText(), textUserName.getText(), password);
             
@@ -385,7 +385,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         dst.driver = textDriverClass.getText();
         dst.dbURL = textURL.getText();
         dst.user = textUserName.getText();
-        dst.pwd = textPassword.getText();
+        dst.pwd = new String(textPassword.getPassword());
         dst.table = comboTable.getSelectedItem().toString();
         
         dst.askForPWD = checkAskForPassword.isSelected();

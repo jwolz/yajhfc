@@ -232,7 +232,8 @@ public class fmtEditor extends JPanel
         initialize();
     }
     
-    class VectorListModel extends AbstractListModel {
+    @SuppressWarnings("unchecked")
+    static class VectorListModel extends AbstractListModel {
         private Vector data;
         
         public Object getElementAt(int index) {

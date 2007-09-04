@@ -25,7 +25,6 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.text.DefaultFormatterFactory;
-import javax.swing.text.NumberFormatter;
 
 // For use with a number model that limits the number of seconds shown.
 public class SpinnerDateOffsetEditor extends javax.swing.JSpinner.DefaultEditor {

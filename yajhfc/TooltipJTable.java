@@ -31,8 +31,10 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-//JTable with tooltips and other extensions
-//Create a new table with: new TooltipJTable(realTableModel)
+/**
+ * JTable with tooltips and other extensions. <p>
+ * Create a new table with: new TooltipJTable(realTableModel)
+ */
 public class TooltipJTable extends JTable {
     
     @Override
@@ -141,15 +143,20 @@ public class TooltipJTable extends JTable {
         MyTableModel realModel = getRealModel(); 
         
         Font customFnt = realModel.getCellFont(realRow, realCol);
-        if (customFnt != null)
+        if (customFnt != null) {
             comp.setFont(customFnt);
+        }
         
         if (!isCellSelected(row, column)) {
             Color customColor = realModel.getCellBackgroundColor(realRow, realCol);
             comp.setBackground(customColor);
+            
+            customColor = realModel.getCellForegroundColor(realRow, realCol);
+            comp.setForeground(customColor);
         }
         
         return comp;
     }
+    
 }
 

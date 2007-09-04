@@ -20,15 +20,11 @@ package yajhfc.phonebook;
 
 import java.awt.Dialog;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.channels.FileLock;
 import java.util.ArrayList;
 import java.util.Collections;
 
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;

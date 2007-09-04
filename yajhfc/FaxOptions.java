@@ -91,6 +91,8 @@ public class FaxOptions {
     
     public boolean preferRenderedTIFF = false;
     public boolean markFailedJobs = true;
+    public boolean showRowNumbers = false;
+    public boolean adjustColumnWidths = true;
     
     public String lookAndFeel = LOOKANDFEEL_SYSTEM;
     public static final String LOOKANDFEEL_SYSTEM = "!system!";
@@ -173,6 +175,7 @@ public class FaxOptions {
     private static final char sep = '|';
     //private static final String sepregex = "\\|";
     
+    @SuppressWarnings("unchecked")
     public void storeToFile(String fileName) {
         Properties p = new Properties();
         java.lang.reflect.Field[] f = FaxOptions.class.getFields();
@@ -225,6 +228,7 @@ public class FaxOptions {
         }
     }
     
+    @SuppressWarnings("unchecked")
     public void loadFromFile(String fileName) {
         Properties p = new Properties();
         //System.err.println(fileName);
@@ -242,7 +246,7 @@ public class FaxOptions {
         // Clear all lists:
         phoneBooks.clear();
         
-        Enumeration e = p.propertyNames();
+        Enumeration<?> e = p.propertyNames();
         while (e.hasMoreElements()) {
             String propName = (String)e.nextElement();
             
@@ -262,7 +266,7 @@ public class FaxOptions {
                 }
                 
                 Field f = FaxOptions.class.getField(fName);
-                Class fcls = f.getType();
+                Class<?> fcls = f.getType();
                 if (String.class.isAssignableFrom(fcls))
                     f.set(this, p.getProperty(fName));
                 else if (Integer.TYPE.isAssignableFrom(fcls))
