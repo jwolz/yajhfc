@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
-import java.util.Vector;
 
 public class FaxOptions {
     public FaxStringProperty tzone = null;
@@ -40,9 +39,9 @@ public class FaxOptions {
     public String user;
     public String pass;
     
-    public Vector<FmtItem> recvfmt;
-    public Vector<FmtItem> sentfmt;
-    public Vector<FmtItem> sendingfmt;
+    public final FmtItemList recvfmt;
+    public final FmtItemList sentfmt;
+    public final FmtItemList sendingfmt;
     
     public String faxViewer;
     public String psViewer;
@@ -109,7 +108,7 @@ public class FaxOptions {
         this.pasv = true;
         this.tzone = utils.timezones[0];
         
-        this.recvfmt = new Vector<FmtItem>();
+        this.recvfmt = new FmtItemList(utils.recvfmts, utils.requiredRecvFmts);
         this.recvfmt.add(utils.recvfmts[0]);  // Y
         this.recvfmt.add(utils.recvfmts[16]); // s
         this.recvfmt.add(utils.recvfmts[4]);  // e
@@ -119,14 +118,18 @@ public class FaxOptions {
         //this.recvFileCol = 2;
         this.recvColState = String.valueOf(this.recvfmt.indexOf(utils.recvfmt_FileName) + 1); // 0 means: no sorting
         
-        this.sentfmt = new Vector<FmtItem>();
+        this.sentfmt = new FmtItemList(utils.jobfmts, utils.requiredSentFmts);
         this.sentfmt.add(utils.jobfmts[40]); //o
         this.sentfmt.add(utils.jobfmts[30]); //e 
         this.sentfmt.add(utils.jobfmts[44]);       
         this.sentfmt.add(utils.jobfmts[45]);
         this.sentfmt.add(utils.jobfmt_JobID);
+        this.sentfmt.add(utils.jobfmt_Jobstate);
+        this.sentfmt.add(utils.jobfmts[51]);
         
-        this.sendingfmt = this.sentfmt;
+        this.sendingfmt = new FmtItemList(utils.jobfmts, utils.requiredSendingFmts);
+        this.sendingfmt.addAll(this.sentfmt);
+        
         this.sentColState = this.sendingColState = "";
         
         String sysname = System.getProperty("os.name");
@@ -182,7 +185,7 @@ public class FaxOptions {
         
         for (int i = 0; i < f.length; i++) {
             try {
-                if (Modifier.isStatic(f[i].getModifiers()) || Modifier.isFinal(f[i].getModifiers()))
+                if (Modifier.isStatic(f[i].getModifiers())) // || Modifier.isFinal(f[i].getModifiers()))
                     continue;
                 
                 Object val = f[i].get(this);
@@ -194,13 +197,15 @@ public class FaxOptions {
                     p.setProperty(name, val.toString());
                 else if (val instanceof MyManualMapObject) 
                     p.setProperty(name, ((MyManualMapObject)val).getKey().toString());
-                else if (val instanceof Vector) {
+                else if (val instanceof FmtItemList) {
+                    p.setProperty(name, ((FmtItemList)val).saveToString());
+                } else /*if (val instanceof Vector) {
                     Vector vec = (Vector)val;
-                    String saveval = "";
+                    StringBuilder saveval = new StringBuilder();
                     for (int j = 0; j < vec.size(); j++) 
-                        saveval += ((FmtItem)vec.get(j)).fmt + sep;
-                    p.setProperty(name, saveval);
-                } else if (val instanceof Rectangle) {
+                        saveval.append(((FmtItem)vec.get(j)).fmt).append(sep);
+                    p.setProperty(name, saveval.toString());
+                } else*/ if (val instanceof Rectangle) {
                     Rectangle rval = (Rectangle)val;
                     p.setProperty(name, "" + rval.x + sep + rval.y + sep + rval.width + sep + rval.height);
                 } else if (val instanceof Point) {
@@ -298,7 +303,10 @@ public class FaxOptions {
                     else
                         System.err.println("Unknown value for MyManualMapObject field " + fName);
                 }
-                else if (Vector.class.isAssignableFrom(fcls)) {
+                else if (FmtItemList.class.isAssignableFrom(fcls)) {
+                    FmtItemList fim = (FmtItemList)f.get(this);
+                    fim.loadFromString(p.getProperty(fName));
+                } else /*if (Vector.class.isAssignableFrom(fcls)) {
                     String[] fields = utils.fastSplit(p.getProperty(fName), sep);
                     FmtItem[] dataarray, required;
                     Vector<FmtItem> vecres = new Vector<FmtItem>();
@@ -327,7 +335,7 @@ public class FaxOptions {
                     
                     utils.addUniqueToVec(vecres, required);
                     f.set(this, vecres);
-                } else if (Rectangle.class.isAssignableFrom(fcls)) {
+                } else */ if (Rectangle.class.isAssignableFrom(fcls)) {
                     String [] v =  utils.fastSplit(p.getProperty(fName), sep);
                     f.set(this, new Rectangle(Integer.parseInt(v[0]), Integer.parseInt(v[1]), Integer.parseInt(v[2]), Integer.parseInt(v[3])));
                 } else if (Point.class.isAssignableFrom(fcls)) {

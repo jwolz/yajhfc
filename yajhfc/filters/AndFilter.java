@@ -19,9 +19,8 @@ package yajhfc.filters;
  */
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
-import yajhfc.FmtItem;
+import yajhfc.FmtItemList;
 import yajhfc.YajJob;
 import yajhfc.YajJobFilter;
 
@@ -58,13 +57,13 @@ public class AndFilter implements YajJobFilter {
         return retVal;
     }
 
-    public void initFilter(Vector<FmtItem> columns) {
+    public void initFilter(FmtItemList columns) {
         for (YajJobFilter yjf: children) {
             yjf.initFilter(columns);
         }
     }
 
-    public boolean validate(Vector<FmtItem> columns) {
+    public boolean validate(FmtItemList columns) {
         for (int i = children.size()-1; i >= 0; i--) {
             if (!children.get(i).validate(columns)) {
                 children.remove(i);

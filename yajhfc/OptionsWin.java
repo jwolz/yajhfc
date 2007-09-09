@@ -33,7 +33,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.AbstractAction;
@@ -93,7 +96,7 @@ public class OptionsWin extends JDialog {
     JCheckBox checkPreferTIFF;
     
     FaxOptions foEdit = null;
-    Vector<FmtItem> recvfmt, sentfmt, sendingfmt;
+    List<FmtItem> recvfmt, sentfmt, sendingfmt;
     Vector<LF_Entry> lookAndFeels;
     
     boolean modalResult;
@@ -373,7 +376,7 @@ public class OptionsWin extends JDialog {
             comboLookAndFeel.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     LF_Entry sel = (LF_Entry)comboLookAndFeel.getSelectedItem();
-                    if (changedLF || sel.className != foEdit.lookAndFeel) {
+                    if (changedLF || !sel.className.equals(foEdit.lookAndFeel)) {
                         utils.setLookAndFeel(sel.className);
                         
                         SwingUtilities.updateComponentTreeUI(OptionsWin.this);
@@ -480,6 +483,7 @@ public class OptionsWin extends JDialog {
             
             comboTZone = new JComboBox(utils.timezones);
             comboNotify = new JComboBox(utils.notifications);
+            comboNotify.setRenderer(new IconMap.ListCellRenderer());
             comboPaperSize = new JComboBox(utils.papersizes);
             comboResolution = new JComboBox(utils.resolutions);
             
@@ -591,23 +595,26 @@ public class OptionsWin extends JDialog {
         return lbl;
     }
     
+    @SuppressWarnings("unchecked")
     private fmtEditor getPanelRecvFmt() {
         if (PanelRecvFmt == null) {
-            PanelRecvFmt = new fmtEditor(utils.recvfmts, recvfmt, Arrays.asList(utils.requiredRecvFmts));
+            PanelRecvFmt = new fmtEditor(utils.recvfmts, recvfmt, Collections.EMPTY_LIST); //Arrays.asList(utils.requiredRecvFmts));
         }
         return PanelRecvFmt;
     }
     
+    @SuppressWarnings("unchecked")
     private fmtEditor getPanelSendingFmt() {
         if (PanelSendingFmt == null) {
-            PanelSendingFmt = new fmtEditor(utils.jobfmts, sendingfmt, Arrays.asList(utils.requiredSendingFmts));
+            PanelSendingFmt = new fmtEditor(utils.jobfmts, sendingfmt, Collections.EMPTY_LIST); // Arrays.asList(utils.requiredSendingFmts));
         }
         return PanelSendingFmt;
     }
     
+    @SuppressWarnings("unchecked")
     private fmtEditor getPanelSentFmt() {
         if (PanelSentFmt == null) {
-            PanelSentFmt = new fmtEditor(utils.jobfmts, sentfmt, Arrays.asList(utils.requiredSentFmts));
+            PanelSentFmt = new fmtEditor(utils.jobfmts, sentfmt, Collections.EMPTY_LIST); //Arrays.asList(utils.requiredSentFmts));
         }
         return PanelSentFmt;
     }
@@ -615,9 +622,9 @@ public class OptionsWin extends JDialog {
     public OptionsWin(FaxOptions foEdit, Frame owner) {
         super(owner);
         this.foEdit = foEdit;
-        recvfmt = new Vector<FmtItem>(foEdit.recvfmt);
-        sentfmt = new Vector<FmtItem>(foEdit.sentfmt);
-        sendingfmt = new Vector<FmtItem>(foEdit.sendingfmt);
+        recvfmt = new ArrayList<FmtItem>(foEdit.recvfmt);
+        sentfmt = new ArrayList<FmtItem>(foEdit.sentfmt);
+        sendingfmt = new ArrayList<FmtItem>(foEdit.sendingfmt);
         
         initialize();
     }
@@ -759,9 +766,12 @@ public class OptionsWin extends JDialog {
                     val |= utils.NEWFAX_MARKASREAD;
                 foEdit.newFaxAction = val;
                 
-                foEdit.recvfmt = recvfmt;
-                foEdit.sentfmt = sentfmt;
-                foEdit.sendingfmt = sendingfmt;
+                foEdit.recvfmt.clear();
+                foEdit.recvfmt.addAll(recvfmt);
+                foEdit.sentfmt.clear();
+                foEdit.sentfmt.addAll(sentfmt);
+                foEdit.sendingfmt.clear();
+                foEdit.sendingfmt.addAll(sendingfmt);
                 
                 foEdit.FromCompany = textFromCompany.getText();
                 foEdit.FromFaxNumber = textFromFaxNumber.getText();

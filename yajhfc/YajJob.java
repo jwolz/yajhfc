@@ -27,26 +27,25 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Vector;
 
 public abstract class YajJob {
     protected String[] stringData;
     protected Object[] parsedData;
-    protected Vector<FmtItem> columns;
+    protected FmtItemList columns;
     // Placeholder to mark "null"-Values in parsedData:
     protected final static Object nullObject = new Object();
     
     public void setStringDataArray(String[] newData) {
         if (!Arrays.equals(newData, stringData)) {
             stringData = newData;
-            parsedData = new Object[newData.length];
+            Arrays.fill(parsedData, null);
         }
     }
     
     public String getStringData(int col) {
-        if (col >= stringData.length && col < columns.size())
-            return null;
-        else if (col >= columns.size())
+        if (col >= stringData.length && col < columns.getCompleteView().size())
+            return "";
+        else if (col >= columns.getCompleteView().size())
             throw new ArrayIndexOutOfBoundsException(col);
         else
             return stringData[col];
@@ -55,16 +54,11 @@ public abstract class YajJob {
     public Object getData(int col) {
         Object result;
         
-        if (col >= stringData.length && col < columns.size())
-            return null;
-        else if (col >= columns.size())
-            throw new ArrayIndexOutOfBoundsException(col);
-        else
-            result = parsedData[col];
+        result = parsedData[col];
         
         if (result == null) { // Not parsed
             String res = getStringData(col);
-            Class<?> dataClass = columns.get(col).dataClass;
+            Class<?> dataClass = columns.getCompleteView().get(col).dataClass;
             
             if (dataClass == String.class) {
                 result = res;
@@ -72,16 +66,18 @@ public abstract class YajJob {
                 res = res.trim();
                 if (dataClass == Boolean.class)  { // "*" if true, " " otherwise
                     result = res.equals("*");
+                } else if (dataClass == IconMap.class) {
+                    result = DefaultIconMap.getInstance(columns.getCompleteView().get(col), res);
                 } else if (res.length() > 0) {
                     try {
                         if (dataClass == Integer.class)
-                            result = Integer.valueOf(res);
+                            result = Integer.valueOf(Integer.parseInt(res));
                         else if (dataClass == Float.class)
                             result = Float.valueOf(res);
                         else if (dataClass == Double.class)
                             result = Double.valueOf(res);
                         else if (dataClass == Date.class) {
-                            Date d = columns.get(col).dateFormat.fmtIn.parse(res);
+                            Date d = columns.getCompleteView().get(col).dateFormat.fmtIn.parse(res);
                             if (d != null && utils.getFaxOptions().dateOffsetSecs != 0) {
                                 Calendar cal = Calendar.getInstance(utils.getLocale());
                                 cal.setTime(d);
@@ -89,8 +85,9 @@ public abstract class YajJob {
                                 d = cal.getTime();
                             }
                             result = d;
-                        } else
+                        } else {
                             result = res;
+                        }
                     } catch (NumberFormatException e) {
                         System.err.println("Not a number: " + res);
                         //result = Float.NaN;
@@ -107,12 +104,13 @@ public abstract class YajJob {
         return (result == nullObject) ? null : result;
     }
     
-    public Vector<FmtItem> getColumns() {
+    public FmtItemList getColumns() {
         return columns;
     }
     
-    public void setColumns(Vector<FmtItem> columns) {
+    public void setColumns(FmtItemList columns) {
         this.columns = columns;
+        parsedData = new Object[columns.getCompleteView().size()];
     }
     
     /**
@@ -138,7 +136,7 @@ public abstract class YajJob {
      */ 
     public abstract Object getIDValue();
     
-    public YajJob(Vector<FmtItem> cols, String[] stringData) {
+    public YajJob(FmtItemList cols, String[] stringData) {
         setColumns(cols);
         setStringDataArray(stringData);
     }

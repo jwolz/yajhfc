@@ -23,11 +23,11 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.AbstractListModel;
 import javax.swing.Box;
@@ -45,8 +45,8 @@ public class fmtEditor extends JPanel
     implements ActionListener {
     
     //private FmtItem[] availFmts;
-    private Vector<FmtItem> selectedFmts;
-    private Vector<FmtItem> deselectedFmts;
+    private List<FmtItem> selectedFmts;
+    private List<FmtItem> deselectedFmts;
     private List<FmtItem> dontDeleteFmts;
     
     private JPanel buttonPane, availPane, selectedPane;
@@ -127,7 +127,7 @@ public class fmtEditor extends JPanel
             availPane = new JPanel(new BorderLayout());
             availPane.add(new JLabel(_("Available Columns:")), BorderLayout.NORTH);
             
-            listAvail = new JList(new VectorListModel(deselectedFmts));
+            listAvail = new JList(new ListListModel(deselectedFmts));
             listAvail.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             listAvail.setCellRenderer(new FmtItemRenderer());
             listAvail.addListSelectionListener(new ListSelectionListener() {
@@ -151,7 +151,7 @@ public class fmtEditor extends JPanel
             selectedPane = new JPanel(new BorderLayout());
             selectedPane.add(new JLabel(_("Selected Columns:")), BorderLayout.NORTH);
             
-            listSelected = new JList(new VectorListModel(selectedFmts));
+            listSelected = new JList(new ListListModel(selectedFmts));
             listSelected.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             listSelected.setCellRenderer(new FmtItemRenderer());
             listSelected.addListSelectionListener(new ListSelectionListener() {
@@ -188,8 +188,8 @@ public class fmtEditor extends JPanel
     
     
     public void actionPerformed(ActionEvent e) {
-        VectorListModel mSel = (VectorListModel)listSelected.getModel();
-        VectorListModel mAvail = (VectorListModel)listAvail.getModel();
+        ListListModel mSel = (ListListModel)listSelected.getModel();
+        ListListModel mAvail = (ListListModel)listAvail.getModel();
         int selidx = listSelected.getSelectedIndex();
         
         if (e.getActionCommand().equals("Forward")) { //>>
@@ -201,7 +201,7 @@ public class fmtEditor extends JPanel
         } else if (e.getActionCommand().equals("Back")) { //<<
             Object sel = listSelected.getSelectedValue();
             if ((sel != null) && canDelete((FmtItem)sel)) {
-                int insidx = Collections.binarySearch(deselectedFmts, (FmtItem)sel, new FmtItemDescComparator());
+                int insidx = Collections.binarySearch(deselectedFmts, (FmtItem)sel, FmtItemDescComparator.globalInstance);
                 assert (insidx < 0);
                 insidx = -(insidx + 1);
                 mAvail.addElement(insidx, sel);
@@ -220,24 +220,24 @@ public class fmtEditor extends JPanel
         }        
     }
     
-    public fmtEditor(FmtItem[] avail, Vector<FmtItem> selected, List<FmtItem> dontDelete) {
+    public fmtEditor(FmtItem[] avail, List<FmtItem> selected, List<FmtItem> dontDelete) {
         super();
         //availFmts = avail;
         selectedFmts = selected;
-        deselectedFmts = new Vector<FmtItem>(Arrays.asList(avail));
+        deselectedFmts = new ArrayList<FmtItem>(Arrays.asList(avail));
         deselectedFmts.removeAll(selectedFmts);
-        Collections.sort(deselectedFmts, new FmtItemDescComparator());
+        Collections.sort(deselectedFmts, FmtItemDescComparator.globalInstance);
         dontDeleteFmts = dontDelete;
         
         initialize();
     }
     
     @SuppressWarnings("unchecked")
-    static class VectorListModel extends AbstractListModel {
-        private Vector data;
+    static class ListListModel extends AbstractListModel {
+        private List data;
         
         public Object getElementAt(int index) {
-            return data.elementAt(index);
+            return data.get(index);
         }
         
         public int getSize() {
@@ -271,15 +271,17 @@ public class fmtEditor extends JPanel
             fireContentsChanged(this, oldindex, newindex);
         }
         
-        public VectorListModel(Vector data) {
+        public ListListModel(List data) {
             super();
             this.data = data;
         }
     }
     
-    class FmtItemDescComparator implements Comparator<FmtItem> {
+    static class FmtItemDescComparator implements Comparator<FmtItem> {
         public int compare(FmtItem o1, FmtItem o2) {
             return o1.desc.compareTo(o2.desc);
         }        
+        
+        public static final FmtItemDescComparator globalInstance = new FmtItemDescComparator();
     }
 }

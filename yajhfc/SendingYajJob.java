@@ -23,7 +23,6 @@ import gnu.hylafax.Job;
 import gnu.inet.ftp.ServerResponseException;
 
 import java.io.IOException;
-import java.util.Vector;
 
 public class SendingYajJob extends SentYajJob {
 
@@ -51,7 +50,7 @@ public class SendingYajJob extends SentYajJob {
         }
     }
     
-    public SendingYajJob(Vector<FmtItem> cols, String[] stringData) {
+    public SendingYajJob(FmtItemList cols, String[] stringData) {
         super(cols, stringData);
     }
 

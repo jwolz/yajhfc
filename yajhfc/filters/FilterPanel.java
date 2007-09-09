@@ -35,6 +35,7 @@ import javax.swing.border.BevelBorder;
 
 import yajhfc.ClipboardPopup;
 import yajhfc.FmtItem;
+import yajhfc.FmtItemList;
 import yajhfc.FmtItemRenderer;
 import yajhfc.YajJobFilter;
 import yajhfc.utils;
@@ -121,7 +122,7 @@ public class FilterPanel extends JPanel implements ActionListener {
         return new Dimension(Integer.MAX_VALUE, getPreferredSize().height);
     }
     
-    public FilterPanel(Vector<FmtItem> columns) {
+    public FilterPanel(FmtItemList columns) {
         super(null, false);
         
         final int border = 12;
@@ -129,7 +130,7 @@ public class FilterPanel extends JPanel implements ActionListener {
         setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
         setBorder(BorderFactory.createCompoundBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED), BorderFactory.createEmptyBorder(border, border, border, border)));
         
-        colModel = new DefaultComboBoxModel(new Vector<FmtItem>(columns));
+        colModel = new DefaultComboBoxModel(new Vector<FmtItem>(columns.getCompleteView()));
         colModel.insertElementAt(voidFmtItem, 0);
         comboColumns = new JComboBox(colModel);
         comboColumns.setRenderer(new FmtItemRenderer());
@@ -161,7 +162,7 @@ public class FilterPanel extends JPanel implements ActionListener {
         comboColumns.setSelectedIndex(0);
     }
 
-    public FilterPanel(Vector<FmtItem> columns, YajJobFilter initValue) {
+    public FilterPanel(FmtItemList columns, YajJobFilter initValue) {
         this(columns);
         initFromFilter(initValue);
     }

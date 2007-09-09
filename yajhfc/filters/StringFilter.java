@@ -1,9 +1,9 @@
 package yajhfc.filters;
 
-import java.util.Vector;
 import java.util.regex.Pattern;
 
 import yajhfc.FmtItem;
+import yajhfc.FmtItemList;
 import yajhfc.YajJob;
 import yajhfc.YajJobFilter;
 
@@ -49,8 +49,7 @@ public class StringFilter implements YajJobFilter {
         if (column == null || compareValue == null || operator == null || colIdx < 0)
             return true;
         String value = job.getStringData(colIdx);
-        if (value == null)
-        {
+        if (value == null) {
             value = "";
         }
         switch (operator) {
@@ -71,8 +70,8 @@ public class StringFilter implements YajJobFilter {
         }
     }
 
-    public void initFilter(Vector<FmtItem> columns) {
-        colIdx = columns.indexOf(column);
+    public void initFilter(FmtItemList columns) {
+        colIdx = columns.getCompleteView().indexOf(column);
     }
     
     public FmtItem getColumn() {
@@ -87,7 +86,7 @@ public class StringFilter implements YajJobFilter {
         return operator;
     }
     
-    public boolean validate(Vector<FmtItem> columns) {
-        return columns.contains(column);
+    public boolean validate(FmtItemList columns) {
+        return columns.getCompleteView().contains(column);
     }
 }

@@ -70,23 +70,23 @@ import yajhfc.phonebook.PhoneBookWin;
 public final class SendWin extends JDialog  {
   
     JPanel jContentPane = null;
-    JButton ButtonSend = null;
-    JButton ButtonCancel = null;
+    JButton buttonSend = null;
+    JButton buttonCancel = null;
     
     JTabbedPane tabMain = null;
     
     // Common:
     JPanel paneCommon = null;
     
-    JButton ButtonPhoneBook = null;
-    JTextField TextNumber = null;
+    JButton buttonPhoneBook = null;
+    JTextField textNumber = null;
     
-    JComboBox ComboResolution = null;
-    JComboBox ComboPaperSize = null;
-    JComboBox ComboNotification = null;
+    JComboBox comboResolution = null;
+    JComboBox comboPaperSize = null;
+    JComboBox comboNotification = null;
     
-    JSpinner SpinKillTime = null;
-    JSpinner SpinMaxTries = null;
+    JSpinner spinKillTime = null;
+    JSpinner spinMaxTries = null;
     
     //JLabel lblFilename = null;
     FileTextField ftfFilename = null;
@@ -169,12 +169,12 @@ public final class SendWin extends JDialog  {
         this.setContentPane(getJContentPane());
         
         FaxOptions fo = utils.getFaxOptions();
-        getComboResolution().setSelectedItem(fo.resolution);
-        getComboPaperSize().setSelectedItem(fo.paperSize);
-        getComboNotification().setSelectedItem(fo.notifyWhen);
+        comboResolution.setSelectedItem(fo.resolution);
+        comboPaperSize.setSelectedItem(fo.paperSize);
+        comboNotification.setSelectedItem(fo.notifyWhen);
         
-        getSpinMaxTries().setValue(Integer.valueOf(fo.maxTry));
-        getSpinKillTime().setValue(fo.killTime);
+        spinMaxTries.setValue(Integer.valueOf(fo.maxTry));
+        spinKillTime.setValue(fo.killTime);
         
         this.addWindowListener(new WindowAdapter() {
             @Override
@@ -337,21 +337,21 @@ public final class SendWin extends JDialog  {
             paneCommon.add(tflFiles, "1, 3, 3, 3, F, F");
             
             Box box = Box.createHorizontalBox();
-            TextNumber = new JTextField();
-            box.add(TextNumber);
+            textNumber = new JTextField();
+            box.add(textNumber);
             box.add(getButtonPhoneBook());
             
-            Dimension d = ButtonPhoneBook.getPreferredSize();
-            Dimension d2 = TextNumber.getPreferredSize();
+            Dimension d = buttonPhoneBook.getPreferredSize();
+            Dimension d2 = textNumber.getPreferredSize();
             if (d2.height > d.height)
                 d.height = d2.height;
             else
                 d2.height = d.height;
             d2.width = Integer.MAX_VALUE;
-            ButtonPhoneBook.setMaximumSize(d);
-            TextNumber.setMaximumSize(d2);
+            buttonPhoneBook.setMaximumSize(d);
+            textNumber.setMaximumSize(d2);
             
-            tflNumbers = new TextFieldList(TextNumber, false) {
+            tflNumbers = new TextFieldList(textNumber, false) {
                 @Override
                 protected TFLItem createListItem(String text) {
                     NumberTFLItem rv = new NumberTFLItem(text);
@@ -388,21 +388,32 @@ public final class SendWin extends JDialog  {
                     super.displayItem(sel);
                 }
             };
-            tflNumbers.addLocalComponent(ButtonPhoneBook);
+            tflNumbers.addLocalComponent(buttonPhoneBook);
             clpNumbers = new ClipboardPopup();
             clpNumbers.getPopupMenu().addSeparator();
             clpNumbers.getPopupMenu().add(tflNumbers.getModifyAction());
             clpNumbers.getPopupMenu().add(tflNumbers.getAddAction());
-            TextNumber.addMouseListener(clpNumbers);
+            textNumber.addMouseListener(clpNumbers);
+            
+            comboNotification = new JComboBox(utils.notifications);
+            comboNotification.setRenderer(new IconMap.ListCellRenderer());
+            
+            comboPaperSize = new JComboBox(utils.papersizes);
+            
+            comboResolution = new JComboBox(utils.resolutions);
+            
+            spinKillTime = new JSpinner(new SpinnerNumberModel(180, 0, 2000, 15));
+            
+            spinMaxTries = new JSpinner(new SpinnerNumberModel(12, 1, 100, 1));
             
             addWithLabel(paneCommon, box, _("Fax number(s):"), "1, 5, 3, 5, F, C");
             paneCommon.add(tflNumbers, "1, 6, 3, 6, F, F");
             
-            addWithLabel(paneCommon, getComboNotification(), _("Notify when:"), "1, 8, 3, 8, F, C");
-            addWithLabel(paneCommon, getComboResolution(), _("Resolution:"), "1, 10, F, C");
-            addWithLabel(paneCommon, getComboPaperSize(), _("Paper size:"), "3, 10, F, C");
-            addWithLabel(paneCommon, getSpinKillTime(), _("Cancel job after (minutes):"), "1, 12, F, C");
-            addWithLabel(paneCommon, getSpinMaxTries(), _("Maximum tries:"), "3, 12, F, C");
+            addWithLabel(paneCommon, comboNotification, _("Notify when:"), "1, 8, 3, 8, F, C");
+            addWithLabel(paneCommon, comboResolution, _("Resolution:"), "1, 10, F, C");
+            addWithLabel(paneCommon, comboPaperSize, _("Paper size:"), "3, 10, F, C");
+            addWithLabel(paneCommon, spinKillTime, _("Cancel job after (minutes):"), "1, 12, F, C");
+            addWithLabel(paneCommon, spinMaxTries, _("Maximum tries:"), "3, 12, F, C");
         }
         return paneCommon;
     }
@@ -456,22 +467,22 @@ public final class SendWin extends JDialog  {
      * @return javax.swing.JButton	
      */
     private JButton getButtonSend() {
-        if (ButtonSend == null) {
-            ButtonSend = new JButton();
+        if (buttonSend == null) {
+            buttonSend = new JButton();
             if (pollMode) {
-                ButtonSend.setText(_("Poll"));
-                ButtonSend.setIcon(utils.loadIcon("general/Import"));
+                buttonSend.setText(_("Poll"));
+                buttonSend.setIcon(utils.loadIcon("general/Import"));
             } else {
-                ButtonSend.setText(_("Send"));
-                ButtonSend.setIcon(utils.loadIcon("general/SendMail"));
+                buttonSend.setText(_("Send"));
+                buttonSend.setIcon(utils.loadIcon("general/SendMail"));
             }
 
             /*ButtonSend.setMinimumSize(buttonSize);
             ButtonSend.setPreferredSize(buttonSize);
             ButtonSend.setMaximumSize(buttonSize);*/
-            ButtonSend.addActionListener(new SendButtonListener());
+            buttonSend.addActionListener(new SendButtonListener());
         }
-        return ButtonSend;
+        return buttonSend;
     }
 
     /**
@@ -480,22 +491,22 @@ public final class SendWin extends JDialog  {
      * @return javax.swing.JButton	
      */
     private JButton getButtonCancel() {
-        if (ButtonCancel == null) {
+        if (buttonCancel == null) {
             Action actCancel = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
                     dispose();
                 };
             };
             actCancel.putValue(Action.NAME, _("Cancel"));
-            ButtonCancel = new JButton(actCancel);
-            ButtonCancel.getActionMap().put("EscapePressed", actCancel);
-            ButtonCancel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "EscapePressed");
+            buttonCancel = new JButton(actCancel);
+            buttonCancel.getActionMap().put("EscapePressed", actCancel);
+            buttonCancel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "EscapePressed");
             
             /*ButtonCancel.setMinimumSize(buttonSize);
             ButtonCancel.setPreferredSize(buttonSize);
             ButtonCancel.setMaximumSize(buttonSize);*/
         }
-        return ButtonCancel;
+        return buttonCancel;
     }
 
     private JButton getButtonPreview() {
@@ -517,51 +528,6 @@ public final class SendWin extends JDialog  {
             });
         }
         return buttonPreview;
-    }
-    
-    private JComboBox getComboResolution() {
-        if (ComboResolution == null) {
-            ComboResolution = new JComboBox(utils.resolutions);
-            //ComboResolution.setBounds(10, 130, 150, 25);
-            //AddLabel(ComboResolution, _("Resolution:"));
-        }
-        return ComboResolution;
-    }
-    
-    private JComboBox getComboPaperSize() {
-        if (ComboPaperSize== null) {
-            ComboPaperSize= new JComboBox(utils.papersizes);
-            //ComboPaperSize.setBounds(180, 130, 150, 25);
-            //AddLabel(ComboPaperSize, _("Paper size:"));
-        }
-        return ComboPaperSize;
-    }
-    
-    private JComboBox getComboNotification() {
-        if (ComboNotification== null) {
-            ComboNotification= new JComboBox(utils.notifications);
-            //ComboNotification.setBounds(10, 180, 320, 25);
-            //AddLabel(ComboNotification, _("Notify when:"));
-        }
-        return ComboNotification;
-    }
-    
-    private JSpinner getSpinKillTime() {
-        if (SpinKillTime== null) {
-            SpinKillTime= new JSpinner(new SpinnerNumberModel(180, 0, 2000, 15));
-            //SpinKillTime.setBounds(10, 230, 150, 25);
-            //AddLabel(SpinKillTime, _("Cancel job after (minutes):"));
-        }
-        return SpinKillTime;
-    }
-    
-    private JSpinner getSpinMaxTries() {
-        if (SpinMaxTries== null) {
-            SpinMaxTries= new JSpinner(new SpinnerNumberModel(12, 1, 100, 1));
-            //SpinMaxTries.setBounds(180, 230, 150, 25);
-            //AddLabel(SpinMaxTries, _("Maximum tries:"));
-        }
-        return SpinMaxTries;
     }
     
     private FileTextField getFtfFilename() {
@@ -586,11 +552,11 @@ public final class SendWin extends JDialog  {
     }
     
     private JButton getButtonPhoneBook() {
-        if (ButtonPhoneBook == null) {
-            ButtonPhoneBook = new JButton(utils.loadIcon("general/Bookmarks"));
-            ButtonPhoneBook.setToolTipText(_("Choose number from phone book"));
+        if (buttonPhoneBook == null) {
+            buttonPhoneBook = new JButton(utils.loadIcon("general/Bookmarks"));
+            buttonPhoneBook.setToolTipText(_("Choose number from phone book"));
             
-            ButtonPhoneBook.addActionListener(new ActionListener() {
+            buttonPhoneBook.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     utils.setWaitCursor(SendWin.this);
                     PhoneBookWin pbw = new PhoneBookWin(SendWin.this);
@@ -617,7 +583,7 @@ public final class SendWin extends JDialog  {
                 }
             });
         }
-        return ButtonPhoneBook;
+        return buttonPhoneBook;
     }
     
     private ClipboardPopup getDefClPop() {
@@ -658,7 +624,7 @@ public final class SendWin extends JDialog  {
     }
             
     void setPaperSizes() {
-        PaperSize desiredSize = (PaperSize)ComboPaperSize.getSelectedItem();
+        PaperSize desiredSize = (PaperSize)comboPaperSize.getSelectedItem();
         for (int i = 0; i < tflFiles.model.size(); i++) {
             HylaTFLItem item = (HylaTFLItem)tflFiles.model.get(i);
 
@@ -705,7 +671,7 @@ public final class SendWin extends JDialog  {
         cov.comments = textToComments.getText();
         cov.regarding = textSubject.getText();
         
-        cov.setPageSize(((PaperSize)ComboPaperSize.getSelectedItem()).size);
+        cov.setPageSize(((PaperSize)comboPaperSize.getSelectedItem()).size);
 
         if (checkCustomCover.isSelected())
             cov.coverTemplate = new File(ftfCustomCover.getText());
@@ -725,7 +691,7 @@ public final class SendWin extends JDialog  {
             cov.toVoiceNumber = to.voiceNumber;
         } else {
             cov.toCompany = textToCompany.getText();
-            cov.toFaxNumber = TextNumber.getText();
+            cov.toFaxNumber = textNumber.getText();
             cov.toLocation = textToLocation.getText();
             cov.toName = textToName.getText();
             cov.toVoiceNumber = textToVoiceNumber.getText();
@@ -866,12 +832,12 @@ public final class SendWin extends JDialog  {
 
                             j.setDialstring(numItem.faxNumber);
                             j.setProperty("EXTERNAL", numItem.faxNumber); // needed to fix an error while sending multiple jobs
-                            j.setMaximumTries(((Integer)SpinMaxTries.getValue()).intValue());
-                            j.setNotifyType(((FaxStringProperty)ComboNotification.getSelectedItem()).type);
-                            j.setPageDimension(((PaperSize)ComboPaperSize.getSelectedItem()).size);
-                            j.setVerticalResolution(((FaxIntProperty)ComboResolution.getSelectedItem()).type);
+                            j.setMaximumTries(((Integer)spinMaxTries.getValue()).intValue());
+                            j.setNotifyType(((FaxStringProperty)comboNotification.getSelectedItem()).type);
+                            j.setPageDimension(((PaperSize)comboPaperSize.getSelectedItem()).size);
+                            j.setVerticalResolution(((FaxIntProperty)comboResolution.getSelectedItem()).type);
                             j.setSendTime("NOW"); // bug fix 
-                            j.setKilltime(utils.minutesToHylaTime(((Integer)SpinKillTime.getValue()).intValue()));  
+                            j.setKilltime(utils.minutesToHylaTime(((Integer)spinKillTime.getValue()).intValue()));  
 
                             if (pollMode) 
                                 j.setProperty("POLL", "\"\" \"\"");

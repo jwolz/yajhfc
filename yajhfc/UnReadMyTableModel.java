@@ -28,7 +28,9 @@ import java.util.Set;
 
 import javax.swing.event.EventListenerList;
 
-//Tablemodel with read/unread state
+/**
+ * Implements a table model with read/unread state
+ */
 class UnReadMyTableModel extends MyTableModel {
     public Font readFont = null;
     public Font unreadFont = null;    
@@ -63,7 +65,7 @@ class UnReadMyTableModel extends MyTableModel {
     
     @Override
     public void setData(String[][] arg0) {
-        Map<Object,Boolean> oldRead = getReadMap();
+        Map<Object,JobState> oldRead = getReadMap();
         super.setData(arg0);
         
         ArrayList<RecvYajJob> newUnread = new ArrayList<RecvYajJob>();
@@ -71,16 +73,20 @@ class UnReadMyTableModel extends MyTableModel {
             for ( int i=0; i < jobs.length; i++ ) {
                 RecvYajJob j = (RecvYajJob)jobs[i];
                 if (j != null) {                   
-                    Boolean val;
+                    JobState val;
                     if (oldRead != null)
                         val = oldRead.get(j.getIDValue());
                     else
                         val = null;
                     
-                    if (val != null)
-                        j.setRead(val);
-                    else
+                    if (val != null) {
+                        j.setRead(val.read);
+                        if (!val.read && val.inProgress && !j.isInProgress()) {
+                            newUnread.add(j);
+                        }
+                    } else if (!j.isInProgress()) {
                         newUnread.add(j);
+                    }
                 }
             }
             if (newUnread.size() > 0)
@@ -88,15 +94,19 @@ class UnReadMyTableModel extends MyTableModel {
         }
     }
     
-    public Map<Object, Boolean> getReadMap() {
+    /**
+     * Returns a map containing the state of all jobs
+     * @return
+     */
+    public Map<Object, JobState> getReadMap() {
         if (jobs == null)
             return null;
         
-        HashMap<Object,Boolean> dataMap = new HashMap<Object,Boolean>();  
+        HashMap<Object,JobState> dataMap = new HashMap<Object,JobState>();  
         for (int i=0; i < jobs.length; i++) {
             RecvYajJob j = (RecvYajJob)jobs[i];
             if (j != null)
-                dataMap.put(j.getIDValue(), j.isRead());
+                dataMap.put(j.getIDValue(), JobState.getInstance(j.isRead(), j.isInProgress()));
         }
         return dataMap;
     }
@@ -139,29 +149,39 @@ class UnReadMyTableModel extends MyTableModel {
         storeTo.persistReadState(readFaxes);
     }
     
-    /*public String getStateString() {
-        StringBuilder res = new StringBuilder();
-        
-        shrinkReadState();
-        for ( String key : readMap.keySet() ) {
-            if (readMap.get(key).booleanValue() != defaultState)
-                res.append(key).append('|');
-        }
-        return res.toString();
-    }
-    
-    public void setStateString(String str) {
-        readMap.clear();
-        if (str.length() == 0)
-            return;
-        
-        String[] selKeys = str.split("\\|");
-        for (int i=0; i < selKeys.length; i++)
-            readMap.put(selKeys[i], !defaultState);
-    }*/
-    
     public UnReadMyTableModel() {
         super();
+    }
+    
+    public static class JobState {
+        public final boolean read;
+        public final boolean inProgress;
+        
+        public JobState(boolean read, boolean inProgress) {
+            this.read = read;
+            this.inProgress = inProgress;
+        }
+        
+        public static final JobState READ_INPROGRESS = new JobState(true, true);
+        public static final JobState UNREAD_INPROGRESS = new JobState(false, true);
+        public static final JobState READ_NOTINPROGRESS = new JobState(true, false);
+        public static final JobState UNREAD_NOTINPROGRESS = new JobState(false, false);
+        
+        public static JobState getInstance(boolean read, boolean inProgress) {
+            if (read) {
+                if (inProgress) {
+                    return READ_INPROGRESS;
+                } else {
+                    return READ_NOTINPROGRESS;
+                }
+            } else {
+                if (inProgress) {
+                    return UNREAD_INPROGRESS;
+                } else {
+                    return UNREAD_NOTINPROGRESS;
+                }
+            }
+        }
     }
 }
 

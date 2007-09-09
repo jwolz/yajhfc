@@ -17,13 +17,13 @@ package yajhfc.filters;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-import java.util.Vector;
-
 import yajhfc.FmtItem;
+import yajhfc.FmtItemList;
 import yajhfc.YajJob;
 import yajhfc.YajJobFilter;
 
 
+@SuppressWarnings("unchecked")
 public class ComparableFilter implements YajJobFilter {
 
     protected Comparable compareValue;
@@ -61,8 +61,8 @@ public class ComparableFilter implements YajJobFilter {
         }
     }
 
-    public void initFilter(Vector<FmtItem> columns) {
-        colIdx = columns.indexOf(column);
+    public void initFilter(FmtItemList columns) {
+        colIdx = columns.getCompleteView().indexOf(column);
     }
 
     public FmtItem getColumn() {
@@ -77,7 +77,7 @@ public class ComparableFilter implements YajJobFilter {
         return operator;
     }
     
-    public boolean validate(Vector<FmtItem> columns) {
-        return columns.contains(column);
+    public boolean validate(FmtItemList columns) {
+        return columns.getCompleteView().contains(column);
     }
 }
