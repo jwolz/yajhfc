@@ -21,7 +21,6 @@ package yajhfc;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.Arrays;
-import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -40,7 +39,7 @@ public class MyTableModel extends AbstractTableModel {
      */
     protected YajJob[] visibleJobs;
     
-    public Vector<FmtItem> columns;
+    public FmtItemList columns;
     
     private static final Color defErrorColor = new Color(255, 230, 230);
     

@@ -1,9 +1,6 @@
-package yajhfc;
-
-
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005 Jonas Wolz
+ * Copyright (C) 2005-2007 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,27 +16,37 @@ package yajhfc;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+package yajhfc;
 
-public interface YajJobFilter {
-    /**
-     * Should return true if job is to be shown (i.e. not filtered), false otherwise. 
-     * @param job
-     * @return
+import javax.swing.Icon;
+
+/**
+ * A fax string property with an attached icon.
+ * @author jonas
+ *
+ */
+public class FaxStringAndIconProperty extends FaxStringProperty implements
+        IconMap {
+
+    protected Icon displayIcon;
+
+    public FaxStringAndIconProperty(String desc, String type, Icon displayIcon) {
+        super(desc, type);
+        this.displayIcon = displayIcon;
+    }
+
+    /* (non-Javadoc)
+     * @see yajhfc.IconMap#getDisplayIcon()
      */
-    public boolean jobIsVisible(YajJob job);
-    
-    /**
-     * Initialize filter. It is guaranteed that the columns or filter properties
-     * are not changed during the subsequent jobIsVisible() calls.
-     * @param columns
+    public Icon getDisplayIcon() {
+        return displayIcon;
+    }
+
+    /* (non-Javadoc)
+     * @see yajhfc.IconMap#getText()
      */
-    public void initFilter(FmtItemList columns);
-    
-    /**
-     * Validates this filter against the new set of columns.
-     * Returns true if this filter still applies to them, false if it should be removed.
-     * @param columns
-     * @return
-     */
-    public boolean validate(FmtItemList columns);
+    public String getText() {
+        return desc;
+    }
+
 }

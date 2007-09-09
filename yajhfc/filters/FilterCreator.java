@@ -19,9 +19,10 @@ package yajhfc.filters;
  */
 import java.text.ParseException;
 import java.util.Date;
-import java.util.Vector;
 
 import yajhfc.FmtItem;
+import yajhfc.FmtItemList;
+import yajhfc.IconMap;
 import yajhfc.YajJobFilter;
 import yajhfc.utils;
 
@@ -35,7 +36,7 @@ public class FilterCreator {
     public static Object[] getOperators(Class<?> cl) {
         if (cl == Integer.class || cl == Float.class || cl == Date.class || cl == Double.class) {
             return ComparableFilterOperator.values();
-        } else if (cl == String.class) {
+        } else if (cl == String.class || cl == IconMap.class) {
             return StringFilterOperator.values();
         } else if (cl == Boolean.class) {
             return booleanOperators;
@@ -56,7 +57,7 @@ public class FilterCreator {
             return new ComparableFilter(column, (ComparableFilterOperator)selectedOperator, Double.valueOf(input));
         } else if (column.dataClass == Date.class) {
             return new ComparableFilter(column, (ComparableFilterOperator)selectedOperator, column.dateFormat.fmtOut.parse(input));
-        } else if (column.dataClass == String.class) {
+        } else if (column.dataClass == String.class || column.dataClass == IconMap.class) {
             return new StringFilter(column, (StringFilterOperator)selectedOperator, input);
         } else if (column.dataClass == Boolean.class) {
             return new ComparableFilter(column, ComparableFilterOperator.EQUAL, selectedOperator == booleanOperators[0]);
@@ -150,7 +151,8 @@ public class FilterCreator {
         return res.toString();
     }
     
-    public static YajJobFilter stringToFilter(String spec, Vector<FmtItem> columns) {
+    @SuppressWarnings("unchecked")
+    public static YajJobFilter stringToFilter(String spec, FmtItemList columns) {
         String [] flt1 = utils.fastSplit(spec, '!'); //spec.split("!");
         
         AndFilter af;
@@ -171,7 +173,7 @@ public class FilterCreator {
             }
             
             FmtItem col = null;
-            for (FmtItem fi: columns) {
+            for (FmtItem fi: columns.getCompleteView()) {
                 if (fi.fmt.equals(flt2[1])) {
                     col = fi;
                     break;

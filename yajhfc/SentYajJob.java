@@ -31,17 +31,36 @@ import java.util.Vector;
 import yajhfc.FormattedFile.FileFormat;
 
 public class SentYajJob extends YajJob {
-    //private Job curJob = null;
-    private boolean haveError;
+    protected int errorCol;
+    protected int jobIDCol;
     
     @Override
     public boolean isError() {
         // Also update mainwin.MenuViewListener if this is changed!
-        return haveError; 
+        if (errorCol >= 0) {
+            String status = getStringData(errorCol);
+            return (status != null) && (status.equals("F") || status.equals("?"));
+        } else {
+            return false;
+        }
+        
+//        int idx = columns.getCompleteView().indexOf(utils.jobfmt_Jobstate);
+//        if (idx >= 0) {
+//            String status = getStringData(idx);
+//            haveError = (status != null) && (status.equals("F") || status.equals("?"));
+//        } else {
+//            idx = columns.getCompleteView().indexOf(utils.jobfmt_Status);
+//            if (idx >= 0) {
+//                String errorDesc = getStringData(idx);
+//                haveError = (errorDesc != null) && (errorDesc.length() > 0);
+//            } else {
+//                haveError = false; // Actually undetermined, but we are optimistic ;-)
+//            }
+//        }
     }
     
     public Job getJob(HylaFAXClient hyfc) throws ServerResponseException, IOException {
-        return hyfc.getJob((Integer)getData(columns.indexOf(utils.jobfmt_JobID)));
+        return hyfc.getJob((Integer)getData(jobIDCol));
     }
     
     @Override
@@ -153,25 +172,18 @@ public class SentYajJob extends YajJob {
     
     @Override
     public Object getIDValue() {
-        return getData(columns.indexOf(utils.jobfmt_JobID));
+        return getData(jobIDCol);
     }
 
-    public SentYajJob(Vector<FmtItem> cols, String[] stringData) {
-        super(cols, stringData);
+    @Override
+    public void setColumns(FmtItemList columns) {
+        jobIDCol = columns.getCompleteView().indexOf(utils.jobfmt_JobID);
+        errorCol = columns.getCompleteView().indexOf(utils.jobfmt_Jobstate);
         
-        // Also update mainwin.MenuViewListener if this is changed!
-        int idx = columns.indexOf(utils.jobfmt_Jobstate);
-        if (idx >= 0) {
-            String status = getStringData(idx);
-            haveError = (status != null) && (status.equals("F") || status.equals("?"));
-        } else {
-            idx = columns.indexOf(utils.jobfmt_Status);
-            if (idx >= 0) {
-                String errorDesc = getStringData(idx);
-                haveError = (errorDesc != null) && (errorDesc.length() > 0);
-            } else {
-                haveError = false; // Actually undetermined, but we are optimistic ;-)
-            }
-        }
+        super.setColumns(columns);
+    }
+    
+    public SentYajJob(FmtItemList cols, String[] stringData) {
+        super(cols, stringData);
     }
 }

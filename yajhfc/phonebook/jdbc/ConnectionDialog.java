@@ -75,7 +75,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
     private JButton buttonOK, buttonCancel, buttonTest;
     private ClipboardPopup clpPop;
     
-    private final double border = 10;
+    private final static double border = 10;
     
     public boolean clickedOK;
     

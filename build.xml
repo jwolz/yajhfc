@@ -116,7 +116,7 @@
 			<fileset dir="${src}" includes="yajhfc/i18n/*.class"/>
 			<fileset dir="${jar-extra}" includes="info/**/*.class,toolbarButtonGraphics/**/*.gif"/>
 			<fileset dir="${gnu.hylafax.classFileLocation}" includes="**/*.class"/>
-			<fileset dir="${src}" includes="COPYING,README*.txt,yajhfc/*.png,doc/*.html,doc/*.css,yajhfc/faxcover/*.ps"/>
+			<fileset dir="${src}" includes="COPYING,README*.txt,yajhfc/*.png,yajhfc/images/*,doc/*.html,doc/*.css,yajhfc/faxcover/*.ps"/>
 		</jar>
 	</target>
 

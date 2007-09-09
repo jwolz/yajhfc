@@ -86,6 +86,7 @@ import yajhfc.filters.StringFilterOperator;
 import yajhfc.phonebook.PhoneBookWin;
 
 
+
 @SuppressWarnings("serial")
 public final class mainwin extends JFrame {
     
@@ -1211,7 +1212,7 @@ public final class mainwin extends JFrame {
             hyfc.tzone(myopts.tzone.type);
             
             reloadTableColumnSettings();
-            hyfc.rcvfmt(utils.VectorToString(myopts.recvfmt, "|"));
+            hyfc.rcvfmt(myopts.recvfmt.getFormatString());
             
             menuView.setEnabled(true);
             // Re-check menu View state:
@@ -1224,7 +1225,7 @@ public final class mainwin extends JFrame {
             
             tablePanel.showIndeterminateProgress(_("Fetching fax list..."));
             
-            tableRefresher = new TableRefresher(utils.VectorToString(myopts.sentfmt, "|"), utils.VectorToString(myopts.sendingfmt, "|"));
+            tableRefresher = new TableRefresher(myopts.sentfmt.getFormatString(), myopts.sendingfmt.getFormatString());
             
             //// Read the read/unread status *after* the table contents has been set 
             //tableRefresher.run();
@@ -1299,9 +1300,9 @@ public final class mainwin extends JFrame {
     private JTabbedPane getTabMain() {
         if (tabMain == null) {
             tabMain = new JTabbedPane();
-            tabMain.addTab(_("Received"), null, getScrollRecv(), _("Received faxes"));
-            tabMain.addTab(_("Sent"), null, getScrollSent(), _("Sent faxes"));
-            tabMain.addTab(_("Transmitting"), null, getScrollSending(), _("Faxes in the output queue"));
+            tabMain.addTab(_("Received"), utils.loadCustomIcon("received.gif"), getScrollRecv(), _("Received faxes"));
+            tabMain.addTab(_("Sent"), utils.loadCustomIcon("sent.gif"), getScrollSent(), _("Sent faxes"));
+            tabMain.addTab(_("Transmitting"), utils.loadCustomIcon("sending.gif"), getScrollSending(), _("Faxes in the output queue"));
             
             tabMain.addChangeListener(actChecker);
         }
@@ -1322,13 +1323,7 @@ public final class mainwin extends JFrame {
     private TooltipJTable getTableRecv() {
         if (tableRecv == null) {
             tableRecv = new TooltipJTable(getRecvTableModel());
-            tableRecv.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-            //TableRecv.setModel(getRecvTableModel());
-            tableRecv.setShowGrid(true);
-            tableRecv.addMouseListener(getTblMouseListener());
-            tableRecv.addKeyListener(getTblKeyListener());
-            tableRecv.getSelectionModel().addListSelectionListener(actChecker);
-            tableRecv.setDefaultRenderer(Date.class, getHylaDateRenderer());
+            doCommonTableSetup(tableRecv);
             
             recvTableModel.unreadFont = tableRecv.getFont().deriveFont(Font.BOLD);
         }
@@ -1423,13 +1418,7 @@ public final class mainwin extends JFrame {
     private TooltipJTable getTableSent() {
         if (tableSent == null) {
             tableSent = new TooltipJTable(getSentTableModel());
-            tableSent.setShowGrid(true);
-            //TableSent.setModel(getSentTableModel());
-            tableSent.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-            tableSent.getSelectionModel().addListSelectionListener(actChecker);
-            tableSent.addMouseListener(getTblMouseListener());
-            tableSent.addKeyListener(getTblKeyListener());
-            tableSent.setDefaultRenderer(Date.class, getHylaDateRenderer());
+            doCommonTableSetup(tableSent);
         }
         return tableSent;
     }
@@ -1455,17 +1444,21 @@ public final class mainwin extends JFrame {
     private TooltipJTable getTableSending() {
         if (tableSending == null) {
             tableSending = new TooltipJTable(getSendingTableModel());
-            tableSending.setShowGrid(true);
-            //TableSending.setModel(getSendingTableModel());
-            tableSending.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-            tableSending.getSelectionModel().addListSelectionListener(actChecker);
-            tableSending.addMouseListener(getTblMouseListener());
-            tableSending.addKeyListener(getTblKeyListener());
-            tableSending.setDefaultRenderer(Date.class, getHylaDateRenderer());
+            doCommonTableSetup(tableSending);
         }
         return tableSending;
     }
 
+    private void doCommonTableSetup(TooltipJTable table) {
+        table.setShowGrid(true);
+        table.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        table.getSelectionModel().addListSelectionListener(actChecker);
+        table.addMouseListener(getTblMouseListener());
+        table.addKeyListener(getTblKeyListener());
+        table.setDefaultRenderer(Date.class, getHylaDateRenderer());
+        table.setDefaultRenderer(IconMap.class, new IconMap.TableCellRenderer());
+    }
+    
     private MyTableModel getSendingTableModel() {
         if (sendingTableModel == null) {
             sendingTableModel = new MyTableModel() {
@@ -1585,9 +1578,9 @@ public final class mainwin extends JFrame {
         
         private boolean ownFilterOK(MyTableModel model) {
             if (model == recvTableModel) { 
-                return myopts.recvfmt.contains(utils.recvfmt_Owner);
+                return model.columns.getCompleteView().contains(utils.recvfmt_Owner);
             } else if (model == sentTableModel || model == sendingTableModel) { 
-                return model.columns.contains(utils.jobfmt_Owner);
+                return model.columns.getCompleteView().contains(utils.jobfmt_Owner);
             } else
                 return false;
         }
@@ -1725,14 +1718,16 @@ public final class mainwin extends JFrame {
         public synchronized void run() {
             if (cancelled)
                 return;
+            String newText;
             try {
-                String newText = utils.VectorToString(hyfc.getList("status"), "\n");
-                if (!newText.equals(text)) {
-                    text = newText;
-                    SwingUtilities.invokeLater(statRunner);
-                }
+                newText = utils.listToString(hyfc.getList("status"), "\n");
             } catch (Exception e) {
-                System.err.println("Error refreshing the status: " + e.getMessage());
+                newText = "Error refreshing the status: " + e.toString();
+                System.err.println(newText);
+            }
+            if (!newText.equals(text)) {
+                text = newText;
+                SwingUtilities.invokeLater(statRunner);
             }
         }
         

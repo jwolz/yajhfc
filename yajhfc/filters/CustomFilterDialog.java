@@ -30,7 +30,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.text.MessageFormat;
 import java.text.ParseException;
-import java.util.Vector;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -49,7 +48,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
-import yajhfc.FmtItem;
+import yajhfc.FmtItemList;
 import yajhfc.YajJobFilter;
 import yajhfc.utils;
 
@@ -62,11 +61,11 @@ public class CustomFilterDialog extends JDialog
     private JScrollPane scrollConditions;
     private JPanel panelConditions, panelCondButtons;
     
-    private Vector<FmtItem> columns;
+    private FmtItemList columns;
     
     public YajJobFilter returnValue = null;
     
-    private void initialize(String tableName, Vector<FmtItem> columns, YajJobFilter init) {
+    private void initialize(String tableName, FmtItemList columns, YajJobFilter init) {
         final int border = 12;
         double[][] dLay = {
                 { border, TableLayout.FILL, border, TableLayout.PREFERRED, border},
@@ -235,12 +234,12 @@ public class CustomFilterDialog extends JDialog
         }
     }
     
-    public CustomFilterDialog(Frame owner, String tableName, Vector<FmtItem> columns, YajJobFilter init) throws HeadlessException {
+    public CustomFilterDialog(Frame owner, String tableName, FmtItemList columns, YajJobFilter init) throws HeadlessException {
         super(owner, true);
         initialize(tableName, columns, init);
     }
 
-    public CustomFilterDialog(Dialog owner, String tableName, Vector<FmtItem> columns, YajJobFilter init) throws HeadlessException {
+    public CustomFilterDialog(Dialog owner, String tableName, FmtItemList columns, YajJobFilter init) throws HeadlessException {
         super(owner,  true);
         initialize(tableName, columns, init);
     }

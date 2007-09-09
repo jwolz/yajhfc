@@ -34,7 +34,7 @@ import java.io.PrintStream;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -47,7 +47,7 @@ public final class utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2007 by Jonas Wolz";
-    public static final String AppVersion = "0.3.4a";
+    public static final String AppVersion = "0.3.5pre";
     public static final String AuthorEMail = "Jonas Wolz &lt;jwolz@freenet.de&gt;";
     public static final String HomepageURL = "http://www.yajhfc.de.vu/"; 
     
@@ -66,7 +66,7 @@ public final class utils {
         new FmtItem("o", _("Owner"),  _("Job owner"));
     
     public static final FmtItem jobfmt_Jobstate =
-        new FmtItem("a", _("Job state"), _("Job state (one-character symbol)"));
+        new FmtItem("a", _("Job state"), _("Job state (one-character symbol)"), IconMap.class);
     
     public static final FmtItem jobfmt_Status =
         new FmtItem("s", _("Status"), _("Job status information from last failure"));
@@ -112,7 +112,7 @@ public final class utils {
             new FmtItem("k", _("Job kill time")), 
             new FmtItem("l", _("Page length"), _("Page length in mm"), Integer.class), 
             new FmtItem("m", _("Modem"), _("Assigned modem")), 
-            new FmtItem("n", _("Notification"), _("E-mail notification handling (one-character symbol)")), 
+            new FmtItem("n", _("Notification"), _("E-mail notification handling (one-character symbol)"), IconMap.class), 
             jobfmt_Owner, 
             new FmtItem("p", _("# pages"), _("# pages transmitted"), Integer.class), 
             new FmtItem("q", _("Retry time"), _("Job retry time (MM::SS)")/*, new HylaDateField("mm:ss", _("mm:ss"))*/), 
@@ -136,6 +136,9 @@ public final class utils {
     public static final FmtItem recvfmt_ErrorDesc 
         = new FmtItem("e", _("Error description"), _("Error description if an error occurred during receive"));
     
+    public static final FmtItem recvfmt_InProgress 
+        = new FmtItem("z", _("In progress"), _("A ``*'' if receive is going on; otherwise `` '' (space)"), Boolean.class);
+    
     public static final FmtItem[] recvfmts = {
             new FmtItem("Y", _("Time/Date"),  _("Extended representation of the time when the receive happened"), new HylaDateField("yyyy:MM:dd HH:mm:ss", _("dd/MM/yyyy HH:mm:ss"))), 
             new FmtItem("a", _("SubAddress"), _("SubAddress received from sender (if any)")), 
@@ -157,7 +160,7 @@ public final class utils {
             new FmtItem("s", _("Sender"), _("Sender identity (TSI)")), 
             new FmtItem("t", _("Date"), _("Compact representation of the time when the receive happened"), new HylaDateField("ddMMMyy", _("dd/MM/yyyy"))), 
             new FmtItem("w", _("Page width"), _("Page width in mm"), Integer.class), 
-            new FmtItem("z", _("In progress"), _("A ``*'' if receive is going on; otherwise `` '' (space)"), Boolean.class)
+            recvfmt_InProgress
     };
     
     public static final PaperSize[] papersizes = {
@@ -172,11 +175,11 @@ public final class utils {
             new FaxIntProperty(_("Low (98 lpi)"), Job.RESOLUTION_LOW)      
     };
     
-    public static final FaxStringProperty[] notifications = {
-            new FaxStringProperty(_("Never"), Job.NOTIFY_NONE),
-            new FaxStringProperty(_("Delivered"), Job.NOTIFY_DONE),
-            new FaxStringProperty(_("Requeued"), Job.NOTIFY_REQUEUE),
-            new FaxStringProperty(_("Delivered or requeued"), Job.NOTIFY_ALL)
+    public static final FaxStringAndIconProperty[] notifications = {
+            new FaxStringAndIconProperty(_("Never"), Job.NOTIFY_NONE, utils.loadCustomIcon("notify_NONE.png")),
+            new FaxStringAndIconProperty(_("Delivered"), Job.NOTIFY_DONE, utils.loadCustomIcon("notify_DONE.png")),
+            new FaxStringAndIconProperty(_("Requeued"), Job.NOTIFY_REQUEUE, utils.loadCustomIcon("notify_REQUEUE.png")),
+            new FaxStringAndIconProperty(_("Delivered or requeued"), Job.NOTIFY_ALL, utils.loadCustomIcon("notify_ALL.png"))
     };
     
     public static final FaxStringProperty[] timezones = {
@@ -186,17 +189,19 @@ public final class utils {
     
 
     public static final FmtItem[] requiredSendingFmts = {
-        jobfmt_JobID
+        jobfmt_JobID,
+        jobfmt_Owner,
+        jobfmt_Jobstate
     };
 
 
-    public static final FmtItem[] requiredSentFmts = { 
-        jobfmt_JobID
-    };
-
+    public static final FmtItem[] requiredSentFmts = requiredSendingFmts;
 
     public static final FmtItem[] requiredRecvFmts = {
-        recvfmt_FileName  
+        recvfmt_FileName,
+        recvfmt_Owner,
+        recvfmt_InProgress,
+        recvfmt_ErrorDesc
     };
     
     // Basic actions when a new fax is detected.
@@ -227,11 +232,13 @@ public final class utils {
         new YajLanguage(new Locale("es"))
     };
     
-    public static String VectorToString(Vector<?> v, String delim) {
+    public static String listToString(List<?> l, String delim) {
         StringBuilder s = new StringBuilder();
-        Enumeration<?> e = v.elements();
-        while (e.hasMoreElements()) {
-            s.append(e.nextElement()).append(delim);
+        if (l.size() == 0) {
+            return "";
+        }
+        for (Object o : l) {
+            s.append(o).append(delim);
         }
         s.delete(s.length() - delim.length(), s.length());
         return s.toString();
@@ -327,11 +334,20 @@ public final class utils {
     }
 
     public static ImageIcon loadIcon(String name) {
-        URL imgURL = utils.class.getResource("/toolbarButtonGraphics/" + name + "16.gif");
-        if (imgURL != null)
+       return loadGeneralIcon("/toolbarButtonGraphics/" + name + "16.gif");
+    }
+    
+    public static ImageIcon loadCustomIcon(String name) {
+        return loadGeneralIcon("/yajhfc/images/" + name);
+     }
+    
+    public static ImageIcon loadGeneralIcon(String name) {
+        URL imgURL = utils.class.getResource(name);
+        if (imgURL != null) {
             return new ImageIcon(imgURL);
-        else
+        } else {
             return null;
+        }
     }
     
     public static String getConfigDir() {

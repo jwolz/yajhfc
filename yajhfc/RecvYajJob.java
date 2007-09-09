@@ -24,20 +24,24 @@ import gnu.inet.ftp.ServerResponseException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Vector;
 
 import yajhfc.FormattedFile.FileFormat;
 
 public class RecvYajJob extends YajJob {
     protected int fileNameCol;
+    protected int errorCol;
+    protected int progressCol;
     protected boolean read = false;
-    
-    private boolean haveError;
     
     @Override
     public boolean isError() {
         // Also update mainwin.MenuViewListener if this is changed!
-        return haveError; 
+        if (errorCol >= 0) {
+            String errorDesc = getStringData(errorCol);
+            return (errorDesc != null) && (errorDesc.length() > 0);
+        } else {
+            return false; // Actually undetermined, but we are optimistic ;-)
+        }
     }
     
     public boolean isRead() {
@@ -48,10 +52,16 @@ public class RecvYajJob extends YajJob {
         this.read = read;
     }
     
+    public boolean isInProgress() {
+        return (Boolean)getData(progressCol);
+    }
+    
     @Override
-    public void setColumns(Vector<FmtItem> columns) {
+    public void setColumns(FmtItemList columns) {
         super.setColumns(columns);
-        fileNameCol = columns.indexOf(utils.recvfmt_FileName);
+        fileNameCol = columns.getCompleteView().indexOf(utils.recvfmt_FileName);
+        errorCol = columns.getCompleteView().indexOf(utils.recvfmt_ErrorDesc);
+        progressCol = columns.getCompleteView().indexOf(utils.recvfmt_InProgress);
     }
     
     public String getServerTIF() {
@@ -75,16 +85,7 @@ public class RecvYajJob extends YajJob {
         return stringData[fileNameCol];
     }
     
-    public RecvYajJob(Vector<FmtItem> cols, String[] stringData) {
+    public RecvYajJob(FmtItemList cols, String[] stringData) {
         super(cols, stringData);
-        
-        // Also update mainwin.MenuViewListener if this is changed!
-        int idx = columns.indexOf(utils.recvfmt_ErrorDesc);
-        if (idx >= 0) {
-            String errorDesc = getStringData(idx);
-            haveError = (errorDesc != null) && (errorDesc.length() > 0);
-        } else {
-            haveError = false; // Actually undetermined, but we are optimistic ;-)
-        }
     }
 }

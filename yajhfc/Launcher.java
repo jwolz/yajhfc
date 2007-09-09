@@ -542,7 +542,7 @@ public final class Launcher {
                                 ArrayList<String> fileNames = new ArrayList<String>();
                                 String line = bufR.readLine();
 
-                                while (!line.equals(multiFileEOF)) {
+                                while (line != null && !line.equals(multiFileEOF)) {
                                     if (utils.debugMode) {
                                         utils.debugOut.println(line);
                                     }
@@ -568,7 +568,7 @@ public final class Launcher {
                             BufferedReader bufR = new BufferedReader(new InputStreamReader(strIn));
                             String line = bufR.readLine();
 
-                            while (!line.equals(multiFileEOF)) {
+                            while (line != null && !line.equals(multiFileEOF)) {
                                 if (utils.debugMode) {
                                     utils.debugOut.println(line);
                                 }
