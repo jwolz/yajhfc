@@ -63,10 +63,10 @@ CHANGES
 -------
 
 0.3.5:
-- Some UI polish (progress bar for the fax list and more icons)
+- Some UI improvements/"polishing" (e.g. progress bar for the fax list and more icons)
 - Removed some restrictions on visible columns 
-  (e.g.: job ID does no longer have to be visible)
-- New fax actions now are done *after* the faxes are no longer "in progress"
+  (e.g.: the job ID does no longer have to be visible)
+- New fax actions now are executed only *after* the faxes are no longer "in progress"
 
 0.3.4a:
 - Bug fix release: 

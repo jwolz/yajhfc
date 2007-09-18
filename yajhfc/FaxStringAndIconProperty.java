@@ -49,4 +49,7 @@ public class FaxStringAndIconProperty extends FaxStringProperty implements
         return desc;
     }
 
+    public String getDescription() {
+        return null;
+    }
 }

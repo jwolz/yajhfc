@@ -75,21 +75,6 @@ So, please start YajHFC using the following commands (replace \texttt{/path/to/d
 \item [Windows:] \verb#java -classpath c:\path\to\dbdriver.jar;c:\path\to\yajhfc.jar yajhfc.Launcher#
 \end{description}
 
-
-\subsection{Why is the \texttt{View->Only own faxes} menu item grayed out?}
-
-Currently YajHFC can only filter on visible columns. So you have to add the 
-``Owner'' column to the table you want to filter by owner.
-
-\subsection{Why is the \texttt{View->Mark failed jobs} menu item grayed out?}
-
-For the same reason as in the previous paragraph: Currently YajHFC can only work with visible columns.
-To detect failed fax jobs it is necessary that the following columns are visible:
-\begin{description}
-\item[Received faxes:] \texttt{Error description}
-\item[Sent/Transmitting faxes:] \texttt{Job state} \emph{or} \texttt{Status}
-\end{description}
-
 \subsection{What can I enter as a value for the \texttt{matches} Operator in the custom filter dialog?}
 
 Regular Expressions. A short reference about the accepted syntax can be found at:

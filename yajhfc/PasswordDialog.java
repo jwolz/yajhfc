@@ -22,9 +22,11 @@ import java.awt.BorderLayout;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -36,6 +38,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 
 public class PasswordDialog extends JDialog {
 
@@ -129,5 +132,70 @@ public class PasswordDialog extends JDialog {
         PasswordDialog pdlg = new PasswordDialog(owner, title, prompt);
         pdlg.setVisible(true);
         return pdlg.returnValue;
+    }
+    
+    public static String showPasswordDialogThreaded(Frame owner, String title, String prompt) {
+        DisplayRunnable runner = new DisplayRunnable(owner, title, prompt);
+        try {
+            SwingUtilities.invokeAndWait(runner);
+            return runner.result;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String showPasswordDialogThreaded(Dialog owner, String title, String prompt) {
+        DisplayRunnable runner = new DisplayRunnable(owner, title, prompt);
+        try {
+            SwingUtilities.invokeAndWait(runner);
+            return runner.result;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    /**
+     * Implements an Runnable that may be used in conjunction with the SwingUtilities.invoke*()
+     * to display an password dialog from another thread 
+     * @author jonas
+     *
+     */
+    public static class DisplayRunnable implements Runnable {
+        protected Window owner;
+        protected String title;
+        protected String prompt;
+        
+        public String result;
+        
+        public void run() {
+            result = null;
+            if (owner instanceof Dialog) {
+                result = showPasswordDialog((Dialog)owner, title, prompt);
+            } else if (owner instanceof Frame) {
+                result = showPasswordDialog((Frame)owner, title, prompt);
+            }
+        }
+
+        public DisplayRunnable(Dialog owner, String title, String prompt) {
+            super();
+            this.owner = owner;
+            this.title = title;
+            this.prompt = prompt;
+        }
+        
+        public DisplayRunnable(Frame owner, String title, String prompt) {
+            super();
+            this.owner = owner;
+            this.title = title;
+            this.prompt = prompt;
+        }
     }
 }

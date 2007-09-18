@@ -82,19 +82,6 @@ Por tanto inicia YajHFC utilizando el siguiente comando (reemplaza \texttt{/ruta
 \item [Windows:] \verb#java -classpath c:\ruta\a\controladorbdd.jar;c:\ruta\a\yajhfc.jar yajhfc.Launcher#
 \end{description}
 
-\subsection{¿Por qué no se puede seleccionar (gris claro) la opción de \texttt{Ver->Sólo faxes propios}?}
-
-Actualmente YajHFC sólo puede filtrar las columnas visibles. Por lo que tienes que añadir la columna de "Propietario" a la tabla en la que quieres filtrar por propietario.
-
-\subsection{¿Por qué no se puede seleccionar (gris claro) la opción de \texttt{Ver->Mostrar trabajos con errores}?}
-
-Por la misma razón que el apartado anterior: actualmente, YajHFC sólo puede trabajar con las columnas que están visibles.
-Para mostrar los trabajos de fax erróneos es necesario que las siguientes columnas sean visibles:
-\begin{description}
-\item[Pestaña Recibidos:] \texttt{Descripción del error}
-\item[Pestaña Enviados / Transmisión:] \texttt{Estado del trabajo} \emph{or} \texttt{Estado}
-\end{description}
-
 \subsection{¿Qué puedo poner como valor \texttt{igual a} en el cuadro de diálogo de filtrado personalizado? }
 
 Expresiones regulares. Puedes encontrar una breve referencia sobre la sintaxis permitida en

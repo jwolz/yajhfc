@@ -31,6 +31,7 @@ import javax.swing.Icon;
 public class DefaultIconMap implements IconMap {
     protected String text;
     protected Icon displayIcon;
+    protected String description;
     
     public String getText() {
         return text;
@@ -39,15 +40,20 @@ public class DefaultIconMap implements IconMap {
         return displayIcon;
     }
     
+    public String getDescription() {
+        return description;
+    }
+    
     @Override
     public String toString() {
         return text;
     }
     
-    public DefaultIconMap(String text, Icon displayIcon) {
+    public DefaultIconMap(String text, Icon displayIcon, String description) {
         super();
         this.text = text;
         this.displayIcon = displayIcon;
+        this.description = description;
     }
     
     /**
@@ -64,14 +70,21 @@ public class DefaultIconMap implements IconMap {
         
         if (fmtItem.fmt.equals("a")) { // Mapping for job state
             String filename;
-            if (textData.equals("?")) {
+            char state;
+            if (textData.length() == 0) {
+                state = '?';
+            } else {
+                state = textData.charAt(0);
+            }
+            if (state == '?') {
                 filename = "jobstate_questionmark.gif";
             } else {
-                filename = "jobstate_" + textData + ".gif";
+                filename = "jobstate_" + state + ".gif";
             }
-            res = new DefaultIconMap(textData, utils.loadCustomIcon(filename));
+            res = new DefaultIconMap(textData, utils.loadCustomIcon(filename), SentYajJob.getDescriptionForJobState(state));
         } else if (fmtItem.fmt.equals("n")) { // Mapping for notification state
-            Icon icon;
+            IconMap original;
+            
             char c;
             if (textData.length() == 0) {
                 c = ' ';
@@ -80,23 +93,27 @@ public class DefaultIconMap implements IconMap {
             }
             switch (c) {
             case ' ':
-                icon = utils.notifications[0].getDisplayIcon(); // never
+                original = utils.notifications[0]; // never
                 break;
             case 'D':
-                icon = utils.notifications[1].getDisplayIcon(); // done
+                original = utils.notifications[1]; // done
                 break;
             case 'Q':
-                icon = utils.notifications[2].getDisplayIcon(); // requeue
+                original = utils.notifications[2]; // requeue
                 break;
             case 'A':
-                icon = utils.notifications[3].getDisplayIcon(); // all
+                original = utils.notifications[3]; // all
                 break;
             default:
-                icon = null;
+                original = null;
             }
-            res = new DefaultIconMap(textData, icon);
+            if (original == null) {
+                res = new DefaultIconMap(textData, null, null);
+            } else {
+                res = new DefaultIconMap(textData, original.getDisplayIcon(), original.getText());   
+            }
         } else {
-            res = new DefaultIconMap(textData, null);
+            res = new DefaultIconMap(textData, null, null);
         }
         instanceCache.put(cacheKey, res);
         return res;

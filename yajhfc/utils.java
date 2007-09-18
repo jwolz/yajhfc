@@ -38,7 +38,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
-import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
@@ -47,7 +46,7 @@ public final class utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2007 by Jonas Wolz";
-    public static final String AppVersion = "0.3.5pre";
+    public static final String AppVersion = "0.3.5";
     public static final String AuthorEMail = "Jonas Wolz &lt;jwolz@freenet.de&gt;";
     public static final String HomepageURL = "http://www.yajhfc.de.vu/"; 
     
@@ -327,11 +326,11 @@ public final class utils {
         return result;
     }
  
-    public static void addUniqueToVec(Vector<FmtItem> vec, FmtItem[] arr) {
-        for (int i = 0; i < arr.length; i++)
-            if (!vec.contains(arr[i]))
-                vec.add(arr[i]);
-    }
+//    public static void addUniqueToVec(Vector<FmtItem> vec, FmtItem[] arr) {
+//        for (int i = 0; i < arr.length; i++)
+//            if (!vec.contains(arr[i]))
+//                vec.add(arr[i]);
+//    }
 
     public static ImageIcon loadIcon(String name) {
        return loadGeneralIcon("/toolbarButtonGraphics/" + name + "16.gif");

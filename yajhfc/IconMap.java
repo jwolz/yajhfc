@@ -34,7 +34,21 @@ import javax.swing.table.DefaultTableCellRenderer;
  */
 public interface IconMap {
     
+    /**
+     * The short description text.
+     * @return
+     */
     public String getText();
+    /**
+     * A more verbose description for this item (e.g. for tool tips)
+     * May return null to signal that there is no such description. 
+     * @return
+     */
+    public String getDescription();
+    /**
+     * The icon that should be displayed.
+     * @return
+     */
     public Icon getDisplayIcon();
     
     /**
@@ -50,17 +64,21 @@ public interface IconMap {
 
             IconMap data = (IconMap)value;
             String text;
+            String tooltip;
             Icon icon;
             if (data == null) {
                 text = "";
                 icon = null;
+                tooltip = null;
             } else {
                 text = data.getText();
                 icon = data.getDisplayIcon();
+                tooltip = data.getDescription();
             }
             
             JLabel renderer = (JLabel)super.getTableCellRendererComponent(table, text, isSelected, hasFocus, row, column);
             renderer.setIcon(icon);
+            renderer.setToolTipText(tooltip);
             return renderer;
         }
     }
@@ -78,16 +96,20 @@ public interface IconMap {
             IconMap data = (IconMap)value;
             String text;
             Icon icon;
+            String tooltip;
             if (data == null) {
                 text = "";
                 icon = null;
+                tooltip = null;
             } else {
                 text = data.getText();
                 icon = data.getDisplayIcon();
+                tooltip = data.getDescription();
             }
             
             JLabel renderer = (JLabel)super.getListCellRendererComponent(list, text, index, isSelected, cellHasFocus);
             renderer.setIcon(icon);
+            renderer.setToolTipText(tooltip);
             return renderer;
         }
     }

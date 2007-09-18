@@ -38,48 +38,44 @@ Contents</A>
 <!--Table of Contents-->
 
 <UL>
-<LI><A NAME="tex2html25"
+<LI><A NAME="tex2html23"
   HREF="faq_fr.html#SECTION00020000000000000000">Installation</A>
 <UL>
-<LI><A NAME="tex2html26"
+<LI><A NAME="tex2html24"
   HREF="faq_fr.html#SECTION00021000000000000000">Ou trouver un visioneur de fax pour Windows?</A>
-<LI><A NAME="tex2html27"
+<LI><A NAME="tex2html25"
   HREF="faq_fr.html#SECTION00022000000000000000">Ou Trouver un visualiseur de fax pour Linux/*BSD/... ?</A>
-<LI><A NAME="tex2html28"
+<LI><A NAME="tex2html26"
   HREF="faq_fr.html#SECTION00023000000000000000">Que devrai je utiliser comme visualiseur sur Mac OS X?</A>
-<LI><A NAME="tex2html29"
+<LI><A NAME="tex2html27"
   HREF="faq_fr.html#SECTION00024000000000000000">Ou trouver un visualiseur PostsScript?</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html30"
+<LI><A NAME="tex2html28"
   HREF="faq_fr.html#SECTION00030000000000000000">Utilisation du programme</A>
 <UL>
-<LI><A NAME="tex2html31"
+<LI><A NAME="tex2html29"
   HREF="faq_fr.html#SECTION00031000000000000000">Comment éditer les modèles de page de garde?</A>
-<LI><A NAME="tex2html32"
+<LI><A NAME="tex2html30"
   HREF="faq_fr.html#SECTION00032000000000000000">J voudrais accéder à un annuiaire téléphonique au travers de JDBC, maist YajHFC ne trouve pas les drivers même si je spécifie un "class path" correct au chargement de la machine virtuelle java.</A>
+<LI><A NAME="tex2html31"
+  HREF="faq_fr.html#SECTION00033000000000000000">Quelles valeurs puis je entrer comme matches opérateurs dans le champ des filtres personnalisés?</A>
+<LI><A NAME="tex2html32"
+  HREF="faq_fr.html#SECTION00034000000000000000">Quels arguments de ligne de commande YajHFC accepte ?</A>
 <LI><A NAME="tex2html33"
-  HREF="faq_fr.html#SECTION00033000000000000000">Pourquoi le menu Visualiser-&gt;Seulement ses propres fax est-il grisé?</A>
+  HREF="faq_fr.html#SECTION00035000000000000000">Quand j'essaie de visualiser les fax envoyés, j'ai toujours un message d'erreur disant Format de fichier PCL non supporté, bien que tous les documents soient en PostScript/PDF.</A>
 <LI><A NAME="tex2html34"
-  HREF="faq_fr.html#SECTION00034000000000000000">Pourquoi le menu Visualiser-&gt;Marquer les travaux échoués est il grisé?</A>
+  HREF="faq_fr.html#SECTION00036000000000000000">YajHFC fonctionnant sous windows sauve quelquefois sa configuration dans C:\.yajhfc au lieu de C:\Documents and Settings\USERNAME\.yajhfc</A>
 <LI><A NAME="tex2html35"
-  HREF="faq_fr.html#SECTION00035000000000000000">Quelles valeurs puis je entrer comme matches opérateurs dans le champ des filtres personnalisés?</A>
-<LI><A NAME="tex2html36"
-  HREF="faq_fr.html#SECTION00036000000000000000">Quels arguments de ligne de commande YajHFC accepte ?</A>
-<LI><A NAME="tex2html37"
-  HREF="faq_fr.html#SECTION00037000000000000000">Quand j'essaie de visualiser les fax envoyés, j'ai toujours un message d'erreur disant Format de fichier PCL non supporté, bien que tous les documents soient en PostScript/PDF.</A>
-<LI><A NAME="tex2html38"
-  HREF="faq_fr.html#SECTION00038000000000000000">YajHFC fonctionnant sous windows sauve quelquefois sa configuration dans C:\.yajhfc au lieu de C:\Documents and Settings\USERNAME\.yajhfc</A>
-<LI><A NAME="tex2html39"
-  HREF="faq_fr.html#SECTION00039000000000000000">Que veux dire la colonne XYZ ?</A>
+  HREF="faq_fr.html#SECTION00037000000000000000">Que veux dire la colonne XYZ ?</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html40"
+<LI><A NAME="tex2html36"
   HREF="faq_fr.html#SECTION00040000000000000000">Divers</A>
 <UL>
-<LI><A NAME="tex2html41"
+<LI><A NAME="tex2html37"
   HREF="faq_fr.html#SECTION00041000000000000000">Pourquoi les mots de passe sont il stockés en clair ?</A>
-<LI><A NAME="tex2html42"
+<LI><A NAME="tex2html38"
   HREF="faq_fr.html#SECTION00042000000000000000">Pourquoi avez vous choisi ce nom stupide ?</A>
 </UL></UL>
 <!--End of Table of Contents-->
@@ -196,34 +192,6 @@ Aussi,Démarrez YajHFC en utilisant les commandes suivantes (remplacez <TT>/path
 <P>
 
 <H2><A NAME="SECTION00033000000000000000">
-Pourquoi le menu <TT>Visualiser-&gt;Seulement ses propres fax</TT> est-il grisé?</A>
-</H2>
-
-<P>
-Actuellement, YajHFC ne peut filtrer que sur les colonnes affichées. Vous devez donc ajouter
-la colonne “Propriétaire” a la table si vous voulez filter par proriétaire.
-
-<P>
-
-<H2><A NAME="SECTION00034000000000000000">
-Pourquoi le menu <TT>Visualiser-&gt;Marquer les travaux échoués</TT> est il grisé?</A>
-</H2>
-
-<P>
-Pour la même raison que dans le paragraphe précédent : Actuellement YajHFC ne peut travailler que sur les colonnes affichées.
-Pour détecter les travaux échoués il faut que les colonnes suivantes soit affichées:
-<DL>
-<DT><STRONG>Fax Reçus:</STRONG></DT>
-<DD><TT>Description de l'erreur</TT>
-</DD>
-<DT><STRONG>Fax Envoyés/Transmition:</STRONG></DT>
-<DD><TT>Statut</TT> <I>ou</I> <TT>Statut</TT>
-</DD>
-</DL>
-
-<P>
-
-<H2><A NAME="SECTION00035000000000000000">
 Quelles valeurs puis je entrer comme <TT>matches</TT> opérateurs dans le champ des filtres personnalisés?</A>
 </H2>
 
@@ -238,7 +206,7 @@ pour l'effet du "wildcard" <code>?</code> use <code>.</code>.
 
 <P>
 
-<H2><A NAME="SECTION00036000000000000000">
+<H2><A NAME="SECTION00034000000000000000">
 Quels arguments de ligne de commande YajHFC accepte ?</A>
 </H2>
 
@@ -266,7 +234,7 @@ filename     Un ou plusieurs nom de fichier à envoyer.
 
 <P>
 
-<H2><A NAME="SECTION00037000000000000000">
+<H2><A NAME="SECTION00035000000000000000">
 Quand j'essaie de visualiser les fax envoyés, j'ai toujours un message d'erreur disant
    <TT>Format de fichier PCL non supporté</TT>, bien que tous les documents soient en PostScript/PDF.</A>
 </H2>
@@ -281,7 +249,7 @@ le type de fichier PCL s'il est rapporté (Ceci fonctionne en général assez bi
 
 <P>
 
-<H2><A NAME="SECTION00038000000000000000">
+<H2><A NAME="SECTION00036000000000000000">
 YajHFC fonctionnant sous windows sauve quelquefois sa configuration dans <TT>C:\.yajhfc</TT> au lieu de <TT>C:\Documents and Settings\USERNAME\.yajhfc</TT></A>
 </H2>
 
@@ -296,7 +264,7 @@ Comme contournement, vous pouvez affecter cette variable explicitement au lancem
 
 <P>
 
-<H2><A NAME="SECTION00039000000000000000">
+<H2><A NAME="SECTION00037000000000000000">
 Que veux dire la colonne XYZ ?</A>
 </H2>
 
@@ -365,11 +333,11 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>-no_subdir -split 0 -html_version 3.2,latin1,unicode,utf8 -no_navigation faq_fr.tex</TT>
 <P>
-The translation was initiated by Jonas Wolz on 2007-07-19
+The translation was initiated by Jonas Wolz on 2007-09-14
 <BR><HR>
 <ADDRESS>
 Jonas Wolz
-2007-07-19
+2007-09-14
 </ADDRESS>
 </BODY>
 </HTML>

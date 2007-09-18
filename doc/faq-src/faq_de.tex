@@ -82,21 +82,6 @@ Starten Sie YajHFC in diesem Fall daher mit den folgenden Befehlen (\texttt{/pfa
 \item [Windows:] \verb#java -classpath c:\pfad\zum\db-treiber.jar;c:\pfad\zu\yajhfc.jar yajhfc.Launcher#
 \end{description}
 
-
-\subsection{Warum ist der Menüeintrag \texttt{Ansicht->Nur eigene Faxe} ausgegraut?}
-
-Momentan kann YajHFC nur auf sichtbaren Tabellenspalten filtern. Deshalb müssen Sie die Spalte "`Besitzer"' zu 
-einer Tabelle hinzufügen, wenn Sie dort auf den Besitzer filtern möchten.
-
-\subsection{Warum ist der Menüeintrag \texttt{Ansicht->Gescheiterte Aufträge markieren} ausgegraut?}
-
-Aus dem selben Grund wie schon im vorherigen Absatz: YajHFC kann nur mit sichtbaren Tabellenspalten arbeiten.
-Zum Erkennen gescheiterter Aufträge ist es also notwendig, dass folgende Spalten sichtbar sind:
-\begin{description}
-\item[Empfangene Faxe:] \texttt{Fehlerbeschreibung}
-\item[Gesendete/Sendende Faxe:] \texttt{Auftragsstatus} \emph{oder} \texttt{Status}
-\end{description}
-
 \subsection{Was kann beim \texttt{passt auf}-Operator im "`Benutzerdef. Filter"'-Dialog als Wert eingegeben werden?}
 
 Reguläre Ausdrücke (regular expressions). Eine Kurzreferenz (auf Englisch) über die verwandte Syntax 

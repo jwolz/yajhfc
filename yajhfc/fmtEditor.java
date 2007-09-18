@@ -25,11 +25,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import javax.swing.AbstractListModel;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -44,7 +42,6 @@ import javax.swing.event.ListSelectionListener;
 public class fmtEditor extends JPanel 
     implements ActionListener {
     
-    //private FmtItem[] availFmts;
     private List<FmtItem> selectedFmts;
     private List<FmtItem> deselectedFmts;
     private List<FmtItem> dontDeleteFmts;
@@ -54,18 +51,24 @@ public class fmtEditor extends JPanel
     private JList listAvail, listSelected;
     private JScrollPane scrollAvail, scrollSelected;
     
-    private String _(String key) {
+    private static String _(String key) {
         return utils._(key);
     }
     
-    private boolean canDelete(FmtItem item) {
-        if (selectedFmts.size() <= 1) // Ensure at least one item is present
+    private boolean canDelete(Object[] items) {
+        if (items.length == 0 || selectedFmts.size() <= 1) // Ensure at least one item is present
             return false;
         
         if (dontDeleteFmts == null)
             return true;
-        else
-            return !dontDeleteFmts.contains(item);
+        else {
+            for (Object o : items) {
+                if (dontDeleteFmts.contains(o)) {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
     
     
@@ -127,8 +130,8 @@ public class fmtEditor extends JPanel
             availPane = new JPanel(new BorderLayout());
             availPane.add(new JLabel(_("Available Columns:")), BorderLayout.NORTH);
             
-            listAvail = new JList(new ListListModel(deselectedFmts));
-            listAvail.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            listAvail = new JList(new SortedListModel<FmtItem>(deselectedFmts, FmtItemDescComparator.globalInstance));
+            listAvail.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
             listAvail.setCellRenderer(new FmtItemRenderer());
             listAvail.addListSelectionListener(new ListSelectionListener() {
                 public void valueChanged(javax.swing.event.ListSelectionEvent e) {
@@ -151,16 +154,17 @@ public class fmtEditor extends JPanel
             selectedPane = new JPanel(new BorderLayout());
             selectedPane.add(new JLabel(_("Selected Columns:")), BorderLayout.NORTH);
             
-            listSelected = new JList(new ListListModel(selectedFmts));
-            listSelected.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            listSelected = new JList(new ListListModel<FmtItem>(selectedFmts));
+            listSelected.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
             listSelected.setCellRenderer(new FmtItemRenderer());
             listSelected.addListSelectionListener(new ListSelectionListener() {
                 public void valueChanged(javax.swing.event.ListSelectionEvent e) {
                     if (!e.getValueIsAdjusting()) {
-                        int selidx = listSelected.getSelectedIndex();
-                        buttonUp.setEnabled(selidx > 0);
-                        buttonDown.setEnabled((selidx >=0) && (selidx < (listSelected.getModel().getSize() - 1)));
-                        buttonDelete.setEnabled((selidx >= 0) && canDelete((FmtItem)listSelected.getSelectedValue()));
+                        int minselidx = listSelected.getMinSelectionIndex();
+                        int maxselidx = listSelected.getMaxSelectionIndex();
+                        buttonUp.setEnabled(minselidx > 0);
+                        buttonDown.setEnabled((minselidx >=0) && (maxselidx < (listSelected.getModel().getSize() - 1)));
+                        buttonDelete.setEnabled((minselidx >= 0) && canDelete(listSelected.getSelectedValues()));
                     }
                 };
             });
@@ -186,95 +190,58 @@ public class fmtEditor extends JPanel
         button.setEnabled(false);
     }
     
-    
+
+    @SuppressWarnings("unchecked")
     public void actionPerformed(ActionEvent e) {
-        ListListModel mSel = (ListListModel)listSelected.getModel();
-        ListListModel mAvail = (ListListModel)listAvail.getModel();
-        int selidx = listSelected.getSelectedIndex();
-        
+        ListListModel<FmtItem> mSel = (ListListModel<FmtItem>)listSelected.getModel();
+        SortedListModel<FmtItem> mAvail = (SortedListModel<FmtItem>)listAvail.getModel();
+
         if (e.getActionCommand().equals("Forward")) { //>>
-            Object sel = listAvail.getSelectedValue();
-            if (sel != null) {
-                mSel.addElement(sel);
-                mAvail.removeElement(sel);
+            int[] selIndexes = listAvail.getSelectedIndices();
+            if (selIndexes.length == 0) {
+                return;
             }
-        } else if (e.getActionCommand().equals("Back")) { //<<
-            Object sel = listSelected.getSelectedValue();
-            if ((sel != null) && canDelete((FmtItem)sel)) {
-                int insidx = Collections.binarySearch(deselectedFmts, (FmtItem)sel, FmtItemDescComparator.globalInstance);
-                assert (insidx < 0);
-                insidx = -(insidx + 1);
-                mAvail.addElement(insidx, sel);
-                mSel.removeElement(sel);
+            for (int i : selIndexes) {
+                mSel.add(mAvail.get(i));
             }
-        } else if (e.getActionCommand().equals("Up")) {
-            if (selidx > 0) {
-                mSel.moveElement(selidx, selidx - 1);
-                listSelected.setSelectedIndex(selidx - 1);
+            mAvail.removeAll(selIndexes);
+        } else {
+            int[] selIndexes = listSelected.getSelectedIndices();
+            if (selIndexes.length == 0) {
+                return;
             }
-        } else if (e.getActionCommand().equals("Down")) { 
-            if (selidx < mSel.getSize() - 1) {
-                mSel.moveElement(selidx, selidx + 1);
-                listSelected.setSelectedIndex(selidx + 1);
-            }
-        }        
+            if (e.getActionCommand().equals("Back")) { //<<
+                Object[] sel = listSelected.getSelectedValues();
+                if (canDelete(sel)) {
+                    for (Object o : sel) {
+                        mAvail.add((FmtItem)o);
+                    }
+                    mSel.removeAll(selIndexes);
+                }
+            } else if (e.getActionCommand().equals("Up")) {
+                mSel.moveUp(selIndexes);
+                for (int i = 0; i < selIndexes.length; i++) {
+                    selIndexes[i]--;
+                }
+                listSelected.setSelectedIndices(selIndexes);
+            } else if (e.getActionCommand().equals("Down")) { 
+                mSel.moveDown(selIndexes);
+                for (int i = 0; i < selIndexes.length; i++) {
+                    selIndexes[i]++;
+                }
+                listSelected.setSelectedIndices(selIndexes);
+            }     
+        }
     }
     
     public fmtEditor(FmtItem[] avail, List<FmtItem> selected, List<FmtItem> dontDelete) {
         super();
-        //availFmts = avail;
         selectedFmts = selected;
         deselectedFmts = new ArrayList<FmtItem>(Arrays.asList(avail));
         deselectedFmts.removeAll(selectedFmts);
-        Collections.sort(deselectedFmts, FmtItemDescComparator.globalInstance);
         dontDeleteFmts = dontDelete;
         
         initialize();
-    }
-    
-    @SuppressWarnings("unchecked")
-    static class ListListModel extends AbstractListModel {
-        private List data;
-        
-        public Object getElementAt(int index) {
-            return data.get(index);
-        }
-        
-        public int getSize() {
-            return data.size();
-        }
-        
-        public void removeElement(Object obj) {
-            this.remove(data.indexOf(obj));
-        }
-        
-        public void remove(int index) {
-            data.remove(index);
-            fireIntervalRemoved(this, index, index);
-        }
-        
-        public void addElement(int index, Object obj) {
-            data.add(index, obj);
-            fireIntervalAdded(this, index, index);
-        }
-        
-        public void addElement(Object obj) {
-            data.add(obj);
-            fireIntervalAdded(this, data.size() - 1, data.size() - 1);
-        }
-        
-        // Moves Element from oldindex to newindex
-        public void moveElement(int oldindex, int newindex) {
-            Object obj = data.get(oldindex);
-            data.remove(oldindex);
-            data.add(newindex, obj);
-            fireContentsChanged(this, oldindex, newindex);
-        }
-        
-        public ListListModel(List data) {
-            super();
-            this.data = data;
-        }
     }
     
     static class FmtItemDescComparator implements Comparator<FmtItem> {

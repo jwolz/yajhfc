@@ -31,32 +31,25 @@ import java.util.Vector;
 import yajhfc.FormattedFile.FileFormat;
 
 public class SentYajJob extends YajJob {
-    protected int errorCol;
+    protected int statusCol;
     protected int jobIDCol;
+    
+    public static final char JOBSTATE_UNDEFINED = '?';
+    public static final char JOBSTATE_FAILED = 'F';
+    public static final char JOBSTATE_SUSPENDED = 'T';
+    public static final char JOBSTATE_PENDING = 'P';
+    public static final char JOBSTATE_SLEEPING = 'S';
+    public static final char JOBSTATE_BLOCKED = 'B';
+    public static final char JOBSTATE_WAITING = 'W';
+    public static final char JOBSTATE_RUNNING = 'R';
+    public static final char JOBSTATE_DONE = 'D';
+    
     
     @Override
     public boolean isError() {
         // Also update mainwin.MenuViewListener if this is changed!
-        if (errorCol >= 0) {
-            String status = getStringData(errorCol);
-            return (status != null) && (status.equals("F") || status.equals("?"));
-        } else {
-            return false;
-        }
-        
-//        int idx = columns.getCompleteView().indexOf(utils.jobfmt_Jobstate);
-//        if (idx >= 0) {
-//            String status = getStringData(idx);
-//            haveError = (status != null) && (status.equals("F") || status.equals("?"));
-//        } else {
-//            idx = columns.getCompleteView().indexOf(utils.jobfmt_Status);
-//            if (idx >= 0) {
-//                String errorDesc = getStringData(idx);
-//                haveError = (errorDesc != null) && (errorDesc.length() > 0);
-//            } else {
-//                haveError = false; // Actually undetermined, but we are optimistic ;-)
-//            }
-//        }
+        char status = getJobState();
+        return (status == JOBSTATE_FAILED || status == JOBSTATE_UNDEFINED);
     }
     
     public Job getJob(HylaFAXClient hyfc) throws ServerResponseException, IOException {
@@ -175,15 +168,55 @@ public class SentYajJob extends YajJob {
         return getData(jobIDCol);
     }
 
+    public char getJobState() {
+        String state = getStringData(statusCol);
+        if (state != null && state.length() > 0) {
+            return state.charAt(0);
+        } else {
+            return '?';
+        }
+    }
+    
     @Override
     public void setColumns(FmtItemList columns) {
         jobIDCol = columns.getCompleteView().indexOf(utils.jobfmt_JobID);
-        errorCol = columns.getCompleteView().indexOf(utils.jobfmt_Jobstate);
+        statusCol = columns.getCompleteView().indexOf(utils.jobfmt_Jobstate);
         
         super.setColumns(columns);
     }
     
     public SentYajJob(FmtItemList cols, String[] stringData) {
         super(cols, stringData);
+    }
+    
+    /**
+     * Returns a descriptive text for the given job state or null
+     * if the state is unknown.
+     * @param state
+     * @return
+     */
+    public static String getDescriptionForJobState(char state) {
+        switch (state) {
+        case JOBSTATE_BLOCKED:
+            return utils._("Blocked (by concurrent activity to the same destination)");
+        case JOBSTATE_DONE:
+            return utils._("Done");
+        case JOBSTATE_FAILED:
+            return utils._("Failed");
+        case JOBSTATE_PENDING:
+            return utils._("Pending (waiting for the time to send to arrive)");
+        case JOBSTATE_RUNNING:
+            return utils._("Running");
+        case JOBSTATE_SLEEPING:
+            return utils._("Sleeping (waiting for a scheduled timeout such as a delay between attempts to send)");
+        case JOBSTATE_SUSPENDED:
+            return utils._("Suspended (not being scheduled)");
+        case JOBSTATE_UNDEFINED:
+            return utils._("Undefined");
+        case JOBSTATE_WAITING:
+            return utils._("Waiting (for resources such as a free modem)");
+        default:
+            return null;
+        }
     }
 }

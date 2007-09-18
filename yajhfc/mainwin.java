@@ -341,7 +341,15 @@ public final class mainwin extends JFrame {
                     yj = (SendingYajJob)selTable.getJobForRow(i);
                     updateNote(MessageFormat.format(_("Suspending job {0}"), yj.getIDValue()));
                     
-                    yj.suspend(hyfc);
+                    char jobstate = yj.getJobState();
+                    if (jobstate == SentYajJob.JOBSTATE_RUNNING) {
+                        if (showConfirmDialog(MessageFormat.format(_("Suspending the currently running job {0} may block until it is done (or switch to another \"non running state\"). Try to suspend it anyway?") , yj.getIDValue()),
+                                _("Suspend fax job"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                            yj.suspend(hyfc);
+                        }
+                    } else {
+                        yj.suspend(hyfc);
+                    }
                     
                     stepProgressBar(10);
                 } catch (Exception e1) {
@@ -383,8 +391,15 @@ public final class mainwin extends JFrame {
                 try {
                     yj = (SendingYajJob)selTable.getJobForRow(i);
                     updateNote(MessageFormat.format(_("Resuming job {0}"), yj.getIDValue()));
-                    
-                    yj.resume(hyfc);
+                    char jobstate = yj.getJobState();
+                    if (jobstate != SentYajJob.JOBSTATE_SUSPENDED) {
+                        if (showConfirmDialog(MessageFormat.format(_("Job {0} is not in state \"Suspended\" so resuming it probably will not work. Try to resume it anyway?") , yj.getIDValue()),
+                                _("Resume fax job"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                            yj.resume(hyfc);
+                        }
+                    } else {
+                        yj.resume(hyfc);
+                    }
                     
                     stepProgressBar(10);
                 } catch (Exception e1) {
@@ -852,12 +867,18 @@ public final class mainwin extends JFrame {
     }
     
     public void refreshTables() {
+        if (tableRefresher == null)
+            return;
+        
         tablePanel.showIndeterminateProgress(_("Fetching fax list..."));
         
         utmrTable.schedule(new TimerTaskWrapper(tableRefresher), 0);
     }
     
     public void refreshStatus() {
+        if (statRefresher == null)
+            return;
+        
         utmrTable.schedule(new TimerTaskWrapper(statRefresher), 0);
     }
     
@@ -1082,6 +1103,7 @@ public final class mainwin extends JFrame {
     
     void doLogout() {
         try {
+            tablePanel.showIndeterminateProgress(_("Logging out..."));
             if (tableRefresher != null)
                 tableRefresher.doCancel();
             if (statRefresher != null)
@@ -1117,6 +1139,7 @@ public final class mainwin extends JFrame {
             e.printStackTrace();
             // do nothing
         }
+        tablePanel.hideProgress();
     }
     
     private void reloadTableColumnSettings() {
@@ -1147,100 +1170,10 @@ public final class mainwin extends JFrame {
             return;
         }
         
+        this.setEnabled(false);
         tablePanel.showIndeterminateProgress(_("Logging in..."));
-        hyfc = new HylaFAXClient();
-        hyfc.setDebug(utils.debugMode);
-        try {
-            hyfc.open(myopts.host, myopts.port);
-            
-            while (hyfc.user(myopts.user)) {                
-                    if (myopts.askPassword) {
-                        
-                        String pwd = PasswordDialog.showPasswordDialog(this, _("User password"), MessageFormat.format(_("Please enter the password for user \"{0}\"."), myopts.user));
-                        if (pwd == null) { // User cancelled
-                            hyfc.quit();
-                            hyfc = null;
-                            tablePanel.hideProgress();
-                            return;
-                        } else
-                            try {
-                                hyfc.pass(pwd);
-                                //repeatAsk = false;
-                                break;
-                            } catch (ServerResponseException e) {
-                                ExceptionDialog.showExceptionDialog(this, _("An error occured in response to the password:"), e);
-                                //repeatAsk = true;
-                            }
-                    } else {
-                        hyfc.pass(myopts.pass);
-                        break;
-                    }
-            } 
-            
-            this.setTitle(myopts.user + "@" + myopts.host + " - " + utils.AppName  );
-            
-            if ((Boolean)actAdminMode.getValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY)) {
-                boolean authOK = false;
-                if (myopts.askAdminPassword) {
-                    do {
-                        String pwd = PasswordDialog.showPasswordDialog(this, _("Admin password"), MessageFormat.format(_("Please enter the administrative password for user \"{0}\"."), myopts.user));
-                        if (pwd == null) { // User cancelled
-                            break; //Continue in "normal" mode
-                        } else
-                            try {
-                                hyfc.admin(pwd);
-                                authOK = true;
-                            } catch (ServerResponseException e) {
-                                ExceptionDialog.showExceptionDialog(this, _("An error occured in response to the password:"), e);
-                                authOK = false;
-                            }
-                    } while (!authOK);
-                } else {
-                    hyfc.admin(myopts.AdminPassword);
-                    authOK = true; // No error => authOK
-                }
-                if (authOK) {
-                    // A reddish gray
-                    Color defStatusBackground = getDefStatusBackground();
-                    textStatus.setBackground(new Color(Math.min(defStatusBackground.getRed() + 40, 255), defStatusBackground.getGreen(), defStatusBackground.getBlue()));
-                    this.setTitle(myopts.user + "@" + myopts.host + " (admin) - " +utils.AppName);
-                } else
-                    actAdminMode.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, false);
-            }
-            
-            hyfc.setPassive(myopts.pasv);
-            hyfc.tzone(myopts.tzone.type);
-            
-            reloadTableColumnSettings();
-            hyfc.rcvfmt(myopts.recvfmt.getFormatString());
-            
-            menuView.setEnabled(true);
-            // Re-check menu View state:
-            menuViewListener.reConnected();
-            
-            // Multi-threaded implementation of the periodic refreshes.
-            // I hope I didn't introduce too many race conditions/deadlocks this way
-            statRefresher = new StatusRefresher();
-            utmrTable.schedule(statRefresher, 0, myopts.statusUpdateInterval);
-            
-            tablePanel.showIndeterminateProgress(_("Fetching fax list..."));
-            
-            tableRefresher = new TableRefresher(myopts.sentfmt.getFormatString(), myopts.sendingfmt.getFormatString());
-            
-            //// Read the read/unread status *after* the table contents has been set 
-            //tableRefresher.run();
-
-            utmrTable.schedule(tableRefresher, 0, myopts.tableUpdateInterval);
-            
-            sendReady = SendReadyState.Ready;
-        } catch (Exception e) {
-            //JOptionPane.showMessageDialog(this, _("An error occured connecting to the server:") + "\n" + e.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
-            hyfc = null;
-            tablePanel.hideProgress();
-            ExceptionDialog.showExceptionDialog(this, _("An error occured connecting to the server:"), e);
-            //actOptions.actionPerformed(null);
-            sendReady = SendReadyState.NotReady;
-        }
+        
+        new LoginThread((Boolean)actAdminMode.getValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY)).start();
         
     }
     
@@ -1863,6 +1796,127 @@ public final class mainwin extends JFrame {
         
         public TimerTaskWrapper(Runnable wrapped) {
             this.wrapped = wrapped;
+        }
+    }
+    
+    class LoginThread extends Thread {
+        protected boolean haveAdmin;
+        
+        @Override
+        public void run() {            
+            hyfc = new HylaFAXClient();
+            hyfc.setDebug(utils.debugMode);
+            try {
+                hyfc.open(myopts.host, myopts.port);
+                
+                while (hyfc.user(myopts.user)) {                
+                        if (myopts.askPassword) {
+                            
+                            String pwd = PasswordDialog.showPasswordDialogThreaded(mainwin.this, _("User password"), MessageFormat.format(_("Please enter the password for user \"{0}\"."), myopts.user));
+                            if (pwd == null) { // User cancelled
+                                hyfc.quit();
+                                doErrorCleanup();
+                                return;
+                            } else
+                                try {
+                                    hyfc.pass(pwd);
+                                    //repeatAsk = false;
+                                    break;
+                                } catch (ServerResponseException e) {
+                                    ExceptionDialog.showExceptionDialogThreaded(mainwin.this, _("An error occured in response to the password:"), e);
+                                    //repeatAsk = true;
+                                }
+                        } else {
+                            hyfc.pass(myopts.pass);
+                            break;
+                        }
+                } 
+                
+                if (haveAdmin) {
+                    boolean authOK = false;
+                    if (myopts.askAdminPassword) {
+                        do {
+                            String pwd = PasswordDialog.showPasswordDialogThreaded(mainwin.this, _("Admin password"), MessageFormat.format(_("Please enter the administrative password for user \"{0}\"."), myopts.user));
+                            if (pwd == null) { // User cancelled
+                                break; //Continue in "normal" mode
+                            } else
+                                try {
+                                    hyfc.admin(pwd);
+                                    authOK = true;
+                                } catch (ServerResponseException e) {
+                                    ExceptionDialog.showExceptionDialogThreaded(mainwin.this, _("An error occured in response to the password:"), e);
+                                    authOK = false;
+                                }
+                        } while (!authOK);
+                    } else {
+                        hyfc.admin(myopts.AdminPassword);
+                        authOK = true; // No error => authOK
+                    }
+;
+                    haveAdmin = authOK;
+                }
+                
+                hyfc.setPassive(myopts.pasv);
+                hyfc.tzone(myopts.tzone.type);
+                
+                hyfc.rcvfmt(myopts.recvfmt.getFormatString());
+                
+                // Multi-threaded implementation of the periodic refreshes.
+                // I hope I didn't introduce too many race conditions/deadlocks this way
+                statRefresher = new StatusRefresher();
+
+                tableRefresher = new TableRefresher(myopts.sentfmt.getFormatString(), myopts.sendingfmt.getFormatString());
+                
+                //// Read the read/unread status *after* the table contents has been set 
+                //tableRefresher.run();
+
+                // Final UI updates:
+                SwingUtilities.invokeLater(new Runnable() {
+                   public void run() {
+                       mainwin.this.setTitle(myopts.user + "@" + myopts.host + (haveAdmin ? " (admin)" : "") + " - " +utils.AppName);
+                       
+                       actAdminMode.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, haveAdmin);
+                       if (haveAdmin) {
+                           // A reddish gray
+                           Color defStatusBackground = getDefStatusBackground();
+                           textStatus.setBackground(new Color(Math.min(defStatusBackground.getRed() + 40, 255), defStatusBackground.getGreen(), defStatusBackground.getBlue()));
+                       } 
+                       
+                       reloadTableColumnSettings();
+                       
+                       menuView.setEnabled(true);
+                       // Re-check menu View state:
+                       menuViewListener.reConnected();
+                       
+                       tablePanel.showIndeterminateProgress(_("Fetching fax list..."));
+                       
+                       utmrTable.schedule(statRefresher, 0, myopts.statusUpdateInterval);
+                       utmrTable.schedule(tableRefresher, 0, myopts.tableUpdateInterval);
+                       
+                       sendReady = SendReadyState.Ready;
+                       mainwin.this.setEnabled(true);
+                    } 
+                });
+            } catch (Exception e) {
+                ExceptionDialog.showExceptionDialogThreaded(mainwin.this, _("An error occured connecting to the server:"), e);
+                doErrorCleanup();
+            }
+        }
+        
+        private void doErrorCleanup() {
+            hyfc = null;
+            sendReady = SendReadyState.NotReady;
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    tablePanel.hideProgress();
+                    mainwin.this.setEnabled(true);
+                 } 
+             });
+        }
+        
+        public LoginThread(boolean haveAdmin) {
+            super(LoginThread.class.getName());
+            this.haveAdmin = haveAdmin;
         }
     }
 }  

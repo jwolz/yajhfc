@@ -58,6 +58,7 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
     protected boolean useUpDown;
     protected ArrayList<JComponent> localComponents;
     protected TFLItem lastSelection;
+    protected JButton btnRemove;
     
     public Action getUpAction() {
         if (upAction == null) {
@@ -134,6 +135,7 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
                         return;
                     }
                     if (list.getSelectedIndex() >= 0) {
+                        lastSelection = null;
                         model.remove(list.getSelectedIndex());
                         //textField.setText("");
                     }
@@ -249,7 +251,7 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
         JButton btnAdd = new JButton(getAddAction());
         btnAdd.setText("");
         localComponents.add(btnAdd);
-        JButton btnRemove = new JButton(getRemoveAction());
+        btnRemove = new JButton(getRemoveAction());
         btnRemove.setText("");
         localComponents.add(btnRemove);
         add(btnAdd, "1, 0");
@@ -357,7 +359,7 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
     
     public void focusLost(FocusEvent e) {
         // Our group of components lost focus...
-        if (!localComponents.contains(e.getOppositeComponent())) {
+        if (e.getComponent().isEnabled() && !localComponents.contains(e.getOppositeComponent())) {
             commit();
         }
     }
@@ -404,7 +406,6 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
     public void removeUpdate(DocumentEvent e) {
         // method stub
     }
-    
     
     public void focusGained(FocusEvent e) {
         // method stub

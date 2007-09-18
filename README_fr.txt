@@ -1,4 +1,4 @@
-LISEZ MOI for YajHFC 0.3.4
+LISEZ MOI for YajHFC 0.3.5
 ==========================
 
 A PROPOS DE
@@ -59,6 +59,17 @@ YajHFC a ete originellement ecrit comme un premier projet Java
 
 MODIFICATIONS
 -------------
+
+0.3.5:
+- Ameliorations de l'interface utilisateur /"polissage" (i.e. bare de progression pour la liste de faxs et plus d'icones)
+- Supprimee quelques restrictions sur les colonne visibles
+  (i.e.: L'identifiant de travail n'a plus a etre visible)
+- De nouvelle actions sont maintenant executees seulement "apres" que les fax ne soient plus "en cours"
+
+0.3.4a:
+- Correction de bugs: 
+  dans la version 0.3.4 un caractere etait ajouté en fin  quand un fax etait soumis par
+  l'entree standard a une instance en cours d'execution
 
 0.3.4:
 - Support de la specification du recipiendaire en ligne de commande
