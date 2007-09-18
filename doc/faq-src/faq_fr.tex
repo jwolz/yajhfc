@@ -75,21 +75,6 @@ Aussi,Démarrez YajHFC en utilisant les commandes suivantes (remplacez \texttt{/p
 \item [Windows:] \verb#java -classpath c:\path\to\dbdriver.jar;c:\path\to\yajhfc.jar yajhfc.Launcher#
 \end{description}
 
-
-\subsection{Pourquoi le menu \texttt{Visualiser->Seulement ses propres fax} est-il grisé?}
-
-Actuellement, YajHFC ne peut filtrer que sur les colonnes affichées. Vous devez donc ajouter
-la colonne ``Propriétaire'' a la table si vous voulez filter par proriétaire.
-
-\subsection{Pourquoi le menu \texttt{Visualiser->Marquer les travaux échoués} est il grisé?}
-
-Pour la même raison que dans le paragraphe précédent : Actuellement YajHFC ne peut travailler que sur les colonnes affichées.
-Pour détecter les travaux échoués il faut que les colonnes suivantes soit affichées:
-\begin{description}
-\item[Fax Reçus:] \texttt{Description de l'erreur}
-\item[Fax Envoyés/Transmition:] \texttt{Statut} \emph{ou} \texttt{Statut}
-\end{description}
-
 \subsection{Quelles valeurs puis je entrer comme \texttt{matches} opérateurs dans le champ des filtres personnalisés?}
 
 Expressions régulières, Un court manuel de référence sur les syntaxes acceptées se trouve à l'adresse :

@@ -117,7 +117,7 @@ public abstract class ProgressWorker extends Thread{
 
     public void showExceptionDialog(String message, Exception ex) {
         try {
-            SwingUtilities.invokeAndWait(new ExcDlgDisplayer(parent, ex, message));
+            SwingUtilities.invokeAndWait(new ExceptionDialog.DisplayRunnable(parent, ex, message));
         } catch (InterruptedException e) {
             // NOP
         } catch (InvocationTargetException e) {
@@ -132,6 +132,18 @@ public abstract class ProgressWorker extends Thread{
             // NOP
         } catch (InvocationTargetException e) {
             // NOP
+        }
+    }
+    
+    public int showConfirmDialog(String message, String title, int optionType, int msgType) {
+        try {
+            MsgDlgDisplayer runner = new MsgDlgDisplayer(parent, message, title, optionType, msgType);
+            SwingUtilities.invokeAndWait(runner);
+            return runner.returnValue;
+        } catch (InterruptedException e) {
+            return Integer.MIN_VALUE;
+        } catch (InvocationTargetException e) {
+            return Integer.MIN_VALUE;
         }
     }
     
@@ -184,9 +196,16 @@ public abstract class ProgressWorker extends Thread{
         private String msg;
         private String title;
         private int msgType;
+        private int optionType = Integer.MIN_VALUE;
+        
+        public int returnValue = 0;
         
         public void run() {
-            JOptionPane.showMessageDialog(parent, msg, title, msgType);
+            if (optionType == Integer.MIN_VALUE) {
+                JOptionPane.showMessageDialog(parent, msg, title, msgType);
+            } else {
+                returnValue = JOptionPane.showConfirmDialog(parent, msg, title, optionType, msgType);
+            }
         }
         
         public MsgDlgDisplayer(Component parent, String msg, String title, int msgType) {
@@ -195,25 +214,13 @@ public abstract class ProgressWorker extends Thread{
             this.title = title;
             this.msgType = msgType;
         }
-    }
-    private static class ExcDlgDisplayer implements Runnable {
-        private Component parent;
-        private Exception ex;
-        private String msg;
         
-        public ExcDlgDisplayer(Component parent, Exception ex, String msg) {
+        public MsgDlgDisplayer(Component parent, String msg, String title, int optionType, int msgType) {
             this.parent = parent;
-            this.ex = ex;
             this.msg = msg;
-        }
-        
-        public void run() {
-            if (parent instanceof Dialog)
-                ExceptionDialog.showExceptionDialog((Dialog)parent, msg, ex);
-            else if (parent instanceof Frame)
-                ExceptionDialog.showExceptionDialog((Frame)parent, msg, ex);
-            else
-                JOptionPane.showMessageDialog(parent, msg + "\n" + ex.getMessage(), utils._("Error"), JOptionPane.ERROR_MESSAGE);;
+            this.title = title;
+            this.msgType = msgType;
+            this.optionType = optionType;
         }
     }
     private static class ProgressUpdater implements Runnable {

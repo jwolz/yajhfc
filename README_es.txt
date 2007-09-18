@@ -1,4 +1,4 @@
-﻿LÉEME (README) de YajHFC 0.3.4
+﻿LÉEME (README) de YajHFC 0.3.5
 ==============================
 
 ACERCA DE
@@ -27,8 +27,8 @@ Requisitos:
 * Algún programa para ver ficheros TIFF (revisar el fichero FAQ.txt)
 * Opcional: visor PostScript (por ejemplo, Ghostview)
 
-Para instalar YajHFC descarga el fichero yajhfc-0_3_4.jar en algún lugar tu disco.
-Para ejecutarlo, utiliza: "java -jar yajhfc-0_3_4.jar"
+Para instalar YajHFC descarga el fichero yajhfc-0_3_5.jar en algún lugar tu disco.
+Para ejecutarlo, utiliza: "java -jar yajhfc-0_3_5.jar"
 (En Windows seguramente sólo te haga falta ejecutarlo pulsando dos veces sobre el archivo).
 
 LICENCIA
@@ -59,6 +59,14 @@ de Java (más avanzado que los programas "Hola mundo") utilizando la IDE Eclipse
 
 CAMBIOS
 -------
+
+0.3.5:
+- Algunas mejoras/"pulidos" de la interfaz gráfica (UI), por ejemplo, la barra de progreso en la lista 
+  de faxes y más iconos
+- Eliminación de algunas restricciones para las columnas visibles
+  (por ejemplo, no es necesario que sea visible el identificador / ID del trabajo)
+- Las nuevas acciones en los faxes se ejecutan ahora sólo *después* de que los faxes no se 
+  encuentren "en progreso"
 
 0.3.4:
 - Soporte para especificar el destinatario desde línea de comandos

@@ -38,48 +38,44 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <!--Table of Contents-->
 
 <UL>
-<LI><A NAME="tex2html25"
+<LI><A NAME="tex2html23"
   HREF="faq_es.html#SECTION00020000000000000000">Instalación</A>
 <UL>
-<LI><A NAME="tex2html26"
+<LI><A NAME="tex2html24"
   HREF="faq_es.html#SECTION00021000000000000000">¿Dónde puedo conseguir un visor de faxes para Windows?</A>
-<LI><A NAME="tex2html27"
+<LI><A NAME="tex2html25"
   HREF="faq_es.html#SECTION00022000000000000000">¿Dónde puedo obtener un visor de faxes para Linux/*BSD/... ?</A>
-<LI><A NAME="tex2html28"
+<LI><A NAME="tex2html26"
   HREF="faq_es.html#SECTION00023000000000000000">¿Qué puedo utilizar como visor de faxes en Mac OS X?</A>
-<LI><A NAME="tex2html29"
+<LI><A NAME="tex2html27"
   HREF="faq_es.html#SECTION00024000000000000000">¿Dónde puedo obtener un visor PostScript?</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html30"
+<LI><A NAME="tex2html28"
   HREF="faq_es.html#SECTION00030000000000000000">Utilización del programa</A>
 <UL>
-<LI><A NAME="tex2html31"
+<LI><A NAME="tex2html29"
   HREF="faq_es.html#SECTION00031000000000000000">¿Cómo puedo editar las plantillas de las portadas?</A>
-<LI><A NAME="tex2html32"
+<LI><A NAME="tex2html30"
   HREF="faq_es.html#SECTION00032000000000000000">Quiero acceder a la agenda telefónica por medio de JDBC pero YajHFC no encuentra el controlador aunque especifique la ruta correcta para llamar a Java.</A>
+<LI><A NAME="tex2html31"
+  HREF="faq_es.html#SECTION00033000000000000000">¿Qué puedo poner como valor igual a en el cuadro de diálogo de filtrado personalizado? </A>
+<LI><A NAME="tex2html32"
+  HREF="faq_es.html#SECTION00034000000000000000">¿Qué argumentos de línea de comandos entiende YajHFC?</A>
 <LI><A NAME="tex2html33"
-  HREF="faq_es.html#SECTION00033000000000000000">¿Por qué no se puede seleccionar (gris claro) la opción de Ver-&gt;Sólo faxes propios?</A>
+  HREF="faq_es.html#SECTION00035000000000000000">Cuando intento ver los faxes enviados siempre obtengo un mensaje de error que dice Formato de archivo PCL no soportado, aunque todos los documentos están el formato PostScript/PDF.</A>
 <LI><A NAME="tex2html34"
-  HREF="faq_es.html#SECTION00034000000000000000">¿Por qué no se puede seleccionar (gris claro) la opción de Ver-&gt;Mostrar trabajos con errores?</A>
+  HREF="faq_es.html#SECTION00036000000000000000">Cuando YajHFC se ejecuta en Windows algunas veces guarda su configuración en C:&#92;.yajhfc en lugar de C:&#92;Documents and Settings&#92;USERNAME&#92;.yajhfc</A>
 <LI><A NAME="tex2html35"
-  HREF="faq_es.html#SECTION00035000000000000000">¿Qué puedo poner como valor igual a en el cuadro de diálogo de filtrado personalizado? </A>
-<LI><A NAME="tex2html36"
-  HREF="faq_es.html#SECTION00036000000000000000">¿Qué argumentos de línea de comandos entiende YajHFC?</A>
-<LI><A NAME="tex2html37"
-  HREF="faq_es.html#SECTION00037000000000000000">Cuando intento ver los faxes enviados siempre obtengo un mensaje de error que dice Formato de archivo PCL no soportado, aunque todos los documentos están el formato PostScript/PDF.</A>
-<LI><A NAME="tex2html38"
-  HREF="faq_es.html#SECTION00038000000000000000">Cuando YajHFC se ejecuta en Windows algunas veces guarda su configuración en C:&#92;.yajhfc en lugar de C:&#92;Documents and Settings&#92;USERNAME&#92;.yajhfc</A>
-<LI><A NAME="tex2html39"
-  HREF="faq_es.html#SECTION00039000000000000000">¿Qué significa la columna XYZ?</A>
+  HREF="faq_es.html#SECTION00037000000000000000">¿Qué significa la columna XYZ?</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html40"
+<LI><A NAME="tex2html36"
   HREF="faq_es.html#SECTION00040000000000000000">Varios</A>
 <UL>
-<LI><A NAME="tex2html41"
+<LI><A NAME="tex2html37"
   HREF="faq_es.html#SECTION00041000000000000000">¿Por qué se guardan las contraseñas en texto plano?</A>
-<LI><A NAME="tex2html42"
+<LI><A NAME="tex2html38"
   HREF="faq_es.html#SECTION00042000000000000000">¿Por qué escogiste ese nombre tan tonto?</A>
 </UL></UL>
 <!--End of Table of Contents-->
@@ -203,33 +199,6 @@ Por tanto inicia YajHFC utilizando el siguiente comando (reemplaza <TT>/ruta/a/c
 <P>
 
 <H2><A NAME="SECTION00033000000000000000">
-¿Por qué no se puede seleccionar (gris claro) la opción de <TT>Ver-&gt;Sólo faxes propios</TT>?</A>
-</H2>
-
-<P>
-Actualmente YajHFC sólo puede filtrar las columnas visibles. Por lo que tienes que añadir la columna de "Propietario" a la tabla en la que quieres filtrar por propietario.
-
-<P>
-
-<H2><A NAME="SECTION00034000000000000000">
-¿Por qué no se puede seleccionar (gris claro) la opción de <TT>Ver-&gt;Mostrar trabajos con errores</TT>?</A>
-</H2>
-
-<P>
-Por la misma razón que el apartado anterior: actualmente, YajHFC sólo puede trabajar con las columnas que están visibles.
-Para mostrar los trabajos de fax erróneos es necesario que las siguientes columnas sean visibles:
-<DL>
-<DT><STRONG>Pestaña Recibidos:</STRONG></DT>
-<DD><TT>Descripción del error</TT>
-</DD>
-<DT><STRONG>Pestaña Enviados / Transmisión:</STRONG></DT>
-<DD><TT>Estado del trabajo</TT> <I>or</I> <TT>Estado</TT>
-</DD>
-</DL>
-
-<P>
-
-<H2><A NAME="SECTION00035000000000000000">
 ¿Qué puedo poner como valor <TT>igual a</TT> en el cuadro de diálogo de filtrado personalizado? </A>
 </H2>
 
@@ -244,7 +213,7 @@ y para simular el efecto de <code>?</code> hay que utilizar <code>.</code>.
 
 <P>
 
-<H2><A NAME="SECTION00036000000000000000">
+<H2><A NAME="SECTION00034000000000000000">
 ¿Qué argumentos de línea de comandos entiende YajHFC?</A>
 </H2>
 
@@ -274,7 +243,7 @@ filename     El nombre del archivo PostScript para enviar.
 
 <P>
 
-<H2><A NAME="SECTION00037000000000000000">
+<H2><A NAME="SECTION00035000000000000000">
 Cuando intento ver los faxes enviados siempre obtengo un mensaje de error 
    que dice <TT>Formato de archivo PCL no soportado</TT>, aunque todos los documentos 
    están el formato PostScript/PDF.</A>
@@ -292,7 +261,7 @@ utilizando la extensión si se reporta PCL (lo cual generalmente funciona bastan
 
 <P>
 
-<H2><A NAME="SECTION00038000000000000000">
+<H2><A NAME="SECTION00036000000000000000">
 Cuando YajHFC se ejecuta en Windows algunas veces guarda su configuración en <TT>C:&#92;.yajhfc</TT> en lugar de <TT>C:&#92;Documents and Settings&#92;USERNAME&#92;.yajhfc</TT></A>
 </H2>
 
@@ -308,7 +277,7 @@ Para solucionar ésto, puedes establecer esta propiedad explícitamente cuando i
 
 <P>
 
-<H2><A NAME="SECTION00039000000000000000">
+<H2><A NAME="SECTION00037000000000000000">
 ¿Qué significa la columna XYZ?</A>
 </H2>
 
@@ -370,11 +339,11 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>-no_subdir -split 0 -html_version 3.2,unicode -no_navigation faq_es.tex</TT>
 <P>
-The translation was initiated by Jonas Wolz on 2007-07-15
+The translation was initiated by Jonas Wolz on 2007-09-14
 <BR><HR>
 <ADDRESS>
 Jonas Wolz
-2007-07-15
+2007-09-14
 </ADDRESS>
 </BODY>
 </HTML>

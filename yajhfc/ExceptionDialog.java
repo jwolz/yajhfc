@@ -30,18 +30,20 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 public class ExceptionDialog extends JDialog implements ActionListener, ComponentListener {
-
     private JLabel lblText, lblExceptionText;
     private JScrollPane scrollStacktrace;
     private JTextArea textStacktrace;
@@ -187,6 +189,16 @@ public class ExceptionDialog extends JDialog implements ActionListener, Componen
         showExceptionDialog(owner, utils._("Error"), message, exc);
     }
 
+    public static void showExceptionDialogThreaded(Component owner, String message, Exception exc) {
+        try {
+            SwingUtilities.invokeAndWait(new DisplayRunnable(owner, exc, message));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+    
     public void componentHidden(ComponentEvent e) {
         //  not used   
     }
@@ -203,4 +215,31 @@ public class ExceptionDialog extends JDialog implements ActionListener, Componen
         // not used
     }
 
+    /**
+     * Implements an Runnable that may be used in conjunction with the SwingUtilities.invoke*()
+     * to display an exception dialog from another thread 
+     * @author jonas
+     *
+     */
+    public static class DisplayRunnable implements Runnable {
+        private Component parent;
+        private Exception ex;
+        private String msg;
+        
+        public DisplayRunnable(Component parent, Exception ex, String msg) {
+            this.parent = parent;
+            this.ex = ex;
+            this.msg = msg;
+        }
+        
+        public void run() {
+            if (parent instanceof Dialog) {
+                showExceptionDialog((Dialog)parent, msg, ex);
+            } else if (parent instanceof Frame) {
+                showExceptionDialog((Frame)parent, msg, ex);
+            } else {
+                JOptionPane.showMessageDialog(parent, msg + "\n" + ex.getMessage(), utils._("Error"), JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
 }
