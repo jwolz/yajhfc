@@ -162,7 +162,7 @@ public final class SendWin extends JDialog  {
      */
     private void initialize() {
         this.setSize(530, 380);
-        this.setResizable(false);
+        //this.setResizable(false);
         this.setName("SendWin");
         this.setTitle(_("Send Fax"));
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);

@@ -1,7 +1,7 @@
 package yajhfc;
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005-2006 Jonas Wolz
+ * Copyright (C) 2005-2007 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -46,9 +46,9 @@ public final class utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2007 by Jonas Wolz";
-    public static final String AppVersion = "0.3.5";
+    public static final String AppVersion = "0.3.5a";
     public static final String AuthorEMail = "Jonas Wolz &lt;jwolz@freenet.de&gt;";
-    public static final String HomepageURL = "http://www.yajhfc.de.vu/"; 
+    public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
     
     public static boolean debugMode = false;
     public static PrintStream debugOut = System.out;
@@ -415,10 +415,15 @@ public final class utils {
         return sBuf.toString();
     }
     
-    public static void setDefWinPos(Window win) {
+    private static boolean buggyLocationByPlatform;
+    static {
         String osname = System.getProperty("os.name");
         // Do we have a buggy Java/Windows combination?
-        if ((osname.equalsIgnoreCase("Windows 95") || osname.equalsIgnoreCase("Windows 98") || osname.equalsIgnoreCase("Windows ME")))
+        buggyLocationByPlatform = ((osname.equalsIgnoreCase("Windows 95") || osname.equalsIgnoreCase("Windows 98") || osname.equalsIgnoreCase("Windows ME")));
+    }
+    public static void setDefWinPos(Window win) {
+        // Do we have a buggy Java/Windows combination?
+        if (buggyLocationByPlatform)
             win.setLocationRelativeTo(null);
             //win.setLocation(0,0);
         else
