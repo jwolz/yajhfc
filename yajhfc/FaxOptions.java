@@ -135,7 +135,7 @@ public class FaxOptions {
         String sysname = System.getProperty("os.name");
         if (sysname.startsWith("Windows")) {
             this.psViewer = "gsview32.exe";
-            if (sysname.indexOf("XP") >= 0) 
+            if (sysname.indexOf("XP") >= 0 || sysname.indexOf("Vista") >= 0) 
                 this.faxViewer = "rundll32.exe shimgvw.dll,ImageView_Fullscreen %s";
             else
                 this.faxViewer = "kodakimg.exe";

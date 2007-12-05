@@ -266,7 +266,7 @@ public class Faxcover {
     
     private void coverDef(String tag, String value) 
         throws IOException {
-        wOut.write("/" + tag + " (");
+        wOut.write('/'); wOut.write(tag); wOut.write(" (");
         for (int i=0; i < value.length(); i++) {
             char v = value.charAt(i);
             if (v == '(' || v == ')' || v == '\\')
@@ -275,6 +275,8 @@ public class Faxcover {
         }
         wOut.write(") def\n");
     }
+    
+    final static byte[] PDF_Signature = "%PDF".getBytes();
     
     // Original from SendFaxClient.c++ (HylaFax)
     public int estimatePostscriptPages(InputStream psFile) 
@@ -302,7 +304,7 @@ public class Faxcover {
                 else
                     pages = nPage;
                 rIn.close();
-            } else if (Arrays.equals(sig, "%PDF".getBytes())) {
+            } else if (Arrays.equals(sig, PDF_Signature)) {
                 BufferedInputStream bIn = new BufferedInputStream(psFile);
                 byte[] buf = new byte[4000];
                 final byte[] search1 = "/Type".getBytes();
