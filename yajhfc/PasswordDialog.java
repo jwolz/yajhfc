@@ -133,22 +133,8 @@ public class PasswordDialog extends JDialog {
         pdlg.setVisible(true);
         return pdlg.returnValue;
     }
-    
-    public static String showPasswordDialogThreaded(Frame owner, String title, String prompt) {
-        DisplayRunnable runner = new DisplayRunnable(owner, title, prompt);
-        try {
-            SwingUtilities.invokeAndWait(runner);
-            return runner.result;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            return null;
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public static String showPasswordDialogThreaded(Dialog owner, String title, String prompt) {
+        
+    public static String showPasswordDialogThreaded(Window owner, String title, String prompt) {
         DisplayRunnable runner = new DisplayRunnable(owner, title, prompt);
         try {
             SwingUtilities.invokeAndWait(runner);
@@ -184,16 +170,12 @@ public class PasswordDialog extends JDialog {
             }
         }
 
-        public DisplayRunnable(Dialog owner, String title, String prompt) {
+        public DisplayRunnable(Window owner, String title, String prompt) {
             super();
             this.owner = owner;
-            this.title = title;
-            this.prompt = prompt;
-        }
-        
-        public DisplayRunnable(Frame owner, String title, String prompt) {
-            super();
-            this.owner = owner;
+            if (!(owner instanceof Frame || owner instanceof Dialog)) {
+                throw new IllegalArgumentException("owner must be of type Dialog or Frame!");
+            }
             this.title = title;
             this.prompt = prompt;
         }

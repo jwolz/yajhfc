@@ -410,7 +410,7 @@ public final class PhoneBookWin extends JDialog
         initialize();
     }
     
-    public PhoneBookEntry selectNumber() {
+    public PhoneBookEntry[] selectNumbers() {
         usedSelectButton = false;
         setModal(true);
         setSelBtnVisible(true);
@@ -418,7 +418,7 @@ public final class PhoneBookWin extends JDialog
         setVisible(true);
         
         if (usedSelectButton && getCurrentPBPanel() != null) {
-            PhoneBookEntry res = getCurrentPBPanel().getSelectedPBEntry();
+            PhoneBookEntry[] res = getCurrentPBPanel().getSelectedPBEntries();
             dispose();
             return res;
         } else

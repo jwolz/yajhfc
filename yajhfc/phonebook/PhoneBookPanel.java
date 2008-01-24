@@ -188,6 +188,15 @@ public class PhoneBookPanel extends JPanel
             return (PhoneBookEntry)listEntries.getSelectedValue();
         }
         
+        public PhoneBookEntry[] getSelectedPBEntries() {
+            Object[] selected = listEntries.getSelectedValues();
+            PhoneBookEntry[] result = new PhoneBookEntry[selected.length];
+            for (int i = 0; i < selected.length; i++) {
+                result[i] = (PhoneBookEntry)selected[i];
+            }
+            return result;
+        }
+        
         public void addEntry() {
             if (!writeOK || phoneBook.isReadOnly()) 
                 return;
