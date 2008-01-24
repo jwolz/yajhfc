@@ -100,6 +100,9 @@ public class FaxOptions {
     public ArrayList<String> phoneBooks = new ArrayList<String>();
     public int lastSelectedPhonebook = 0;
     
+    public boolean useDisconnectedMode = false;
+    public String defaultModem = "any";
+    
     public FaxOptions() {
         this.host = "";
         this.port = 4559;

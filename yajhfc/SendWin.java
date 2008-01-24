@@ -561,10 +561,13 @@ public final class SendWin extends JDialog  {
                     utils.setWaitCursor(SendWin.this);
                     PhoneBookWin pbw = new PhoneBookWin(SendWin.this);
                     utils.unsetWaitCursorOnOpen(SendWin.this, pbw);
-                    PhoneBookEntry pb = pbw.selectNumber();
-                    if (pb != null) {
-                        NumberTFLItem nti = new NumberTFLItem(pb);
-                        tflNumbers.addListItem(nti);
+                    PhoneBookEntry[] pbs = pbw.selectNumbers();
+                    if (pbs != null) {
+                        for (PhoneBookEntry pb : pbs)
+                        {
+                            NumberTFLItem nti = new NumberTFLItem(pb);
+                            tflNumbers.addListItem(nti);
+                        }
                         
                         /*TextNumber.setText(pb.getFaxNumber());
                         tflNumbers.addListItem(pb.getFaxNumber());
@@ -770,6 +773,7 @@ public final class SendWin extends JDialog  {
                 Faxcover cover = null;
                 FaxOptions fo = utils.getFaxOptions();                    
                 
+                synchronized (hyfc) {
                 if (!pollMode) {
                     setPaperSizes();
                     
@@ -779,7 +783,7 @@ public final class SendWin extends JDialog  {
                     }
                     
                     // Upload documents:
-                    synchronized (hyfc) {
+                    //TEST synchronized (hyfc) {
                         hyfc.type(HylaFAXClient.TYPE_IMAGE);
 
                         for (int i = 0; i < tflFiles.model.size(); i++) {
@@ -789,7 +793,7 @@ public final class SendWin extends JDialog  {
 
                             stepProgressBar(20);
                         }
-                    }
+                    //TEST }
                 }            
                 
                 for (int i = 0; i < tflNumbers.model.size(); i++) {
@@ -809,7 +813,7 @@ public final class SendWin extends JDialog  {
                         }
                         stepProgressBar(5);
                         
-                        synchronized (hyfc) {
+                      //TEST synchronized (hyfc) {
                             Job j = hyfc.createJob();
 
                             stepProgressBar(5);
@@ -858,12 +862,13 @@ public final class SendWin extends JDialog  {
                             stepProgressBar(5);
 
                             hyfc.submit(j);
-                        }
+                        //TEST }
                         
                         stepProgressBar(5);
                     } catch (Exception e1) {
                         showExceptionDialog(MessageFormat.format(_("An error occured while submitting the fax job for phone number \"{0}\" (will try to submit the fax to the other numbers anyway): "), numItem.getText()) , e1);
                     }
+                }
                 }
                 
                 updateNote(_("Cleaning up"));
