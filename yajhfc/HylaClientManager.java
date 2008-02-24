@@ -7,8 +7,6 @@ import java.awt.Window;
 import java.io.IOException;
 import java.text.MessageFormat;
 
-import javax.swing.JFrame;
-
 public class HylaClientManager {
     protected boolean adminMode;
     protected HylaFAXClient client;
@@ -16,8 +14,9 @@ public class HylaClientManager {
     protected String password;
     protected String adminPassword;
     protected String lastUser;
+    protected int transactionCounter;
     
-    public HylaClientManager(FaxOptions myopts, JFrame mainWin) {
+    public HylaClientManager(FaxOptions myopts) {
         super();
         this.myopts = myopts;
         optionsChanged();
@@ -37,10 +36,32 @@ public class HylaClientManager {
     }
     
     public HylaFAXClient beginServerTransaction(Window owner) {
+        transactionCounter++;
+        
         if (utils.debugMode) {
-            utils.debugOut.println("HylaClientManager -> beginServerTransaction");
+            utils.debugOut.println("HylaClientManager -> beginServerTransaction: " + transactionCounter);
+        }
+        if (client != null  && myopts.useDisconnectedMode && transactionCounter == 1) {
+            synchronized (client) {
+                int time = 0;
+                Thread.yield();
+                try {
+                    while (client != null && time < 500) {
+                        Thread.sleep(50); // Wait that the other user frees the client (Quick and Dirty !!)
+                        time += 50;
+                    }
+                } catch (InterruptedException e) {
+                    // NOP
+                }
+                if (utils.debugMode && time >= 500) {
+                    utils.debugOut.println("In beginServerTransaction: TIMEOUT waiting for other client");
+                }
+            }
         }
         if (client == null) {
+            if (transactionCounter != 1) {
+                utils.debugOut.println("WARNING: Before forceLogin: transactionCounter = " + transactionCounter);
+            }
             return forceLogin(owner);
         } else {
             return client;   
@@ -49,13 +70,14 @@ public class HylaClientManager {
     
     public void endServerTransaction() {
         if (utils.debugMode) {
-            utils.debugOut.println("HylaClientManager -> endServerTransaction");
+            utils.debugOut.println("HylaClientManager -> endServerTransaction: " + transactionCounter);
         }
-        if (myopts.useDisconnectedMode) {
+        transactionCounter--;
+        if (myopts.useDisconnectedMode && transactionCounter <= 0) {
             forceLogout();
         }
     }
-    
+
     /**
      * Logs in. Returns null if an error occurred.
      */
@@ -66,13 +88,16 @@ public class HylaClientManager {
         if (client == null)
         {
             client = new HylaFAXClient();
-            client.setDebug(utils.debugMode);
-            try {
-                client.open(myopts.host, myopts.port);
-                
-                while (client.user(myopts.user)) {                
+            synchronized (client) {
+                client.setDebug(utils.debugMode);
+                try {
+                    client.open(myopts.host, myopts.port);
+                    if (utils.debugMode) {
+                        utils.debugOut.println("Greeting was: " + client.getGreeting());
+                    }
+                    while (client.user(myopts.user)) {                
                         if (password == null) {
-                            
+
                             String pwd = PasswordDialog.showPasswordDialogThreaded(owner, utils._("User password"), MessageFormat.format(utils._("Please enter the password for user \"{0}\"."), myopts.user));
                             if (pwd == null) { // User cancelled
                                 client.quit();
@@ -92,42 +117,42 @@ public class HylaClientManager {
                             client.pass(password);
                             break;
                         }
-                } 
-                
-                if (adminMode) {
-                    boolean authOK = false;
-                    if (adminPassword == null) {
-                        do {
-                            String pwd = PasswordDialog.showPasswordDialogThreaded(owner, utils._("Admin password"), MessageFormat.format(utils._("Please enter the administrative password for user \"{0}\"."), myopts.user));
-                            if (pwd == null) { // User cancelled
-                                break; //Continue in "normal" mode
-                            } else
-                                try {
-                                    client.admin(pwd);
-                                    adminPassword = pwd;
-                                    authOK = true;
-                                } catch (ServerResponseException e) {
-                                    ExceptionDialog.showExceptionDialogThreaded(owner, utils._("An error occured in response to the password:"), e);
-                                    authOK = false;
-                                }
-                        } while (!authOK);
-                    } else {
-                        client.admin(adminPassword);
-                        authOK = true; // No error => authOK
+                    } 
+
+                    if (adminMode) {
+                        boolean authOK = false;
+                        if (adminPassword == null) {
+                            do {
+                                String pwd = PasswordDialog.showPasswordDialogThreaded(owner, utils._("Admin password"), MessageFormat.format(utils._("Please enter the administrative password for user \"{0}\"."), myopts.user));
+                                if (pwd == null) { // User cancelled
+                                    break; //Continue in "normal" mode
+                                } else
+                                    try {
+                                        client.admin(pwd);
+                                        adminPassword = pwd;
+                                        authOK = true;
+                                    } catch (ServerResponseException e) {
+                                        ExceptionDialog.showExceptionDialogThreaded(owner, utils._("An error occured in response to the password:"), e);
+                                        authOK = false;
+                                    }
+                            } while (!authOK);
+                        } else {
+                            client.admin(adminPassword);
+                            authOK = true; // No error => authOK
+                        }
+                        ;
+                        adminMode = authOK;
                     }
-;
-                    adminMode = authOK;
+
+                    client.setPassive(myopts.pasv);
+                    client.tzone(myopts.tzone.type);
+
+                    client.rcvfmt(myopts.recvfmt.getFormatString());
+                    return client;
+                } catch (Exception e) {
+                    ExceptionDialog.showExceptionDialogThreaded(owner, utils._("An error occured connecting to the server:"), e);
+                    return null;
                 }
-                
-                client.setPassive(myopts.pasv);
-                client.tzone(myopts.tzone.type);
-                
-                client.rcvfmt(myopts.recvfmt.getFormatString());
-                
-                return client;
-            } catch (Exception e) {
-                ExceptionDialog.showExceptionDialogThreaded(owner, utils._("An error occured connecting to the server:"), e);
-                return null;
             }
         } else {
             return client;
@@ -137,6 +162,10 @@ public class HylaClientManager {
     public void forceLogout() {
         if (utils.debugMode) {
             utils.debugOut.println("HylaClientManager -> forceLogout");
+        }
+        if (transactionCounter != 0) {
+            utils.debugOut.println("WARNING: In forceLogout: transactionCounter = " + transactionCounter);
+            transactionCounter = 0;
         }
         if (client != null) {
             try {
@@ -156,12 +185,11 @@ public class HylaClientManager {
         return adminMode;
     }
 
-    public void setAdminMode(boolean adminMode, Window owner) {
-        this.adminMode = adminMode;
-        if (client != null) 
+    public void setAdminMode(boolean adminMode) {
+        if (adminMode != this.adminMode) 
         {
-            client = null;
-            forceLogin(owner);
+            this.adminMode = adminMode;
+            forceLogout();
         }
     }
 }

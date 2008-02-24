@@ -118,7 +118,7 @@ public final class SendWin extends JDialog  {
     static final Dimension buttonSize = new Dimension(120, 27);
     static final int border = 10;
     
-    HylaFAXClient hyfc;
+    HylaClientManager clientManager;
     
     private JLabel addWithLabel(JPanel pane, JComponent comp, String text, String layout) {
         TableLayoutConstraints c = new TableLayoutConstraints(layout);
@@ -140,16 +140,19 @@ public final class SendWin extends JDialog  {
     }
     
     
-    public SendWin(HylaFAXClient hyfc, Frame owner) {
-        this(hyfc, owner, false);
+    public SendWin(HylaClientManager manager, Frame owner) {
+        this(manager, owner, false);
+        if (utils.debugMode) {
+            utils.debugOut.println("New SendWin: manager=" + manager + ", owner = " + owner);
+        }
     }
     
     /**
      * This is the default constructor
      */
-    public SendWin(HylaFAXClient hyfc, Frame owner, boolean pollMode) {
+    public SendWin(HylaClientManager manager, Frame owner, boolean pollMode) {
         super(owner);
-        this.hyfc = hyfc;
+        this.clientManager = manager;
         this.pollMode = pollMode;
         initialize();
 
@@ -735,15 +738,23 @@ public final class SendWin extends JDialog  {
                     else
                         step = 0;
                 }
-                for (int i = 0; i < tflFiles.model.size(); i++) {
-                    HylaTFLItem item = (HylaTFLItem)tflFiles.model.get(i);
-                    updateNote(MessageFormat.format(_("Formatting {0}"), item.getText()));
-                    item.preview(SendWin.this, hyfc);
-                    stepProgressBar(step);
+                HylaFAXClient hyfc = clientManager.beginServerTransaction(SendWin.this);
+                if (hyfc == null) {
+                    return;
+                }
+                try {
+                    for (int i = 0; i < tflFiles.model.size(); i++) {
+                        HylaTFLItem item = (HylaTFLItem)tflFiles.model.get(i);
+                        updateNote(MessageFormat.format(_("Formatting {0}"), item.getText()));
+                        item.preview(SendWin.this, hyfc);
+                        stepProgressBar(step);
+                    }
+                } finally {
+                    clientManager.endServerTransaction();                    
                 }
             } catch (Exception e1) {
                 showExceptionDialog(utils._("Error previewing the documents:"), e1);
-            }
+            } 
         } 
     }
     class SendWorker extends ProgressWorker {
@@ -768,22 +779,27 @@ public final class SendWin extends JDialog  {
         
         @Override
         public void doWork() {
-            try {        
+            try {
+                HylaFAXClient hyfc = clientManager.beginServerTransaction(SendWin.this);
+                if (hyfc == null) {
+                    return;
+                }
+
                 //File coverFile = null;
                 Faxcover cover = null;
                 FaxOptions fo = utils.getFaxOptions();                    
-                
+
                 synchronized (hyfc) {
-                if (!pollMode) {
-                    setPaperSizes();
-                    
-                    if (checkUseCover.isSelected()) {
-                        cover = initFaxCover();
-                        stepProgressBar(20);
-                    }
-                    
-                    // Upload documents:
-                    //TEST synchronized (hyfc) {
+                    if (!pollMode) {
+                        setPaperSizes();
+
+                        if (checkUseCover.isSelected()) {
+                            cover = initFaxCover();
+                            stepProgressBar(20);
+                        }
+
+                        // Upload documents:
+                        //TEST synchronized (hyfc) {
                         hyfc.type(HylaFAXClient.TYPE_IMAGE);
 
                         for (int i = 0; i < tflFiles.model.size(); i++) {
@@ -793,27 +809,27 @@ public final class SendWin extends JDialog  {
 
                             stepProgressBar(20);
                         }
-                    //TEST }
-                }            
-                
-                for (int i = 0; i < tflNumbers.model.size(); i++) {
-                    NumberTFLItem numItem = (NumberTFLItem)tflNumbers.model.get(i);
-                    updateNote(MessageFormat.format(_("Creating job to {0}"), numItem.getText()));
-                    
-                    try {
-                        String coverName = null;
-                        if (cover != null) {
-                            File coverFile = makeCoverFile(cover, numItem);
+                        //TEST }
+                    }            
 
-                            FileInputStream fi = new FileInputStream(coverFile);
-                            coverName = hyfc.putTemporary(fi);
-                            fi.close();
-                            
-                            coverFile.delete();
-                        }
-                        stepProgressBar(5);
-                        
-                      //TEST synchronized (hyfc) {
+                    for (int i = 0; i < tflNumbers.model.size(); i++) {
+                        NumberTFLItem numItem = (NumberTFLItem)tflNumbers.model.get(i);
+                        updateNote(MessageFormat.format(_("Creating job to {0}"), numItem.getText()));
+
+                        try {
+                            String coverName = null;
+                            if (cover != null) {
+                                File coverFile = makeCoverFile(cover, numItem);
+
+                                FileInputStream fi = new FileInputStream(coverFile);
+                                coverName = hyfc.putTemporary(fi);
+                                fi.close();
+
+                                coverFile.delete();
+                            }
+                            stepProgressBar(5);
+
+                            //TEST synchronized (hyfc) {
                             Job j = hyfc.createJob();
 
                             stepProgressBar(5);
@@ -862,25 +878,26 @@ public final class SendWin extends JDialog  {
                             stepProgressBar(5);
 
                             hyfc.submit(j);
-                        //TEST }
-                        
-                        stepProgressBar(5);
-                    } catch (Exception e1) {
-                        showExceptionDialog(MessageFormat.format(_("An error occured while submitting the fax job for phone number \"{0}\" (will try to submit the fax to the other numbers anyway): "), numItem.getText()) , e1);
+                            //TEST }
+
+                            stepProgressBar(5);
+                        } catch (Exception e1) {
+                            showExceptionDialog(MessageFormat.format(_("An error occured while submitting the fax job for phone number \"{0}\" (will try to submit the fax to the other numbers anyway): "), numItem.getText()) , e1);
+                        }
                     }
                 }
-                }
-                
+
                 updateNote(_("Cleaning up"));
                 for (int i = 0; i < tflFiles.model.size(); i++) {
                     HylaTFLItem item = (HylaTFLItem)tflFiles.model.get(i);
                     item.cleanup();
                 }
-                
+
             } catch (Exception e1) {
                 //JOptionPane.showMessageDialog(ButtonSend, _("An error occured while submitting the fax: ") + "\n" + e1.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
                 showExceptionDialog(_("An error occured while submitting the fax: "), e1);
             } 
+            clientManager.endServerTransaction();
         }
         
         @Override

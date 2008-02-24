@@ -101,7 +101,7 @@ public class FaxOptions {
     public int lastSelectedPhonebook = 0;
     
     public boolean useDisconnectedMode = false;
-    public String defaultModem = "any";
+    //public String defaultModem = "any";
     
     public FaxOptions() {
         this.host = "";
@@ -181,6 +181,14 @@ public class FaxOptions {
     private static final char sep = '|';
     //private static final String sepregex = "\\|";
     
+    private void logErr(String msg) {
+        if (utils.debugMode) {
+            utils.debugOut.println(msg);
+        } else {
+            System.err.println(msg);              
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     public void storeToFile(String fileName) {
         Properties p = new Properties();
@@ -221,9 +229,9 @@ public class FaxOptions {
                         p.setProperty(name + "." + (++idx), (String)o);
                     }
                 } else
-                    System.err.println("Unknown field type " + val.getClass().getName());
+                    logErr("Unknown field type " + val.getClass().getName());
             } catch (Exception e) {
-                System.err.println("Exception reading field: " + e.getMessage());
+                logErr("Exception reading field: " + e.getMessage());
             }
         }
         
@@ -232,12 +240,15 @@ public class FaxOptions {
             p.store(filout, utils.AppShortName + " " + utils.AppVersion + " configuration file");
             filout.close();
         } catch (Exception e) {
-            System.err.println("Couldn't save file '" + fileName + "': " + e.getMessage());
+            logErr("Couldn't save file '" + fileName + "': " + e.getMessage());
         }
     }
     
     @SuppressWarnings("unchecked")
     public void loadFromFile(String fileName) {
+        if (utils.debugMode) {
+            utils.debugOut.println("Loading prefs from " + fileName);
+        }
         Properties p = new Properties();
         //System.err.println(fileName);
         try {
@@ -247,10 +258,14 @@ public class FaxOptions {
         } catch (FileNotFoundException e) {
             return; // No file yet
         } catch (IOException e) {
-            System.err.println("Error reading file '" + fileName + "': " + e.getMessage());
+            logErr("Error reading file '" + fileName + "': " + e.getMessage());
             return;
         }
-        
+        if (utils.debugMode) {
+            utils.debugOut.println("---- BEGIN preferences dump");
+            utils.dumpProperties(p, utils.debugOut, "pass", "AdminPassword");
+            utils.debugOut.println("---- END preferences dump");
+        }
         // Clear all lists:
         phoneBooks.clear();
         
@@ -297,14 +312,14 @@ public class FaxOptions {
                     else if (fName.equals("locale"))
                         dataarray = utils.AvailableLocales;
                     else {
-                        System.err.println("Unknown MyManualMapObject field: " + fName);
+                        logErr("Unknown MyManualMapObject field: " + fName);
                         continue;
                     }
                     Object res = utils.findInArray(dataarray, p.getProperty(fName));
                     if (res != null)
                         f.set(this, res);
                     else
-                        System.err.println("Unknown value for MyManualMapObject field " + fName);
+                        logErr("Unknown value for MyManualMapObject field " + fName);
                 }
                 else if (FmtItemList.class.isAssignableFrom(fcls)) {
                     FmtItemList fim = (FmtItemList)f.get(this);
@@ -348,9 +363,9 @@ public class FaxOptions {
                     List lst = (List)f.get(this);
                     lst.add(p.getProperty(propName));
                 } else
-                    System.err.println("Unknown field type " + fcls.getName());
+                    logErr("Unknown field type " + fcls.getName());
             } catch (Exception e1) {
-                System.err.println("Couldn't load setting for " + propName + ": " + e1.getMessage());
+                logErr("Couldn't load setting for " + propName + ": " + e1.getMessage());
             }
         }
     }

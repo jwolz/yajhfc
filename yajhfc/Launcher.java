@@ -30,11 +30,15 @@ package yajhfc;
  * experience knows a better way to accomplish this functionality, please let me know.
  */
 
+import gnu.inet.logging.ConsoleLogger;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -42,6 +46,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -152,7 +157,7 @@ public final class Launcher {
         System.out.print(
             "General usage:\n"+
             "java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose] \n" +
-            "         [--configdir=directory] [--loadplugin=filename] \n" +
+            "         [--configdir=directory] [--loadplugin=filename] [--logfile=filename]\n" +
             "         [--showtab=0|R|1|S|2|T] [--recipient=...] [--stdin | filename ...]\n"+
             "Argument description:\n"+
             "filename     One or more file names of PostScript files to send.\n"+
@@ -161,6 +166,7 @@ public final class Launcher {
             "             You may specify multiple arguments for multiple recipients.\n"+
             "--admin      Start up in admin mode\n"+
             "--debug      Output some debugging information\n"+
+            "--logfile    The logfile to log debug information to (if not specified, use stdout)\n"+
             "--background If there is no already running instance, launch a new instance \n" +
             "             and terminate (after submitting the file to send)\n" +
             "--noclose    Do not close YajHFC after submitting the fax\n"+
@@ -203,6 +209,7 @@ public final class Launcher {
         boolean closeAfterSubmit = true;
         boolean debugMode = false;
         int selectedTab = -1;
+        String logFile = null;
         
         for (int i = 0; i < args.length; i++) {
             if (args[i].startsWith("--")) { // command line argument
@@ -245,7 +252,9 @@ public final class Launcher {
                     }
                 } else if (args[i].startsWith("--loadplugin=")) {
                     jars.add(new File(stripQuotes(args[i].substring("--loadplugin=".length()))));
-                } else {
+                } else if (args[i].startsWith("--logfile=")) {
+                    logFile = stripQuotes(args[i].substring("--logfile=".length()));
+                } else{
                     System.err.println("Unknown command line argument: " + args[i]);
                 }
             } else if (args[i].startsWith("-"))
@@ -256,6 +265,25 @@ public final class Launcher {
                 
         // IMPORTANT: Don't access utils before this line!
         utils.debugMode = debugMode;
+        
+        if (logFile != null) {
+            try {
+                utils.debugOut = new PrintStream(new FileOutputStream(logFile));
+            } catch (FileNotFoundException e) {
+                utils.debugOut = System.out;
+            }
+        }
+        ConsoleLogger.setOutputStream(utils.debugOut);
+        if (debugMode) {
+            utils.debugOut.println("YajHFC version: " + utils.AppVersion);
+            utils.debugOut.println("---- BEGIN System.getProperties() dump");
+            utils.dumpProperties(System.getProperties(), utils.debugOut);
+            utils.debugOut.println("---- END System.getProperties() dump");
+            utils.debugOut.println("" + args.length + " command line arguments:");
+            for (String arg : args) {
+                utils.debugOut.println(arg);
+            }
+        }
         
         Socket oldinst = checkLock();
         
@@ -443,30 +471,36 @@ public final class Launcher {
         }
     }
         
-    static class NewInstRunner extends SubmitRunner {
+    static class NewInstRunner implements Runnable{
         protected boolean adminMode;
         protected boolean closeAfterSubmit;
         protected int selectedTab;
+        protected InputStream inStream;
+        protected List<String> fileNames;
+        protected List<String> recipients;
         
         public void run() {
             utils.setLookAndFeel(utils.getFaxOptions().lookAndFeel);
             
             application = new mainwin(adminMode);
             application.setVisible(true);
-            application.reconnectToServer();
-            if (selectedTab >= 0) {
-                application.setSelectedTab(selectedTab);
+            Runnable loginAction = null;
+            if ((fileNames != null && fileNames.size() > 0) || this.inStream != null) {
+                loginAction = new SubmitRunner(fileNames, inStream, recipients, closeAfterSubmit);
             }
             
-            if ((fileNames != null && fileNames.size() > 0) || this.inStream != null) {
-                doSubmit();
-                if (closeAfterSubmit)
-                    application.dispose();
+            application.reconnectToServer(loginAction);
+            if (selectedTab >= 0) {
+                application.setSelectedTab(selectedTab);
             }
         }   
         
         public NewInstRunner(List<String> fileNames, boolean useStdin, List<String> recipients, boolean adminMode, boolean closeAfterSubmit, int selectedTab) {
-            super(fileNames, useStdin ? System.in : null, recipients);
+            //super(fileNames, useStdin ? System.in : null, recipients);
+            this.fileNames = fileNames;
+            this.inStream = useStdin ? System.in : null;
+            this.recipients = recipients;
+            
             this.adminMode = adminMode;
             this.closeAfterSubmit = closeAfterSubmit;
             this.selectedTab = selectedTab;
@@ -634,14 +668,17 @@ public final class Launcher {
         protected InputStream inStream;
         protected List<String> fileNames;
         protected List<String> recipients;
+        protected boolean closeAfterSubmit;
         
         public void run() {
             application.toFront();
             doSubmit();
+            if (closeAfterSubmit)
+                application.dispose();
         }
         
-        protected void doSubmit() {                       
-            SendWin sw = new SendWin(application.hyfc, application);
+        protected void doSubmit() {
+            SendWin sw = new SendWin(application.clientManager, application);
             sw.setModal(true);
             if (inStream != null) {                
                 sw.addInputStream(inStream);
@@ -657,20 +694,21 @@ public final class Launcher {
             sw.setVisible(true);
         }
         
-        public SubmitRunner(List<String> fileNames, InputStream strIn, List<String> recipients) {
+        public SubmitRunner(List<String> fileNames, InputStream strIn, List<String> recipients, boolean closeAfterSubmit) {
             super();
             this.fileNames = fileNames;
             this.inStream = strIn;
             this.recipients = recipients;
+            this.closeAfterSubmit = closeAfterSubmit;
         }
         
         
         public SubmitRunner(List<String> fileNames, List<String> recipients) {
-            this(fileNames, null, recipients);
+            this(fileNames, null, recipients, false);
         }
         
         public SubmitRunner(InputStream strIn, List<String> recipients) {
-            this(null, strIn, recipients);
+            this(null, strIn, recipients, false);
         }
     }
 }

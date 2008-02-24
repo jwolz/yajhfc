@@ -34,8 +34,10 @@ import java.io.PrintStream;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
@@ -545,6 +547,47 @@ public final class utils {
         }
         
         return resList.toArray(new String[resList.size()]);
+    }
+    
+    /**
+     * Dumps the content of the specified properties object to the PrintStream
+     * @param prop
+     * @param out
+     */
+    public static void dumpProperties(Map<Object, ?> prop, PrintStream out, Object... censorKeys) {
+        Object keys[] = prop.keySet().toArray();
+        Arrays.sort(keys);
+        StringBuilder s = new StringBuilder();
+        for (Object key : keys) {
+            s.setLength(0);
+            s.append(key).append('=');
+            if (indexOfArray(censorKeys, key) == -1) {
+                s.append(prop.get(key));
+            } else {
+                Object val = prop.get(key);
+                if (val == null) {
+                    s.append("null");
+                } else {
+                    s.append('<').append(val.toString().length()).append(" characters>");
+                }
+            }
+            out.println(s);
+        }
+    }
+    
+    /**
+     * Returns the index of the given object in the given array or -1 if it is not found
+     * @param array
+     * @param element
+     * @return
+     */
+    public static int indexOfArray(Object[] array, Object element) {
+        for (int i = 0; i < array.length; i++) {
+            if (element.equals(array[i])) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
 
