@@ -20,7 +20,6 @@ package yajhfc;
 
 import gnu.hylafax.HylaFAXClient;
 import gnu.hylafax.Job;
-import gnu.inet.ftp.ServerResponseException;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -124,7 +123,6 @@ public final class mainwin extends JFrame {
     protected JRadioButtonMenuItem menuViewAll, menuViewOwn, menuViewCustom;
     protected ButtonGroup viewGroup;
     
-    HylaFAXClient hyfc = null;
     protected FaxOptions myopts = null;
       
     protected java.util.Timer utmrTable;
@@ -146,6 +144,7 @@ public final class mainwin extends JFrame {
     protected Action actRefresh, actResend, actPrintTable, actSuspend, actResume, actClipCopy, actShowRowNumbers, actAdjustColumns;
     protected ActionEnabler actChecker;
     
+    protected HylaClientManager clientManager;
     
     public enum SendReadyState {
         Ready, NeedToWait, NotReady;
@@ -167,6 +166,10 @@ public final class mainwin extends JFrame {
         
         @Override
         public void doWork() {
+            HylaFAXClient hyfc = clientManager.beginServerTransaction(mainwin.this);
+            if (hyfc == null) {
+                return;
+            }
             int[] selRows =  selTable.getSelectedRows();
 
             for (int i : selRows) {
@@ -188,6 +191,8 @@ public final class mainwin extends JFrame {
                     showExceptionDialog(msgText, e1);
                 }
             }
+            
+            clientManager.endServerTransaction();
         }
         @Override
         protected void done() {
@@ -213,7 +218,10 @@ public final class mainwin extends JFrame {
         @Override
         public void doWork() {
             fileCounter = 0;
-            
+            HylaFAXClient hyfc = clientManager.beginServerTransaction(mainwin.this);
+            if (hyfc == null) {
+                return;
+            }
             int[] selRows =  selTable.getSelectedRows();
             
             for (int i : selRows) {
@@ -244,6 +252,8 @@ public final class mainwin extends JFrame {
                 }
                 stepProgressBar(1000);
             }
+            
+            clientManager.endServerTransaction();
         }
         
         @Override
@@ -267,6 +277,10 @@ public final class mainwin extends JFrame {
         
         @Override
         public void doWork() {
+            HylaFAXClient hyfc = clientManager.beginServerTransaction(mainwin.this);
+            if (hyfc == null) {
+                return;
+            }
             int[] selRows =  selTable.getSelectedRows();
             sMin = Integer.MAX_VALUE; sMax = Integer.MIN_VALUE;
             for (int i : selRows) {
@@ -308,6 +322,7 @@ public final class mainwin extends JFrame {
                     showExceptionDialog(MessageFormat.format(_("An error occured displaying the fax \"{0}\":"), yj.getIDValue()), e1);
                 }
             }
+            clientManager.endServerTransaction();
         }
         
         @Override
@@ -333,6 +348,10 @@ public final class mainwin extends JFrame {
         
         @Override
         public void doWork() {
+            HylaFAXClient hyfc = clientManager.beginServerTransaction(mainwin.this);
+            if (hyfc == null) {
+                return;
+            }
             int[] selRows =  selTable.getSelectedRows();
 
             for (int i : selRows) {
@@ -361,6 +380,7 @@ public final class mainwin extends JFrame {
                     showExceptionDialog(msgText, e1);
                 }
             }
+            clientManager.endServerTransaction();
         }
         @Override
         protected void done() {
@@ -384,6 +404,10 @@ public final class mainwin extends JFrame {
         
         @Override
         public void doWork() {
+            HylaFAXClient hyfc = clientManager.beginServerTransaction(mainwin.this);
+            if (hyfc == null) {
+                return;
+            }
             int[] selRows =  selTable.getSelectedRows();
 
             for (int i : selRows) {
@@ -411,6 +435,7 @@ public final class mainwin extends JFrame {
                     showExceptionDialog(msgText, e1);
                 }
             }
+            clientManager.endServerTransaction();
         }
         @Override
         protected void done() {
@@ -438,7 +463,7 @@ public final class mainwin extends JFrame {
                 utils.unsetWaitCursorOnOpen(null, ow);
                 ow.setVisible(true);
                 if (ow.getModalResult()) 
-                    reconnectToServer();
+                    reconnectToServer(null);
                 else
                     sendReady = oldState;
                     
@@ -451,7 +476,7 @@ public final class mainwin extends JFrame {
         actSend = new AbstractAction() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 utils.setWaitCursor(null);
-                SendWin sw = new SendWin(hyfc, mainwin.this);
+                SendWin sw = new SendWin(clientManager, mainwin.this);
                 sw.setModal(true);
                 utils.unsetWaitCursorOnOpen(null, sw);
                 sw.setVisible(true);
@@ -467,7 +492,7 @@ public final class mainwin extends JFrame {
         actPoll = new AbstractAction() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 utils.setWaitCursor(null);
-                SendWin sw = new SendWin(hyfc, mainwin.this, true);
+                SendWin sw = new SendWin(clientManager, mainwin.this, true);
                 sw.setModal(true);
                 utils.unsetWaitCursorOnOpen(null, sw);
                 sw.setVisible(true);
@@ -593,6 +618,10 @@ public final class mainwin extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 TooltipJTable selTable = (TooltipJTable)((JScrollPane)tabMain.getSelectedComponent()).getViewport().getView();
                 
+                HylaFAXClient hyfc = clientManager.beginServerTransaction(mainwin.this);
+                if (hyfc == null) {
+                    return;
+                }
                 if (selTable.getSelectedRowCount() == 1) {
                     JFileChooser jfc = new JFileChooser();
                     
@@ -640,6 +669,7 @@ public final class mainwin extends JFrame {
                         wrk.startWork(mainwin.this, _("Saving faxes"));
                     }
                 }
+                clientManager.endServerTransaction();
             };
         };
         actFaxSave.putValue(Action.NAME, _("Save fax..."));
@@ -651,21 +681,24 @@ public final class mainwin extends JFrame {
                 if (tabMain.getSelectedComponent() != scrollRecv || tableRecv.getSelectedRow() < 0)
                     return;
                 
+                HylaFAXClient hyfc = clientManager.beginServerTransaction(mainwin.this);
                 HylaServerFile file;
                 try {
                     file = tableRecv.getJobForRow(tableRecv.getSelectedRow()).getServerFilenames(hyfc).get(0);
                 } catch (Exception e1) {
                     //JOptionPane.showMessageDialog(mainwin.this, _("Couldn't get a filename for the fax:\n") + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
                     ExceptionDialog.showExceptionDialog(mainwin.this, _("Couldn't get a filename for the fax:"), e1);
+                    clientManager.endServerTransaction();
                     return;
                 }
                 
-                SendWin sw = new SendWin(hyfc, mainwin.this);
+                SendWin sw = new SendWin(clientManager, mainwin.this);
                 sw.setModal(true);
                 sw.addServerFile(file);
                 sw.setVisible(true);
                 refreshTables();
                 
+                clientManager.endServerTransaction();
             }
         };
         actForward.putValue(Action.NAME, _("Forward fax..."));
@@ -684,7 +717,7 @@ public final class mainwin extends JFrame {
 
                 putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, newState);
                 
-                reconnectToServer();
+                reconnectToServer(null);
                 utils.unsetWaitCursor(null);
             };
         };
@@ -716,7 +749,8 @@ public final class mainwin extends JFrame {
                 
                 List<HylaServerFile> files;
                 String number, voiceNumber, company, name, location, subject;
-
+                HylaFAXClient hyfc = clientManager.beginServerTransaction(mainwin.this);
+                
                 try {
                     synchronized (hyfc) {
                         files = job.getServerFilenames(hyfc);
@@ -734,9 +768,11 @@ public final class mainwin extends JFrame {
                     utils.unsetWaitCursor(null);
                     ExceptionDialog.showExceptionDialog(mainwin.this, _("Could not get all of the job information necessary to resend the fax:"), e1);
                     return;
+                } finally {
+                    clientManager.endServerTransaction();
                 }
                 
-                SendWin sw = new SendWin(hyfc, mainwin.this);
+                SendWin sw = new SendWin(clientManager, mainwin.this);
                 sw.setModal(true);
                 
                 for (HylaServerFile hysf : files) {
@@ -1109,7 +1145,7 @@ public final class mainwin extends JFrame {
             if (statRefresher != null)
                 statRefresher.doCancel();
             
-            if (hyfc != null) {                
+            if (clientManager != null) {                
                 myopts.recvColState = getTableRecv().getColumnCfgString();
                 myopts.sentColState = getTableSent().getColumnCfgString();
                 myopts.sendingColState = getTableSending().getColumnCfgString();
@@ -1119,7 +1155,9 @@ public final class mainwin extends JFrame {
                     recvTableModel.storeReadState(PersistentReadState.CURRENT);
                 }
                 
-                hyfc.quit();
+                //hyfc.quit();
+                clientManager.forceLogout();
+                clientManager = null;
             }
             //tmrStat.stop();
             //tmrTable.stop();
@@ -1132,6 +1170,8 @@ public final class mainwin extends JFrame {
             getTextStatus().setBackground(getDefStatusBackground());
             getTextStatus().setText(_("Disconnected."));
             
+            actSend.setEnabled(false);
+            actPoll.setEnabled(false);
             menuView.setEnabled(false);
             this.setTitle("Disconnected - " + utils.AppName);
         }
@@ -1160,7 +1200,7 @@ public final class mainwin extends JFrame {
         tableSending.setColumnCfgString(myopts.sendingColState);
     }
     
-    public void reconnectToServer() {
+    public void reconnectToServer(Runnable loginAction) {
         sendReady = SendReadyState.NeedToWait;
         
         doLogout();
@@ -1173,7 +1213,7 @@ public final class mainwin extends JFrame {
         this.setEnabled(false);
         tablePanel.showIndeterminateProgress(_("Logging in..."));
         
-        new LoginThread((Boolean)actAdminMode.getValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY)).start();
+        new LoginThread((Boolean)actAdminMode.getValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY), loginAction).start();
         
     }
     
@@ -1314,6 +1354,10 @@ public final class mainwin extends JFrame {
                         Toolkit.getDefaultToolkit().beep();
                     }
                     if ((myopts.newFaxAction & utils.NEWFAX_VIEWER) != 0) {
+                        HylaFAXClient hyfc = clientManager.beginServerTransaction(mainwin.this);
+                        if (hyfc == null) {
+                            return;
+                        }
                         for (RecvYajJob j : evt.getItems()) {
                             for (HylaServerFile hsf : j.getServerFilenames(hyfc)) {
                                 try {
@@ -1329,6 +1373,7 @@ public final class mainwin extends JFrame {
                                 j.setRead(true);
                             }
                         }
+                        clientManager.endServerTransaction();
                     }
                 };
             });
@@ -1652,16 +1697,26 @@ public final class mainwin extends JFrame {
             if (cancelled)
                 return;
             String newText;
-            try {
-                newText = utils.listToString(hyfc.getList("status"), "\n");
-            } catch (Exception e) {
-                newText = "Error refreshing the status: " + e.toString();
-                System.err.println(newText);
+            HylaFAXClient hyfc = clientManager.beginServerTransaction(mainwin.this);
+            if (hyfc == null) {
+                newText = utils._("Could not log in");
+            } else {
+                try {
+                    newText = utils.listToString(hyfc.getList("status"), "\n");
+                } catch (Exception e) {
+                    newText = "Error refreshing the status: " + e.toString();
+                    System.err.println(newText);
+                    if (utils.debugMode) {
+                        utils.debugOut.println("Error refreshing the status: ");
+                        e.printStackTrace(utils.debugOut);
+                    }
+                }
             }
             if (!newText.equals(text)) {
                 text = newText;
                 SwingUtilities.invokeLater(statRunner);
             }
+            clientManager.endServerTransaction();
         }
         
         public StatusRefresher() {
@@ -1688,6 +1743,10 @@ public final class mainwin extends JFrame {
             if (cancelled)
                 return;
             
+            HylaFAXClient hyfc = clientManager.beginServerTransaction(mainwin.this);
+            if (hyfc == null) {
+                return;
+            }
             Vector<?> lst;
             try {
                 //System.out.println(System.currentTimeMillis() + ": Getting list...");
@@ -1716,6 +1775,10 @@ public final class mainwin extends JFrame {
                 }
             } catch (Exception e) {
                 System.err.println("An error occured refreshing the tables: " + e.getMessage());
+                if (utils.debugMode) {
+                    utils.debugOut.println("An error occured refreshing the tables: ");
+                    e.printStackTrace(utils.debugOut);
+                }
             }        
             
             try {
@@ -1734,6 +1797,10 @@ public final class mainwin extends JFrame {
                 }
             } catch (Exception e) {
                 System.err.println("An error occured refreshing the tables: " + e.getMessage());
+                if (utils.debugMode) {
+                    utils.debugOut.println("An error occured refreshing the tables: ");
+                    e.printStackTrace(utils.debugOut);
+                }
             }
             
             try {
@@ -1752,6 +1819,10 @@ public final class mainwin extends JFrame {
                 }
             } catch (Exception e) {
                 System.err.println("An error occured refreshing the tables: " + e.getMessage());
+                if (utils.debugMode) {
+                    utils.debugOut.println("An error occured refreshing the tables: ");
+                    e.printStackTrace(utils.debugOut);
+                }
             }
             
             if (tablePanel.isShowingProgress()) {
@@ -1762,6 +1833,7 @@ public final class mainwin extends JFrame {
                     }
                 });
             }
+            clientManager.endServerTransaction();
         }
         
         public TableRefresher(String sentfmt, String sendingfmt) {
@@ -1800,14 +1872,17 @@ public final class mainwin extends JFrame {
     }
     
     class LoginThread extends Thread {
-        protected boolean haveAdmin;
+        protected boolean wantAdmin;
+        protected Runnable loginAction;
         
         @Override
-        public void run() {            
+        public void run() {  
+            
+            /*
             hyfc = new HylaFAXClient();
-            hyfc.setDebug(utils.debugMode);
+            hyfc.setDebug(utils.debugMode);*/
             try {
-                hyfc.open(myopts.host, myopts.port);
+                /*hyfc.open(myopts.host, myopts.port);
                 
                 while (hyfc.user(myopts.user)) {                
                         if (myopts.askPassword) {
@@ -1859,8 +1934,19 @@ public final class mainwin extends JFrame {
                 hyfc.setPassive(myopts.pasv);
                 hyfc.tzone(myopts.tzone.type);
                 
-                hyfc.rcvfmt(myopts.recvfmt.getFormatString());
-                
+                hyfc.rcvfmt(myopts.recvfmt.getFormatString());*/
+                if (utils.debugMode) {
+                    utils.debugOut.println("Begin login (wantAdmin=" + wantAdmin + ")");
+                }
+                clientManager = new HylaClientManager(myopts);
+                clientManager.setAdminMode(wantAdmin);
+                if (clientManager.beginServerTransaction(mainwin.this) == null) {
+                    doErrorCleanup();
+                    return;
+                }
+                if (utils.debugMode) {
+                    utils.debugOut.println("Login succeeded. -- begin init work.");
+                }
                 // Multi-threaded implementation of the periodic refreshes.
                 // I hope I didn't introduce too many race conditions/deadlocks this way
                 statRefresher = new StatusRefresher();
@@ -1873,10 +1959,10 @@ public final class mainwin extends JFrame {
                 // Final UI updates:
                 SwingUtilities.invokeLater(new Runnable() {
                    public void run() {
-                       mainwin.this.setTitle(myopts.user + "@" + myopts.host + (haveAdmin ? " (admin)" : "") + " - " +utils.AppName);
+                       mainwin.this.setTitle(myopts.user + "@" + myopts.host + (clientManager.isAdminMode() ? " (admin)" : "") + " - " +utils.AppName);
                        
-                       actAdminMode.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, haveAdmin);
-                       if (haveAdmin) {
+                       actAdminMode.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, clientManager.isAdminMode());
+                       if (clientManager.isAdminMode()) {
                            // A reddish gray
                            Color defStatusBackground = getDefStatusBackground();
                            textStatus.setBackground(new Color(Math.min(defStatusBackground.getRed() + 40, 255), defStatusBackground.getGreen(), defStatusBackground.getBlue()));
@@ -1893,8 +1979,23 @@ public final class mainwin extends JFrame {
                        utmrTable.schedule(statRefresher, 0, myopts.statusUpdateInterval);
                        utmrTable.schedule(tableRefresher, 0, myopts.tableUpdateInterval);
                        
+                       actSend.setEnabled(true);
+                       actPoll.setEnabled(true);
                        sendReady = SendReadyState.Ready;
                        mainwin.this.setEnabled(true);
+                       if (utils.debugMode) {
+                           utils.debugOut.println("Finished init work!");
+                       }
+                       if (loginAction != null) {
+                           if (utils.debugMode) {
+                               utils.debugOut.println("Doing login action: " + loginAction.getClass().getName());
+                           }
+                           loginAction.run();
+                           if (utils.debugMode) {
+                               utils.debugOut.println("Finished login action.");
+                           }
+                       }
+                       clientManager.endServerTransaction();
                     } 
                 });
             } catch (Exception e) {
@@ -1904,7 +2005,10 @@ public final class mainwin extends JFrame {
         }
         
         private void doErrorCleanup() {
-            hyfc = null;
+            if (utils.debugMode) {
+                utils.debugOut.println("Login failed! -- doing cleanup.");
+            }
+            clientManager = null;
             sendReady = SendReadyState.NotReady;
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
@@ -1914,9 +2018,10 @@ public final class mainwin extends JFrame {
              });
         }
         
-        public LoginThread(boolean haveAdmin) {
+        public LoginThread(boolean wantAdmin, Runnable loginAction) {
             super(LoginThread.class.getName());
-            this.haveAdmin = haveAdmin;
+            this.wantAdmin = wantAdmin;
+            this.loginAction = loginAction;
         }
     }
 }  

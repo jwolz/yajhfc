@@ -1,4 +1,4 @@
-README for YajHFC 0.3.5
+README for YajHFC 0.3.6
 =======================
 
 ABOUT
@@ -28,9 +28,9 @@ Requirements:
 * Some program to view TIFF files (also see the FAQ)
 * Optional: A PostScript viewer (e.g. Ghostview)
 
-To install YajHFC just download the yajhfc-0_3_5.jar file to some folder on your
+To install YajHFC just download the yajhfc-0_3_6.jar file to some folder on your
 file system.
-To execute it, use: "java -jar yajhfc-0_3_5.jar"
+To execute it, use: "java -jar yajhfc-0_3_6.jar"
 (In Windows you usually can just double click the jar file as well.)
 
 LICENSE
@@ -61,6 +61,12 @@ YajHFC was originally written as a first more complicated
 
 CHANGES
 -------
+
+0.3.6:
+- Some bug fixes
+- Support for to select multiple phone book entries for the send dialog
+- New command line argument ("--logfile") to log to a file in debug mode
+- Support for "disconnected mode" as a possible workaround to some HylaFAX bugs
 
 0.3.5:
 - Some UI improvements/"polishing" (e.g. progress bar for the fax list and more icons)

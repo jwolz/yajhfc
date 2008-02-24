@@ -213,6 +213,10 @@ public abstract class ProgressWorker extends Thread{
             this.msg = msg;
             this.title = title;
             this.msgType = msgType;
+            
+            if (utils.debugMode) {
+                utils.debugOut.println("ProgressWorker showMessageDialog: msg=\"" + msg + "\", title = \"" + title + "\", msgType=" + msgType);
+            }
         }
         
         public MsgDlgDisplayer(Component parent, String msg, String title, int optionType, int msgType) {
@@ -221,6 +225,10 @@ public abstract class ProgressWorker extends Thread{
             this.title = title;
             this.msgType = msgType;
             this.optionType = optionType;
+            
+            if (utils.debugMode) {
+                utils.debugOut.println("ProgressWorker showConfirmDialog: msg=\"" + msg + "\", title = \"" + title + "\", msgType=" + msgType + ", optionType=" + optionType);
+            }
         }
     }
     private static class ProgressUpdater implements Runnable {
@@ -249,6 +257,9 @@ public abstract class ProgressWorker extends Thread{
         public NoteUpdater(String note, ProgressUI pMon) {
             this.note = note;
             this.pMon = pMon;
+            if (utils.debugMode) {
+                utils.debugOut.println("ProgressWorker setNote: " + note);
+            }
         }
     }
     

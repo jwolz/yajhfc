@@ -93,7 +93,7 @@ public class OptionsWin extends JDialog {
     JCheckBox checkNewFax_Beep, checkNewFax_ToFront, checkNewFax_Open, checkNewFax_MarkAsRead;
     JSpinner spinStatusInterval, spinTableInterval;
     
-    JCheckBox checkPreferTIFF;
+    JCheckBox checkPreferTIFF, checkUseDisconnected;
     
     FaxOptions foEdit = null;
     List<FmtItem> recvfmt, sentfmt, sendingfmt;
@@ -154,6 +154,7 @@ public class OptionsWin extends JDialog {
         checkAskPassword.setSelected(foEdit.askPassword);
         checkAskAdminPassword.setSelected(foEdit.askAdminPassword);
         checkPreferTIFF.setSelected(foEdit.preferRenderedTIFF);
+        checkUseDisconnected.setSelected(foEdit.useDisconnectedMode);
         
         checkNewFax_Beep.setSelected((foEdit.newFaxAction & utils.NEWFAX_BEEP) != 0);
         checkNewFax_ToFront.setSelected((foEdit.newFaxAction & utils.NEWFAX_TOFRONT) != 0);
@@ -432,7 +433,7 @@ public class OptionsWin extends JDialog {
         if (panelServerRetrieval == null) {
             double[][] tablelay = {
                     {border, TableLayout.FILL, border},
-                    new double[11]
+                    new double[13]
             };
             double rowh = 1 / (double)(tablelay[1].length - 1);
             //tablelay[1][0] = border;
@@ -452,13 +453,17 @@ public class OptionsWin extends JDialog {
             checkPreferTIFF = new JCheckBox("<html>" + _("Prefer rendered TIFF (experimental)") + "</html>");
             checkPreferTIFF.setToolTipText(_("Try to fetch the rendered TIFF from the HylaFAX server instead of the source file."));
             
+            checkUseDisconnected = new JCheckBox("<html>" + _("Create new session for every action") + "</html>");
+            checkUseDisconnected.setToolTipText(_("Connect to the server and log in for every action (e.g. view a fax, update tables, ...) and disconnect afterwards. This impairs performance but might work around some bugs."));
+            
             addWithLabel(panelServerRetrieval, spinOffset, _("Date/Time offset:"), "1, 1, 1, 1, f, c");
             spinOffset.setToolTipText(_("Offset to be added to dates received from the HylaFAX server before displaying them."));
             panelServerRetrieval.add(checkPCLBug, "1, 2, 1, 3");
-            panelServerRetrieval.add(checkPreferTIFF, "1, 4, 1, 5");
+            panelServerRetrieval.add(checkUseDisconnected, "1, 4, 1, 5");
+            panelServerRetrieval.add(checkPreferTIFF, "1, 6, 1, 7");
             
-            addWithLabel(panelServerRetrieval, spinTableInterval, "<html>" + _("Table refresh interval (secs.):") + "</html>", "1, 7, 1, 7, f, c");
-            addWithLabel(panelServerRetrieval, spinStatusInterval, "<html>" + _("Server status refresh interval (secs.):") + "</html>", "1, 9, 1, 9, f, c"); 
+            addWithLabel(panelServerRetrieval, spinTableInterval, "<html>" + _("Table refresh interval (secs.):") + "</html>", "1, 9, 1, 9, f, c");
+            addWithLabel(panelServerRetrieval, spinStatusInterval, "<html>" + _("Server status refresh interval (secs.):") + "</html>", "1, 11, 1, 11, f, c"); 
         }
         return panelServerRetrieval;
     }
@@ -754,6 +759,7 @@ public class OptionsWin extends JDialog {
                 foEdit.askPassword = checkAskPassword.isSelected();
                 foEdit.askAdminPassword = checkAskAdminPassword.isSelected();
                 foEdit.preferRenderedTIFF = checkPreferTIFF.isSelected();
+                foEdit.useDisconnectedMode = checkUseDisconnected.isSelected();
                 
                 int val = 0;
                 if (checkNewFax_Beep.isSelected())
