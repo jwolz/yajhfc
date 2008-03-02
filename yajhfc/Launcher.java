@@ -273,7 +273,7 @@ public final class Launcher {
                 utils.debugOut = System.out;
             }
         }
-        ConsoleLogger.setOutputStream(utils.debugOut);
+        ConsoleLogger.setAllOutputStreams(utils.debugOut);
         if (debugMode) {
             utils.debugOut.println("YajHFC version: " + utils.AppVersion);
             utils.debugOut.println("---- BEGIN System.getProperties() dump");

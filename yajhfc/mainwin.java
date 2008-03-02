@@ -264,6 +264,8 @@ public final class mainwin extends JFrame {
         public MultiSaveWorker(TooltipJTable selTable, File targetDir) {
             this.selTable = selTable;
             this.targetDir = targetDir;
+            this.progressMonitor = tablePanel;
+            this.setCloseOnExit(false);
         }
     }
     private class ShowWorker extends ProgressWorker {
@@ -335,6 +337,8 @@ public final class mainwin extends JFrame {
         
         public ShowWorker(TooltipJTable selTable) {
             this.selTable = selTable;
+            this.progressMonitor = tablePanel;
+            this.setCloseOnExit(false);
         }
     }
     // Worker classes:

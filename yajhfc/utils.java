@@ -322,9 +322,9 @@ public final class utils {
         DecimalFormat fmt = new DecimalFormat("00");
         result = fmt.format(mins % 60);
         mins /= 60;
-        result = fmt.format(mins % 60) + result;
-        mins /= 60;
-        result = fmt.format(mins % 60) + result;
+        result = fmt.format(mins % 24) + result;
+        mins /= 24;
+        result = fmt.format(mins) + result;
         return result;
     }
  
