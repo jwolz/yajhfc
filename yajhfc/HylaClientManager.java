@@ -31,6 +31,9 @@ public class HylaClientManager {
 
     public void optionsChanged() {
         forceLogout();
+        
+        modems = null;
+        
         if (!myopts.askPassword)
             password = myopts.pass;
         else
@@ -155,7 +158,6 @@ public class HylaClientManager {
                     client.tzone(myopts.tzone.type);
 
                     client.rcvfmt(myopts.recvfmt.getFormatString());
-                    modems = null;
                     return client;
                 } catch (Exception e) {
                     ExceptionDialog.showExceptionDialogThreaded(owner, utils._("An error occured connecting to the server:"), e);
@@ -219,11 +221,12 @@ public class HylaClientManager {
 
                     hyfc.mdmfmt(oldModemFmt);
                 }
-                endServerTransaction();
             } catch (Exception e) {
                 utils.printWarning("Error fetching modem list: ", e);
                 modems = HylaModem.defaultModems;
                 return modems;
+            } finally {
+                endServerTransaction();
             }
             
             modems = new ArrayList<HylaModem>();
