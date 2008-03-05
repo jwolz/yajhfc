@@ -67,6 +67,7 @@ CHANGES
 - Support for to select multiple phone book entries for the send dialog
 - New command line argument ("--logfile") to log to a file in debug mode
 - Support for "disconnected mode" as a possible workaround to some HylaFAX bugs
+- Support to select the modem to use
 
 0.3.5:
 - Some UI improvements/"polishing" (e.g. progress bar for the fax list and more icons)

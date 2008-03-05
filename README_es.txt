@@ -1,15 +1,16 @@
-﻿LÉEME (README) de YajHFC 0.3.5
+LÉEME (README) de YajHFC 0.3.6
 ==============================
 
 ACERCA DE
 ---------
 
-YajHFC (Yet another java HylaFAX client) es un cliente para el servidor HylaFAX (http://www.hylafax.org) escrito en Java.
+YajHFC (Yet another java HylaFAX client) es un cliente para el servidor HylaFAX 
+(http://www.hylafax.org) escrito en Java.
 
 Características:
 * Envío de faxes en formato PostScript o PDF
-* Recepción de faxes
-* Soporte para generar portadas a partir de plantillas
+* Transmisión bajo demanda (polling) de faxes
+* Soporte para generar páginas de portada a partir de plantillas
 * Visualización de faxes enviados y recibidos
 * Agenda telefónica
 * Selección de columnas visibles (seleccionable desde cuadro de diálogo)
@@ -27,8 +28,8 @@ Requisitos:
 * Algún programa para ver ficheros TIFF (revisar el fichero FAQ.txt)
 * Opcional: visor PostScript (por ejemplo, Ghostview)
 
-Para instalar YajHFC descarga el fichero yajhfc-0_3_5.jar en algún lugar tu disco.
-Para ejecutarlo, utiliza: "java -jar yajhfc-0_3_5.jar"
+Para instalar YajHFC descarga el fichero yajhfc-0_3_6.jar en algún lugar tu disco.
+Para ejecutarlo, utiliza: "java -jar yajhfc-0_3_6.jar"
 (En Windows seguramente sólo te haga falta ejecutarlo pulsando dos veces sobre el archivo).
 
 LICENCIA
@@ -60,6 +61,13 @@ de Java (más avanzado que los programas "Hola mundo") utilizando la IDE Eclipse
 CAMBIOS
 -------
 
+0.3.6:
+- Corrección de algunos errores
+- Soporte para seleccionar múltiples entradas de la agenda telefónica en en cuadro de diálogo de envío
+- Nuevo argumento de línea de comandos ("--logfile") que permite el registro en un archivo en modo de depuración
+- Soporte para el "modo desconectado" como posible solución a algunos errores de HylaFAX
+- Soporte para seleccionar el módem a utilizar
+
 0.3.5:
 - Algunas mejoras/"pulidos" de la interfaz gráfica (UI), por ejemplo, la barra de progreso en la lista 
   de faxes y más iconos
@@ -82,7 +90,6 @@ CAMBIOS
 - Soporte añadido para agenda telefónica LDAP de sólo lectura
 - Soporte para apertura múltiple de agendas telefónicas
 - Programa de instalación para Windows con instalación automática de "impresora de fax"
-
 
 0.3.2:
 - Corrección de errores esporádicos cuando se envían faxes
@@ -138,14 +145,13 @@ CAMBIOS
 
 0.2:
 - Se añade soporte para la portada de fax
-- Se añade soporte para la recepción de faxes
+- Se añade soporte para la transmisión bajo demanda (polling) de faxes
 
 POR HACER
 ---------
 
 Las siguientes características posiblemente se añadirán en el futuro:
 
-* Soporte para agenda telefónica en base de datos LDAP.
 * Más traducciones (mirar abajo)
 
 YajHFC utiliza GNU gettext para las traducciones por lo que resulta muy sencillo 

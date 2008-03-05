@@ -89,7 +89,7 @@ public class FmtItemList extends ArrayList<FmtItem> {
         for (int i=0; i < fields.length; i++) {
             FmtItem res = (FmtItem)utils.findInArray(availableItems, fields[i]);
             if (res == null) {
-                System.err.println("FmtItem for " + fields[i] + "not found.");
+                utils.printWarning("FmtItem for " + fields[i] + "not found.");
             } else {
                 if (!this.contains(res)) {
                     this.add(res);

@@ -57,7 +57,7 @@ Contents</A>
 <LI><A NAME="tex2html29"
   HREF="faq_fr.html#SECTION00031000000000000000">Comment éditer les modèles de page de garde?</A>
 <LI><A NAME="tex2html30"
-  HREF="faq_fr.html#SECTION00032000000000000000">J voudrais accéder à un annuiaire téléphonique au travers de JDBC, maist YajHFC ne trouve pas les drivers même si je spécifie un "class path" correct au chargement de la machine virtuelle java.</A>
+  HREF="faq_fr.html#SECTION00032000000000000000">Je voudrais accéder à un annuiaire téléphonique au travers de JDBC, maist YajHFC ne trouve pas les drivers même si je spécifie un "class path" correct au chargement de la machine virtuelle java.</A>
 <LI><A NAME="tex2html31"
   HREF="faq_fr.html#SECTION00033000000000000000">Quelles valeurs puis je entrer comme matches opérateurs dans le champ des filtres personnalisés?</A>
 <LI><A NAME="tex2html32"
@@ -156,7 +156,7 @@ Ou trouver un visualiseur PostsScript?</A>
 
 <H1><A NAME="SECTION00030000000000000000">
 Utilisation du programme</A>
-</H1>	
+</H1>
 
 <P>
 
@@ -174,7 +174,7 @@ de tels fichiers:
 <P>
 
 <H2><A NAME="SECTION00032000000000000000">
-J voudrais accéder à un annuiaire téléphonique au travers de JDBC, maist YajHFC ne trouve pas les drivers même si je spécifie un  "class path" correct au chargement de la machine virtuelle java.</A>
+Je voudrais accéder à un annuiaire téléphonique au travers de JDBC, maist YajHFC ne trouve pas les drivers même si je spécifie un  "class path" correct au chargement de la machine virtuelle java.</A>
 </H2>
 
 <P>
@@ -200,8 +200,8 @@ Expressions régulières, Un court manuel de référence sur les syntaxes accept
 <TT><A NAME="tex2html4"
   HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/util/regex/Pattern.html">http://java.sun.com/j2se/1.5.0/docs/api/java/util/regex/Pattern.html</A></TT>
 <P>
-Notez que les expressions régulières ne sont pas identiques aux "wildcards : 
-Par exemple, pour avoir l'effet de <code>*</code> "wildcard", vous devez utiliser <code>.*</code> and 
+Notez que les expressions régulières ne sont pas identiques aux "wildcards :
+Par exemple, pour avoir l'effet de <code>*</code> "wildcard", vous devez utiliser <code>.*</code> and
 pour l'effet du "wildcard" <code>?</code> use <code>.</code>.
 
 <P>
@@ -213,8 +213,9 @@ Quels arguments de ligne de commande YajHFC accepte ?</A>
 <P>
 <PRE>
 Usage Général :
-java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose] 
-                     [--configdir=directory] [--stdin | filename]
+java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose]
+         [--configdir=directory] [--loadplugin=filename] [--logfile=filename]
+         [--showtab=0|R|1|S|2|T] [--recipient=...] [--stdin | filename ...]
 Description des Arguments :
 filename     Un ou plusieurs nom de fichier à envoyer.
 --stdin      Lit le fichier depuis l'entrée standard
@@ -222,6 +223,7 @@ filename     Un ou plusieurs nom de fichier à envoyer.
              Vous devez spécifier plusieurs arguments pour des recipiendaires multiples.
 --admin      Démarre en mode Administrateur
 --debug      Affiche des information de deboggage.
+--logfile    Le fichier de log pour les informations de debogage  (Si rien n'est spécifié, la sortie standard est utilisée)
 --background S'il n'y a pas d'instance en cours, démarre une nouvelle instance
              et la termine (après avoir soumis le fichier à envoyer)
 --noclose    Ne pas fermer YajHFC après la soumission du fax
@@ -244,7 +246,7 @@ Cochez la case  <TT>Utilisez le type de fichier PCL bugfix</TT> dans la boite de
 
 <P>
 Certaine version de HylaFAX rapportent de façon incorrecte les fichiers “PCL” pour tous les documents
-associés à un travail. Si cette case à cocher est active, YajHFC essaie de trouver 
+associés à un travail. Si cette case à cocher est active, YajHFC essaie de trouver
 le type de fichier PCL s'il est rapporté (Ceci fonctionne en général assez bien).
 
 <P>
@@ -254,7 +256,7 @@ YajHFC fonctionnant sous windows sauve quelquefois sa configuration dans <TT>C:\
 </H2>
 
 <P>
-Par défaut YajHFC sauve ses informations de configuration dans le sous répertoire <TT>.yajhfc</TT> du répertoire retourné par 
+Par défaut YajHFC sauve ses informations de configuration dans le sous répertoire <TT>.yajhfc</TT> du répertoire retourné par
 la propriété système java <TT>user.home</TT>.
 Quelquefois des versions de java semblent ne pas affecter correctement cette variable d'environnement ce qui explique le problème ci dessus.
 
@@ -269,8 +271,8 @@ Que veux dire la colonne XYZ ?</A>
 </H2>
 
 <P>
-Très probablement, je ne sais pas exactement car la description des colonnes sont 
-simplement copiées de la page de manuel <code>faxstat(1)</code> (JobFmt/RcvFmt) et  
+Très probablement, je ne sais pas exactement car la description des colonnes sont
+simplement copiées de la page de manuel <code>faxstat(1)</code> (JobFmt/RcvFmt) et
 abrégées/traduites.
 
 <P>
@@ -289,7 +291,7 @@ Pourquoi les mots de passe sont il stockés en clair ?</A>
 Simplement car il n'y a pas de méthode beaucoup meilleure.
 
 <P>
-YajHFC pourrait encoder/“crypter” les mots de passe avant de les stocker, mais si cela le faisait, 
+YajHFC pourrait encoder/“crypter” les mots de passe avant de les stocker, mais si cela le faisait,
 vous pourriez toujours regarder le code source et trouver comment les décrypter
 (même si YajHFC était un logiciel fermé (propriétaire) vous pourriez le désassembler
 ou expérimenter pour les retrouver ).
@@ -311,7 +313,7 @@ je n'avais pas de  “joli” nom. Après un moment de travail dessus, j'ai vu q
 utilisable, j'ai donc choisi de le nommer.
 Comme je travaillais aussi sur SuSE  Linux a ce moment je savais qu'il
 y avait déjà de nombreux projets clients java hylfax, Je l'ai simplement appellé
-“<B>y</B>et <B>a</B>nother <B>J</B>ava <B>H</B>ylaFAX <B>c</B>lient”. 
+“<B>y</B>et <B>a</B>nother <B>J</B>ava <B>H</B>ylaFAX <B>c</B>lient”.
 
 <P>
 
@@ -333,11 +335,11 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>-no_subdir -split 0 -html_version 3.2,latin1,unicode,utf8 -no_navigation faq_fr.tex</TT>
 <P>
-The translation was initiated by Jonas Wolz on 2007-09-14
+The translation was initiated by Jonas Wolz on 2008-03-04
 <BR><HR>
 <ADDRESS>
 Jonas Wolz
-2007-09-14
+2008-03-04
 </ADDRESS>
 </BODY>
 </HTML>

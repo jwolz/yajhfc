@@ -89,7 +89,7 @@ for the effect of the wildcard \verb#?# use \verb#.#.
 \begin{verbatim}
 General usage:
 java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose]
-         [--configdir=directory] [--loadplugin=filename]
+         [--configdir=directory] [--loadplugin=filename] [--logfile=filename]
          [--showtab=0|R|1|S|2|T] [--recipient=...] [--stdin | filename ...]
 Argument description:
 filename     One or more file names of PostScript files to send.
@@ -98,6 +98,7 @@ filename     One or more file names of PostScript files to send.
              You may specify multiple arguments for multiple recipients.
 --admin      Start up in admin mode
 --debug      Output some debugging information
+--logfile    The logfile to log debug information to (if not specified, use stdout)
 --background If there is no already running instance, launch a new instance
              and terminate (after submitting the file to send)
 --noclose    Do not close YajHFC after submitting the fax

@@ -136,7 +136,7 @@ public final class Launcher {
                 isLocking = true;
             }
         } catch (IOException e) {
-            System.err.println("Could not create lock: " + e.getMessage());
+            utils.printWarning("Could not create lock: ", e);
         }
     }
     
@@ -378,8 +378,7 @@ public final class Launcher {
                 try {
                     PluginManager.addPlugin(jar);
                 } catch (IOException e) {
-                    System.err.println("Error loading the plugin " + jar + ": ");
-                    e.printStackTrace();
+                    utils.printWarning("Error loading the plugin " + jar + ": ", e);
                 }
             }
             SwingUtilities.invokeLater(new NewInstRunner(fileNames, useStdin, recipients, adminMode, closeAfterSubmit, selectedTab));
@@ -443,7 +442,7 @@ public final class Launcher {
                 } else {
                     outStream.write(codeToForeground);
                     
-                    System.err.println(utils._("There already is a running instance!"));
+                    utils.printWarning(utils._("There already is a running instance!"));
                 }
                 //outStream.write(codeQuit);
                 outStream.flush();
@@ -464,8 +463,7 @@ public final class Launcher {
                 else
                     System.exit(responseGeneralError);
             } catch (IOException e) {
-                System.err.println("An error occured communicating with the old instance: ");
-                e.printStackTrace();
+                utils.printWarning("An error occured communicating with the old instance: ", e);
                 System.exit(responseGeneralError);
             }
         }
@@ -628,7 +626,7 @@ public final class Launcher {
                             doLoop = false;
                             break;
                         default:
-                            System.err.println("Unknown code received.");
+                            utils.printWarning("Unknown code received.");
                             strOut.write(responseUnknownOpCode);
                             break;
                         }

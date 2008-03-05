@@ -138,13 +138,12 @@ public class GeneralConnectionSettings {
                 } else if (f_class == Integer.TYPE || f_class == Integer.class) {
                     f.set(this, Integer.valueOf(value));
                 } else {
-                    System.err.println("Unsupported field type: " + f_class.getName());
+                    utils.printWarning("Unsupported field type: " + f_class.getName());
                 }
             } catch (NoSuchFieldException e) {
-                System.err.println("Unknown field " + fieldName);
+                utils.printWarning("Unknown field " + fieldName);
             } catch (Exception e) {
-                System.err.println("Exception loading fields:");
-                e.printStackTrace();
+                utils.printWarning("Exception loading fields:", e);
             }
         }
     }

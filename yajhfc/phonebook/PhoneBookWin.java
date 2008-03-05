@@ -444,7 +444,7 @@ public final class PhoneBookWin extends JDialog
                 else if (cmd.equals(IMPORT_COMMAND)) 
                     doImport();
                 else
-                    System.err.println("Unknown Action command: " + cmd);
+                    utils.printWarning("Unknown Action command: " + cmd);
             } catch (Exception ex) {
                 ExceptionDialog.showExceptionDialog(PhoneBookWin.this, utils._("Error executing the desired action:"), ex);
             }

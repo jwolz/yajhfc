@@ -56,7 +56,7 @@ public class PluginManager {
         jar.close();
         
         if (initClassName == null) {
-            System.err.println(pluginJar.toString() + " is not a valid YajHFC Plugin.");
+            utils.printWarning(pluginJar.toString() + " is not a valid YajHFC Plugin.");
             return false;
         }
         
@@ -66,13 +66,12 @@ public class PluginManager {
             Method initMethod = initClass.getMethod("init", new Class[0]);
             Object returnValue = initMethod.invoke(null);
             if (!(returnValue instanceof Boolean && ((Boolean)returnValue).booleanValue())) {
-                System.err.println("Initialization of plugin " + pluginJar + " failed." );
+                utils.printWarning("Initialization of plugin " + pluginJar + " failed." );
                 return false;
             }
             return true;
         } catch (Exception e) {
-            System.err.println("Could not initialize plugin " + pluginJar + ":");
-            e.printStackTrace();
+            utils.printWarning("Could not initialize plugin " + pluginJar + ":", e);
             return false;
         }
     }
