@@ -64,7 +64,7 @@ CHANGES
 
 0.3.6:
 - Some bug fixes
-- Support for to select multiple phone book entries for the send dialog
+- Support for selection of multiple phone book entries for the send dialog
 - New command line argument ("--logfile") to log to a file in debug mode
 - Support for "disconnected mode" as a possible workaround to some HylaFAX bugs
 - Support to select the modem to use
