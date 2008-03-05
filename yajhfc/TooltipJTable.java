@@ -98,7 +98,7 @@ public class TooltipJTable extends JTable {
             if ((sort != 0) && (Math.abs(sort) <= getColumnCount()))
                 getSorter().setSortingStatus(Math.abs(sort) - 1, (sort > 0) ? TableSorter.ASCENDING : TableSorter.DESCENDING);
         } catch (NumberFormatException e1) {
-            System.err.println("Couldn't parse value: " + cfg[0]);
+            utils.printWarning("Couldn't parse value: " + cfg[0]);
         }
         
         for (int i = 1; i < cfg.length; i++) {
@@ -118,7 +118,7 @@ public class TooltipJTable extends JTable {
                     }
                 }
             } catch (NumberFormatException e) {
-                System.err.println("Couldn't parse value: " + cfg[i]);
+                utils.printWarning("Couldn't parse value: " + cfg[i]);
             }
         } 
     }

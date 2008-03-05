@@ -30,14 +30,14 @@ Vous pouvez utiliser l'application Imaging du menu Accessoires.
       pour trouver le programme \texttt{kodakimg.exe} sur votre disque dur.\\
       Ce fichier est habituellement dasn le répertoire Windows (Win 98/ME) \emph{ou} \\
       dans \verb.Program Files\Windows NT\Accessoires\ImageVue. (Win 2k).
-       
+
 \item[Windows XP:]
 Vous pouvez utiliser le "visualiseur d'images et de fax" intégré (Désolé, Je ne connais pas son emplacement exact).
       Pour l'utiliser,entrez le texte suivant dans le champ \texttt{Ligne de commande pour visualiser les fax} boite:\\
       \verb#rundll32.exe shimgvw.dll,ImageView_Fullscreen %s#
  \end{description}
 
-      
+
 \subsection{Ou Trouver un visualiseur de fax pour Linux/*BSD/... ?}
 \texttt{kfax} fonctionne très bien pour moi, mais comme pour Windows, vous pouvez utiliser n'importe quel programme
 capable d'afficher les fichiersTIFF , cherchez dans la base des paquets de votre distribution
@@ -56,8 +56,8 @@ Merci à Scott Harris pour cette information.
 \item[Linux/*BSD/...:] Installez seulement un paquet Visualiseur Postscript
                 (i.e. \texttt{gv, kghostview, gnome-gv, ...})
 \end{description}
-		
-\section{Utilisation du programme}	
+
+\section{Utilisation du programme}
 
 \subsection{Comment éditer les modèles de page de garde?}
 Les modèles doivent être au même format Postscript que ceux utilisés par le programme HylaFAX
@@ -66,7 +66,7 @@ de tels fichiers: \\
 \url{http://www.hylafax.org/HylaFAQ/Q202.html}\\
 \url{http://www.hylafax.org/howto/tweaking.html}\\
 
-\subsection{J voudrais accéder à un annuiaire téléphonique au travers de JDBC, maist YajHFC ne trouve pas les drivers même si je spécifie un  "class path" correct au chargement de la machine virtuelle java.}
+\subsection{Je voudrais accéder à un annuiaire téléphonique au travers de JDBC, maist YajHFC ne trouve pas les drivers même si je spécifie un  "class path" correct au chargement de la machine virtuelle java.}
 
 Si vous utilisez l'argument de ligne de commande \texttt{-jar} , java ignore les "class path" utilisateur.
 Aussi,Démarrez YajHFC en utilisant les commandes suivantes (remplacez \texttt{/path/to/dbdriver.jar} et \texttt{/path/to/yajhfc.jar} par les répertoires et nom des fichiers respectifs réels bien sur):
@@ -80,16 +80,17 @@ Aussi,Démarrez YajHFC en utilisant les commandes suivantes (remplacez \texttt{/p
 Expressions régulières, Un court manuel de référence sur les syntaxes acceptées se trouve à l'adresse :
 \url{http://java.sun.com/j2se/1.5.0/docs/api/java/util/regex/Pattern.html}
 
-Notez que les expressions régulières ne sont pas identiques aux "wildcards : 
-Par exemple, pour avoir l'effet de \verb.*. "wildcard", vous devez utiliser \verb#.*# and 
+Notez que les expressions régulières ne sont pas identiques aux "wildcards :
+Par exemple, pour avoir l'effet de \verb.*. "wildcard", vous devez utiliser \verb#.*# and
 pour l'effet du "wildcard" \verb#?# use \verb#.#.
 
 \subsection{Quels arguments de ligne de commande YajHFC accepte ?}
 
 \begin{verbatim}
 Usage Général :
-java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose] 
-                     [--configdir=directory] [--stdin | filename]
+java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose]
+         [--configdir=directory] [--loadplugin=filename] [--logfile=filename]
+         [--showtab=0|R|1|S|2|T] [--recipient=...] [--stdin | filename ...]
 Description des Arguments :
 filename     Un ou plusieurs nom de fichier à envoyer.
 --stdin      Lit le fichier depuis l'entrée standard
@@ -97,6 +98,7 @@ filename     Un ou plusieurs nom de fichier à envoyer.
              Vous devez spécifier plusieurs arguments pour des recipiendaires multiples.
 --admin      Démarre en mode Administrateur
 --debug      Affiche des information de deboggage.
+--logfile    Le fichier de log pour les informations de debogage  (Si rien n'est spécifié, la sortie standard est utilisée)
 --background S'il n'y a pas d'instance en cours, démarre une nouvelle instance
              et la termine (après avoir soumis le fichier à envoyer)
 --noclose    Ne pas fermer YajHFC après la soumission du fax
@@ -114,12 +116,12 @@ filename     Un ou plusieurs nom de fichier à envoyer.
 Cochez la case  \texttt{Utilisez le type de fichier PCL bugfix} dans la boite de dialogue des options et essayez à nouveau.
 
 Certaine version de HylaFAX rapportent de façon incorrecte les fichiers ``PCL'' pour tous les documents
-associés à un travail. Si cette case à cocher est active, YajHFC essaie de trouver 
+associés à un travail. Si cette case à cocher est active, YajHFC essaie de trouver
 le type de fichier PCL s'il est rapporté (Ceci fonctionne en général assez bien).
 
 \subsection{YajHFC fonctionnant sous windows sauve quelquefois sa configuration dans \texttt{C:\textbackslash .yajhfc} au lieu de \texttt{C:\textbackslash Documents and Settings\textbackslash USERNAME\textbackslash .yajhfc}}
 
-Par défaut YajHFC sauve ses informations de configuration dans le sous répertoire \texttt{.yajhfc} du répertoire retourné par 
+Par défaut YajHFC sauve ses informations de configuration dans le sous répertoire \texttt{.yajhfc} du répertoire retourné par
 la propriété système java \texttt{user.home}.
 Quelquefois des versions de java semblent ne pas affecter correctement cette variable d'environnement ce qui explique le problème ci dessus.
 
@@ -128,8 +130,8 @@ Comme contournement, vous pouvez affecter cette variable explicitement au lancem
 
 \subsection{Que veux dire la colonne XYZ ?}
 
-Très probablement, je ne sais pas exactement car la description des colonnes sont 
-simplement copiées de la page de manuel \verb.faxstat(1). (JobFmt/RcvFmt) et  
+Très probablement, je ne sais pas exactement car la description des colonnes sont
+simplement copiées de la page de manuel \verb.faxstat(1). (JobFmt/RcvFmt) et
 abrégées/traduites.
 
 \section{Divers}
@@ -138,7 +140,7 @@ abrégées/traduites.
 
 Simplement car il n'y a pas de méthode beaucoup meilleure.
 
-YajHFC pourrait encoder/``crypter'' les mots de passe avant de les stocker, mais si cela le faisait, 
+YajHFC pourrait encoder/``crypter'' les mots de passe avant de les stocker, mais si cela le faisait,
 vous pourriez toujours regarder le code source et trouver comment les décrypter
 (même si YajHFC était un logiciel fermé (propriétaire) vous pourriez le désassembler
 ou expérimenter pour les retrouver ).
@@ -155,6 +157,6 @@ je n'avais pas de  ``joli'' nom. Après un moment de travail dessus, j'ai vu que 
 utilisable, j'ai donc choisi de le nommer.
 Comme je travaillais aussi sur SuSE  Linux a ce moment je savais qu'il
 y avait déjà de nombreux projets clients java hylfax, Je l'ai simplement appellé
-``\textbf{y}et \textbf{a}nother \textbf{J}ava \textbf{H}ylaFAX \textbf{c}lient''. 
+``\textbf{y}et \textbf{a}nother \textbf{J}ava \textbf{H}ylaFAX \textbf{c}lient''.
 
 \end{document}

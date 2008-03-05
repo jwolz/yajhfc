@@ -96,7 +96,7 @@ y para simular el efecto de \verb#?# hay que utilizar \verb#.#.
 \begin{verbatim}
 Uso general:
 java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose]
-         [--configdir=directory] [--loadplugin=filename]
+         [--configdir=directory] [--loadplugin=filename] [--logfile=filename]
          [--showtab=0|R|1|S|2|T] [--recipient=...] [--stdin | filename ...]
 Descripción de los argumentos:
 filename     El nombre del archivo PostScript para enviar.
@@ -105,6 +105,7 @@ filename     El nombre del archivo PostScript para enviar.
              Es posible especificar varios valores para múltiples destinatarios.
 --admin      Inicia en modo administrador
 --debug      Salida de información de errores
+--logfile    Archivo de registro donde registrar la información de depuración (si no se especifica, usar la salida estándar "stdout")
 --background Si no hay ninguna instancia en ejecución, iniciar una nueva instancia
              y terminar (después de enviar el archivo)
 --noclose    No cerrar YajHFC después de enviar el fax
@@ -149,12 +150,12 @@ Yo tampoco lo sé exactamente porque la descripción de las columnas ha sido cop
 Simplemente porque no hay otro método que sea mejor.
 
 
-YajHFC puede codificar/"encriptar" las contraseñas antes de almacenarlas, 
+YajHFC puede codificar/"cifrar" las contraseñas antes de almacenarlas, 
 pero si lo hace siempre es posible visualizar el código fuente para encontrarlas 
-y desencriptarlas (incluso aunque YajHFC fuera de código cerrado podrías reventarlas o experimentar un poco sobre cómo hacerlo).
+y descifrarlas (incluso aunque YajHFC fuera de código cerrado podrías reventarlas o experimentar un poco sobre cómo hacerlo).
 
 
-El único mitodo seguro requeriría introducir una contraseña maestra cada vez que se inicia YajHFC, pero en mi opinión no es mejor que introducir la contraseña real.
+El único método seguro requeriría introducir una contraseña maestra cada vez que se inicia YajHFC, pero en mi opinión no es mejor que introducir la contraseña real.
 
 
 \subsection{¿Por qué escogiste ese nombre tan tonto?}

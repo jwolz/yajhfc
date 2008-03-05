@@ -1709,11 +1709,7 @@ public final class mainwin extends JFrame {
                     newText = utils.listToString(hyfc.getList("status"), "\n");
                 } catch (Exception e) {
                     newText = "Error refreshing the status: " + e.toString();
-                    System.err.println(newText);
-                    if (utils.debugMode) {
-                        utils.debugOut.println("Error refreshing the status: ");
-                        e.printStackTrace(utils.debugOut);
-                    }
+                    utils.printWarning("Error refreshing the status: ", e);
                 }
             }
             if (!newText.equals(text)) {
@@ -1778,7 +1774,7 @@ public final class mainwin extends JFrame {
                     //System.out.println(System.currentTimeMillis() + ": Did invokeLater()");
                 }
             } catch (Exception e) {
-                System.err.println("An error occured refreshing the tables: " + e.getMessage());
+                utils.printWarning("An error occured refreshing the tables: ", e);
                 if (utils.debugMode) {
                     utils.debugOut.println("An error occured refreshing the tables: ");
                     e.printStackTrace(utils.debugOut);
@@ -1800,7 +1796,7 @@ public final class mainwin extends JFrame {
                     lastSentList = lst;
                 }
             } catch (Exception e) {
-                System.err.println("An error occured refreshing the tables: " + e.getMessage());
+                utils.printWarning("An error occured refreshing the tables: ", e);
                 if (utils.debugMode) {
                     utils.debugOut.println("An error occured refreshing the tables: ");
                     e.printStackTrace(utils.debugOut);
@@ -1822,7 +1818,7 @@ public final class mainwin extends JFrame {
                     lastSendingList = lst;
                 }
             } catch (Exception e) {
-                System.err.println("An error occured refreshing the tables: " + e.getMessage());
+                utils.printWarning("An error occured refreshing the tables: ", e);
                 if (utils.debugMode) {
                     utils.debugOut.println("An error occured refreshing the tables: ");
                     e.printStackTrace(utils.debugOut);

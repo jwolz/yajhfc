@@ -62,7 +62,7 @@ public class LocalPersistentReadState extends PersistentReadState {
         } catch (FileNotFoundException e) { 
             // No file yet - keep empty
         } catch (IOException e) {
-            System.err.println("Error reading read status: " + e.getMessage());
+            utils.printWarning("Error reading read status: ", e);
         }
         
         return oldRead;
@@ -80,11 +80,12 @@ public class LocalPersistentReadState extends PersistentReadState {
             bOut.write("# This file contains a list of faxes considered read\n\n");
             
             for ( String fax : readFaxes ) {
-                bOut.write(fax + "\n");
+                bOut.write(fax);
+                bOut.write('\n');
             }
             bOut.close();
         } catch (IOException e) {
-            System.err.println("Error storing read state: " + e.getMessage());
+            utils.printWarning("Error storing read state: ", e);
         }
     }
 

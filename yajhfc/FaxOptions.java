@@ -101,7 +101,7 @@ public class FaxOptions {
     public int lastSelectedPhonebook = 0;
     
     public boolean useDisconnectedMode = false;
-    //public String defaultModem = "any";
+    public String defaultModem = "any";
     
     public FaxOptions() {
         this.host = "";
@@ -181,14 +181,6 @@ public class FaxOptions {
     private static final char sep = '|';
     //private static final String sepregex = "\\|";
     
-    private void logErr(String msg) {
-        if (utils.debugMode) {
-            utils.debugOut.println(msg);
-        } else {
-            System.err.println(msg);              
-        }
-    }
-    
     @SuppressWarnings("unchecked")
     public void storeToFile(String fileName) {
         Properties p = new Properties();
@@ -229,9 +221,9 @@ public class FaxOptions {
                         p.setProperty(name + "." + (++idx), (String)o);
                     }
                 } else
-                    logErr("Unknown field type " + val.getClass().getName());
+                    utils.printWarning("Unknown field type " + val.getClass().getName());
             } catch (Exception e) {
-                logErr("Exception reading field: " + e.getMessage());
+                utils.printWarning("Exception reading field: ", e);
             }
         }
         
@@ -240,7 +232,7 @@ public class FaxOptions {
             p.store(filout, utils.AppShortName + " " + utils.AppVersion + " configuration file");
             filout.close();
         } catch (Exception e) {
-            logErr("Couldn't save file '" + fileName + "': " + e.getMessage());
+            utils.printWarning("Couldn't save file '" + fileName + "': ", e);
         }
     }
     
@@ -258,7 +250,7 @@ public class FaxOptions {
         } catch (FileNotFoundException e) {
             return; // No file yet
         } catch (IOException e) {
-            logErr("Error reading file '" + fileName + "': " + e.getMessage());
+            utils.printWarning("Error reading file '" + fileName + "': " , e);
             return;
         }
         if (utils.debugMode) {
@@ -312,14 +304,14 @@ public class FaxOptions {
                     else if (fName.equals("locale"))
                         dataarray = utils.AvailableLocales;
                     else {
-                        logErr("Unknown MyManualMapObject field: " + fName);
+                        utils.printWarning("Unknown MyManualMapObject field: " + fName);
                         continue;
                     }
                     Object res = utils.findInArray(dataarray, p.getProperty(fName));
                     if (res != null)
                         f.set(this, res);
                     else
-                        logErr("Unknown value for MyManualMapObject field " + fName);
+                        utils.printWarning("Unknown value for MyManualMapObject field " + fName);
                 }
                 else if (FmtItemList.class.isAssignableFrom(fcls)) {
                     FmtItemList fim = (FmtItemList)f.get(this);
@@ -363,9 +355,9 @@ public class FaxOptions {
                     List lst = (List)f.get(this);
                     lst.add(p.getProperty(propName));
                 } else
-                    logErr("Unknown field type " + fcls.getName());
+                    utils.printWarning("Unknown field type " + fcls.getName());
             } catch (Exception e1) {
-                logErr("Couldn't load setting for " + propName + ": " + e1.getMessage());
+                utils.printWarning("Couldn't load setting for " + propName + ": ", e1);
             }
         }
     }

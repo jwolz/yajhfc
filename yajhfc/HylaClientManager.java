@@ -6,6 +6,9 @@ import gnu.inet.ftp.ServerResponseException;
 import java.awt.Window;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 
 public class HylaClientManager {
     protected boolean adminMode;
@@ -15,6 +18,10 @@ public class HylaClientManager {
     protected String adminPassword;
     protected String lastUser;
     protected int transactionCounter;
+    protected List<HylaModem> modems = null;
+    
+    protected static final String modemListFormat = "$$$|%m|%n";
+    protected static final String modemListPrefix = "$$$";    
     
     public HylaClientManager(FaxOptions myopts) {
         super();
@@ -148,6 +155,7 @@ public class HylaClientManager {
                     client.tzone(myopts.tzone.type);
 
                     client.rcvfmt(myopts.recvfmt.getFormatString());
+                    modems = null;
                     return client;
                 } catch (Exception e) {
                     ExceptionDialog.showExceptionDialogThreaded(owner, utils._("An error occured connecting to the server:"), e);
@@ -191,5 +199,43 @@ public class HylaClientManager {
             this.adminMode = adminMode;
             forceLogout();
         }
+    }
+    
+    public List<HylaModem> getModems() {
+        if (modems == null) {
+            HylaFAXClient hyfc = beginServerTransaction(null);
+            if (hyfc == null) {
+                modems = HylaModem.defaultModems;
+                return modems;
+            }
+            
+            Vector<?> status;
+            try {
+                synchronized (hyfc) {
+                    String oldModemFmt = hyfc.mdmfmt();
+
+                    hyfc.mdmfmt(modemListFormat);
+                    status = hyfc.getList("status");
+
+                    hyfc.mdmfmt(oldModemFmt);
+                }
+                endServerTransaction();
+            } catch (Exception e) {
+                utils.printWarning("Error fetching modem list: ", e);
+                modems = HylaModem.defaultModems;
+                return modems;
+            }
+            
+            modems = new ArrayList<HylaModem>();
+            modems.addAll(HylaModem.defaultModems);
+            for (Object o : status) {
+                String line = (String)o;
+                if (line.startsWith(modemListPrefix)) { // Is a line describing a modem
+                    String[] fields = utils.fastSplit(line, '|');
+                    modems.add(new HylaModem(fields[1], fields[2]));
+                }
+            }
+        }
+        return modems;
     }
 }

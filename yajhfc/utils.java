@@ -47,8 +47,8 @@ import javax.swing.UIManager;
 public final class utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
-    public static final String AppCopyright = "Copyright © 2005-2007 by Jonas Wolz";
-    public static final String AppVersion = "0.3.6pre";
+    public static final String AppCopyright = "Copyright © 2005-2008 by Jonas Wolz";
+    public static final String AppVersion = "0.3.6";
     public static final String AuthorEMail = "Jonas Wolz &lt;jwolz@freenet.de&gt;";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
     
@@ -445,11 +445,11 @@ public final class utils {
             UIManager.setLookAndFeel(lfClass);
             return true;
         } catch (Exception e) {
-            System.err.println("Couldn't load look&feel: " + className);
+            utils.printWarning("Couldn't load look&feel: " + className + ": ", e);
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             } catch (Exception e1) {
-                System.err.println("Couldn't load native look&feel.");
+                utils.printWarning("Couldn't load native look&feel: ", e1);
             }
             return false;
         }
@@ -588,6 +588,35 @@ public final class utils {
             }
         }
         return -1;
+    }
+    
+    /**
+     * Outputs an error message to standard error or to the debug log
+     * @param message
+     */
+    public static void printWarning(String message, Throwable ex) {
+        if (debugMode) {
+            debugOut.print("WARNING: ");
+            debugOut.println(message);
+            if (ex != null) {
+                ex.printStackTrace(debugOut);
+            }
+        } else {
+            if (ex == null) {
+                System.err.println(message);
+            } else {
+                System.err.print(message);
+                System.err.println(ex);
+            }
+        }
+    }
+
+    /**
+     * Outputs an error message to standard error or to the debug log
+     * @param message
+     */
+    public static void printWarning(String message) {
+        printWarning(message, null);
     }
 }
 

@@ -84,6 +84,7 @@ public final class SendWin extends JDialog  {
     JComboBox comboResolution = null;
     JComboBox comboPaperSize = null;
     JComboBox comboNotification = null;
+    JComboBox comboModem = null;
     
     JSpinner spinKillTime = null;
     JSpinner spinMaxTries = null;
@@ -175,6 +176,15 @@ public final class SendWin extends JDialog  {
         comboResolution.setSelectedItem(fo.resolution);
         comboPaperSize.setSelectedItem(fo.paperSize);
         comboNotification.setSelectedItem(fo.notifyWhen);
+        
+        Object selModem = fo.defaultModem;
+        for (HylaModem modem : clientManager.getModems()) {
+            if (modem.getInternalName().equals(fo.defaultModem)) {
+                selModem = modem;
+                break;
+            }
+        }
+        comboModem.setSelectedItem(selModem);
         
         spinMaxTries.setValue(Integer.valueOf(fo.maxTry));
         spinKillTime.setValue(fo.killTime);
@@ -409,10 +419,14 @@ public final class SendWin extends JDialog  {
             
             spinMaxTries = new JSpinner(new SpinnerNumberModel(12, 1, 100, 1));
             
+            comboModem = new JComboBox(clientManager.getModems().toArray());
+            comboModem.setEditable(true);
+            
             addWithLabel(paneCommon, box, _("Fax number(s):"), "1, 5, 3, 5, F, C");
             paneCommon.add(tflNumbers, "1, 6, 3, 6, F, F");
             
-            addWithLabel(paneCommon, comboNotification, _("Notify when:"), "1, 8, 3, 8, F, C");
+            addWithLabel(paneCommon, comboNotification, _("Notify when:"), "1, 8, 1, 8, F, C");
+            addWithLabel(paneCommon, comboModem, _("Modem:"), "3, 8, F, C");
             addWithLabel(paneCommon, comboResolution, _("Resolution:"), "1, 10, F, C");
             addWithLabel(paneCommon, comboPaperSize, _("Paper size:"), "3, 10, F, C");
             addWithLabel(paneCommon, spinKillTime, _("Cancel job after (minutes):"), "1, 12, F, C");
@@ -763,7 +777,24 @@ public final class SendWin extends JDialog  {
             if (val.length() >  0)
                 j.setProperty(prop, val);
             } catch (Exception e) {
-                System.err.println("Couldn't set additional job info " + prop + ": " + e.getMessage());
+                utils.printWarning("Couldn't set additional job info " + prop + ": ", e);
+            }
+        }
+        
+        private String getModem() {
+            Object sel = comboModem.getSelectedItem();
+            if (utils.debugMode) {
+                utils.debugOut.println("Selected modem (" + sel.getClass().getCanonicalName() + "): " + sel);
+            }
+            if (sel instanceof HylaModem) {
+                return ((HylaModem)sel).getInternalName();
+            } else {
+                String str = sel.toString();
+                int pos = str.indexOf(' '); // Use part up to the first space
+                if (pos == -1)
+                    return str;
+                else
+                    return str.substring(0, pos);
             }
         }
         
@@ -812,6 +843,11 @@ public final class SendWin extends JDialog  {
                         //TEST }
                     }            
 
+                    String modem = getModem();
+                    if (utils.debugMode) {
+                        utils.debugOut.print("Use modem: ");
+                        utils.debugOut.println(modem);
+                    }
                     for (int i = 0; i < tflNumbers.model.size(); i++) {
                         NumberTFLItem numItem = (NumberTFLItem)tflNumbers.model.get(i);
                         updateNote(MessageFormat.format(_("Creating job to {0}"), numItem.getText()));
@@ -858,6 +894,8 @@ public final class SendWin extends JDialog  {
                             j.setVerticalResolution(((FaxIntProperty)comboResolution.getSelectedItem()).type);
                             j.setSendTime("NOW"); // bug fix 
                             j.setKilltime(utils.minutesToHylaTime(((Integer)spinKillTime.getValue()).intValue()));  
+                            
+                            j.setProperty("MODEM", modem);
 
                             if (pollMode) 
                                 j.setProperty("POLL", "\"\" \"\"");
@@ -953,12 +991,13 @@ public final class SendWin extends JDialog  {
             location = pbe.getLocation();
             voiceNumber = pbe.getVoiceNumber();
             
-            name = "";
+            StringBuilder nameBuilder = new StringBuilder();
             if (pbe.getTitle().length() > 0)
-                name += pbe.getTitle() + " ";
+                nameBuilder.append(pbe.getTitle()).append(' ');
             if (pbe.getGivenName().length() > 0)
-                name += pbe.getGivenName() + " ";
-            name += pbe.getName();
+                nameBuilder.append(pbe.getGivenName()).append(' ');
+            nameBuilder.append(pbe.getName());
+            name = nameBuilder.toString();
         }
         
         public NumberTFLItem(String number) {

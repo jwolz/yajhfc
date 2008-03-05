@@ -53,7 +53,7 @@ public class XMLPhoneBookEntry extends SimplePhoneBookEntry {
                 dataEl.setTextContent(val.toString());
                 el.appendChild(dataEl);
             } catch (Exception e) {
-                System.err.println("Error writing element " + f[i].getName() + ": " + e.toString());
+                yajhfc.utils.printWarning("Error writing element " + f[i].getName() + ": ", e);
             }
         }
     }
@@ -68,7 +68,7 @@ public class XMLPhoneBookEntry extends SimplePhoneBookEntry {
                     java.lang.reflect.Field f = XMLPhoneBookEntry.class.getField(item.getNodeName());
                     f.set(this, item.getTextContent());
                 } catch (Exception e) {
-                     System.err.println("Error reading element " + item.getNodeName() + ": " + e.toString());
+                    yajhfc.utils.printWarning("Error reading element " + item.getNodeName() + ": ", e);
                 }
             }
         }

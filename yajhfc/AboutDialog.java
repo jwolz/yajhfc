@@ -288,7 +288,7 @@ public class AboutDialog extends JDialog implements HyperlinkListener {
             this.setSize(640, 480);
             break;
         default:
-            System.err.println("Invalid mode!");
+            utils.printWarning("Invalid mode!");
         }
     }
     

@@ -89,11 +89,11 @@ public abstract class YajJob {
                             result = res;
                         }
                     } catch (NumberFormatException e) {
-                        System.err.println("Not a number: " + res);
+                        utils.printWarning("Not a number: " + res + ": ", e);
                         //result = Float.NaN;
                         result = nullObject;
                     } catch (ParseException e) {
-                        System.err.println("Not a parseable date: " + res);
+                        utils.printWarning("Not a parseable date: " + res + ": ", e);
                         result = nullObject;
                     }    
                 } else

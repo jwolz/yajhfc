@@ -214,7 +214,7 @@ Which command line arguments does YajHFC understand?</A>
 <PRE>
 General usage:
 java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose]
-         [--configdir=directory] [--loadplugin=filename]
+         [--configdir=directory] [--loadplugin=filename] [--logfile=filename]
          [--showtab=0|R|1|S|2|T] [--recipient=...] [--stdin | filename ...]
 Argument description:
 filename     One or more file names of PostScript files to send.
@@ -223,6 +223,7 @@ filename     One or more file names of PostScript files to send.
              You may specify multiple arguments for multiple recipients.
 --admin      Start up in admin mode
 --debug      Output some debugging information
+--logfile    The logfile to log debug information to (if not specified, use stdout)
 --background If there is no already running instance, launch a new instance
              and terminate (after submitting the file to send)
 --noclose    Do not close YajHFC after submitting the fax
@@ -334,11 +335,11 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>-no_subdir -split 0 -html_version 3.2,latin1,unicode,utf8 -no_navigation faq.tex</TT>
 <P>
-The translation was initiated by Jonas Wolz on 2007-09-14
+The translation was initiated by Jonas Wolz on 2008-03-04
 <BR><HR>
 <ADDRESS>
 Jonas Wolz
-2007-09-14
+2008-03-04
 </ADDRESS>
 </BODY>
 </HTML>

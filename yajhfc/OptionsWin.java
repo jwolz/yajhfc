@@ -79,7 +79,7 @@ public class OptionsWin extends JDialog {
     JTextField textNotifyAddress, textHost, textUser, /*textViewer,*/ textPort;
     JPasswordField textPassword, textAdminPassword;
     JComboBox comboTZone, comboNotify, comboPaperSize, comboResolution; //, comboNewFaxAction;
-    JComboBox comboLang, comboLookAndFeel;
+    JComboBox comboLang, comboLookAndFeel, comboModem;
     JCheckBox checkPasv, checkPCLBug, checkAskPassword, checkAskAdminPassword, checkUseCustomDefCover;
     JSpinner spinMaxTry, spinMaxDial, spinOffset, spinKillTime;
     //JButton buttonBrowseViewer;
@@ -98,6 +98,8 @@ public class OptionsWin extends JDialog {
     FaxOptions foEdit = null;
     List<FmtItem> recvfmt, sentfmt, sendingfmt;
     Vector<LF_Entry> lookAndFeels;
+    
+    List<HylaModem> availableModems;
     
     boolean modalResult;
     boolean changedLF;
@@ -148,6 +150,15 @@ public class OptionsWin extends JDialog {
         }
         comboLookAndFeel.setSelectedIndex(lfPos);
         //changedLF = false;
+        
+        Object selModem = foEdit.defaultModem;
+        for (HylaModem modem : availableModems) {
+            if (modem.getInternalName().equals(foEdit.defaultModem)) {
+                selModem = modem;
+                break;
+            }
+        }
+        comboModem.setSelectedItem(selModem);
         
         checkPasv.setSelected(foEdit.pasv);
         checkPCLBug.setSelected(foEdit.pclBug);
@@ -492,6 +503,10 @@ public class OptionsWin extends JDialog {
             comboPaperSize = new JComboBox(utils.papersizes);
             comboResolution = new JComboBox(utils.resolutions);
             
+            availableModems = HylaModem.defaultModems;
+            comboModem = new JComboBox(availableModems.toArray());
+            comboModem.setEditable(true);
+            
             spinMaxDial = new JSpinner(new SpinnerNumberModel(12, 1, 100, 1));
             spinMaxTry = new JSpinner(new SpinnerNumberModel(6, 1, 100, 1));
             spinKillTime= new JSpinner(new SpinnerNumberModel(180, 0, 2000, 15));
@@ -508,7 +523,8 @@ public class OptionsWin extends JDialog {
             ftfCustomDefCover.setEnabled(false);
             
             addWithLabel(panelSend, textNotifyAddress, _("E-mail address for notifications:"), "1, 2, 3, 2, f, c");
-            addWithLabel(panelSend, comboNotify, _("Notify when:"), "1, 4, 3, 4, f, c");
+            addWithLabel(panelSend, comboNotify, _("Notify when:"), "1, 4, 1, 4, f, c");
+            addWithLabel(panelSend, comboModem, _("Modem:"), "3, 4, 3, 4, f, c");
             addWithLabel(panelSend, comboTZone, _("Time zone:"), "1, 6, f, c");
             addWithLabel(panelSend, comboResolution, _("Resolution:"), "3, 6, f, c");
             addWithLabel(panelSend, comboPaperSize, _("Paper size:"), "1, 8, f, c" );
@@ -704,6 +720,23 @@ public class OptionsWin extends JDialog {
 
     
     class ButtonOKActionListener implements ActionListener {
+        private String getModem() {
+            Object sel = comboModem.getSelectedItem();
+            if (utils.debugMode) {
+                utils.debugOut.println("Selected modem (" + sel.getClass().getCanonicalName() + "): " + sel);
+            }
+            if (sel instanceof HylaModem) {
+                return ((HylaModem)sel).getInternalName();
+            } else {
+                String str = sel.toString();
+                int pos = str.indexOf(' '); // Use part up to the first space
+                if (pos == -1)
+                    return str;
+                else
+                    return str.substring(0, pos);
+            }
+        }
+        
         public void actionPerformed(ActionEvent e) {
             
             if (checkUseCustomDefCover.isSelected()) {
@@ -787,6 +820,8 @@ public class OptionsWin extends JDialog {
                 
                 foEdit.defaultCover = ftfCustomDefCover.getText();
                 foEdit.useCustomDefaultCover = checkUseCustomDefCover.isSelected();
+                
+                foEdit.defaultModem = getModem();
             } catch (NumberFormatException e1) {
                 JOptionPane.showMessageDialog(ButtonOK, _("Please enter a number."));
                 return;

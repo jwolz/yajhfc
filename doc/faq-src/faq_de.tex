@@ -97,7 +97,7 @@ für den Effekt des \verb#?#-Wildcards \verb#.#.
 \begin{verbatim}
 Allgemeine Syntax:
 java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose]
-         [--configdir=directory] [--loadplugin=filename]
+         [--configdir=directory] [--loadplugin=filename] [--logfile=filename]
          [--showtab=0|R|1|S|2|T] [--recipient=...] [--stdin | filename ...]
 Beschreibung der Argumente:
 Dateiname    Ein oder mehrere Dateinamen der zu sendenden Dokumente.
@@ -106,6 +106,8 @@ Dateiname    Ein oder mehrere Dateinamen der zu sendenden Dokumente.
              Sie können mehrere Argumente für mehrere Empfänger angeben.
 --admin      Im "Admin-Modus" starten.
 --debug      Debugging-Informationen ausgeben.
+--logfile    Die Logdatei, in die die Debugging-Informationen geschrieben werden
+             (falls nicht angegeben, benutze die Standardausgabe (stdout))
 --background Falls es noch keine laufende Instanz gibt, starte eine neue
              und terminiere (nach Absenden des zu sendenden Dokuments)
 --noclose    YajHFC nach Absenden des Dokuments nicht schließen

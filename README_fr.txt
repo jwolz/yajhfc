@@ -1,4 +1,4 @@
-LISEZ MOI for YajHFC 0.3.5
+LISEZ MOI for YajHFC 0.3.6
 ==========================
 
 A PROPOS DE
@@ -28,9 +28,9 @@ Pres requis:
 * Un programme pour visualiser les fichiers TIFF (voir aussi les FAQ)
 * Optionnel: Un visualiseur Postscript (e.g. Ghostview)
 
-Pour Installer YajHFC Telechargez le fichier yajhfc-0_3_4.jar dans un repertoire
+Pour Installer YajHFC Telechargez le fichier yajhfc-0_3_6.jar dans un repertoire
 sur votre machine.
-Pour l'executer, utilisez la commande: "java -jar yajhfc-0_3_4.jar"
+Pour l'executer, utilisez la commande: "java -jar yajhfc-0_3_6.jar"
 (Sous Windows vous pouvez habituellement double cliquer sur le fichier jar.)
 
 LICENCE
@@ -59,6 +59,13 @@ YajHFC a ete originellement ecrit comme un premier projet Java
 
 MODIFICATIONS
 -------------
+
+0.3.6:
+- Correction de bugs
+- Support de la selection multiple sur les contacts pour la boite d'envoi
+- Nouel argument de ligne de commande ("--logfile") pour tracer un fichier en mode debug
+- Suport du "mode deconnecte" comme possible contournement de certains bugs Hylafax
+- Support du choix du modem a utiliser
 
 0.3.5:
 - Ameliorations de l'interface utilisateur /"polissage" (i.e. bare de progression pour la liste de faxs et plus d'icones)

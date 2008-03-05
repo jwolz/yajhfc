@@ -190,7 +190,7 @@ public class NumberRowViewport extends JViewport {
             } else if (source == table2.getSelectionModel()) {
                 dest = table1.getSelectionModel();
             } else {
-                System.err.println("Unknown selection: " + e.toString());
+                utils.printWarning("Unknown selection: " + e.toString());
                 return;
             }
 
