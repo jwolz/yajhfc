@@ -235,7 +235,11 @@ public class HylaClientManager {
                 String line = (String)o;
                 if (line.startsWith(modemListPrefix)) { // Is a line describing a modem
                     String[] fields = utils.fastSplit(line, '|');
-                    modems.add(new HylaModem(fields[1], fields[2]));
+                    if (fields.length < 2) {
+                        utils.printWarning("Invalid modem \"" + line + "\".");                            
+                    } else {
+                        modems.add(new HylaModem(fields[1], fields.length >= 3 ? fields[2] : ""));
+                    }
                 }
             }
         }

@@ -56,8 +56,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileFilter;
 
 public final class Launcher {
 
@@ -195,6 +197,8 @@ public final class Launcher {
         return str;
     }
     
+   
+    
     /**
      * Launches this application
      */
@@ -262,7 +266,14 @@ public final class Launcher {
             else // treat argument as file name to send
                 fileNames.add(args[i]);
         }
-                
+        
+        if (debugMode && ":prompt:".equals(logFile)) {
+            logFile = (new LogFilePrompter()).promptForLogfile();
+            if (logFile == null) {
+                debugMode = false;
+            }
+        }
+        
         // IMPORTANT: Don't access utils before this line!
         utils.debugMode = debugMode;
         
@@ -468,7 +479,37 @@ public final class Launcher {
             }
         }
     }
+    
+    private static class LogFilePrompter implements Runnable {
+        protected String selection = null;
         
+        public void run() {
+            JFileChooser chooser = new JFileChooser();
+            FileFilter logFiles = new ExampleFileFilter("log", "Log files");
+            chooser.addChoosableFileFilter(logFiles);
+            chooser.setFileFilter(logFiles);
+            chooser.setDialogTitle("Select log file location");
+            if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                selection = chooser.getSelectedFile().getPath();
+                if (chooser.getFileFilter() == logFiles && selection.indexOf('.') == -1) {
+                    selection = selection + ".log";
+                }
+            } else {
+                selection = null;
+            }
+        }
+        
+        public String promptForLogfile() {
+            try {
+                SwingUtilities.invokeAndWait(this);
+                return selection;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+    
     static class NewInstRunner implements Runnable{
         protected boolean adminMode;
         protected boolean closeAfterSubmit;
