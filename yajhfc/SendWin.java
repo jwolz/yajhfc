@@ -143,9 +143,6 @@ public final class SendWin extends JDialog  {
     
     public SendWin(HylaClientManager manager, Frame owner) {
         this(manager, owner, false);
-        if (utils.debugMode) {
-            utils.debugOut.println("New SendWin: manager=" + manager + ", owner = " + owner);
-        }
     }
     
     /**
@@ -155,8 +152,13 @@ public final class SendWin extends JDialog  {
         super(owner);
         this.clientManager = manager;
         this.pollMode = pollMode;
+        if (utils.debugMode) {
+            utils.debugOut.println("Creating new SendWin: manager=" + manager + ", owner = " + owner);
+        }
         initialize();
-
+        if (utils.debugMode) {
+            utils.debugOut.println("New SendWin created.");
+        }
     }
 
     /**
@@ -369,10 +371,25 @@ public final class SendWin extends JDialog  {
                 protected TFLItem createListItem(String text) {
                     NumberTFLItem rv = new NumberTFLItem(text);
                     if (!pollMode) {
-                        rv.company = textToCompany.getText();
-                        rv.location = textToLocation.getText();
-                        rv.name = textToName.getText();
-                        rv.voiceNumber = textToVoiceNumber.getText();
+                        NumberTFLItem current = (NumberTFLItem)this.getList().getSelectedValue();
+                        String company = textToCompany.getText();
+                        String location  = textToLocation.getText();
+                        String name = textToName.getText();
+                        String voiceNumber = textToVoiceNumber.getText();
+                        if (current != null) {
+                            if (company.equals(current.company) && location.equals(current.location) &&
+                                    name.equals(current.name) && voiceNumber.equals(current.voiceNumber)) {
+
+                                company = ""; //textToCompany.getText();
+                                location  = ""; //textToLocation.getText();
+                                name = ""; //textToName.getText();
+                                voiceNumber = ""; //textToVoiceNumber.getText();
+                            }
+                        } 
+                        rv.company = company;
+                        rv.location  = location;
+                        rv.name = name;
+                        rv.voiceNumber = voiceNumber;
                     }
                     return rv;
                 }
@@ -686,6 +703,8 @@ public final class SendWin extends JDialog  {
         cov.fromFaxNumber = fo.FromFaxNumber;
         cov.fromLocation = fo.FromLocation;
         cov.fromVoiceNumber = fo.FromVoiceNumber;
+        // TODO: Define field
+        cov.fromMailAddress = fo.notifyAddress;
         cov.sender = fo.FromName;
 
         cov.comments = textToComments.getText();

@@ -60,6 +60,7 @@ public class Faxcover {
     public String   fromVoiceNumber;    // sender's voice number
     public String   fromLocation;   // sender's geographical location
     public String   fromCompany;    // sender's company/institution
+    public String   fromMailAddress; // sender's mail address
     public String   regarding;  // fax is regarding...
     public String   comments;   // general comments
     public String   sender;     // sender's identity
@@ -250,6 +251,7 @@ public class Faxcover {
         coverDef("from-voice-number",fromVoiceNumber);
         coverDef("from-company",    fromCompany);
         coverDef("from-location",   fromLocation);
+        coverDef("from-mail-address",fromMailAddress);
     }
     
     private void emitCommentDefs() 
