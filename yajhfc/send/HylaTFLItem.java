@@ -1,4 +1,4 @@
-package yajhfc;
+package yajhfc.send;
 /*
  * YAJHFC - Yet another Java Hylafax client
  * Copyright (C) 2005-2007 Jonas Wolz
@@ -28,6 +28,11 @@ import java.io.InputStream;
 import java.text.MessageFormat;
 
 import javax.swing.JOptionPane;
+
+import yajhfc.FormattedFile;
+import yajhfc.PaperSize;
+import yajhfc.UnknownFormatException;
+import yajhfc.utils;
 
 public abstract class HylaTFLItem extends TFLItem {
     protected String serverName = "<invalid>";

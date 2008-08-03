@@ -1,4 +1,4 @@
-package yajhfc;
+package yajhfc.send;
 /*
  * YAJHFC - Yet another Java Hylafax client
  * Copyright (C) 2005 Jonas Wolz
@@ -18,22 +18,18 @@ package yajhfc;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
-public class FaxStringProperty extends MyManualMapObject {
-    public String desc;
-    public String type;
+public class DefTFLItem extends TFLItem {
+    protected String text;
     
-    public FaxStringProperty(String desc, String type) {
-        this.desc = desc;
-        this.type = type;        
+    public void setText(String newText) {
+        text = newText;
     }
     
-    public String toString() {
-        return desc;
+    public String getText() {
+        return text;
     }
     
-    @Override
-    public Object getKey() {
-        return type;
+    public DefTFLItem(String text) {
+        this.text = text;
     }
 }

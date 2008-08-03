@@ -1,4 +1,4 @@
-package yajhfc;
+package yajhfc.send;
 /*
  * YAJHFC - Yet another Java Hylafax client
  * Copyright (C) 2005-2007 Jonas Wolz
@@ -28,6 +28,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import yajhfc.FormattedFile;
+import yajhfc.utils;
 
 public class StreamTFLItem extends HylaTFLItem {
     protected FormattedFile tempFile;

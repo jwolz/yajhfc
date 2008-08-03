@@ -83,6 +83,8 @@ import yajhfc.filters.FilterCreator;
 import yajhfc.filters.StringFilter;
 import yajhfc.filters.StringFilterOperator;
 import yajhfc.phonebook.PhoneBookWin;
+import yajhfc.send.SendController;
+import yajhfc.send.SendWinControl;
 
 
 
@@ -480,11 +482,11 @@ public final class mainwin extends JFrame {
         actSend = new AbstractAction() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 utils.setWaitCursor(null);
-                SendWin sw = new SendWin(clientManager, mainwin.this);
-                sw.setModal(true);
-                utils.unsetWaitCursorOnOpen(null, sw);
+                SendWinControl sw = SendController.createSendWindow(mainwin.this, clientManager, false, false);
+
+                utils.unsetWaitCursorOnOpen(null, sw.getWindow());
                 sw.setVisible(true);
-                if (sw.modalResult) {
+                if (sw.getModalResult()) {
                     refreshTables();
                 }
             }
@@ -496,9 +498,8 @@ public final class mainwin extends JFrame {
         actPoll = new AbstractAction() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 utils.setWaitCursor(null);
-                SendWin sw = new SendWin(clientManager, mainwin.this, true);
-                sw.setModal(true);
-                utils.unsetWaitCursorOnOpen(null, sw);
+                SendWinControl sw = SendController.createSendWindow(mainwin.this, clientManager, true, true);
+                utils.unsetWaitCursorOnOpen(null, sw.getWindow());
                 sw.setVisible(true);
             }
         };
@@ -628,7 +629,7 @@ public final class mainwin extends JFrame {
                 }
                 if (selTable.getSelectedRowCount() == 1) {
                     JFileChooser jfc = new JFileChooser();
-                    
+                        
                     try {
                         YajJob yj = selTable.getJobForRow(selTable.getSelectedRow());
                         List<HylaServerFile> serverFiles = yj.getServerFilenames(hyfc);
@@ -644,15 +645,17 @@ public final class mainwin extends JFrame {
                                     if (seppos >= 0)
                                         filename = filename.substring(seppos + 1);
                                     jfc.setDialogTitle(MessageFormat.format(_("Save {0} to"), hsf.getPath()));
-                                    jfc.setSelectedFile(new File(filename));
+                                    jfc.setSelectedFile(new File(utils.getFaxOptions().lastSavePath.length() > 0 ? utils.getFaxOptions().lastSavePath : null, filename));
                                     
                                     jfc.resetChoosableFileFilters();
                                     ExampleFileFilter curFilter = new ExampleFileFilter(hsf.getType().getDefaultExtension(), hsf.getType().getDescription());
                                     jfc.addChoosableFileFilter(curFilter);
                                     jfc.setFileFilter(curFilter);
                                     
-                                    if (jfc.showSaveDialog(mainwin.this) == JFileChooser.APPROVE_OPTION)
+                                    if (jfc.showSaveDialog(mainwin.this) == JFileChooser.APPROVE_OPTION) {
                                         hsf.download(hyfc, jfc.getSelectedFile());
+                                        utils.getFaxOptions().lastSavePath = jfc.getSelectedFile().getParentFile().getPath();
+                                    }
                                 } catch (Exception e1) {
                                     //JOptionPane.showMessageDialog(mainwin.this, MessageFormat.format(_("An error occured saving the file {0} (job {1}):\n"), hsf.getPath(), yj.getIDValue()) + e1.getMessage() , _("Error"), JOptionPane.ERROR_MESSAGE);
                                     ExceptionDialog.showExceptionDialog(mainwin.this, MessageFormat.format(_("An error occured saving the file {0} (job {1}):"), hsf.getPath(), yj.getIDValue()), e1);
@@ -668,9 +671,13 @@ public final class mainwin extends JFrame {
                     jfc.setDialogTitle(_("Select a directory to save the faxes in"));
                     jfc.setApproveButtonText(_("Select"));
                     jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                    if (utils.getFaxOptions().lastSavePath.length() > 0) {
+                        jfc.setSelectedFile(new File(utils.getFaxOptions().lastSavePath));
+                    }
                     if (jfc.showOpenDialog(mainwin.this) == JFileChooser.APPROVE_OPTION) {
                         MultiSaveWorker wrk = new MultiSaveWorker(selTable, jfc.getSelectedFile());
                         wrk.startWork(mainwin.this, _("Saving faxes"));
+                        utils.getFaxOptions().lastSavePath = jfc.getSelectedFile().getPath();
                     }
                 }
                 clientManager.endServerTransaction();
@@ -696,8 +703,7 @@ public final class mainwin extends JFrame {
                     return;
                 }
                 
-                SendWin sw = new SendWin(clientManager, mainwin.this);
-                sw.setModal(true);
+                SendWinControl sw = SendController.createSendWindow(mainwin.this, clientManager, false, true);
                 sw.addServerFile(file);
                 sw.setVisible(true);
                 refreshTables();
@@ -776,8 +782,7 @@ public final class mainwin extends JFrame {
                     clientManager.endServerTransaction();
                 }
                 
-                SendWin sw = new SendWin(clientManager, mainwin.this);
-                sw.setModal(true);
+                SendWinControl sw = SendController.createSendWindow(mainwin.this, clientManager, false, true);
                 
                 for (HylaServerFile hysf : files) {
                     sw.addServerFile(hysf);
@@ -785,7 +790,7 @@ public final class mainwin extends JFrame {
                 sw.addRecipient(number, name, company, location, voiceNumber);
                 sw.setSubject(subject);
                 
-                utils.unsetWaitCursorOnOpen(null, sw);
+                utils.unsetWaitCursorOnOpen(null, sw.getWindow());
                 sw.setVisible(true);
                 refreshTables();
             };

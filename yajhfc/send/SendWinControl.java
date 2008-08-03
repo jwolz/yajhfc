@@ -1,7 +1,6 @@
-package yajhfc;
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005 Jonas Wolz
+ * Copyright (C) 2005-2008 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,19 +16,26 @@ package yajhfc;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+package yajhfc.send;
 
-public class DefTFLItem extends TFLItem {
-    protected String text;
+import java.awt.Window;
+import java.io.InputStream;
+
+import yajhfc.HylaServerFile;
+
+/**
+ * Control methods for the send dialog
+ * @author jonas
+ *
+ */
+public interface SendWinControl {
+    public void setVisible(boolean visible);
+    public boolean getModalResult();
+    public Window getWindow();
     
-    public void setText(String newText) {
-        text = newText;
-    }
-    
-    public String getText() {
-        return text;
-    }
-    
-    public DefTFLItem(String text) {
-        this.text = text;
-    }
+    public void addServerFile(HylaServerFile serverFile);
+    public void addRecipient(String faxNumber, String name, String company, String location, String voiceNumber);
+    public void setSubject(String subject);
+    public void addInputStream(InputStream inStream);
+    public void addLocalFile(String fileName);
 }

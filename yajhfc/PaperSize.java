@@ -21,8 +21,8 @@ package yajhfc;
 import java.awt.Dimension;
 
 public class PaperSize extends MyManualMapObject {
-    String desc;
-    Dimension size;
+    public String desc;
+    public Dimension size;
     
     public PaperSize(String desc, Dimension size) {
         this.desc = desc;

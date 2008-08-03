@@ -20,8 +20,8 @@ package yajhfc;
 
 
 public class FaxIntProperty extends MyManualMapObject{
-    String desc;
-    int type;
+    public String desc;
+    public int type;
     
     public FaxIntProperty(String desc, int type) {
         this.desc = desc;
