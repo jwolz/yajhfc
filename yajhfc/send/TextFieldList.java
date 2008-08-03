@@ -1,4 +1,4 @@
-package yajhfc;
+package yajhfc.send;
 /*
  * YAJHFC - Yet another Java Hylafax client
  * Copyright (C) 2005 Jonas Wolz
@@ -29,10 +29,10 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JList;
@@ -46,13 +46,16 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import yajhfc.ListListModel;
+import yajhfc.utils;
 
-public class TextFieldList extends JPanel implements ListSelectionListener, KeyListener, MouseListener, DocumentListener, FocusListener {
+
+public abstract class TextFieldList<T extends TFLItem> extends JPanel implements ListSelectionListener, KeyListener, MouseListener, DocumentListener, FocusListener {
 
     protected JTextField textField;
     protected JList list;
     protected JScrollPane scrollPane;
-    protected DefaultListModel model;
+    protected ListListModel<T> model;
     protected Action addAction, removeAction, modifyAction, upAction, downAction;
     protected JPopupMenu popup;
     protected boolean useUpDown;
@@ -70,9 +73,10 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
                     }
                     int selIdx = list.getSelectedIndex();
                     if (selIdx >= 1) {
-                        Object old = model.get(selIdx);
-                        model.set(selIdx, model.get(selIdx - 1));
-                        model.set(selIdx - 1, old);
+//                        Object old = model.get(selIdx);
+//                        model.set(selIdx, model.get(selIdx - 1));
+//                        model.set(selIdx - 1, old);
+                        model.moveUp(new int[] { selIdx });
                     }
                 };
             };
@@ -94,9 +98,10 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
                     }
                     int selIdx = list.getSelectedIndex();
                     if (selIdx >= 0 && selIdx < model.getSize() - 1) {
-                        Object old = model.get(selIdx);
-                        model.set(selIdx, model.get(selIdx + 1));
-                        model.set(selIdx + 1, old);
+//                        Object old = model.get(selIdx);
+//                        model.set(selIdx, model.get(selIdx + 1));
+//                        model.set(selIdx + 1, old);
+                        model.moveDown(new int[] { selIdx });
                     }
                 };
             };
@@ -173,9 +178,10 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
         sel.setText(textField.getText());
     }
     
-    protected TFLItem createListItem(String text) {
-        return new DefTFLItem(text);
-    }
+    protected abstract T createListItem(String text);
+//    {
+//        return new DefTFLItem(text);
+//    }
     
     protected void modifyListItem(TFLItem sel) {
         if (sel != null && sel.isMutable() && textField.getDocument().getLength() > 0) {
@@ -186,10 +192,10 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
         }
     }
     
-    public void addListItem(TFLItem newItem) {
-        if (!model.contains(newItem)) {// Elements should be unique
+    public void addListItem(T newItem) {
+        if (!model.getList().contains(newItem)) {// Elements should be unique
             lastSelection = null;
-            model.addElement(newItem);
+            model.add(newItem);
             list.setSelectedIndex(model.getSize() - 1);
         }
     }
@@ -200,16 +206,16 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
         }
     }
     
-    public DefaultListModel getModel() {
-        if (model == null) {
-            model = new DefaultListModel();
-        }
-        return model;
-    }
+//    public DefaultListModel getModel() {
+//        if (model == null) {
+//            model = new DefaultListModel();
+//        }
+//        return model;
+//    }
     
     public JList getList() {
         if (list == null) {
-            list = new JList(getModel());
+            list = new JList(model);
             list.setVisibleRowCount(3);
         }
         return list;
@@ -232,21 +238,25 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
     }
     
     public TextFieldList(JTextField textField, boolean haveUpDown) {
+        this(textField, haveUpDown, new ArrayList<T>());
+    }
+    public TextFieldList(JTextField textField, boolean haveUpDown, List<T> internalList) {
         super(null, false);
         this.useUpDown = haveUpDown;
         this.textField = textField;
         
         double [][] dLay = {
                 { TableLayout.FILL, TableLayout.PREFERRED },
-                { TableLayout.FILL, 0.5 }
+                { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.FILL}
         };
         this.setLayout(new TableLayout(dLay));
         
         localComponents = new ArrayList<JComponent>();
+        model = new ListListModel<T>(internalList);
         
         scrollPane = new JScrollPane(getList(), JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         localComponents.add(scrollPane);
-        add(scrollPane, "0, 0, 0, 1, F, F");
+        add(scrollPane, "0, 0, 0, 2, F, F");
         
         JButton btnAdd = new JButton(getAddAction());
         btnAdd.setText("");
@@ -350,7 +360,7 @@ public class TextFieldList extends JPanel implements ListSelectionListener, KeyL
     }
     
     public void commit() {
-        if (model.size() == 0 && getAddAction().isEnabled()) {
+        if (model.getSize() == 0 && getAddAction().isEnabled()) {
             getAddAction().actionPerformed(null);
         } else if (getModifyAction().isEnabled()) {
             getModifyAction().actionPerformed(null);

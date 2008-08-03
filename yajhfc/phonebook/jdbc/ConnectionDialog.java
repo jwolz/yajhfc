@@ -80,7 +80,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
     public boolean clickedOK;
     
     private Connection conn;
-    private Statement stmt;
+    //private Statement stmt;
     
     private static String _(String key) {
         return utils._(key);
@@ -257,7 +257,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
             }
             conn = DriverManager.getConnection(textURL.getText(), textUserName.getText(), password);
             
-            stmt = conn.createStatement(); // ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            //stmt = conn.createStatement(); // ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             
             DatabaseMetaData dbmd = conn.getMetaData();
             
@@ -283,10 +283,10 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
     
     private void closeConnection() {
         try {
-            if (stmt != null) {
-                stmt.close();
-                stmt = null;
-            }
+//            if (stmt != null) {
+//                stmt.close();
+//                stmt = null;
+//            }
             if (conn != null) {
                 conn.close();
                 conn = null;
@@ -297,10 +297,11 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
     }
     
     private boolean loadFieldNames() {
-        if (conn == null || stmt == null)
+        if (conn == null /*|| stmt == null*/)
             return false;
         
         try {
+            Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM " + comboTable.getSelectedItem().toString());
             ResultSetMetaData rsmd = rs.getMetaData();
             
@@ -317,6 +318,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
             }
             
             rs.close();
+            stmt.close();
         } catch (Exception e) {
             ExceptionDialog.showExceptionDialog(this, _("Could not get the field names:"), e);
             return false;

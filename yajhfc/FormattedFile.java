@@ -23,9 +23,49 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.MessageFormat;
 
 public class FormattedFile {
+    public enum FileFormat {
+        PostScript(utils._("Postscript documents"), "ps"),
+        PDF(utils._("PDF documents"), "pdf"),
+        PCL(utils._("PCL files"), "pcl"),
+        JPEG(utils._("JPEG pictures"), "jpeg", "jpg"),
+        PNG(utils._("PNG pictures"),"png"),
+        GIF(utils._("GIF pictures"),"gif"),
+        TIFF(utils._("TIFF pictures"),"tiff", "tif"),
+        PlainText(utils._("Plain text files"),"txt"),
+        Unknown(utils._("Unknown files"), "");
+        
+        private String defaultExt;
+        private String[] possibleExts;
+        private String description;
+        
+        private FileFormat(String description, String... possibleExts) {
+            this(description, possibleExts[0], possibleExts);
+        }
+        
+        private FileFormat(String description, String defaultExt, String[] possibleExts) {
+            this.defaultExt = defaultExt;
+            this.possibleExts = possibleExts;
+            this.description = description;
+        }
+        
+        public String getDefaultExtension() {
+            return defaultExt;
+        }
+        
+        public String getDescription() {
+            return description;
+            //return MessageFormat.format(utils._("{0} files"), toString());
+        }
+        
+        public String[] getPossibleExtension() {
+            return possibleExts;
+        }
+    }
+    
     
     public File file = null;
     public FileFormat format = FileFormat.Unknown;
@@ -57,27 +97,20 @@ public class FormattedFile {
     }
     
 
-    public enum FileFormat {
-        PostScript("ps"), PDF("pdf"), PCL("pcl"), JPEG("jpeg"), PNG("png"), GIF("gif"), TIFF("tiff"), PlainText("txt"), Unknown("");
-        
-        private String defaultExt;
-        
-        private FileFormat(String defaultExt) {
-            this.defaultExt = defaultExt;
-        }
-        
-        public String getDefaultExtension() {
-            return defaultExt;
-        }
-        
-        public String getDescription() {
-            return MessageFormat.format(utils._("{0} files"), toString());
-        }
-    }
+
 
     // Static methods:
     public static FileFormat detectFileFormat(String fileName) throws FileNotFoundException, IOException {
-        FileInputStream fIn = new FileInputStream(fileName);
+        return detectFileFormat(new FileInputStream(fileName));
+    }
+    
+    /**
+     * Detects the file format of the given InputStream and closes it afterwards
+     * @param fIn
+     * @return
+     * @throws IOException
+     */
+    public static FileFormat detectFileFormat(InputStream fIn) throws IOException {
         byte[] data = new byte[maxSignatureLen];
         fIn.read(data);
         fIn.close();

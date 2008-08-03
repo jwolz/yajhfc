@@ -1,7 +1,7 @@
-package yajhfc;
+package yajhfc.send;
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005 Jonas Wolz
+ * Copyright (C) 2005-2008 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,23 +17,25 @@ package yajhfc;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+import yajhfc.utils;
 
+public enum SendWinStyle {
 
-public class FaxStringProperty extends MyManualMapObject {
-    public String desc;
-    public String type;
+    TRADITIONAL(utils._("Traditional")),
+    SIMPLIFIED(utils._("Simplified"))
+    ;
     
-    public FaxStringProperty(String desc, String type) {
-        this.desc = desc;
-        this.type = type;        
+    private String description;
+    
+    private SendWinStyle(String description) {
+        this.description = description;
+    }
+    
+    public String getDescription() {
+        return description;
     }
     
     public String toString() {
-        return desc;
-    }
-    
-    @Override
-    public Object getKey() {
-        return type;
+        return description;
     }
 }

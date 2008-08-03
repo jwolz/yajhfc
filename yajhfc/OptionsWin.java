@@ -63,6 +63,9 @@ import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import yajhfc.faxcover.Faxcover;
+import yajhfc.send.SendWinStyle;
+
 public class OptionsWin extends JDialog {
     
     JPanel jContentPane = null;
@@ -79,13 +82,13 @@ public class OptionsWin extends JDialog {
     JTextField textNotifyAddress, textHost, textUser, /*textViewer,*/ textPort;
     JPasswordField textPassword, textAdminPassword;
     JComboBox comboTZone, comboNotify, comboPaperSize, comboResolution; //, comboNewFaxAction;
-    JComboBox comboLang, comboLookAndFeel, comboModem;
+    JComboBox comboLang, comboLookAndFeel, comboModem, comboSendWinStyle;
     JCheckBox checkPasv, checkPCLBug, checkAskPassword, checkAskAdminPassword, checkUseCustomDefCover;
     JSpinner spinMaxTry, spinMaxDial, spinOffset, spinKillTime;
     //JButton buttonBrowseViewer;
     FileTextField ftfFaxViewer, ftfPSViewer, ftfCustomDefCover;
     
-    JTextField textFromFaxNumber, textFromName, textFromCompany, textFromLocation, textFromVoicenumber;
+    JTextField textFromFaxNumber, textFromName, textFromCompany, textFromLocation, textFromVoicenumber, textFromEMail;
     ClipboardPopup clpDef;
     JPanel panelServer, panelSend, panelPaths, panelCover, panelMisc;
     
@@ -140,6 +143,7 @@ public class OptionsWin extends JDialog {
         comboTZone.setSelectedItem(foEdit.tzone);
         //comboNewFaxAction.setSelectedItem(foEdit.newFaxAction);
         comboLang.setSelectedItem(foEdit.locale);
+        comboSendWinStyle.setSelectedItem(foEdit.sendWinStyle);
         
         int lfPos = 0; 
         for (int i=0; i<lookAndFeels.size(); i++) {
@@ -187,6 +191,7 @@ public class OptionsWin extends JDialog {
         textFromLocation.setText(foEdit.FromLocation);
         textFromName.setText(foEdit.FromName );
         textFromVoicenumber.setText(foEdit.FromVoiceNumber);
+        textFromEMail.setText(foEdit.FromEMail);
         
         this.addWindowListener(new WindowAdapter() {
             @Override
@@ -366,7 +371,7 @@ public class OptionsWin extends JDialog {
         if (panelMisc == null) {
             double[][] tablelay = {
                     {border, TableLayout.FILL, border},
-                    new double[6]
+                    new double[8]
             };
             double rowh = 1 / (double)(tablelay[1].length - 1);
             //tablelay[1][0] = border;
@@ -383,8 +388,6 @@ public class OptionsWin extends JDialog {
             
             lookAndFeels = LF_Entry.getLookAndFeelList();
             comboLookAndFeel = new JComboBox(lookAndFeels);
-            
-            
             comboLookAndFeel.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     LF_Entry sel = (LF_Entry)comboLookAndFeel.getSelectedItem();
@@ -397,9 +400,12 @@ public class OptionsWin extends JDialog {
                 }
             });
             
+            comboSendWinStyle = new JComboBox(SendWinStyle.values());
+            
 
             addWithLabel(panelMisc, comboLang, _("Language:"), "1, 1, 1, 1, f, c");
             addWithLabel(panelMisc, comboLookAndFeel, _("Look and Feel:"), "1, 3, 1, 3, f, c");
+            addWithLabel(panelMisc, comboSendWinStyle, _("Style of send dialog:"), "1, 5, 1, 5, f, c");
             //addWithLabel(panelMisc, comboNewFaxAction, "<html>" + _("When a new fax is received:") + "</html>", "1, 3, 1, 3, f, c");
 
         }
@@ -519,7 +525,7 @@ public class OptionsWin extends JDialog {
              });
             ftfCustomDefCover = new FileTextField();
             ftfCustomDefCover.getJTextField().addMouseListener(clpDef);
-            ftfCustomDefCover.setFileFilters(new ExampleFileFilter("ps", _("Postscript files")));
+            ftfCustomDefCover.setFileFilters(Faxcover.getAcceptedFileFilters());
             ftfCustomDefCover.setEnabled(false);
             
             addWithLabel(panelSend, textNotifyAddress, _("E-mail address for notifications:"), "1, 2, 3, 2, f, c");
@@ -542,7 +548,7 @@ public class OptionsWin extends JDialog {
         if (panelCover == null) {
             double[][] tablelay = {
                     {border,  TableLayout.FILL, border},
-                    new double[12]
+                    new double[14]
             };
             double rowh = 1 / (double)(tablelay[1].length - 2);
             tablelay[1][0] = border;
@@ -563,12 +569,15 @@ public class OptionsWin extends JDialog {
             textFromName.addMouseListener(clpDef);
             textFromVoicenumber = new JTextField();
             textFromVoicenumber.addMouseListener(clpDef);
+            textFromEMail = new JTextField();
+            textFromEMail.addMouseListener(clpDef);
             
             addWithLabel(panelCover, textFromName, _("Name:"), "1, 2, f, c");
             addWithLabel(panelCover, textFromCompany, _("Company:"), "1, 4, f, c");
             addWithLabel(panelCover, textFromLocation, _("Location:"), "1, 6, f, c");
             addWithLabel(panelCover, textFromVoicenumber, _("Voice number:"), "1, 8, f, c");
             addWithLabel(panelCover, textFromFaxNumber, _("Fax number:"), "1, 10, f, c");
+            addWithLabel(panelCover, textFromEMail, _("E-mail address:"), "1, 12, f, c");
         }
         return panelCover;
     }
@@ -770,7 +779,7 @@ public class OptionsWin extends JDialog {
                 foEdit.resolution = (FaxIntProperty)comboResolution.getSelectedItem();
                 foEdit.tzone = (FaxStringProperty)comboTZone.getSelectedItem();
                 //foEdit.newFaxAction = (FaxIntProperty)comboNewFaxAction.getSelectedItem();
-                
+                foEdit.sendWinStyle = (SendWinStyle)comboSendWinStyle.getSelectedItem();
                 
                 String newLF = ((LF_Entry)comboLookAndFeel.getSelectedItem()).className;
                 if (!newLF.equals(foEdit.lookAndFeel)) {
@@ -817,6 +826,7 @@ public class OptionsWin extends JDialog {
                 foEdit.FromLocation = textFromLocation.getText();
                 foEdit.FromName = textFromName.getText();
                 foEdit.FromVoiceNumber = textFromVoicenumber.getText();
+                foEdit.FromEMail = textFromEMail.getText();
                 
                 foEdit.defaultCover = ftfCustomDefCover.getText();
                 foEdit.useCustomDefaultCover = checkUseCustomDefCover.isSelected();

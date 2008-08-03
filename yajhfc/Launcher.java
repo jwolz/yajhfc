@@ -61,6 +61,9 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
+import yajhfc.send.SendController;
+import yajhfc.send.SendWinControl;
+
 public final class Launcher {
 
     // Configuration directory as set on the command line
@@ -717,8 +720,8 @@ public final class Launcher {
         }
         
         protected void doSubmit() {
-            SendWin sw = new SendWin(application.clientManager, application);
-            sw.setModal(true);
+            SendWinControl sw = SendController.createSendWindow(application, application.clientManager, false, true);
+
             if (inStream != null) {                
                 sw.addInputStream(inStream);
             } else {

@@ -126,4 +126,8 @@ public class ListListModel<T> extends AbstractListModel {
     public T get(int index) {
         return list.get(index);
     }
+
+    public List<T> getList() {
+        return list;
+    }
 }

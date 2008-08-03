@@ -29,7 +29,10 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+
+import yajhfc.send.SendWinStyle;
 
 public class FaxOptions {
     public FaxStringProperty tzone = null;
@@ -70,6 +73,7 @@ public class FaxOptions {
     public String FromLocation;
     public String FromCompany;
     public String CustomCover;
+    public String FromEMail = "";
     public boolean useCover, useCustomCover;
     
     //public FaxIntProperty newFaxAction = utils.newFaxActions[3];
@@ -102,6 +106,10 @@ public class FaxOptions {
     
     public boolean useDisconnectedMode = false;
     public String defaultModem = "any";
+    public boolean regardingAsUsrKey = true;
+    public String lastSavePath = "";
+    
+    public SendWinStyle sendWinStyle = SendWinStyle.SIMPLIFIED;
     
     public FaxOptions() {
         this.host = "";
@@ -137,14 +145,26 @@ public class FaxOptions {
         
         String sysname = System.getProperty("os.name");
         if (sysname.startsWith("Windows")) {
-            this.psViewer = "gsview32.exe";
+            this.psViewer = "rundll32.exe URL.DLL,FileProtocolHandler \"%s\"";//"gsview32.exe";
             if (sysname.indexOf("XP") >= 0 || sysname.indexOf("Vista") >= 0) 
                 this.faxViewer = "rundll32.exe shimgvw.dll,ImageView_Fullscreen %s";
             else
-                this.faxViewer = "kodakimg.exe";
+                this.faxViewer = "rundll32.exe URL.DLL,FileProtocolHandler \"%s\"";//"kodakimg.exe";
         } else {
-            this.faxViewer = "/usr/bin/kfax %s";
-            this.psViewer = "/usr/bin/gv %s";
+            Map<String,String> env = System.getenv();
+            if ("true".equals(env.get("KDE_FULL_SESSION"))) {
+                this.faxViewer = "kfmclient exec %s";
+                this.psViewer = "kfmclient exec %s";
+            } else {
+                String gnome = env.get("GNOME_DESKTOP_SESSION_ID");
+                if (gnome != null && gnome.length() > 0) {
+                    this.faxViewer = "gnome-open %s";
+                    this.psViewer = "gnome-open %s";
+                } else {
+                    this.faxViewer = "kfax %s";
+                    this.psViewer = "gv %s";                    
+                }
+            }
         }
         
         this.resolution = utils.resolutions[0];
@@ -220,8 +240,11 @@ public class FaxOptions {
                     for (Object o : lst) {
                         p.setProperty(name + "." + (++idx), (String)o);
                     }
-                } else
+                } else if (val instanceof Enum) {
+                    p.setProperty(name, ((Enum)val).name());
+                } else {
                     utils.printWarning("Unknown field type " + val.getClass().getName());
+                }
             } catch (Exception e) {
                 utils.printWarning("Exception reading field: ", e);
             }
@@ -354,8 +377,11 @@ public class FaxOptions {
                 } else if (List.class.isAssignableFrom(fcls)) {
                     List lst = (List)f.get(this);
                     lst.add(p.getProperty(propName));
-                } else
+                } else if (Enum.class.isAssignableFrom(fcls)) {
+                    f.set(this, Enum.valueOf((Class<? extends Enum>)fcls, p.getProperty(propName)));
+                } else {
                     utils.printWarning("Unknown field type " + fcls.getName());
+                }
             } catch (Exception e1) {
                 utils.printWarning("Couldn't load setting for " + propName + ": ", e1);
             }

@@ -1,4 +1,4 @@
-package yajhfc;
+package yajhfc.send;
 /*
  * YAJHFC - Yet another Java Hylafax client
  * Copyright (C) 2005-2007 Jonas Wolz
@@ -25,6 +25,9 @@ import java.awt.Component;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+
+import yajhfc.HylaServerFile;
+import yajhfc.UnknownFormatException;
 
 public class ServerFileTFLItem extends HylaTFLItem {
     private HylaServerFile hysf;

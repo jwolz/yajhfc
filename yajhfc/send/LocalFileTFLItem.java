@@ -1,4 +1,4 @@
-package yajhfc;
+package yajhfc.send;
 /*
  * YAJHFC - Yet another Java Hylafax client
  * Copyright (C) 2005-2007 Jonas Wolz
@@ -31,6 +31,11 @@ import java.text.MessageFormat;
 
 import javax.print.DocFlavor;
 
+import yajhfc.ExceptionDialog;
+import yajhfc.FileConverter;
+import yajhfc.FormattedFile;
+import yajhfc.PaperSize;
+import yajhfc.utils;
 import yajhfc.FormattedFile.FileFormat;
 
 public class LocalFileTFLItem extends HylaTFLItem {
