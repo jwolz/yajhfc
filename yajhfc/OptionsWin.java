@@ -38,6 +38,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -67,6 +68,8 @@ import yajhfc.faxcover.Faxcover;
 import yajhfc.send.SendWinStyle;
 
 public class OptionsWin extends JDialog {
+    static final Logger log = Logger.getLogger(OptionsWin.class.getName());
+    
     
     JPanel jContentPane = null;
     
@@ -732,7 +735,7 @@ public class OptionsWin extends JDialog {
         private String getModem() {
             Object sel = comboModem.getSelectedItem();
             if (utils.debugMode) {
-                utils.debugOut.println("Selected modem (" + sel.getClass().getCanonicalName() + "): " + sel);
+                log.info("Selected modem (" + sel.getClass().getCanonicalName() + "): " + sel);
             }
             if (sel instanceof HylaModem) {
                 return ((HylaModem)sel).getInternalName();

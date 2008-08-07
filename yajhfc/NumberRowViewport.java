@@ -18,6 +18,9 @@
  */
 package yajhfc;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
@@ -37,6 +40,7 @@ import javax.swing.table.TableModel;
  *
  */
 public class NumberRowViewport extends JViewport {
+    private static final Logger log = Logger.getLogger(NumberRowViewport.class.getName());
     
     protected JTable rowNumberTable;
     protected JTable realTable;
@@ -190,7 +194,7 @@ public class NumberRowViewport extends JViewport {
             } else if (source == table2.getSelectionModel()) {
                 dest = table1.getSelectionModel();
             } else {
-                utils.printWarning("Unknown selection: " + e.toString());
+                log.log(Level.WARNING, "Unknown selection: " + e.toString());
                 return;
             }
 

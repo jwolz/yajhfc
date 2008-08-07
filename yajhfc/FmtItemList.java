@@ -22,6 +22,8 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Contains a list of FmtItems.
@@ -29,6 +31,8 @@ import java.util.List;
  *
  */
 public class FmtItemList extends ArrayList<FmtItem> {
+    private static final Logger log = Logger.getLogger(FmtItemList.class.getName());
+    
     protected FmtItem[] availableItems;
     protected FmtItem[] obligateItems;
     protected List<FmtItem> completeView;
@@ -89,7 +93,7 @@ public class FmtItemList extends ArrayList<FmtItem> {
         for (int i=0; i < fields.length; i++) {
             FmtItem res = (FmtItem)utils.findInArray(availableItems, fields[i]);
             if (res == null) {
-                utils.printWarning("FmtItem for " + fields[i] + "not found.");
+                log.log(Level.WARNING, "FmtItem for " + fields[i] + "not found.");
             } else {
                 if (!this.contains(res)) {
                     this.add(res);

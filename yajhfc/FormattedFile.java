@@ -25,6 +25,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.regex.Pattern;
+
+import javax.print.DocFlavor;
 
 public class FormattedFile {
     public enum FileFormat {
@@ -36,6 +41,11 @@ public class FormattedFile {
         GIF(utils._("GIF pictures"),"gif"),
         TIFF(utils._("TIFF pictures"),"tiff", "tif"),
         PlainText(utils._("Plain text files"),"txt"),
+        XML(utils._("XML documents"), "xml"),
+        FOP(utils._("XSL:FO documents"), "fo", "xml", "fop"),
+        ODT(utils._("OpenDocument text document"), "odt"),
+        HTML(utils._("HTML document"), "html", "htm"),
+        RTF(utils._("RTF document"), "rtf"),
         Unknown(utils._("Unknown files"), "");
         
         private String defaultExt;
@@ -100,6 +110,21 @@ public class FormattedFile {
 
 
     // Static methods:
+    public static final Map<FileFormat,FileConverter> fileConverters = new EnumMap<FileFormat, FileConverter>(FileFormat.class);
+    static {
+        fileConverters.put(FileFormat.PostScript, FileConverter.IDENTITY_CONVERTER);
+        fileConverters.put(FileFormat.PDF, FileConverter.IDENTITY_CONVERTER);
+        fileConverters.put(FileFormat.TIFF, FileConverter.IDENTITY_CONVERTER);
+        
+        fileConverters.put(FileFormat.PNG, new PrintServiceFileConverter(DocFlavor.URL.PNG));
+        fileConverters.put(FileFormat.GIF, new PrintServiceFileConverter(DocFlavor.URL.GIF));
+        fileConverters.put(FileFormat.JPEG, new PrintServiceFileConverter(DocFlavor.URL.JPEG));
+        
+        fileConverters.put(FileFormat.HTML, new EditorPaneFileConverter("text/html"));
+        // Doesn't work very well
+        //fileConverters.put(FileFormat.RTF, new EditorPaneFileConverter("text/rtf"));
+    }
+    
     public static FileFormat detectFileFormat(String fileName) throws FileNotFoundException, IOException {
         return detectFileFormat(new FileInputStream(fileName));
     }
@@ -111,42 +136,69 @@ public class FormattedFile {
      * @throws IOException
      */
     public static FileFormat detectFileFormat(InputStream fIn) throws IOException {
-        byte[] data = new byte[maxSignatureLen];
-        fIn.read(data);
-        fIn.close();
+        try {
+            byte[] data = new byte[maxSignatureLen];
+            int bytesRead = fIn.read(data);
 
-        if (matchesSignature(data, JPEGSignature))
-            return FileFormat.JPEG;
+            if (matchesSignature(data, JPEGSignature))
+                return FileFormat.JPEG;
 
-        if (matchesSignature(data, PNGSignature))
-            return FileFormat.PNG;
+            if (matchesSignature(data, PNGSignature))
+                return FileFormat.PNG;
 
-        if (matchesSignature(data, GIFSignature1) || matchesSignature(data, GIFSignature2))
-            return FileFormat.GIF;
+            if (matchesSignature(data, GIFSignature1) || matchesSignature(data, GIFSignature2))
+                return FileFormat.GIF;
 
-        if (matchesSignature(data, TIFFSignature1) || matchesSignature(data, TIFFSignature2))
-            return FileFormat.TIFF;
+            if (matchesSignature(data, TIFFSignature1) || matchesSignature(data, TIFFSignature2))
+                return FileFormat.TIFF;
 
-        if (matchesSignature(data, PDFSignature))
-            return FileFormat.PDF;
+            if (matchesSignature(data, PDFSignature))
+                return FileFormat.PDF;
 
-        if (matchesSignature(data, PostScriptSignature))
-            return FileFormat.PostScript;
+            if (matchesSignature(data, PostScriptSignature))
+                return FileFormat.PostScript;
 
-        if (matchesSignature(data, PCLSignature))
-            return FileFormat.PCL;
-
-        for (int i = 0; i < data.length; i++) {
-            int b = data[i] & 0xff;
+            if (matchesSignature(data, PCLSignature))
+                return FileFormat.PCL;
             
-            if (b == 127)
-                return FileFormat.Unknown;
-            if (b < 32) {
-                if (b != 10 && b != 13 && b != 9)
-                    return FileFormat.Unknown;
+            if (matchesSignature(data, ODTSignature)) {
+                return FileFormat.ODT;
             }
+            
+            if (matchesSignature(data, XMLSignature)) {
+                // Check if there is a namespace definition for FOP
+                String startOfFile = new String(data, "UTF-8");
+                if (FOPattern.matcher(startOfFile).find()) {
+                    return FileFormat.FOP;
+                } else {
+                    return FileFormat.XML;
+                }
+            }
+            
+            String startOfFileLower = new String(data, 0, 32, "ISO-8859-1").toLowerCase();
+            if (startOfFileLower.startsWith("<html") || startOfFileLower.startsWith("<!doctype html") ||
+                startOfFileLower.startsWith("<head") || startOfFileLower.startsWith("<title")) {
+                return FileFormat.HTML;
+            }
+            
+            if (startOfFileLower.startsWith("{\\rtf")) {
+                return FileFormat.RTF;
+            }
+            
+            for (int i = 0; i < bytesRead; i++) {
+                int b = data[i] & 0xff;
+
+                if (b == 127)
+                    return FileFormat.Unknown;
+                if (b < 32) {
+                    if (b != 10 && b != 13 && b != 9)
+                        return FileFormat.Unknown;
+                }
+            }
+            return FileFormat.PlainText;
+        } finally {
+            fIn.close();
         }
-        return FileFormat.PlainText;
     }   
     private static final short[] JPEGSignature = { 0xff, 0xd8, 0xff, 0xe0, -1, -1, 'J', 'F', 'I', 'F', 0 };
 
@@ -163,12 +215,32 @@ public class FormattedFile {
     private static final short[] PDFSignature = { '%', 'P', 'D', 'F', '-' };
 
     private static final short[] PCLSignature = { 033, 'E', 033 };
+    
+    private static final short[] XMLSignature = { '<', '?', 'x', 'm', 'l', ' ' };
 
-    private static final int maxSignatureLen = 256;
+    private static final String ODTMimeString = "mimetypeapplication/vnd.oasis.opendocument.text";
+    private static final short[] ODTSignature;
+    static {
+        // See http://lists.oasis-open.org/archives/office/200505/msg00006.html
+        ODTSignature = new short[30 + ODTMimeString.length()];
+        ODTSignature[0] = 'P';
+        ODTSignature[1] = 'K';
+        ODTSignature[2] = 3;
+        ODTSignature[3] = 4;
+        for (int i = 4; i < 30; i++) {
+            ODTSignature[i] = -1;
+        }
+        for (int i = 0; i < ODTMimeString.length(); i++) {
+            ODTSignature[30+i] = (short)ODTMimeString.charAt(i);
+        }
+    }
+    
+    private static final int maxSignatureLen = 4096;
 
-
+    private static final Pattern FOPattern = Pattern.compile("<[^>]+?xmlns(?::\\w+)?=\"http://www\\.w3\\.org/1999/XSL/Format\"");
+    
     /**
-     * Checks if the first bytes of raf equal those given in signature.
+     * Checks if the first bytes of data equal those given in signature.
      * @param raf The file to check
      * @param signature The signature to check against. A value of -1 for a byte means "don't care".
      * @return true if the signature matches.
@@ -210,6 +282,10 @@ public class FormattedFile {
 
         Runtime.getRuntime().exec(execCmd);
     }
-
-
+    
+    public static void main(String[] args) throws Exception {
+        for (String file : args) {
+            System.out.println(file + ": " + detectFileFormat(file));
+        }
+    }
 }

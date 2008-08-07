@@ -207,7 +207,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
                 saveSettingsToSendController();
 
                 boolean wantCover = checkUseCover.isSelected();
-                if ((!wantCover && tflFiles.model.getSize() == 0) ||
+                if ((!wantCover && tflFiles.model.getSize() == 0) &&
                         (wantCover && sendController.getNumbers().size() == 0)) {
                     JOptionPane.showMessageDialog(SimplifiedSendDialog.this, utils._("Nothing to preview! (Neither a cover page nor a file to send has been selected.)"), utils._("Preview"), JOptionPane.INFORMATION_MESSAGE);
                     return;
@@ -265,6 +265,11 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
 
         checkUseCover = new JCheckBox(utils._("Use cover page"));
         checkUseCover.setSelected(utils.getFaxOptions().useCover);
+        checkUseCover.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                enableCoverComps(checkUseCover.isSelected());
+            };
+        });
         
         textSubject = new JTextField();
         textSubject.addMouseListener(clpDefault);
@@ -429,6 +434,11 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
 
         FaxOptions fo = utils.getFaxOptions();
         checkCustomCover = new JCheckBox(utils._("Use custom cover page:"));
+        checkCustomCover.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                 ftfCustomCover.setEnabled(checkCustomCover.isSelected() && checkCustomCover.isEnabled());
+             } 
+         });
         checkCustomCover.setSelected(fo.useCustomCover);
 
         ftfCustomCover = new FileTextField();
@@ -438,6 +448,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         } else {
             ftfCustomCover.setText(fo.defaultCover);
         }
+        ftfCustomCover.getJTextField().addMouseListener(clpDefault);
 
         comboNotification = new JComboBox(utils.notifications);
         comboNotification.setRenderer(new IconMap.ListCellRenderer());
@@ -572,6 +583,13 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
     public void setSubject(String subject) {
         textSubject.setText(subject);
     }
+    
+    void enableCoverComps(boolean state) {
+//      for (JComponent comp: coverComps)
+//          comp.setEnabled(state);
+      checkCustomCover.setEnabled(state);
+      ftfCustomCover.setEnabled(checkCustomCover.isSelected() && state);
+  }
  
     protected static class BoldCellRenderer implements TableCellRenderer {
         protected TableCellRenderer wrapped;

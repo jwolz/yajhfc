@@ -20,10 +20,14 @@ package yajhfc.phonebook;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import yajhfc.utils;
 
 public class GeneralConnectionSettings {
+    private static final Logger log = Logger.getLogger(GeneralConnectionSettings.class.getName());
+    
     public String name = "";
     public String givenName = "";
     public String title = "";
@@ -138,12 +142,12 @@ public class GeneralConnectionSettings {
                 } else if (f_class == Integer.TYPE || f_class == Integer.class) {
                     f.set(this, Integer.valueOf(value));
                 } else {
-                    utils.printWarning("Unsupported field type: " + f_class.getName());
+                    log.log(Level.WARNING, "Unsupported field type: " + f_class.getName());
                 }
             } catch (NoSuchFieldException e) {
-                utils.printWarning("Unknown field " + fieldName);
+                log.log(Level.WARNING, "Unknown field " + fieldName);
             } catch (Exception e) {
-                utils.printWarning("Exception loading fields:", e);
+                log.log(Level.WARNING, "Exception loading fields:", e);
             }
         }
     }

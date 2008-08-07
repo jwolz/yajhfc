@@ -21,36 +21,43 @@ package yajhfc.send;
 import gnu.hylafax.HylaFAXClient;
 import gnu.inet.ftp.ServerResponseException;
 
-import java.awt.Dialog;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
-
-import javax.print.DocFlavor;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import yajhfc.ExceptionDialog;
 import yajhfc.FileConverter;
 import yajhfc.FormattedFile;
+import yajhfc.Launcher;
 import yajhfc.PaperSize;
 import yajhfc.utils;
 import yajhfc.FormattedFile.FileFormat;
 
-public class LocalFileTFLItem extends HylaTFLItem {
+public class LocalFileTFLItem extends HylaTFLItem {    
+    private static final Logger log = Logger.getLogger(LocalFileTFLItem.class.getName());
+    
     protected String fileName;
     protected boolean prepared = false;
     protected FormattedFile preparedFile;
     
-    private void convertFile(DocFlavor.INPUT_STREAM flavor) {
-        FileConverter fconv = new FileConverter(flavor);
+    private void convertFile(FileConverter fconv) {
         try {
-            fconv.paperSize = desiredPaperSize;
-            File f = fconv.convertToPSTemp(new FileInputStream(fileName));
-            preparedFile = new FormattedFile(f, FileFormat.PostScript);
+            File tempFile = File.createTempFile("conv", ".ps");
+            tempFile.deleteOnExit();
+            
+            FileOutputStream outStream = new FileOutputStream(tempFile);
+            fconv.convertToHylaFormat(new File(fileName), outStream, desiredPaperSize);
+            outStream.close();
+            
+            preparedFile = new FormattedFile(tempFile);
         }  catch (Exception e) {
-            ExceptionDialog.showExceptionDialog((Dialog)null, MessageFormat.format(utils._("The document {0} could not get converted to PostScript. Reason:"), getText()), e);
+            ExceptionDialog.showExceptionDialog(Launcher.application, MessageFormat.format(utils._("The document {0} could not be converted to PostScript, PDF or TIFF. Reason:"), getText()), e);
         }        
     }
     
@@ -67,30 +74,17 @@ public class LocalFileTFLItem extends HylaTFLItem {
             return;
         
         FileFormat format = FormattedFile.detectFileFormat(fileName);
-        switch (format) { 
-        case JPEG:
-            convertFile(DocFlavor.INPUT_STREAM.JPEG);
-            break;
-        case GIF:
-            convertFile(DocFlavor.INPUT_STREAM.GIF);
-            break;
-        case PNG:
-            convertFile(DocFlavor.INPUT_STREAM.PNG);
-            break;
-        /*case PlainText:
-            convertFile(DocFlavor.INPUT_STREAM.TEXT_PLAIN_HOST);
-            break;*/
-        /*case Unknown:
-            if (JOptionPane.showConfirmDialog(null, MessageFormat.format(utils._("The document \"{0}\" has a unknown data format. It might not get transferred by HylaFAX. Use it anyway?"), getText()), utils._("Unknown format"), JOptionPane.QUESTION_MESSAGE | JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                preparedFile = new FormattedFile(fileName, FileFormat.Unknown);
-            } else {
-                preparedFile = null;
-            }
-            break;
-        */
-        default: // PostScript, PDF, TIFF, ...
+        FileConverter fconv = FormattedFile.fileConverters.get(format);
+        if (utils.debugMode) {
+            log.info("prepareFile: fileName='" + fileName + "' format: " + format);
+        }
+        if (fconv == null) {
+            log.warning("Unconvertable file: " + fileName + ", format: " + format);
             preparedFile = new FormattedFile(fileName, format);
-            break;
+        } else if (fconv == FileConverter.IDENTITY_CONVERTER) {
+            preparedFile = new FormattedFile(fileName, format);
+        } else {
+            convertFile(fconv);
         }
         prepared = true;
     }
@@ -100,6 +94,7 @@ public class LocalFileTFLItem extends HylaTFLItem {
         try {
             prepareFile();
         } catch (Exception ex) {
+            log.log(Level.WARNING, "Error preparing preview:", ex);
             return null;
         }
         

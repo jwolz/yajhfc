@@ -18,12 +18,17 @@ package yajhfc.phonebook;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class XMLPhoneBookEntry extends SimplePhoneBookEntry {
+    private static final Logger log = Logger.getLogger(XMLPhoneBookEntry.class.getName());
+    
     private XMLPhoneBook parent;
     
     public XMLPhoneBookEntry(XMLPhoneBook parent) {
@@ -53,7 +58,7 @@ public class XMLPhoneBookEntry extends SimplePhoneBookEntry {
                 dataEl.setTextContent(val.toString());
                 el.appendChild(dataEl);
             } catch (Exception e) {
-                yajhfc.utils.printWarning("Error writing element " + f[i].getName() + ": ", e);
+                log.log(Level.WARNING, "Error writing element " + f[i].getName() + ": ", e);
             }
         }
     }
@@ -68,7 +73,7 @@ public class XMLPhoneBookEntry extends SimplePhoneBookEntry {
                     java.lang.reflect.Field f = XMLPhoneBookEntry.class.getField(item.getNodeName());
                     f.set(this, item.getTextContent());
                 } catch (Exception e) {
-                    yajhfc.utils.printWarning("Error reading element " + item.getNodeName() + ": ", e);
+                    log.log(Level.WARNING, "Error reading element " + item.getNodeName() + ": ", e);
                 }
             }
         }

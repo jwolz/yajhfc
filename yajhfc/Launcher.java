@@ -30,8 +30,6 @@ package yajhfc;
  * experience knows a better way to accomplish this functionality, please let me know.
  */
 
-import gnu.inet.logging.ConsoleLogger;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -46,7 +44,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -55,6 +52,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+import java.util.logging.StreamHandler;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -65,14 +68,15 @@ import yajhfc.send.SendController;
 import yajhfc.send.SendWinControl;
 
 public final class Launcher {
-
+    private static final Logger launchLog = Logger.getLogger(Launcher.class.getName());
+    
     // Configuration directory as set on the command line
     // Needs to be set *before* utils initializes in order to have an effect!
     public static String cmdLineConfDir = null;
     
     static ServerSocket sockBlock = null;
     static SockBlockAcceptor blockThread;
-    static mainwin application;
+    public static mainwin application;
     static boolean isLocking = false;
     
     final static int codeSubmitStream = 1;
@@ -141,7 +145,7 @@ public final class Launcher {
                 isLocking = true;
             }
         } catch (IOException e) {
-            utils.printWarning("Could not create lock: ", e);
+            launchLog.log(Level.WARNING, "Could not create lock: ", e);
         }
     }
     
@@ -215,30 +219,32 @@ public final class Launcher {
         boolean forkNewInst = false;
         boolean closeAfterSubmit = true;
         boolean debugMode = false;
+        boolean noPlugins = false;
         int selectedTab = -1;
         String logFile = null;
         
         for (int i = 0; i < args.length; i++) {
-            if (args[i].startsWith("--")) { // command line argument
-                if (args[i].equals("--help")) {
+            String curArg = args[i];
+            if (curArg.startsWith("--")) { // command line argument
+                if (curArg.equals("--help")) {
                     printHelp();
                     System.exit(0);
-                } else if (args[i].equals("--stdin"))
+                } else if (curArg.equals("--stdin"))
                     useStdin = true;
-                else if (args[i].equals("--admin"))
+                else if (curArg.equals("--admin"))
                     adminMode = true;
-                else if (args[i].equals("--debug"))
+                else if (curArg.equals("--debug"))
                     debugMode = true;
-                else if (args[i].equals("--background"))
+                else if (curArg.equals("--background"))
                     forkNewInst = true;
-                else if (args[i].equals("--noclose")) 
+                else if (curArg.equals("--noclose")) 
                     closeAfterSubmit = false;
-                else if (args[i].startsWith("--configdir="))
-                    cmdLineConfDir = stripQuotes(args[i].substring(12)); // 12 == "--configdir=".length()
-                else if (args[i].startsWith("--recipient="))
-                    recipients.add(stripQuotes(args[i].substring(12))); // 12 == "--recipient=".length()
-                else if (args[i].startsWith("--showtab=") && args[i].length() > 10) { // 10 == ""--showtab="".length()
-                    switch (args[i].charAt(10)) {
+                else if (curArg.startsWith("--configdir="))
+                    cmdLineConfDir = stripQuotes(curArg.substring(12)); // 12 == "--configdir=".length()
+                else if (curArg.startsWith("--recipient="))
+                    recipients.add(stripQuotes(curArg.substring(12))); // 12 == "--recipient=".length()
+                else if (curArg.startsWith("--showtab=") && curArg.length() > 10) { // 10 == ""--showtab="".length()
+                    switch (curArg.charAt(10)) {
                     case '0':
                     case 'R':
                     case 'r':
@@ -255,19 +261,21 @@ public final class Launcher {
                         selectedTab = 2;
                         break;
                     default:
-                        System.err.println("Unknown tab: " + args[i].substring(10));
+                        System.err.println("Unknown tab: " + curArg.substring(10));
                     }
-                } else if (args[i].startsWith("--loadplugin=")) {
-                    jars.add(new File(stripQuotes(args[i].substring("--loadplugin=".length()))));
-                } else if (args[i].startsWith("--logfile=")) {
-                    logFile = stripQuotes(args[i].substring("--logfile=".length()));
-                } else{
-                    System.err.println("Unknown command line argument: " + args[i]);
+                } else if (curArg.startsWith("--loadplugin=")) {
+                    jars.add(new File(stripQuotes(curArg.substring("--loadplugin=".length()))));
+                } else if (curArg.startsWith("--logfile=")) {
+                    logFile = stripQuotes(curArg.substring("--logfile=".length()));
+                } else if (curArg.equals("--no-plugins")) {
+                    noPlugins = true;
+                } else {
+                    System.err.println("Unknown command line argument: " + curArg);
                 }
-            } else if (args[i].startsWith("-"))
-                System.err.println("Unknown command line argument: " + args[i]);
+            } else if (curArg.startsWith("-"))
+                System.err.println("Unknown command line argument: " + curArg);
             else // treat argument as file name to send
-                fileNames.add(args[i]);
+                fileNames.add(curArg);
         }
         
         if (debugMode && ":prompt:".equals(logFile)) {
@@ -280,22 +288,41 @@ public final class Launcher {
         // IMPORTANT: Don't access utils before this line!
         utils.debugMode = debugMode;
         
-        if (logFile != null) {
-            try {
-                utils.debugOut = new PrintStream(new FileOutputStream(logFile));
-            } catch (FileNotFoundException e) {
-                utils.debugOut = System.out;
-            }
-        }
-        ConsoleLogger.setAllOutputStreams(utils.debugOut);
         if (debugMode) {
-            utils.debugOut.println("YajHFC version: " + utils.AppVersion);
-            utils.debugOut.println("---- BEGIN System.getProperties() dump");
-            utils.dumpProperties(System.getProperties(), utils.debugOut);
-            utils.debugOut.println("---- END System.getProperties() dump");
-            utils.debugOut.println("" + args.length + " command line arguments:");
+            Logger rootLogger = LogManager.getLogManager().getLogger("");
+            Handler theHandler;
+            if (logFile != null) {
+//              try {
+//              utils.debugOut = new PrintStream(new FileOutputStream(logFile));
+//              } catch (FileNotFoundException e) {
+//              utils.debugOut = System.out;
+//              }
+                try {
+                    theHandler = new StreamHandler(new FileOutputStream(logFile), new SimpleFormatter());
+                } catch (FileNotFoundException e) {
+                    launchLog.log(Level.WARNING, "Could not open log file.", e);
+                    theHandler = new StreamHandler(System.out, new SimpleFormatter());
+                }
+            } else {
+                theHandler = new StreamHandler(System.out, new SimpleFormatter());
+            }
+            theHandler.setLevel(Level.FINEST);
+            rootLogger.setLevel(Level.FINEST);
+            rootLogger.addHandler(theHandler);
+            
+            Logger.getLogger("sun").setLevel(Level.INFO);
+            Logger.getLogger("java.awt").setLevel(Level.INFO);
+            Logger.getLogger("javax.swing").setLevel(Level.INFO);
+
+            //ConsoleLogger.setAllOutputStreams(utils.debugOut);
+
+            launchLog.config("YajHFC version: " + utils.AppVersion);
+            launchLog.config("---- BEGIN System.getProperties() dump");
+            utils.dumpProperties(System.getProperties(), launchLog);
+            launchLog.config("---- END System.getProperties() dump");
+            launchLog.config("" + args.length + " command line arguments:");
             for (String arg : args) {
-                utils.debugOut.println(arg);
+                launchLog.config(arg);
             }
         }
         
@@ -348,16 +375,16 @@ public final class Launcher {
                 }
                 
                 if (utils.debugMode) {
-                    utils.debugOut.println("Launching new instance:");
+                    launchLog.info("Launching new instance:");
                     for (int i = 0; i < launchArgs.length; i++) {
-                        utils.debugOut.println("launchArgs[" + i + "] = " + launchArgs[i]);
+                        launchLog.info("launchArgs[" + i + "] = " + launchArgs[i]);
                     }
                 }
                 Runtime.getRuntime().exec(launchArgs);
                 
                 int time = 0;
                 if (utils.debugMode) {
-                    utils.debugOut.print("Waiting for new instance... ");
+                    launchLog.info("Waiting for new instance... ");
                 }
                 
                 do {
@@ -371,12 +398,12 @@ public final class Launcher {
                 } while (oldinst == null);
                 
                 if (utils.debugMode) {
-                    utils.debugOut.println("New instance has been started.");
+                    launchLog.info("New instance has been started.");
                 }
             } catch (Exception e) {
                 if (utils.debugMode) {
-                    utils.debugOut.println("Exception launching new instance:");
-                    e.printStackTrace(utils.debugOut);
+                    launchLog.log(Level.WARNING, "Exception launching new instance:", e);
+                    //e.printStackTrace(utils.debugOut);
                 }
                 JOptionPane.showMessageDialog(null, utils._("Cannot launch new program instance, continuing with the existing one!\nReason: ") + e.toString() );
             }
@@ -384,7 +411,7 @@ public final class Launcher {
         
         if (oldinst == null) {
             if (utils.debugMode) {
-                utils.debugOut.println("No old instance found, creating lock...");
+                launchLog.info("No old instance found, creating lock...");
             }
             createLock();
             // Load plugins:
@@ -392,19 +419,22 @@ public final class Launcher {
                 try {
                     PluginManager.addPlugin(jar);
                 } catch (IOException e) {
-                    utils.printWarning("Error loading the plugin " + jar + ": ", e);
+                    launchLog.log(Level.WARNING, "Error loading the plugin " + jar + ": ", e);
                 }
+            }
+            if (!noPlugins) {
+                PluginManager.loadPluginList();
             }
             SwingUtilities.invokeLater(new NewInstRunner(fileNames, useStdin, recipients, adminMode, closeAfterSubmit, selectedTab));
             blockThread = new SockBlockAcceptor();
             blockThread.start();
             if (utils.debugMode) {
-                utils.debugOut.println("Lock and listener created.");
+                launchLog.info("Lock and listener created.");
             }
         } else {            
             try {
                 if (utils.debugMode) {
-                    utils.debugOut.println("Found old instance at: " + oldinst);
+                    launchLog.info("Found old instance at: " + oldinst);
                 }
                 OutputStream outStream = oldinst.getOutputStream();
                 InputStream inStream = oldinst.getInputStream();
@@ -456,7 +486,7 @@ public final class Launcher {
                 } else {
                     outStream.write(codeToForeground);
                     
-                    utils.printWarning(utils._("There already is a running instance!"));
+                    launchLog.log(Level.WARNING, utils._("There already is a running instance!"));
                 }
                 //outStream.write(codeQuit);
                 outStream.flush();
@@ -469,7 +499,7 @@ public final class Launcher {
                 }
                 
                 if (utils.debugMode) {
-                    utils.debugOut.println("Submitted information to old inst, terminating with code " + response);
+                    launchLog.info("Submitted information to old inst, terminating with code " + response);
                 }
                 
                 if (response >= 0)
@@ -477,7 +507,7 @@ public final class Launcher {
                 else
                     System.exit(responseGeneralError);
             } catch (IOException e) {
-                utils.printWarning("An error occured communicating with the old instance: ", e);
+                launchLog.log(Level.WARNING, "An error occured communicating with the old instance: ", e);
                 System.exit(responseGeneralError);
             }
         }
@@ -568,6 +598,7 @@ public final class Launcher {
         
         @Override
         public void run() {
+            Logger log = Logger.getLogger(SockBlockAcceptor.class.getName());
             while (isLocking) {
                 Socket srv = null;
                 InputStream strIn = null;
@@ -584,7 +615,7 @@ public final class Launcher {
                         switch (strIn.read()) {
                         case codeSubmitStream:
                             if (utils.debugMode) {
-                                utils.debugOut.println("Received codeSubmitStream:");
+                                log.info("Received codeSubmitStream:");
                             }
                             int ok = waitSubmitOK();
                             if (ok == responseOK) {
@@ -593,7 +624,7 @@ public final class Launcher {
                             }
                             strOut.write(ok);
                             if (utils.debugMode) {
-                                utils.debugOut.println("Wrote response: " + ok);
+                                log.info("Wrote response: " + ok);
                             }
                             break;
                         case codeSubmitFile:
@@ -610,7 +641,7 @@ public final class Launcher {
                             break;
                         case codeMultiSubmitFile:
                             if (utils.debugMode) {
-                                utils.debugOut.println("Received codeMultiSubmitFiles:");
+                                log.info("Received codeMultiSubmitFiles:");
                             }
                             ok = waitSubmitOK();
                             if (ok == responseOK) {
@@ -620,7 +651,7 @@ public final class Launcher {
 
                                 while (line != null && !line.equals(multiFileEOF)) {
                                     if (utils.debugMode) {
-                                        utils.debugOut.println(line);
+                                        log.finer(line);
                                     }
                                     fileNames.add(line);
                                     line = bufR.readLine();
@@ -632,13 +663,13 @@ public final class Launcher {
                             }
                             strOut.write(ok);
                             if (utils.debugMode) {
-                                utils.debugOut.println("Wrote response: " + ok);
+                                log.info("Wrote response: " + ok);
                             }
                             break;
                         case codeAddRecipients:
                         {
                             if (utils.debugMode) {
-                                utils.debugOut.println("Received codeAddRecipients:");
+                                log.info("Received codeAddRecipients:");
                             }
                             recipients = new ArrayList<String>();
                             BufferedReader bufR = new BufferedReader(new InputStreamReader(strIn));
@@ -646,7 +677,7 @@ public final class Launcher {
 
                             while (line != null && !line.equals(multiFileEOF)) {
                                 if (utils.debugMode) {
-                                    utils.debugOut.println(line);
+                                    log.finer(line);
                                 }
                                 recipients.add(line);
                                 line = bufR.readLine();
@@ -670,7 +701,7 @@ public final class Launcher {
                             doLoop = false;
                             break;
                         default:
-                            utils.printWarning("Unknown code received.");
+                            log.log(Level.WARNING, "Unknown code received.");
                             strOut.write(responseUnknownOpCode);
                             break;
                         }
@@ -679,12 +710,12 @@ public final class Launcher {
                     } while (doLoop && !srv.isClosed());
                     
                     if (utils.debugMode) {
-                        utils.debugOut.println("Closed connection cleanly.");
+                        log.info("Closed connection cleanly.");
                     }
                 } catch (Exception e) {
                     if (utils.debugMode) {
-                        utils.debugOut.println("Maybe error listening for connections:" );
-                        e.printStackTrace(utils.debugOut);
+                        log.log(Level.INFO, "Maybe error listening for connections:", e);
+                        //e.printStackTrace(utils.debugOut);
                     }
                 } finally {
                     try {

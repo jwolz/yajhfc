@@ -44,6 +44,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimerTask;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -78,6 +80,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import yajhfc.PluginManager.PluginMenuCreator;
 import yajhfc.filters.CustomFilterDialog;
 import yajhfc.filters.FilterCreator;
 import yajhfc.filters.StringFilter;
@@ -90,6 +93,8 @@ import yajhfc.send.SendWinControl;
 
 @SuppressWarnings("serial")
 public final class mainwin extends JFrame {
+    
+    private static final Logger log = Logger.getLogger(mainwin.class.getName());
     
     protected JPanel jContentPane = null;
     
@@ -1373,8 +1378,8 @@ public final class mainwin extends JFrame {
                                     hsf.view(hyfc);
                                 } catch (Exception e) {
                                     if (utils.debugMode) {
-                                        utils.debugOut.println("Exception while trying to view new faxes:");
-                                        e.printStackTrace(utils.debugOut);
+                                        log.log(Level.WARNING, "Exception while trying to view new faxes:", e);
+                                        //e.printStackTrace(utils.debugOut);
                                     }
                                 }
                             }
@@ -1492,6 +1497,14 @@ public final class mainwin extends JFrame {
             menuExtras.add(new JMenuItem(actOptions));
             menuExtras.addSeparator();
             menuExtras.add(new ActionJCheckBoxMenuItem(actAdminMode));
+            if (PluginManager.pluginMenuEntries.size() > 0) {
+                menuExtras.addSeparator();
+                for (PluginMenuCreator pmc : PluginManager.pluginMenuEntries) {
+                    for (JMenuItem item : pmc.createMenuItems()) {
+                        menuExtras.add(item);
+                    }
+                }
+            }
         }
         return menuExtras;
     }
@@ -1714,7 +1727,7 @@ public final class mainwin extends JFrame {
                     newText = utils.listToString(hyfc.getList("status"), "\n");
                 } catch (Exception e) {
                     newText = "Error refreshing the status: " + e.toString();
-                    utils.printWarning("Error refreshing the status: ", e);
+                    log.log(Level.WARNING, "Error refreshing the status: ", e);
                 }
             }
             if (!newText.equals(text)) {
@@ -1779,11 +1792,11 @@ public final class mainwin extends JFrame {
                     //System.out.println(System.currentTimeMillis() + ": Did invokeLater()");
                 }
             } catch (Exception e) {
-                utils.printWarning("An error occured refreshing the tables: ", e);
-                if (utils.debugMode) {
-                    utils.debugOut.println("An error occured refreshing the tables: ");
-                    e.printStackTrace(utils.debugOut);
-                }
+                log.log(Level.WARNING, "An error occured refreshing the tables: ", e);
+//                if (utils.debugMode) {
+//                    utils.debugOut.println("An error occured refreshing the tables: ");
+//                    e.printStackTrace(utils.debugOut);
+//                }
             }        
             
             try {
@@ -1801,11 +1814,11 @@ public final class mainwin extends JFrame {
                     lastSentList = lst;
                 }
             } catch (Exception e) {
-                utils.printWarning("An error occured refreshing the tables: ", e);
-                if (utils.debugMode) {
-                    utils.debugOut.println("An error occured refreshing the tables: ");
-                    e.printStackTrace(utils.debugOut);
-                }
+                log.log(Level.WARNING, "An error occured refreshing the tables: ", e);
+//                if (utils.debugMode) {
+//                    utils.debugOut.println("An error occured refreshing the tables: ");
+//                    e.printStackTrace(utils.debugOut);
+//                }
             }
             
             try {
@@ -1823,11 +1836,11 @@ public final class mainwin extends JFrame {
                     lastSendingList = lst;
                 }
             } catch (Exception e) {
-                utils.printWarning("An error occured refreshing the tables: ", e);
-                if (utils.debugMode) {
-                    utils.debugOut.println("An error occured refreshing the tables: ");
-                    e.printStackTrace(utils.debugOut);
-                }
+                log.log(Level.WARNING, "An error occured refreshing the tables: ", e);
+//                if (utils.debugMode) {
+//                    utils.debugOut.println("An error occured refreshing the tables: ");
+//                    e.printStackTrace(utils.debugOut);
+//                }
             }
             
             if (tablePanel.isShowingProgress()) {
@@ -1941,7 +1954,7 @@ public final class mainwin extends JFrame {
                 
                 hyfc.rcvfmt(myopts.recvfmt.getFormatString());*/
                 if (utils.debugMode) {
-                    utils.debugOut.println("Begin login (wantAdmin=" + wantAdmin + ")");
+                    log.info("Begin login (wantAdmin=" + wantAdmin + ")");
                 }
                 clientManager = new HylaClientManager(myopts);
                 clientManager.setAdminMode(wantAdmin);
@@ -1950,7 +1963,7 @@ public final class mainwin extends JFrame {
                     return;
                 }
                 if (utils.debugMode) {
-                    utils.debugOut.println("Login succeeded. -- begin init work.");
+                    log.info("Login succeeded. -- begin init work.");
                 }
                 // Multi-threaded implementation of the periodic refreshes.
                 // I hope I didn't introduce too many race conditions/deadlocks this way
@@ -1989,15 +2002,15 @@ public final class mainwin extends JFrame {
                        sendReady = SendReadyState.Ready;
                        mainwin.this.setEnabled(true);
                        if (utils.debugMode) {
-                           utils.debugOut.println("Finished init work!");
+                           log.info("Finished init work!");
                        }
                        if (loginAction != null) {
                            if (utils.debugMode) {
-                               utils.debugOut.println("Doing login action: " + loginAction.getClass().getName());
+                               log.info("Doing login action: " + loginAction.getClass().getName());
                            }
                            loginAction.run();
                            if (utils.debugMode) {
-                               utils.debugOut.println("Finished login action.");
+                               log.info("Finished login action.");
                            }
                        }
                        clientManager.endServerTransaction();
@@ -2011,7 +2024,7 @@ public final class mainwin extends JFrame {
         
         private void doErrorCleanup() {
             if (utils.debugMode) {
-                utils.debugOut.println("Login failed! -- doing cleanup.");
+                log.info("Login failed! -- doing cleanup.");
             }
             clientManager = null;
             sendReady = SendReadyState.NotReady;
@@ -2028,6 +2041,10 @@ public final class mainwin extends JFrame {
             this.wantAdmin = wantAdmin;
             this.loginAction = loginAction;
         }
+    }
+
+    public HylaClientManager getClientManager() {
+        return clientManager;
     }
 }  
 

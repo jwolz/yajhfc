@@ -27,8 +27,12 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class YajJob {
+    private static final Logger log = Logger.getLogger(YajJob.class.getName());
+    
     protected String[] stringData;
     protected Object[] parsedData;
     protected FmtItemList columns;
@@ -89,11 +93,11 @@ public abstract class YajJob {
                             result = res;
                         }
                     } catch (NumberFormatException e) {
-                        utils.printWarning("Not a number: " + res + ": ", e);
+                        log.log(Level.WARNING, "Not a number: " + res + ": ", e);
                         //result = Float.NaN;
                         result = nullObject;
                     } catch (ParseException e) {
-                        utils.printWarning("Not a parseable date: " + res + ": ", e);
+                        log.log(Level.WARNING, "Not a parseable date: " + res + ": ", e);
                         result = nullObject;
                     }    
                 } else

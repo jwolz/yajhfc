@@ -29,6 +29,7 @@ import java.sql.Statement;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
@@ -41,6 +42,8 @@ import yajhfc.phonebook.PhoneBookEntry;
 import yajhfc.phonebook.PhoneBookException;
 
 public class JDBCPhoneBook extends PhoneBook {
+    private static final Logger log = Logger.getLogger(JDBCPhoneBook.class.getName());
+    
     ConnectionSettings settings;
     Connection connection;
     ArrayList<JDBCPhoneBookEntry> items = new ArrayList<JDBCPhoneBookEntry>();
@@ -278,7 +281,7 @@ public class JDBCPhoneBook extends PhoneBook {
         try {
             String query = getSELECTQuery();
             if (utils.debugMode) {
-                utils.debugOut.println("JDBC phone book: SELECT query: " + query);
+                log.fine("JDBC phone book: SELECT query: " + query);
             }
             if (query == null) {
                 JOptionPane.showMessageDialog(parentDialog, utils._("Cannot open phonebook since no database fields were selected!"));
@@ -316,19 +319,19 @@ public class JDBCPhoneBook extends PhoneBook {
         try {   
             String query = getINSERTQuery();
             if (utils.debugMode) {
-                utils.debugOut.println("JDBC phone book: INSERT query: " + query);
+                log.fine("JDBC phone book: INSERT query: " + query);
             }
             insertStmt = connection.prepareStatement(query);
 
             query = getUPDATEQuery();
             if (utils.debugMode) {
-                utils.debugOut.println("JDBC phone book: UPDATE query: " + query);
+                log.fine("JDBC phone book: UPDATE query: " + query);
             }
             updateStmt = connection.prepareStatement(query);
 
             query = getDELETEQuery();
             if (utils.debugMode) {
-                utils.debugOut.println("JDBC phone book: DELETE query: " + query);
+                log.fine("JDBC phone book: DELETE query: " + query);
             }
             deleteStmt = connection.prepareStatement(query);
 

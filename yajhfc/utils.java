@@ -30,7 +30,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.PrintStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -40,6 +40,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
@@ -53,7 +55,8 @@ public final class utils {
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
     
     public static boolean debugMode = false;
-    public static PrintStream debugOut = System.out;
+    //public static PrintStream debugOut = System.out;
+    private static final Logger log = Logger.getLogger(utils.class.getName());
     
     private static FaxOptions theoptions = null;
     private static ResourceBundle msgs = null;
@@ -232,6 +235,30 @@ public final class utils {
         new YajLanguage(Locale.GERMAN),
         new YajLanguage(new Locale("es"))
     };
+    
+    public static final File applicationDir;
+    static {
+        // Try to determine where the JAR file is located
+        URL utilURL = utils.class.getResource("utils.class");
+        try {
+            while (utilURL.getProtocol().equals("jar")) {
+                String path = utilURL.getPath();
+                int idx = path.lastIndexOf('!');
+                if (idx >= 0) {
+                    path = path.substring(0, idx);
+                }
+                utilURL = new URL(path);
+            }
+        } catch (MalformedURLException e) {
+            log.log(Level.WARNING, "Error determining application dir:", e);
+        }
+        if (utilURL.getProtocol().equals("file")) {
+            applicationDir = (new File(utilURL.getPath())).getParentFile();
+        } else {
+            applicationDir = new File(".");
+            log.severe("Application directory not found, url was: " + utils.class.getResource("utils.class"));
+        }
+    }
     
     public static String listToString(List<?> l, String delim) {
         StringBuilder s = new StringBuilder();
@@ -445,11 +472,11 @@ public final class utils {
             UIManager.setLookAndFeel(lfClass);
             return true;
         } catch (Exception e) {
-            utils.printWarning("Couldn't load look&feel: " + className + ": ", e);
+            log.log(Level.WARNING, "Couldn't load look&feel: " + className + ": ", e);
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             } catch (Exception e1) {
-                utils.printWarning("Couldn't load native look&feel: ", e1);
+                log.log(Level.WARNING, "Couldn't load native look&feel: ", e1);
             }
             return false;
         }
@@ -550,16 +577,16 @@ public final class utils {
     }
     
     /**
-     * Dumps the content of the specified properties object to the PrintStream
+     * Dumps the content of the specified properties object to the Logger
      * @param prop
      * @param out
      */
-    public static void dumpProperties(Map<Object, ?> prop, PrintStream out, Object... censorKeys) {
+    public static void dumpProperties(Map<Object, ?> prop, Logger out, Object... censorKeys) {
         Object keys[] = prop.keySet().toArray();
         Arrays.sort(keys);
         StringBuilder s = new StringBuilder();
         for (Object key : keys) {
-            s.setLength(0);
+            //s.setLength(0);
             s.append(key).append('=');
             if (indexOfArray(censorKeys, key) == -1) {
                 s.append(prop.get(key));
@@ -571,8 +598,10 @@ public final class utils {
                     s.append('<').append(val.toString().length()).append(" characters>");
                 }
             }
-            out.println(s);
+            //out.println(s);
+            s.append('\n');
         }
+        out.config(s.toString());
     }
     
     /**
@@ -590,34 +619,6 @@ public final class utils {
         return -1;
     }
     
-    /**
-     * Outputs an error message to standard error or to the debug log
-     * @param message
-     */
-    public static void printWarning(String message, Throwable ex) {
-        if (debugMode) {
-            debugOut.print("WARNING: ");
-            debugOut.println(message);
-            if (ex != null) {
-                ex.printStackTrace(debugOut);
-            }
-        } else {
-            if (ex == null) {
-                System.err.println(message);
-            } else {
-                System.err.print(message);
-                System.err.println(ex);
-            }
-        }
-    }
-
-    /**
-     * Outputs an error message to standard error or to the debug log
-     * @param message
-     */
-    public static void printWarning(String message) {
-        printWarning(message, null);
-    }
 }
 
 

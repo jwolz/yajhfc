@@ -31,6 +31,8 @@ import java.awt.event.ComponentListener;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -53,6 +55,8 @@ public class ExceptionDialog extends JDialog implements ActionListener, Componen
     private Component strutStacktrace;
     private ClipboardPopup clpDef;
     private boolean detailState = false;
+    
+    private static final Logger log = Logger.getLogger(ExceptionDialog.class.getName());
     
     private void initialize(String message, Exception exc) {
         final int border = 12;
@@ -136,8 +140,9 @@ public class ExceptionDialog extends JDialog implements ActionListener, Componen
             lblExceptionText.addComponentListener(this);
         
         if (utils.debugMode) {
-            utils.debugOut.println("EXCEPTION occured: " + message);
-            exc.printStackTrace(utils.debugOut);
+//            utils.debugOut.println("EXCEPTION occured: " + message);
+//            exc.printStackTrace(utils.debugOut);
+            log.log(Level.WARNING, "Exception occurred: " + message, exc);
         }
     }
     

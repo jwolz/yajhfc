@@ -33,6 +33,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -72,7 +73,8 @@ import yajhfc.phonebook.PhoneBookWin;
 
 
 final class SendWin extends JDialog implements SendWinControl  {
-  
+    private static final Logger log = Logger.getLogger(SendWin.class.getName());
+    
     JPanel jContentPane = null;
     JButton buttonSend = null;
     JButton buttonCancel = null;
@@ -159,11 +161,11 @@ final class SendWin extends JDialog implements SendWinControl  {
         this.clientManager = manager;
         this.pollMode = pollMode;
         if (utils.debugMode) {
-            utils.debugOut.println("Creating new SendWin: manager=" + manager + ", owner = " + owner);
+            log.fine("Creating new SendWin: manager=" + manager + ", owner = " + owner);
         }
         initialize();
         if (utils.debugMode) {
-            utils.debugOut.println("New SendWin created.");
+            log.fine("New SendWin created.");
         }
     }
 

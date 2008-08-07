@@ -62,6 +62,11 @@ YajHFC was originally written as a first more complicated
 CHANGES
 -------
 
+0.3.7:
+- New simplified send dialog
+- Better plugin support (see the new FOP plugin)
+- Some bug fixes
+
 0.3.6:
 - Some bug fixes
 - Support for selection of multiple phone book entries for the send dialog

@@ -1,30 +1,6 @@
-package yajhfc;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.text.MessageFormat;
-
-import javax.print.DocFlavor;
-import javax.print.DocPrintJob;
-import javax.print.PrintException;
-import javax.print.PrintService;
-import javax.print.SimpleDoc;
-import javax.print.StreamPrintServiceFactory;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttributeSet;
-import javax.print.attribute.standard.MediaSize;
-import javax.print.event.PrintJobEvent;
-import javax.print.event.PrintJobListener;
-
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005-2006 Jonas Wolz
+ * Copyright (C) 2005-2008 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -40,103 +16,50 @@ import javax.print.event.PrintJobListener;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+package yajhfc;
 
-public class FileConverter implements PrintJobListener {
-    protected int completed;
-    protected final static int NOT_COMPLETED = 0;
-    protected final static int COMPLETED_SUCCESSFULLY = 1;
-    protected final static int FAILED = 2;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+/**
+ * Interface for File Converters
+ * @author jonas
+ *
+ */
+public interface FileConverter {
     
-    public PaperSize paperSize = utils.papersizes[0]; // A4
-    public DocFlavor.INPUT_STREAM flavor;
+    /**
+     * Converts the input from inStream to a format HylaFAX understands.
+     * This means PostScript, PDF or TIFF G4.
+     * @param inFile
+     * @param destination
+     * @throws ConversionException
+     * @throws IOException
+     */
+    public void convertToHylaFormat(File inFile, OutputStream destination, PaperSize paperSize) throws ConversionException, IOException;
     
-    public FileConverter(DocFlavor.INPUT_STREAM flavor) {        
-        this.flavor = flavor;
-    }
-    
-    public File convertToPSTemp(InputStream inStream) throws IOException, FileNotFoundException, ConversionException, PrintException {
-        File tempFile = File.createTempFile("conv", ".ps");
-        tempFile.deleteOnExit();
-        
-        FileOutputStream outStream = new FileOutputStream(tempFile);
-        convertToPS(inStream, outStream);
-        outStream.close();
-        return tempFile;
-    }
-    
-    public void convertToPS(InputStream inStream, OutputStream destination) throws IOException, FileNotFoundException, ConversionException, PrintException {
-                
-        if (!(inStream instanceof BufferedInputStream))
-            inStream = new BufferedInputStream(inStream);
-        if (!(destination instanceof BufferedOutputStream))
-            destination = new BufferedOutputStream(destination);
-        
-        StreamPrintServiceFactory[] services = StreamPrintServiceFactory.lookupStreamPrintServiceFactories(flavor, DocFlavor.BYTE_ARRAY.POSTSCRIPT.getMimeType());
-        if (services.length < 1) {
-            throw new ConversionException(MessageFormat.format(utils._("Cannot find a PrintService to convert files of type {0} to Postscript!"), flavor.getMimeType())); 
-        }
-        
-        PrintService ps = services[0].getPrintService(destination);
-        DocPrintJob dpj = ps.createPrintJob();
+    /**
+     * A dummy file converter that just copies the input to the output
+     */
+    public static final FileConverter IDENTITY_CONVERTER = new FileConverter() {
+      public void convertToHylaFormat(File inFile,
+                OutputStream destination, PaperSize paperSize) throws ConversionException, IOException {
+            byte buf[] = new byte[8100];
+            int bytesRead;
+            InputStream in = new FileInputStream(inFile);
+            
+            do {
+                bytesRead = in.read(buf);
+                if (bytesRead > 0) {
+                    destination.write(buf, 0, bytesRead);
+                }
+            } while (bytesRead == buf.length);
 
-        dpj.addPrintJobListener(this);
-        completed = NOT_COMPLETED;
-        
-        PrintRequestAttributeSet prset = new HashPrintRequestAttributeSet();
-        
-        MediaSize mediaSize;
-        if (paperSize.desc.equals("A4"))
-            mediaSize = MediaSize.ISO.A4;
-        else if (paperSize.desc.equals("A5"))
-            mediaSize = MediaSize.ISO.A5;
-        else if (paperSize.desc.equals("Letter"))
-            mediaSize = MediaSize.NA.LETTER;
-        else if (paperSize.desc.equals("Legal"))
-            mediaSize = MediaSize.NA.LEGAL;
-        else
-            mediaSize = MediaSize.ISO.A4;
-        prset.add(mediaSize.getMediaSizeName());
-        
-        dpj.print(new SimpleDoc(inStream, flavor, null), prset);
-
-        while (completed == NOT_COMPLETED) {
-            try {
-                Thread.sleep(100);
-            } catch (Exception e) {
-                // NOP
-            }            
-        }
-        
-        if (completed != COMPLETED_SUCCESSFULLY) {
-            throw new ConversionException(utils._("An error occured while converting the document to PostScript."));
-        }
-    }
-    
-    public void printDataTransferCompleted(PrintJobEvent pje) {
-        // NOP
-        //System.out.println("printDataTransferCompleted");
-    }
-
-    public void printJobCompleted(PrintJobEvent pje) {
-        completed = COMPLETED_SUCCESSFULLY;
-    }
-
-    public void printJobCanceled(PrintJobEvent pje) {
-        completed = FAILED;
-    }
-
-    public void printJobFailed(PrintJobEvent pje) {
-        completed = FAILED;
-    }
-
-    public void printJobNoMoreEvents(PrintJobEvent pje) {
-        completed = COMPLETED_SUCCESSFULLY;
-    }
-
-    public void printJobRequiresAttention(PrintJobEvent pje) {
-        //NOP
-        //System.out.println("printJobRequiresAttention");
-    }       
+        }  
+    };
     
     public static class ConversionException extends Exception {
         public ConversionException(String message) {
@@ -145,6 +68,10 @@ public class FileConverter implements PrintJobListener {
         
         public ConversionException(String message, Throwable cause) {
             super(message, cause);
+        }
+
+        public ConversionException(Throwable cause) {
+            super(cause);
         }
     }
 }
