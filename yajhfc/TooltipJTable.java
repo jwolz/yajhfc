@@ -24,6 +24,8 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JTable;
 import javax.swing.event.TableColumnModelEvent;
@@ -36,6 +38,7 @@ import javax.swing.table.TableColumn;
  * Create a new table with: new TooltipJTable(realTableModel)
  */
 public class TooltipJTable extends JTable {
+    private static final Logger log = Logger.getLogger(TooltipJTable.class.getName());
     
     @Override
     protected JTableHeader createDefaultTableHeader() {
@@ -98,7 +101,7 @@ public class TooltipJTable extends JTable {
             if ((sort != 0) && (Math.abs(sort) <= getColumnCount()))
                 getSorter().setSortingStatus(Math.abs(sort) - 1, (sort > 0) ? TableSorter.ASCENDING : TableSorter.DESCENDING);
         } catch (NumberFormatException e1) {
-            utils.printWarning("Couldn't parse value: " + cfg[0]);
+            log.log(Level.WARNING, "Couldn't parse value: " + cfg[0]);
         }
         
         for (int i = 1; i < cfg.length; i++) {
@@ -118,7 +121,7 @@ public class TooltipJTable extends JTable {
                     }
                 }
             } catch (NumberFormatException e) {
-                utils.printWarning("Couldn't parse value: " + cfg[i]);
+                log.log(Level.WARNING, "Couldn't parse value: " + cfg[i]);
             }
         } 
     }

@@ -18,7 +18,6 @@ package yajhfc.faxcover;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-import java.awt.Dimension;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -50,8 +49,9 @@ import yajhfc.FormattedFile.FileFormat;
 public abstract class Faxcover {
     public DateFormat dateFmt;    // date format for Output
     
-    public float    pageWidth;  // page width (mm)
-    public float    pageLength; // page length (mm)
+//    public float    pageWidth;  // page width (mm)
+//    public float    pageLength; // page length (mm)
+    public yajhfc.PaperSize pageSize;
     
     public String   toName;     // to person's name
     public String   toFaxNumber;    // to's fax number
@@ -70,11 +70,6 @@ public abstract class Faxcover {
     
     protected URL coverTemplate;
    
-    public void setPageSize(Dimension size) {
-        pageWidth = size.width;
-        pageLength = size.height;
-    }
-    
     public abstract void makeCoverSheet(OutputStream out) throws IOException; 
     
     final static byte[] PDF_Signature = "%PDF".getBytes();
@@ -179,7 +174,7 @@ public abstract class Faxcover {
     }
     
     
-    Faxcover(URL coverTemplate) {
+    protected Faxcover(URL coverTemplate) {
         //dateFmt("%a %b %d %Y, %H:%M %Z")
         dateFmt = DateFormat.getDateInstance(DateFormat.FULL, utils.getLocale());
         this.coverTemplate = coverTemplate;
@@ -219,7 +214,7 @@ public abstract class Faxcover {
                 throw new IOException("Default cover page not found!");
             }
         } else {
-            coverURL = coverTemplate.toURL();
+            coverURL = coverTemplate.toURI().toURL();
         }
         
         FileFormat format = FormattedFile.detectFileFormat(coverURL.openStream());

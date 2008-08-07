@@ -31,6 +31,8 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -47,6 +49,7 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
 public class AboutDialog extends JDialog implements HyperlinkListener {
+    private static final Logger log = Logger.getLogger(AboutDialog.class.getName());
     
     public enum Mode { ABOUT, READMES };
     
@@ -288,7 +291,7 @@ public class AboutDialog extends JDialog implements HyperlinkListener {
             this.setSize(640, 480);
             break;
         default:
-            utils.printWarning("Invalid mode!");
+            log.log(Level.WARNING, "Invalid mode!");
         }
     }
     

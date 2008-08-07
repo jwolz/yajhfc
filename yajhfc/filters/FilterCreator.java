@@ -19,6 +19,8 @@ package yajhfc.filters;
  */
 import java.text.ParseException;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import yajhfc.FmtItem;
 import yajhfc.FmtItemList;
@@ -27,6 +29,7 @@ import yajhfc.YajJobFilter;
 import yajhfc.utils;
 
 public class FilterCreator {
+    private static final Logger log = Logger.getLogger(FilterCreator.class.getName());
     
     private static String[] booleanOperators = {
         utils._("is set"),
@@ -145,7 +148,7 @@ public class FilterCreator {
                 res.append(utils.escapeChars(sf.getCompareValue().toString(), "$!", '~')).append('$');
                 res.append('!');
             } else
-                utils.printWarning("Unknown filter type for filterToString: " + yjf.getClass().getName());
+                log.log(Level.WARNING, "Unknown filter type for filterToString: " + yjf.getClass().getName());
         }
         
         return res.toString();
@@ -161,14 +164,14 @@ public class FilterCreator {
         } else if (flt1[0].equals("&")) {
             af = new AndFilter();
         } else {
-            utils.printWarning("Unknown And/Or specification in stringToFilter: " + flt1[0]);
+            log.log(Level.WARNING, "Unknown And/Or specification in stringToFilter: " + flt1[0]);
             return null;
         }
         
         for (int i = 1; i < flt1.length; i++) {
             String[] flt2 = utils.fastSplit(flt1[i], '$'); //flt1[i].split("\\$");
             if (flt2.length != 4) {
-                utils.printWarning("Unknown filter specification in stringToFilter: " + flt1[i]);
+                log.log(Level.WARNING, "Unknown filter specification in stringToFilter: " + flt1[i]);
                 continue;
             }
             
@@ -180,7 +183,7 @@ public class FilterCreator {
                 }
             }
             if (col == null) {
-                utils.printWarning("Unknown column in stringToFilter: " + flt1[i]);
+                log.log(Level.WARNING, "Unknown column in stringToFilter: " + flt1[i]);
                 continue;
             }
             
@@ -199,29 +202,29 @@ public class FilterCreator {
                     try {
                         compVal = col.dateFormat.fmtIn.parse(strData);
                     } catch (ParseException e) {
-                        utils.printWarning("Unknown date format in stringToFilter: " + strData);
+                        log.log(Level.WARNING, "Unknown date format in stringToFilter: " + strData);
                         continue;
                     }
                 } else {
-                    utils.printWarning("Unknown data class in stringToFilter: " + col.dataClass.getName());
+                    log.log(Level.WARNING, "Unknown data class in stringToFilter: " + col.dataClass.getName());
                     continue;
                 }                        
                 
                 try {
                     af.addChild(new ComparableFilter(col, ComparableFilterOperator.valueOf(ComparableFilterOperator.class, flt2[2]), compVal));
                 } catch (RuntimeException e) {
-                    utils.printWarning("Exception in stringToFilter: ", e);
+                    log.log(Level.WARNING, "Exception in stringToFilter: ", e);
                     continue;
                 }
             } else if (flt2[0].equals("s")) {
                 try {
                     af.addChild(new StringFilter(col, StringFilterOperator.valueOf(StringFilterOperator.class, flt2[2]), utils.unEscapeChars(flt2[3], "$!", '~')));
                 } catch (RuntimeException e) {
-                    utils.printWarning("Exception in stringToFilter: ",  e);
+                    log.log(Level.WARNING, "Exception in stringToFilter: ",  e);
                     continue;
                 }
             } else {
-                utils.printWarning("Unknown filter type in stringToFilter: " + flt1[i]);
+                log.log(Level.WARNING, "Unknown filter type in stringToFilter: " + flt1[i]);
                 continue;
             }  
         }

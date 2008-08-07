@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Stores the read state of faxes in a local file.
@@ -34,7 +36,8 @@ import java.util.Set;
  *
  */
 public class LocalPersistentReadState extends PersistentReadState {
-
+    private static final Logger log = Logger.getLogger(LocalPersistentReadState.class.getName());
+    
     protected String fileName;
     
     public LocalPersistentReadState(String fileName) {
@@ -62,7 +65,7 @@ public class LocalPersistentReadState extends PersistentReadState {
         } catch (FileNotFoundException e) { 
             // No file yet - keep empty
         } catch (IOException e) {
-            utils.printWarning("Error reading read status: ", e);
+            log.log(Level.WARNING, "Error reading read status: ", e);
         }
         
         return oldRead;
@@ -85,7 +88,7 @@ public class LocalPersistentReadState extends PersistentReadState {
             }
             bOut.close();
         } catch (IOException e) {
-            utils.printWarning("Error storing read state: ", e);
+            log.log(Level.WARNING, "Error storing read state: ", e);
         }
     }
 

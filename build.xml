@@ -114,7 +114,7 @@
 		<jar jarfile="${jar-output}" manifest="${jar-extra}/manifest.txt">
 			<fileset dir="${build}" includes="yajhfc/**"/>
 			<fileset dir="${src}" includes="yajhfc/i18n/*.class"/>
-			<fileset dir="${jar-extra}" includes="info/**/*.class,toolbarButtonGraphics/**/*.gif"/>
+			<fileset dir="${jar-extra}" includes="info/**/*.class,toolbarButtonGraphics/**/*.gif,org/**/*.class"/>
 			<fileset dir="${gnu.hylafax.classFileLocation}" includes="**/*.class"/>
 			<fileset dir="${src}" includes="COPYING,README*.txt,yajhfc/*.png,yajhfc/images/*,doc/*.html,doc/*.css,yajhfc/faxcover/*.ps"/>
 		</jar>
@@ -128,6 +128,7 @@
 				<exclude name="**/*.jar"/>
 				<exclude name="doc/faq-src/*"/>
 				<exclude name="**/*.log"/>
+				<exclude name="**/*~"/>
 			</zipfileset>
 			<zipfileset dir="${src}" prefix="yajhfc/">
 				<include name="doc/faq-src/.latex2html-init"/>

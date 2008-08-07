@@ -23,12 +23,14 @@ import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Frame;
 import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 import javax.swing.ProgressMonitor;
 import javax.swing.SwingUtilities;
 
 public abstract class ProgressWorker extends Thread{
+    private static final Logger log = Logger.getLogger(ProgressWorker.class.getName());
     
     protected ProgressUI progressMonitor;
     protected int progress;
@@ -215,7 +217,7 @@ public abstract class ProgressWorker extends Thread{
             this.msgType = msgType;
             
             if (utils.debugMode) {
-                utils.debugOut.println("ProgressWorker showMessageDialog: msg=\"" + msg + "\", title = \"" + title + "\", msgType=" + msgType);
+                log.info("ProgressWorker showMessageDialog: msg=\"" + msg + "\", title = \"" + title + "\", msgType=" + msgType);
             }
         }
         
@@ -227,7 +229,7 @@ public abstract class ProgressWorker extends Thread{
             this.optionType = optionType;
             
             if (utils.debugMode) {
-                utils.debugOut.println("ProgressWorker showConfirmDialog: msg=\"" + msg + "\", title = \"" + title + "\", msgType=" + msgType + ", optionType=" + optionType);
+                log.info("ProgressWorker showConfirmDialog: msg=\"" + msg + "\", title = \"" + title + "\", msgType=" + msgType + ", optionType=" + optionType);
             }
         }
     }
@@ -258,7 +260,7 @@ public abstract class ProgressWorker extends Thread{
             this.note = note;
             this.pMon = pMon;
             if (utils.debugMode) {
-                utils.debugOut.println("ProgressWorker setNote: " + note);
+                log.fine("ProgressWorker setNote: " + note);
             }
         }
     }

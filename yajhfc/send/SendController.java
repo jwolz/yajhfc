@@ -33,6 +33,9 @@ import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
@@ -54,6 +57,7 @@ import yajhfc.faxcover.Faxcover.InvalidCoverFormatException;
  *
  */
 public class SendController {
+    
     // These properties are set in the constructor:
     protected HylaClientManager clientManager;
     protected Dialog parent;
@@ -131,7 +135,7 @@ public class SendController {
         cov.comments = comments;
         cov.regarding = subject;
 
-        cov.setPageSize(paperSize.size);
+        cov.pageSize = paperSize;
 
         return cov;
     }
@@ -212,19 +216,21 @@ public class SendController {
         } 
     }
     class SendWorker extends ProgressWorker {
+        private final Logger log = Logger.getLogger(SendWorker.class.getName());    
+        
         private void setIfNotEmpty(Job j, String prop, String val) {
             try {
                 if (val.length() >  0)
                     j.setProperty(prop, val);
             } catch (Exception e) {
-                utils.printWarning("Couldn't set additional job info " + prop + ": ", e);
+                log.log(Level.WARNING, "Couldn't set additional job info " + prop + ": ", e);
             }
         }
 
         private String getModem() {
             Object sel = selectedModem;
             if (utils.debugMode) {
-                utils.debugOut.println("Selected modem (" + sel.getClass().getCanonicalName() + "): " + sel);
+                log.fine("Selected modem (" + sel.getClass().getCanonicalName() + "): " + sel);
             }
             if (sel instanceof HylaModem) {
                 return ((HylaModem)sel).getInternalName();
@@ -284,8 +290,8 @@ public class SendController {
 
                     String modem = getModem();
                     if (utils.debugMode) {
-                        utils.debugOut.print("Use modem: ");
-                        utils.debugOut.println(modem);
+                        log.fine("Use modem: " + modem);
+                        //utils.debugOut.println(modem);
                     }
                     for (NumberTFLItem numItem : numbers) {
                         updateNote(MessageFormat.format(utils._("Creating job to {0}"), numItem.getText()));
@@ -531,21 +537,23 @@ public class SendController {
         return result;
     }
     
-    protected static final FileFormat[] acceptedFormats = {
-        FileFormat.PostScript, FileFormat.PDF, FileFormat.JPEG, FileFormat.GIF, FileFormat.PNG, FileFormat.TIFF
-    };
+//    protected static final FileFormat[] acceptedFormats = {
+//        FileFormat.PostScript, FileFormat.PDF, FileFormat.JPEG, FileFormat.GIF, FileFormat.PNG, FileFormat.TIFF
+//    };
     protected static FileFilter[] acceptedFilters;
 
     public static FileFilter[] getAcceptedFileFilters() {
         if (acceptedFilters == null) {
+            Set<FileFormat> acceptedFormats = FormattedFile.fileConverters.keySet();
+            
             ArrayList<String> allExts = new ArrayList<String>();
-            acceptedFilters = new FileFilter[acceptedFormats.length + 1];
-            for (int i = 1; i <= acceptedFormats.length; i++) {
-                FileFormat ff = acceptedFormats[i-1];
+            acceptedFilters = new FileFilter[acceptedFormats.size() + 1];
+            int i = 0;
+            for (FileFormat ff : acceptedFormats) {
                 for (String ext : ff.getPossibleExtension()) {
                     allExts.add(ext);
                 }
-                acceptedFilters[i] = new ExampleFileFilter(ff.getPossibleExtension(), ff.getDescription());
+                acceptedFilters[++i] = new ExampleFileFilter(ff.getPossibleExtension(), ff.getDescription());
             }
             acceptedFilters[0] = new ExampleFileFilter(allExts.toArray(new String[allExts.size()]), utils._("All supported formats"));
         }

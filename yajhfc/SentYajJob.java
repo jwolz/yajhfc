@@ -27,10 +27,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import yajhfc.FormattedFile.FileFormat;
 
 public class SentYajJob extends YajJob {
+    private static final Logger log = Logger.getLogger(SentYajJob.class.getName());
+    
     protected int statusCol;
     protected int jobIDCol;
     
@@ -72,7 +76,7 @@ public class SentYajJob extends YajJob {
             FileFormat fileFormat;
             
             if (utils.debugMode) {
-                utils.debugOut.println("Trying to access file " + fileName + "; type: " + fileType);
+                log.info("Trying to access file " + fileName + "; type: " + fileType);
             }
             try {
                 hyfc.stat(fileName); // will throw FileNotFoundException if file doesn't exist
@@ -106,7 +110,7 @@ public class SentYajJob extends YajJob {
                 // do nothing
                 //System.err.println(e.toString());
                 if (utils.debugMode) {
-                    e.printStackTrace(utils.debugOut);
+                    log.throwing(SentYajJob.class.getName(), "getServerFilenames", e);
                 }
             }
         }
@@ -120,7 +124,7 @@ public class SentYajJob extends YajJob {
     @SuppressWarnings("unchecked")
     private String findRenderedTIFF(HylaFAXClient hyfc, String serverName) {
         if (utils.debugMode)
-            utils.debugOut.println("Trying to find the rendered TIFF for " + serverName);
+            log.info("Trying to find the rendered TIFF for " + serverName);
             
         int pos = serverName.indexOf('/');
         if (pos < 0)
@@ -138,7 +142,7 @@ public class SentYajJob extends YajJob {
                 if (file.startsWith(searchPrefix)) {
                     file = dir + file;
                     if (utils.debugMode)
-                        utils.debugOut.println("Found a TIFF: " + file);
+                        log.info("Found a TIFF: " + file);
                     
                     hyfc.stat(file); //Throws an exception if the TIFF is not accessible...
                     
@@ -148,8 +152,8 @@ public class SentYajJob extends YajJob {
             return null; //Nothing found;
         } catch (Exception ex) {
             if (utils.debugMode) {
-                utils.debugOut.println("Got an exception:");
-                ex.printStackTrace(utils.debugOut);
+                log.log(Level.INFO, "Got an exception:", ex);
+                //ex.printStackTrace(utils.debugOut);
             }
             return null;
         }

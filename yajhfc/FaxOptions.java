@@ -31,10 +31,14 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import yajhfc.send.SendWinStyle;
 
 public class FaxOptions {
+    private static final Logger log = Logger.getLogger(FaxOptions.class.getName());
+    
     public FaxStringProperty tzone = null;
     public String host;
     public int port;
@@ -243,10 +247,10 @@ public class FaxOptions {
                 } else if (val instanceof Enum) {
                     p.setProperty(name, ((Enum)val).name());
                 } else {
-                    utils.printWarning("Unknown field type " + val.getClass().getName());
+                    log.log(Level.WARNING, "Unknown field type " + val.getClass().getName());
                 }
             } catch (Exception e) {
-                utils.printWarning("Exception reading field: ", e);
+                log.log(Level.WARNING, "Exception reading field: ", e);
             }
         }
         
@@ -255,14 +259,14 @@ public class FaxOptions {
             p.store(filout, utils.AppShortName + " " + utils.AppVersion + " configuration file");
             filout.close();
         } catch (Exception e) {
-            utils.printWarning("Couldn't save file '" + fileName + "': ", e);
+            log.log(Level.WARNING, "Couldn't save file '" + fileName + "': ", e);
         }
     }
     
     @SuppressWarnings("unchecked")
     public void loadFromFile(String fileName) {
         if (utils.debugMode) {
-            utils.debugOut.println("Loading prefs from " + fileName);
+            log.info("Loading prefs from " + fileName);
         }
         Properties p = new Properties();
         //System.err.println(fileName);
@@ -273,13 +277,13 @@ public class FaxOptions {
         } catch (FileNotFoundException e) {
             return; // No file yet
         } catch (IOException e) {
-            utils.printWarning("Error reading file '" + fileName + "': " , e);
+            log.log(Level.WARNING, "Error reading file '" + fileName + "': " , e);
             return;
         }
         if (utils.debugMode) {
-            utils.debugOut.println("---- BEGIN preferences dump");
-            utils.dumpProperties(p, utils.debugOut, "pass", "AdminPassword");
-            utils.debugOut.println("---- END preferences dump");
+            log.config("---- BEGIN preferences dump");
+            utils.dumpProperties(p, log, "pass", "AdminPassword");
+            log.config("---- END preferences dump");
         }
         // Clear all lists:
         phoneBooks.clear();
@@ -327,14 +331,14 @@ public class FaxOptions {
                     else if (fName.equals("locale"))
                         dataarray = utils.AvailableLocales;
                     else {
-                        utils.printWarning("Unknown MyManualMapObject field: " + fName);
+                        log.log(Level.WARNING, "Unknown MyManualMapObject field: " + fName);
                         continue;
                     }
                     Object res = utils.findInArray(dataarray, p.getProperty(fName));
                     if (res != null)
                         f.set(this, res);
                     else
-                        utils.printWarning("Unknown value for MyManualMapObject field " + fName);
+                        log.log(Level.WARNING, "Unknown value for MyManualMapObject field " + fName);
                 }
                 else if (FmtItemList.class.isAssignableFrom(fcls)) {
                     FmtItemList fim = (FmtItemList)f.get(this);
@@ -380,10 +384,10 @@ public class FaxOptions {
                 } else if (Enum.class.isAssignableFrom(fcls)) {
                     f.set(this, Enum.valueOf((Class<? extends Enum>)fcls, p.getProperty(propName)));
                 } else {
-                    utils.printWarning("Unknown field type " + fcls.getName());
+                    log.log(Level.WARNING, "Unknown field type " + fcls.getName());
                 }
             } catch (Exception e1) {
-                utils.printWarning("Couldn't load setting for " + propName + ": ", e1);
+                log.log(Level.WARNING, "Couldn't load setting for " + propName + ": ", e1);
             }
         }
     }

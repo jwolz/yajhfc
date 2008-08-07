@@ -27,6 +27,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.EventObject;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -49,6 +51,8 @@ import yajhfc.phonebook.PhoneBookPanel.EnableEventObj;
 public final class PhoneBookWin extends JDialog 
     implements ActionListener, PhoneBookPanel.PBPanelListener {
 
+    private static final Logger log = Logger.getLogger(PhoneBookWin.class.getName());
+    
     JPanel jContentPane;
     JTabbedPane tabPhonebooks;
         
@@ -444,7 +448,7 @@ public final class PhoneBookWin extends JDialog
                 else if (cmd.equals(IMPORT_COMMAND)) 
                     doImport();
                 else
-                    utils.printWarning("Unknown Action command: " + cmd);
+                    log.log(Level.WARNING, "Unknown Action command: " + cmd);
             } catch (Exception ex) {
                 ExceptionDialog.showExceptionDialog(PhoneBookWin.this, utils._("Error executing the desired action:"), ex);
             }

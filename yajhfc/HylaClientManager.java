@@ -9,6 +9,8 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class HylaClientManager {
     protected boolean adminMode;
@@ -22,6 +24,8 @@ public class HylaClientManager {
     
     protected static final String modemListFormat = "$$$|%m|%n";
     protected static final String modemListPrefix = "$$$";    
+    
+    private static final Logger log = Logger.getLogger(HylaClientManager.class.getName());
     
     public HylaClientManager(FaxOptions myopts) {
         super();
@@ -49,7 +53,7 @@ public class HylaClientManager {
         transactionCounter++;
         
         if (utils.debugMode) {
-            utils.debugOut.println("HylaClientManager -> beginServerTransaction: " + transactionCounter);
+            log.fine("HylaClientManager -> beginServerTransaction: " + transactionCounter);
         }
         if (client != null  && myopts.useDisconnectedMode && transactionCounter == 1) {
             synchronized (client) {
@@ -64,13 +68,13 @@ public class HylaClientManager {
                     // NOP
                 }
                 if (utils.debugMode && time >= 500) {
-                    utils.debugOut.println("In beginServerTransaction: TIMEOUT waiting for other client");
+                    log.info("In beginServerTransaction: TIMEOUT waiting for other client");
                 }
             }
         }
         if (client == null) {
             if (transactionCounter != 1) {
-                utils.debugOut.println("WARNING: Before forceLogin: transactionCounter = " + transactionCounter);
+                log.warning("Before forceLogin: transactionCounter = " + transactionCounter);
             }
             return forceLogin(owner);
         } else {
@@ -80,7 +84,7 @@ public class HylaClientManager {
     
     public void endServerTransaction() {
         if (utils.debugMode) {
-            utils.debugOut.println("HylaClientManager -> endServerTransaction: " + transactionCounter);
+            log.fine("HylaClientManager -> endServerTransaction: " + transactionCounter);
         }
         transactionCounter--;
         if (myopts.useDisconnectedMode && transactionCounter <= 0) {
@@ -93,17 +97,17 @@ public class HylaClientManager {
      */
     public HylaFAXClient forceLogin(Window owner) {
         if (utils.debugMode) {
-            utils.debugOut.println("HylaClientManager -> forceLogin");
+            log.fine("HylaClientManager -> forceLogin");
         }
         if (client == null)
         {
             client = new HylaFAXClient();
             synchronized (client) {
-                client.setDebug(utils.debugMode);
+                //client.setDebug(utils.debugMode);
                 try {
                     client.open(myopts.host, myopts.port);
                     if (utils.debugMode) {
-                        utils.debugOut.println("Greeting was: " + client.getGreeting());
+                        log.info("Greeting was: " + client.getGreeting());
                     }
                     while (client.user(myopts.user)) {                
                         if (password == null) {
@@ -171,10 +175,10 @@ public class HylaClientManager {
     
     public void forceLogout() {
         if (utils.debugMode) {
-            utils.debugOut.println("HylaClientManager -> forceLogout");
+            log.fine("HylaClientManager -> forceLogout");
         }
         if (transactionCounter != 0) {
-            utils.debugOut.println("WARNING: In forceLogout: transactionCounter = " + transactionCounter);
+            log.warning("In forceLogout: transactionCounter = " + transactionCounter);
             transactionCounter = 0;
         }
         if (client != null) {
@@ -182,10 +186,10 @@ public class HylaClientManager {
                 client.quit();
             } catch (IOException e) {
                 if (utils.debugMode)
-                    e.printStackTrace(utils.debugOut);
+                    log.log(Level.INFO, "On client.quit():", e);
             } catch (ServerResponseException e) {
                 if (utils.debugMode)
-                    e.printStackTrace(utils.debugOut);
+                    log.log(Level.INFO, "On client.quit():", e);
             }
             client = null;
         }
@@ -222,7 +226,7 @@ public class HylaClientManager {
                     hyfc.mdmfmt(oldModemFmt);
                 }
             } catch (Exception e) {
-                utils.printWarning("Error fetching modem list: ", e);
+                log.log(Level.WARNING, "Error fetching modem list: ", e);
                 modems = HylaModem.defaultModems;
                 return modems;
             } finally {
@@ -236,7 +240,7 @@ public class HylaClientManager {
                 if (line.startsWith(modemListPrefix)) { // Is a line describing a modem
                     String[] fields = utils.fastSplit(line, '|');
                     if (fields.length < 2) {
-                        utils.printWarning("Invalid modem \"" + line + "\".");                            
+                        log.log(Level.WARNING, "Invalid modem \"" + line + "\".");                            
                     } else {
                         modems.add(new HylaModem(fields[1], fields.length >= 3 ? fields[2] : ""));
                     }
