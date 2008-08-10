@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Logger;
 
 import javax.print.DocFlavor;
 import javax.swing.JEditorPane;
@@ -41,6 +42,8 @@ import javax.swing.text.html.HTMLDocument;
  *
  */
 public class EditorPaneFileConverter extends PrintServiceFileConverter {
+    public static final EditorPaneFileConverter HTML_CONVERTER = new EditorPaneFileConverter("text/html");
+    
     protected String contentType;
     
     public EditorPaneFileConverter(String contentType) {
@@ -53,32 +56,41 @@ public class EditorPaneFileConverter extends PrintServiceFileConverter {
     public void convertToHylaFormat(File inFile, OutputStream destination,
             PaperSize paperSize) throws ConversionException {
         try {
-            PrintableEditorPane pep = new PrintableEditorPane();
-            pep.loadURL(inFile.toURI().toURL(), contentType);
-            convertUsingPrintService(pep, destination, paperSize);
+            URL inURL = inFile.toURI().toURL();
+            convertToHylaFormat(inURL, destination, paperSize, inURL);
         } catch (MalformedURLException e) {
             throw new ConversionException(e);
+        } 
+    }
+    
+    public void convertToHylaFormat(URL inURL, OutputStream destination,
+            PaperSize paperSize, URL baseURL) throws ConversionException {
+        try {
+            PrintableEditorPane pep = new PrintableEditorPane(paperSize.size);
+            pep.loadURL(inURL, contentType, baseURL);
+            convertUsingPrintService(pep, destination, paperSize);
         } catch (IOException e) {
             throw new ConversionException(e);
         }
     }
     
     public static class PrintableEditorPane extends JEditorPane implements Printable {
-        public PrintableEditorPane(){
+        private static final int assumedBordersMM = 44;
+        
+        public PrintableEditorPane(Dimension pageSizeMM){
             super();
             setDoubleBuffered(false);
-            this.setSize(1024, 1024);
+            this.setSize((int)((pageSizeMM.width - assumedBordersMM)*72/25.4), (int)((pageSizeMM.height - assumedBordersMM)*72/25.4));
         }
 
-        public void loadURL(URL url, String contentType)  throws IOException {
+        public void loadURL(URL url, String contentType, URL baseURL)  throws IOException {
             setContentType(contentType);
             if (contentType.contains("text/html")) {
-                HTMLDocument hdoc = new HTMLDocument();
-                hdoc.setBase(url);
+                HTMLDocument hdoc = new FixedBaseHTMLDocument(baseURL);
                 hdoc.putProperty(Document.StreamDescriptionProperty, url);
                 read(url.openStream(), hdoc);
             } else {
-                read(url.openStream(), url);
+                read(url.openStream(), baseURL);
             }
         }
         
@@ -96,6 +108,12 @@ public class EditorPaneFileConverter extends PrintServiceFileConverter {
             
             int totalNumPages = (int)Math.ceil(scale * panelHeight /  pageHeight);
 
+            if (utils.debugMode) {
+                Logger log = Logger.getLogger(PrintableEditorPane.class.getName());
+                log.fine(String.format("Panel: Size : %d x %d; Preferred Size = %d x %d", getWidth(), getHeight(), pD.width, pD.height));
+                log.fine(String.format("ImageableWidth: %f, ImageableHeight: %f, pageIndex: %d, totalNumPages: %d", pageWidth, pageHeight, pageIndex, totalNumPages));
+            }
+            
             // Check for empty pages
             if (pageIndex >= totalNumPages) return Printable.NO_SUCH_PAGE;
 
@@ -104,6 +122,20 @@ public class EditorPaneFileConverter extends PrintServiceFileConverter {
             this.paint(g2);
 
             return Printable.PAGE_EXISTS;
+        }
+    }
+    
+    public static class FixedBaseHTMLDocument extends HTMLDocument {
+        protected URL fixedBase;
+        
+        public FixedBaseHTMLDocument(URL fixedBase) {
+            super();
+            this.fixedBase = fixedBase;
+        }
+        
+        @Override
+        public URL getBase() {
+            return fixedBase;
         }
     }
 }

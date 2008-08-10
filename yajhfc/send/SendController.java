@@ -555,7 +555,9 @@ public class SendController {
                 }
                 acceptedFilters[++i] = new ExampleFileFilter(ff.getPossibleExtension(), ff.getDescription());
             }
-            acceptedFilters[0] = new ExampleFileFilter(allExts.toArray(new String[allExts.size()]), utils._("All supported formats"));
+            ExampleFileFilter allSupported = new ExampleFileFilter(allExts.toArray(new String[allExts.size()]), utils._("All supported file formats"));
+            allSupported.setExtensionListInDescription(false);
+            acceptedFilters[0] = allSupported;
         }
         return acceptedFilters;
     }

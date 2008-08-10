@@ -186,6 +186,7 @@ public abstract class Faxcover {
     public static final java.util.Map<FileFormat,Class<? extends Faxcover>> supportedCoverFormats = new EnumMap<FileFormat, Class<? extends Faxcover>>(FileFormat.class);
     static {
         supportedCoverFormats.put(FileFormat.PostScript, FaxcoverHyla.class);
+        supportedCoverFormats.put(FileFormat.HTML, HTMLFaxcover.class);
     }
     
     protected static FileFilter[] acceptedFilters;
@@ -200,7 +201,9 @@ public abstract class Faxcover {
                 }
                 acceptedFilters[++idx] = new ExampleFileFilter(ff.getPossibleExtension(), ff.getDescription());
             }
-            acceptedFilters[0] = new ExampleFileFilter(allExts.toArray(new String[allExts.size()]), utils._("All supported formats"));
+            ExampleFileFilter allSupported = new ExampleFileFilter(allExts.toArray(new String[allExts.size()]), utils._("All supported file formats"));
+            allSupported.setExtensionListInDescription(false);
+            acceptedFilters[0] = allSupported;
         }
         return acceptedFilters;
     }

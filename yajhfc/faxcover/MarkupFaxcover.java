@@ -19,28 +19,33 @@
 package yajhfc.faxcover;
 
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
 import java.util.Date;
 
-import yajhfc.FileConverter;
+import yajhfc.FileConverter.ConversionException;
 
 /**
  * @author jonas
  *
  */
-public class MarkupFaxcover extends Faxcover {
+public abstract class MarkupFaxcover extends Faxcover {
 
-    protected FileConverter converter;
+    protected boolean encodeNonASCIIAsEntity = false;
+    
     /**
      * @param coverTemplate
      */
-    public MarkupFaxcover(URL coverTemplate, FileConverter converter) {
+    public MarkupFaxcover(URL coverTemplate) {
         super(coverTemplate);
-        this.converter = converter;
     }
 
     /* (non-Javadoc)
@@ -48,9 +53,45 @@ public class MarkupFaxcover extends Faxcover {
      */
     @Override
     public void makeCoverSheet(OutputStream out) throws IOException {
-        // TODO Auto-generated method stub
-
+        try {
+            createCoverSheet(coverTemplate.openStream(), out);
+        } catch (ConversionException e) {
+            throw new RuntimeException(e);
+        }
     }
+    
+    /**
+     * Replaces tags in the source document from in, converts it to HylaFAX format
+     * using the FileConverter converter and writes it to out.
+     * @param in
+     * @param out
+     * @throws IOException
+     * @throws ConversionException
+     */
+    protected void createCoverSheet(InputStream in, OutputStream out) throws IOException, ConversionException {
+        File tempFile = null;
+        try {
+            tempFile = File.createTempFile("cover", ".tmp");
+            Reader inReader = new InputStreamReader(in, "utf-8");
+            Writer outWriter = new OutputStreamWriter(new FileOutputStream(tempFile), "utf-8");
+            replaceTags(inReader, outWriter);
+            inReader.close();
+            outWriter.close();
+
+            convertMarkupToHyla(tempFile, out);
+        } finally {
+            if (tempFile != null) tempFile.delete();
+        }
+    }
+    
+    /**
+     * Converts the given markup to hyla format
+     * @param tempFile
+     * @param out
+     * @throws IOException
+     * @throws ConversionException
+     */
+    protected abstract void convertMarkupToHyla(File tempFile, OutputStream out) throws IOException, ConversionException;
     
     // Tag names. MUST be lower case to allow case insensitive comparison
     public static final String NAME_TAG =            "name";
@@ -161,7 +202,15 @@ public class MarkupFaxcover extends Faxcover {
                                     out.write("&apos;");
                                     break;
                                 default:
-                                    out.write(c);
+                                    if (encodeNonASCIIAsEntity) {
+                                        if (c <= 127) {
+                                            out.write(c);
+                                        } else {
+                                            out.write("&#" + (int)c + ";");
+                                        }
+                                    } else {
+                                        out.write(c);
+                                    }
                                 }
                             }
                             // Set the write pointer behind the replaced tag
@@ -191,7 +240,6 @@ public class MarkupFaxcover extends Faxcover {
 
         out.close();
     }
-
 
     private boolean matchesTag(char[] buffer, int offset, String tag) {
         int tagLen = tag.length();

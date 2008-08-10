@@ -43,9 +43,9 @@ public class FormattedFile {
         PlainText(utils._("Plain text files"),"txt"),
         XML(utils._("XML documents"), "xml"),
         FOP(utils._("XSL:FO documents"), "fo", "xml", "fop"),
-        ODT(utils._("OpenDocument text document"), "odt"),
-        HTML(utils._("HTML document"), "html", "htm"),
-        RTF(utils._("RTF document"), "rtf"),
+        ODT(utils._("OpenDocument text documents"), "odt"),
+        HTML(utils._("HTML documents"), "html", "htm"),
+        RTF(utils._("RTF documents"), "rtf"),
         Unknown(utils._("Unknown files"), "");
         
         private String defaultExt;
@@ -120,7 +120,7 @@ public class FormattedFile {
         fileConverters.put(FileFormat.GIF, new PrintServiceFileConverter(DocFlavor.URL.GIF));
         fileConverters.put(FileFormat.JPEG, new PrintServiceFileConverter(DocFlavor.URL.JPEG));
         
-        fileConverters.put(FileFormat.HTML, new EditorPaneFileConverter("text/html"));
+        fileConverters.put(FileFormat.HTML, EditorPaneFileConverter.HTML_CONVERTER);
         // Doesn't work very well
         //fileConverters.put(FileFormat.RTF, new EditorPaneFileConverter("text/rtf"));
     }

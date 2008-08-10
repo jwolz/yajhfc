@@ -1,4 +1,4 @@
-README for YajHFC 0.3.6
+README for YajHFC 0.3.7
 =======================
 
 ABOUT
@@ -16,7 +16,7 @@ Features:
 * Visible table columns may be selected in a dialog
 * Supports four languages: English, French, German and Spanish
 
-Homepage: http://www.yajhfc.de.vu/
+Homepage: http://yajhfc.berlios.de/
 email:    Jonas Wolz <jwolz@freenet.de>
 
 INSTALLATION
@@ -28,9 +28,9 @@ Requirements:
 * Some program to view TIFF files (also see the FAQ)
 * Optional: A PostScript viewer (e.g. Ghostview)
 
-To install YajHFC just download the yajhfc-0_3_6.jar file to some folder on your
+To install YajHFC just download the yajhfc-0_3_7.jar file to some folder on your
 file system.
-To execute it, use: "java -jar yajhfc-0_3_6.jar"
+To execute it, use: "java -jar yajhfc-0_3_7.jar"
 (In Windows you usually can just double click the jar file as well.)
 
 LICENSE
@@ -52,8 +52,10 @@ YajHFC uses the following packages:
     from https://tablelayout.dev.java.net/
 (3) "Java look and feel Graphics Repository" (jlfgr-1_0.jar) 
     from http://java.sun.com/developer/techDocs/hi/repository/
+(4) Apache Commons Logging from http://commons.apache.org/logging/
+    as a dependency of (1)
 
-Copies of the required files from (2) and (3) can also be found in the jar 
+Copies of the required files from (2), (3) and (4) can also be found in the jar 
 subdirectory in the source archive.
 
 YajHFC was originally written as a first more complicated
@@ -64,7 +66,11 @@ CHANGES
 
 0.3.7:
 - New simplified send dialog
-- Better plugin support (see the new FOP plugin)
+- Support for cover pages in HTML format
+- Support for cover pages in XSL:FO and ODT format using a plugin
+- Better plugin support
+- Logging changed to use Java 1.4 logging
+- Adapted to use gnu.hylafax 1.0.1
 - Some bug fixes
 
 0.3.6:
