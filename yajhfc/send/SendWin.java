@@ -586,9 +586,13 @@ final class SendWin extends JDialog implements SendWinControl  {
                 protected void writeTextFieldFileName(String fName) {
                     super.writeTextFieldFileName(fName);
                     tflFiles.addListItem(fName);
+                    utils.getFaxOptions().lastSendWinPath = getJFileChooser().getCurrentDirectory().getPath();
                 }
             };
-            ftfFilename.setFileFilters(SendController.getAcceptedFileFilters());           
+            ftfFilename.setFileFilters(SendController.getAcceptedFileFilters()); 
+            if (utils.getFaxOptions().lastSendWinPath.length() > 0) {
+                ftfFilename.getJFileChooser().setCurrentDirectory(new File(utils.getFaxOptions().lastSendWinPath));
+            }
         }
         return ftfFilename;
     }

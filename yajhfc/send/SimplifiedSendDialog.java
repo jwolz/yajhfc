@@ -145,14 +145,15 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         clpDefault = new ClipboardPopup();
         createContentPane();
         setContentPane(contentPane);
-        this.setSize(640, 640);
+        this.setSize(640, 500);
         createAdvancedPane();
-        setAdvancedView(false);
+        setAdvancedView(utils.getFaxOptions().sendWinIsAdvanced);
         
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
                 utils.getFaxOptions().sendWinPos = getLocation();
+                utils.getFaxOptions().sendWinIsAdvanced = isAdvancedView;
             }     
             
         });
@@ -299,9 +300,13 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
             protected void writeTextFieldFileName(String fName) {
                 super.writeTextFieldFileName(fName);
                 tflFiles.addListItem(fName);
+                utils.getFaxOptions().lastSendWinPath = getJFileChooser().getCurrentDirectory().getPath();
             }
         };
         ftfFileName.setFileFilters(SendController.getAcceptedFileFilters()); 
+        if (utils.getFaxOptions().lastSendWinPath.length() > 0) {
+            ftfFileName.getJFileChooser().setCurrentDirectory(new File(utils.getFaxOptions().lastSendWinPath));
+        }
         
         tflFiles = new TextFieldList<HylaTFLItem>(ftfFileName.getJTextField(), true, sendController.getFiles()) {
             @Override
@@ -310,6 +315,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
             }
         };
         tflFiles.addLocalComponent(ftfFileName.getJButton());
+
         ClipboardPopup clpFiles = new ClipboardPopup();
         clpFiles.getPopupMenu().addSeparator();
         clpFiles.getPopupMenu().add(tflFiles.getModifyAction());

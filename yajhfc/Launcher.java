@@ -170,20 +170,21 @@ public final class Launcher {
             "         [--showtab=0|R|1|S|2|T] [--recipient=...] [--stdin | filename ...]\n"+
             "Argument description:\n"+
             "filename     One or more file names of PostScript files to send.\n"+
-            "--stdin      Read the file to send from standard input\n"+
+            "--stdin      Read the file to send from standard input.\n"+
             "--recipient  Specifies the phone number of a recipient to send the fax to.\n"+
             "             You may specify multiple arguments for multiple recipients.\n"+
-            "--admin      Start up in admin mode\n"+
-            "--debug      Output some debugging information\n"+
-            "--logfile    The logfile to log debug information to (if not specified, use stdout)\n"+
+            "--admin      Start up in admin mode.\n"+
+            "--debug      Output some debugging information.\n"+
+            "--logfile    The logfile to log debug information to (if not specified, use stdout).\n"+
             "--background If there is no already running instance, launch a new instance \n" +
-            "             and terminate (after submitting the file to send)\n" +
-            "--noclose    Do not close YajHFC after submitting the fax\n"+
+            "             and terminate (after submitting the file to send).\n" +
+            "--noclose    Do not close YajHFC after submitting the fax.\n"+
             "--showtab    Sets the tab to display on startup. Specify 0 or R for the \"Received\", \n"+
             "             1 or S for the \"Sent\" or 2 or T for the \"Transmitting\" tab.\n"+
-            "--loadplugin Specifies the jar file of a YajHFC plugin to load\n"+
+            "--loadplugin Specifies the jar file of a YajHFC plugin to load.\n"+
+            "--no-plugins Disables loading plugins from the plugin.lst file.\n" +
             "--configdir  Sets a configuration directory to use instead of ~/.yajhfc\n" +
-            "--help       Displays this text\n"
+            "--help       Displays this text.\n"
             );   
     }
     
@@ -222,6 +223,7 @@ public final class Launcher {
         boolean noPlugins = false;
         int selectedTab = -1;
         String logFile = null;
+        boolean appendToLog = false;
         
         for (int i = 0; i < args.length; i++) {
             String curArg = args[i];
@@ -267,6 +269,10 @@ public final class Launcher {
                     jars.add(new File(stripQuotes(curArg.substring("--loadplugin=".length()))));
                 } else if (curArg.startsWith("--logfile=")) {
                     logFile = stripQuotes(curArg.substring("--logfile=".length()));
+                    appendToLog = false;
+                } else if (curArg.startsWith("--appendlogfile=")) {
+                    logFile = stripQuotes(curArg.substring("--appendlogfile=".length()));
+                    appendToLog = true;
                 } else if (curArg.equals("--no-plugins")) {
                     noPlugins = true;
                 } else {
@@ -298,7 +304,7 @@ public final class Launcher {
 //              utils.debugOut = System.out;
 //              }
                 try {
-                    theHandler = new StreamHandler(new FileOutputStream(logFile), new SimpleFormatter());
+                    theHandler = new StreamHandler(new FileOutputStream(logFile, appendToLog), new SimpleFormatter());
                 } catch (FileNotFoundException e) {
                     launchLog.log(Level.WARNING, "Could not open log file.", e);
                     theHandler = new StreamHandler(System.out, new SimpleFormatter());
@@ -356,6 +362,10 @@ public final class Launcher {
                 }
                 if (utils.debugMode) {
                     launchArgs[argidx] = "--debug";
+                    argidx++;
+                }
+                if (logFile != null) {
+                    launchArgs[argidx] = "--appendlogfile=\"" + logFile + "\"";
                     argidx++;
                 }
                 if (!closeAfterSubmit) {
