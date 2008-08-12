@@ -33,14 +33,11 @@ import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileFilter;
 
-import yajhfc.ExampleFileFilter;
 import yajhfc.FaxOptions;
 import yajhfc.FormattedFile;
 import yajhfc.HylaClientManager;
@@ -535,30 +532,5 @@ public class SendController {
             result = new SimplifiedSendDialog(manager, owner, initiallyHideFiles);
         } 
         return result;
-    }
-    
-//    protected static final FileFormat[] acceptedFormats = {
-//        FileFormat.PostScript, FileFormat.PDF, FileFormat.JPEG, FileFormat.GIF, FileFormat.PNG, FileFormat.TIFF
-//    };
-    protected static FileFilter[] acceptedFilters;
-
-    public static FileFilter[] getAcceptedFileFilters() {
-        if (acceptedFilters == null) {
-            Set<FileFormat> acceptedFormats = FormattedFile.fileConverters.keySet();
-            
-            ArrayList<String> allExts = new ArrayList<String>();
-            acceptedFilters = new FileFilter[acceptedFormats.size() + 1];
-            int i = 0;
-            for (FileFormat ff : acceptedFormats) {
-                for (String ext : ff.getPossibleExtension()) {
-                    allExts.add(ext);
-                }
-                acceptedFilters[++i] = new ExampleFileFilter(ff.getPossibleExtension(), ff.getDescription());
-            }
-            ExampleFileFilter allSupported = new ExampleFileFilter(allExts.toArray(new String[allExts.size()]), utils._("All supported file formats"));
-            allSupported.setExtensionListInDescription(false);
-            acceptedFilters[0] = allSupported;
-        }
-        return acceptedFilters;
     }
 }

@@ -66,6 +66,7 @@ import yajhfc.FaxIntProperty;
 import yajhfc.FaxOptions;
 import yajhfc.FaxStringProperty;
 import yajhfc.FileTextField;
+import yajhfc.FormattedFile;
 import yajhfc.HylaClientManager;
 import yajhfc.HylaModem;
 import yajhfc.HylaServerFile;
@@ -145,7 +146,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         clpDefault = new ClipboardPopup();
         createContentPane();
         setContentPane(contentPane);
-        this.setSize(640, 500);
+        this.setSize(640, initiallyHideFiles ? 400 : 480);
         createAdvancedPane();
         setAdvancedView(utils.getFaxOptions().sendWinIsAdvanced);
         
@@ -303,7 +304,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
                 utils.getFaxOptions().lastSendWinPath = getJFileChooser().getCurrentDirectory().getPath();
             }
         };
-        ftfFileName.setFileFilters(SendController.getAcceptedFileFilters()); 
+        ftfFileName.setFileFilters(FormattedFile.getConvertableFileFilters()); 
         if (utils.getFaxOptions().lastSendWinPath.length() > 0) {
             ftfFileName.getJFileChooser().setCurrentDirectory(new File(utils.getFaxOptions().lastSendWinPath));
         }
@@ -522,6 +523,9 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         if (textNumber.getText().length() > 0) {
             actAddNumber.actionPerformed(null);
         }
+        if (tableNumbers.isEditing()) {
+           tableNumbers.getCellEditor().stopCellEditing();
+        }
         
         sendController.setComments(textComments.getText());
         sendController.setKillTime((Integer)spinKillTime.getValue());
@@ -543,6 +547,10 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
 
     
     protected void setAdvancedView(boolean isAdvanced) {
+        if (isAdvanced == isAdvancedView) {
+            return;
+        }
+        
         isAdvancedView = isAdvanced;
         if (isAdvanced) {
             buttonAdvanced.setText(SIMPLIFIED_TEXT);

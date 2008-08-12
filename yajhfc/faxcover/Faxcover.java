@@ -28,7 +28,6 @@ import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.regex.Matcher;
@@ -36,7 +35,6 @@ import java.util.regex.Pattern;
 
 import javax.swing.filechooser.FileFilter;
 
-import yajhfc.ExampleFileFilter;
 import yajhfc.FormattedFile;
 import yajhfc.utils;
 import yajhfc.FormattedFile.FileFormat;
@@ -192,18 +190,7 @@ public abstract class Faxcover {
     protected static FileFilter[] acceptedFilters;
     public static FileFilter[] getAcceptedFileFilters() {
         if (acceptedFilters == null) {
-            ArrayList<String> allExts = new ArrayList<String>();
-            acceptedFilters = new FileFilter[supportedCoverFormats.keySet().size() + 1];
-            int idx = 0;
-            for (FileFormat ff : supportedCoverFormats.keySet()) {
-                for (String ext : ff.getPossibleExtension()) {
-                    allExts.add(ext);
-                }
-                acceptedFilters[++idx] = new ExampleFileFilter(ff.getPossibleExtension(), ff.getDescription());
-            }
-            ExampleFileFilter allSupported = new ExampleFileFilter(allExts.toArray(new String[allExts.size()]), utils._("All supported file formats"));
-            allSupported.setExtensionListInDescription(false);
-            acceptedFilters[0] = allSupported;
+            acceptedFilters = FormattedFile.createFileFiltersFromFormats(supportedCoverFormats.keySet());
         }
         return acceptedFilters;
     }

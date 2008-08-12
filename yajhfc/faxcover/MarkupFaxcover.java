@@ -40,6 +40,7 @@ import yajhfc.FileConverter.ConversionException;
 public abstract class MarkupFaxcover extends Faxcover {
 
     protected boolean encodeNonASCIIAsEntity = false;
+    protected String newLineReplacement = "\n";
     
     /**
      * @param coverTemplate
@@ -200,6 +201,9 @@ public abstract class MarkupFaxcover extends Faxcover {
                                     break;
                                 case '\'':
                                     out.write("&apos;");
+                                    break;
+                                case '\n':
+                                    out.write(newLineReplacement);
                                     break;
                                 default:
                                     if (encodeNonASCIIAsEntity) {

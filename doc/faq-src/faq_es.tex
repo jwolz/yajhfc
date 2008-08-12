@@ -5,6 +5,7 @@
 \usepackage[left=3cm,right=3cm,top=2cm,bottom=2cm,nohead]{geometry}
 \usepackage[spanish]{babel}
 \usepackage[colorlinks=false,pdfborder=0 0 0]{hyperref}
+\usepackage[T1]{fontenc}
 
 %opening
 \title{YajHFC FAQ}
@@ -19,7 +20,7 @@
 \section{Instalación}
 \subsection{¿Dónde puedo conseguir un visor de faxes para Windows?}
 
-Generalmente puedes utilizar cualquier programa que permita mostrar ficheros TIFF, aunque algunos de ellos muestran los faxes en una resolución baja con una anchura (a la mitad) incorrecta.
+Generalmente puedes utilizar cualquier programa que permita mostrar archivos TIFF, aunque algunos de ellos muestran los faxes en una resolución baja con una anchura (a la mitad) incorrecta.
 
 Afortunadamente, las versiones recientes de Windows vienen con un programa 
 que hace ésto correctamente:
@@ -52,7 +53,7 @@ Gracias a Scott Harris por esta ayuda.
 \item[Windows:] Utiliza Ghostview disponible en
 \url{http://www.cs.wisc.edu/~ghost/}\\
 \textbf{Nota:} también es posible utilizar el programa Acrobat Distiller
-(verificado sólo con la versión completa) que permite abrir los ficheros PS
+(verificado sólo con la versión completa) que permite abrir los archivos PS
 y visualizarlo al instante. Para ello hay que introducir la ruta al programa
 en \texttt{Línea de comandos para el visor archivos PostScript},
 generalmente:
@@ -66,17 +67,64 @@ PostScript
 
 \section{Utilización del programa}	
 
-\subsection{¿Cómo puedo editar las plantillas de las portadas?}
+\subsection{¿Cómo puedo editar las plantillas PostScript de las portadas?}
 Las plantillas tienen que estar en el mismo formato PostScript especial 
 que utiliza el programa \texttt{faxcover} de HylaFAX. Revisa la siguiente ayuda 
 para saber cómo crear / modificar este tipo de archivos: \\
 \url{http://www.hylafax.org/HylaFAQ/Q202.html}\\
 \url{http://www.hylafax.org/howto/tweaking.html}\\
 
+Como alternativa, a partir de YajHFC 0.3.7, puedes utilizar páginas de portada en HTML o bien en formato XSL:FO u ODT (OpenDocument Text), mediante un complemento.
+
+\subsection{¡He creado un documento / página de portada en HTML pero el formato en YajHFC se ve mal!}
+
+YajHFC utiliza el soporta HTML que está integrado en Java (\texttt{HTMLEditorKit} / \texttt{HTMLDocument}) para convertir el HTML en PostScript. Es un soporte muy limitado ya que sólo soporta la especificación HTML 3.2.\\
+Esto significa que los diseños complejos seguramente no se rendericen correctamente en YajHFC.
+Para lograr el diseño que quieres, tienes básicamente las siguientes alternativas:
+
+\begin{itemize}
+ \item Utilizar el método de ``prueba \& error'' hasta que el diseño quede bien (el botón de previsualización en el cuadro de diálogo de envío mostrará el diseño del HTML convertido).
+ \item Utilizar un editor HTML como Ekit (\url{http://www.hexidec.com/ekit.php}) que también utiliza el soporte HTML de Java, por lo que el documento se renderizará de manera similar en YajHFC.
+ \item Utilizar otro formato para la página de portada (como XSL:FO u ODT con el complemento FOP).
+\end{itemize}
+
+\subsection{¿Qué campos se reconocen en una página de portada HTML?}
+
+Las siguientes ``palabras'' se reemplazan (sin tener en cuenta mayúsculas / minúsculas) con sus valores correspondientes cuando se utiliza un archivo HTML como página de portada:
+
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+\bfseries Palabra & \bfseries Significado \\
+\hline\hline
+\ttfamily @@Name@@ & Nombre del destinatario \\\hline
+\ttfamily @@Location@@ & Ubicación del destinatario \\\hline
+\ttfamily @@Company@@ & Empresa del destinatario \\\hline
+\ttfamily @@Faxnumber@@ & Número de fax del destinatario \\\hline
+\ttfamily @@Voicenumber@@ & Número de teléfono del destinatario \\\hline
+\ttfamily @@FromName@@ & Nombre del emisor \\\hline
+\ttfamily @@FromLocation@@ & Ubicación del emisor \\\hline
+\ttfamily @@FromCompany@@ & Empresa del emisor \\\hline
+\ttfamily @@FromFaxnumber@@ & Número de fax del emisor \\\hline
+\ttfamily @@FromVoicenumber@@ & Número de teléfono del emisor \\\hline
+\ttfamily @@FromEMail@@ & Dirección de correo electrónico del emisor \\\hline
+\ttfamily @@Subject@@ & Asunto del fax \\\hline
+\ttfamily @@Date@@ & Fecha actual \\\hline
+\ttfamily @@PageCount@@ & Número de páginas sin incluir la página de portada \\\hline
+\ttfamily @@Comments@@ & Comentarios para el fax \\\hline
+\end{tabular}
+\end{center}
+
+El reemplazo se realiza a nivel de código fuente, por lo que esas palabras no se reconocerán en los cambios de formato dentro del mismo (por ejemplo, \texttt{@@sub\textit{ject@@}}).
+
+\subsection{Me gustaba más el antiguo cuadro de diálogo. ¿Puedo volver a utilizarlo?}
+
+Simplemente abre el cuadro de diálogo de Opciones y selecciona \texttt{Tradicional} en ``Estilo para el cuadro de diálogo de envío''.
+
 \subsection{Quiero acceder a la agenda telefónica por medio de JDBC pero YajHFC no encuentra el controlador aunque especifique la ruta correcta para llamar a Java.}
 
 Si utilizas el argumento \texttt{-jar}, Java ignora la ruta definida por el usuario.
-Por tanto inicia YajHFC utilizando el siguiente comando (reemplaza \texttt{/ruta/a/controladorbdd.jar} y \texttt{/ruta/a/yajhfc.jar} con sus respectivas rutas reales y nombre de fichero (por supuesto):
+Por tanto inicia YajHFC utilizando el siguiente comando (reemplaza \texttt{/ruta/a/controladorbdd.jar} y \texttt{/ruta/a/yajhfc.jar} con sus respectivas rutas reales y nombre de archivo (por supuesto):
 \begin{description}
 \item [Linux/Unix:] \verb#java -classpath /ruta/a/controaldorbdd.jar:/ruta/a/yajhfc.jar yajhfc.Launcher#
 \item [Windows:] \verb#java -classpath c:\ruta\a\controladorbdd.jar;c:\ruta\a\yajhfc.jar yajhfc.Launcher#
@@ -87,7 +135,7 @@ Por tanto inicia YajHFC utilizando el siguiente comando (reemplaza \texttt{/ruta
 Expresiones regulares. Puedes encontrar una breve referencia sobre la sintaxis permitida en
 \url{http://java.sun.com/j2se/1.5.0/docs/api/java/util/regex/Pattern.html}
 
-ten en cuenta que las expresiones regulares no son lo mismo que los caracteres comodín:
+Ten en cuenta que las expresiones regulares no son lo mismo que los caracteres comodín:
 Por ejemplo, para obtener el mismo efecto que el comodín \verb.*. tienes que utilizar \verb#.*#
 y para simular el efecto de \verb#?# hay que utilizar \verb#.#.
 
@@ -112,7 +160,8 @@ filename     El nombre del archivo PostScript para enviar.
 --showtab    Establece la pestaña para mostrar al inicio. Especifica 
              0 o R para la pestaña "Recibidos", 1 o S para "Enviados" o
              2 o T para "Transmistiendo".
---loadplugin Especifica el fichero jar de un plugin de YajHFC para cargar
+--loadplugin Especifica el archivo jar de un plugin de YajHFC para cargar
+--no-plugins Descativa la carga de complementos desde el archivo plugin.lst.
 --configdir  Establece un directorio de configuración para utilizar en lugar de ~/.yajhfc
 --help       Muestra este texto
 \end{verbatim}
@@ -122,12 +171,12 @@ filename     El nombre del archivo PostScript para enviar.
    que dice \texttt{Formato de archivo PCL no soportado}, aunque todos los documentos 
    están el formato PostScript/PDF.}
 
-Verifica que la opción \texttt{Utilizar fichero PCL para la corrección de error} en el 
+Verifica que la opción \texttt{Utilizar archivo PCL para la corrección de error} en el 
 cuadro de Opciones está seleccionada e inténtalo de nuevo.
  
 Algunas versiones de HylaFAX reportan 
-un tipo de fichero "PCL" para todos los documentos asociados con un trabajo. 
-Si esta opción está seleccionada, YajHFC intenta adivinar el tipo de fichero 
+un tipo de archivo "PCL" para todos los documentos asociados con un trabajo. 
+Si esta opción está seleccionada, YajHFC intenta adivinar el tipo de archivo 
 utilizando la extensión si se reporta PCL (lo cual generalmente funciona bastante bien).
 
 \subsection{Cuando YajHFC se ejecuta en Windows algunas veces guarda su configuración en \texttt{C:\textbackslash .yajhfc} en lugar de \texttt{C:\textbackslash Documents and Settings\textbackslash USERNAME\textbackslash .yajhfc}}

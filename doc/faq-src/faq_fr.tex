@@ -3,6 +3,7 @@
 \usepackage{url}
 \usepackage[left=3cm,right=3cm,top=2cm,bottom=2cm,nohead]{geometry}
 \usepackage[colorlinks=false,pdfborder=0 0 0]{hyperref}
+\usepackage[T1]{fontenc}
 
 %opening
 \title{YajHFC FAQ}
@@ -66,7 +67,57 @@ de tels fichiers: \\
 \url{http://www.hylafax.org/HylaFAQ/Q202.html}\\
 \url{http://www.hylafax.org/howto/tweaking.html}\\
 
-\subsection{Je voudrais accéder à un annuiaire téléphonique au travers de JDBC, maist YajHFC ne trouve pas les drivers même si je spécifie un  "class path" correct au chargement de la machine virtuelle java.}
+Sinon, Depuis la version 0.3.7, vous pouvez utiliser des page de garde en HTML ou, avec un module (plugin), en XSL:FO ou format ODT (texte Open Document).
+
+\subsection{J'ai cree un document/page de couverture HTMLI created a HTML mais la mise en forme dans YajHFC parait mauvaise!}
+
+
+YajHFC utilise le support HTML intégré de Java (\texttt{HTMLEditorKit} / \texttt{HTMLDocument}) pour convertir le HTML en PostScript. Ce support est limite, aussi, surtout il ne supporte que la version HTML 3.2.\\
+Cela signifie que les mises en forme complexes seront souvent mal affichées dans YajHFC.
+Pour créer la mise en page que vous désirez, vous aurez de base les alternatives suivantes:
+
+
+\begin{itemize}
+ \item Faire ``des essais \& erreurs'' jusqu'a ce que la mise en page apparaisse correctement (Le bouton Prévisualiser dans la boite de dialogue d'envoi affichera la mise en forme de la page HTML convertie).
+ \item Utilisez un éditeur HTML comme Ekit (\url{http://www.hexidec.com/ekit.php}) Qui utilise aussi un support Java, Aussi il affichera la page comme YajHFC.
+ \item Utilisez un autre format pour la page de garde (comme XSL:FO ou ODT avec le module FOP).
+\end{itemize}
+
+\subsection{Quels champs sont reconnus dans une page de couverture HTML?}
+
+les mot suivants``words'' sont remplacés (sans distinction de casse) par les valeurs correspondantes quand une page HTML est utilisée comme page de couverture:
+
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+\bfseries Word & \bfseries Meaning \\
+\hline\hline
+\ttfamily @@Name@@ & Nom du récipiendaire \\\hline
+\ttfamily @@Location@@ & Adresse du récipiendaire \\\hline
+\ttfamily @@Company@@ & Societe du récipiendaire \\\hline
+\ttfamily @@Faxnumber@@ & Numero de fax du récipiendaire \\\hline
+\ttfamily @@Voicenumber@@ & numero de telephone du récipiendaire \\\hline
+\ttfamily @@FromName@@ & Nom de l'expéditeur \\\hline
+\ttfamily @@FromLocation@@ & Adresse de l'expéditeur \\\hline
+\ttfamily @@FromCompany@@ & Societe de l'expéditeur \\\hline
+\ttfamily @@FromFaxnumber@@ & Numero de fax de l'expéditeur \\\hline
+\ttfamily @@FromVoicenumber@@ & Numero de téléphone de l'expéditeur \\\hline
+\ttfamily @@FromEMail@@ & Adresse e-mail de l'expéditeur \\\hline
+\ttfamily @@Subject@@ & Sujet du fax \\\hline
+\ttfamily @@Date@@ & Date du jour \\\hline
+\ttfamily @@PageCount@@ & Le nombre de pages en excluant la page de garde \\\hline
+\ttfamily @@Comments@@ & Les commentaires pour ce Fax \\\hline
+\end{tabular}
+\end{center}
+
+Ces remplacements sont fais sur le code source de la page, aussi ces mots ne seront certainement pas reconnus s'il y a des chaine de formatatge dans l'un d'eux (exemple. \texttt{@@sub\textit{ject@@}}).
+
+\subsection{Je preferais l'ancienne boite de dialogue d'envoi. Puis je la conserver?}
+
+Ouvrez la boite de dialogue des Options et selectionnez \texttt{Traditionnel} comme ``Style de boite d'envoi''.
+
+
+\subsection{Je voudrais accéder à un annuaire téléphonique au travers de JDBC, maist YajHFC ne trouve pas les drivers même si je spécifie un  "class path" correct au chargement de la machine virtuelle java.}
 
 Si vous utilisez l'argument de ligne de commande \texttt{-jar} , java ignore les "class path" utilisateur.
 Aussi,Démarrez YajHFC en utilisant les commandes suivantes (remplacez \texttt{/path/to/dbdriver.jar} et \texttt{/path/to/yajhfc.jar} par les répertoires et nom des fichiers respectifs réels bien sur):
@@ -94,7 +145,7 @@ java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose]
 Description des Arguments :
 filename     Un ou plusieurs nom de fichier à envoyer.
 --stdin      Lit le fichier depuis l'entrée standard
---recipient  Sépcifie le numéro de téléphone du récipiendaire auquel envoyer le fax.
+--recipient  Spécifie le numéro de téléphone du récipiendaire auquel envoyer le fax.
              Vous devez spécifier plusieurs arguments pour des recipiendaires multiples.
 --admin      Démarre en mode Administrateur
 --debug      Affiche des information de deboggage.
@@ -105,6 +156,7 @@ filename     Un ou plusieurs nom de fichier à envoyer.
 --showtab    Spécifie l'onglet à afficher au démarrage. Spécifiez 0 ou R pour l'onglet "Reçus",
              1 ou S pour l'onglet "Envoyés" ou 2 ou T pour l'onglet "Transmission".
 --loadplugin Spécifie le fichier jar de plugin YajHFC à charger
+--no-plugins Supprime le chargement des modules (plugins) depuis le fichier plugin.lst.
 --configdir  Répertoire de configuration à utiliser au lieu de  ~/.yajhfc
 --help       Affiche ce texte
 \end{verbatim}
@@ -115,7 +167,7 @@ filename     Un ou plusieurs nom de fichier à envoyer.
 
 Cochez la case  \texttt{Utilisez le type de fichier PCL bugfix} dans la boite de dialogue des options et essayez à nouveau.
 
-Certaine version de HylaFAX rapportent de façon incorrecte les fichiers ``PCL'' pour tous les documents
+Certaines version de HylaFAX rapportent de façon incorrecte les fichiers ``PCL'' pour tous les documents
 associés à un travail. Si cette case à cocher est active, YajHFC essaie de trouver
 le type de fichier PCL s'il est rapporté (Ceci fonctionne en général assez bien).
 

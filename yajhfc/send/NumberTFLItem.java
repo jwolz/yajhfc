@@ -52,6 +52,7 @@ class NumberTFLItem extends TFLItem {
     
     public NumberTFLItem(String number) {
         this.faxNumber = number;
+        name = company = location = voiceNumber = "";
     }
     
     public NumberTFLItem(PhoneBookEntry pbe) {

@@ -3,6 +3,7 @@
 \usepackage{url}
 \usepackage[left=3cm,right=3cm,top=2cm,bottom=2cm,nohead]{geometry}
 \usepackage[colorlinks=false,pdfborder=0 0 0]{hyperref}
+\usepackage[T1]{fontenc}
 
 %opening
 \title{YajHFC FAQ}
@@ -59,12 +60,59 @@ Thanks to Scott Harris for figuring this out.
 		
 \section{Usage of the program}	
 
-\subsection{How can I edit cover page templates?}
-The templates have to be in the same special PostScript format the HylaFAX
+\subsection{How can I edit PostScript cover page templates?}
+Those templates have to be in the same special PostScript format the HylaFAX
 \texttt{faxcover} program uses. See the following pages for hints how to create/edit
 such files: \\
 \url{http://www.hylafax.org/HylaFAQ/Q202.html}\\
 \url{http://www.hylafax.org/howto/tweaking.html}\\
+
+Alternatively, starting with YajHFC 0.3.7, you can use Cover pages in HTML or, with a plugin, in XSL:FO or ODT (OpenDocument Text) format.
+
+\subsection{I created a HTML document/cover page but the formatting in YajHFC looks wrong!}
+
+YajHFC uses the HTML support integrated in Java (\texttt{HTMLEditorKit} / \texttt{HTMLDocument}) to convert HTML to PostScript. This support is quite limited, however, especially it only supports HTML 3.2.\\
+This means that complex layouts often won't render correctly in YajHFC.
+To achieve the layout you want, you will basically have the following alternatives:
+
+\begin{itemize}
+ \item Do some ``trial \& error'' until the layout looks right (the preview button in the send dialog will show the layout of the converted HTML).
+ \item Use a HTML editor like Ekit (\url{http://www.hexidec.com/ekit.php}) that also uses the Java HTML support, so it will render similarily in YajHFC.
+ \item Use another format for the cover page (such as XSL:FO or ODT with the FOP Plugin).
+\end{itemize}
+
+\subsection{Which fields are recognized in a HTML cover page?}
+
+The following ``words'' are replaced (case insensitively) with the corresponding values when a HTML file is used as a cover page:
+
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+\bfseries Word & \bfseries Meaning \\
+\hline\hline
+\ttfamily @@Name@@ & The recipient's name \\\hline
+\ttfamily @@Location@@ & The recipient's location \\\hline
+\ttfamily @@Company@@ & The recipient's company \\\hline
+\ttfamily @@Faxnumber@@ & The recipient's fax number \\\hline
+\ttfamily @@Voicenumber@@ & The recipient's voice number \\\hline
+\ttfamily @@FromName@@ & The sender's name \\\hline
+\ttfamily @@FromLocation@@ & The sender's location \\\hline
+\ttfamily @@FromCompany@@ & The sender's company \\\hline
+\ttfamily @@FromFaxnumber@@ & The sender's fax number \\\hline
+\ttfamily @@FromVoicenumber@@ & The sender's voice number \\\hline
+\ttfamily @@FromEMail@@ & The sender's e-mail address \\\hline
+\ttfamily @@Subject@@ & The fax's subject \\\hline
+\ttfamily @@Date@@ & Today's date \\\hline
+\ttfamily @@PageCount@@ & The number of pages excluding the cover page \\\hline
+\ttfamily @@Comments@@ & The comments entered for this fax \\\hline
+\end{tabular}
+\end{center}
+
+This replacement is done at the source code level, so those words probably won't be recognized if the formatting changes inside one of it (e.g. \texttt{@@sub\textit{ject@@}}).
+
+\subsection{I liked the old send dialog better. Can I have it back?}
+
+Just open the Options dialog and select \texttt{Traditional} as ``Style of send dialog''.
 
 \subsection{I want to access a phone book over JDBC, but YajHFC won't find the driver even if I specify a correct class path when invoking java.}
 
@@ -104,7 +152,8 @@ filename     One or more file names of PostScript files to send.
 --noclose    Do not close YajHFC after submitting the fax
 --showtab    Sets the tab to display on startup. Specify 0 or R for the "Received",
              1 or S for the "Sent" or 2 or T for the "Transmitting" tab.
---loadplugin Specifies the jar file of a YajHFC plugin to load
+--loadplugin Specifies the jar file of a YajHFC plugin to load.
+--no-plugins Disables loading plugins from the plugin.lst file.
 --configdir  Sets a configuration directory to use instead of ~/.yajhfc
 --help       Displays this text
 \end{verbatim}

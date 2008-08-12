@@ -25,11 +25,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.print.DocFlavor;
+import javax.swing.filechooser.FileFilter;
 
 public class FormattedFile {
     public enum FileFormat {
@@ -71,7 +74,7 @@ public class FormattedFile {
             //return MessageFormat.format(utils._("{0} files"), toString());
         }
         
-        public String[] getPossibleExtension() {
+        public String[] getPossibleExtensions() {
             return possibleExts;
         }
     }
@@ -108,8 +111,10 @@ public class FormattedFile {
     
 
 
-
-    // Static methods:
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Static fields & methods:
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     public static final Map<FileFormat,FileConverter> fileConverters = new EnumMap<FileFormat, FileConverter>(FileFormat.class);
     static {
         fileConverters.put(FileFormat.PostScript, FileConverter.IDENTITY_CONVERTER);
@@ -124,6 +129,45 @@ public class FormattedFile {
         // Doesn't work very well
         //fileConverters.put(FileFormat.RTF, new EditorPaneFileConverter("text/rtf"));
     }
+    
+    private static final short[] JPEGSignature = { 0xff, 0xd8, 0xff, 0xe0, -1, -1, 'J', 'F', 'I', 'F', 0 };
+
+    private static final short[] PNGSignature = { 137,  80,  78,  71,  13,  10,  26,  10 };
+
+    private static final short[] GIFSignature1 = { 'G', 'I', 'F', '8', '9', 'a' };
+    private static final short[] GIFSignature2 = { 'G', 'I', 'F', '8', '7', 'a' };
+
+    private static final short[] TIFFSignature1 = { 'M', 'M', 0, 42 };
+    private static final short[] TIFFSignature2 = { 'I', 'I', 42, 0 };
+
+    private static final short[] PostScriptSignature = { '%', '!' };
+
+    private static final short[] PDFSignature = { '%', 'P', 'D', 'F', '-' };
+
+    private static final short[] PCLSignature = { 033, 'E', 033 };
+    
+    private static final short[] XMLSignature = { '<', '?', 'x', 'm', 'l', ' ' };
+
+    private static final String ODTMimeString = "mimetypeapplication/vnd.oasis.opendocument.text";
+    private static final short[] ODTSignature;
+    static {
+        // See http://lists.oasis-open.org/archives/office/200505/msg00006.html
+        ODTSignature = new short[30 + ODTMimeString.length()];
+        ODTSignature[0] = 'P';
+        ODTSignature[1] = 'K';
+        ODTSignature[2] = 3;
+        ODTSignature[3] = 4;
+        for (int i = 4; i < 30; i++) {
+            ODTSignature[i] = -1;
+        }
+        for (int i = 0; i < ODTMimeString.length(); i++) {
+            ODTSignature[30+i] = (short)ODTMimeString.charAt(i);
+        }
+    }
+    
+    private static final int maxSignatureLen = 4096;
+
+    private static final Pattern FOPattern = Pattern.compile("<[^>]+?xmlns(?::\\w+)?=\"http://www\\.w3\\.org/1999/XSL/Format\"");
     
     public static FileFormat detectFileFormat(String fileName) throws FileNotFoundException, IOException {
         return detectFileFormat(new FileInputStream(fileName));
@@ -200,44 +244,6 @@ public class FormattedFile {
             fIn.close();
         }
     }   
-    private static final short[] JPEGSignature = { 0xff, 0xd8, 0xff, 0xe0, -1, -1, 'J', 'F', 'I', 'F', 0 };
-
-    private static final short[] PNGSignature = { 137,  80,  78,  71,  13,  10,  26,  10 };
-
-    private static final short[] GIFSignature1 = { 'G', 'I', 'F', '8', '9', 'a' };
-    private static final short[] GIFSignature2 = { 'G', 'I', 'F', '8', '7', 'a' };
-
-    private static final short[] TIFFSignature1 = { 'M', 'M', 0, 42 };
-    private static final short[] TIFFSignature2 = { 'I', 'I', 42, 0 };
-
-    private static final short[] PostScriptSignature = { '%', '!' };
-
-    private static final short[] PDFSignature = { '%', 'P', 'D', 'F', '-' };
-
-    private static final short[] PCLSignature = { 033, 'E', 033 };
-    
-    private static final short[] XMLSignature = { '<', '?', 'x', 'm', 'l', ' ' };
-
-    private static final String ODTMimeString = "mimetypeapplication/vnd.oasis.opendocument.text";
-    private static final short[] ODTSignature;
-    static {
-        // See http://lists.oasis-open.org/archives/office/200505/msg00006.html
-        ODTSignature = new short[30 + ODTMimeString.length()];
-        ODTSignature[0] = 'P';
-        ODTSignature[1] = 'K';
-        ODTSignature[2] = 3;
-        ODTSignature[3] = 4;
-        for (int i = 4; i < 30; i++) {
-            ODTSignature[i] = -1;
-        }
-        for (int i = 0; i < ODTMimeString.length(); i++) {
-            ODTSignature[30+i] = (short)ODTMimeString.charAt(i);
-        }
-    }
-    
-    private static final int maxSignatureLen = 4096;
-
-    private static final Pattern FOPattern = Pattern.compile("<[^>]+?xmlns(?::\\w+)?=\"http://www\\.w3\\.org/1999/XSL/Format\"");
     
     /**
      * Checks if the first bytes of data equal those given in signature.
@@ -282,7 +288,36 @@ public class FormattedFile {
 
         Runtime.getRuntime().exec(execCmd);
     }
+
+//  protected static final FileFormat[] acceptedFormats = {
+//  FileFormat.PostScript, FileFormat.PDF, FileFormat.JPEG, FileFormat.GIF, FileFormat.PNG, FileFormat.TIFF
+//  };
+    protected static FileFilter[] acceptedFilters;
+
+    public static FileFilter[] createFileFiltersFromFormats(Collection<FileFormat> formats) {
+        ArrayList<String> allExts = new ArrayList<String>();
+        FileFilter[] filters = new FileFilter[formats.size() + 1];
+        int i = 0;
+        for (FileFormat ff : formats) {
+            for (String ext : ff.getPossibleExtensions()) {
+                allExts.add(ext);
+            }
+            filters[++i] = new ExampleFileFilter(ff.getPossibleExtensions(), ff.getDescription());
+        }
+        ExampleFileFilter allSupported = new ExampleFileFilter(allExts.toArray(new String[allExts.size()]), utils._("All supported file formats"));
+        allSupported.setExtensionListInDescription(false);
+        filters[0] = allSupported;
+        
+        return filters;
+    }
     
+    public static FileFilter[] getConvertableFileFilters() {
+        if (acceptedFilters == null) {
+            acceptedFilters = createFileFiltersFromFormats(fileConverters.keySet());
+        }
+        return acceptedFilters;
+    }
+
     public static void main(String[] args) throws Exception {
         for (String file : args) {
             System.out.println(file + ": " + detectFileFormat(file));

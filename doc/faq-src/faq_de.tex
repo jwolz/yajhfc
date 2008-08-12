@@ -4,6 +4,7 @@
 \usepackage[left=3cm,right=3cm,top=2cm,bottom=2cm,nohead]{geometry}
 \usepackage{ngerman}
 \usepackage[colorlinks=false,pdfborder=0 0 0]{hyperref}
+\usepackage[T1]{fontenc}
 
 %opening
 \title{YajHFC FAQ}
@@ -63,13 +64,59 @@ Danke an Scott Harris für diese Info.
 		
 \section{Benutzung des Programms}	
 
-\subsection{Wie kann ich Deckblattvorlagen bearbeiten?}
+\subsection{Wie kann ich PostScript-Deckblattvorlagen bearbeiten?}
 Die Vorlagen müssen in dem gleichen speziellen PostScript-Format vorliegen,
 wie es auch von dem HylaFAX-\texttt{faxcover}-Programm verwendet wird.
 Schauen Sie bitte auf den folgenden Seiten nach, um Hinweise zu erhalten, wie 
 man solche Dateien anlegen bzw. bearbeiten kann (auf Englisch):\\
 \url{http://www.hylafax.org/HylaFAQ/Q202.html}\\
 \url{http://www.hylafax.org/howto/tweaking.html}\\
+
+Alternativ können Sie ab YajHFC 0.3.7 auch Deckblätter im HTML-Format benutzen, oder mit Hilfe eines Plugins im XSL:FO- und ODT-Format.
+
+\subsection{Ich habe ein HTML-Dokument/Deckblatt erstellt, aber die Formatierung in YajHFC ist nicht korrekt!}
+
+YajHFC verwendet die in Java integrierte HTML-Unterstützung (\texttt{HTMLEditorKit} / \texttt{HTMLDocument}), um HTML in PostScript zu konvertieren. Allerdings ist diese Unterstützung relativ eingeschränkt, insbesondere unterstützt sie nur HTML 3.2.\\
+Dies bedeutet, dass komplexe Layouts in YajHFC vermutlich häufig nicht korrekt dargestellt werden. Um das gewünschte Layout zu erreichen, gibt es im Grunde die folgenden Möglichkeiten:
+
+\begin{itemize}
+ \item Probieren Sie solange herum ("`trial \& error"'), bis das Layout richtig aussieht (der Vorschau-Knopf im Sendedialog zeigt das Layout der konvertierten HTML-Datei an).
+ \item Verwenden Sie einen HTML-Editor wie Ekit (\url{http://www.hexidec.com/ekit.php}), der ebenfalls die Java-HTML-Unterstützung verwendet, so dass die Darstellung ähnlich zu der in YajHFC ist.
+ \item Verwenden Sie ein anderes Format für das Deckblatt (z.B. XSL:FO oder ODT mit dem FOP Plugin).
+\end{itemize}
+
+\subsection{Welche Felder werden in einem HTML-Deckblatt erkannt?}
+
+Die folgenden "`Wörter"' werden (ohne Berücksichtigung der Groß-/""Kleinschreibung) bei Verwendung einer HTML-Datei als Deckblatt durch die entsprechenden Werte ersetzt:
+
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+\bfseries Wort & \bfseries Bedeutung \\
+\hline\hline
+\ttfamily @@Name@@ & Der Name des Empfängers \\\hline
+\ttfamily @@Location@@ &  Der Ort des Empfängers \\\hline
+\ttfamily @@Company@@ &  Die Firma des Empfängers \\\hline
+\ttfamily @@Faxnumber@@ &  Die Faxnummer des Empfängers \\\hline
+\ttfamily @@Voicenumber@@ &  Die Telefonnummer des Empfängers \\\hline
+\ttfamily @@FromName@@ & Der Name des Senders \\\hline
+\ttfamily @@FromLocation@@ &  Der Ort des Senders \\\hline
+\ttfamily @@FromCompany@@ &  Die Firma des Senders \\\hline
+\ttfamily @@FromFaxnumber@@ &  Die Faxnummer des Senders \\\hline
+\ttfamily @@FromVoicenumber@@ &  Die Telefonnummer des Senders \\\hline
+\ttfamily @@FromEMail@@ &  Die E-Mail-Adresse des Senders \\\hline
+\ttfamily @@Subject@@ & Der Betreff des Faxes \\\hline
+\ttfamily @@Date@@ & Das heutige Datum \\\hline
+\ttfamily @@PageCount@@ & Die Seitenanzahl ohne das Deckblatt selbst \\\hline
+\ttfamily @@Comments@@ & Die für dieses Fax eingegebenen Kommentare \\\hline
+\end{tabular}
+\end{center}
+
+Diese Ersetzung wird auf der Quelltextebene durchgeführt, so dass diese Wörter vermutlich nicht mehr erkannt werden, wenn sich die Formatierung innerhalb eines Wortes ändert (z.B. \texttt{@@sub\textit{ject@@}}).
+
+\subsection{Mir gefiel der alte Sendedialog besser. Kann ich ihn zurück haben?}
+
+Öffnen Sie einfach das Optionen-Dialogfeld und wählen sie \texttt{Traditionell} als Stil des Sendedialogs aus.
 
 \subsection{Ich möchte ein Telefonbuch über JDBC ansprechen, aber YajHFC kann den Treiber nicht finden, obwohl 
 ich einen korrekten "`class path"' angegeben habe.}
@@ -114,7 +161,8 @@ Dateiname    Ein oder mehrere Dateinamen der zu sendenden Dokumente.
 --showtab    Setzt den beim Start anzuzeigenden Tab. Geben Sie 0 oder R für den Tab "Empfangen",
              1 oder S für "Gesendet" oder 2 oder T für "Sendend" an.
 --loadplugin Gibt die JAR-Datei eines zu ladenden YajHFC-Plugins an.
---configdir  Setzt ein anstatt von ~/.yajhfc zu verwendendes Konfigurationsverzeichnis
+--no-plugins Deaktiviert das Laden von Plugins aus der plugin.lst-Datei.
+--configdir  Setzt ein anstatt von ~/.yajhfc zu verwendendes Konfigurationsverzeichnis.
 --help       Zeigt diesen Text an.
 \end{verbatim}
 
