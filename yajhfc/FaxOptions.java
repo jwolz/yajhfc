@@ -151,11 +151,15 @@ public class FaxOptions {
         
         String sysname = System.getProperty("os.name");
         if (sysname.startsWith("Windows")) {
-            this.psViewer = "rundll32.exe URL.DLL,FileProtocolHandler \"%s\"";//"gsview32.exe";
+            String startCmd = System.getenv("COMSPEC");
+            if (startCmd == null) startCmd = "COMMAND";
+            startCmd += " /C start \"Viewer\" \"%s\"";
+            
+            this.psViewer = startCmd;  //"rundll32.exe URL.DLL,FileProtocolHandler \"%s\"";//"gsview32.exe";
             if (sysname.indexOf("XP") >= 0 || sysname.indexOf("Vista") >= 0) 
                 this.faxViewer = "rundll32.exe shimgvw.dll,ImageView_Fullscreen %s";
             else
-                this.faxViewer = "rundll32.exe URL.DLL,FileProtocolHandler \"%s\"";//"kodakimg.exe";
+                this.faxViewer = startCmd; //"rundll32.exe URL.DLL,FileProtocolHandler \"%s\"";//"kodakimg.exe";
         } else {
             Map<String,String> env = System.getenv();
             if ("true".equals(env.get("KDE_FULL_SESSION"))) {

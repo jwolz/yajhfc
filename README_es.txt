@@ -1,4 +1,4 @@
-LÉEME (README) de YajHFC 0.3.6
+LÉEME (README) de YajHFC 0.3.7
 ==============================
 
 ACERCA DE
@@ -25,11 +25,12 @@ INSTALACIÓN
 Requisitos:
 * JRE 5.0 (o superior) 
 * Servidor HylaFAX funcionando en red (obviamente ;-) )
-* Algún programa para ver ficheros TIFF (revisar el fichero FAQ.txt)
+* Algún programa para ver archivos TIFF (revisar el documento FAQ.txt)
 * Opcional: visor PostScript (por ejemplo, Ghostview)
 
-Para instalar YajHFC descarga el fichero yajhfc-0_3_6.jar en algún lugar tu disco.
-Para ejecutarlo, utiliza: "java -jar yajhfc-0_3_6.jar"
+Para instalar YajHFC descarga el archivo yajhfc-0_3_7.jar en algún lugar 
+de tu disco.
+Para ejecutarlo, utiliza: "java -jar yajhfc-0_3_7.jar"
 (En Windows seguramente sólo te haga falta ejecutarlo pulsando dos veces sobre el archivo).
 
 LICENCIA
@@ -42,7 +43,7 @@ CÓDIGO FUENTE
 -------------
 
 Para obtener las instrucciones donde se describe cómo compilar YajHFC desde
-el código fuente, revisa el fichero BUILDING.txt que está en este directorio.
+el código fuente, revisa el archivo BUILDING.txt que está en este directorio.
 
 YajHFC utiliza los siguientes paquetes:
 (1) La librería gnu.hylafax (núcleo y paquete inet-ftp)
@@ -50,9 +51,11 @@ YajHFC utiliza los siguientes paquetes:
 (2) Tablelayout.jar
     de https://tablelayout.dev.java.net/
 (3) "Java look and feel Graphics Repository" (jlfgr-1_0.jar) 
-    de http://java.sun.com/developer/techDocs/hi/repository/ 
+    de http://java.sun.com/developer/techDocs/hi/repository/
+(4) "Apache Commons Logging" de http://commons.apache.org/logging/
+    como dependencia de (1)
 
-Las copias de los archivos requeridos en (2) y (3) también se pueden encontrar
+Las copias de los archivos requeridos en (2), (3) y (4) también se pueden encontrar
 en el subdirectorio jar en el archivo original.
 
 YajHFC se escribió en un principio como un proyecto más complicado 
@@ -60,6 +63,15 @@ de Java (más avanzado que los programas "Hola mundo") utilizando la IDE Eclipse
 
 CAMBIOS
 -------
+
+0.3.7:
+- Nuevo cuadro de diálogo simplificado para el envío de faxes
+- Soporte para las páginas de portada en formato HTML
+- Soporte para las páginas de portada en formatos XSL:FO y ODT utilizando un complemento (plugin)
+- Mejor soporte para los complementos (plugins)
+- Cambio en el sistema de registros para usar las API de registros de Java
+- Ahora se utiliza gnu.hylafax 1.0.1
+- Corrección de algunos errores
 
 0.3.6:
 - Corrección de algunos errores
@@ -96,7 +108,7 @@ CAMBIOS
 - Soporte para iniciar una nueva instancia del programa en segundo plano (útil para "impresoras de faxes")
 - Algunos parámetros adicionales nuevos de línea de comandos
 - Botón "Actualizar"
-- Fichero de construcción ant. incluido en las fuentes de distribución
+- Archivo de construcción ant. incluido en las fuentes de distribución
 - Actualización de la documentación
 
 0.3.1:

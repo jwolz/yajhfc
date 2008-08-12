@@ -8,7 +8,7 @@ YajHFC (Yet Another Java HylaFAX Client) is a client for the HylaFAX fax server
 (http://www.hylafax.org/) written in Java.
 
 Features:
-* Faxing documents in PostScript or PDF format
+* Faxing documents in PostScript, PDF and various other formats
 * Polling faxes
 * Support for generating cover pages from templates
 * Viewing sent and received faxes
@@ -69,8 +69,8 @@ CHANGES
 - Support for cover pages in HTML format
 - Support for cover pages in XSL:FO and ODT format using a plugin
 - Better plugin support
-- Logging changed to use Java 1.4 logging
-- Adapted to use gnu.hylafax 1.0.1
+- Logging changed to use the Java logging APIs
+- Now uses gnu.hylafax 1.0.1
 - Some bug fixes
 
 0.3.6:

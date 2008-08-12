@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-05 17:51+0200\n"
+"POT-Creation-Date: 2008-08-10 16:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -98,17 +98,17 @@ msgstr ""
 msgid "Selected Columns:"
 msgstr ""
 
-#: ../Launcher.java:394
+#: ../Launcher.java:395
 msgid "The new instance did not start after 20 seconds."
 msgstr ""
 
-#: ../Launcher.java:408
+#: ../Launcher.java:409
 msgid ""
 "Cannot launch new program instance, continuing with the existing one!\n"
 "Reason: "
 msgstr ""
 
-#: ../Launcher.java:489
+#: ../Launcher.java:490
 msgid "There already is a running instance!"
 msgstr ""
 
@@ -232,7 +232,7 @@ msgid "Shows the Options dialog"
 msgstr ""
 
 #: ../mainwin.java:499 ../send/SendWin.java:527
-#: ../send/SimplifiedSendDialog.java:178
+#: ../send/SimplifiedSendDialog.java:179
 msgid "Send"
 msgstr ""
 
@@ -526,7 +526,7 @@ msgstr ""
 #: ../OptionsWin.java:248 ../phonebook/ldap/ConnectionDialog.java:169
 #: ../phonebook/jdbc/ConnectionDialog.java:163
 #: ../filters/CustomFilterDialog.java:90 ../send/SendWin.java:551
-#: ../send/SimplifiedSendDialog.java:237 ../PasswordDialog.java:75
+#: ../send/SimplifiedSendDialog.java:238 ../PasswordDialog.java:75
 msgid "Cancel"
 msgstr ""
 
@@ -678,12 +678,12 @@ msgid "E-mail address for notifications:"
 msgstr ""
 
 #: ../OptionsWin.java:535 ../send/SendWin.java:462
-#: ../send/SimplifiedSendDialog.java:462
+#: ../send/SimplifiedSendDialog.java:478
 msgid "Notify when:"
 msgstr ""
 
 #: ../OptionsWin.java:536 ../send/SendWin.java:463
-#: ../send/SimplifiedSendDialog.java:463
+#: ../send/SimplifiedSendDialog.java:479
 msgid "Modem:"
 msgstr ""
 
@@ -692,17 +692,17 @@ msgid "Time zone:"
 msgstr ""
 
 #: ../OptionsWin.java:538 ../send/SendWin.java:464
-#: ../send/SimplifiedSendDialog.java:464
+#: ../send/SimplifiedSendDialog.java:480
 msgid "Resolution:"
 msgstr ""
 
 #: ../OptionsWin.java:539 ../send/SendWin.java:465
-#: ../send/SimplifiedSendDialog.java:465
+#: ../send/SimplifiedSendDialog.java:481
 msgid "Paper size:"
 msgstr ""
 
 #: ../OptionsWin.java:540 ../send/SendWin.java:466
-#: ../send/SimplifiedSendDialog.java:466
+#: ../send/SimplifiedSendDialog.java:482
 msgid "Cancel job after (minutes):"
 msgstr ""
 
@@ -711,7 +711,7 @@ msgid "Maximum dials:"
 msgstr ""
 
 #: ../OptionsWin.java:542 ../send/SendWin.java:467
-#: ../send/SimplifiedSendDialog.java:467
+#: ../send/SimplifiedSendDialog.java:483
 msgid "Maximum tries:"
 msgstr ""
 
@@ -744,7 +744,7 @@ msgstr ""
 
 #: ../OptionsWin.java:582 ../phonebook/ldap/ConnectionDialog.java:204
 #: ../phonebook/jdbc/ConnectionDialog.java:192
-#: ../phonebook/PhoneBookPanel.java:498 ../send/SimplifiedSendDialog.java:402
+#: ../phonebook/PhoneBookPanel.java:498 ../send/SimplifiedSendDialog.java:413
 msgid "Fax number:"
 msgstr ""
 
@@ -785,8 +785,8 @@ msgstr ""
 #: ../phonebook/jdbc/ConnectionDialog.java:335
 #: ../phonebook/PhoneBookPanel.java:97 ../phonebook/PhoneBookPanel.java:145
 #: ../filters/CustomFilterDialog.java:208
-#: ../filters/CustomFilterDialog.java:212 ../send/SendController.java:107
-#: ../send/SendController.java:112 ../ExceptionDialog.java:185
+#: ../filters/CustomFilterDialog.java:212 ../send/SendController.java:108
+#: ../send/SendController.java:113 ../ExceptionDialog.java:185
 #: ../ExceptionDialog.java:194 ../ExceptionDialog.java:246
 msgid "Error"
 msgstr ""
@@ -1523,7 +1523,7 @@ msgstr ""
 #: ../phonebook/ldap/ConnectionDialog.java:205
 #: ../phonebook/jdbc/ConnectionDialog.java:193
 #: ../phonebook/PhoneBookPanel.java:499 ../send/SendWin.java:329
-#: ../send/SimplifiedSendDialog.java:284
+#: ../send/SimplifiedSendDialog.java:290
 msgid "Comments:"
 msgstr ""
 
@@ -1764,9 +1764,9 @@ msgstr ""
 msgid "Please enter at least one filtering condition."
 msgstr ""
 
-#: ../filters/CustomFilterDialog.java:219 ../send/SendWin.java:707
-#: ../send/SendWin.java:713 ../send/SimplifiedSendDialog.java:189
-#: ../send/SimplifiedSendDialog.java:195
+#: ../filters/CustomFilterDialog.java:219 ../send/SendWin.java:711
+#: ../send/SendWin.java:717 ../send/SimplifiedSendDialog.java:190
+#: ../send/SimplifiedSendDialog.java:196
 msgid "Warning"
 msgstr ""
 
@@ -1802,8 +1802,8 @@ msgstr ""
 msgid "greater or equal"
 msgstr ""
 
-#: ../faxcover/Faxcover.java:208 ../send/SendController.java:555
-msgid "All supported formats"
+#: ../faxcover/Faxcover.java:204 ../send/SendController.java:558
+msgid "All supported file formats"
 msgstr ""
 
 #: ../send/TextFieldList.java:84
@@ -1842,11 +1842,11 @@ msgstr ""
 msgid "Poll fax"
 msgstr ""
 
-#: ../send/SendWin.java:276 ../send/SimplifiedSendDialog.java:266
+#: ../send/SendWin.java:276 ../send/SimplifiedSendDialog.java:267
 msgid "Use cover page"
 msgstr ""
 
-#: ../send/SendWin.java:284 ../send/SimplifiedSendDialog.java:431
+#: ../send/SendWin.java:284 ../send/SimplifiedSendDialog.java:442
 msgid "Use custom cover page:"
 msgstr ""
 
@@ -1854,7 +1854,7 @@ msgstr ""
 msgid "Recipient Name:"
 msgstr ""
 
-#: ../send/SendWin.java:328 ../send/SimplifiedSendDialog.java:283
+#: ../send/SendWin.java:328 ../send/SimplifiedSendDialog.java:289
 msgid "Subject:"
 msgstr ""
 
@@ -1871,41 +1871,41 @@ msgid "Cover page"
 msgstr ""
 
 #: ../send/SendWin.java:565 ../send/SendWin.java:571
-#: ../send/HylaTFLItem.java:53 ../send/SimplifiedSendDialog.java:204
-#: ../send/SimplifiedSendDialog.java:212
+#: ../send/HylaTFLItem.java:53 ../send/SimplifiedSendDialog.java:205
+#: ../send/SimplifiedSendDialog.java:213
 msgid "Preview"
 msgstr ""
 
-#: ../send/SendWin.java:571 ../send/SimplifiedSendDialog.java:212
+#: ../send/SendWin.java:571 ../send/SimplifiedSendDialog.java:213
 msgid ""
 "Nothing to preview! (Neither a cover page nor a file to send has been "
 "selected.)"
 msgstr ""
 
-#: ../send/SendWin.java:599 ../send/SimplifiedSendDialog.java:336
+#: ../send/SendWin.java:603 ../send/SimplifiedSendDialog.java:347
 msgid "Choose number from phone book"
 msgstr ""
 
-#: ../send/SendWin.java:654 ../send/SimplifiedSendDialog.java:551
+#: ../send/SendWin.java:658 ../send/SimplifiedSendDialog.java:567
 msgid "An error occured reading the input: "
 msgstr ""
 
-#: ../send/SendWin.java:704 ../send/SimplifiedSendDialog.java:186
+#: ../send/SendWin.java:708 ../send/SimplifiedSendDialog.java:187
 msgid ""
 "You haven't selected a file to transmit, so your fax will ONLY contain the "
 "cover page.\n"
 "Continue anyway?"
 msgstr ""
 
-#: ../send/SendWin.java:704 ../send/SimplifiedSendDialog.java:186
+#: ../send/SendWin.java:708 ../send/SimplifiedSendDialog.java:187
 msgid "Continue?"
 msgstr ""
 
-#: ../send/SendWin.java:707 ../send/SimplifiedSendDialog.java:189
+#: ../send/SendWin.java:711 ../send/SimplifiedSendDialog.java:190
 msgid "To send a fax you must select at least one file!"
 msgstr ""
 
-#: ../send/SendWin.java:713 ../send/SimplifiedSendDialog.java:195
+#: ../send/SendWin.java:717 ../send/SimplifiedSendDialog.java:196
 msgid "To send a fax you have to enter at least one phone number!"
 msgstr ""
 
@@ -1930,75 +1930,75 @@ msgstr ""
 msgid "Send fax"
 msgstr ""
 
-#: ../send/SimplifiedSendDialog.java:314
+#: ../send/SimplifiedSendDialog.java:325
 msgid "File(s) to send:"
 msgstr ""
 
-#: ../send/SimplifiedSendDialog.java:361
+#: ../send/SimplifiedSendDialog.java:372
 msgid "Add a new recipient"
 msgstr ""
 
-#: ../send/SimplifiedSendDialog.java:375
+#: ../send/SimplifiedSendDialog.java:386
 msgid "Remove selected recipient"
 msgstr ""
 
-#: ../send/SimplifiedSendDialog.java:404
+#: ../send/SimplifiedSendDialog.java:415
 msgid "Recipients:"
 msgstr ""
 
-#: ../send/SendController.java:107
+#: ../send/SendController.java:108
 #, java-format
 msgid "Can not read file \"{0}\"!"
 msgstr ""
 
-#: ../send/SendController.java:112
+#: ../send/SendController.java:113
 #, java-format
 msgid "Can not read default cover page file \"{0}\"!"
 msgstr ""
 
-#: ../send/SendController.java:188
+#: ../send/SendController.java:189
 msgid "Creating cover page"
 msgstr ""
 
-#: ../send/SendController.java:205
+#: ../send/SendController.java:206
 #, java-format
 msgid "Formatting {0}"
 msgstr ""
 
-#: ../send/SendController.java:213
+#: ../send/SendController.java:214
 msgid "Error previewing the documents:"
 msgstr ""
 
-#: ../send/SendController.java:282
+#: ../send/SendController.java:283
 #, java-format
 msgid "Uploading {0}"
 msgstr ""
 
-#: ../send/SendController.java:296
+#: ../send/SendController.java:297
 #, java-format
 msgid "Creating job to {0}"
 msgstr ""
 
-#: ../send/SendController.java:370
+#: ../send/SendController.java:371
 #, java-format
 msgid ""
 "An error occured while submitting the fax job for phone number \"{0}\" (will "
 "try to submit the fax to the other numbers anyway): "
 msgstr ""
 
-#: ../send/SendController.java:375
+#: ../send/SendController.java:376
 msgid "Cleaning up"
 msgstr ""
 
-#: ../send/SendController.java:382
+#: ../send/SendController.java:383
 msgid "An error occured while submitting the fax: "
 msgstr ""
 
-#: ../send/SendController.java:402
+#: ../send/SendController.java:403
 msgid "Sending fax"
 msgstr ""
 
-#: ../send/SendController.java:407
+#: ../send/SendController.java:408
 msgid "Previewing fax"
 msgstr ""
 
@@ -2010,9 +2010,10 @@ msgstr ""
 msgid "Simplified"
 msgstr ""
 
-#: ../send/LocalFileTFLItem.java:53
+#: ../send/LocalFileTFLItem.java:60
 #, java-format
-msgid "The document {0} could not get converted to PostScript. Reason:"
+msgid ""
+"The document {0} could not be converted to PostScript, PDF or TIFF. Reason:"
 msgstr ""
 
 #: ../SentYajJob.java:205
@@ -2077,70 +2078,78 @@ msgstr ""
 msgid "Initializing..."
 msgstr ""
 
-#: ../FileConverter.java:76
-#, java-format
-msgid "Cannot find a PrintService to convert files of type {0} to Postscript!"
-msgstr ""
-
-#: ../FileConverter.java:111
-msgid "An error occured while converting the document to PostScript."
-msgstr ""
-
 #: ../YajAutoLanguage.java:26
 msgid "(System default)"
 msgstr ""
 
-#: ../FormattedFile.java:32
+#: ../FormattedFile.java:36
 msgid "Postscript documents"
 msgstr ""
 
-#: ../FormattedFile.java:33
+#: ../FormattedFile.java:37
 msgid "PDF documents"
 msgstr ""
 
-#: ../FormattedFile.java:34
+#: ../FormattedFile.java:38
 msgid "PCL files"
 msgstr ""
 
-#: ../FormattedFile.java:35
+#: ../FormattedFile.java:39
 msgid "JPEG pictures"
 msgstr ""
 
-#: ../FormattedFile.java:36
+#: ../FormattedFile.java:40
 msgid "PNG pictures"
 msgstr ""
 
-#: ../FormattedFile.java:37
+#: ../FormattedFile.java:41
 msgid "GIF pictures"
 msgstr ""
 
-#: ../FormattedFile.java:38
+#: ../FormattedFile.java:42
 msgid "TIFF pictures"
 msgstr ""
 
-#: ../FormattedFile.java:39
+#: ../FormattedFile.java:43
 msgid "Plain text files"
 msgstr ""
 
-#: ../FormattedFile.java:40
+#: ../FormattedFile.java:44
 msgid "XML documents"
 msgstr ""
 
-#: ../FormattedFile.java:41
+#: ../FormattedFile.java:45
 msgid "XSL:FO documents"
 msgstr ""
 
-#: ../FormattedFile.java:42
-msgid "OpenDocument text document"
+#: ../FormattedFile.java:46
+msgid "OpenDocument text documents"
 msgstr ""
 
-#: ../FormattedFile.java:43
+#: ../FormattedFile.java:47
+msgid "HTML documents"
+msgstr ""
+
+#: ../FormattedFile.java:48
+msgid "RTF documents"
+msgstr ""
+
+#: ../FormattedFile.java:49
 msgid "Unknown files"
 msgstr ""
 
-#: ../FormattedFile.java:243
+#: ../FormattedFile.java:274
 #, java-format
 msgid "File format {0} not supported."
+msgstr ""
+
+#: ../PrintServiceFileConverter.java:66
+#, java-format
+msgid "Cannot find a PrintService to convert files of type {0} to Postscript!"
+msgstr ""
+
+#: ../PrintServiceFileConverter.java:105
+msgid "An error occured while converting the document to PostScript."
 msgstr ""
 
 #: ../HylaModem.java:35

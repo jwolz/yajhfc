@@ -1,4 +1,4 @@
-LISEZ MOI for YajHFC 0.3.6
+LISEZ MOI for YajHFC 0.3.7
 ==========================
 
 A PROPOS DE
@@ -28,9 +28,9 @@ Pres requis:
 * Un programme pour visualiser les fichiers TIFF (voir aussi les FAQ)
 * Optionnel: Un visualiseur Postscript (e.g. Ghostview)
 
-Pour Installer YajHFC Telechargez le fichier yajhfc-0_3_6.jar dans un repertoire
+Pour Installer YajHFC Telechargez le fichier yajhfc-0_3_7.jar dans un repertoire
 sur votre machine.
-Pour l'executer, utilisez la commande: "java -jar yajhfc-0_3_6.jar"
+Pour l'executer, utilisez la commande: "java -jar yajhfc-0_3_7.jar"
 (Sous Windows vous pouvez habituellement double cliquer sur le fichier jar.)
 
 LICENCE
@@ -50,8 +50,10 @@ YajHFC utilise les paquets suivants :
     depuis https://tablelayout.dev.java.net/
 (3) "Java look and feel Graphics Repository" (jlfgr-1_0.jar)
     depuis http://java.sun.com/developer/techDocs/hi/repository/
+(4) Apache Commons Logging depuis http://commons.apache.org/logging/
+    en tant que dependance de (1)
 
-Des copies des fichiers requis peuvent etre trouves 
+Des copies des fichiers requis pur (2), (3) et (4) peuvent etre trouves
 dans le sous repertoire jar de l'archive des sources.
 
 YajHFC a ete originellement ecrit comme un premier projet Java
@@ -60,10 +62,19 @@ YajHFC a ete originellement ecrit comme un premier projet Java
 MODIFICATIONS
 -------------
 
+0.3.7:
+- Nouvelle boite de dialoguen d'envoie simplifiee
+- Support des pages de garde au format HTML
+- Support des pages de garde au format XSL:FO et ODT avec l'utilisation d'un module (plugin)
+- Meilleur support des modules (plugin)
+- Gestion des logs modifiée pour utiliser les APIs Java
+- Maintenant utilise gnu.hylafax 1.0.1
+- Correction de bugs
+
 0.3.6:
 - Correction de bugs
 - Support de la selection multiple sur les contacts pour la boite d'envoi
-- Nouel argument de ligne de commande ("--logfile") pour tracer un fichier en mode debug
+- Nouvel argument de ligne de commande ("--logfile") pour tracer un fichier en mode debug
 - Suport du "mode deconnecte" comme possible contournement de certains bugs Hylafax
 - Support du choix du modem a utiliser
 
@@ -74,7 +85,7 @@ MODIFICATIONS
 - De nouvelle actions sont maintenant executees seulement "apres" que les fax ne soient plus "en cours"
 
 0.3.4a:
-- Correction de bugs: 
+- Correction de bugs:
   dans la version 0.3.4 un caractere etait ajouté en fin  quand un fax etait soumis par
   l'entree standard a une instance en cours d'execution
 

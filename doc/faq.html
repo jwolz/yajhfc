@@ -38,44 +38,50 @@ Contents</A>
 <!--Table of Contents-->
 
 <UL>
-<LI><A NAME="tex2html23"
+<LI><A NAME="tex2html27"
   HREF="faq.html#SECTION00020000000000000000">Installation</A>
 <UL>
-<LI><A NAME="tex2html24"
+<LI><A NAME="tex2html28"
   HREF="faq.html#SECTION00021000000000000000">Where do I get a fax viewer for Windows?</A>
-<LI><A NAME="tex2html25"
+<LI><A NAME="tex2html29"
   HREF="faq.html#SECTION00022000000000000000">Where do I get a fax viewer for Linux/*BSD/... ?</A>
-<LI><A NAME="tex2html26"
+<LI><A NAME="tex2html30"
   HREF="faq.html#SECTION00023000000000000000">What should I use as a fax viewer on Mac OS X?</A>
-<LI><A NAME="tex2html27"
+<LI><A NAME="tex2html31"
   HREF="faq.html#SECTION00024000000000000000">Where do I get a PostScript viewer?</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html28"
+<LI><A NAME="tex2html32"
   HREF="faq.html#SECTION00030000000000000000">Usage of the program</A>
 <UL>
-<LI><A NAME="tex2html29"
-  HREF="faq.html#SECTION00031000000000000000">How can I edit cover page templates?</A>
-<LI><A NAME="tex2html30"
-  HREF="faq.html#SECTION00032000000000000000">I want to access a phone book over JDBC, but YajHFC won't find the driver even if I specify a correct class path when invoking java.</A>
-<LI><A NAME="tex2html31"
-  HREF="faq.html#SECTION00033000000000000000">What can I enter as a value for the matches Operator in the custom filter dialog?</A>
-<LI><A NAME="tex2html32"
-  HREF="faq.html#SECTION00034000000000000000">Which command line arguments does YajHFC understand?</A>
 <LI><A NAME="tex2html33"
-  HREF="faq.html#SECTION00035000000000000000">When trying to view sent faxes I always get an error message saying File format PCL not supported, although all the documents are PostScript/PDF.</A>
+  HREF="faq.html#SECTION00031000000000000000">How can I edit PostScript cover page templates?</A>
 <LI><A NAME="tex2html34"
-  HREF="faq.html#SECTION00036000000000000000">YajHFC running under Windows sometimes saves its configuration in C:\.yajhfc instead of C:\Documents and Settings\USERNAME\.yajhfc</A>
+  HREF="faq.html#SECTION00032000000000000000">I created a HTML document/cover page but the formatting in YajHFC looks wrong!</A>
 <LI><A NAME="tex2html35"
-  HREF="faq.html#SECTION00037000000000000000">What does the column XYZ mean?</A>
+  HREF="faq.html#SECTION00033000000000000000">Which fields are recognized in a HTML cover page?</A>
+<LI><A NAME="tex2html36"
+  HREF="faq.html#SECTION00034000000000000000">I liked the old send dialog better. Can I have it back?</A>
+<LI><A NAME="tex2html37"
+  HREF="faq.html#SECTION00035000000000000000">I want to access a phone book over JDBC, but YajHFC won't find the driver even if I specify a correct class path when invoking java.</A>
+<LI><A NAME="tex2html38"
+  HREF="faq.html#SECTION00036000000000000000">What can I enter as a value for the matches Operator in the custom filter dialog?</A>
+<LI><A NAME="tex2html39"
+  HREF="faq.html#SECTION00037000000000000000">Which command line arguments does YajHFC understand?</A>
+<LI><A NAME="tex2html40"
+  HREF="faq.html#SECTION00038000000000000000">When trying to view sent faxes I always get an error message saying File format PCL not supported, although all the documents are PostScript/PDF.</A>
+<LI><A NAME="tex2html41"
+  HREF="faq.html#SECTION00039000000000000000">YajHFC running under Windows sometimes saves its configuration in C:\.yajhfc instead of C:\Documents and Settings\USERNAME\.yajhfc</A>
+<LI><A NAME="tex2html42"
+  HREF="faq.html#SECTION000310000000000000000">What does the column XYZ mean?</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html36"
+<LI><A NAME="tex2html43"
   HREF="faq.html#SECTION00040000000000000000">Miscellaneous</A>
 <UL>
-<LI><A NAME="tex2html37"
+<LI><A NAME="tex2html44"
   HREF="faq.html#SECTION00041000000000000000">Why are passwords stored in clear text?</A>
-<LI><A NAME="tex2html38"
+<LI><A NAME="tex2html45"
   HREF="faq.html#SECTION00042000000000000000">Why did you choose that stupid name?</A>
 </UL></UL>
 <!--End of Table of Contents-->
@@ -161,9 +167,9 @@ Usage of the program</A>
 <P>
 
 <H2><A NAME="SECTION00031000000000000000">
-How can I edit cover page templates?</A>
+How can I edit PostScript cover page templates?</A>
 </H2>
-The templates have to be in the same special PostScript format the HylaFAX
+Those templates have to be in the same special PostScript format the HylaFAX
 <TT>faxcover</TT> program uses. See the following pages for hints how to create/edit
 such files: 
 <BR><TT><A NAME="tex2html2"
@@ -172,8 +178,110 @@ such files:
   HREF="http://www.hylafax.org/howto/tweaking.html">http://www.hylafax.org/howto/tweaking.html</A></TT>
 <BR>
 <P>
+Alternatively, starting with YajHFC 0.3.7, you can use Cover pages in HTML or, with a plugin, in XSL:FO or ODT (OpenDocument Text) format.
+
+<P>
 
 <H2><A NAME="SECTION00032000000000000000">
+I created a HTML document/cover page but the formatting in YajHFC looks wrong!</A>
+</H2>
+
+<P>
+YajHFC uses the HTML support integrated in Java (<TT>HTMLEditorKit</TT> / <TT>HTMLDocument</TT>) to convert HTML to PostScript. This support is quite limited, however, especially it only supports HTML 3.2.
+<BR>
+This means that complex layouts often won't render correctly in YajHFC.
+To achieve the layout you want, you will basically have the following alternatives:
+
+<P>
+
+<UL>
+<LI>Do some “trial &amp; error” until the layout looks right (the preview button in the send dialog will show the layout of the converted HTML).
+</LI>
+<LI>Use a HTML editor like Ekit (<TT><A NAME="tex2html4"
+  HREF="http://www.hexidec.com/ekit.php">http://www.hexidec.com/ekit.php</A></TT>) that also uses the Java HTML support, so it will render similarily in YajHFC.
+</LI>
+<LI>Use another format for the cover page (such as XSL:FO or ODT with the FOP Plugin).
+</LI>
+</UL>
+
+<P>
+
+<H2><A NAME="SECTION00033000000000000000">
+Which fields are recognized in a HTML cover page?</A>
+</H2>
+
+<P>
+The following “words” are replaced (case insensitively) with the corresponding values when a HTML file is used as a cover page:
+
+<P>
+<DIV ALIGN="CENTER">
+<TABLE CELLPADDING=3 BORDER="1">
+<TR><TH ALIGN="LEFT"><B>Word </B></TH>
+<TH ALIGN="LEFT"><B>Meaning </B></TH>
+</TR>
+<TR><TD ALIGN="LEFT"><TT>@@Name@@ </TT></TD>
+<TD ALIGN="LEFT">The recipient's name</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><TT>@@Location@@ </TT></TD>
+<TD ALIGN="LEFT">The recipient's location</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><TT>@@Company@@ </TT></TD>
+<TD ALIGN="LEFT">The recipient's company</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><TT>@@Faxnumber@@ </TT></TD>
+<TD ALIGN="LEFT">The recipient's fax number</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><TT>@@Voicenumber@@ </TT></TD>
+<TD ALIGN="LEFT">The recipient's voice number</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><TT>@@FromName@@ </TT></TD>
+<TD ALIGN="LEFT">The sender's name</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><TT>@@FromLocation@@ </TT></TD>
+<TD ALIGN="LEFT">The sender's location</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><TT>@@FromCompany@@ </TT></TD>
+<TD ALIGN="LEFT">The sender's company</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><TT>@@FromFaxnumber@@ </TT></TD>
+<TD ALIGN="LEFT">The sender's fax number</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><TT>@@FromVoicenumber@@ </TT></TD>
+<TD ALIGN="LEFT">The sender's voice number</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><TT>@@FromEMail@@ </TT></TD>
+<TD ALIGN="LEFT">The sender's e-mail address</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><TT>@@Subject@@ </TT></TD>
+<TD ALIGN="LEFT">The fax's subject</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><TT>@@Date@@ </TT></TD>
+<TD ALIGN="LEFT">Today's date</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><TT>@@PageCount@@ </TT></TD>
+<TD ALIGN="LEFT">The number of pages excluding the cover page</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><TT>@@Comments@@ </TT></TD>
+<TD ALIGN="LEFT">The comments entered for this fax</TD>
+</TR>
+</TABLE>
+</DIV>
+
+<P>
+This replacement is done at the source code level, so those words probably won't be recognized if the formatting changes inside one of it (e.g. <TT>@@sub<I>ject@@</I></TT>).
+
+<P>
+
+<H2><A NAME="SECTION00034000000000000000">
+I liked the old send dialog better. Can I have it back?</A>
+</H2>
+
+<P>
+Just open the Options dialog and select <TT>Traditional</TT> as “Style of send dialog”.
+
+<P>
+
+<H2><A NAME="SECTION00035000000000000000">
 I want to access a phone book over JDBC, but YajHFC won't find the driver even if I specify a correct class path when invoking java.</A>
 </H2>
 
@@ -191,13 +299,13 @@ So, please start YajHFC using the following commands (replace <TT>/path/to/dbdri
 
 <P>
 
-<H2><A NAME="SECTION00033000000000000000">
+<H2><A NAME="SECTION00036000000000000000">
 What can I enter as a value for the <TT>matches</TT> Operator in the custom filter dialog?</A>
 </H2>
 
 <P>
 Regular Expressions. A short reference about the accepted syntax can be found at:
-<TT><A NAME="tex2html4"
+<TT><A NAME="tex2html5"
   HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/util/regex/Pattern.html">http://java.sun.com/j2se/1.5.0/docs/api/java/util/regex/Pattern.html</A></TT>
 <P>
 Please note that Regular Expressions are not the same as wildcards: 
@@ -206,7 +314,7 @@ for the effect of the wildcard <code>?</code> use <code>.</code>.
 
 <P>
 
-<H2><A NAME="SECTION00034000000000000000">
+<H2><A NAME="SECTION00037000000000000000">
 Which command line arguments does YajHFC understand?</A>
 </H2>
 
@@ -229,14 +337,15 @@ filename     One or more file names of PostScript files to send.
 --noclose    Do not close YajHFC after submitting the fax
 --showtab    Sets the tab to display on startup. Specify 0 or R for the "Received",
              1 or S for the "Sent" or 2 or T for the "Transmitting" tab.
---loadplugin Specifies the jar file of a YajHFC plugin to load
+--loadplugin Specifies the jar file of a YajHFC plugin to load.
+--no-plugins Disables loading plugins from the plugin.lst file.
 --configdir  Sets a configuration directory to use instead of ~/.yajhfc
 --help       Displays this text
 </PRE>
 
 <P>
 
-<H2><A NAME="SECTION00035000000000000000">
+<H2><A NAME="SECTION00038000000000000000">
 When trying to view sent faxes I always get an error message saying 
    <TT>File format PCL not supported</TT>, although all the documents are PostScript/PDF.</A>
 </H2>
@@ -251,7 +360,7 @@ file type if PCL is reported (which usually works pretty well).
 
 <P>
 
-<H2><A NAME="SECTION00036000000000000000">
+<H2><A NAME="SECTION00039000000000000000">
 YajHFC running under Windows sometimes saves its configuration in <TT>C:\.yajhfc</TT> instead of <TT>C:\Documents and Settings\USERNAME\.yajhfc</TT></A>
 </H2>
 
@@ -266,7 +375,7 @@ As a workaround, you can set this property explicitely when starting YajHFC by u
 
 <P>
 
-<H2><A NAME="SECTION00037000000000000000">
+<H2><A NAME="SECTION000310000000000000000">
 What does the column XYZ mean?</A>
 </H2>
 
@@ -335,11 +444,11 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>-no_subdir -split 0 -html_version 3.2,latin1,unicode,utf8 -no_navigation faq.tex</TT>
 <P>
-The translation was initiated by Jonas Wolz on 2008-03-04
+The translation was initiated by Jonas Wolz on 2008-08-10
 <BR><HR>
 <ADDRESS>
 Jonas Wolz
-2008-03-04
+2008-08-10
 </ADDRESS>
 </BODY>
 </HTML>

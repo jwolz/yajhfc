@@ -35,7 +35,15 @@ import java.util.logging.Logger;
 import javax.print.DocFlavor;
 import javax.swing.JEditorPane;
 import javax.swing.text.Document;
+import javax.swing.text.Element;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.View;
+import javax.swing.text.ViewFactory;
+import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.ImageView;
+import javax.swing.text.html.HTMLEditorKit.HTMLFactory;
 
 /**
  * @author jonas
@@ -65,8 +73,9 @@ public class EditorPaneFileConverter extends PrintServiceFileConverter {
     
     public void convertToHylaFormat(URL inURL, OutputStream destination,
             PaperSize paperSize, URL baseURL) throws ConversionException {
-        try {
+        try {            
             PrintableEditorPane pep = new PrintableEditorPane(paperSize.size);
+     
             pep.loadURL(inURL, contentType, baseURL);
             convertUsingPrintService(pep, destination, paperSize);
         } catch (IOException e) {
@@ -75,7 +84,7 @@ public class EditorPaneFileConverter extends PrintServiceFileConverter {
     }
     
     public static class PrintableEditorPane extends JEditorPane implements Printable {
-        private static final int assumedBordersMM = 44;
+        private static final int assumedBordersMM = 0; //44;
         
         public PrintableEditorPane(Dimension pageSizeMM){
             super();
@@ -86,6 +95,7 @@ public class EditorPaneFileConverter extends PrintServiceFileConverter {
         public void loadURL(URL url, String contentType, URL baseURL)  throws IOException {
             setContentType(contentType);
             if (contentType.contains("text/html")) {
+                setEditorKit(new SyncHTMLEditorKit());
                 HTMLDocument hdoc = new FixedBaseHTMLDocument(baseURL);
                 hdoc.putProperty(Document.StreamDescriptionProperty, url);
                 read(url.openStream(), hdoc);
@@ -131,11 +141,35 @@ public class EditorPaneFileConverter extends PrintServiceFileConverter {
         public FixedBaseHTMLDocument(URL fixedBase) {
             super();
             this.fixedBase = fixedBase;
+            setAsynchronousLoadPriority(-1);
         }
         
         @Override
         public URL getBase() {
             return fixedBase;
+        }
+    }
+    
+    public static class SyncHTMLEditorKit extends HTMLEditorKit {
+        protected static final HTMLFactory factory = new SyncHTMLFactory();
+        
+        @Override
+        public ViewFactory getViewFactory() {
+            return factory;
+        } 
+    }
+    
+    public static class SyncHTMLFactory extends HTMLFactory {
+        @Override
+        public View create(Element elem) {
+            Object kind = elem.getAttributes().getAttribute(StyleConstants.NameAttribute);
+            if (kind == HTML.Tag.IMG) {
+                ImageView iv = new ImageView(elem);
+                iv.setLoadsSynchronously(true);
+                return iv;
+            } else {
+                return super.create(elem);
+            } 
         }
     }
 }

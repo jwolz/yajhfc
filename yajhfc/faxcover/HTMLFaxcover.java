@@ -41,6 +41,7 @@ public class HTMLFaxcover extends MarkupFaxcover {
     public HTMLFaxcover(URL coverTemplate) {
         super(coverTemplate);
         encodeNonASCIIAsEntity = true;
+        newLineReplacement = "<br>";
     }
 
     /* (non-Javadoc)

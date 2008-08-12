@@ -1,16 +1,16 @@
-# translation of messages_es.po to Spanish
+# translation of messages_es.po to
 # This file is distributed under the same license as YajHFC package.
 # Copyright (C) Elsa Andrés.
-# Elsa Andrés <e.andres@ist-sci.com>, 2008.
 #
+# Elsa Andrés <e.andres@ist-sci.com>, 2008.
 msgid ""
 msgstr ""
 "Project-Id-Version: messages_es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-05 17:51+0200\n"
-"PO-Revision-Date: 2008-03-04 21:32+0100\n"
+"POT-Creation-Date: 2008-08-10 16:11+0200\n"
+"PO-Revision-Date: 2008-08-11 20:01+0200\n"
 "Last-Translator: Elsa Andrés <e.andres@ist-sci.com>\n"
-"Language-Team: Spanish <es@li.org>\n"
+"Language-Team:  <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -100,11 +100,11 @@ msgstr "Columnas disponibles:"
 msgid "Selected Columns:"
 msgstr "Columnas seleccionadas:"
 
-#: ../Launcher.java:394
+#: ../Launcher.java:395
 msgid "The new instance did not start after 20 seconds."
 msgstr "La nueva instancia no se inició tras 20 segundos."
 
-#: ../Launcher.java:408
+#: ../Launcher.java:409
 msgid ""
 "Cannot launch new program instance, continuing with the existing one!\n"
 "Reason: "
@@ -113,7 +113,7 @@ msgstr ""
 "existente!\n"
 "Motivo: "
 
-#: ../Launcher.java:489
+#: ../Launcher.java:490
 msgid "There already is a running instance!"
 msgstr "¡Ya existe una instancia en ejecución!"
 
@@ -148,7 +148,7 @@ msgstr "Ha ocurrido un error al guardar el fax:"
 #: ../mainwin.java:268
 #, java-format
 msgid "{0} files saved to directory {1}."
-msgstr "Se ha(n) guardado {0} archivo(s) en el directorio {1}"
+msgstr "Se ha(n) guardado {0} archivo(s) en el directorio {1}."
 
 #: ../mainwin.java:268
 msgid "Faxes saved"
@@ -242,7 +242,7 @@ msgid "Shows the Options dialog"
 msgstr "Muestra el cuadro de diálogo de opciones"
 
 #: ../mainwin.java:499 ../send/SendWin.java:527
-#: ../send/SimplifiedSendDialog.java:178
+#: ../send/SimplifiedSendDialog.java:179
 msgid "Send"
 msgstr "Enviar"
 
@@ -354,7 +354,7 @@ msgstr "Guarda los faxes seleccionados en el disco"
 
 #: ../mainwin.java:706
 msgid "Couldn't get a filename for the fax:"
-msgstr "No se ha podido obtener el nombre del fichero del fax:"
+msgstr "No se ha podido obtener el nombre del archivo del fax:"
 
 #: ../mainwin.java:719
 msgid "Forward fax..."
@@ -370,8 +370,7 @@ msgstr "Modo administrador"
 
 #: ../mainwin.java:740
 msgid "Connect to the server in admin mode (e.g. to delete faxes)"
-msgstr ""
-"Conectar al servidor en modo administrador (por ejemplo, para eliminar faxes)"
+msgstr "Conectar al servidor en modo administrador (por ejemplo, para eliminar faxes)"
 
 #: ../mainwin.java:751
 msgid "Refresh"
@@ -383,8 +382,7 @@ msgstr "Actualizar las tablas y el estado del servidor"
 
 #: ../mainwin.java:784
 msgid "Could not get all of the job information necessary to resend the fax:"
-msgstr ""
-"No es posible obtener toda la información necesaria para reenviar el fax:"
+msgstr "No es posible obtener toda la información necesaria para reenviar el fax:"
 
 #: ../mainwin.java:803
 msgid "Resend fax..."
@@ -538,7 +536,7 @@ msgstr "Ha ocurrido un error al conectar con el servidor:"
 #: ../OptionsWin.java:248 ../phonebook/ldap/ConnectionDialog.java:169
 #: ../phonebook/jdbc/ConnectionDialog.java:163
 #: ../filters/CustomFilterDialog.java:90 ../send/SendWin.java:551
-#: ../send/SimplifiedSendDialog.java:237 ../PasswordDialog.java:75
+#: ../send/SimplifiedSendDialog.java:238 ../PasswordDialog.java:75
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -608,7 +606,7 @@ msgstr "Interfaz:"
 
 #: ../OptionsWin.java:411
 msgid "Style of send dialog:"
-msgstr ""
+msgstr "Estilo para el cuadro de diálogo de envío:"
 
 #: ../OptionsWin.java:431
 msgid "Actions after receiving a new fax:"
@@ -697,12 +695,12 @@ msgid "E-mail address for notifications:"
 msgstr "Dirección de correo electrónico para notificaciones:"
 
 #: ../OptionsWin.java:535 ../send/SendWin.java:462
-#: ../send/SimplifiedSendDialog.java:462
+#: ../send/SimplifiedSendDialog.java:478
 msgid "Notify when:"
 msgstr "Notificar cuando:"
 
 #: ../OptionsWin.java:536 ../send/SendWin.java:463
-#: ../send/SimplifiedSendDialog.java:463
+#: ../send/SimplifiedSendDialog.java:479
 msgid "Modem:"
 msgstr "Módem:"
 
@@ -711,17 +709,17 @@ msgid "Time zone:"
 msgstr "Zona horaria:"
 
 #: ../OptionsWin.java:538 ../send/SendWin.java:464
-#: ../send/SimplifiedSendDialog.java:464
+#: ../send/SimplifiedSendDialog.java:480
 msgid "Resolution:"
 msgstr "Resolución:"
 
 #: ../OptionsWin.java:539 ../send/SendWin.java:465
-#: ../send/SimplifiedSendDialog.java:465
+#: ../send/SimplifiedSendDialog.java:481
 msgid "Paper size:"
 msgstr "Tamaño de papel:"
 
 #: ../OptionsWin.java:540 ../send/SendWin.java:466
-#: ../send/SimplifiedSendDialog.java:466
+#: ../send/SimplifiedSendDialog.java:482
 msgid "Cancel job after (minutes):"
 msgstr "Cancelar trabajo después de (minutos):"
 
@@ -730,7 +728,7 @@ msgid "Maximum dials:"
 msgstr "Número máximo de llamadas:"
 
 #: ../OptionsWin.java:542 ../send/SendWin.java:467
-#: ../send/SimplifiedSendDialog.java:467
+#: ../send/SimplifiedSendDialog.java:483
 msgid "Maximum tries:"
 msgstr "Número máximo de intentos:"
 
@@ -747,7 +745,7 @@ msgstr "Nombre:"
 #: ../phonebook/jdbc/ConnectionDialog.java:189
 #: ../phonebook/PhoneBookPanel.java:494 ../send/SendWin.java:325
 msgid "Company:"
-msgstr "Empresa"
+msgstr "Empresa:"
 
 #: ../OptionsWin.java:580 ../phonebook/ldap/ConnectionDialog.java:202
 #: ../phonebook/jdbc/ConnectionDialog.java:190
@@ -763,21 +761,20 @@ msgstr "Número de teléfono:"
 
 #: ../OptionsWin.java:582 ../phonebook/ldap/ConnectionDialog.java:204
 #: ../phonebook/jdbc/ConnectionDialog.java:192
-#: ../phonebook/PhoneBookPanel.java:498 ../send/SimplifiedSendDialog.java:402
+#: ../phonebook/PhoneBookPanel.java:498 ../send/SimplifiedSendDialog.java:413
 msgid "Fax number:"
 msgstr "Número de fax:"
 
 #: ../OptionsWin.java:583
 msgid "E-mail address:"
-msgstr ""
+msgstr "Dirección de correo electrónico:"
 
 #: ../OptionsWin.java:601
 msgid "Path settings"
 msgstr "Opciones de ruta"
 
 #: ../OptionsWin.java:608
-msgid ""
-"Command line for fax viewer: (insert %s as a placeholder for the filename)"
+msgid "Command line for fax viewer: (insert %s as a placeholder for the filename)"
 msgstr ""
 "Línea de comandos para el visor de faxes: (introducir %s como almacén para "
 "el nombre de archivo)"
@@ -800,8 +797,7 @@ msgstr "(Todos los sistemas)"
 
 #: ../OptionsWin.java:756
 msgid "The selected default cover page can not be read."
-msgstr ""
-"No se puede leer la portada de fax predeterminada que se ha seleccionado."
+msgstr "No se puede leer la portada de fax predeterminada que se ha seleccionado."
 
 #: ../OptionsWin.java:756 ../phonebook/ldap/ConnectionDialog.java:243
 #: ../phonebook/jdbc/ConnectionDialog.java:224
@@ -809,15 +805,14 @@ msgstr ""
 #: ../phonebook/jdbc/ConnectionDialog.java:335
 #: ../phonebook/PhoneBookPanel.java:97 ../phonebook/PhoneBookPanel.java:145
 #: ../filters/CustomFilterDialog.java:208
-#: ../filters/CustomFilterDialog.java:212 ../send/SendController.java:107
-#: ../send/SendController.java:112 ../ExceptionDialog.java:185
+#: ../filters/CustomFilterDialog.java:212 ../send/SendController.java:108
+#: ../send/SendController.java:113 ../ExceptionDialog.java:185
 #: ../ExceptionDialog.java:194 ../ExceptionDialog.java:246
 msgid "Error"
 msgstr "Error"
 
 #: ../OptionsWin.java:799
-msgid ""
-"You must restart the program for the change of the language to take effect."
+msgid "You must restart the program for the change of the language to take effect."
 msgstr "Debe reiniciar el programa para que el cambio de idioma tenga efecto."
 
 #: ../OptionsWin.java:839
@@ -1286,7 +1281,7 @@ msgstr "Tamaño del archivo"
 
 #: ../utils.java:159
 msgid "File size (number of bytes)"
-msgstr "Tamaño del fichero (número de bytes)"
+msgstr "Tamaño del archivo (número de bytes)"
 
 #: ../utils.java:161
 msgid "Number of pages in document"
@@ -1391,7 +1386,7 @@ msgstr "Agenda telefónica en formato XML"
 
 #: ../phonebook/XMLPhoneBook.java:48
 msgid "A Phonebook saving its entries as a XML file."
-msgstr "Una agenda telefónica guardando sus registros como archivo XML"
+msgstr "Una agenda telefónica guardando sus registros como archivo XML."
 
 #: ../phonebook/XMLPhoneBook.java:101
 msgid "Phonebook files"
@@ -1411,8 +1406,7 @@ msgstr "Añadir a la lista"
 
 #: ../phonebook/PhoneBookWin.java:202
 msgid "Please enter the phone book descriptor to open."
-msgstr ""
-"Por favor, introduzca el descriptor de la agenda telefónica para abrir."
+msgstr "Por favor, introduzca el descriptor de la agenda telefónica para abrir."
 
 #: ../phonebook/PhoneBookWin.java:206
 msgid "Open by descriptor"
@@ -1481,8 +1475,7 @@ msgstr "Agenda telefónica LDAP (sólo lectura)"
 
 #: ../phonebook/ldap/LDAPPhoneBook.java:46
 msgid "A Phonebook reading its entries from an LDAP directory."
-msgstr ""
-"Una agenda telefónica está leyendo las entradas desde un directorio LDAP."
+msgstr "Una agenda telefónica está leyendo las entradas desde un directorio LDAP."
 
 #: ../phonebook/ldap/LDAPPhoneBook.java:108
 #: ../phonebook/ldap/ConnectionDialog.java:268
@@ -1493,7 +1486,7 @@ msgstr "Contraseña LDAP"
 #: ../phonebook/ldap/ConnectionDialog.java:268
 #, java-format
 msgid "Please enter the LDAP password for user {0}."
-msgstr "Por favor, introduzca la contraseña LDAP del usuario {0}"
+msgstr "Por favor, introduzca la contraseña LDAP del usuario {0}."
 
 #: ../phonebook/ldap/ConnectionDialog.java:137
 msgid "Use authentication"
@@ -1556,7 +1549,7 @@ msgstr "Tratamiento:"
 #: ../phonebook/ldap/ConnectionDialog.java:205
 #: ../phonebook/jdbc/ConnectionDialog.java:193
 #: ../phonebook/PhoneBookPanel.java:499 ../send/SendWin.java:329
-#: ../send/SimplifiedSendDialog.java:284
+#: ../send/SimplifiedSendDialog.java:290
 msgid "Comments:"
 msgstr "Comentarios:"
 
@@ -1619,8 +1612,7 @@ msgstr "Contraseña de la base de datos"
 #: ../phonebook/jdbc/JDBCPhoneBook.java:259
 #, java-format
 msgid "Please enter the database password for user {0} (database: {1})."
-msgstr ""
-"Por favor, introduzca la contraseña para el usuario {0} (base de datos: {1})."
+msgstr "Por favor, introduzca la contraseña para el usuario {0} (base de datos: {1})."
 
 #: ../phonebook/jdbc/ConnectionDialog.java:277
 #: ../phonebook/jdbc/JDBCPhoneBook.java:277
@@ -1652,7 +1644,7 @@ msgstr "Agenda telefónica JDBC"
 msgid "A Phonebook saving its entries in a relational database using JDBC."
 msgstr ""
 "Una agenda telefónica guardando sus registros en una base de datos "
-"relacional utilizando JDBC"
+"relacional utilizando JDBC."
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:287
 msgid "Cannot open phonebook since no database fields were selected!"
@@ -1680,8 +1672,7 @@ msgstr "<error>"
 
 #: ../phonebook/SearchWin.java:88
 msgid "No matching phone book entry found."
-msgstr ""
-"No se ha encontrado ninguna coincidencia del registro en la agenda telefónica"
+msgstr "No se ha encontrado ninguna coincidencia del registro en la agenda telefónica."
 
 #: ../phonebook/SearchWin.java:109
 msgid "Search"
@@ -1808,9 +1799,9 @@ msgstr "¡Por favor, introduzca un número válido!"
 msgid "Please enter at least one filtering condition."
 msgstr "Por favor, introduzca al menos una condición de filtrado."
 
-#: ../filters/CustomFilterDialog.java:219 ../send/SendWin.java:707
-#: ../send/SendWin.java:713 ../send/SimplifiedSendDialog.java:189
-#: ../send/SimplifiedSendDialog.java:195
+#: ../filters/CustomFilterDialog.java:219 ../send/SendWin.java:711
+#: ../send/SendWin.java:717 ../send/SimplifiedSendDialog.java:190
+#: ../send/SimplifiedSendDialog.java:196
 msgid "Warning"
 msgstr "Advertencia"
 
@@ -1846,9 +1837,9 @@ msgstr "menor o igual"
 msgid "greater or equal"
 msgstr "mayor o igual"
 
-#: ../faxcover/Faxcover.java:208 ../send/SendController.java:555
-msgid "All supported formats"
-msgstr "Todos los formatos soportados"
+#: ../faxcover/Faxcover.java:204 ../send/SendController.java:558
+msgid "All supported file formats"
+msgstr "Todos los formatos de archivo soportados"
 
 #: ../send/TextFieldList.java:84
 msgid "Moves the item upwards"
@@ -1886,11 +1877,11 @@ msgstr "Enviar fax"
 msgid "Poll fax"
 msgstr "Transmisión de fax bajo demanda"
 
-#: ../send/SendWin.java:276 ../send/SimplifiedSendDialog.java:266
+#: ../send/SendWin.java:276 ../send/SimplifiedSendDialog.java:267
 msgid "Use cover page"
 msgstr "Utilizar página de portada"
 
-#: ../send/SendWin.java:284 ../send/SimplifiedSendDialog.java:431
+#: ../send/SendWin.java:284 ../send/SimplifiedSendDialog.java:442
 msgid "Use custom cover page:"
 msgstr "Utilizar página de portada personalizada:"
 
@@ -1898,7 +1889,7 @@ msgstr "Utilizar página de portada personalizada:"
 msgid "Recipient Name:"
 msgstr "Nombre del destinatario:"
 
-#: ../send/SendWin.java:328 ../send/SimplifiedSendDialog.java:283
+#: ../send/SendWin.java:328 ../send/SimplifiedSendDialog.java:289
 msgid "Subject:"
 msgstr "Asunto:"
 
@@ -1915,12 +1906,12 @@ msgid "Cover page"
 msgstr "Página de portada"
 
 #: ../send/SendWin.java:565 ../send/SendWin.java:571
-#: ../send/HylaTFLItem.java:53 ../send/SimplifiedSendDialog.java:204
-#: ../send/SimplifiedSendDialog.java:212
+#: ../send/HylaTFLItem.java:53 ../send/SimplifiedSendDialog.java:205
+#: ../send/SimplifiedSendDialog.java:213
 msgid "Preview"
 msgstr "Previsualizar"
 
-#: ../send/SendWin.java:571 ../send/SimplifiedSendDialog.java:212
+#: ../send/SendWin.java:571 ../send/SimplifiedSendDialog.java:213
 msgid ""
 "Nothing to preview! (Neither a cover page nor a file to send has been "
 "selected.)"
@@ -1928,15 +1919,15 @@ msgstr ""
 "¡No hay nada para previsualizar! (No se ha seleccionado ninguna portada ni "
 "archivo para enviar.)"
 
-#: ../send/SendWin.java:599 ../send/SimplifiedSendDialog.java:336
+#: ../send/SendWin.java:603 ../send/SimplifiedSendDialog.java:347
 msgid "Choose number from phone book"
 msgstr "Seleccionar número desde la agenda telefónica"
 
-#: ../send/SendWin.java:654 ../send/SimplifiedSendDialog.java:551
+#: ../send/SendWin.java:658 ../send/SimplifiedSendDialog.java:567
 msgid "An error occured reading the input: "
 msgstr "Ha ocurrido un error al leer la entrada: "
 
-#: ../send/SendWin.java:704 ../send/SimplifiedSendDialog.java:186
+#: ../send/SendWin.java:708 ../send/SimplifiedSendDialog.java:187
 msgid ""
 "You haven't selected a file to transmit, so your fax will ONLY contain the "
 "cover page.\n"
@@ -1946,15 +1937,15 @@ msgstr ""
 "contendrá la página de portada.\n"
 "¿Desea continuar de todos modos?"
 
-#: ../send/SendWin.java:704 ../send/SimplifiedSendDialog.java:186
+#: ../send/SendWin.java:708 ../send/SimplifiedSendDialog.java:187
 msgid "Continue?"
 msgstr "¿Continuar?"
 
-#: ../send/SendWin.java:707 ../send/SimplifiedSendDialog.java:189
+#: ../send/SendWin.java:711 ../send/SimplifiedSendDialog.java:190
 msgid "To send a fax you must select at least one file!"
 msgstr "¡Para enviar un fax debe seleccionar al menos un archivo!"
 
-#: ../send/SendWin.java:713 ../send/SimplifiedSendDialog.java:195
+#: ../send/SendWin.java:717 ../send/SimplifiedSendDialog.java:196
 msgid "To send a fax you have to enter at least one phone number!"
 msgstr "¡Para enviar un fax debe introducir al menos un número de teléfono!"
 
@@ -1969,67 +1960,66 @@ msgstr "La previsualización no está soportada para el documento \"{0}\"."
 
 #: ../send/SimplifiedSendDialog.java:120
 msgid ">> Advanced"
-msgstr ""
+msgstr ">> Avanzado"
 
 #: ../send/SimplifiedSendDialog.java:121
 msgid "<< Simplified"
-msgstr ""
+msgstr "<< Simplificado"
 
 #: ../send/SimplifiedSendDialog.java:128
 msgid "Send fax"
-msgstr ""
+msgstr "Enviar fax"
 
-#: ../send/SimplifiedSendDialog.java:314
+#: ../send/SimplifiedSendDialog.java:325
 msgid "File(s) to send:"
-msgstr ""
+msgstr "Archivo(s) para enviar:"
 
-#: ../send/SimplifiedSendDialog.java:361
+#: ../send/SimplifiedSendDialog.java:372
 msgid "Add a new recipient"
-msgstr ""
+msgstr "Añadir un nuevo destinatario"
 
-#: ../send/SimplifiedSendDialog.java:375
+#: ../send/SimplifiedSendDialog.java:386
 msgid "Remove selected recipient"
-msgstr ""
+msgstr "Eliminar el destinatario seleccionado"
 
-#: ../send/SimplifiedSendDialog.java:404
+#: ../send/SimplifiedSendDialog.java:415
 msgid "Recipients:"
-msgstr ""
+msgstr "Destinatarios:"
 
-#: ../send/SendController.java:107
+#: ../send/SendController.java:108
 #, java-format
 msgid "Can not read file \"{0}\"!"
 msgstr "No se puede leer el archivo \"{0}\"!"
 
-#: ../send/SendController.java:112
+#: ../send/SendController.java:113
 #, java-format
 msgid "Can not read default cover page file \"{0}\"!"
-msgstr ""
-"No se puede leer el archivo de la página de portada predeterminada \"{0}\"!"
+msgstr "No se puede leer el archivo de la página de portada predeterminada \"{0}\"!"
 
-#: ../send/SendController.java:188
+#: ../send/SendController.java:189
 msgid "Creating cover page"
 msgstr "Creando página de portada"
 
-#: ../send/SendController.java:205
+#: ../send/SendController.java:206
 #, java-format
 msgid "Formatting {0}"
 msgstr "Dando formato {0}"
 
-#: ../send/SendController.java:213
+#: ../send/SendController.java:214
 msgid "Error previewing the documents:"
 msgstr "Error al previsualizar los documentos:"
 
-#: ../send/SendController.java:282
+#: ../send/SendController.java:283
 #, java-format
 msgid "Uploading {0}"
 msgstr "Subiendo {0}"
 
-#: ../send/SendController.java:296
+#: ../send/SendController.java:297
 #, java-format
 msgid "Creating job to {0}"
 msgstr "Creando trabajo para {0}"
 
-#: ../send/SendController.java:370
+#: ../send/SendController.java:371
 #, java-format
 msgid ""
 "An error occured while submitting the fax job for phone number \"{0}\" (will "
@@ -2038,34 +2028,34 @@ msgstr ""
 "Ha ocurrido un error al enviar el fax al número de teléfono \"{0}\" (se "
 "intentará enviar el fax al resto de números): "
 
-#: ../send/SendController.java:375
+#: ../send/SendController.java:376
 msgid "Cleaning up"
 msgstr "Limpiando"
 
-#: ../send/SendController.java:382
+#: ../send/SendController.java:383
 msgid "An error occured while submitting the fax: "
 msgstr "Ha ocurrido un error al enviar el fax: "
 
-#: ../send/SendController.java:402
+#: ../send/SendController.java:403
 msgid "Sending fax"
 msgstr "Enviando fax"
 
-#: ../send/SendController.java:407
+#: ../send/SendController.java:408
 msgid "Previewing fax"
 msgstr "Previsualizando fax"
 
 #: ../send/SendWinStyle.java:24
 msgid "Traditional"
-msgstr ""
+msgstr "Tradicional"
 
 #: ../send/SendWinStyle.java:25
 msgid "Simplified"
-msgstr ""
+msgstr "Simplificado"
 
-#: ../send/LocalFileTFLItem.java:53
+#: ../send/LocalFileTFLItem.java:60
 #, java-format
-msgid "The document {0} could not get converted to PostScript. Reason:"
-msgstr "No se puede convertir el documento {0} a PostScript. Motivo:"
+msgid "The document {0} could not be converted to PostScript, PDF or TIFF. Reason:"
+msgstr "El documento {0} no se puede convertir a PostScript, PDF o TIFF. Motivo:"
 
 #: ../SentYajJob.java:205
 msgid "Blocked (by concurrent activity to the same destination)"
@@ -2131,73 +2121,81 @@ msgstr "Detalles"
 msgid "Initializing..."
 msgstr "Iniciando..."
 
-#: ../FileConverter.java:76
+#: ../YajAutoLanguage.java:26
+msgid "(System default)"
+msgstr "(Predeterminado del sistema)"
+
+#: ../FormattedFile.java:36
+msgid "Postscript documents"
+msgstr "Documentos PostScript"
+
+#: ../FormattedFile.java:37
+msgid "PDF documents"
+msgstr "Documentos PDF"
+
+#: ../FormattedFile.java:38
+msgid "PCL files"
+msgstr "Archivos PCL"
+
+#: ../FormattedFile.java:39
+msgid "JPEG pictures"
+msgstr "Imágenes JPEG"
+
+#: ../FormattedFile.java:40
+msgid "PNG pictures"
+msgstr "Imágenes PNG"
+
+#: ../FormattedFile.java:41
+msgid "GIF pictures"
+msgstr "Imágenes GIF"
+
+#: ../FormattedFile.java:42
+msgid "TIFF pictures"
+msgstr "Imágenes TIFF"
+
+#: ../FormattedFile.java:43
+msgid "Plain text files"
+msgstr "Archivos en texto plano"
+
+#: ../FormattedFile.java:44
+msgid "XML documents"
+msgstr "Documentos XML"
+
+#: ../FormattedFile.java:45
+msgid "XSL:FO documents"
+msgstr "Documentos XSL:FO"
+
+#: ../FormattedFile.java:46
+msgid "OpenDocument text documents"
+msgstr "Documentos de texto OpenDocument"
+
+#: ../FormattedFile.java:47
+msgid "HTML documents"
+msgstr "Documentos HTML"
+
+#: ../FormattedFile.java:48
+msgid "RTF documents"
+msgstr "Documentos RTF"
+
+#: ../FormattedFile.java:49
+msgid "Unknown files"
+msgstr "Archivos desconocidos"
+
+#: ../FormattedFile.java:274
+#, java-format
+msgid "File format {0} not supported."
+msgstr "Formato de archivo {0} no soportado."
+
+#: ../PrintServiceFileConverter.java:66
 #, java-format
 msgid "Cannot find a PrintService to convert files of type {0} to Postscript!"
 msgstr ""
 "¡No se puede encontrar un servicio de impresión para convertir los archivos "
 "de tipo {0} a PostScript!"
 
-#: ../FileConverter.java:111
+#: ../PrintServiceFileConverter.java:105
 msgid "An error occured while converting the document to PostScript."
 msgstr "Se ha producido un error al convertir el documento a PostScript."
-
-#: ../YajAutoLanguage.java:26
-msgid "(System default)"
-msgstr "(Predeterminado del sistema)"
-
-#: ../FormattedFile.java:32
-msgid "Postscript documents"
-msgstr ""
-
-#: ../FormattedFile.java:33
-msgid "PDF documents"
-msgstr "Documentos PDF"
-
-#: ../FormattedFile.java:34
-msgid "PCL files"
-msgstr ""
-
-#: ../FormattedFile.java:35
-msgid "JPEG pictures"
-msgstr "Imágenes JPEG"
-
-#: ../FormattedFile.java:36
-msgid "PNG pictures"
-msgstr "Imágenes PNG"
-
-#: ../FormattedFile.java:37
-msgid "GIF pictures"
-msgstr "Imágenes GIF"
-
-#: ../FormattedFile.java:38
-msgid "TIFF pictures"
-msgstr ""
-
-#: ../FormattedFile.java:39
-msgid "Plain text files"
-msgstr ""
-
-#: ../FormattedFile.java:40
-msgid "XML documents"
-msgstr ""
-
-#: ../FormattedFile.java:41
-msgid "XSL:FO documents"
-msgstr ""
-
-#: ../FormattedFile.java:42
-msgid "OpenDocument text document"
-msgstr ""
-
-#: ../FormattedFile.java:43
-msgid "Unknown files"
-msgstr ""
-
-#: ../FormattedFile.java:243
-#, java-format
-msgid "File format {0} not supported."
-msgstr "Formato de fichero {0} no soportado"
 
 #: ../HylaModem.java:35
 msgid "Any modem"
@@ -2223,11 +2221,5 @@ msgstr "Contraseña de administrador"
 #: ../HylaClientManager.java:140
 #, java-format
 msgid "Please enter the administrative password for user \"{0}\"."
-msgstr ""
-"Por favor, introduzca la contraseña de administrador para el usuario \"{0}\"."
+msgstr "Por favor, introduzca la contraseña de administrador para el usuario \"{0}\"."
 
-#~ msgid "Postscript files"
-#~ msgstr "Archivos PostScript"
-
-#~ msgid "{0} files"
-#~ msgstr "{0} ficheros"

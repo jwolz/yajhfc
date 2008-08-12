@@ -75,7 +75,7 @@ public class StreamTFLItem extends HylaTFLItem {
     public StreamTFLItem(InputStream inStream) throws IOException, FileNotFoundException {
         File tmp;
         // Copy input stream to a temporary file:
-        tmp = File.createTempFile("submit", ".tmp");
+        tmp = File.createTempFile("submit", ".ps");
         tmp.deleteOnExit();
         byte[] buf = new byte[8000];
         int len = 0;

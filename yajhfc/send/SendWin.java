@@ -61,6 +61,7 @@ import yajhfc.FaxIntProperty;
 import yajhfc.FaxOptions;
 import yajhfc.FaxStringProperty;
 import yajhfc.FileTextField;
+import yajhfc.FormattedFile;
 import yajhfc.HylaClientManager;
 import yajhfc.HylaModem;
 import yajhfc.HylaServerFile;
@@ -589,7 +590,7 @@ final class SendWin extends JDialog implements SendWinControl  {
                     utils.getFaxOptions().lastSendWinPath = getJFileChooser().getCurrentDirectory().getPath();
                 }
             };
-            ftfFilename.setFileFilters(SendController.getAcceptedFileFilters()); 
+            ftfFilename.setFileFilters(FormattedFile.getConvertableFileFilters()); 
             if (utils.getFaxOptions().lastSendWinPath.length() > 0) {
                 ftfFilename.getJFileChooser().setCurrentDirectory(new File(utils.getFaxOptions().lastSendWinPath));
             }
