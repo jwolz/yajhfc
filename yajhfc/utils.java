@@ -50,7 +50,7 @@ public final class utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2008 by Jonas Wolz";
-    public static final String AppVersion = "0.3.7";
+    public static final String AppVersion = "0.3.8pre";
     public static final String AuthorEMail = "Jonas Wolz &lt;jwolz@freenet.de&gt;";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
     
@@ -236,30 +236,33 @@ public final class utils {
         new YajLanguage(new Locale("es"))
     };
     
-    public static final File applicationDir;
-    static {
-        // Try to determine where the JAR file is located
-        URL utilURL = utils.class.getResource("utils.class");
-        try {
-            while (utilURL.getProtocol().equals("jar")) {
-                String path = utilURL.getPath();
-                int idx = path.lastIndexOf('!');
-                if (idx >= 0) {
-                    path = path.substring(0, idx);
+    private static File applicationDir;
+    public static File getApplicationDir() {
+        if (applicationDir == null) {
+            // Try to determine where the JAR file is located
+            URL utilURL = utils.class.getResource("utils.class");
+            try {
+                while (utilURL.getProtocol().equals("jar")) {
+                    String path = utilURL.getPath();
+                    int idx = path.lastIndexOf('!');
+                    if (idx >= 0) {
+                        path = path.substring(0, idx);
+                    }
+                    utilURL = new URL(path);
                 }
-                utilURL = new URL(path);
+            } catch (MalformedURLException e) {
+                log.log(Level.WARNING, "Error determining application dir:", e);
             }
-        } catch (MalformedURLException e) {
-            log.log(Level.WARNING, "Error determining application dir:", e);
+            if (utilURL.getProtocol().equals("file")) {
+                applicationDir = (new File(utilURL.getPath())).getParentFile();
+            } else {
+                applicationDir = new File(".");
+                log.severe("Application directory not found, url was: " + utils.class.getResource("utils.class"));
+            }
         }
-        if (utilURL.getProtocol().equals("file")) {
-            applicationDir = (new File(utilURL.getPath())).getParentFile();
-        } else {
-            applicationDir = new File(".");
-            log.severe("Application directory not found, url was: " + utils.class.getResource("utils.class"));
-        }
+        return applicationDir;
     }
-    
+
     public static String listToString(List<?> l, String delim) {
         StringBuilder s = new StringBuilder();
         if (l.size() == 0) {
@@ -618,7 +621,7 @@ public final class utils {
         }
         return -1;
     }
-    
+   
 }
 
 

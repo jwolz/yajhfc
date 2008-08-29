@@ -26,12 +26,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import yajhfc.FormattedFile.FileFormat;
+import yajhfc.readstate.PersistentReadState;
 
 public class RecvYajJob extends YajJob {
     protected int fileNameCol;
     protected int errorCol;
     protected int progressCol;
-    protected boolean read = false;
+    protected boolean read;
+    PersistentReadState readState;
     
     @Override
     public boolean isError() {
@@ -49,7 +51,10 @@ public class RecvYajJob extends YajJob {
     }
     
     public void setRead(boolean read) {
-        this.read = read;
+        if (read != this.read) {
+            this.read = read;
+            readState.setRead((String)getIDValue(), read);
+        }
     }
     
     public boolean isInProgress() {
@@ -85,7 +90,9 @@ public class RecvYajJob extends YajJob {
         return stringData[fileNameCol];
     }
     
-    public RecvYajJob(FmtItemList cols, String[] stringData) {
+    public RecvYajJob(FmtItemList cols, String[] stringData, PersistentReadState readState) {
         super(cols, stringData);
+        this.readState = readState;
+        this.read = readState.isRead((String)getIDValue());
     }
 }

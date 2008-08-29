@@ -18,16 +18,8 @@ package yajhfc.phonebook;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import yajhfc.utils;
-
-public class GeneralConnectionSettings {
-    private static final Logger log = Logger.getLogger(GeneralConnectionSettings.class.getName());
-    
+public class GeneralConnectionSettings extends AbstractConnectionSettings {    
     public String name = "";
     public String givenName = "";
     public String title = "";
@@ -36,17 +28,7 @@ public class GeneralConnectionSettings {
     public String faxNumber = "";
     public String voiceNumber = "";
     public String comment = "";
-    
-    private static final String separator = ";";
-    private static final char escapeChar = '~';
-    
-    public static final String noField = "<none>";
-    public static final String noField_translated = utils._("<none>");
-    
-    public static boolean isNoField(String fieldName) {
-        return (fieldName == null || fieldName.length() == 0 || fieldName.equals(noField));
-    }
-    
+     
     public static final int SURNAME_FIELD = 0;
     public static final int GIVENNAME_FIELD = 1;
     public static final int LOCATION_FIELD = 2;
@@ -80,76 +62,5 @@ public class GeneralConnectionSettings {
             throw new IllegalArgumentException("Unknown field " + fieldIdx);
         }
     }
-    
-    public void copyFrom(GeneralConnectionSettings other) {
-        if (other == null)
-            return;
-        
-        for (Field f : getClass().getFields()) {
-            if (Modifier.isStatic(f.getModifiers()))
-                continue;
-            if (Modifier.isFinal(f.getModifiers()))
-                continue;
-            
-            try {
-                f.set(this, f.get(other));
-            } catch (Exception e) {
-                //NOP
-            }
-        }
-    }
-    
-    public String saveToString() {
-        StringBuilder builder = new StringBuilder();
-        for (Field f : getClass().getFields()) {
-            if (Modifier.isStatic(f.getModifiers()))
-                continue;
-            if (Modifier.isFinal(f.getModifiers()))
-                continue;
-            
-            try {
-                String val;
-                val = f.get(this).toString();
-                val = utils.escapeChars(val, separator, escapeChar) ;
-                builder.append(f.getName());
-                builder.append('=');
-                builder.append(val);
-                builder.append(separator);
-            } catch (Exception e) {
-                //NOP
-            }
-        }
-        
-        return builder.toString();
-    }
-    
-    public void loadFromString(String input) {
-        String[] tokens = input.split(separator);
-        for (String line : tokens) {
-            int pos = line.indexOf('=');
-            if (pos < 0)
-                continue;
-            
-            String fieldName = line.substring(0, pos);
-            String value = utils.unEscapeChars(line.substring(pos+1), separator, escapeChar);
-            try {
-                Field f = getClass().getField(fieldName);
-                Class<?> f_class = f.getType();
-                if (f_class == String.class) {
-                    f.set(this, value);
-                } else if (f_class == Boolean.TYPE || f_class == Boolean.class) {
-                    f.set(this, Boolean.valueOf(value));
-                } else if (f_class == Integer.TYPE || f_class == Integer.class) {
-                    f.set(this, Integer.valueOf(value));
-                } else {
-                    log.log(Level.WARNING, "Unsupported field type: " + f_class.getName());
-                }
-            } catch (NoSuchFieldException e) {
-                log.log(Level.WARNING, "Unknown field " + fieldName);
-            } catch (Exception e) {
-                log.log(Level.WARNING, "Exception loading fields:", e);
-            }
-        }
-    }
-    
+
 }

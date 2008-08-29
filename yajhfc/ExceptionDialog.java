@@ -198,9 +198,9 @@ public class ExceptionDialog extends JDialog implements ActionListener, Componen
         try {
             SwingUtilities.invokeAndWait(new DisplayRunnable(owner, exc, message));
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            log.log(Level.WARNING, "Error showing exception dialog.", e);
         } catch (InvocationTargetException e) {
-            e.printStackTrace();
+            log.log(Level.WARNING, "Error showing exception dialog.", e);
         }
     }
     

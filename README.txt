@@ -64,6 +64,10 @@ YajHFC was originally written as a first more complicated
 CHANGES
 -------
 
+0.3.8:
+- Improved phone book window (with better support for multiple phone books)
+- Support to save the read/unread state of faxes in a central database table
+
 0.3.7:
 - New simplified send dialog
 - Support for cover pages in HTML format

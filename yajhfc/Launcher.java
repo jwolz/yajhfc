@@ -64,6 +64,8 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
+import yajhfc.PluginManager.PluginInfo;
+import yajhfc.PluginManager.PluginType;
 import yajhfc.send.SendController;
 import yajhfc.send.SendWinControl;
 
@@ -181,7 +183,8 @@ public final class Launcher {
             "--noclose    Do not close YajHFC after submitting the fax.\n"+
             "--showtab    Sets the tab to display on startup. Specify 0 or R for the \"Received\", \n"+
             "             1 or S for the \"Sent\" or 2 or T for the \"Transmitting\" tab.\n"+
-            "--loadplugin Specifies the jar file of a YajHFC plugin to load.\n"+
+            "--loadplugin Specifies the jar file of a YajHFC plugin to load.\n" +
+            "--loaddriver Specifies the location of a JDBC driver JAR file.\n" +
             "--no-plugins Disables loading plugins from the plugin.lst file.\n" +
             "--configdir  Sets a configuration directory to use instead of ~/.yajhfc\n" +
             "--help       Displays this text.\n"
@@ -214,7 +217,7 @@ public final class Launcher {
         // parse command line
         ArrayList<String> fileNames = new ArrayList<String>();
         ArrayList<String> recipients = new ArrayList<String>();
-        ArrayList<File> jars = new ArrayList<File>();
+        ArrayList<PluginInfo> plugins = new ArrayList<PluginInfo>();
         boolean useStdin = false;
         boolean adminMode = false;
         boolean forkNewInst = false;
@@ -266,7 +269,11 @@ public final class Launcher {
                         System.err.println("Unknown tab: " + curArg.substring(10));
                     }
                 } else if (curArg.startsWith("--loadplugin=")) {
-                    jars.add(new File(stripQuotes(curArg.substring("--loadplugin=".length()))));
+                    plugins.add(new PluginInfo(new File(stripQuotes(curArg.substring("--loadplugin=".length()))),
+                            PluginType.PLUGIN, false));
+                } else if (curArg.startsWith("--loaddriver=")) {
+                    plugins.add(new PluginInfo(new File(stripQuotes(curArg.substring("--loaddriver=".length()))), 
+                            PluginType.JDBCDRIVER, false));
                 } else if (curArg.startsWith("--logfile=")) {
                     logFile = stripQuotes(curArg.substring("--logfile=".length()));
                     appendToLog = false;
@@ -343,11 +350,15 @@ public final class Launcher {
                     argcount++;
                 if (!closeAfterSubmit)
                     argcount++;
+                if (logFile != null) 
+                    argcount++;
                 if (cmdLineConfDir != null)
                     argcount++;
                 if (selectedTab >= 0)
                     argcount++;
-                argcount += jars.size();
+                if (noPlugins)
+                    argcount++;
+                argcount += plugins.size();
                 
                 String[] launchArgs = new String[argcount];
                 launchArgs[0] = System.getProperty("java.home") + File.separatorChar + "bin" + File.separatorChar + "java";
@@ -355,6 +366,7 @@ public final class Launcher {
                 launchArgs[2] = System.getProperty("java.class.path");
                 launchArgs[3] = Launcher.class.getCanonicalName();
                 
+                //When adding something here, also modify argcount above!
                 int argidx = 4;
                 if (adminMode) {
                     launchArgs[argidx] = "--admin";
@@ -380,8 +392,19 @@ public final class Launcher {
                     launchArgs[argidx] = "--showtab=" + selectedTab;
                     argidx++;
                 }
-                for (File jar : jars) {
-                    launchArgs[argidx++] = "--loadplugin=\"" + jar.getAbsolutePath() + "\"";;
+                if (noPlugins) {
+                    launchArgs[argidx] = "--no-plugins";
+                    argidx++;
+                }
+                for (PluginInfo entry : plugins) {
+                    switch (entry.type) {
+                    case PLUGIN:
+                        launchArgs[argidx++] = "--loadplugin=\"" + entry.file.getAbsolutePath() + "\"";
+                        break;
+                    case JDBCDRIVER:
+                        launchArgs[argidx++] = "--loaddriver=\"" + entry.file.getAbsolutePath() + "\"";
+                        break;
+                    }
                 }
                 
                 if (utils.debugMode) {
@@ -424,17 +447,14 @@ public final class Launcher {
                 launchLog.info("No old instance found, creating lock...");
             }
             createLock();
+            
             // Load plugins:
-            for (File jar : jars) {
-                try {
-                    PluginManager.addPlugin(jar);
-                } catch (IOException e) {
-                    launchLog.log(Level.WARNING, "Error loading the plugin " + jar + ": ", e);
-                }
-            }
             if (!noPlugins) {
-                PluginManager.loadPluginList();
+                PluginManager.readPluginList();
             }
+            PluginManager.addPlugins(plugins);
+            PluginManager.loadAllKnownPlugins();
+            
             SwingUtilities.invokeLater(new NewInstRunner(fileNames, useStdin, recipients, adminMode, closeAfterSubmit, selectedTab));
             blockThread = new SockBlockAcceptor();
             blockThread.start();

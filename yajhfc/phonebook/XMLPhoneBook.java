@@ -208,7 +208,7 @@ public class XMLPhoneBook extends PhoneBook {
     @Override
     public String getDisplayCaption() {
         String rv = PB_Prefix + ":";
-        int desiredLen = 30 - rv.length();
+        int desiredLen = CAPTION_LENGTH - rv.length();
         
         if (fileName.length() > desiredLen)
             rv += "..." + fileName.substring(fileName.length() - desiredLen - 3);

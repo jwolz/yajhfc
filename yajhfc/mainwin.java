@@ -18,6 +18,7 @@ package yajhfc;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+import static yajhfc.utils._;
 import gnu.hylafax.HylaFAXClient;
 import gnu.hylafax.Job;
 
@@ -85,11 +86,10 @@ import yajhfc.filters.CustomFilterDialog;
 import yajhfc.filters.FilterCreator;
 import yajhfc.filters.StringFilter;
 import yajhfc.filters.StringFilterOperator;
-import yajhfc.phonebook.PhoneBookWin;
+import yajhfc.phonebook.NewPhoneBookWin;
+import yajhfc.readstate.PersistentReadState;
 import yajhfc.send.SendController;
 import yajhfc.send.SendWinControl;
-
-
 
 @SuppressWarnings("serial")
 public final class mainwin extends JFrame {
@@ -157,10 +157,6 @@ public final class mainwin extends JFrame {
         Ready, NeedToWait, NotReady;
     }
     protected SendReadyState sendReady = SendReadyState.NeedToWait;
-    
-    static String _(String key) {
-        return utils._(key);
-    }
     
     // Worker classes:
     private class DeleteWorker extends ProgressWorker {
@@ -272,7 +268,7 @@ public final class mainwin extends JFrame {
             this.selTable = selTable;
             this.targetDir = targetDir;
             this.progressMonitor = tablePanel;
-            this.setCloseOnExit(false);
+            this.setCloseOnExit(true);
         }
     }
     private class ShowWorker extends ProgressWorker {
@@ -345,7 +341,7 @@ public final class mainwin extends JFrame {
         public ShowWorker(TooltipJTable selTable) {
             this.selTable = selTable;
             this.progressMonitor = tablePanel;
-            this.setCloseOnExit(false);
+            this.setCloseOnExit(true);
         }
     }
     // Worker classes:
@@ -573,7 +569,7 @@ public final class mainwin extends JFrame {
         actPhonebook = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
                 utils.setWaitCursor(null);
-                PhoneBookWin pbw = new PhoneBookWin(mainwin.this);
+                NewPhoneBookWin pbw = new NewPhoneBookWin(mainwin.this);
                 pbw.setModal(true);
                 utils.unsetWaitCursorOnOpen(null, pbw);
                 pbw.setVisible(true);
@@ -1108,6 +1104,8 @@ public final class mainwin extends JFrame {
                 sendReady = SendReadyState.NotReady;
                 
                 doLogout();
+                PersistentReadState.getCurrent().persistReadState();
+                
                 menuViewListener.saveToOptions();
                 myopts.mainWinBounds = getBounds();
                 myopts.mainwinLastTab = getTabMain().getSelectedIndex();
@@ -1165,9 +1163,11 @@ public final class mainwin extends JFrame {
                 myopts.sendingColState = getTableSending().getColumnCfgString();
                 
                 //myopts.recvReadState = recvTableModel.getStateString();
-                if (tableRefresher != null && tableRefresher.didFirstRun) {
-                    recvTableModel.storeReadState(PersistentReadState.CURRENT);
-                }
+//                if (tableRefresher != null && tableRefresher.didFirstRun ) {
+//                    recvTableModel.storeReadState(PersistentReadState.CURRENT);
+//                }
+                
+                recvTableModel.cleanupReadState();
                 
                 //hyfc.quit();
                 clientManager.forceLogout();
@@ -1190,7 +1190,7 @@ public final class mainwin extends JFrame {
             this.setTitle("Disconnected - " + utils.AppName);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            log.log(Level.WARNING, "Error logging out:", e);
             // do nothing
         }
         tablePanel.hideProgress();
@@ -1352,7 +1352,7 @@ public final class mainwin extends JFrame {
 
     private UnReadMyTableModel getRecvTableModel() {
         if (recvTableModel == null) {
-            recvTableModel = new UnReadMyTableModel();
+            recvTableModel = new UnReadMyTableModel(PersistentReadState.getCurrent());
             recvTableModel.addUnreadItemListener(new UnreadItemListener() {
                 public void newItemsAvailable(UnreadItemEvent evt) {
                     if (evt.isOldDataNull())
@@ -1750,7 +1750,7 @@ public final class mainwin extends JFrame {
         private String sentfmt, sendingfmt;
         private Vector<?> lastRecvList = null, lastSentList = null, lastSendingList = null;
         private boolean cancelled = false;
-        public boolean didFirstRun = false;
+        //public boolean didFirstRun = false;
         
         public synchronized boolean doCancel() {
             cancelled = true;
@@ -1779,16 +1779,16 @@ public final class mainwin extends JFrame {
                     SwingUtilities.invokeLater(new TableDataRunner(recvTableModel, data));
                     lastRecvList = lst;
                     
-                    if (!didFirstRun) {
-                        // Read the read/unread status *after* the table contents has been set 
-                        SwingUtilities.invokeLater(new Runnable() {
-                            public void run() {
-                                recvTableModel.loadReadState(PersistentReadState.CURRENT);
-                                tableRecv.repaint();
-                            }
-                        });
-                        didFirstRun = true;
-                    }
+//                    if (!didFirstRun) {
+//                        // Read the read/unread status *after* the table contents has been set 
+//                        SwingUtilities.invokeLater(new Runnable() {
+//                            public void run() {
+//                                recvTableModel.loadReadState(PersistentReadState.CURRENT);
+//                                tableRecv.repaint();
+//                            }
+//                        });
+//                        didFirstRun = true;
+//                    }
                     //System.out.println(System.currentTimeMillis() + ": Did invokeLater()");
                 }
             } catch (Exception e) {
@@ -1965,6 +1965,10 @@ public final class mainwin extends JFrame {
                 if (utils.debugMode) {
                     log.info("Login succeeded. -- begin init work.");
                 }
+                
+                PersistentReadState persistentReadState = PersistentReadState.getCurrent();
+                recvTableModel.setPersistentReadState(persistentReadState);
+                
                 // Multi-threaded implementation of the periodic refreshes.
                 // I hope I didn't introduce too many race conditions/deadlocks this way
                 statRefresher = new StatusRefresher();
@@ -1974,6 +1978,8 @@ public final class mainwin extends JFrame {
                 //// Read the read/unread status *after* the table contents has been set 
                 //tableRefresher.run();
 
+                persistentReadState.prepareReadStates();
+                
                 // Final UI updates:
                 SwingUtilities.invokeLater(new Runnable() {
                    public void run() {
@@ -2045,6 +2051,10 @@ public final class mainwin extends JFrame {
 
     public HylaClientManager getClientManager() {
         return clientManager;
+    }
+    
+    public java.util.Timer getRefreshTimer() {
+        return utmrTable;
     }
 }  
 

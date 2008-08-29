@@ -29,12 +29,15 @@ import java.sql.Statement;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
 import yajhfc.ExceptionDialog;
 import yajhfc.PasswordDialog;
+import yajhfc.PluginManager;
 import yajhfc.utils;
 import yajhfc.phonebook.DefaultPhoneBookEntryComparator;
 import yajhfc.phonebook.PhoneBook;
@@ -50,7 +53,17 @@ public class JDBCPhoneBook extends PhoneBook {
     ArrayList<JDBCPhoneBookEntry> deleted_items = new ArrayList<JDBCPhoneBookEntry>();
     ArrayList<DBKey> rowId = new ArrayList<DBKey>();
     
-    //PreparedStatement insertStmt, deleteStmt, updateStmt/*, selectStmt*/;
+    protected static final Map<String,String> fieldNameMap = new HashMap<String,String>(); 
+    static {
+        fieldNameMap.put("givenName", utils._("Given name:"));
+        fieldNameMap.put("name", utils._("Name:"));
+        fieldNameMap.put("title", utils. _("Title:"));
+        fieldNameMap.put("company", utils._("Company:"));
+        fieldNameMap.put("location", utils._("Location:"));
+        fieldNameMap.put("faxNumber", utils._("Voice number:"));
+        fieldNameMap.put("voiceNumber", utils._("Fax number:"));
+        fieldNameMap.put("comment", utils._("Comments:"));
+    }
     
     public static final String PB_Prefix = "JDBC";      // The prefix of this Phonebook type's descriptor
     public static final String PB_DisplayName = utils._("JDBC Phonebook"); // A user-readable name for this Phonebook type
@@ -72,9 +85,11 @@ public class JDBCPhoneBook extends PhoneBook {
 
     @Override
     public String browseForPhoneBook() {
-        ConnectionDialog cDlg = new ConnectionDialog(parentDialog);
         ConnectionSettings cs = new ConnectionSettings(settings);
-        if (cDlg.browseForPhonebook(cs))
+        ConnectionDialog cDlg = new ConnectionDialog(parentDialog, utils._("New JDBC phonebook"),
+                utils._("Please select which database fields correspond to the Phonebook entry fields of YajHFC:"),
+                fieldNameMap, cs, true);
+        if (cDlg.promptForNewSettings(cs))
             return PB_Prefix + ":" + cs.saveToString();
         else
             return null;
@@ -248,7 +263,7 @@ public class JDBCPhoneBook extends PhoneBook {
         settings = new ConnectionSettings(descriptorWithoutPrefix);
 
         try {
-            Class.forName(settings.driver);
+            PluginManager.registerJDBCDriver(settings.driver);
         } catch (Exception e) {
             ExceptionDialog.showExceptionDialog(parentDialog, utils._("Could not load the specified driver class:"), e);
             throw new PhoneBookException(e, true);
@@ -405,8 +420,8 @@ public class JDBCPhoneBook extends PhoneBook {
     public String getDisplayCaption() {
         String rv = settings.dbURL;
 
-        if (rv.length() > 30)
-            return rv.substring(0, 27) + "...";
+        if (rv.length() > CAPTION_LENGTH)
+            return rv.substring(0, CAPTION_LENGTH-3) + "...";
         else
             return rv;
     }

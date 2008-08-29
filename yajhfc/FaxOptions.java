@@ -116,6 +116,8 @@ public class FaxOptions {
     public SendWinStyle sendWinStyle = SendWinStyle.SIMPLIFIED;
     public boolean sendWinIsAdvanced = false;
     public String lastSendWinPath = "";
+    public String persistenceMethod = "local";
+    public String persistenceConfig = "";
     
     public FaxOptions() {
         this.host = "";
