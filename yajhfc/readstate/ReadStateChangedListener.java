@@ -1,6 +1,6 @@
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005-2007 Jonas Wolz
+ * Copyright (C) 2005-2008 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,36 +16,23 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package yajhfc;
+package yajhfc.readstate;
 
 import java.util.Collection;
-import java.util.Set;
 
 /**
- * This class supports loading and saving the (un)read state of faxes
+ * Interface for listeners that are notified when the read state
+ * of faxes changed.
+ * 
  * @author jonas
  *
  */
-public abstract class PersistentReadState {
-    
+public interface ReadStateChangedListener {
     /**
-     * Saves the list of faxes in the given set as read
-     * @param readFaxes
+     * Notifies the receiver that the read state of the faxes identified by the ID
+     * values in the given Collection has changed. <br>
+     * NOTE: This might be called from outside the event dispatching thread!
+     * @param changedFaxes
      */
-    public abstract void persistReadState(Collection<String> readFaxes);
-    
-    /**
-     * Returns a set of faxes that should be considered read.
-     * @return
-     */
-    public abstract Set<String> loadReadFaxes();
-    
-    /**
-     * Contains a default instance of the class
-     */
-    public static final PersistentReadState DEFAULT = new LocalPersistentReadState(utils.getConfigDir() + "recvread");
-    /**
-     * Contains the currently used PersistentReadState class
-     */
-    public static PersistentReadState CURRENT = DEFAULT;
+    public void readStateChanged(PersistentReadState sender, Collection<String> changedFaxes);
 }

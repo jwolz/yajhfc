@@ -48,6 +48,8 @@ import javax.swing.JTextArea;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
+import static yajhfc.utils._;
+
 public class AboutDialog extends JDialog implements HyperlinkListener {
     private static final Logger log = Logger.getLogger(AboutDialog.class.getName());
     
@@ -84,8 +86,9 @@ public class AboutDialog extends JDialog implements HyperlinkListener {
                     // NOP
                     getToolkit().beep();
                 }
-            } catch (Throwable t) {
-                t.printStackTrace();
+            } catch (Exception ex) {
+                //t.printStackTrace();
+                log.log(Level.WARNING, "Error handling hyperlink:", ex);
             }
         }
     }
@@ -260,10 +263,6 @@ public class AboutDialog extends JDialog implements HyperlinkListener {
         
         getRootPane().setDefaultButton(buttonOK);
         //setLocationByPlatform(true);
-    }
-    
-    private static String _(String key) {
-        return utils._(key);
     }
     
     public void setMode(Mode mode) {

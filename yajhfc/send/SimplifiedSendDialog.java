@@ -74,8 +74,8 @@ import yajhfc.IconMap;
 import yajhfc.PaperSize;
 import yajhfc.utils;
 import yajhfc.faxcover.Faxcover;
+import yajhfc.phonebook.NewPhoneBookWin;
 import yajhfc.phonebook.PhoneBookEntry;
-import yajhfc.phonebook.PhoneBookWin;
 
 /**
  * @author jonas
@@ -350,7 +350,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         buttonPhonebook.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 utils.setWaitCursor(SimplifiedSendDialog.this);
-                PhoneBookWin pbw = new PhoneBookWin(SimplifiedSendDialog.this);
+                NewPhoneBookWin pbw = new NewPhoneBookWin(SimplifiedSendDialog.this);
                 utils.unsetWaitCursorOnOpen(SimplifiedSendDialog.this, pbw);
                 PhoneBookEntry[] pbs = pbw.selectNumbers();
                 if (pbs != null) {

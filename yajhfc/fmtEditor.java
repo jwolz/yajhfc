@@ -18,6 +18,8 @@ package yajhfc;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+import static yajhfc.utils._;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -50,10 +52,6 @@ public class fmtEditor extends JPanel
     private JButton buttonAdd, buttonDelete, buttonUp, buttonDown;
     private JList listAvail, listSelected;
     private JScrollPane scrollAvail, scrollSelected;
-    
-    private static String _(String key) {
-        return utils._(key);
-    }
     
     private boolean canDelete(Object[] items) {
         if (items.length == 0 || selectedFmts.size() <= 1) // Ensure at least one item is present

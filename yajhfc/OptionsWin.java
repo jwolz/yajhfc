@@ -18,6 +18,7 @@ package yajhfc;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+import static yajhfc.utils._;
 import info.clearthought.layout.TableLayout;
 import info.clearthought.layout.TableLayoutConstraints;
 
@@ -36,7 +37,9 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import java.util.logging.Logger;
 
@@ -50,12 +53,15 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SpinnerNumberModel;
@@ -63,8 +69,13 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
+import yajhfc.PluginManager.PluginType;
 import yajhfc.faxcover.Faxcover;
+import yajhfc.readstate.AvailablePersistenceMethod;
+import yajhfc.readstate.PersistentReadState;
 import yajhfc.send.SendWinStyle;
 
 public class OptionsWin extends JDialog {
@@ -93,13 +104,23 @@ public class OptionsWin extends JDialog {
     
     JTextField textFromFaxNumber, textFromName, textFromCompany, textFromLocation, textFromVoicenumber, textFromEMail;
     ClipboardPopup clpDef;
-    JPanel panelServer, panelSend, panelPaths, panelCover, panelMisc;
+    JPanel panelServer, panelSend, panelPaths, panelCover, panelUI;
     
     JPanel panelServerRetrieval, panelNewFaxAction;
     JCheckBox checkNewFax_Beep, checkNewFax_ToFront, checkNewFax_Open, checkNewFax_MarkAsRead;
     JSpinner spinStatusInterval, spinTableInterval;
     
     JCheckBox checkPreferTIFF, checkUseDisconnected;
+    
+    JPanel panelPersistence;
+    JComboBox comboPersistenceMethods;
+    JButton buttonConfigPersistence;
+    Map<String,String> persistenceConfigs = new HashMap<String,String>();
+    
+    JPanel panelPlugins;
+    JTable tablePlugins;
+    PluginTableModel pluginTableModel;
+    JButton buttonAddJDBC, buttonAddPlugin, buttonRemovePlugin;
     
     FaxOptions foEdit = null;
     List<FmtItem> recvfmt, sentfmt, sendingfmt;
@@ -114,10 +135,6 @@ public class OptionsWin extends JDialog {
     // true if OK, false otherwise
     public boolean getModalResult() {
         return modalResult;
-    }
-    
-    static String _(String key) {
-        return utils._(key);
     }
     
     private void initialize() {
@@ -148,15 +165,25 @@ public class OptionsWin extends JDialog {
         comboLang.setSelectedItem(foEdit.locale);
         comboSendWinStyle.setSelectedItem(foEdit.sendWinStyle);
         
-        int lfPos = 0; 
+        int pos = 0; 
         for (int i=0; i<lookAndFeels.size(); i++) {
             if (lookAndFeels.get(i).className.equals(foEdit.lookAndFeel)) {
-                lfPos = i;
+                pos = i;
                 break;
             }
         }
-        comboLookAndFeel.setSelectedIndex(lfPos);
+        comboLookAndFeel.setSelectedIndex(pos);
         //changedLF = false;
+        
+        persistenceConfigs.put(foEdit.persistenceMethod, foEdit.persistenceConfig);
+        pos = 0; 
+        for (int i=0; i<PersistentReadState.persistenceMethods.size(); i++) {
+            if (PersistentReadState.persistenceMethods.get(i).getKey().equals(foEdit.persistenceMethod)) {
+                pos = i;
+                break;
+            }
+        }
+        comboPersistenceMethods.setSelectedIndex(pos);
         
         Object selModem = foEdit.defaultModem;
         for (HylaModem modem : availableModems) {
@@ -196,6 +223,8 @@ public class OptionsWin extends JDialog {
         textFromVoicenumber.setText(foEdit.FromVoiceNumber);
         textFromEMail.setText(foEdit.FromEMail);
         
+        pluginTableModel.addAllItems(PluginManager.getKnownPlugins());
+        
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
@@ -213,6 +242,10 @@ public class OptionsWin extends JDialog {
             //this.setLocationByPlatform(true);
             utils.setDefWinPos(this);
         
+        // Small special handling for new users
+        if (foEdit.host.length() == 0) {
+            TabMain.setSelectedIndex(1);
+        }
     }
     
     private JPanel getJContentPane() {
@@ -261,12 +294,13 @@ public class OptionsWin extends JDialog {
         if (panelServerSettings == null) {
             double[][] tablelay = {
                     {border, 0.4, border, TableLayout.FILL, border},
-                    { border, TableLayout.FILL, border }
+                    { border, TableLayout.FILL, border, TableLayout.PREFERRED, border }
             };
             panelServerSettings = new JPanel(new TableLayout(tablelay));
             
-            panelServerSettings.add(getPanelServerRetrieval(), "1,1");
+            panelServerSettings.add(getPanelServerRetrieval(), "1,1,1,3");
             panelServerSettings.add(getPanelServer(), "3,1");
+            panelServerSettings.add(getPanelPersistence(), "3,3");
         }
         return panelServerSettings;
     }
@@ -278,6 +312,7 @@ public class OptionsWin extends JDialog {
             TabMain.addTab(_("Common"), getPanelCommon());
             TabMain.addTab(_("Server"), getPanelServerSettings());
             TabMain.addTab(_("Delivery"), getPanelSendSettings());
+            TabMain.addTab(_("Plugins & JDBC"), getPanelPlugins());
             TabMain.addTab(MessageFormat.format(_("Table \"{0}\""), _("Received")), getPanelRecvFmt());
             TabMain.addTab(MessageFormat.format(_("Table \"{0}\""), _("Sent")), getPanelSentFmt());
             TabMain.addTab(MessageFormat.format(_("Table \"{0}\""), _("Transmitting")), getPanelSendingFmt());
@@ -294,7 +329,7 @@ public class OptionsWin extends JDialog {
             PanelCommon = new JPanel(new TableLayout(tablelay));
             
             //PanelCommon.add(getPanelServer(), "1,1");
-            PanelCommon.add(getPanelMisc(), "1,1");
+            PanelCommon.add(getPanelUI(), "1,1");
             PanelCommon.add(getPanelNewFaxAction(), "3,1");
             PanelCommon.add(getPanelPaths(), "1,3,3,3");
         }
@@ -370,8 +405,8 @@ public class OptionsWin extends JDialog {
         return panelServer;
     }
     
-    private JPanel getPanelMisc() {
-        if (panelMisc == null) {
+    private JPanel getPanelUI() {
+        if (panelUI == null) {
             double[][] tablelay = {
                     {border, TableLayout.FILL, border},
                     new double[8]
@@ -382,8 +417,8 @@ public class OptionsWin extends JDialog {
             Arrays.fill(tablelay[1], 0, tablelay[1].length - 1, rowh);
             tablelay[1][tablelay[1].length - 2] = TableLayout.FILL;
             
-            panelMisc = new JPanel(new TableLayout(tablelay));
-            panelMisc.setBorder(BorderFactory.createTitledBorder(_("Miscellaneous settings")));
+            panelUI = new JPanel(new TableLayout(tablelay));
+            panelUI.setBorder(BorderFactory.createTitledBorder(_("User interface")));
             
             //comboNewFaxAction = new JComboBox(utils.newFaxActions);
             
@@ -406,13 +441,13 @@ public class OptionsWin extends JDialog {
             comboSendWinStyle = new JComboBox(SendWinStyle.values());
             
 
-            addWithLabel(panelMisc, comboLang, _("Language:"), "1, 1, 1, 1, f, c");
-            addWithLabel(panelMisc, comboLookAndFeel, _("Look and Feel:"), "1, 3, 1, 3, f, c");
-            addWithLabel(panelMisc, comboSendWinStyle, _("Style of send dialog:"), "1, 5, 1, 5, f, c");
-            //addWithLabel(panelMisc, comboNewFaxAction, "<html>" + _("When a new fax is received:") + "</html>", "1, 3, 1, 3, f, c");
+            addWithLabel(panelUI, comboLang, _("Language:"), "1, 1, 1, 1, f, c");
+            addWithLabel(panelUI, comboLookAndFeel, _("Look and Feel:"), "1, 3, 1, 3, f, c");
+            addWithLabel(panelUI, comboSendWinStyle, _("Style of send dialog:"), "1, 5, 1, 5, f, c");
+            //addWithLabel(panelUI, comboNewFaxAction, "<html>" + _("When a new fax is received:") + "</html>", "1, 3, 1, 3, f, c");
 
         }
-        return panelMisc;
+        return panelUI;
     }
     
     private JPanel getPanelNewFaxAction() {
@@ -835,6 +870,22 @@ public class OptionsWin extends JDialog {
                 foEdit.useCustomDefaultCover = checkUseCustomDefCover.isSelected();
                 
                 foEdit.defaultModem = getModem();
+                
+                // Save persistence settings:
+                String persistenceMethod = ((AvailablePersistenceMethod)comboPersistenceMethods.getSelectedItem()).getKey();
+                String config = persistenceConfigs.get(persistenceMethod);
+                if (config == null) config = "";
+                if (!(persistenceMethod.equals(foEdit.persistenceMethod) && config.equals(foEdit.persistenceConfig))) {
+                    PersistentReadState.getCurrent().persistReadState();
+                    PersistentReadState.resetCurrent();
+                }
+                foEdit.persistenceMethod = persistenceMethod;
+                foEdit.persistenceConfig = config;
+                
+                if (PluginManager.updatePluginList(pluginTableModel.getEntries())) {
+                    JOptionPane.showMessageDialog(OptionsWin.this, utils._("You will need to restart the program for the changes to the list of plugins and JDBC drivers to take full effect."), utils._("Plugins & JDBC"), JOptionPane.INFORMATION_MESSAGE);
+                }
+                
             } catch (NumberFormatException e1) {
                 JOptionPane.showMessageDialog(ButtonOK, _("Please enter a number."));
                 return;
@@ -843,5 +894,162 @@ public class OptionsWin extends JDialog {
             modalResult = true;
             dispose();
         }
+        
+    }
+
+
+    private JPanel getPanelPersistence() {
+        if (panelPersistence == null) {
+            double[][] tablelay = {
+                    {border, TableLayout.FILL, border/2, TableLayout.PREFERRED, border},
+                    {border, TableLayout.PREFERRED, TableLayout.PREFERRED, border}
+            };
+            panelPersistence = new JPanel(new TableLayout(tablelay));
+            panelPersistence.setBorder(BorderFactory.createTitledBorder(_("Read/Unread state of faxes")));
+            
+            ActionListener persistenceListener = new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    AvailablePersistenceMethod sel = (AvailablePersistenceMethod)comboPersistenceMethods.getSelectedItem();
+                    if ("combo".equals(e.getActionCommand())) {
+                        boolean canConfig = sel != null && sel.canConfigure();
+                        buttonConfigPersistence.setEnabled(canConfig);
+                        if (canConfig) {
+                            String config = persistenceConfigs.get(sel.getKey());
+                            if (config == null) {
+                                doConfigure(sel);
+                            }
+                        }
+                    } else if ("config".equals(e.getActionCommand())) {
+                        if (sel != null) {
+                            doConfigure(sel);
+                        }
+                    } else {
+                        assert(false);
+                    }
+                }
+                
+                private void doConfigure(AvailablePersistenceMethod sel) {
+                    String res = sel.showConfigDialog(OptionsWin.this, persistenceConfigs.get(sel.getKey()));
+                    if (res != null) {
+                        persistenceConfigs.put(sel.getKey(), res);
+                    }
+                }
+            };
+            comboPersistenceMethods = new JComboBox(PersistentReadState.persistenceMethods.toArray());
+            comboPersistenceMethods.addActionListener(persistenceListener);
+            comboPersistenceMethods.setActionCommand("combo");
+            
+            buttonConfigPersistence = new JButton(_("Configure..."));
+            buttonConfigPersistence.addActionListener(persistenceListener);
+            buttonConfigPersistence.setActionCommand("config");
+            
+            addWithLabel(panelPersistence, comboPersistenceMethods, _("Save location:"), "1,2");
+            panelPersistence.add(buttonConfigPersistence, "3,2");
+        }
+        return panelPersistence;
+    }
+
+    private JPanel getPanelPlugins() {
+        if (panelPlugins == null) {
+            double[][] dLay = {
+                    {border, TableLayout.FILL, border, TableLayout.PREFERRED, border},
+                    {border, TableLayout.PREFERRED, border, TableLayout.PREFERRED, border, TableLayout.PREFERRED, border, TableLayout.FILL, border}
+            };
+            panelPlugins = new JPanel(new TableLayout(dLay), false);
+            
+            pluginTableModel = new PluginTableModel();
+            tablePlugins = new JTable(pluginTableModel); /* {
+                @Override
+                public Component prepareRenderer(TableCellRenderer renderer,
+                        int row, int column) {
+                    Component comp = super.prepareRenderer(renderer, row, column);
+                    PluginTableModel.Entry entry = ((PluginTableModel)this.dataModel).getEntry(row);
+                    if (getSelectedRow() != row) {
+                        if (!entry.persistent) {
+                            comp.setBackground(UIManager.getColor("TextField.inactiveBackground"));
+                            //comp.setForeground(UIManager.getColor("TextField.inactiveForeground"));
+                        } else {
+                            comp.setBackground(getBackground());
+                            //comp.setForeground(getForeground());
+                        }
+                    }
+                    return comp;
+                }  
+            };*/
+            tablePlugins.setDefaultRenderer(IconMap.class, new IconMap.TableCellRenderer());
+            tablePlugins.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+                public void valueChanged(ListSelectionEvent e) {
+                    if (!e.getValueIsAdjusting()) {
+                        int selRow = tablePlugins.getSelectedRow();
+                        buttonRemovePlugin.setEnabled(selRow >= 0) ; // && pluginTableModel.getEntry(selRow).persistent);
+                    }
+                }
+                
+            });
+            tablePlugins.getColumnModel().getColumn(0).setPreferredWidth(300);
+            
+            JScrollPane scrollTable = new JScrollPane(tablePlugins);
+            
+            ActionListener actionListener = new ActionListener() {
+                JFileChooser fileChooser;
+                
+                private File chooseFile(String title) {
+                    if (fileChooser == null) {
+                        fileChooser = new JFileChooser();
+                        fileChooser.setAcceptAllFileFilterUsed(false);
+                        fileChooser.addChoosableFileFilter(new ExampleFileFilter("jar", utils._("JAR files")));
+                    }
+                    fileChooser.setDialogTitle(title);
+                    if (fileChooser.showOpenDialog(OptionsWin.this) == JFileChooser.APPROVE_OPTION) {
+                        return fileChooser.getSelectedFile();
+                    } else {
+                        return null;
+                    }
+                }
+                
+                public void actionPerformed(ActionEvent e) {
+                    String actCmd = e.getActionCommand();
+                    if (actCmd.equals("addJDBC")) {
+                        File jar = chooseFile(utils._("Add JDBC driver"));
+                        if (jar == null)
+                            return;
+                        
+                        pluginTableModel.addItem(jar, PluginType.JDBCDRIVER);
+                    } else if (actCmd.equals("addPlugin")) {
+                        File jar = chooseFile(utils._("Add plugin"));
+                        if (jar == null)
+                            return;
+                        
+                        if (!PluginManager.isValidPlugin(jar)) {
+                            JOptionPane.showMessageDialog(OptionsWin.this, MessageFormat.format(utils._("The file {0} is not a valid YajHFC plugin!"), jar), utils._("Add plugin"), JOptionPane.WARNING_MESSAGE);
+                            return;
+                        }
+                        pluginTableModel.addItem(jar, PluginType.PLUGIN);
+                    } else if (actCmd.equals("remove")) {
+                        int idx = tablePlugins.getSelectedRow();
+                        if (idx >= 0) {
+                            pluginTableModel.removeItemAt(idx);
+                        }
+                    } else 
+                        assert(false);
+                }
+            };
+            buttonAddJDBC = new JButton(_("Add JDBC driver") + "...", utils.loadIcon("development/JarAdd"));
+            buttonAddJDBC.addActionListener(actionListener);
+            buttonAddJDBC.setActionCommand("addJDBC");
+            buttonAddPlugin = new JButton(_("Add plugin") +  "...", utils.loadIcon("development/J2EEApplicationClientAdd"));
+            buttonAddPlugin.addActionListener(actionListener);
+            buttonAddPlugin.setActionCommand("addPlugin");
+            buttonRemovePlugin = new JButton(_("Remove item"), utils.loadIcon("general/Remove"));
+            buttonRemovePlugin.addActionListener(actionListener);
+            buttonRemovePlugin.setActionCommand("remove");
+            buttonRemovePlugin.setEnabled(false);
+            
+            panelPlugins.add(scrollTable, "1,1,1,7,f,f");
+            panelPlugins.add(buttonAddPlugin, "3,1");
+            panelPlugins.add(buttonAddJDBC, "3,3");
+            panelPlugins.add(buttonRemovePlugin, "3,5");
+        }
+        return panelPlugins;
     }
 }

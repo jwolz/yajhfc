@@ -18,6 +18,8 @@ package yajhfc.send;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+import static yajhfc.utils._;
+
 import info.clearthought.layout.TableLayout;
 import info.clearthought.layout.TableLayoutConstants;
 import info.clearthought.layout.TableLayoutConstraints;
@@ -69,8 +71,8 @@ import yajhfc.IconMap;
 import yajhfc.PaperSize;
 import yajhfc.utils;
 import yajhfc.faxcover.Faxcover;
+import yajhfc.phonebook.NewPhoneBookWin;
 import yajhfc.phonebook.PhoneBookEntry;
-import yajhfc.phonebook.PhoneBookWin;
 
 
 final class SendWin extends JDialog implements SendWinControl  {
@@ -143,10 +145,6 @@ final class SendWin extends JDialog implements SendWinControl  {
         pane.add(lbl, c); 
         
         return lbl;
-    }
-    
-    static String _(String key) {
-        return utils._(key);
     }
     
     
@@ -606,7 +604,7 @@ final class SendWin extends JDialog implements SendWinControl  {
             buttonPhoneBook.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     utils.setWaitCursor(SendWin.this);
-                    PhoneBookWin pbw = new PhoneBookWin(SendWin.this);
+                    NewPhoneBookWin pbw = new NewPhoneBookWin(SendWin.this);
                     utils.unsetWaitCursorOnOpen(SendWin.this, pbw);
                     PhoneBookEntry[] pbs = pbw.selectNumbers();
                     if (pbs != null) {

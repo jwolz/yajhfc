@@ -41,6 +41,8 @@ import yajhfc.filters.StringFilterOperator;
 
 public abstract class PhoneBook extends AbstractListModel {
     
+    protected static final int CAPTION_LENGTH = 40;
+    
     /***
      * The dialog to be used as parent when a UI is shown.
      */
@@ -221,11 +223,16 @@ public abstract class PhoneBook extends AbstractListModel {
     
     /**
      * Return a caption for display to users.
-     * Should be shortened to 30 chars or less.
+     * Should be shortened to CAPTION_LENGTH chars or less.
      * @return
      */
     public String getDisplayCaption() {
-        return getDescriptor().substring(0, 30);
+        return getDescriptor().substring(0, CAPTION_LENGTH);
+    }
+    
+    @Override
+    public String toString() {
+        return getDisplayCaption();
     }
     
     public boolean isReadOnly() {

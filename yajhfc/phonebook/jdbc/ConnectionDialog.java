@@ -18,6 +18,7 @@ package yajhfc.phonebook.jdbc;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+import static yajhfc.utils._;
 import info.clearthought.layout.TableLayout;
 import info.clearthought.layout.TableLayoutConstraints;
 
@@ -37,7 +38,11 @@ import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -58,15 +63,18 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.JTextComponent;
 
 import yajhfc.ClipboardPopup;
 import yajhfc.ExceptionDialog;
 import yajhfc.PasswordDialog;
-import yajhfc.utils;
+import yajhfc.PluginManager;
+import yajhfc.phonebook.AbstractConnectionSettings;
 
 public final class ConnectionDialog extends JDialog implements ActionListener {
-
-    private JComboBox comboName, comboGivenName, comboTitle, comboCompany, comboLocation, comboVoiceNumber, comboFaxNumber, comboComment;
+    private static final Logger log = Logger.getLogger(ConnectionDialog.class.getName());
+    
+    //private JComboBox comboName, comboGivenName, comboTitle, comboCompany, comboLocation, comboVoiceNumber, comboFaxNumber, comboComment;
     private ArrayList<JComboBox> fieldCombos = new ArrayList<JComboBox>();
     private JTextField textDriverClass, textURL, textUserName/*, textQuery*/;
     private JComboBox comboTable;
@@ -74,46 +82,65 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
     private JPasswordField textPassword;
     private JButton buttonOK, buttonCancel, buttonTest;
     private ClipboardPopup clpPop;
+    private boolean noFieldOK;
     
     private final static double border = 10;
     
     public boolean clickedOK;
     
     private Connection conn;
-    //private Statement stmt;
     
-    private static String _(String key) {
-        return utils._(key);
-    }
+    /**
+     * A map mapping field names to user visible captions
+     */
+    private Map<String,String> fieldNameMap;
+    private Map<String, Component> settingsComponents = new HashMap<String, Component>();
+    private static final String DBURL_FIELD = "dbURL";
+    private static final String DRIVER_FIELD = "driver";
+    private static final String USER_FIELD = "user";
+    private static final String PASSWORD_FIELD = "pwd";
+    private static final String TABLE_FIELD = "table";
+    private static final String ASKFORPWD_FIELD = "askForPWD";
+    private static final int FIXEDFIELD_COUNT = 6;
+    
+    private static final String FIELD_ClientProperty = "YajHFC-FieldComboField";
     
     private JLabel addWithLabel(JPanel container, Component comp, String label, String layout) {
+        return addWithLabel(container, comp, label, new TableLayoutConstraints(layout));
+    }
+    private JLabel addWithLabel(JPanel container, Component comp, String label, TableLayoutConstraints layout) {
         JLabel lbl = new JLabel(label);
         lbl.setLabelFor(comp);
         
-        TableLayoutConstraints c = new TableLayoutConstraints(layout);
-        container.add(comp, c);
+        container.add(comp, layout);
         
-        c.col1 = c.col2 = c.col1 - 2;
-        c.vAlign = TableLayoutConstraints.CENTER;
-        c.hAlign = TableLayoutConstraints.LEFT;
-        container.add(lbl, c);
+        layout.col1 = layout.col2 = layout.col1 - 2;
+        layout.vAlign = TableLayoutConstraints.CENTER;
+        layout.hAlign = TableLayoutConstraints.LEFT;
+        container.add(lbl, layout);
         
         return lbl; 
     }
-    private JComboBox addFieldCombo(JPanel container, String label, String layout) {
+    private JComboBox addFieldCombo(JPanel container, String field, int col, int row) {
         JComboBox rv = new JComboBox();
         rv.setEditable(true);
+        rv.putClientProperty(FIELD_ClientProperty, field);
         fieldCombos.add(rv);
+        settingsComponents.put(field, rv);
         
-        addWithLabel(container, rv, label, layout);
+        TableLayoutConstraints layout = new TableLayoutConstraints(col, row);
+        layout.hAlign = TableLayoutConstraints.FULL;
+        layout.vAlign = TableLayoutConstraints.CENTER;
+        addWithLabel(container, rv, fieldNameMap.get(field), layout);
         return rv;
     }
-    private void initialize() {
+    private void initialize(String fieldPrompt, AbstractConnectionSettings template) {
+        final int varFieldCount = (int)Math.ceil((template.getAvailableFields().size() - FIXEDFIELD_COUNT) / (double)2);
+        final int len = varFieldCount * 2 + 18; 
         double dLay[][] = {
                 {border, TableLayout.PREFERRED, border, 0.5, border, TableLayout.PREFERRED, border, TableLayout.FILL, border},      
-                new double[26]
+                new double[len]
         };
-        int len = dLay[1].length;
         double rowh = 1/(double)(len-5)*2;
         for (int i = 0; i < len; i++) {
             if ((i&1) == 0) {
@@ -173,24 +200,38 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         buttonTest.addActionListener(this);
         
         addWithLabel(jContentPane, textDriverClass, _("Driver class:"), "3, 1, 7, 1, f, c");
+        settingsComponents.put(DRIVER_FIELD, textDriverClass);
         addWithLabel(jContentPane, textURL, _("Database URL:"), "3, 3, 7, 3, f, c");
+        settingsComponents.put(DBURL_FIELD, textURL);
         addWithLabel(jContentPane, textUserName, _("Username:"), "3, 5, 5, 5, f, c");
+        settingsComponents.put(USER_FIELD, textUserName);
         jContentPane.add(buttonTest, "7, 5");
         addWithLabel(jContentPane, textPassword, _("Password:"), "3, 7, 5, 7, f, c");
+        settingsComponents.put(PASSWORD_FIELD, textPassword);
         jContentPane.add(checkAskForPassword, "7, 7");
+        settingsComponents.put(ASKFORPWD_FIELD, checkAskForPassword);
         //addWithLabel(jContentPane, textQuery, _("Query:"), "3, 9, 7, 9, f, c");
         addWithLabel(jContentPane, comboTable, _("Table:"), "3, 9, 7, 9, f, c");
+        settingsComponents.put(TABLE_FIELD, comboTable);
         
         jContentPane.add(new JSeparator(JSeparator.HORIZONTAL), "0, 11, 8, 11");
-        jContentPane.add(new JLabel(_("Please select which database fields correspond to the Phonebook entry fields of YajHFC:")), "1, 13, 7, 13, f, c");
-        comboGivenName = addFieldCombo(jContentPane, _("Given name:"), "3, 15, f, c");
-        comboName = addFieldCombo(jContentPane, _("Name:"), "7, 15, f, c");
-        comboTitle = addFieldCombo(jContentPane, _("Title:"), "3, 17, f, c");
-        comboCompany = addFieldCombo(jContentPane, _("Company:"), "7, 17, f, c");
-        comboLocation = addFieldCombo(jContentPane, _("Location:"), "3, 19, f, c");
-        comboVoiceNumber = addFieldCombo(jContentPane, _("Voice number:"), "7, 19, f, c");
-        comboFaxNumber = addFieldCombo(jContentPane, _("Fax number:"), "3, 21, f, c");
-        comboComment = addFieldCombo(jContentPane, _("Comments:"), "7, 21, f, c");
+        jContentPane.add(new JLabel(fieldPrompt), "1, 13, 7, 13, f, c");
+//        comboGivenName = addFieldCombo(jContentPane, _("Given name:"), "3, 15, f, c");
+//        comboName = addFieldCombo(jContentPane, _("Name:"), "7, 15, f, c");
+//        comboTitle = addFieldCombo(jContentPane, _("Title:"), "3, 17, f, c");
+//        comboCompany = addFieldCombo(jContentPane, _("Company:"), "7, 17, f, c");
+//        comboLocation = addFieldCombo(jContentPane, _("Location:"), "3, 19, f, c");
+//        comboVoiceNumber = addFieldCombo(jContentPane, _("Voice number:"), "7, 19, f, c");
+//        comboFaxNumber = addFieldCombo(jContentPane, _("Fax number:"), "3, 21, f, c");
+//        comboComment = addFieldCombo(jContentPane, _("Comments:"), "7, 21, f, c");
+        int counter = 0;
+        for (String field : template.getAvailableFields()) {
+            if (!settingsComponents.containsKey(field)) { // Only add a field once (especially don't add fixed fields here)
+                addFieldCombo(jContentPane, field, 3 + 4 * (counter % 2), 15 + 2*(counter/2));
+                counter++;
+            }
+        }
+        
         
         Box buttonBox = new Box(BoxLayout.LINE_AXIS);
         buttonBox.add(Box.createHorizontalGlue());
@@ -199,8 +240,8 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         buttonBox.add(buttonCancel);
         buttonBox.add(Box.createHorizontalGlue());
         
-        jContentPane.add(new JSeparator(JSeparator.HORIZONTAL), "0, 23, 8, 23");
-        jContentPane.add(buttonBox, "0, 25, 8, 25");
+        jContentPane.add(new JSeparator(JSeparator.HORIZONTAL), new TableLayoutConstraints(0,len-3,8,len-3));
+        jContentPane.add(buttonBox, new TableLayoutConstraints(0,len-1,8,len-1));
         
         setContentPane(jContentPane);
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -241,7 +282,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         closeConnection();
         
         try {
-            Class.forName(textDriverClass.getText());
+            PluginManager.registerJDBCDriver(textDriverClass.getText());
         } catch (Exception e) {
             ExceptionDialog.showExceptionDialog(this, _("Could not load the specified driver class:"), e);
             return false;
@@ -306,7 +347,9 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
             ResultSetMetaData rsmd = rs.getMetaData();
             
             Vector<String> fieldNames = new Vector<String>(rsmd.getColumnCount() + 1);
-            fieldNames.add(ConnectionSettings.noField_translated);
+            if (noFieldOK) {
+                fieldNames.add(ConnectionSettings.noField_translated);
+            }
             for (int i = 1; i <= rsmd.getColumnCount(); i++) {
                 fieldNames.add(rsmd.getColumnName(i));
             }
@@ -363,54 +406,102 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         }
     }
     
-    private void readFromConnectionSettings(ConnectionSettings src) {
-        textDriverClass.setText(src.driver);
-        textURL.setText(src.dbURL);
-        textUserName.setText(src.user);
-        textPassword.setText(src.pwd);
-        //textQuery.setText(src.query);
-        comboTable.setSelectedItem(src.table);
+    private void readFromConnectionSettings(AbstractConnectionSettings src) {
+//        textDriverClass.setText(src.driver);
+//        textURL.setText(src.dbURL);
+//        textUserName.setText(src.user);
+//        textPassword.setText(src.pwd);
+//        //textQuery.setText(src.query);
+//        comboTable.setSelectedItem(src.table);
+//        
+//        checkAskForPassword.setSelected(src.askForPWD);
+//        
+//        setFieldComboSel(comboComment, src.comment);
+//        setFieldComboSel(comboCompany, src.company);
+//        setFieldComboSel(comboFaxNumber, src.faxNumber);
+//        setFieldComboSel(comboGivenName, src.givenName);
+//        setFieldComboSel(comboLocation, src.location);
+//        setFieldComboSel(comboName, src.name);
+//        setFieldComboSel(comboTitle, src.title);
+//        setFieldComboSel(comboVoiceNumber, src.voiceNumber);
         
-        checkAskForPassword.setSelected(src.askForPWD);
-        
-        setFieldComboSel(comboComment, src.comment);
-        setFieldComboSel(comboCompany, src.company);
-        setFieldComboSel(comboFaxNumber, src.faxNumber);
-        setFieldComboSel(comboGivenName, src.givenName);
-        setFieldComboSel(comboLocation, src.location);
-        setFieldComboSel(comboName, src.name);
-        setFieldComboSel(comboTitle, src.title);
-        setFieldComboSel(comboVoiceNumber, src.voiceNumber);
+        for (Map.Entry<String, Component> entry : settingsComponents.entrySet()) {
+            try {
+                Component comp = entry.getValue();
+                if (comp instanceof JComboBox) {
+                    JComboBox box = (JComboBox)comp;
+                    if (box.getClientProperty(FIELD_ClientProperty) != null) {
+                        setFieldComboSel(box, (String)src.getField(entry.getKey()));
+                    } else {
+                        box.setSelectedItem(src.getField(entry.getKey()));
+                    }
+                } else if (comp instanceof JTextComponent) {
+                    ((JTextComponent)comp).setText((String)src.getField(entry.getKey()));
+                } else if (comp instanceof JCheckBox) {
+                    ((JCheckBox)comp).setSelected((Boolean)src.getField(entry.getKey()));
+                } else {
+                    log.warning("Unknown component type: " + comp);
+                }
+            } catch (Exception e) {
+                log.log(Level.WARNING, "Error reading values", e);
+            }
+        }
     }
     
-    private void writeToConnectionSettings(ConnectionSettings dst) {
-        dst.driver = textDriverClass.getText();
-        dst.dbURL = textURL.getText();
-        dst.user = textUserName.getText();
-        dst.pwd = new String(textPassword.getPassword());
-        dst.table = comboTable.getSelectedItem().toString();
+    private void writeToConnectionSettings(AbstractConnectionSettings dst) {
+//        dst.driver = textDriverClass.getText();
+//        dst.dbURL = textURL.getText();
+//        dst.user = textUserName.getText();
+//        dst.pwd = new String(textPassword.getPassword());
+//        dst.table = comboTable.getSelectedItem().toString();
+//        
+//        dst.askForPWD = checkAskForPassword.isSelected();
+//        
+//        dst.comment = getFieldComboSel(comboComment);
+//        dst.company = getFieldComboSel(comboCompany);
+//        dst.faxNumber = getFieldComboSel(comboFaxNumber);
+//        dst.givenName = getFieldComboSel(comboGivenName);
+//        dst.location = getFieldComboSel(comboLocation);
+//        dst.name = getFieldComboSel(comboName);
+//        dst.title = getFieldComboSel(comboTitle);
+//        dst.voiceNumber = getFieldComboSel(comboVoiceNumber);
         
-        dst.askForPWD = checkAskForPassword.isSelected();
-        
-        dst.comment = getFieldComboSel(comboComment);
-        dst.company = getFieldComboSel(comboCompany);
-        dst.faxNumber = getFieldComboSel(comboFaxNumber);
-        dst.givenName = getFieldComboSel(comboGivenName);
-        dst.location = getFieldComboSel(comboLocation);
-        dst.name = getFieldComboSel(comboName);
-        dst.title = getFieldComboSel(comboTitle);
-        dst.voiceNumber = getFieldComboSel(comboVoiceNumber);
+        for (Map.Entry<String, Component> entry : settingsComponents.entrySet()) {
+            try {
+                Component comp = entry.getValue();
+                if (comp instanceof JComboBox) {
+                    JComboBox box = (JComboBox)comp;
+                    if (box.getClientProperty(FIELD_ClientProperty) != null) {
+                        dst.setField(entry.getKey(), getFieldComboSel(box));
+                    } else {
+                        dst.setField(entry.getKey(), box.getSelectedItem());
+                    }
+                } else if (comp instanceof JTextComponent) {
+                    dst.setField(entry.getKey(), ((JTextComponent)comp).getText());
+                } else if (comp instanceof JCheckBox) {
+                    dst.setField(entry.getKey(), ((JCheckBox)comp).isSelected());
+                } else {
+                    log.warning("Unknown component type: " + comp);
+                }
+            } catch (Exception e) {
+                log.log(Level.WARNING, "Error saving values", e);
+            }
+        }
     }
     
-    public ConnectionDialog(Frame owner) {
-        super(owner, _("New JDBC phonebook"));
+    public ConnectionDialog(Frame owner, String title, String fieldPrompt, Map<String,String> fieldCaptionMap, AbstractConnectionSettings template, boolean noFieldOK) {
+        super(owner, title);
      
-        initialize();
+        this.noFieldOK = noFieldOK;
+        this.fieldNameMap = fieldCaptionMap;
+        initialize(fieldPrompt, template);
     }
-    public ConnectionDialog(Dialog owner) {
-        super(owner, _("New JDBC phonebook"));
+    public ConnectionDialog(Dialog owner, String title, String fieldPrompt, Map<String,String> fieldCaptionMap, AbstractConnectionSettings template, boolean noFieldOK) {
+        super(owner, title);
      
-        initialize();
+        this.noFieldOK = noFieldOK;
+        this.fieldNameMap = fieldCaptionMap;
+        initialize(fieldPrompt, template);
     }
     
     /**
@@ -419,7 +510,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
      * @param target
      * @return true if the user clicked "OK"
      */
-    public boolean browseForPhonebook(ConnectionSettings target) {
+    public boolean promptForNewSettings(AbstractConnectionSettings target) {
         readFromConnectionSettings(target);
         clickedOK = false;
         setVisible(true);

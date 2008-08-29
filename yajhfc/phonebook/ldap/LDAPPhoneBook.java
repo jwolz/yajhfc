@@ -150,8 +150,8 @@ public class LDAPPhoneBook extends PhoneBook {
         String rv = PB_Prefix + ":" + settings.serverName + "/" + settings.baseDN;
 
         
-        if (rv.length() > 30)
-            return rv.substring(0, 27) + "...";
+        if (rv.length() > CAPTION_LENGTH)
+            return rv.substring(0, CAPTION_LENGTH-3) + "...";
         else
             return rv;
     }

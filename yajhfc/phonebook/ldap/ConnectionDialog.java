@@ -18,6 +18,8 @@ package yajhfc.phonebook.ldap;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+import static yajhfc.utils._;
+
 import info.clearthought.layout.TableLayout;
 import info.clearthought.layout.TableLayoutConstraints;
 
@@ -73,10 +75,6 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
     private final static double border = 10;
     
     public boolean clickedOK;
-    
-    private static String _(String key) {
-        return utils._(key);
-    }
     
     private JLabel addWithLabel(JPanel container, Component comp, String label, String layout) {
         JLabel lbl = new JLabel(label);

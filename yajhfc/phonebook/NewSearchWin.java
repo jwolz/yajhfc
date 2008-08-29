@@ -23,6 +23,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -40,13 +41,15 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
+import javax.swing.JTree;
 import javax.swing.KeyStroke;
+import javax.swing.tree.TreePath;
 
 import yajhfc.ClipboardPopup;
 import yajhfc.utils;
 import yajhfc.filters.StringFilterOperator;
 
-public final class SearchWin extends JDialog implements ActionListener {
+public final class NewSearchWin extends JDialog implements ActionListener {
 
     private JPanel myContentPane;
     private JButton buttonSearch, buttonClose;
@@ -54,7 +57,7 @@ public final class SearchWin extends JDialog implements ActionListener {
     private JTextField textCondition;
     private JRadioButton radioForward, radioBackward;
     private JCheckBox checkCaseSensitive, checkWrapAround;
-    private PhoneBookWin owner;
+    private NewPhoneBookWin owner;
     private ButtonGroup groupDirection;
     
     private static final int border = 10;
@@ -62,32 +65,61 @@ public final class SearchWin extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand();
         if (cmd.equals("search")) {
-            int idx, startIdx;
-            startIdx = owner.getSelectedPBEntry();
+            int idx, startIdx, pbIdx, pbStartIdx;
+            boolean hitEnd = false;
+            JTree tree = owner.getPhoneBookTree();
+            List<PhoneBook> availPBs = owner.getAvailablePhoneBooks();
+            TreePath selPath = tree.getSelectionPath();
+            PhoneBook pb;
+            boolean searchBackwards = radioBackward.isSelected();
+            
+            if (selPath == null || selPath.getPathCount() <= 1) {
+                pbStartIdx = 0;
+                startIdx = 0;
+            } else {
+                pbStartIdx = availPBs.indexOf(selPath.getPathComponent(1));
+                if (selPath.getPathCount() == 3) {
+                    startIdx = ((PhoneBook)selPath.getPathComponent(1)).indexOf((PhoneBookEntry)selPath.getPathComponent(2));
+                } else {
+                    startIdx = 0;
+                }
+            }
+            
+            pbIdx = pbStartIdx;
             do {
-                PhoneBook pb = owner.getCurrentPhoneBook();
-                if (pb == null)
-                    return;
-                
-                idx = pb.findEntry(startIdx + (radioBackward.isSelected() ? -1 : 1),
-                        radioBackward.isSelected(),
-                        checkCaseSensitive.isSelected(),
-                        (PhoneBookEntry.PBEntryField)comboFields.getSelectedItem(),
-                        (StringFilterOperator)comboOp.getSelectedItem(),
-                        textCondition.getText());
-                
+                pb = availPBs.get(pbIdx);
+                if ((searchBackwards && startIdx == 0) ||
+                        (!searchBackwards && startIdx >= pb.getSize()-1)) {
+                    idx = -1;
+                } else {
+                    idx = pb.findEntry(startIdx + (searchBackwards ? -1 : 1),
+                            searchBackwards,
+                            checkCaseSensitive.isSelected(),
+                            (PhoneBookEntry.PBEntryField)comboFields.getSelectedItem(),
+                            (StringFilterOperator)comboOp.getSelectedItem(),
+                            textCondition.getText());
+                }
                 if (idx >= 0)
                     break;
                 
-                if (checkWrapAround.isSelected() && startIdx >= 0)
-                    startIdx = -1;
-                else 
+                pbIdx += (searchBackwards ? -1 : 1);
+                if (hitEnd && ((!searchBackwards && pbIdx > pbStartIdx) || (searchBackwards && pbIdx < pbStartIdx)))
                     break;
+                
+                if (pbIdx >= availPBs.size() || pbIdx < 0) {
+                    hitEnd = true;
+                    if (checkWrapAround.isSelected())
+                        pbIdx = searchBackwards ? availPBs.size()-1 : 0;
+                    else 
+                        break;   
+                }
+                startIdx = (searchBackwards ? availPBs.get(pbIdx).getSize() : -1);
             } while (true);
+            
             if (idx < 0) {
                 JOptionPane.showMessageDialog(this, utils._("No matching phone book entry found."));
             } else {
-                owner.selectPhoneBookEntry(idx);
+                tree.setSelectionPath(new TreePath(new Object[] { tree.getModel().getRoot(), pb, pb.getElementAt(idx)}));
             }
         }
     }
@@ -165,7 +197,7 @@ public final class SearchWin extends JDialog implements ActionListener {
         pack();
     }
     
-    public SearchWin(PhoneBookWin owner) {
+    public NewSearchWin(NewPhoneBookWin owner) {
         super(owner, utils._("Find phone book entry"), false);
         
         this.owner = owner;
