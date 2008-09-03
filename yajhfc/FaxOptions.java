@@ -106,7 +106,7 @@ public class FaxOptions {
     public static final String LOOKANDFEEL_CROSSPLATFORM = "!crossplatform!"; 
     
     public ArrayList<String> phoneBooks = new ArrayList<String>();
-    public int lastSelectedPhonebook = 0;
+    //public int lastSelectedPhonebook = 0;
     
     public boolean useDisconnectedMode = false;
     public String defaultModem = "any";
@@ -118,6 +118,11 @@ public class FaxOptions {
     public String lastSendWinPath = "";
     public String persistenceMethod = "local";
     public String persistenceConfig = "";
+    
+    // Uncomment for archive support.
+//    public boolean showArchive = true;
+//    public FmtItemList archiveFmt;
+//    public String archiveColState = "";
     
     public FaxOptions() {
         this.host = "";
@@ -148,6 +153,10 @@ public class FaxOptions {
         
         this.sendingfmt = new FmtItemList(utils.jobfmts, utils.requiredSendingFmts);
         this.sendingfmt.addAll(this.sentfmt);
+        
+        // Uncomment for archive support.
+//        this.archiveFmt = new FmtItemList(ArchiveYajJob.availableFields, new FmtItem[0]);
+//        this.archiveFmt.addAll(Arrays.asList(ArchiveYajJob.availableFields)); //TODO: More sane default
         
         this.sentColState = this.sendingColState = "";
         

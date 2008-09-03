@@ -146,6 +146,12 @@ public final class mainwin extends JFrame {
     
     protected MenuViewListener menuViewListener;
     
+    // Uncomment for archive support.
+//    protected TooltipJTable tableArchive;
+//    protected JScrollPane scrollArchive;
+//    protected ArchiveTableModel archiveTableModel;
+//    protected NumberRowViewport archiveRowNumbers;
+    
     // Actions:
     protected Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward, actAdminMode;
     protected Action actRefresh, actResend, actPrintTable, actSuspend, actResume, actClipCopy, actShowRowNumbers, actAdjustColumns;
@@ -882,7 +888,9 @@ public final class mainwin extends JFrame {
                 int newMode = newState ? JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS : JTable.AUTO_RESIZE_OFF;
                 tableRecv.setAutoResizeMode(newMode);
                 tableSent.setAutoResizeMode(newMode);
-                tableSent.setAutoResizeMode(newMode);
+                tableSending.setAutoResizeMode(newMode);
+                // Uncomment for archive support.
+//                tableArchive.setAutoResizeMode(newMode);
                 
                 putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, newState);
             };
@@ -1209,9 +1217,16 @@ public final class mainwin extends JFrame {
         tm.columns = myopts.sendingfmt;
         tm.fireTableStructureChanged();
         
+        // Uncomment for archive support.
+//        tm = getArchiveTableModel();
+//        tm.columns = myopts.archiveFmt;
+//        tm.fireTableStructureChanged();
+        
         tableRecv.setColumnCfgString(myopts.recvColState);
         tableSent.setColumnCfgString(myopts.sentColState);
         tableSending.setColumnCfgString(myopts.sendingColState);
+        // Uncomment for archive support.
+//        tableArchive.setColumnCfgString(myopts.archiveColState);
     }
     
     public void reconnectToServer(Runnable loginAction) {
@@ -1290,6 +1305,10 @@ public final class mainwin extends JFrame {
             tabMain.addTab(_("Received"), utils.loadCustomIcon("received.gif"), getScrollRecv(), _("Received faxes"));
             tabMain.addTab(_("Sent"), utils.loadCustomIcon("sent.gif"), getScrollSent(), _("Sent faxes"));
             tabMain.addTab(_("Transmitting"), utils.loadCustomIcon("sending.gif"), getScrollSending(), _("Faxes in the output queue"));
+            // Uncomment for archive support.
+//            if (myopts.showArchive) {
+//                tabMain.addTab(_("Archive"), getScrollArchive());
+//            }
             
             tabMain.addChangeListener(actChecker);
         }
@@ -1463,6 +1482,25 @@ public final class mainwin extends JFrame {
         return sendingTableModel;
     }
 
+    // Uncomment for archive support.
+//    private ArchiveTableModel getArchiveTableModel() {
+//        if (archiveTableModel == null) {
+//            archiveTableModel = new ArchiveTableModel();
+//        }
+//        return archiveTableModel;
+//    }
+//    
+//    private JScrollPane getScrollArchive() {
+//        if (scrollArchive == null) {
+//            tableArchive = new TooltipJTable(getArchiveTableModel());
+//            doCommonTableSetup(tableArchive);
+//            scrollArchive = new JScrollPane(tableArchive);
+//            archiveRowNumbers = new NumberRowViewport(tableArchive, scrollArchive);
+//            archiveRowNumbers.setVisible(myopts.showRowNumbers);
+//        }
+//        return scrollArchive;
+//    }
+    
     private JMenu getMenuFax() {
         if (menuFax == null) {
             menuFax = new JMenu();
@@ -1510,6 +1548,7 @@ public final class mainwin extends JFrame {
     }
     
     class MenuViewListener implements ActionListener, ChangeListener {
+        // Uncomment for archive support (change 3 -> 4)
         private JRadioButtonMenuItem[] lastSel = new JRadioButtonMenuItem[3];
         
         public void actionPerformed(ActionEvent e) {
@@ -1569,10 +1608,10 @@ public final class mainwin extends JFrame {
         
         private boolean canMarkError(MyTableModel model) {
             if (model == sentTableModel || model == sendingTableModel) { 
-                return model.columns.contains(utils.jobfmt_Jobstate) || model.columns.contains(utils.jobfmt_Status);
+                return model.columns.getCompleteView().contains(utils.jobfmt_Jobstate) || model.columns.getCompleteView().contains(utils.jobfmt_Status);
             } else if (model == recvTableModel) { 
-                return myopts.recvfmt.contains(utils.recvfmt_ErrorDesc);
-            } else
+                return myopts.recvfmt.getCompleteView().contains(utils.recvfmt_ErrorDesc);
+            } else //TODO?
                 return false;
         }
         
@@ -1581,6 +1620,9 @@ public final class mainwin extends JFrame {
                 return model.columns.getCompleteView().contains(utils.recvfmt_Owner);
             } else if (model == sentTableModel || model == sendingTableModel) { 
                 return model.columns.getCompleteView().contains(utils.jobfmt_Owner);
+                // Uncomment for archive support.
+//            } else if (model == archiveTableModel) {
+//                return model.columns.getCompleteView().contains(ArchiveYajJob.ownerField);
             } else
                 return false;
         }
@@ -1689,6 +1731,14 @@ public final class mainwin extends JFrame {
                     resendState = true;
                     suspResumeState = true;
                 }
+                // Uncomment for archive support.
+//            } if (tabMain.getSelectedComponent() == scrollArchive) { // Sending Table
+//                if (tableArchive.getSelectedRow() >= 0) {
+//                    deleteState = true;
+//                    showState = true;
+//                    resendState = true;
+//                    suspResumeState = true;
+//                }
             } 
             
             actShow.setEnabled(showState);
@@ -1749,6 +1799,8 @@ public final class mainwin extends JFrame {
     class TableRefresher extends TimerTask {
         private String sentfmt, sendingfmt;
         private Vector<?> lastRecvList = null, lastSentList = null, lastSendingList = null;
+        // Uncomment for archive support.
+//        private Vector<?> lastArchiveList = null;
         private boolean cancelled = false;
         //public boolean didFirstRun = false;
         
@@ -1842,6 +1894,26 @@ public final class mainwin extends JFrame {
 //                    e.printStackTrace(utils.debugOut);
 //                }
             }
+
+            // Uncomment for archive support.
+//            if (myopts.showArchive) {
+//                try {
+//                    synchronized (hyfc) {
+//                        lst = hyfc.getNameList("archive");
+//                    }
+//                    if ((lastArchiveList == null) || !lst.equals(lastArchiveList)) {
+//                        final List<ArchiveYajJob> archiveJobs = ArchiveYajJob.getArchiveFiles(hyfc, lst, archiveTableModel.columns);
+//                        SwingUtilities.invokeLater(new Runnable() {
+//                           public void run() {
+//                               archiveTableModel.setData(archiveJobs);
+//                            } 
+//                        });
+//                        lastArchiveList = lst;
+//                    }
+//                } catch (Exception e) {
+//                    log.log(Level.WARNING, "An error occured refreshing the tables: ", e);
+//                }
+//            }
             
             if (tablePanel.isShowingProgress()) {
                 SwingUtilities.invokeLater(new Runnable() 

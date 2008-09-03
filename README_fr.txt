@@ -1,4 +1,4 @@
-LISEZ MOI for YajHFC 0.3.7
+LISEZ MOI for YajHFC 0.3.8
 ==========================
 
 A PROPOS DE
@@ -61,6 +61,10 @@ YajHFC a ete originellement ecrit comme un premier projet Java
 
 MODIFICATIONS
 -------------
+0.3.8:
+- Amelioration de la fenetre d'annuaire avec un meilleur support du multi annuaire
+- Support de l'nregistrement de l'etat lu/non lu des faxs dans une base de donnee centrale.
+- Panneau graphique pour ajouter des pilotes JDBC et des modules
 
 0.3.7:
 - Nouvelle boite de dialoguen d'envoie simplifiee

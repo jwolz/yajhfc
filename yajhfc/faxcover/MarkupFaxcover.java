@@ -38,8 +38,15 @@ import yajhfc.FileConverter.ConversionException;
  *
  */
 public abstract class MarkupFaxcover extends Faxcover {
-
+    
+    /**
+     * Set this to true if non-ASCII characters should be encoded as 
+     * HTML/XML entity
+     */
     protected boolean encodeNonASCIIAsEntity = false;
+    /**
+     * Set this to the string the new line character should be replaced with.
+     */
     protected String newLineReplacement = "\n";
     
     /**
@@ -245,7 +252,7 @@ public abstract class MarkupFaxcover extends Faxcover {
         out.close();
     }
 
-    private boolean matchesTag(char[] buffer, int offset, String tag) {
+    private static boolean matchesTag(char[] buffer, int offset, String tag) {
         int tagLen = tag.length();
         for (int i = 0; i < tagLen; i++) {
             if (Character.toLowerCase(buffer[i + offset]) != tag.charAt(i)) {
