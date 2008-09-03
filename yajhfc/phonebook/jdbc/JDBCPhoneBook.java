@@ -60,8 +60,8 @@ public class JDBCPhoneBook extends PhoneBook {
         fieldNameMap.put("title", utils. _("Title:"));
         fieldNameMap.put("company", utils._("Company:"));
         fieldNameMap.put("location", utils._("Location:"));
-        fieldNameMap.put("faxNumber", utils._("Voice number:"));
-        fieldNameMap.put("voiceNumber", utils._("Fax number:"));
+        fieldNameMap.put("faxNumber", utils._("Fax number:"));
+        fieldNameMap.put("voiceNumber", utils._("Voice number:"));
         fieldNameMap.put("comment", utils._("Comments:"));
     }
     

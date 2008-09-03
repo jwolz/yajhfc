@@ -79,7 +79,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     JPanel rightPane, leftPane;
 
     JTextField textDescriptor;
-    JButton buttonBrowse,  buttonSelect;
+    JButton buttonBrowse, buttonSelect;
     
     JTextField textSurname, textGivenname, textTitle, textCompany, textLocation;
     JTextField textVoicenumber, textFaxnumber;
@@ -220,11 +220,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             buttonBrowse.setActionCommand("browse");
             buttonBrowse.addActionListener(this);
                     
-            buttonSelect = new JButton(utils._("Select"));
-            buttonSelect.setIcon(utils.loadIcon("general/Undo"));
-            buttonSelect.setActionCommand("select");
-            buttonSelect.addActionListener(this);
-            buttonSelect.setVisible(false);
+
             
             Box box = Box.createHorizontalBox();
             box.add(textDescriptor);
@@ -233,7 +229,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             rightPane.add(new JLabel(utils._("Current phone book:")), "1, 1, L, B");
             rightPane.add(box, "1, 2, 3, 2");
             
-            rightPane.add(buttonSelect, "3, 1");
+            //rightPane.add(buttonSelect, "3, 1");
             
             rightPane.add(new JSeparator(), "0,3,4,3,F,C");
             
@@ -372,7 +368,8 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         
         listRemoveAction.setEnabled(havePB);
         buttonBrowse.setEnabled(havePB);
-        buttonSelect.setEnabled(delOK);
+        if (buttonSelect != null)
+            buttonSelect.setEnabled(delOK);
     }
     
     public void actionPerformed(ActionEvent e) {
@@ -385,8 +382,8 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         } else if (cmd.equals("descimport")) {
             doDescImport();
         } else if (cmd.equals("select")) {
-            setVisible(false);
             usedSelectButton = true;
+            setVisible(false);
         } else if (cmd.equals("browse")) {
             browseForPhonebook();
         } else
@@ -456,7 +453,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         if (leftPane == null) {
             double[][] dLay = {
                     {0.5, border, TableLayout.FILL},
-                    {TableLayout.FILL, border/2, TableLayout.PREFERRED}
+                    {TableLayout.FILL, border/2, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED}
             };
             leftPane = new JPanel(new TableLayout(dLay), false);
             
@@ -678,7 +675,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         };
         removeEntryAction.putValue(Action.NAME, utils._("Delete"));
         removeEntryAction.putValue(Action.SMALL_ICON, utils.loadIcon("general/Delete"));
-        removeEntryAction.putValue(Action.SHORT_DESCRIPTION, utils._("Search for an entry"));
+        removeEntryAction.putValue(Action.SHORT_DESCRIPTION, utils._("Delete selected entry"));
         removeEntryAction.setEnabled(false);
         
         searchEntryAction = new AbstractAction() {
@@ -694,7 +691,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         };
         searchEntryAction.putValue(Action.NAME, utils._("Find..."));
         searchEntryAction.putValue(Action.SMALL_ICON, utils.loadIcon("general/Search"));
-        searchEntryAction.putValue(Action.SHORT_DESCRIPTION, utils._("Delete selected entry"));
+        searchEntryAction.putValue(Action.SHORT_DESCRIPTION, utils._("Search for an entry"));
     }
     
     private void initialize() {
@@ -754,10 +751,21 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         initialize();
     }
     
+    private void showSelectButton() {
+        if (buttonSelect == null) {
+            buttonSelect = new JButton(utils._("Select"));
+            buttonSelect.setIcon(utils.loadIcon("general/Undo"));
+            buttonSelect.setActionCommand("select");
+            buttonSelect.addActionListener(this);
+            leftPane.add(Box.createVerticalStrut((int)border), "0,3");
+            leftPane.add(buttonSelect, "0,4,2,4");
+        }
+    }
+    
     public PhoneBookEntry[] selectNumbers() {
         usedSelectButton = false;
         setModal(true);
-        buttonSelect.setVisible(true);
+        showSelectButton();
         
         setVisible(true);
         

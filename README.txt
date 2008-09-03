@@ -1,4 +1,4 @@
-README for YajHFC 0.3.7
+README for YajHFC 0.3.8
 =======================
 
 ABOUT
@@ -14,7 +14,7 @@ Features:
 * Viewing sent and received faxes
 * Phone book
 * Visible table columns may be selected in a dialog
-* Supports four languages: English, French, German and Spanish
+* Supports five languages: English, French, German, Russian and Spanish
 
 Homepage: http://yajhfc.berlios.de/
 email:    Jonas Wolz <jwolz@freenet.de>
@@ -28,9 +28,9 @@ Requirements:
 * Some program to view TIFF files (also see the FAQ)
 * Optional: A PostScript viewer (e.g. Ghostview)
 
-To install YajHFC just download the yajhfc-0_3_7.jar file to some folder on your
+To install YajHFC just download the yajhfc-0_3_8.jar file to some folder on your
 file system.
-To execute it, use: "java -jar yajhfc-0_3_7.jar"
+To execute it, use: "java -jar yajhfc-0_3_8.jar"
 (In Windows you usually can just double click the jar file as well.)
 
 LICENSE
@@ -65,8 +65,10 @@ CHANGES
 -------
 
 0.3.8:
-- Improved phone book window (with better support for multiple phone books)
+- Improved phone book window with better support for multiple phone books
 - Support to save the read/unread state of faxes in a central database table
+- Graphical panel to add JDBC drivers and plugins
+- Russian translation of YajHFC added
 
 0.3.7:
 - New simplified send dialog
