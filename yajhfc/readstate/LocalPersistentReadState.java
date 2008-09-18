@@ -21,6 +21,7 @@ package yajhfc.readstate;
 import java.awt.Window;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -41,11 +42,11 @@ import yajhfc.utils;
 public class LocalPersistentReadState extends PersistentReadState {
     private static final Logger log = Logger.getLogger(LocalPersistentReadState.class.getName());
     
-    protected String fileName;
+    protected File file;
     protected Map<String,Boolean> readStateMap = null;
     
-    public LocalPersistentReadState(String fileName) {
-        this.fileName = fileName;
+    public LocalPersistentReadState(File file) {
+        this.file = file;
     }
     
     /* (non-Javadoc)
@@ -54,7 +55,7 @@ public class LocalPersistentReadState extends PersistentReadState {
     protected void loadReadFaxes() {    
         readStateMap = new HashMap<String, Boolean>();
         try {
-            BufferedReader bIn = new BufferedReader(new FileReader(fileName));
+            BufferedReader bIn = new BufferedReader(new FileReader(file));
             
             String line = null;
             while ((line = bIn.readLine()) != null) {
@@ -81,7 +82,7 @@ public class LocalPersistentReadState extends PersistentReadState {
             return;
         
         try {
-            BufferedWriter bOut = new BufferedWriter(new FileWriter(fileName));
+            BufferedWriter bOut = new BufferedWriter(new FileWriter(file));
             
             bOut.write("# " + utils.AppShortName + " " + utils.AppVersion + " configuration file\n");
             bOut.write("# This file contains a list of faxes considered read\n\n");
@@ -144,7 +145,7 @@ public class LocalPersistentReadState extends PersistentReadState {
         }
 
         public PersistentReadState createInstance(String config) {
-            return new LocalPersistentReadState(utils.getConfigDir() + "recvread");
+            return new LocalPersistentReadState(new File(utils.getConfigDir(), "recvread"));
         }
 
         public String getDescription() {

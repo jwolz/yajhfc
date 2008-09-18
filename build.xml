@@ -80,7 +80,7 @@
 
 	<target name="compile" depends="init" description="compile the source code" >
 		<!-- Compile the java code from ${src} into ${build} -->
-		<javac srcdir="${src}" includes="yajhfc/**/*.java" destdir="${build}" source="1.5" target="1.5" debug="true" debuglevel="lines,source">
+		<javac srcdir="${src}" includes="yajhfc/**/*.java" destdir="${build}" source="1.5" target="1.5" encoding="iso-8859-1" debug="true" debuglevel="lines,source">
 			<classpath>
 				<pathelement path="${classpath}"/>
 				<pathelement location="${gnu.hylafax.classFileLocation}"/>

@@ -29,7 +29,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -43,8 +42,6 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.logging.Logger;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -63,7 +60,6 @@ import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.KeyStroke;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -273,15 +269,8 @@ public class OptionsWin extends JDialog {
             
             PanelButtons.add(Box.createRigidArea(new Dimension((int)border, 1)));
             
-            Action actCancel = new AbstractAction() {
-                public void actionPerformed(ActionEvent e) {
-                    dispose();
-                };
-            };
-            actCancel.putValue(Action.NAME, _("Cancel"));
-            ButtonCancel = new JButton(actCancel);
-            ButtonCancel.getActionMap().put("EscapePressed", actCancel);
-            ButtonCancel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "EscapePressed");
+            CancelAction actCancel = new CancelAction(this);
+            ButtonCancel = actCancel.createCancelButton();
             ButtonCancel.setPreferredSize(buttonSize);
             PanelButtons.add(ButtonCancel);
             

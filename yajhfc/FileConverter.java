@@ -47,17 +47,9 @@ public interface FileConverter {
     public static final FileConverter IDENTITY_CONVERTER = new FileConverter() {
       public void convertToHylaFormat(File inFile,
                 OutputStream destination, PaperSize paperSize) throws ConversionException, IOException {
-            byte buf[] = new byte[8100];
-            int bytesRead;
             InputStream in = new FileInputStream(inFile);
-            
-            do {
-                bytesRead = in.read(buf);
-                if (bytesRead > 0) {
-                    destination.write(buf, 0, bytesRead);
-                }
-            } while (bytesRead == buf.length);
-
+            utils.copyStream(in, destination);
+            in.close();
         }  
     };
     

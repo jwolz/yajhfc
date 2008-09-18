@@ -1,6 +1,7 @@
 package yajhfc.phonebook;
 
 import java.awt.Dialog;
+import java.io.File;
 import java.util.ArrayList;
 
 import yajhfc.utils;
@@ -54,6 +55,6 @@ public class PhoneBookFactory {
     }
     
     public static String getDefaultPhonebookDescriptor() {
-        return XMLPhoneBook.PB_Prefix + ":" + utils.getConfigDir() + "default.phonebook";
+        return XMLPhoneBook.PB_Prefix + ":" + (new File(utils.getConfigDir(), "default.phonebook")).getAbsolutePath();
     }
 }

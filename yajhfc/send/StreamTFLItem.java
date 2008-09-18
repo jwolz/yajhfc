@@ -21,7 +21,6 @@ package yajhfc.send;
 import gnu.hylafax.HylaFAXClient;
 import gnu.inet.ftp.ServerResponseException;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -77,13 +76,8 @@ public class StreamTFLItem extends HylaTFLItem {
         // Copy input stream to a temporary file:
         tmp = File.createTempFile("submit", ".ps");
         tmp.deleteOnExit();
-        byte[] buf = new byte[8000];
-        int len = 0;
         FileOutputStream fOut = new FileOutputStream(tmp);
-        BufferedInputStream fIn = new BufferedInputStream(inStream);
-        while ((len = fIn.read(buf)) >= 0) {
-            fOut.write(buf, 0, len);
-        }
+        utils.copyStream(inStream, fOut);
         fOut.close();
         
         tempFile = new FormattedFile(tmp);

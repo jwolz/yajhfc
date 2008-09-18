@@ -30,13 +30,11 @@ import java.awt.HeadlessException;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.InputStream;
 
-import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -52,7 +50,6 @@ import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ListSelectionEvent;
@@ -60,7 +57,9 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import yajhfc.CancelAction;
 import yajhfc.ClipboardPopup;
+import yajhfc.ExcDialogAbstractAction;
 import yajhfc.ExceptionDialog;
 import yajhfc.FaxIntProperty;
 import yajhfc.FaxOptions;
@@ -86,13 +85,15 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
     SendController sendController;
     
     protected JPanel contentPane, advancedPane;
-    protected JButton buttonSend, buttonCancel, buttonPreview;
+    protected JButton buttonCancel;
     protected FileTextField ftfFileName;
     protected TextFieldList<HylaTFLItem> tflFiles;
-    protected JButton buttonPhonebook, buttonAdvanced;
+    protected JButton buttonAdvanced;
     protected JTable tableNumbers;
     protected NumberTFLItemTableModel numberTableModel;
     protected JTextField textNumber;
+    protected Action actSend, actPreview, actPhonebook;
+    
     
     protected JComboBox comboResolution;
     protected JComboBox comboPaperSize;
@@ -176,41 +177,43 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
 
         contentPane = new JPanel(new TableLayout(tablelay));
 
-        buttonSend = new JButton();
-        buttonSend.setText(utils._("Send"));
-        buttonSend.setIcon(utils.loadIcon("general/SendMail"));
-        buttonSend.addActionListener(new ActionListener() {
-           public void actionPerformed(ActionEvent e) {
-               saveSettingsToSendController();
-               
-               if (tflFiles.model.getSize() == 0) {
-                   if (checkUseCover.isSelected()) {
-                       if (JOptionPane.showConfirmDialog(SimplifiedSendDialog.this, utils._("You haven't selected a file to transmit, so your fax will ONLY contain the cover page.\nContinue anyway?"), utils._("Continue?"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION)
-                           return;
-                   } else {
-                       JOptionPane.showMessageDialog(SimplifiedSendDialog.this, utils._("To send a fax you must select at least one file!"), utils._("Warning"), JOptionPane.INFORMATION_MESSAGE);
-                       return;
-                   }
-               }
-               
-               if (sendController.getNumbers().size() == 0) {
-                   JOptionPane.showMessageDialog(SimplifiedSendDialog.this, utils._("To send a fax you have to enter at least one phone number!"), utils._("Warning"), JOptionPane.INFORMATION_MESSAGE);
-                   return;
-               }
+        actSend = new ExcDialogAbstractAction() {
+            @Override
+            protected void actualActionPerformed(ActionEvent e) {
+                saveSettingsToSendController();
+                
+                if (tflFiles.model.getSize() == 0) {
+                    if (checkUseCover.isSelected()) {
+                        if (JOptionPane.showConfirmDialog(SimplifiedSendDialog.this, utils._("You haven't selected a file to transmit, so your fax will ONLY contain the cover page.\nContinue anyway?"), utils._("Continue?"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION)
+                            return;
+                    } else {
+                        JOptionPane.showMessageDialog(SimplifiedSendDialog.this, utils._("To send a fax you must select at least one file!"), utils._("Warning"), JOptionPane.INFORMATION_MESSAGE);
+                        return;
+                    }
+                }
+                
+                if (sendController.getNumbers().size() == 0) {
+                    JOptionPane.showMessageDialog(SimplifiedSendDialog.this, utils._("To send a fax you have to enter at least one phone number!"), utils._("Warning"), JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
 
-               sendController.sendFax();
-               modalResult = true;
-            } 
-        });
+                sendController.sendFax();
+                modalResult = true;
+            }
+        };
+        actSend.putValue(Action.NAME, utils._("Send"));
+        actSend.putValue(Action.SMALL_ICON, utils.loadIcon("general/SendMail"));
+        
+        JButton buttonSend = new JButton(actSend);
 
-        buttonPreview = new JButton(utils._("Preview"), utils.loadIcon("general/PrintPreview"));
-        buttonPreview.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        actPreview = new ExcDialogAbstractAction() {
+            @Override
+            protected void actualActionPerformed(ActionEvent e) {
                 saveSettingsToSendController();
 
                 boolean wantCover = checkUseCover.isSelected();
-                if ((!wantCover && tflFiles.model.getSize() == 0) &&
-                        (wantCover && sendController.getNumbers().size() == 0)) {
+                if ((tflFiles.model.getSize() == 0) && 
+                        (!wantCover || (wantCover && sendController.getNumbers().size() == 0))) {
                     JOptionPane.showMessageDialog(SimplifiedSendDialog.this, utils._("Nothing to preview! (Neither a cover page nor a file to send has been selected.)"), utils._("Preview"), JOptionPane.INFORMATION_MESSAGE);
                     return;
                 }
@@ -229,17 +232,13 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
                 }
                 sendController.previewFax(coverItem);
             }
-        });
-
-        Action actCancel = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            };
         };
-        actCancel.putValue(Action.NAME, utils._("Cancel"));
-        buttonCancel = new JButton(actCancel);
-        buttonCancel.getActionMap().put("EscapePressed", actCancel);
-        buttonCancel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "EscapePressed");
+        actPreview.putValue(Action.NAME, utils._("Preview"));
+        actPreview.putValue(Action.SMALL_ICON, utils.loadIcon("general/PrintPreview"));
+        JButton buttonPreview = new JButton(actPreview);
+
+        CancelAction actCancel = new CancelAction(this);
+        buttonCancel = actCancel.createCancelButton();
 
         buttonAdvanced = new JButton(SIMPLIFIED_TEXT);
         // Set the preferred size large enough to hold both possible texts
@@ -344,11 +343,9 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         };
         JPanel tablePanel = new JPanel(new TableLayout(tablelay), false);
         
-        buttonPhonebook = new JButton(utils.loadIcon("general/Bookmarks"));
-        buttonPhonebook.setToolTipText(utils._("Choose number from phone book"));
-        
-        buttonPhonebook.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        actPhonebook = new ExcDialogAbstractAction() {
+            @Override
+            protected void actualActionPerformed(ActionEvent e) {
                 utils.setWaitCursor(SimplifiedSendDialog.this);
                 NewPhoneBookWin pbw = new NewPhoneBookWin(SimplifiedSendDialog.this);
                 utils.unsetWaitCursorOnOpen(SimplifiedSendDialog.this, pbw);
@@ -360,11 +357,14 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
                     }
                 }
             }
-        });
+        };
+        actPhonebook.putValue(Action.SHORT_DESCRIPTION, utils._("Choose number from phone book"));
+        actPhonebook.putValue(Action.SMALL_ICON, utils.loadIcon("general/Bookmarks"));
+        JButton buttonPhonebook = new JButton(actPhonebook);;
 
         
-        actAddNumber = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
+        actAddNumber = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(ActionEvent e) {
                 numberTableModel.addRow(new NumberTFLItem(textNumber.getText()));
                 textNumber.setText("");
             }
@@ -374,8 +374,8 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         
         JButton buttonAddNumber = new JButton(actAddNumber);
 
-        actRemoveNumber = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
+        actRemoveNumber = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(ActionEvent e) {
                 int selIdx = tableNumbers.getSelectedRow();
                 if (selIdx >= 0) {
                     numberTableModel.removeRow(selIdx);

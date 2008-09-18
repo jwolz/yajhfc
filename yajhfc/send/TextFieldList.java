@@ -31,7 +31,6 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -46,6 +45,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import yajhfc.ExcDialogAbstractAction;
 import yajhfc.ListListModel;
 import yajhfc.utils;
 
@@ -65,8 +65,8 @@ public abstract class TextFieldList<T extends TFLItem> extends JPanel implements
     
     public Action getUpAction() {
         if (upAction == null) {
-            upAction = new AbstractAction() {
-                public void actionPerformed(java.awt.event.ActionEvent e) {
+            upAction = new ExcDialogAbstractAction() {
+                public void actualActionPerformed(java.awt.event.ActionEvent e) {
                     if (!this.isEnabled()) {
                         Toolkit.getDefaultToolkit().beep();
                         return;
@@ -90,8 +90,8 @@ public abstract class TextFieldList<T extends TFLItem> extends JPanel implements
     
     public Action getDownAction() {
         if (downAction == null) {
-            downAction = new AbstractAction() {
-                public void actionPerformed(java.awt.event.ActionEvent e) {
+            downAction = new ExcDialogAbstractAction() {
+                public void actualActionPerformed(java.awt.event.ActionEvent e) {
                     if (!this.isEnabled()) {
                         Toolkit.getDefaultToolkit().beep();
                         return;
@@ -115,8 +115,8 @@ public abstract class TextFieldList<T extends TFLItem> extends JPanel implements
     
     public Action getAddAction() {
         if (addAction == null) {
-            addAction = new AbstractAction() {
-                public void actionPerformed(java.awt.event.ActionEvent e) {
+            addAction = new ExcDialogAbstractAction() {
+                public void actualActionPerformed(java.awt.event.ActionEvent e) {
                     if (!this.isEnabled()) {
                         Toolkit.getDefaultToolkit().beep();
                         return;
@@ -133,8 +133,8 @@ public abstract class TextFieldList<T extends TFLItem> extends JPanel implements
     
     public Action getRemoveAction() {
         if (removeAction == null) {
-            removeAction = new AbstractAction() {
-                public void actionPerformed(java.awt.event.ActionEvent e) {
+            removeAction = new ExcDialogAbstractAction() {
+                public void actualActionPerformed(java.awt.event.ActionEvent e) {
                     if (!this.isEnabled()) {
                         Toolkit.getDefaultToolkit().beep();
                         return;
@@ -156,8 +156,8 @@ public abstract class TextFieldList<T extends TFLItem> extends JPanel implements
     
     public Action getModifyAction() {
         if (modifyAction == null) {
-            modifyAction = new AbstractAction() {
-                public void actionPerformed(java.awt.event.ActionEvent e) {
+            modifyAction = new ExcDialogAbstractAction() {
+                public void actualActionPerformed(java.awt.event.ActionEvent e) {
                     if (!this.isEnabled()) {
                         Toolkit.getDefaultToolkit().beep();
                         return;
