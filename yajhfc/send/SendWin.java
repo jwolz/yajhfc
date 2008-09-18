@@ -19,7 +19,6 @@ package yajhfc.send;
  */
 
 import static yajhfc.utils._;
-
 import info.clearthought.layout.TableLayout;
 import info.clearthought.layout.TableLayoutConstants;
 import info.clearthought.layout.TableLayoutConstraints;
@@ -29,7 +28,6 @@ import java.awt.Frame;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -37,8 +35,6 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -54,9 +50,9 @@ import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.KeyStroke;
 import javax.swing.SpinnerNumberModel;
 
+import yajhfc.CancelAction;
 import yajhfc.ClipboardPopup;
 import yajhfc.ExceptionDialog;
 import yajhfc.FaxIntProperty;
@@ -542,19 +538,8 @@ final class SendWin extends JDialog implements SendWinControl  {
      */
     private JButton getButtonCancel() {
         if (buttonCancel == null) {
-            Action actCancel = new AbstractAction() {
-                public void actionPerformed(ActionEvent e) {
-                    dispose();
-                };
-            };
-            actCancel.putValue(Action.NAME, _("Cancel"));
-            buttonCancel = new JButton(actCancel);
-            buttonCancel.getActionMap().put("EscapePressed", actCancel);
-            buttonCancel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "EscapePressed");
-            
-            /*ButtonCancel.setMinimumSize(buttonSize);
-            ButtonCancel.setPreferredSize(buttonSize);
-            ButtonCancel.setMaximumSize(buttonSize);*/
+            CancelAction actCancel = new CancelAction(this);
+            buttonCancel = actCancel.createCancelButton();
         }
         return buttonCancel;
     }

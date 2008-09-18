@@ -132,7 +132,7 @@ public abstract class MarkupFaxcover extends Faxcover {
 
             int lastTag = -1;
             int writePointer = 0;
-            int loopEnd = numRead + readOffset;
+            int loopEnd = (numRead < 0 ? 0 : numRead) + readOffset;
             for (int i = 0; i < loopEnd; i++) {
                 if (buf[i] == TAGCHAR && (i+1) < loopEnd && buf[i+1] == TAGCHAR) {
                     // Found start/end of a tag
@@ -234,7 +234,7 @@ public abstract class MarkupFaxcover extends Faxcover {
                     }
                 }
             }
-            if (numRead < readLen) {
+            if (numRead < 0) {
                 readOffset = 0;
             } else if (lastTag >= 0 && loopEnd - lastTag < MAXTAGLENGTH + 4) { // There might be an incomplete tag at the end
                 readOffset = loopEnd - lastTag + 2;
@@ -247,7 +247,7 @@ public abstract class MarkupFaxcover extends Faxcover {
             if (readOffset > 0) { // Copy stuff that may be the start of a tag for processing in the next iteration
                 System.arraycopy(buf, loopEnd - readOffset, buf, 0, readOffset);
             }
-        } while (numRead == readLen);
+        } while (numRead >= 0); // (numRead == readLen);
 
         out.close();
     }

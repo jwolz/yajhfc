@@ -211,7 +211,7 @@ public class XMLPhoneBook extends PhoneBook {
         int desiredLen = CAPTION_LENGTH - rv.length();
         
         if (fileName.length() > desiredLen)
-            rv += "..." + fileName.substring(fileName.length() - desiredLen - 3);
+            rv += "..." + fileName.substring(fileName.length() - desiredLen + 3);
         else
             rv += fileName;
         

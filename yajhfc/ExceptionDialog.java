@@ -22,12 +22,11 @@ import info.clearthought.layout.TableLayout;
 
 import java.awt.Component;
 import java.awt.Dialog;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
@@ -42,10 +41,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-public class ExceptionDialog extends JDialog implements ActionListener, ComponentListener {
+public class ExceptionDialog extends JDialog implements ActionListener {
+    private final static int border = 12;
+    private final static int maxTextWidth = 400;
+    private static final int maxTextLines = 10;
+    
     private JLabel lblText, lblExceptionText;
     private JScrollPane scrollStacktrace;
     private JTextArea textStacktrace;
@@ -59,10 +63,9 @@ public class ExceptionDialog extends JDialog implements ActionListener, Componen
     private static final Logger log = Logger.getLogger(ExceptionDialog.class.getName());
     
     private void initialize(String message, Exception exc) {
-        final int border = 12;
         double[][] dLay = {
-                { border, TableLayout.PREFERRED, border, 400, border },
-                { border, TableLayout.PREFERRED, border, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, border, TableLayout.PREFERRED, border }
+                { border, TableLayout.PREFERRED, border, TableLayout.FILL, border },
+                { border, TableLayout.PREFERRED, border, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.FILL, border, TableLayout.PREFERRED, border }
         };
         
         contentPane = new JPanel(new TableLayout(dLay));
@@ -82,9 +85,12 @@ public class ExceptionDialog extends JDialog implements ActionListener, Componen
         JLabel lblIcon = new JLabel(UIManager.getIcon("OptionPane.errorIcon"));
         
         lblText = new JLabel("<html>" + message + "</html>");
+        adjustTextLabelSize(lblText);
         
         if (exc.getLocalizedMessage() != null) {
             lblExceptionText = new JLabel("<html>" + exc.getLocalizedMessage() + "</html>");
+            lblExceptionText.setVerticalAlignment(SwingConstants.TOP);
+            adjustTextLabelSize(lblExceptionText);
         } else
             lblExceptionText = null;
         
@@ -100,7 +106,7 @@ public class ExceptionDialog extends JDialog implements ActionListener, Componen
         textStacktrace.setEditable(false);
         textStacktrace.addMouseListener(clpDef);
         textStacktrace.setRows(8);
-        textStacktrace.setColumns(40);
+        //textStacktrace.setColumns(40);
         
         scrollStacktrace = new JScrollPane(textStacktrace, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         
@@ -135,15 +141,30 @@ public class ExceptionDialog extends JDialog implements ActionListener, Componen
         //this.setLocationByPlatform(true);
         
         this.pack();
-        lblText.addComponentListener(this);
-        if (lblExceptionText != null)
-            lblExceptionText.addComponentListener(this);
+//        lblText.addComponentListener(this);
+//        if (lblExceptionText != null)
+//            lblExceptionText.addComponentListener(this);
         
         if (utils.debugMode) {
 //            utils.debugOut.println("EXCEPTION occured: " + message);
 //            exc.printStackTrace(utils.debugOut);
             log.log(Level.WARNING, "Exception occurred: " + message, exc);
         }
+    }
+    
+    private void adjustTextLabelSize(JLabel label) {
+        // Try to calculate a reasonable height
+        Dimension oldPreferred = label.getPreferredSize();
+        if (oldPreferred.width > maxTextWidth) {
+            int numLines = oldPreferred.width / maxTextWidth + 1;
+            if (numLines > maxTextLines) {
+                numLines = maxTextLines;
+            }
+            oldPreferred.height *= numLines;
+        }
+        oldPreferred.width = maxTextWidth;
+        label.setPreferredSize(oldPreferred);
+        label.setMinimumSize(oldPreferred);
     }
     
     public void actionPerformed(ActionEvent e) {
@@ -159,6 +180,7 @@ public class ExceptionDialog extends JDialog implements ActionListener, Componen
                 contentPane.remove(scrollStacktrace);
             }
             btnDetails.setText(utils._("Details") + (detailState ? " <<" : " >>"));
+            this.setResizable(detailState);
             this.pack();
         }
     }
@@ -204,21 +226,21 @@ public class ExceptionDialog extends JDialog implements ActionListener, Componen
         }
     }
     
-    public void componentHidden(ComponentEvent e) {
-        //  not used   
-    }
-
-    public void componentMoved(ComponentEvent e) {
-        //  not used   
-    }
-
-    public void componentResized(ComponentEvent e) {
-        this.pack();    
-    }
-
-    public void componentShown(ComponentEvent e) {
-        // not used
-    }
+//    public void componentHidden(ComponentEvent e) {
+//        //  not used   
+//    }
+//
+//    public void componentMoved(ComponentEvent e) {
+//        //  not used   
+//    }
+//
+//    public void componentResized(ComponentEvent e) {
+//        this.pack();    
+//    }
+//
+//    public void componentShown(ComponentEvent e) {
+//        // not used
+//    }
 
     /**
      * Implements an Runnable that may be used in conjunction with the SwingUtilities.invoke*()

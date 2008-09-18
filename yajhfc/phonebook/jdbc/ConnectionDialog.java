@@ -27,7 +27,6 @@ import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.Connection;
@@ -44,15 +43,12 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -60,11 +56,11 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
-import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.JTextComponent;
 
+import yajhfc.CancelAction;
 import yajhfc.ClipboardPopup;
 import yajhfc.ExceptionDialog;
 import yajhfc.PasswordDialog;
@@ -182,15 +178,8 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
             }
         });
         
-        Action actCancel = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            };
-        };
-        actCancel.putValue(Action.NAME, _("Cancel"));
-        buttonCancel = new JButton(actCancel);
-        buttonCancel.getActionMap().put("EscapePressed", actCancel);
-        buttonCancel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "EscapePressed");
+        CancelAction actCancel = new CancelAction(this);
+        buttonCancel = actCancel.createCancelButton();
         
         buttonOK = new JButton(_("OK"));
         buttonOK.setActionCommand("ok");

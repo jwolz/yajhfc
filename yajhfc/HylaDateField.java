@@ -18,15 +18,20 @@ package yajhfc;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 public class HylaDateField {
-    public SimpleDateFormat fmtIn = null;
-    public SimpleDateFormat fmtOut = null;
+    public DateFormat fmtIn = null;
+    public DateFormat fmtOut = null;
     
     public HylaDateField(String sFmtIn, String sFmtOut) {
         fmtIn = new SimpleDateFormat(sFmtIn);
         fmtOut = new SimpleDateFormat(sFmtOut, utils.getLocale());
     }
-    
+ 
+    public HylaDateField(DateFormat fmtIn, DateFormat fmtOut) {
+        this.fmtIn = fmtIn;
+        this.fmtOut =fmtOut;
+    }
 }

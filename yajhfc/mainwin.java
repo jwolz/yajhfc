@@ -48,7 +48,6 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -95,6 +94,8 @@ import yajhfc.send.SendWinControl;
 public final class mainwin extends JFrame {
     
     private static final Logger log = Logger.getLogger(mainwin.class.getName());
+    // Uncomment for archive support (change 3 -> 4)
+    private static final int TABLE_COUNT = 3;
     
     protected JPanel jContentPane = null;
     
@@ -464,8 +465,8 @@ public final class mainwin extends JFrame {
     
     // Creates all actions:
     private void createActions(boolean adminState) {
-        actOptions = new AbstractAction() {
-            public void actionPerformed(java.awt.event.ActionEvent e) {
+        actOptions = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(java.awt.event.ActionEvent e) {
                 utils.setWaitCursor(null);
                 
                 SendReadyState oldState = sendReady;
@@ -486,8 +487,8 @@ public final class mainwin extends JFrame {
         actOptions.putValue(Action.SHORT_DESCRIPTION, _("Shows the Options dialog"));
         actOptions.putValue(Action.SMALL_ICON, utils.loadIcon("general/Preferences"));
         
-        actSend = new AbstractAction() {
-            public void actionPerformed(java.awt.event.ActionEvent e) {
+        actSend = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(java.awt.event.ActionEvent e) {
                 utils.setWaitCursor(null);
                 SendWinControl sw = SendController.createSendWindow(mainwin.this, clientManager, false, false);
 
@@ -502,8 +503,8 @@ public final class mainwin extends JFrame {
         actSend.putValue(Action.SHORT_DESCRIPTION, _("Shows the send fax dialog"));
         actSend.putValue(Action.SMALL_ICON, utils.loadIcon("general/SendMail"));
         
-        actPoll = new AbstractAction() {
-            public void actionPerformed(java.awt.event.ActionEvent e) {
+        actPoll = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(java.awt.event.ActionEvent e) {
                 utils.setWaitCursor(null);
                 SendWinControl sw = SendController.createSendWindow(mainwin.this, clientManager, true, true);
                 utils.unsetWaitCursorOnOpen(null, sw.getWindow());
@@ -514,8 +515,8 @@ public final class mainwin extends JFrame {
         actPoll.putValue(Action.SHORT_DESCRIPTION, _("Shows the poll fax dialog"));
         actPoll.putValue(Action.SMALL_ICON, utils.loadIcon("general/Import"));
         
-        actDelete = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
+        actDelete = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(ActionEvent e) {
                 TooltipJTable selTable = (TooltipJTable)((JScrollPane)tabMain.getSelectedComponent()).getViewport().getView();
                 
                 String msgText;
@@ -536,8 +537,8 @@ public final class mainwin extends JFrame {
         actDelete.putValue(Action.SHORT_DESCRIPTION, _("Deletes the selected fax"));
         actDelete.putValue(Action.SMALL_ICON, utils.loadIcon("general/Delete"));
         
-        actShow = new AbstractAction() {
-            public void actionPerformed(java.awt.event.ActionEvent e) {
+        actShow = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(java.awt.event.ActionEvent e) {
                 TooltipJTable selTable = (TooltipJTable)((JScrollPane)tabMain.getSelectedComponent()).getViewport().getView();
                 
                 ShowWorker wrk = new ShowWorker(selTable);
@@ -548,8 +549,8 @@ public final class mainwin extends JFrame {
         actShow.putValue(Action.SHORT_DESCRIPTION, _("Displays the selected fax"));
         actShow.putValue(Action.SMALL_ICON, utils.loadIcon("general/Zoom"));
         
-        actExit = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
+        actExit = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(ActionEvent e) {
                 dispose();
                 //System.exit(0);
             }
@@ -558,8 +559,8 @@ public final class mainwin extends JFrame {
         actExit.putValue(Action.SHORT_DESCRIPTION, _("Exits the application"));
         actExit.putValue(Action.SMALL_ICON, utils.loadIcon("general/Stop"));
         
-        actAbout = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
+        actAbout = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(ActionEvent e) {
                 utils.setWaitCursor(null);
                 //JOptionPane.showMessageDialog(aboutMenuItem.getComponent(), utils.AppName + "\n\n" + _("by Jonas Wolz"), _("About"), JOptionPane.INFORMATION_MESSAGE);
                 AboutDialog aDlg = new AboutDialog(mainwin.this);
@@ -572,8 +573,8 @@ public final class mainwin extends JFrame {
         actAbout.putValue(Action.SHORT_DESCRIPTION, _("Shows the about dialog"));
         actAbout.putValue(Action.SMALL_ICON, utils.loadIcon("general/About"));
         
-        actPhonebook = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
+        actPhonebook = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(ActionEvent e) {
                 utils.setWaitCursor(null);
                 NewPhoneBookWin pbw = new NewPhoneBookWin(mainwin.this);
                 pbw.setModal(true);
@@ -585,8 +586,8 @@ public final class mainwin extends JFrame {
         actPhonebook.putValue(Action.SHORT_DESCRIPTION, _("Display/edit the phone book"));
         actPhonebook.putValue(Action.SMALL_ICON, utils.loadIcon("general/Bookmarks"));
         
-        actReadme = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
+        actReadme = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(ActionEvent e) {
                 utils.setWaitCursor(null);
                 AboutDialog aDlg = new AboutDialog(mainwin.this);
                 aDlg.setMode(AboutDialog.Mode.READMES);
@@ -598,8 +599,8 @@ public final class mainwin extends JFrame {
         actReadme.putValue(Action.SHORT_DESCRIPTION, _("Shows the README files"));
         actReadme.putValue(Action.SMALL_ICON, utils.loadIcon("general/Help"));
         
-        actFaxRead = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
+        actFaxRead = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(ActionEvent e) {
                 Boolean state = (Boolean)getValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY);
                 boolean newState;
                 if (state == null)
@@ -626,8 +627,8 @@ public final class mainwin extends JFrame {
         actFaxRead.putValue(Action.SHORT_DESCRIPTION, _("Marks the selected fax as read/unread"));
         actFaxRead.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, true);
         
-        actFaxSave = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
+        actFaxSave = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(ActionEvent e) {
                 TooltipJTable selTable = (TooltipJTable)((JScrollPane)tabMain.getSelectedComponent()).getViewport().getView();
                 
                 HylaFAXClient hyfc = clientManager.beginServerTransaction(mainwin.this);
@@ -694,8 +695,8 @@ public final class mainwin extends JFrame {
         actFaxSave.putValue(Action.SHORT_DESCRIPTION, _("Saves the selected fax on disk"));
         actFaxSave.putValue(Action.SMALL_ICON, utils.loadIcon("general/SaveAs"));
         
-        actForward = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
+        actForward = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(ActionEvent e) {
                 if (tabMain.getSelectedComponent() != scrollRecv || tableRecv.getSelectedRow() < 0)
                     return;
                 
@@ -722,8 +723,8 @@ public final class mainwin extends JFrame {
         actForward.putValue(Action.SHORT_DESCRIPTION, _("Forwards the fax"));
         actForward.putValue(Action.SMALL_ICON, utils.loadIcon("general/Redo"));
         
-        actAdminMode = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
+        actAdminMode = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(ActionEvent e) {
                 utils.setWaitCursor(null);
                 Boolean state = (Boolean)getValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY);
                 boolean newState;
@@ -742,8 +743,8 @@ public final class mainwin extends JFrame {
         actAdminMode.putValue(Action.SHORT_DESCRIPTION, _("Connect to the server in admin mode (e.g. to delete faxes)"));
         actAdminMode.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, adminState);
         
-        actRefresh = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
+        actRefresh = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(ActionEvent e) {
                 utils.setWaitCursor(null);
                 refreshStatus();
                 refreshTables();
@@ -755,8 +756,8 @@ public final class mainwin extends JFrame {
         actRefresh.putValue(Action.SMALL_ICON, utils.loadIcon("general/Refresh"));
         actRefresh.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
         
-        actResend = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {                
+        actResend = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(ActionEvent e) {                
                 TooltipJTable selTable = (TooltipJTable)((JScrollPane)tabMain.getSelectedComponent()).getViewport().getView();
                 if (!(selTable == tableSent && selTable != tableSending) || selTable.getSelectedRow() < 0)
                     return;
@@ -806,8 +807,8 @@ public final class mainwin extends JFrame {
         actResend.putValue(Action.SHORT_DESCRIPTION, _("Resend the fax"));
         actResend.putValue(Action.SMALL_ICON, utils.loadIcon("general/Export"));
         
-        actPrintTable = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
+        actPrintTable = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(ActionEvent e) {
                 TooltipJTable selTable = (TooltipJTable)((JScrollPane)tabMain.getSelectedComponent()).getViewport().getView();
                 try {
                     MessageFormat header = new MessageFormat(tabMain.getToolTipTextAt(tabMain.getSelectedIndex()));
@@ -824,8 +825,8 @@ public final class mainwin extends JFrame {
         actPrintTable.putValue(Action.SHORT_DESCRIPTION, _("Prints the currently displayed table"));
         actPrintTable.putValue(Action.SMALL_ICON, utils.loadIcon("general/Print"));
         
-        actSuspend = new AbstractAction() {
-            public void actionPerformed(java.awt.event.ActionEvent e) {
+        actSuspend = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(java.awt.event.ActionEvent e) {
                 TooltipJTable selTable = (TooltipJTable)((JScrollPane)tabMain.getSelectedComponent()).getViewport().getView();
                 SuspendWorker wrk = new SuspendWorker(selTable);
                 wrk.startWork(mainwin.this, _("Suspending jobs"));
@@ -835,8 +836,8 @@ public final class mainwin extends JFrame {
         actSuspend.putValue(Action.SHORT_DESCRIPTION, _("Suspends the transfer of the selected fax"));
         actSuspend.putValue(Action.SMALL_ICON, utils.loadIcon("media/Pause"));
         
-        actResume = new AbstractAction() {
-            public void actionPerformed(java.awt.event.ActionEvent e) {
+        actResume = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(java.awt.event.ActionEvent e) {
                 TooltipJTable selTable = (TooltipJTable)((JScrollPane)tabMain.getSelectedComponent()).getViewport().getView();
                 ResumeWorker wrk = new ResumeWorker(selTable);
                 wrk.startWork(mainwin.this, _("Resuming jobs"));
@@ -846,8 +847,8 @@ public final class mainwin extends JFrame {
         actResume.putValue(Action.SHORT_DESCRIPTION, _("Resumes the transfer of the selected fax"));
         actResume.putValue(Action.SMALL_ICON, utils.loadIcon("media/Play"));
         
-        actClipCopy = new AbstractAction() {
-            public void actionPerformed(java.awt.event.ActionEvent e) {
+        actClipCopy = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(java.awt.event.ActionEvent e) {
                 TooltipJTable selTable = (TooltipJTable)((JScrollPane)tabMain.getSelectedComponent()).getViewport().getView();
                 selTable.getTransferHandler().exportToClipboard(selTable, Toolkit.getDefaultToolkit().getSystemClipboard(), TransferHandler.COPY);
             }
@@ -856,8 +857,8 @@ public final class mainwin extends JFrame {
         actClipCopy.putValue(Action.SHORT_DESCRIPTION, _("Copies the selected table items to the clipboard"));
         actClipCopy.putValue(Action.SMALL_ICON, utils.loadIcon("general/Copy"));
         
-        actShowRowNumbers = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
+        actShowRowNumbers = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(ActionEvent e) {
                 Boolean state = (Boolean)getValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY);
                 boolean newState;
                 if (state == null)
@@ -876,8 +877,8 @@ public final class mainwin extends JFrame {
         actShowRowNumbers.putValue(Action.SHORT_DESCRIPTION, _("Show row numbers"));
         actShowRowNumbers.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, myopts.showRowNumbers);
         
-        actAdjustColumns = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
+        actAdjustColumns = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(ActionEvent e) {
                 Boolean state = (Boolean)getValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY);
                 boolean newState;
                 if (state == null)
@@ -942,7 +943,9 @@ public final class mainwin extends JFrame {
     
     public void setSelectedTab(int index)
     {
-        getTabMain().setSelectedIndex(index);
+        if (index >= 0 && index < TABLE_COUNT) {
+            getTabMain().setSelectedIndex(index);
+        }
     }
     
     private MouseListener getTblMouseListener() {
@@ -970,9 +973,10 @@ public final class mainwin extends JFrame {
                         JTable src = (JTable)e.getComponent();
                         int row = src.rowAtPoint(e.getPoint());
                         if (row >= 0) {
-                            src.setRowSelectionInterval(row, row);
-                            getTblPopup().show(src,
-                                    e.getX(), e.getY());
+                            if (!src.isRowSelected(row)) {
+                                src.setRowSelectionInterval(row, row);
+                            }
+                            getTblPopup().show(src, e.getX(), e.getY());
                         }
                     }
                 }
@@ -1123,7 +1127,7 @@ public final class mainwin extends JFrame {
                 selVal = (Boolean)actAdjustColumns.getValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY);
                 myopts.adjustColumnWidths = (selVal != null && selVal.booleanValue());
                 
-                myopts.storeToFile(FaxOptions.getDefaultConfigFileName());
+                myopts.storeToFile(FaxOptions.getDefaultConfigFile());
                 saved = true;
                 Launcher.releaseLock();
                 System.exit(0);
@@ -1548,8 +1552,7 @@ public final class mainwin extends JFrame {
     }
     
     class MenuViewListener implements ActionListener, ChangeListener {
-        // Uncomment for archive support (change 3 -> 4)
-        private JRadioButtonMenuItem[] lastSel = new JRadioButtonMenuItem[3];
+        private JRadioButtonMenuItem[] lastSel = new JRadioButtonMenuItem[TABLE_COUNT];
         
         public void actionPerformed(ActionEvent e) {
             String cmd = e.getActionCommand();
@@ -1611,7 +1614,7 @@ public final class mainwin extends JFrame {
                 return model.columns.getCompleteView().contains(utils.jobfmt_Jobstate) || model.columns.getCompleteView().contains(utils.jobfmt_Status);
             } else if (model == recvTableModel) { 
                 return myopts.recvfmt.getCompleteView().contains(utils.recvfmt_ErrorDesc);
-            } else //TODO?
+            } else //TODO for archive support?
                 return false;
         }
         

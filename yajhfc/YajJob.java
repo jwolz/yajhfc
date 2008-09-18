@@ -62,50 +62,70 @@ public abstract class YajJob {
         
         if (result == null) { // Not parsed
             String res = getStringData(col);
-            Class<?> dataClass = columns.getCompleteView().get(col).dataClass;
-            
+            FmtItem fmtItem = columns.getCompleteView().get(col);
+            parsedData[col] = result = parseValue(fmtItem, res);
+        }        
+        return (result == nullObject) ? null : result;
+    }
+    
+    /**
+     * Parses the String value data into the dataClass of the given FmtItem.
+     * This is called by getData, its result is cached so this is only called once
+     * for each data value.
+     * @param fmtItem
+     * @param data
+     * @return
+     */
+    protected Object parseValue(FmtItem fmtItem, String data) {
+        if (data == null) {
+            return  nullObject;
+        } else {
+            Class<?> dataClass = fmtItem.dataClass;
+
             if (dataClass == String.class) {
-                result = res;
+                return data;
             } else {
-                res = res.trim();
+                data = data.trim();
                 if (dataClass == Boolean.class)  { // "*" if true, " " otherwise
-                    result = res.equals("*");
+                    return data.equals("*");
                 } else if (dataClass == IconMap.class) {
-                    result = DefaultIconMap.getInstance(columns.getCompleteView().get(col), res);
-                } else if (res.length() > 0) {
+                    return DefaultIconMap.getInstance(fmtItem, data);
+                } else if (data.length() > 0) {
                     try {
                         if (dataClass == Integer.class)
-                            result = Integer.valueOf(Integer.parseInt(res));
+                            return Integer.valueOf(Integer.parseInt(data));
                         else if (dataClass == Float.class)
-                            result = Float.valueOf(res);
+                            return  Float.valueOf(data);
                         else if (dataClass == Double.class)
-                            result = Double.valueOf(res);
+                            return  Double.valueOf(data);
                         else if (dataClass == Date.class) {
-                            Date d = columns.getCompleteView().get(col).dateFormat.fmtIn.parse(res);
+                            Date d = fmtItem.dateFormat.fmtIn.parse(data);
                             if (d != null && utils.getFaxOptions().dateOffsetSecs != 0) {
                                 Calendar cal = Calendar.getInstance(utils.getLocale());
                                 cal.setTime(d);
                                 cal.add(Calendar.SECOND, utils.getFaxOptions().dateOffsetSecs);
                                 d = cal.getTime();
                             }
-                            result = d;
+                            return  d;
+                        } else if (dataClass == Long.class) {
+                            return Long.valueOf(Long.parseLong(data));
                         } else {
-                            result = res;
+                            log.info("Unsupported data class: " + dataClass);
+                            return data;
                         }
                     } catch (NumberFormatException e) {
-                        log.log(Level.WARNING, "Not a number: " + res + ": ", e);
-                        //result = Float.NaN;
-                        result = nullObject;
+                        log.log(Level.WARNING, "Not a number: " + data + ": ", e);
+                        //return  Float.NaN;
+                        return  nullObject;
                     } catch (ParseException e) {
-                        log.log(Level.WARNING, "Not a parseable date: " + res + ": ", e);
-                        result = nullObject;
+                        log.log(Level.WARNING, "Not a parseable date: " + data + ": ", e);
+                        return  nullObject;
                     }    
-                } else
-                    result = nullObject;
+                } else {
+                    return nullObject;
+                }
             }
-            parsedData[col] = result;
-        }        
-        return (result == nullObject) ? null : result;
+        }
     }
     
     public FmtItemList getColumns() {

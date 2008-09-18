@@ -25,19 +25,14 @@ import java.awt.Frame;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.lang.reflect.InvocationTargetException;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 public class PasswordDialog extends JDialog {
@@ -66,16 +61,8 @@ public class PasswordDialog extends JDialog {
             }             
         });
 
-        Action actCancel = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
-                returnValue = null;
-                dispose();
-            };
-        };
-        actCancel.putValue(Action.NAME, utils._("Cancel"));
-        btnCancel = new JButton(actCancel);
-        btnCancel.getActionMap().put("EscapePressed", actCancel);
-        btnCancel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "EscapePressed");
+        CancelAction actCancel = new CancelAction(this);
+        btnCancel = actCancel.createCancelButton();
         
         Dimension boxy = new Dimension(border, border);
         jContentFrame.add(Box.createRigidArea(boxy), BorderLayout.NORTH);

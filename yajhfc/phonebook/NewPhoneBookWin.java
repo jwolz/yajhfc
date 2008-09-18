@@ -28,6 +28,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -37,7 +38,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
@@ -50,12 +50,14 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
 import javax.swing.event.TreeSelectionEvent;
@@ -65,6 +67,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import yajhfc.ClipboardPopup;
+import yajhfc.ExcDialogAbstractAction;
 import yajhfc.ExceptionDialog;
 import yajhfc.FaxOptions;
 import yajhfc.utils;
@@ -79,7 +82,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     JPanel rightPane, leftPane;
 
     JTextField textDescriptor;
-    JButton buttonBrowse, buttonSelect;
+    JButton buttonBrowse;
     
     JTextField textSurname, textGivenname, textTitle, textCompany, textLocation;
     JTextField textVoicenumber, textFaxnumber;
@@ -91,8 +94,9 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     ClipboardPopup defClPop;
     
     JMenu pbMenu, importMenu, openMenu, entryMenu;
- 
-    Action listRemoveAction, addEntryAction, removeEntryAction, searchEntryAction;
+    JPopupMenu treePopup;
+    
+    Action listRemoveAction, addEntryAction, removeEntryAction, searchEntryAction, selectAction;
     
     NewSearchWin searchWin;
     
@@ -368,8 +372,8 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         
         listRemoveAction.setEnabled(havePB);
         buttonBrowse.setEnabled(havePB);
-        if (buttonSelect != null)
-            buttonSelect.setEnabled(delOK);
+        if (selectAction != null)
+            selectAction.setEnabled(delOK);
     }
     
     public void actionPerformed(ActionEvent e) {
@@ -381,9 +385,6 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             doDescOpen();
         } else if (cmd.equals("descimport")) {
             doDescImport();
-        } else if (cmd.equals("select")) {
-            usedSelectButton = true;
-            setVisible(false);
         } else if (cmd.equals("browse")) {
             browseForPhonebook();
         } else
@@ -537,6 +538,15 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                     oldSelection = paths;
                 } 
             });
+            phoneBookTree.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "RemoveEntry");
+            phoneBookTree.getActionMap().put("RemoveEntry", removeEntryAction);
+            treePopup = new JPopupMenu();
+            treePopup.add(new JMenuItem(addEntryAction));
+            treePopup.add(new JMenuItem(removeEntryAction));
+            treePopup.addSeparator();
+            treePopup.add(new JMenuItem(searchEntryAction));
+            phoneBookTree.setComponentPopupMenu(treePopup);
+            
             
             JScrollPane treeScroller = new JScrollPane(phoneBookTree);
             
@@ -597,8 +607,8 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             openMenu.addSeparator();
             openMenu.add(mi);
             
-            listRemoveAction = new AbstractAction() {
-                public void actionPerformed(ActionEvent e) {
+            listRemoveAction = new ExcDialogAbstractAction() {
+                public void actualActionPerformed(ActionEvent e) {
                     if (JOptionPane.showConfirmDialog(NewPhoneBookWin.this, utils._("Do you want to remove the current phone book from the list?"), utils._("Remove from list"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                         closeCurrentPhoneBook();
                     }
@@ -607,7 +617,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             listRemoveAction.putValue(Action.NAME, utils._("Remove from list"));
             listRemoveAction.putValue(Action.SMALL_ICON, utils.loadIcon("general/Remove"));
             
-            JMenuItem closeWinMenu = new JMenuItem(utils._("Close"));
+            JMenuItem closeWinMenu = new JMenuItem(utils._("Close"), utils.loadCustomIcon("close.gif"));
             closeWinMenu.setActionCommand("close");
             closeWinMenu.addActionListener(this);
 
@@ -643,8 +653,8 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     }
     
     private void createActions() {
-        addEntryAction = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
+        addEntryAction = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(ActionEvent e) {
                 if (currentPhonebook == null || currentPhonebook.isReadOnly()) 
                     return;
                 
@@ -657,8 +667,8 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         addEntryAction.putValue(Action.SHORT_DESCRIPTION, utils._("Add new entry"));
         addEntryAction.setEnabled(false);
         
-        removeEntryAction = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
+        removeEntryAction = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(ActionEvent e) {
                 if (selectedItems.size() == 0)
                     return;
                 
@@ -678,8 +688,8 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         removeEntryAction.putValue(Action.SHORT_DESCRIPTION, utils._("Delete selected entry"));
         removeEntryAction.setEnabled(false);
         
-        searchEntryAction = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
+        searchEntryAction = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(ActionEvent e) {
                 if (searchWin == null) {
                     searchWin = new NewSearchWin(NewPhoneBookWin.this);
                 }
@@ -752,13 +762,28 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     }
     
     private void showSelectButton() {
-        if (buttonSelect == null) {
-            buttonSelect = new JButton(utils._("Select"));
-            buttonSelect.setIcon(utils.loadIcon("general/Undo"));
-            buttonSelect.setActionCommand("select");
-            buttonSelect.addActionListener(this);
+        if (selectAction == null) {
+            selectAction = new ExcDialogAbstractAction() {
+                public void actualActionPerformed(ActionEvent e) {
+                    if (selectedItems.size() == 0)
+                        return;
+                    
+                    usedSelectButton = true;
+                    setVisible(false);
+                }
+            };
+            selectAction.putValue(Action.NAME, utils._("Select"));
+            selectAction.putValue(Action.SMALL_ICON, utils.loadIcon("general/Undo"));
+            
+            JButton buttonSelect = new JButton(selectAction);
             leftPane.add(Box.createVerticalStrut((int)border), "0,3");
             leftPane.add(buttonSelect, "0,4,2,4");
+            
+            entryMenu.addSeparator();
+            entryMenu.add(new JMenuItem(selectAction));
+            
+            treePopup.addSeparator();
+            treePopup.add(new JMenuItem(selectAction));
         }
     }
     

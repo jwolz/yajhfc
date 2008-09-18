@@ -20,6 +20,7 @@ package yajhfc;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -223,7 +224,7 @@ public class FaxOptions {
     //private static final String sepregex = "\\|";
     
     @SuppressWarnings("unchecked")
-    public void storeToFile(String fileName) {
+    public void storeToFile(File file) {
         Properties p = new Properties();
         java.lang.reflect.Field[] f = FaxOptions.class.getFields();
         
@@ -272,29 +273,29 @@ public class FaxOptions {
         }
         
         try {
-            FileOutputStream filout = new FileOutputStream(fileName);
+            FileOutputStream filout = new FileOutputStream(file);
             p.store(filout, utils.AppShortName + " " + utils.AppVersion + " configuration file");
             filout.close();
         } catch (Exception e) {
-            log.log(Level.WARNING, "Couldn't save file '" + fileName + "': ", e);
+            log.log(Level.WARNING, "Couldn't save file '" + file + "': ", e);
         }
     }
     
     @SuppressWarnings("unchecked")
-    public void loadFromFile(String fileName) {
+    public void loadFromFile(File file) {
         if (utils.debugMode) {
-            log.info("Loading prefs from " + fileName);
+            log.info("Loading prefs from " + file);
         }
         Properties p = new Properties();
         //System.err.println(fileName);
         try {
-            FileInputStream filin = new FileInputStream(fileName);
+            FileInputStream filin = new FileInputStream(file);
             p.load(filin);
             filin.close();
         } catch (FileNotFoundException e) {
             return; // No file yet
         } catch (IOException e) {
-            log.log(Level.WARNING, "Error reading file '" + fileName + "': " , e);
+            log.log(Level.WARNING, "Error reading file '" + file + "': " , e);
             return;
         }
         if (utils.debugMode) {
@@ -409,7 +410,7 @@ public class FaxOptions {
         }
     }
     
-    public static String getDefaultConfigFileName() {
-        return utils.getConfigDir() +  "settings";
+    public static File getDefaultConfigFile() {
+        return new File(utils.getConfigDir(), "settings");
     }
 }

@@ -1,5 +1,5 @@
-README for YajHFC 0.3.8
-=======================
+README for YajHFC 0.3.8a
+========================
 
 ABOUT
 -----
@@ -28,9 +28,9 @@ Requirements:
 * Some program to view TIFF files (also see the FAQ)
 * Optional: A PostScript viewer (e.g. Ghostview)
 
-To install YajHFC just download the yajhfc-0_3_8.jar file to some folder on your
+To install YajHFC just download the yajhfc-0_3_8a.jar file to some folder on your
 file system.
-To execute it, use: "java -jar yajhfc-0_3_8.jar"
+To execute it, use: "java -jar yajhfc-0_3_8a.jar"
 (In Windows you usually can just double click the jar file as well.)
 
 LICENSE
@@ -63,6 +63,10 @@ YajHFC was originally written as a first more complicated
 
 CHANGES
 -------
+
+0.3.8a:
+- Bug fix for XML phone books
+- Some minor UI improvements
 
 0.3.8:
 - Improved phone book window with better support for multiple phone books

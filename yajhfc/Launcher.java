@@ -102,7 +102,7 @@ public final class Launcher {
     }
     
     private static File getLockFile() {
-        return new File(utils.getConfigDir() + "lock");
+        return new File(utils.getConfigDir(), "lock");
     }
     
     private static Socket checkLock() {
@@ -493,13 +493,7 @@ public final class Launcher {
                     BufferedOutputStream bufOut = new BufferedOutputStream(outStream);
                     BufferedInputStream bufIn = new BufferedInputStream(System.in);
                     bufOut.write(codeSubmitStream);
-                    byte[] buf = new byte[16000];
-                    int bytesRead = 0;
-                    do {
-                        bytesRead = bufIn.read(buf);
-                        if (bytesRead > 0)
-                            bufOut.write(buf, 0, bytesRead);
-                    } while (bytesRead >= 0);
+                    utils.copyStream(bufIn, bufOut);
                     bufIn.close();
                     bufOut.flush();              
                 } else if ( fileNames != null && fileNames.size() > 0) {

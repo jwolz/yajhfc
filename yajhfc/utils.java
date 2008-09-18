@@ -30,6 +30,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -50,7 +53,7 @@ public final class utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2008 by Jonas Wolz";
-    public static final String AppVersion = "0.3.8";
+    public static final String AppVersion = "0.3.8a";
     public static final String AuthorEMail = "Jonas Wolz &lt;jwolz@freenet.de&gt;";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
     
@@ -61,7 +64,7 @@ public final class utils {
     private static FaxOptions theoptions = null;
     private static ResourceBundle msgs = null;
     private static boolean TriedMsgLoad = false;
-    private static String confdir = null;
+    private static File configDir = null;
     
     public static final FmtItem jobfmt_JobID =
         new FmtItem("j", _("ID"), _("Job identifier"), Integer.class);
@@ -279,7 +282,7 @@ public final class utils {
     public static FaxOptions getFaxOptions() {
         if (theoptions == null) {
             theoptions = new FaxOptions();
-            theoptions.loadFromFile(FaxOptions.getDefaultConfigFileName());
+            theoptions.loadFromFile(FaxOptions.getDefaultConfigFile());
         }
         return theoptions;
     }
@@ -292,7 +295,7 @@ public final class utils {
             Properties prop = new Properties();
             String locale;
             try {
-                FileInputStream fIn = new FileInputStream(FaxOptions.getDefaultConfigFileName());
+                FileInputStream fIn = new FileInputStream(FaxOptions.getDefaultConfigFile());
                 prop.load(fIn);
                 fIn.close();
                 locale = prop.getProperty("locale", "auto");
@@ -382,25 +385,19 @@ public final class utils {
         }
     }
     
-    public static String getConfigDir() {
-        if (confdir == null) {
+    public static File getConfigDir() {
+        if (configDir == null) {
             if (Launcher.cmdLineConfDir == null) {
-                confdir = System.getProperty("user.home") + File.separator + ".yajhfc" + File.separator;
+                configDir = new File(System.getProperty("user.home"), ".yajhfc");
             } else {
-                char lastCF = Launcher.cmdLineConfDir.charAt(Launcher.cmdLineConfDir.length()-1);
-                if (lastCF == '/' || lastCF == File.separatorChar) {
-                    confdir = Launcher.cmdLineConfDir;
-                } else {
-                    confdir = Launcher.cmdLineConfDir + File.separatorChar;
-                }
+                configDir = new File(Launcher.cmdLineConfDir);
             }
-            
-            File dir = new File(confdir);
-            if (!dir.exists()) {
-                dir.mkdir();
+
+            if (!configDir.exists()) {
+                configDir.mkdir();
             }
         }
-        return confdir;
+        return configDir;
     }
     
     /***
@@ -622,7 +619,20 @@ public final class utils {
         }
         return -1;
     }
-   
+ 
+    /**
+     * Copies the content from inStream into outStream
+     * @param inStream
+     * @param outStream
+     * @throws IOException 
+     */
+    public static void copyStream(InputStream inStream, OutputStream outStream) throws IOException {
+        int len = 0;
+        final byte[] buf = new byte[8000];
+        while ((len = inStream.read(buf)) >= 0) {
+            outStream.write(buf, 0, len);
+        }
+    }
 }
 
 
