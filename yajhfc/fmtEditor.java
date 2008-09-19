@@ -233,7 +233,7 @@ public class fmtEditor extends JPanel
     }
     
     public fmtEditor(FmtItem[] avail, List<FmtItem> selected, List<FmtItem> dontDelete) {
-        super();
+        super(false);
         selectedFmts = selected;
         deselectedFmts = new ArrayList<FmtItem>(Arrays.asList(avail));
         deselectedFmts.removeAll(selectedFmts);

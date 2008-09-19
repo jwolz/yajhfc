@@ -67,11 +67,10 @@ public class ClipboardPopup implements MouseListener, ActionListener {
         popupMenu.add(selectAll);
     }
     
-    @SuppressWarnings("deprecation")
     protected void preparePopup(JTextComponent target) {
         boolean haveSelection = target.getSelectionStart() < target.getSelectionEnd();
         boolean editable = target.isEditable();
-        boolean clipboardAvail = Toolkit.getDefaultToolkit().getSystemClipboard().isDataFlavorAvailable(DataFlavor.plainTextFlavor);
+        boolean clipboardAvail = Toolkit.getDefaultToolkit().getSystemClipboard().isDataFlavorAvailable(DataFlavor.stringFlavor);
         
         cut.setEnabled(haveSelection && editable);
         copy.setEnabled(haveSelection);

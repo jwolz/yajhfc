@@ -255,7 +255,7 @@ public class OptionsWin extends JDialog {
     
     private JPanel getPanelButtons() {
         if (PanelButtons == null) {
-            PanelButtons = new JPanel();
+            PanelButtons = new JPanel(false);
             PanelButtons.setLayout(new BoxLayout(PanelButtons, BoxLayout.LINE_AXIS));
             
             Dimension buttonSize = new Dimension(120, 30);
@@ -285,7 +285,7 @@ public class OptionsWin extends JDialog {
                     {border, 0.4, border, TableLayout.FILL, border},
                     { border, TableLayout.FILL, border, TableLayout.PREFERRED, border }
             };
-            panelServerSettings = new JPanel(new TableLayout(tablelay));
+            panelServerSettings = new JPanel(new TableLayout(tablelay), false);
             
             panelServerSettings.add(getPanelServerRetrieval(), "1,1,1,3");
             panelServerSettings.add(getPanelServer(), "3,1");
@@ -315,7 +315,7 @@ public class OptionsWin extends JDialog {
                     {border, 0.4, border, TableLayout.FILL, border},
                     { border, 0.55, border, TableLayout.FILL, border }
             };
-            PanelCommon = new JPanel(new TableLayout(tablelay));
+            PanelCommon = new JPanel(new TableLayout(tablelay), false);
             
             //PanelCommon.add(getPanelServer(), "1,1");
             PanelCommon.add(getPanelUI(), "1,1");
@@ -333,7 +333,7 @@ public class OptionsWin extends JDialog {
                     { border, TableLayout.FILL, border }
             };
             
-            panelSendSettings = new JPanel(new TableLayout(tablelay));
+            panelSendSettings = new JPanel(new TableLayout(tablelay), false);
             
             panelSendSettings.add(getPanelSend(), "1, 1"); 
             panelSendSettings.add(getPanelCover(), "3, 1");
@@ -353,7 +353,7 @@ public class OptionsWin extends JDialog {
             Arrays.fill(tablelay[1], 1, tablelay[1].length - 2, rowh);
             tablelay[1][tablelay[1].length - 2] = TableLayout.FILL;
             
-            panelServer = new JPanel(new TableLayout(tablelay));
+            panelServer = new JPanel(new TableLayout(tablelay), false);
             panelServer.setBorder(BorderFactory.createTitledBorder(_("Connection settings:")));
                         
             textHost = new JTextField();
@@ -406,7 +406,7 @@ public class OptionsWin extends JDialog {
             Arrays.fill(tablelay[1], 0, tablelay[1].length - 1, rowh);
             tablelay[1][tablelay[1].length - 2] = TableLayout.FILL;
             
-            panelUI = new JPanel(new TableLayout(tablelay));
+            panelUI = new JPanel(new TableLayout(tablelay), false);
             panelUI.setBorder(BorderFactory.createTitledBorder(_("User interface")));
             
             //comboNewFaxAction = new JComboBox(utils.newFaxActions);
@@ -451,7 +451,7 @@ public class OptionsWin extends JDialog {
             Arrays.fill(tablelay[1], 1, tablelay[1].length - 1, rowh);
             tablelay[1][tablelay[1].length - 2] = TableLayout.FILL;
             
-            panelNewFaxAction = new JPanel(new TableLayout(tablelay));
+            panelNewFaxAction = new JPanel(new TableLayout(tablelay), false);
             panelNewFaxAction.setBorder(BorderFactory.createTitledBorder(_("Actions after receiving a new fax:")));
             
             checkNewFax_Beep = new JCheckBox(_("Beep"));
@@ -485,7 +485,7 @@ public class OptionsWin extends JDialog {
             Arrays.fill(tablelay[1], 0, tablelay[1].length - 1, rowh);
             tablelay[1][tablelay[1].length - 2] = TableLayout.FILL;
             
-            panelServerRetrieval = new JPanel(new TableLayout(tablelay));
+            panelServerRetrieval = new JPanel(new TableLayout(tablelay), false);
             panelServerRetrieval.setBorder(BorderFactory.createTitledBorder(_("General settings:")));
             
             checkPCLBug = new JCheckBox("<html>" + _("Use PCL file type bugfix") + "</html>");
@@ -524,7 +524,7 @@ public class OptionsWin extends JDialog {
             Arrays.fill(tablelay[1], 1, tablelay[1].length - 2, rowh);
             tablelay[1][tablelay[1].length - 2] = TableLayout.FILL;
             
-            panelSend = new JPanel(new TableLayout(tablelay));
+            panelSend = new JPanel(new TableLayout(tablelay), false);
             panelSend.setBorder(BorderFactory.createTitledBorder(_("Delivery settings")));
            
             textNotifyAddress = new JTextField();
@@ -583,7 +583,7 @@ public class OptionsWin extends JDialog {
             Arrays.fill(tablelay[1], 1, tablelay[1].length - 2, rowh);
             tablelay[1][tablelay[1].length - 2] = TableLayout.FILL;
             
-            panelCover = new JPanel(new TableLayout(tablelay));
+            panelCover = new JPanel(new TableLayout(tablelay), false);
             panelCover.setBorder(BorderFactory.createTitledBorder(_("Fax cover page from:")));
             
             textFromCompany = new JTextField();
@@ -621,7 +621,7 @@ public class OptionsWin extends JDialog {
             Arrays.fill(tablelay[1], 1, tablelay[1].length - 2, rowh);
             tablelay[1][tablelay[1].length - 2] = TableLayout.FILL;
             
-            panelPaths = new JPanel(new TableLayout(tablelay));
+            panelPaths = new JPanel(new TableLayout(tablelay), false);
             panelPaths.setBorder(BorderFactory.createTitledBorder(_("Path settings")));
             
             ftfFaxViewer = new ExeFileTextField();
@@ -893,7 +893,7 @@ public class OptionsWin extends JDialog {
                     {border, TableLayout.FILL, border/2, TableLayout.PREFERRED, border},
                     {border, TableLayout.PREFERRED, TableLayout.PREFERRED, border}
             };
-            panelPersistence = new JPanel(new TableLayout(tablelay));
+            panelPersistence = new JPanel(new TableLayout(tablelay), false);
             panelPersistence.setBorder(BorderFactory.createTitledBorder(_("Read/Unread state of faxes")));
             
             ActionListener persistenceListener = new ActionListener() {
