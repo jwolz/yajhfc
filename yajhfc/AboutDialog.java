@@ -18,12 +18,12 @@ package yajhfc;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+import static yajhfc.utils._;
 import info.clearthought.layout.TableLayout;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Frame;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
@@ -47,8 +47,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-
-import static yajhfc.utils._;
 
 public class AboutDialog extends JDialog implements HyperlinkListener {
     private static final Logger log = Logger.getLogger(AboutDialog.class.getName());
@@ -220,12 +218,8 @@ public class AboutDialog extends JDialog implements HyperlinkListener {
         if (boxButtons == null) {
             boxButtons = new Box(BoxLayout.LINE_AXIS);
             
-            buttonOK = new JButton(_("OK"));
-            buttonOK.addActionListener(new ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent e) {
-                    dispose();
-                };
-            });
+            CancelAction actOK = new CancelAction(this, _("OK"));
+            buttonOK = actOK.createCancelButton();
             
             boxButtons.add(Box.createHorizontalGlue());
             boxButtons.add(buttonOK);

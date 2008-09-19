@@ -25,6 +25,8 @@ import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.PrintWriter;
@@ -53,12 +55,13 @@ public class ExceptionDialog extends JDialog implements ActionListener {
     private JLabel lblText, lblExceptionText;
     private JScrollPane scrollStacktrace;
     private JTextArea textStacktrace;
-    private JButton btnOK, btnDetails;
+    private JButton btnOK, btnDetails, btnCopy;
     private JPanel contentPane;
     private Box boxButtons/*, boxLabels*/;
     private Component strutStacktrace;
     private ClipboardPopup clpDef;
     private boolean detailState = false;
+    private String fullMessage;
     
     private static final Logger log = Logger.getLogger(ExceptionDialog.class.getName());
     
@@ -75,11 +78,15 @@ public class ExceptionDialog extends JDialog implements ActionListener {
         btnOK.addActionListener(this);
         btnDetails = new JButton(utils._("Details") + " >>");
         btnDetails.addActionListener(this);
+        btnCopy = new JButton(utils._("Copy"), utils.loadIcon("general/Copy"));
+        btnCopy.addActionListener(this);
         
         boxButtons.add(Box.createHorizontalGlue());
         boxButtons.add(btnOK);
         boxButtons.add(Box.createHorizontalStrut(border));
         boxButtons.add(btnDetails);
+        boxButtons.add(Box.createHorizontalStrut(border));
+        boxButtons.add(btnCopy);
         boxButtons.add(Box.createHorizontalGlue());
         
         JLabel lblIcon = new JLabel(UIManager.getIcon("OptionPane.errorIcon"));
@@ -87,12 +94,17 @@ public class ExceptionDialog extends JDialog implements ActionListener {
         lblText = new JLabel("<html>" + message + "</html>");
         adjustTextLabelSize(lblText);
         
-        if (exc.getLocalizedMessage() != null) {
-            lblExceptionText = new JLabel("<html>" + exc.getLocalizedMessage() + "</html>");
+        String localizedMessage = exc.getLocalizedMessage();
+        if (localizedMessage == null) {
+            localizedMessage = exc.getMessage();
+        }
+        if (localizedMessage != null) {
+            lblExceptionText = new JLabel("<html>" + localizedMessage + "</html>");
             lblExceptionText.setVerticalAlignment(SwingConstants.TOP);
             adjustTextLabelSize(lblExceptionText);
-        } else
+        } else {
             lblExceptionText = null;
+        }
         
         strutStacktrace = Box.createVerticalStrut(20);
         
@@ -101,7 +113,17 @@ public class ExceptionDialog extends JDialog implements ActionListener {
         
         clpDef = new ClipboardPopup();
         
-        textStacktrace = new JTextArea(stringBuf.toString());
+        String stacktrace = stringBuf.toString();
+        
+        StringBuilder sb = new StringBuilder();
+        sb.append(message).append('\n');
+        if (localizedMessage != null)
+            sb.append(localizedMessage).append('\n');
+        sb.append('\n');
+        sb.append(stacktrace);
+        fullMessage = sb.toString();
+        
+        textStacktrace = new JTextArea(stacktrace);
         textStacktrace.setFont(new Font("DialogInput", Font.PLAIN, 12));
         textStacktrace.setEditable(false);
         textStacktrace.addMouseListener(clpDef);
@@ -168,9 +190,10 @@ public class ExceptionDialog extends JDialog implements ActionListener {
     }
     
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btnOK) {
+        Object source = e.getSource();
+        if (source == btnOK) {
             dispose();
-        } else if (e.getSource() == btnDetails) {
+        } else if (source == btnDetails) {
             detailState = !detailState;
             if (detailState) {
                 contentPane.add(strutStacktrace, "1, 4, 3, 4");
@@ -182,6 +205,9 @@ public class ExceptionDialog extends JDialog implements ActionListener {
             btnDetails.setText(utils._("Details") + (detailState ? " <<" : " >>"));
             this.setResizable(detailState);
             this.pack();
+        } else if (source == btnCopy) {
+            StringSelection contents = new StringSelection(fullMessage);
+            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(contents, contents);
         }
     }
     

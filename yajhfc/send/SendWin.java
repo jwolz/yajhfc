@@ -35,6 +35,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
+import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -54,6 +55,7 @@ import javax.swing.SpinnerNumberModel;
 
 import yajhfc.CancelAction;
 import yajhfc.ClipboardPopup;
+import yajhfc.ExcDialogAbstractAction;
 import yajhfc.ExceptionDialog;
 import yajhfc.FaxIntProperty;
 import yajhfc.FaxOptions;
@@ -75,7 +77,6 @@ final class SendWin extends JDialog implements SendWinControl  {
     private static final Logger log = Logger.getLogger(SendWin.class.getName());
     
     JPanel jContentPane = null;
-    JButton buttonSend = null;
     JButton buttonCancel = null;
     
     JTabbedPane tabMain = null;
@@ -83,7 +84,6 @@ final class SendWin extends JDialog implements SendWinControl  {
     // Common:
     JPanel paneCommon = null;
     
-    JButton buttonPhoneBook = null;
     JTextField textNumber = null;
     
     JComboBox comboResolution = null;
@@ -115,7 +115,6 @@ final class SendWin extends JDialog implements SendWinControl  {
     JTextField textSubject = null;
     JScrollPane scrollToComments = null;
     JTextArea textToComments = null;
-    JButton buttonPreview;
     
     ClipboardPopup defClPop, clpNumbers, clpFiles;
     
@@ -366,16 +365,17 @@ final class SendWin extends JDialog implements SendWinControl  {
             Box box = Box.createHorizontalBox();
             textNumber = new JTextField();
             box.add(textNumber);
-            box.add(getButtonPhoneBook());
+            JButton buttonPhonebook = getButtonPhoneBook();
+            box.add(buttonPhonebook);
             
-            Dimension d = buttonPhoneBook.getPreferredSize();
+            Dimension d = buttonPhonebook.getPreferredSize();
             Dimension d2 = textNumber.getPreferredSize();
             if (d2.height > d.height)
                 d.height = d2.height;
             else
                 d2.height = d.height;
             d2.width = Integer.MAX_VALUE;
-            buttonPhoneBook.setMaximumSize(d);
+            buttonPhonebook.setMaximumSize(d);
             textNumber.setMaximumSize(d2);
             
             tflNumbers = new TextFieldList<NumberTFLItem>(textNumber, false, sendController.getNumbers()) {
@@ -430,7 +430,7 @@ final class SendWin extends JDialog implements SendWinControl  {
                     super.displayItem(sel);
                 }
             };
-            tflNumbers.addLocalComponent(buttonPhoneBook);
+            tflNumbers.addLocalComponent(buttonPhonebook);
             clpNumbers = new ClipboardPopup();
             clpNumbers.getPopupMenu().addSeparator();
             clpNumbers.getPopupMenu().add(tflNumbers.getModifyAction());
@@ -513,21 +513,44 @@ final class SendWin extends JDialog implements SendWinControl  {
      * @return javax.swing.JButton	
      */
     private JButton getButtonSend() {
-        if (buttonSend == null) {
-            buttonSend = new JButton();
+        //if (buttonSend == null) {
+            Action actSend = new ExcDialogAbstractAction() {
+                @Override
+                protected void actualActionPerformed(ActionEvent e) {
+                    saveSettingsToSendController();
+                    
+                    if (!pollMode && tflFiles.model.getSize() == 0) {
+                        if (checkUseCover.isSelected()) {
+                            if (JOptionPane.showConfirmDialog(SendWin.this, _("You haven't selected a file to transmit, so your fax will ONLY contain the cover page.\nContinue anyway?"), _("Continue?"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION)
+                                return;
+                        } else {
+                            JOptionPane.showMessageDialog(SendWin.this, _("To send a fax you must select at least one file!"), _("Warning"), JOptionPane.INFORMATION_MESSAGE);
+                            return;
+                        }
+                    }
+                    
+                    if (tflNumbers.model.getSize() == 0) {
+                        JOptionPane.showMessageDialog(SendWin.this, _("To send a fax you have to enter at least one phone number!"), _("Warning"), JOptionPane.INFORMATION_MESSAGE);
+                        return;
+                    }
+
+                    sendController.sendFax();
+                    modalResult = true;
+                }
+            };
             if (pollMode) {
-                buttonSend.setText(_("Poll"));
-                buttonSend.setIcon(utils.loadIcon("general/Import"));
+                actSend.putValue(Action.NAME, _("Poll"));
+                actSend.putValue(Action.SMALL_ICON, utils.loadIcon("general/Import"));
             } else {
-                buttonSend.setText(_("Send"));
-                buttonSend.setIcon(utils.loadIcon("general/SendMail"));
+                actSend.putValue(Action.NAME, _("Send"));
+                actSend.putValue(Action.SMALL_ICON, utils.loadIcon("general/SendMail"));
             }
+            JButton buttonSend = new JButton(actSend);
 
             /*ButtonSend.setMinimumSize(buttonSize);
             ButtonSend.setPreferredSize(buttonSize);
             ButtonSend.setMaximumSize(buttonSize);*/
-            buttonSend.addActionListener(new SendButtonListener());
-        }
+        //}
         return buttonSend;
     }
 
@@ -545,10 +568,9 @@ final class SendWin extends JDialog implements SendWinControl  {
     }
 
     private JButton getButtonPreview() {
-        if (buttonPreview == null) {
-            buttonPreview = new JButton(_("Preview"), utils.loadIcon("general/PrintPreview"));
-            buttonPreview.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
+        //if (buttonPreview == null) {
+            Action actPreview = new ExcDialogAbstractAction(_("Preview"), utils.loadIcon("general/PrintPreview")) {
+                public void actualActionPerformed(ActionEvent e) {
                     saveSettingsToSendController();
                     
                     if (!checkUseCover.isSelected() && tflFiles.model.getSize() == 0) {
@@ -558,8 +580,9 @@ final class SendWin extends JDialog implements SendWinControl  {
                     
                     sendController.previewFax((NumberTFLItem)tflNumbers.list.getSelectedValue());
                 }
-            });
-        }
+            };
+            JButton buttonPreview = new JButton(actPreview);
+        //}
         return buttonPreview;
     }
     
@@ -582,12 +605,9 @@ final class SendWin extends JDialog implements SendWinControl  {
     }
     
     private JButton getButtonPhoneBook() {
-        if (buttonPhoneBook == null) {
-            buttonPhoneBook = new JButton(utils.loadIcon("general/Bookmarks"));
-            buttonPhoneBook.setToolTipText(_("Choose number from phone book"));
-            
-            buttonPhoneBook.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
+        //if (buttonPhoneBook == null) {
+            Action actPhonebook = new ExcDialogAbstractAction() {
+                public void actualActionPerformed(ActionEvent e) {
                     utils.setWaitCursor(SendWin.this);
                     NewPhoneBookWin pbw = new NewPhoneBookWin(SendWin.this);
                     utils.unsetWaitCursorOnOpen(SendWin.this, pbw);
@@ -614,8 +634,12 @@ final class SendWin extends JDialog implements SendWinControl  {
                         textToName.setText(name);*/
                     }
                 }
-            });
-        }
+            };
+            actPhonebook.putValue(Action.SMALL_ICON, utils.loadIcon("general/Bookmarks"));
+            actPhonebook.putValue(Action.SHORT_DESCRIPTION, _("Choose number from phone book"));
+            JButton buttonPhoneBook = new JButton(actPhonebook);
+            
+        //}
         return buttonPhoneBook;
     }
     
@@ -679,34 +703,6 @@ final class SendWin extends JDialog implements SendWinControl  {
             sendController.setCustomCover(null);
         }
     }
-
-    
-    class SendButtonListener implements ActionListener {
-               
-        public void actionPerformed(ActionEvent e) {
-            
-            saveSettingsToSendController();
-            
-            if (!pollMode && tflFiles.model.getSize() == 0) {
-                if (checkUseCover.isSelected()) {
-                    if (JOptionPane.showConfirmDialog(SendWin.this, _("You haven't selected a file to transmit, so your fax will ONLY contain the cover page.\nContinue anyway?"), _("Continue?"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION)
-                        return;
-                } else {
-                    JOptionPane.showMessageDialog(SendWin.this, _("To send a fax you must select at least one file!"), _("Warning"), JOptionPane.INFORMATION_MESSAGE);
-                    return;
-                }
-            }
-            
-            if (tflNumbers.model.getSize() == 0) {
-                JOptionPane.showMessageDialog(SendWin.this, _("To send a fax you have to enter at least one phone number!"), _("Warning"), JOptionPane.INFORMATION_MESSAGE);
-                return;
-            }
-
-            sendController.sendFax();
-            modalResult = true;
-        }
-    }
-
 
     public Window getWindow() {
         return this;
