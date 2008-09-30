@@ -636,7 +636,7 @@ public final class mainwin extends JFrame {
                     return;
                 }
                 if (selTable.getSelectedRowCount() == 1) {
-                    JFileChooser jfc = new JFileChooser();
+                    JFileChooser jfc = new yajhfc.util.SafeJFileChooser();
                         
                     try {
                         YajJob yj = selTable.getJobForRow(selTable.getSelectedRow());
@@ -675,7 +675,7 @@ public final class mainwin extends JFrame {
                         ExceptionDialog.showExceptionDialog(mainwin.this, _("An error occured saving the fax:"), e1);
                     }
                 } else {
-                    JFileChooser jfc = new JFileChooser();
+                    JFileChooser jfc = new yajhfc.util.SafeJFileChooser();
                     jfc.setDialogTitle(_("Select a directory to save the faxes in"));
                     jfc.setApproveButtonText(_("Select"));
                     jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);

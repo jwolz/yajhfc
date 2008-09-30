@@ -120,7 +120,7 @@ public class FileTextField extends JComponent implements ActionListener {
         jButton.setMaximumSize(d);
         jTextField.setMaximumSize(d2);
         
-        jFileChooser = new JFileChooser();
+        jFileChooser = new yajhfc.util.SafeJFileChooser();
         
         add(jTextField);
         add(jButton);
