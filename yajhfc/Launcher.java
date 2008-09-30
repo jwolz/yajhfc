@@ -541,7 +541,7 @@ public final class Launcher {
         protected String selection = null;
         
         public void run() {
-            JFileChooser chooser = new JFileChooser();
+            JFileChooser chooser = new yajhfc.util.SafeJFileChooser();
             FileFilter logFiles = new ExampleFileFilter("log", "Log files");
             chooser.addChoosableFileFilter(logFiles);
             chooser.setFileFilter(logFiles);

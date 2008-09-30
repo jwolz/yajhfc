@@ -96,7 +96,7 @@ public class XMLPhoneBook extends PhoneBook {
 
     @Override
     public String browseForPhoneBook() {
-        JFileChooser jfc = new JFileChooser(fileName);
+        JFileChooser jfc = new yajhfc.util.SafeJFileChooser(fileName);
         jfc.removeChoosableFileFilter(jfc.getAcceptAllFileFilter());
         ExampleFileFilter ff = new ExampleFileFilter("phonebook", utils._("Phonebook files"));
         jfc.addChoosableFileFilter(ff);

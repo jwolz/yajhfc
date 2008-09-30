@@ -984,7 +984,7 @@ public class OptionsWin extends JDialog {
                 
                 private File chooseFile(String title) {
                     if (fileChooser == null) {
-                        fileChooser = new JFileChooser();
+                        fileChooser = new yajhfc.util.SafeJFileChooser();
                         fileChooser.setAcceptAllFileFilterUsed(false);
                         fileChooser.addChoosableFileFilter(new ExampleFileFilter("jar", utils._("JAR files")));
                     }
