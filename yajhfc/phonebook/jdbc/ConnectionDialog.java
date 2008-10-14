@@ -37,6 +37,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -49,6 +50,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -89,7 +91,8 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
     /**
      * A map mapping field names to user visible captions
      */
-    private Map<String,String> fieldNameMap;
+    private Map<String,FieldMapEntry> fieldNameMap;
+    
     private Map<String, Component> settingsComponents = new HashMap<String, Component>();
     private static final String DBURL_FIELD = "dbURL";
     private static final String DRIVER_FIELD = "driver";
@@ -97,7 +100,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
     private static final String PASSWORD_FIELD = "pwd";
     private static final String TABLE_FIELD = "table";
     private static final String ASKFORPWD_FIELD = "askForPWD";
-    private static final int FIXEDFIELD_COUNT = 6;
+//    private static final int FIXEDFIELD_COUNT = 6;
     
     private static final String FIELD_ClientProperty = "YajHFC-FieldComboField";
     
@@ -117,7 +120,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         
         return lbl; 
     }
-    private JComboBox addFieldCombo(JPanel container, String field, int col, int row) {
+    private JComboBox addFieldCombo(JPanel container, String field, String caption, int col, int row) {
         JComboBox rv = new JComboBox();
         rv.setEditable(true);
         rv.putClientProperty(FIELD_ClientProperty, field);
@@ -127,12 +130,39 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         TableLayoutConstraints layout = new TableLayoutConstraints(col, row);
         layout.hAlign = TableLayoutConstraints.FULL;
         layout.vAlign = TableLayoutConstraints.CENTER;
-        addWithLabel(container, rv, fieldNameMap.get(field), layout);
+        addWithLabel(container, rv, caption, layout);
         return rv;
     }
-    private void initialize(String fieldPrompt, AbstractConnectionSettings template) {
-        final int varFieldCount = (int)Math.ceil((template.getAvailableFields().size() - FIXEDFIELD_COUNT) / (double)2);
-        final int len = varFieldCount * 2 + 18; 
+    private JComponent addAdditionalEntryField(JPanel container, String field, FieldMapEntry entry, int col, int row) {
+        JComponent result;
+        if (entry.dataType.equals(Boolean.class)) {
+            result = new JCheckBox(entry.caption);
+            container.add(result, new TableLayoutConstraints(col-2,row,col,row,TableLayoutConstraints.LEFT,TableLayoutConstraints.CENTER));
+        } else if (entry.dataType.equals(String.class)) {
+            result = new JTextField();
+            addWithLabel(container, result, entry.caption, new TableLayoutConstraints(col,row,col,row,TableLayoutConstraints.FULL,TableLayoutConstraints.CENTER));
+        } else {
+            throw new IllegalArgumentException("Unsupported data type for additional field.");
+        }
+        settingsComponents.put(field, result);
+        return result;
+    }
+    
+    private void initialize(String fieldPrompt) {
+        //final int varFieldCount = (template.getAvailableFields().size() - FIXEDFIELD_COUNT + 1) / 2;
+        //Count the number of "data fields" and additional fields
+        int dataFieldCount = 0, addFieldCount = 0;
+        for (FieldMapEntry entry : fieldNameMap.values()) {
+            if (entry.isDataField) {
+                dataFieldCount++;
+            } else {
+                addFieldCount++;
+            }
+        }
+        
+        final int dataRowCount = ((dataFieldCount + 1) / 2)*2;
+        final int addRowCount = ((addFieldCount + 1) / 2)*2;
+        final int len = dataRowCount + addRowCount + 18; 
         double dLay[][] = {
                 {border, TableLayout.PREFERRED, border, 0.5, border, TableLayout.PREFERRED, border, TableLayout.FILL, border},      
                 new double[len]
@@ -145,7 +175,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
                 dLay[1][i] = rowh;
             }
         }
-        dLay[1][11] = dLay[1][len - 3] = 
+        dLay[1][11+addRowCount] = dLay[1][len - 3] = 
         dLay[1][len-1] = TableLayout.PREFERRED;
         
         TableLayout lay = new TableLayout(dLay);
@@ -203,8 +233,8 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         addWithLabel(jContentPane, comboTable, _("Table:"), "3, 9, 7, 9, f, c");
         settingsComponents.put(TABLE_FIELD, comboTable);
         
-        jContentPane.add(new JSeparator(JSeparator.HORIZONTAL), "0, 11, 8, 11");
-        jContentPane.add(new JLabel(fieldPrompt), "1, 13, 7, 13, f, c");
+        jContentPane.add(new JSeparator(JSeparator.HORIZONTAL), new TableLayoutConstraints(0, 11 + addRowCount, 8, 11 + addRowCount));
+        jContentPane.add(new JLabel(fieldPrompt), new TableLayoutConstraints(1, 13+addRowCount, 7, 13+addRowCount, TableLayoutConstraints.FULL, TableLayoutConstraints.CENTER));
 //        comboGivenName = addFieldCombo(jContentPane, _("Given name:"), "3, 15, f, c");
 //        comboName = addFieldCombo(jContentPane, _("Name:"), "7, 15, f, c");
 //        comboTitle = addFieldCombo(jContentPane, _("Title:"), "3, 17, f, c");
@@ -213,11 +243,17 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
 //        comboVoiceNumber = addFieldCombo(jContentPane, _("Voice number:"), "7, 19, f, c");
 //        comboFaxNumber = addFieldCombo(jContentPane, _("Fax number:"), "3, 21, f, c");
 //        comboComment = addFieldCombo(jContentPane, _("Comments:"), "7, 21, f, c");
-        int counter = 0;
-        for (String field : template.getAvailableFields()) {
+        
+        // Add variable fields
+        for (Map.Entry<String, FieldMapEntry> entry : fieldNameMap.entrySet()) {
+            String field = entry.getKey();
             if (!settingsComponents.containsKey(field)) { // Only add a field once (especially don't add fixed fields here)
-                addFieldCombo(jContentPane, field, 3 + 4 * (counter % 2), 15 + 2*(counter/2));
-                counter++;
+                int ordinalPos = entry.getValue().ordinalPosition;
+                if (entry.getValue().isDataField) {
+                    addFieldCombo(jContentPane, field, entry.getValue().caption, 3 + 4 * (ordinalPos % 2), 15 + addRowCount + 2*(ordinalPos/2));
+                } else {
+                    addAdditionalEntryField(jContentPane, field, entry.getValue(), 3 + 4 * (ordinalPos % 2), 11 + 2*(ordinalPos/2));
+                }
             }
         }
         
@@ -336,11 +372,12 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
             ResultSetMetaData rsmd = rs.getMetaData();
             
             Vector<String> fieldNames = new Vector<String>(rsmd.getColumnCount() + 1);
-            if (noFieldOK) {
-                fieldNames.add(ConnectionSettings.noField_translated);
-            }
             for (int i = 1; i <= rsmd.getColumnCount(); i++) {
                 fieldNames.add(rsmd.getColumnName(i));
+            }
+            Collections.sort(fieldNames);
+            if (noFieldOK) {
+                fieldNames.add(0, ConnectionSettings.noField_translated);
             }
             for (JComboBox combo : fieldCombos) {
                 Object o = combo.getSelectedItem();
@@ -478,20 +515,22 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         }
     }
     
-    public ConnectionDialog(Frame owner, String title, String fieldPrompt, Map<String,String> fieldCaptionMap, AbstractConnectionSettings template, boolean noFieldOK) {
+    public ConnectionDialog(Frame owner, String title, String fieldPrompt, Map<String,FieldMapEntry> fieldCaptionMap, boolean noFieldOK) {
         super(owner, title);
      
         this.noFieldOK = noFieldOK;
         this.fieldNameMap = fieldCaptionMap;
-        initialize(fieldPrompt, template);
+        initialize(fieldPrompt);
     }
-    public ConnectionDialog(Dialog owner, String title, String fieldPrompt, Map<String,String> fieldCaptionMap, AbstractConnectionSettings template, boolean noFieldOK) {
+    public ConnectionDialog(Dialog owner, String title, String fieldPrompt, Map<String,FieldMapEntry> fieldCaptionMap, boolean noFieldOK) {
         super(owner, title);
      
         this.noFieldOK = noFieldOK;
         this.fieldNameMap = fieldCaptionMap;
-        initialize(fieldPrompt, template);
+        initialize(fieldPrompt);
     }
+    
+    
     
     /**
      * Shows the dialog (initialized with the values of target)
@@ -508,5 +547,24 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         }
         dispose();
         return clickedOK;
+    }
+    
+    public static class FieldMapEntry {
+        public final String caption;
+        public final int ordinalPosition;
+        public final boolean isDataField;
+        public final Class<?> dataType;
+        
+        public FieldMapEntry(String caption, int ordinalPosition) {
+            this(caption,ordinalPosition,true,String.class);
+        }
+        
+        public FieldMapEntry(String caption, int ordinalPosition, boolean isDataField, Class<?> dataType) {
+            super();
+            this.caption = caption;
+            this.isDataField = isDataField;
+            this.ordinalPosition = ordinalPosition;
+            this.dataType = dataType;
+        }
     }
 }

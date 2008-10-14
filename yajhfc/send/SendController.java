@@ -218,7 +218,7 @@ public class SendController {
         private void setIfNotEmpty(Job j, String prop, String val) {
             try {
                 if (val.length() >  0)
-                    j.setProperty(prop, val);
+                    j.setProperty(prop, utils.sanitizeInput(val));
             } catch (Exception e) {
                 log.log(Level.WARNING, "Couldn't set additional job info " + prop + ": ", e);
             }
@@ -285,7 +285,7 @@ public class SendController {
                         //TEST }
                     }            
 
-                    String modem = getModem();
+                    String modem = utils.sanitizeInput(getModem());
                     if (utils.debugMode) {
                         log.fine("Use modem: " + modem);
                         //utils.debugOut.println(modem);
@@ -311,8 +311,8 @@ public class SendController {
 
                             stepProgressBar(5);
 
-                            j.setFromUser(fo.user);
-                            j.setNotifyAddress(fo.notifyAddress);
+                            j.setFromUser(utils.sanitizeInput(fo.user));
+                            j.setNotifyAddress(utils.sanitizeInput(fo.notifyAddress));
                             j.setMaximumDials(fo.maxDial);
 
                             if (!pollMode) {
@@ -322,7 +322,7 @@ public class SendController {
                                 setIfNotEmpty(j, "TOLOCATION", numItem.location);
                                 setIfNotEmpty(j, "TOVOICE", numItem.voiceNumber);
                                 setIfNotEmpty(j, "REGARDING", subject);
-                                setIfNotEmpty(j, "COMMENTS", comments.replace("\n", " "));
+                                setIfNotEmpty(j, "COMMENTS", comments);
                                 setIfNotEmpty(j, "FROMCOMPANY", fo.FromCompany);
                                 setIfNotEmpty(j, "FROMLOCATION", fo.FromLocation);
                                 setIfNotEmpty(j, "FROMVOICE", fo.FromVoiceNumber);
@@ -331,9 +331,10 @@ public class SendController {
                                     setIfNotEmpty(j, "USRKEY", subject);
                                 }
                             }
-
-                            j.setDialstring(numItem.faxNumber);
-                            j.setProperty("EXTERNAL", numItem.faxNumber); // needed to fix an error while sending multiple jobs
+                            
+                            String faxNumber = utils.sanitizeInput(numItem.faxNumber);
+                            j.setDialstring(faxNumber);
+                            j.setProperty("EXTERNAL", faxNumber); // needed to fix an error while sending multiple jobs
                             j.setMaximumTries(maxTries);
                             j.setNotifyType(notificationType);
                             j.setPageDimension(paperSize.size);

@@ -178,6 +178,13 @@ mit einem Faxauftrag verbundenen Dokumenten zurück.
 Wenn Sie dieses Kontrollfeld aktivieren, versucht YajHFC den Dateityp selbst herauszufinden,
 wenn als Typ PCL zurückgegeben wird (was üblicherweise recht gut funktioniert).
 
+\subsection{Ich bekomme häufig eine Fehlermeldung, wenn ich zwei oder mehr Faxe hintereinander sende.}
+
+Manche Versionen des HylaFAX"=Servers haben scheinbar Probleme, wenn mehr als ein Fax innerhalb einer Sitzung gesendet wird.
+
+Um dieses Problem zu umgehen, öffnen Sie bitte den Tab "`Server"' im Optionendialogfeld, aktivieren das Kontrollkästchen "`Erstelle neue Sitzung für jede Aktion"' und probieren aus, ob das Problem weiterhin besteht.
+Falls dies auch nichts hilft, schreiben Sie mir bitte einen Bug Report.
+
 \subsection{Unter Windows speichert YajHFC seine Konfiguration manchmal unter \texttt{C:\textbackslash .yajhfc} und nicht unter \texttt{C:\textbackslash Dokumente und Einstellungen\textbackslash BENUTZERNAME\textbackslash .yajhfc}}
 
 In der Standardeinstellung speichert YajHFC seine Konfigurationsinformationen im Unterverzeichnis \texttt{.yajhfc} des Verzeichnisses, das von der Java-System-Eigenschaft \texttt{user.home} zurückgeliefert wird.

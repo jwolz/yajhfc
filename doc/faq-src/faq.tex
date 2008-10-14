@@ -168,6 +168,13 @@ Some HylaFAX versions incorrectly report a file type of ``PCL'' for all document
 associated with a job. If this checkbox is checked, YajHFC tries to guess the
 file type if PCL is reported (which usually works pretty well).
 
+\subsection{I often get an error when I am sending two or more faxes in a row. What can I do about it?}
+
+Some versions of the HylaFAX server seem to have problems when more than one fax is submitted per session.
+
+To work around that problem, go to the \texttt{Server} tab in the Options dialog, check the \texttt{Create new session for every action} box and try if the problem persists.
+If this does \emph{not} help, please mail me a bug report.
+
 \subsection{YajHFC running under Windows sometimes saves its configuration in \texttt{C:\textbackslash .yajhfc} instead of \texttt{C:\textbackslash Documents and Settings\textbackslash USERNAME\textbackslash .yajhfc}}
 
 As a default YajHFC saves its configuration information in the subdirectory \texttt{.yajhfc} of the directory returned by

@@ -39,7 +39,9 @@ import yajhfc.ExceptionDialog;
 import yajhfc.PasswordDialog;
 import yajhfc.PluginManager;
 import yajhfc.utils;
+import yajhfc.phonebook.AbstractConnectionSettings;
 import yajhfc.phonebook.DefaultPhoneBookEntryComparator;
+import yajhfc.phonebook.GeneralConnectionSettings;
 import yajhfc.phonebook.PhoneBook;
 import yajhfc.phonebook.PhoneBookEntry;
 import yajhfc.phonebook.PhoneBookException;
@@ -53,16 +55,18 @@ public class JDBCPhoneBook extends PhoneBook {
     ArrayList<JDBCPhoneBookEntry> deleted_items = new ArrayList<JDBCPhoneBookEntry>();
     ArrayList<DBKey> rowId = new ArrayList<DBKey>();
     
-    protected static final Map<String,String> fieldNameMap = new HashMap<String,String>(); 
+    protected static final Map<String,ConnectionDialog.FieldMapEntry> fieldNameMap = new HashMap<String,ConnectionDialog.FieldMapEntry>(); 
     static {
-        fieldNameMap.put("givenName", utils._("Given name:"));
-        fieldNameMap.put("name", utils._("Name:"));
-        fieldNameMap.put("title", utils. _("Title:"));
-        fieldNameMap.put("company", utils._("Company:"));
-        fieldNameMap.put("location", utils._("Location:"));
-        fieldNameMap.put("faxNumber", utils._("Fax number:"));
-        fieldNameMap.put("voiceNumber", utils._("Voice number:"));
-        fieldNameMap.put("comment", utils._("Comments:"));
+        fieldNameMap.put("givenName", new ConnectionDialog.FieldMapEntry(utils._("Given name:"),0));
+        fieldNameMap.put("name", new ConnectionDialog.FieldMapEntry(utils._("Name:"),1));
+        fieldNameMap.put("title", new ConnectionDialog.FieldMapEntry(utils. _("Title:"),2));
+        fieldNameMap.put("company", new ConnectionDialog.FieldMapEntry(utils._("Company:"),3));
+        fieldNameMap.put("location", new ConnectionDialog.FieldMapEntry(utils._("Location:"),4));
+        fieldNameMap.put("faxNumber", new ConnectionDialog.FieldMapEntry(utils._("Fax number:"),5));
+        fieldNameMap.put("voiceNumber", new ConnectionDialog.FieldMapEntry(utils._("Voice number:"),6));
+        fieldNameMap.put("comment", new ConnectionDialog.FieldMapEntry(utils._("Comments:"),7));
+        
+        fieldNameMap.put("readOnly", new ConnectionDialog.FieldMapEntry(utils._("Open as read only"),0,false,Boolean.class));
     }
     
     public static final String PB_Prefix = "JDBC";      // The prefix of this Phonebook type's descriptor
@@ -88,7 +92,7 @@ public class JDBCPhoneBook extends PhoneBook {
         ConnectionSettings cs = new ConnectionSettings(settings);
         ConnectionDialog cDlg = new ConnectionDialog(parentDialog, utils._("New JDBC phonebook"),
                 utils._("Please select which database fields correspond to the Phonebook entry fields of YajHFC:"),
-                fieldNameMap, cs, true);
+                fieldNameMap, true);
         if (cDlg.promptForNewSettings(cs))
             return PB_Prefix + ":" + cs.saveToString();
         else
@@ -96,40 +100,7 @@ public class JDBCPhoneBook extends PhoneBook {
     }
 
     @Override
-    public void close() {
-        /*if (selectStmt != null) {
-            try {
-                selectStmt.close();
-            } catch (Exception e) {
-                //NOP
-            }
-            selectStmt = null;
-        }
-        if (insertStmt != null) {
-            try {
-                insertStmt.close();
-            } catch (Exception e) {
-                //NOP
-            }
-            insertStmt = null;
-        }
-        if (updateStmt != null) {
-            try {
-                updateStmt.close();
-            } catch (Exception e) {
-                //NOP
-            }
-            updateStmt = null;
-        }
-        if (deleteStmt != null) {
-            try {
-                deleteStmt.close();
-            } catch (Exception e) {
-                //NOP
-            }
-            deleteStmt = null;
-        }*/
-        
+    public void close() {        
         if (connection != null) {
             commitToDB();
             
@@ -288,6 +259,19 @@ public class JDBCPhoneBook extends PhoneBook {
                 rowId.add(key);
             }
             rs.close();
+            
+            if (rowId.size() == 0) {
+                log.info("No key found, using all data fields as replacement");
+                
+                for (int i = 0; i < GeneralConnectionSettings.FIELD_COUNT; i++) {
+                    String mapping = settings.getMappingFor(i);
+                    if (!AbstractConnectionSettings.isNoField(mapping)) {
+                        DBKey key = new DBKey(mapping);
+                        key.isDataColumn = true;
+                        rowId.add(key);
+                    }
+                }
+            }
         } catch (Exception e) {
             ExceptionDialog.showExceptionDialog(parentDialog, utils._("Could not connect to the database:"), e);
             connection = null;
@@ -329,12 +313,24 @@ public class JDBCPhoneBook extends PhoneBook {
         return (connection != null);
     }
 
+    @Override
+    public boolean isReadOnly() {
+        return settings.readOnly;
+    }
+    
     void commitToDB() {
         PreparedStatement insertStmt, updateStmt, deleteStmt;
+        if (isReadOnly())
+            return;
+        
         try {   
             String query = getINSERTQuery();
             if (utils.debugMode) {
                 log.fine("JDBC phone book: INSERT query: " + query);
+            }
+            if (query == null) {
+                JOptionPane.showMessageDialog(parentDialog, MessageFormat.format(utils._("Could not save the changes: No valid {0} query."), "INSERT"), utils._("Error"), JOptionPane.WARNING_MESSAGE);
+                return;
             }
             insertStmt = connection.prepareStatement(query);
 
@@ -342,11 +338,19 @@ public class JDBCPhoneBook extends PhoneBook {
             if (utils.debugMode) {
                 log.fine("JDBC phone book: UPDATE query: " + query);
             }
+            if (query == null) {
+                JOptionPane.showMessageDialog(parentDialog, MessageFormat.format(utils._("Could not save the changes: No valid {0} query."), "UPDATE"), utils._("Error"), JOptionPane.WARNING_MESSAGE);
+                return;
+            }
             updateStmt = connection.prepareStatement(query);
 
             query = getDELETEQuery();
             if (utils.debugMode) {
                 log.fine("JDBC phone book: DELETE query: " + query);
+            }
+            if (query == null) {
+                JOptionPane.showMessageDialog(parentDialog, MessageFormat.format(utils._("Could not save the changes: No valid {0} query."), "DELETE"), utils._("Error"), JOptionPane.WARNING_MESSAGE);
+                return;
             }
             deleteStmt = connection.prepareStatement(query);
 
