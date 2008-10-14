@@ -357,12 +357,13 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     }
     
     void checkMenuEnable() {
-        boolean delOK = false, writeOK = false, browseOK = false;
+        boolean delOK = false, writeOK = false, browseOK = false, selOK = false;
         boolean havePB = currentPhonebook != null;
         
         browseOK = (treeModel.getPhoneBooks().size() > 0);
         writeOK = havePB && !currentPhonebook.isReadOnly() && currentPhonebook.isOpen();
-        delOK = (selectedItems.size() > 0);
+        selOK = (selectedItems.size() > 0);
+        delOK = selOK && writeOK;
         
         removeEntryAction.setEnabled(delOK);
         addEntryAction.setEnabled(writeOK);
@@ -373,7 +374,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         listRemoveAction.setEnabled(havePB);
         buttonBrowse.setEnabled(havePB);
         if (selectAction != null)
-            selectAction.setEnabled(delOK);
+            selectAction.setEnabled(selOK);
     }
     
     public void actionPerformed(ActionEvent e) {

@@ -44,7 +44,8 @@ public class SafeFileSystemView extends FileSystemView {
         
     }
 
-    private static final String newFolderString = UIManager.getString("FileChooser.other.newFolder");
+    private static final String newFolderStringID = "FileChooser.other.newFolder";
+    private static final String newFolderString = UIManager.getString(newFolderStringID);
 
     private File _defaultDirectory = null;
 

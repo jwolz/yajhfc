@@ -44,6 +44,7 @@ import yajhfc.PluginManager;
 import yajhfc.utils;
 import yajhfc.phonebook.AbstractConnectionSettings;
 import yajhfc.phonebook.jdbc.ConnectionDialog;
+import yajhfc.phonebook.jdbc.ConnectionDialog.FieldMapEntry;
 
 /**
  * @author jonas
@@ -66,10 +67,10 @@ public class JDBCPersistentReadState extends PersistentReadState {
     private static final String UPDATE_TEMPLATE = "UPDATE {0} SET {2} = ? WHERE {1} = ?;";
     private static final String INSERT_TEMPLATE = "INSERT INTO {0} ({1},{2}) VALUES (?,?);";
     
-    protected static final Map<String,String> fieldCaptionMap = new HashMap<String,String>();
+    protected static final Map<String,FieldMapEntry> fieldCaptionMap = new HashMap<String,FieldMapEntry>();
     static {
-        fieldCaptionMap.put("faxNameField", utils._("Fax filename:"));
-        fieldCaptionMap.put("isReadField", utils._("Read/Unread State:"));
+        fieldCaptionMap.put("faxNameField", new FieldMapEntry(utils._("Fax filename:"),0));
+        fieldCaptionMap.put("isReadField", new FieldMapEntry(utils._("Read/Unread State:"),1));
     }
     
     protected synchronized void openConnection() throws ClassNotFoundException, SQLException {
@@ -386,9 +387,9 @@ public class JDBCPersistentReadState extends PersistentReadState {
             ConnectionSettings cs = new ConnectionSettings(oldConfig);
             
             if (parent instanceof Dialog) {
-                cd = new ConnectionDialog((Dialog)parent, dialogTitle, dialogPrompt, fieldCaptionMap, cs, false);
+                cd = new ConnectionDialog((Dialog)parent, dialogTitle, dialogPrompt, fieldCaptionMap, false);
             } else if (parent instanceof Frame) {
-                cd = new ConnectionDialog((Frame)parent, dialogTitle, dialogPrompt, fieldCaptionMap, cs, false);
+                cd = new ConnectionDialog((Frame)parent, dialogTitle, dialogPrompt, fieldCaptionMap, false);
             } else {
                 throw new IllegalArgumentException("parent must be a Dialog or a Frame!");
             }

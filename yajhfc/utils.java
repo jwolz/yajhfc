@@ -53,7 +53,7 @@ public final class utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2008 by Jonas Wolz";
-    public static final String AppVersion = "0.3.8b";
+    public static final String AppVersion = "0.3.8d";
     public static final String AuthorEMail = "Jonas Wolz &lt;jwolz@freenet.de&gt;";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
     
@@ -236,6 +236,7 @@ public final class utils {
         new YajLanguage(Locale.ENGLISH),
         new YajLanguage(Locale.FRENCH),
         new YajLanguage(Locale.GERMAN),
+        new YajLanguage(Locale.ITALIAN),
         new YajLanguage(new Locale("es")),
         new YajLanguage(new Locale("ru"))
     };
@@ -631,6 +632,39 @@ public final class utils {
         final byte[] buf = new byte[8000];
         while ((len = inStream.read(buf)) >= 0) {
             outStream.write(buf, 0, len);
+        }
+    }
+    
+    /**
+     * "Sanitizes" the given input by replacing any new line characters with spaces.
+     * @param input
+     * @param forbiddenChars
+     * @param replacement
+     */
+    public static String sanitizeInput(String input) {
+        return sanitizeInput(input, "\r\n", ' ');    
+    }
+    
+    /**
+     * "Sanitizes" the given input by replacing all characters in forbiddenChars with replacement
+     * @param input
+     * @param forbiddenChars
+     * @param replacement
+     */
+    public static String sanitizeInput(String input, String forbiddenChars, char replacement) {
+        char[] chars = input.toCharArray();
+        boolean changed = false;
+        for (int i = 0; i < chars.length; i++) {
+            if (forbiddenChars.indexOf(chars[i]) >= 0) {
+                chars[i] = replacement;
+                changed = true;
+            }
+        }
+        
+        if (changed) {
+            return new String(chars);
+        } else {
+            return input;
         }
     }
 }

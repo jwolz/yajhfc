@@ -27,6 +27,7 @@ public class ConnectionSettings extends GeneralConnectionSettings {
     public String pwd = "";
     public boolean askForPWD = false;
     public String table = "";
+    public boolean readOnly = false;
     
     public ConnectionSettings(String serialized) {
         super();
