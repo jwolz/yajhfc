@@ -238,7 +238,8 @@ public final class utils {
         new YajLanguage(Locale.GERMAN),
         new YajLanguage(Locale.ITALIAN),
         new YajLanguage(new Locale("es")),
-        new YajLanguage(new Locale("ru"))
+        new YajLanguage(new Locale("ru")),
+        new YajLanguage(new Locale("tr"))
     };
     
     private static File applicationDir;
@@ -652,6 +653,9 @@ public final class utils {
      * @param replacement
      */
     public static String sanitizeInput(String input, String forbiddenChars, char replacement) {
+        if (input == null)
+            return null;
+        
         char[] chars = input.toCharArray();
         boolean changed = false;
         for (int i = 0; i < chars.length; i++) {

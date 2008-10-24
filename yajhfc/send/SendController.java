@@ -312,7 +312,10 @@ public class SendController {
                             stepProgressBar(5);
 
                             j.setFromUser(utils.sanitizeInput(fo.user));
-                            j.setNotifyAddress(utils.sanitizeInput(fo.notifyAddress));
+                            String notifyAddr = utils.sanitizeInput(fo.notifyAddress);
+                            if (notifyAddr != null && notifyAddr.length() > 0) {
+                                j.setNotifyAddress(notifyAddr);
+                            }
                             j.setMaximumDials(fo.maxDial);
 
                             if (!pollMode) {
