@@ -23,8 +23,10 @@ import info.clearthought.layout.TableLayout;
 import info.clearthought.layout.TableLayoutConstraints;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -775,12 +777,8 @@ public class OptionsWin extends JDialog {
         
         public void actionPerformed(ActionEvent e) {
             
-            if (checkUseCustomDefCover.isSelected()) {
-                if (!(new File(ftfCustomDefCover.getText()).canRead())) {
-                    JOptionPane.showMessageDialog(ButtonOK, _("The selected default cover page can not be read."), _("Error"), JOptionPane.ERROR_MESSAGE);
-                    ftfCustomDefCover.getJTextField().requestFocus();
-                    return;
-                }
+            if (!validateInput()) {
+                return;
             }
             
             try {
@@ -789,8 +787,8 @@ public class OptionsWin extends JDialog {
                 foEdit.maxDial = ((Integer)spinMaxDial.getValue()).intValue();
                 foEdit.maxTry = ((Integer)spinMaxTry.getValue()).intValue();
                 foEdit.dateOffsetSecs = (Integer)spinOffset.getValue();
-                foEdit.tableUpdateInterval = (int)((Double)spinTableInterval.getValue() * 1000);
-                foEdit.statusUpdateInterval = (int)((Double)spinStatusInterval.getValue() * 1000);
+                foEdit.tableUpdateInterval = (int)(((Double)spinTableInterval.getValue()).doubleValue() * 1000);
+                foEdit.statusUpdateInterval = (int)(((Double)spinStatusInterval.getValue()).doubleValue() * 1000);
                 foEdit.killTime = (Integer)spinKillTime.getValue();
                 
                 foEdit.notifyAddress = textNotifyAddress.getText();
@@ -875,8 +873,8 @@ public class OptionsWin extends JDialog {
                     JOptionPane.showMessageDialog(OptionsWin.this, utils._("You will need to restart the program for the changes to the list of plugins and JDBC drivers to take full effect."), utils._("Plugins & JDBC"), JOptionPane.INFORMATION_MESSAGE);
                 }
                 
-            } catch (NumberFormatException e1) {
-                JOptionPane.showMessageDialog(ButtonOK, _("Please enter a number."));
+            } catch (Exception e1) {
+                ExceptionDialog.showExceptionDialog(OptionsWin.this, utils._("Error saving the settings:"), e1);
                 return;
             }
             
@@ -884,6 +882,79 @@ public class OptionsWin extends JDialog {
             dispose();
         }
         
+        /**
+         * Validate input. Return true if input is valid.
+         * @return
+         */
+        private boolean validateInput() {
+            if (checkUseCustomDefCover.isSelected()) {
+                if (!(new File(ftfCustomDefCover.getText()).canRead())) {
+                    focusComponent(ftfCustomDefCover.getJTextField());
+                    JOptionPane.showMessageDialog(OptionsWin.this, _("The selected default cover page can not be read."), _("Error"), JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+            }
+            
+            if (textHost.getText().length() == 0) {
+                focusComponent(textHost);
+                JOptionPane.showMessageDialog(OptionsWin.this, _("Please enter a host name."), _("Error"), JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            
+            if (textUser.getText().length() == 0) {
+                focusComponent(textUser);
+                JOptionPane.showMessageDialog(OptionsWin.this, _("Please enter a user name."), _("Error"), JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            
+            if (ftfFaxViewer.getText().length() == 0) {
+                focusComponent(ftfFaxViewer.getJTextField());
+                JOptionPane.showMessageDialog(OptionsWin.this, _("Please enter the command line for the fax viewer."), _("Error"), JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            
+            if (ftfPSViewer.getText().length() == 0) {
+                focusComponent(ftfPSViewer.getJTextField());
+                JOptionPane.showMessageDialog(OptionsWin.this, _("Please enter the command line for the PostScript viewer."), _("Error"), JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            
+            String port = textPort.getText();
+            boolean valid = true;
+            if (port.length() == 0) {
+                valid = false;
+            } else {
+                try {
+                    int iPort = Integer.parseInt(port);
+                    valid = (iPort > 0 && iPort < 65536);
+                } catch (NumberFormatException e) {
+                    valid = false;
+                }
+            }
+            if (!valid) {
+                focusComponent(textPort);
+                JOptionPane.showMessageDialog(OptionsWin.this, _("Please enter a valid port number."), _("Error"), JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            
+            return true;
+        }
+        
+        private void focusTab(Component comp) {
+            Component parent = comp.getParent();
+            if (parent == null || parent instanceof Window) {
+                return;
+            } else if (parent instanceof JTabbedPane) {
+                ((JTabbedPane)parent).setSelectedComponent(comp);
+            } else {
+                focusTab(parent);
+            }
+        }
+        
+        private void focusComponent(Component comp) {
+            focusTab(comp);
+            comp.requestFocusInWindow();
+        }
     }
 
 
