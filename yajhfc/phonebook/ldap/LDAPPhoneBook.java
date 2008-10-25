@@ -161,7 +161,7 @@ public class LDAPPhoneBook extends PhoneBook {
         Collections.sort(entries, DefaultPhoneBookEntryComparator.globalInstance);
     }
 
-    public Object getElementAt(int index) {
+    public PhoneBookEntry getElementAt(int index) {
         return entries.get(index);
     }
 

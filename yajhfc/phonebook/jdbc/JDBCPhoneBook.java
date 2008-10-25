@@ -83,7 +83,7 @@ public class JDBCPhoneBook extends PhoneBook {
         JDBCPhoneBookEntry pb = new JDBCPhoneBookEntry(this);
         int pos = getInsertionPos(pb);
         items.add(pos, pb);
-        fireIntervalAdded(this, pos, pos);
+        fireEntriesAdded(pos, pb);
         return pb;
     }
 
@@ -397,14 +397,16 @@ public class JDBCPhoneBook extends PhoneBook {
         items.remove(oldpos);
         int pos = getInsertionPos(entry);
         items.add(pos, entry);
-        fireContentsChanged(this, oldpos, pos);
+        fireEntriesChanged(eventObjectForInterval(oldpos, pos));
     }
     
     void removeFromList(JDBCPhoneBookEntry entry) {
         int pos = items.indexOf(entry);
-        items.remove(pos);
+        if (pos >= 0) {
+            items.remove(pos);
         
-        fireIntervalRemoved(this, pos, pos);
+            fireEntriesRemoved(pos, entry);
+        }
     }
     
     @Override
@@ -412,7 +414,7 @@ public class JDBCPhoneBook extends PhoneBook {
         Collections.sort(items, DefaultPhoneBookEntryComparator.globalInstance);
     }
 
-    public Object getElementAt(int index) {
+    public PhoneBookEntry getElementAt(int index) {
         return items.get(index);
     }
 

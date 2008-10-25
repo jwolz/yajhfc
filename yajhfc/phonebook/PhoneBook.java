@@ -20,9 +20,9 @@ package yajhfc.phonebook;
 
 import java.awt.Dialog;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
-
-import javax.swing.AbstractListModel;
 
 import yajhfc.filters.StringFilterOperator;
 
@@ -39,7 +39,9 @@ import yajhfc.filters.StringFilterOperator;
  * public static String PB_Description; // A user-readable description of this Phonebook type
  * */
 
-public abstract class PhoneBook extends AbstractListModel {
+public abstract class PhoneBook {
+    
+    protected List<PhonebookEventListener> listeners = new ArrayList<PhonebookEventListener>();
     
     protected static final int CAPTION_LENGTH = 40;
     
@@ -121,7 +123,7 @@ public abstract class PhoneBook extends AbstractListModel {
         increment = searchBackwards ? -1 : 1;
             
         for (; i >= 0 && i < size; i+=increment) {
-            PhoneBookEntry pbe = readEntry(i);
+            PhoneBookEntry pbe = getElementAt(i);
             String val = pbe.getPBField(field);
             if (!caseSensitive)
                 val = val.toLowerCase();
@@ -158,17 +160,75 @@ public abstract class PhoneBook extends AbstractListModel {
     
     public abstract PhoneBookEntry addNewEntry();
     
-    // read entry
-    public PhoneBookEntry readEntry(int index) {
-        return (PhoneBookEntry)getElementAt(index);
-    }
-    
     public int indexOf(PhoneBookEntry pbe) {
         for (int i = 0; i < getSize(); i++) {
-            if (readEntry(i).equals(pbe))
+            if (getElementAt(i).equals(pbe))
                 return i;
         }
         return -1;
+    }
+    
+    // new interface (no more list model because of incompatibility of the removed event
+    //     with the corresponding tree event):
+    public abstract int getSize();
+    
+    public abstract PhoneBookEntry getElementAt(int index);
+    
+    public void addPhonebookEventListener(PhonebookEventListener pel) {
+        listeners.add(pel);
+    }
+    
+    public void removePhonebookEventListener(PhonebookEventListener pel) {
+        listeners.remove(pel);
+    }
+    
+    protected void fireEntriesAdded(int index, PhoneBookEntry pbe) {
+        fireEntriesAdded(new PhonebookEvent(this, new PhoneBookEntry[] { pbe }, new int[] { index }));
+    }
+    
+    protected void fireEntriesChanged(int index, PhoneBookEntry pbe) {
+        fireEntriesChanged(new PhonebookEvent(this, new PhoneBookEntry[] { pbe }, new int[] { index }));
+    }
+    
+    protected PhonebookEvent eventObjectForInterval(int intervalStart, int intervalEnd) {
+        if (intervalEnd < intervalStart) {
+            // Make sure that intervalStart <= intervalEnd
+            int t = intervalEnd;
+            intervalEnd = intervalStart;
+            intervalStart = t;
+        }
+        int[] indices = new int[intervalEnd - intervalStart + 1];
+        PhoneBookEntry[] entries = new PhoneBookEntry[intervalEnd - intervalStart + 1];
+        
+        for (int i=intervalStart; i <= intervalEnd; i++) {
+            int idx = i-intervalStart;
+            indices[idx] = i;
+            entries[idx] = getElementAt(i);
+        }
+        
+        return new PhonebookEvent(this, entries, indices);
+    }
+    
+    protected void fireEntriesRemoved(int index, PhoneBookEntry pbe) {
+        fireEntriesRemoved(new PhonebookEvent(this, new PhoneBookEntry[] { pbe }, new int[] { index }));
+    }
+    
+    protected void fireEntriesAdded(PhonebookEvent pbe) {
+        for (PhonebookEventListener pel : listeners) {
+            pel.elementsAdded(pbe);
+        }
+    }
+    
+    protected void fireEntriesChanged(PhonebookEvent pbe) {
+        for (PhonebookEventListener pel : listeners) {
+            pel.elementsChanged(pbe);
+        }
+    }
+    
+    protected void fireEntriesRemoved(PhonebookEvent pbe) {
+        for (PhonebookEventListener pel : listeners) {
+            pel.elementsRemoved(pbe);
+        }
     }
     
     /**
