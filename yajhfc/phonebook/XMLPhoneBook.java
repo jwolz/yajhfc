@@ -68,14 +68,16 @@ public class XMLPhoneBook extends PhoneBook {
         XMLPhoneBookEntry pb = new XMLPhoneBookEntry(this);
         int pos = getInsertionPos(pb);
         list.add(pos, pb);
-        fireIntervalAdded(this, pos, pos);
+        fireEntriesAdded(pos, pb);
         return pb;
     }
 
     void deleteEntry(PhoneBookEntry entry) {
         int index = list.indexOf(entry);
-        list.remove(index);
-        fireIntervalRemoved(this, index, index);
+        if (index >= 0) {
+            list.remove(index);
+            fireEntriesRemoved(index, entry);
+        }
     }
 
     void writeEntry(PhoneBookEntry entry) {
@@ -83,10 +85,10 @@ public class XMLPhoneBook extends PhoneBook {
         list.remove(oldpos);
         int pos = getInsertionPos(entry);
         list.add(pos, (XMLPhoneBookEntry)entry);
-        fireContentsChanged(this, oldpos, pos);
+        fireEntriesChanged(eventObjectForInterval(oldpos, pos));
     }
 
-    public Object getElementAt(int index) {
+    public PhoneBookEntry getElementAt(int index) {
         return list.get(index);
     }
 
@@ -148,7 +150,11 @@ public class XMLPhoneBook extends PhoneBook {
     
     public void loadFromXML(Element el) {
         NodeList nl = el.getChildNodes();
-        list.clear();
+        if (list.size() > 0) {
+            PhonebookEvent pbe = eventObjectForInterval(0, list.size() - 1);
+            list.clear();
+            fireEntriesRemoved(pbe);
+        }
         
         for (int i = 0; i < nl.getLength(); i++) {
             Node item = nl.item(i);
@@ -160,7 +166,9 @@ public class XMLPhoneBook extends PhoneBook {
         }
         
         resort();
-        fireContentsChanged(this, 0, list.size() - 1);
+        if (list.size() > 0) {
+            fireEntriesAdded(eventObjectForInterval(0, list.size() - 1));
+        }
     }
     
     @Override

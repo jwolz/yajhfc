@@ -428,7 +428,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             
             for (int i=0; i < pb.getSize(); i++) {
                 PhoneBookEntry pbe = currentPhonebook.addNewEntry();
-                pbe.copyFrom(pb.readEntry(i));
+                pbe.copyFrom(pb.getElementAt(i));
             }
             
             if (descriptor != null) // Phone book has been opened above...
@@ -675,9 +675,9 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                 
                 if (JOptionPane.showConfirmDialog(NewPhoneBookWin.this, utils._("Do you want to delete the selected entries?"), "Delete entries", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     PhoneBookEntry[] entries = selectedItems.toArray(new PhoneBookEntry[selectedItems.size()]);
-                    selectedItems.clear();
                     
                     for (PhoneBookEntry pbe : entries) {
+                        selectedItems.clear();
                         pbe.delete();
                     }
                     writeToTextFields(null, null);

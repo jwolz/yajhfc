@@ -22,8 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JTree;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
@@ -35,7 +33,7 @@ import yajhfc.utils;
  * @author jonas
  *
  */
-public class PhoneBookTreeModel implements TreeModel, ListDataListener {
+public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
 
     protected final List<PhoneBook> phoneBooks = new ArrayList<PhoneBook>();
     protected final List<TreeModelListener> treeModelListeners = new ArrayList<TreeModelListener>();
@@ -45,7 +43,7 @@ public class PhoneBookTreeModel implements TreeModel, ListDataListener {
     
     public void addPhoneBook(PhoneBook pb) {
         phoneBooks.add(pb);
-        pb.addListDataListener(this);
+        pb.addPhonebookEventListener(this);
         fireTreeNodesInserted(new TreeModelEvent(this, new Object[] { rootNode },
                 new int[] { phoneBooks.size() - 1 }, new Object[] { pb }));
     }
@@ -56,7 +54,7 @@ public class PhoneBookTreeModel implements TreeModel, ListDataListener {
             return;
         
         phoneBooks.remove(idx);
-        pb.removeListDataListener(this);
+        pb.removePhonebookEventListener(this);
         fireTreeNodesRemoved(new TreeModelEvent(this, new Object[] { rootNode },
                     new int[] { idx }, new Object[] { pb }));
     }
@@ -163,22 +161,12 @@ public class PhoneBookTreeModel implements TreeModel, ListDataListener {
             tml.treeNodesRemoved(tme);
         }
     }
-    
-    protected TreeModelEvent treeModelEventFromListDataEvent(ListDataEvent e) {
-        PhoneBook pb = (PhoneBook)e.getSource();
-        int[] indices = new int[e.getIndex1() - e.getIndex0() + 1];
-        Object[] childs = new Object[indices.length];
-        
-        for (int i = 0; i < indices.length; i++) {
-            int idx = e.getIndex0() + i;
-            indices[i] = idx;
-            childs[i] = pb.getElementAt(idx);
-        }
-        
-        return new TreeModelEvent(this, new Object[] { rootNode, pb }, indices, childs);
+
+    public void elementsAdded(PhonebookEvent e) {
+        fireTreeNodesInserted(new TreeModelEvent(this, new Object[] {rootNode, e.getPhonebook()}, e.getIndices(), e.getEntries()));     
     }
-    
-    public void contentsChanged(ListDataEvent e) {
+
+    public void elementsChanged(PhonebookEvent e) {
         TreePath[] oldSelection = null;
         if (tree != null) {
             oldSelection = tree.getSelectionPaths();
@@ -192,14 +180,10 @@ public class PhoneBookTreeModel implements TreeModel, ListDataListener {
         }
     }
 
-    public void intervalAdded(ListDataEvent e) {
-        fireTreeNodesInserted(treeModelEventFromListDataEvent(e));
+    public void elementsRemoved(PhonebookEvent e) {
+        fireTreeNodesRemoved(new TreeModelEvent(this, new Object[] {rootNode, e.getPhonebook()}, e.getIndices(), e.getEntries()));     
     }
-
-    public void intervalRemoved(ListDataEvent e) {
-        fireTreeNodesRemoved(treeModelEventFromListDataEvent(e));
-    }
-
+    
     public JTree getTree() {
         return tree;
     }
