@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: messages_it\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-10-21 14:01+0200\n"
-"PO-Revision-Date: 2008-10-14 20:06GMT\n"
+"PO-Revision-Date: 2008-10-25 18:41GMT\n"
 "Last-Translator: Jonas Wolz <jwolz@freenet.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -125,11 +125,11 @@ msgstr "Porta in primo piano"
 
 #: ../OptionsWin.java:461
 msgid "Open in viewer"
-msgstr "Apri nel viewer"
+msgstr "Apri nel visualizzatore"
 
 #: ../OptionsWin.java:467
 msgid "And mark as read"
-msgstr "E segala come letto"
+msgstr "E segnala come letto"
 
 #: ../OptionsWin.java:491
 msgid "General settings:"
@@ -278,10 +278,9 @@ msgid "Path settings"
 msgstr "Impostazioni percorso"
 
 #: ../OptionsWin.java:634
-msgid ""
-"Command line for fax viewer: (insert %s as a placeholder for the filename)"
+msgid "Command line for fax viewer: (insert %s as a placeholder for the filename)"
 msgstr ""
-"Comando per il viewer fax:( inserisci il simbolo %s in sostituzione del nome "
+"Comando per il visualizzatore fax:( inserisci il simbolo %s in sostituzione del nome "
 "file)"
 
 #: ../OptionsWin.java:636
@@ -289,7 +288,7 @@ msgid ""
 "Command line for Postscript viewer: (insert %s as a placeholder for the "
 "filename)"
 msgstr ""
-"Comando per il viewer Postscript:( inserisci il simbolo %s in sostituzione "
+"Comando per il visualizzatore Postscript:( inserisci il simbolo %s in sostituzione "
 "del nome file)"
 
 #: ../OptionsWin.java:737
@@ -301,10 +300,8 @@ msgid "(Crossplatform)"
 msgstr "(Multipiattaforma)"
 
 #: ../OptionsWin.java:821
-msgid ""
-"You must restart the program for the change of the language to take effect."
-msgstr ""
-"Riavviare il il programma per rendere effettive le modifiche della lingua. "
+msgid "You must restart the program for the change of the language to take effect."
+msgstr "Riavviare il il programma per rendere effettive le modifiche della lingua. "
 
 #: ../OptionsWin.java:873
 msgid ""
@@ -361,7 +358,7 @@ msgstr ""
 
 #: ../OptionsWin.java:968
 msgid "Read/Unread state of faxes"
-msgstr "Steto dei fax letti/non letti"
+msgstr "Stato dei fax letti/non letti"
 
 #: ../OptionsWin.java:1002
 msgid "Configure..."
@@ -779,7 +776,7 @@ msgstr "Password amministratore"
 #: ../HylaClientManager.java:140
 #, java-format
 msgid "Please enter the administrative password for user \"{0}\"."
-msgstr "Prego immettere la password amministratore pel l'utente \"{0}\"."
+msgstr "Prego immettere la password amministratore pel l''utente \"{0}\"."
 
 #: ../HylaClientManager.java:167 ../mainwin.java:2101
 msgid "An error occured connecting to the server:"
@@ -807,7 +804,7 @@ msgstr "Salvataggio fax {0}"
 #: ../mainwin.java:256 ../mainwin.java:669
 #, java-format
 msgid "An error occured saving the file {0} (job {1}):"
-msgstr "E' avvenuto un errore durante il salvataggio del file {0} (job{1}):"
+msgstr "E'' avvenuto un errore durante il salvataggio del file {0} (job{1}):"
 
 #: ../mainwin.java:261 ../mainwin.java:675
 msgid "An error occured saving the fax:"
@@ -876,7 +873,7 @@ msgstr "Errore durante la sospensione del fax job \"{0}\":\n"
 #: ../mainwin.java:431
 #, java-format
 msgid "Resuming job {0}"
-msgstr "Ripristino di un Job"
+msgstr "Ripristino di un Job {0}"
 
 #: ../mainwin.java:434
 #, java-format
@@ -1301,7 +1298,7 @@ msgstr "Password LDAP"
 #: ../phonebook/ldap/ConnectionDialog.java:254
 #, java-format
 msgid "Please enter the LDAP password for user {0}."
-msgstr "Inserire la passwordi amministratore LDAP per l'utente {0}."
+msgstr "Inserire la passwordi amministratore LDAP per l''utente {0}."
 
 #: ../phonebook/ldap/ConnectionDialog.java:130
 msgid "Use authentication"
@@ -1508,7 +1505,7 @@ msgstr "Password database"
 #: ../readstate/JDBCPersistentReadState.java:85
 #, java-format
 msgid "Please enter the database password for user {0} (database: {1})."
-msgstr "Inserire la pssword del database per l'utente {0} (database: {1})."
+msgstr "Inserire la pssword del database per l''utente {0} (database: {1})."
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:276
 #: ../phonebook/jdbc/ConnectionDialog.java:343
@@ -1517,8 +1514,7 @@ msgstr "Impossibile connettersi al database:"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:286
 msgid "Cannot open phonebook since no database fields were selected!"
-msgstr ""
-"Impossibile aprire la rubrica se non è selezionato nessun campo del database!"
+msgstr "Impossibile aprire la rubrica se non è selezionato nessun campo del database!"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:306
 msgid "Could not load the phone book:"
@@ -1871,7 +1867,7 @@ msgstr "#pagina trasmessa"
 
 #: ../utils.java:125
 msgid "Retry time"
-msgstr "numeri di tentativi"
+msgstr "numero di tentativi"
 
 #: ../utils.java:125
 msgid "Job retry time (MM::SS)"
@@ -2248,8 +2244,7 @@ msgstr "<stdin>"
 
 #: ../send/LocalFileTFLItem.java:60
 #, java-format
-msgid ""
-"The document {0} could not be converted to PostScript, PDF or TIFF. Reason:"
+msgid "The document {0} could not be converted to PostScript, PDF or TIFF. Reason:"
 msgstr "Il documento {0} non può essere convertito"
 
 #: ../send/SendController.java:105
@@ -2341,11 +2336,11 @@ msgstr "Aggiorna la lista oggetti selezionata"
 #: ../send/HylaTFLItem.java:53
 #, java-format
 msgid "Preview is not supported for document \"{0}\"."
-msgstr "L'anteprima non è supportata per il documento \"{0}\"."
+msgstr "L''anteprima non è supportata per il documento \"{0}\"."
 
 #: ../YajAutoLanguage.java:26
 msgid "(System default)"
-msgstr "(Impostazioni di defoult)"
+msgstr "(Impostazioni di default)"
 
 #: ../PrintServiceFileConverter.java:66
 #, java-format
@@ -2358,5 +2353,3 @@ msgstr ""
 msgid "An error occured while converting the document to PostScript."
 msgstr "Errore di conversione del documento in PostScript"
 
-#~ msgid "Please enter a number."
-#~ msgstr "Inserire un numero."
