@@ -1,22 +1,24 @@
-# translation of messages_fr.po to French (France)
+# translation of messages_fr.po to Deutsch
 # This file is distributed under the same license as YajHFC package.
 # Copyright (C) Defmond LAW / Olivier VIGAND.
-# DefMond LAW <defmondlaw@gmail.com> / Olivier VIGAND <frclientfax@groupedeschalets.com>, 2007.
 #
+# DefMond LAW <defmondlaw@gmail.com> / Olivier VIGAND <frclientfax@groupedeschalets.com>, 2007.
+# Jonas Wolz <jwolz@freenet.de>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: 1.0.0\n"
+"Project-Id-Version: messages_fr\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-10-21 14:01+0200\n"
-"PO-Revision-Date: 2008-09-03 09:33+0100\n"
-"Last-Translator: \n"
-"Language-Team: French <frclientfax@groupedeschalets.com>\n"
+"PO-Revision-Date: 2008-10-25 18:37GMT\n"
+"Last-Translator: Jonas Wolz <jwolz@freenet.de>\n"
+"Language-Team: Deutsch <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-Language: French\n"
 "X-Poedit-Country: FRANCE\n"
 "X-Poedit-SourceCharset: utf-8\n"
+"X-Generator: KBabel 1.11.4\n"
 
 #: ../OptionsWin.java:141 ../OptionsWin.java:821 ../mainwin.java:486
 msgid "Options"
@@ -175,8 +177,7 @@ msgstr "Date/Heure (Décalage):"
 msgid ""
 "Offset to be added to dates received from the HylaFAX server before "
 "displaying them."
-msgstr ""
-"Décalage horaire à ajouter aux fax reçu par HylaFax avant de les afficher"
+msgstr "Décalage horaire à ajouter aux fax reçu par HylaFax avant de les afficher"
 
 #: ../OptionsWin.java:511
 msgid "Table refresh interval (secs.):"
@@ -279,8 +280,7 @@ msgid "Path settings"
 msgstr "Paramètres et chemin d'accès"
 
 #: ../OptionsWin.java:634
-msgid ""
-"Command line for fax viewer: (insert %s as a placeholder for the filename)"
+msgid "Command line for fax viewer: (insert %s as a placeholder for the filename)"
 msgstr ""
 "Ligne de commande pour visualiser les fax: (ajouter %s pour le nom du "
 "fichier)"
@@ -302,10 +302,8 @@ msgid "(Crossplatform)"
 msgstr "(Multi système)"
 
 #: ../OptionsWin.java:821
-msgid ""
-"You must restart the program for the change of the language to take effect."
-msgstr ""
-"Vous devez redémarrer pour que les changements de langue prennent effet."
+msgid "You must restart the program for the change of the language to take effect."
+msgstr "Vous devez redémarrer pour que les changements de langue prennent effet."
 
 #: ../OptionsWin.java:873
 msgid ""
@@ -542,8 +540,7 @@ msgstr "En cours"
 msgid ""
 "Sleeping (waiting for a scheduled timeout such as a delay between attempts "
 "to send)"
-msgstr ""
-"Sommeil (Attente d'un dépassement du temps imparti entre les éssais d'envoi)"
+msgstr "Sommeil (Attente d'un dépassement du temps imparti entre les éssais d'envoi)"
 
 #: ../SentYajJob.java:217
 msgid "Suspended (not being scheduled)"
@@ -782,8 +779,7 @@ msgstr "Mot de passe Administrateur"
 #: ../HylaClientManager.java:140
 #, java-format
 msgid "Please enter the administrative password for user \"{0}\"."
-msgstr ""
-"Veuiller entrer le mot de passe Administrateur pour l'utilisateur \"{0}\"."
+msgstr "Veuiller entrer le mot de passe Administrateur pour l''utilisateur \"{0}\"."
 
 #: ../HylaClientManager.java:167 ../mainwin.java:2101
 msgid "An error occured connecting to the server:"
@@ -811,8 +807,7 @@ msgstr "Sauvegarde en cours du fax {0}"
 #: ../mainwin.java:256 ../mainwin.java:669
 #, java-format
 msgid "An error occured saving the file {0} (job {1}):"
-msgstr ""
-"Une erreur est survenue pendant la sauvegarde du fichier {0} (travail {1}):"
+msgstr "Une erreur est survenue pendant la sauvegarde du fichier {0} (travail {1}):"
 
 #: ../mainwin.java:261 ../mainwin.java:675
 msgid "An error occured saving the fax:"
@@ -844,13 +839,12 @@ msgstr "Fax affiché "
 #: ../mainwin.java:320
 #, java-format
 msgid "An error occured displaying the file {0} (job {1}):\n"
-msgstr ""
-"Une erreur est survenue pendant l'affichage du fichier {0} (travail {1}:\n"
+msgstr "Une erreur est survenue pendant l''affichage du fichier {0} (travail {1}:\n"
 
 #: ../mainwin.java:334
 #, java-format
 msgid "An error occured displaying the fax \"{0}\":"
-msgstr "Une erreur est survenue pendant l'affichage du fax \"{0}\":"
+msgstr "Une erreur est survenue pendant l''affichage du fax \"{0}\":"
 
 #: ../mainwin.java:375
 #, java-format
@@ -883,7 +877,7 @@ msgstr "Erreur de mise en attente du travail de fax  \"{0}\" : \n"
 #: ../mainwin.java:431
 #, java-format
 msgid "Resuming job {0}"
-msgstr "Terminer le travail"
+msgstr "Terminer le travail {0}"
 
 #: ../mainwin.java:434
 #, java-format
@@ -1035,8 +1029,7 @@ msgstr "Mode Administrateur"
 
 #: ../mainwin.java:743
 msgid "Connect to the server in admin mode (e.g. to delete faxes)"
-msgstr ""
-"Connection au serveur en mode Admnistrateur  (ex: pour effacer des fax)"
+msgstr "Connection au serveur en mode Admnistrateur  (ex: pour effacer des fax)"
 
 #: ../mainwin.java:754
 msgid "Refresh"
@@ -1307,7 +1300,7 @@ msgstr "Mot de passe LDAP"
 #: ../phonebook/ldap/ConnectionDialog.java:254
 #, java-format
 msgid "Please enter the LDAP password for user {0}."
-msgstr "Veuiller saisir le mot de passe LDAP pour l'utilisateur {0}"
+msgstr "Veuiller saisir le mot de passe LDAP pour l''utilisateur {0}"
 
 #: ../phonebook/ldap/ConnectionDialog.java:130
 msgid "Use authentication"
@@ -1381,8 +1374,7 @@ msgstr "Annuaire téléphonique XML"
 
 #: ../phonebook/XMLPhoneBook.java:48
 msgid "A Phonebook saving its entries as a XML file."
-msgstr ""
-"Un agenda téléphonique conservant ses enregistrements dans un fichier XML."
+msgstr "Un agenda téléphonique conservant ses enregistrements dans un fichier XML."
 
 #: ../phonebook/XMLPhoneBook.java:101
 msgid "Phonebook files"
@@ -1517,8 +1509,7 @@ msgstr "Mot de passe de la base de donnée"
 #: ../readstate/JDBCPersistentReadState.java:85
 #, java-format
 msgid "Please enter the database password for user {0} (database: {1})."
-msgstr ""
-"Veuiller saisir le mot de passe pour l'utilisateur {0} (base de donnée: {1})."
+msgstr "Veuiller saisir le mot de passe pour l''utilisateur {0} (base de donnée: {1})."
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:276
 #: ../phonebook/jdbc/ConnectionDialog.java:343
@@ -1546,7 +1537,7 @@ msgstr ""
 #: ../phonebook/jdbc/JDBCPhoneBook.java:370
 #, java-format
 msgid "Could not save the changes for entry {0}:"
-msgstr "Impossible de sauvegarder les modifications de l'entrée {0}: "
+msgstr "Impossible de sauvegarder les modifications de l''entrée {0}: "
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:383
 msgid "Could not save the phone book:"
@@ -2202,8 +2193,7 @@ msgstr "Continuer?"
 
 #: ../send/SendWin.java:527 ../send/SimplifiedSendDialog.java:190
 msgid "To send a fax you must select at least one file!"
-msgstr ""
-"Pour envoyer un fax, vous ne pouvez selectionner qu'un fichier à la fois!"
+msgstr "Pour envoyer un fax, vous ne pouvez selectionner qu'un fichier à la fois!"
 
 #: ../send/SendWin.java:533 ../send/SimplifiedSendDialog.java:196
 msgid "To send a fax you have to enter at least one phone number!"
@@ -2265,10 +2255,8 @@ msgstr "<stdin>"
 
 #: ../send/LocalFileTFLItem.java:60
 #, java-format
-msgid ""
-"The document {0} could not be converted to PostScript, PDF or TIFF. Reason:"
-msgstr ""
-"Le document {0} n'a pas pu être converti en PostScript, PDF ou TIFF. Raison:"
+msgid "The document {0} could not be converted to PostScript, PDF or TIFF. Reason:"
+msgstr "Le document {0} n'a pas pu être converti en PostScript, PDF ou TIFF. Raison:"
 
 #: ../send/SendController.java:105
 #, java-format
@@ -2309,8 +2297,8 @@ msgid ""
 "An error occured while submitting the fax job for phone number \"{0}\" (will "
 "try to submit the fax to the other numbers anyway): "
 msgstr ""
-"Une erreur s'est produite lors de la soumission du fax pour le numéro de "
-"téléphone \"{0}\" (Essayer d'envoyer le fax à l'autre numéro quand même): "
+"Une erreur s''est produite lors de la soumission du fax pour le numéro de "
+"téléphone \"{0}\" (Essayer d''envoyer le fax à l''autre numéro quand même): "
 
 #: ../send/SendController.java:377
 msgid "Cleaning up"
@@ -2359,7 +2347,7 @@ msgstr "Mettre à jour la liste des objets selectionnés"
 #: ../send/HylaTFLItem.java:53
 #, java-format
 msgid "Preview is not supported for document \"{0}\"."
-msgstr "La prévisualisation n'est pas supportée pour le document \"{0}\"."
+msgstr "La prévisualisation n''est pas supportée pour le document \"{0}\"."
 
 #: ../YajAutoLanguage.java:26
 msgid "(System default)"
@@ -2369,42 +2357,10 @@ msgstr "(Système par défaut)"
 #, java-format
 msgid "Cannot find a PrintService to convert files of type {0} to Postscript!"
 msgstr ""
-"Impossible de trouver un service d'impression pour convertir un fichier de "
+"Impossible de trouver un service d''impression pour convertir un fichier de "
 "type {0} en PostScript"
 
 #: ../PrintServiceFileConverter.java:105
 msgid "An error occured while converting the document to PostScript."
 msgstr "Une erreur s'est produite pendant la conversion PostScript."
 
-#~ msgid "Please enter a number."
-#~ msgstr "Veuiller entrer un numéro"
-
-#~ msgid "Miscellaneous settings"
-#~ msgstr "Autres options"
-
-#~ msgid "Do you want to delete the entry for \"{0}\"?"
-#~ msgstr "Voulez vous supprimer la donnée pour \"{0}\"?"
-
-#~ msgid "No phone book"
-#~ msgstr "Pas d'annuaire téléphonique"
-
-#~ msgid "Phone book:"
-#~ msgstr "Annuaire téléphonique:"
-
-#~ msgid "All supported formats"
-#~ msgstr "Tous formats supportés"
-
-#~ msgid "The document {0} could not get converted to PostScript. Reason:"
-#~ msgstr "Impossible de convertir ce document {0} en PostScript. Raison:"
-
-#~ msgid "Postscript files"
-#~ msgstr "Fichiers PostScript"
-
-#~ msgid "{0} files"
-#~ msgstr "{0} fichiers"
-
-#~ msgid "Fax-style protection mode string (``-rwxrwx')"
-#~ msgstr "Chaine de protection du style du Fax-modèle  ('-rwxrwx')"
-
-#~ msgid "A ``*' if receive is going on; otherwise `` ' (space)"
-#~ msgstr "Un ``*' si la réception est lancée; sinon ``'' (espace)"
