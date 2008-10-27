@@ -28,6 +28,7 @@ public class ConnectionSettings extends GeneralConnectionSettings {
     public boolean askForPWD = false;
     public String table = "";
     public boolean readOnly = false;
+    public String displayCaption = "";
     
     public ConnectionSettings(String serialized) {
         super();

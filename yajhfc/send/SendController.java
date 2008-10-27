@@ -155,7 +155,7 @@ public class SendController {
         }
 
         // Create cover:
-        coverFile = File.createTempFile("cover", ".tmp");
+        coverFile = File.createTempFile("cover", ".ps");
         coverFile.deleteOnExit();
         FileOutputStream fout = new FileOutputStream(coverFile);
         cov.makeCoverSheet(fout);

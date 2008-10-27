@@ -66,7 +66,8 @@ public class JDBCPhoneBook extends PhoneBook {
         fieldNameMap.put("voiceNumber", new ConnectionDialog.FieldMapEntry(utils._("Voice number:"),6));
         fieldNameMap.put("comment", new ConnectionDialog.FieldMapEntry(utils._("Comments:"),7));
         
-        fieldNameMap.put("readOnly", new ConnectionDialog.FieldMapEntry(utils._("Open as read only"),0,false,Boolean.class));
+        fieldNameMap.put("readOnly", new ConnectionDialog.FieldMapEntry(utils._("Open as read only"),1,false,Boolean.class));
+        fieldNameMap.put("displayCaption", new ConnectionDialog.FieldMapEntry(utils._("Phonebook name to display:"),0,false,String.class));
     }
     
     public static final String PB_Prefix = "JDBC";      // The prefix of this Phonebook type's descriptor
@@ -424,12 +425,16 @@ public class JDBCPhoneBook extends PhoneBook {
 
     @Override
     public String getDisplayCaption() {
-        String rv = settings.dbURL;
+        if (settings.displayCaption != null && settings.displayCaption.length() > 0) {
+            return settings.displayCaption;
+        } else {
+            String rv = settings.dbURL;
 
-        if (rv.length() > CAPTION_LENGTH)
-            return rv.substring(0, CAPTION_LENGTH-3) + "...";
-        else
-            return rv;
+            if (rv.length() > CAPTION_LENGTH)
+                return rv.substring(0, CAPTION_LENGTH-3) + "...";
+            else
+                return rv;
+        }
     }
     
     public boolean isFieldNameAvailable() {
