@@ -109,6 +109,7 @@ public class HylaClientManager {
                     if (utils.debugMode) {
                         log.info("Greeting was: " + client.getGreeting());
                     }
+                    
                     while (client.user(myopts.user)) {                
                         if (password == null) {
 

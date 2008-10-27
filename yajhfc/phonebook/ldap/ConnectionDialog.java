@@ -61,7 +61,7 @@ import yajhfc.utils;
 public final class ConnectionDialog extends JDialog implements ActionListener {
 
     private JTextField textName, textGivenName, textTitle, textCompany, textLocation, textVoiceNumber, textFaxNumber, textComment;
-    private JTextField textServerName, textPort, textBaseDN, textBindDN, textFilter;
+    private JTextField textServerName, textPort, textBaseDN, textBindDN, textFilter, textDisplayCaption;
     private JCheckBox checkAskForPassword, checkDoAuth, checkSearchSubtree;
     private JPasswordField textPassword;
     private JButton buttonOK, buttonCancel, buttonTest;
@@ -94,21 +94,21 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
     }
     
     private void initialize() {
+        final int rowCount = 35;
         double dLay[][] = {
                 {border, TableLayout.PREFERRED, border, 0.5, border, TableLayout.PREFERRED, border, TableLayout.FILL, border},      
-                new double[31]
+                new double[rowCount]
         };
-        int len = dLay[1].length;
-        double rowh = 1/(double)(len-5)*2;
-        for (int i = 0; i < len; i++) {
+        double rowh = 1/(double)(rowCount-9)*2;
+        for (int i = 0; i < rowCount; i++) {
             if ((i&1) == 0) {
                 dLay[1][i] = border;
             } else {
                 dLay[1][i] = rowh;
             }
         }
-        dLay[1][11] = dLay[1][15] = dLay[1][len - 4] = 
-        dLay[1][len - 2] = TableLayout.PREFERRED; //Separators/Labels
+        dLay[1][11] = dLay[1][15] = dLay[1][19] = dLay[1][rowCount - 4] = 
+        dLay[1][rowCount - 2] = TableLayout.PREFERRED; //Separators/Labels
         
         dLay[1][1] = TableLayout.FILL;
         
@@ -133,6 +133,9 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         textBindDN.addMouseListener(clpPop);
         
         textPassword = new JPasswordField();
+        
+        textDisplayCaption = new JTextField();
+        textDisplayCaption.addMouseListener(clpPop);
         
         checkAskForPassword = new JCheckBox(_("Always ask"));
         
@@ -172,23 +175,26 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         addWithLabel(jContentPane, textBindDN, _("User name (Bind DN):"), "3, 7, 7, 7, f, c");
         addWithLabel(jContentPane, textPassword, _("Password:"), "3, 9, 5, 9, f, c");
         jContentPane.add(checkAskForPassword, "7, 9, f, c");
-
         jContentPane.add(new JSeparator(JSeparator.HORIZONTAL), "0, 11, 8, 11");
         
-        addWithLabel(jContentPane, textFilter, _("Object filter:"), "3, 13, 5, 13, f, c");
-        jContentPane.add(checkSearchSubtree, "7, 13");
+        addWithLabel(jContentPane, textDisplayCaption, _("Phonebook name to display:"), "3, 13, 7, 13, f, c");
         
         jContentPane.add(new JSeparator(JSeparator.HORIZONTAL), "0, 15, 8, 15");
         
-        jContentPane.add(new JLabel(_("Please enter which LDAP attributes correspond to the Phonebook entry fields of YajHFC (default should usually work):")), "1, 17, 7, 17, f, c");
-        textGivenName = addTextField(jContentPane, _("Given name:"), "3, 19, f, c");
-        textName = addTextField(jContentPane, _("Name:"), "7, 19, f, c");
-        textTitle = addTextField(jContentPane, _("Title:"), "3, 21, f, c");
-        textCompany = addTextField(jContentPane, _("Company:"), "7, 21, f, c");
-        textLocation = addTextField(jContentPane, _("Location:"), "3, 23, f, c");
-        textVoiceNumber = addTextField(jContentPane, _("Voice number:"), "7, 23, f, c");
-        textFaxNumber = addTextField(jContentPane, _("Fax number:"), "3, 25, f, c");
-        textComment = addTextField(jContentPane, _("Comments:"), "7, 25, f, c");
+        addWithLabel(jContentPane, textFilter, _("Object filter:"), "3, 17, 5, 17, f, c");
+        jContentPane.add(checkSearchSubtree, "7, 17");
+        
+        jContentPane.add(new JSeparator(JSeparator.HORIZONTAL), "0, 19, 8, 19");
+        
+        jContentPane.add(new JLabel(_("Please enter which LDAP attributes correspond to the Phonebook entry fields of YajHFC (default should usually work):")), "1, 21, 7, 21, f, c");
+        textGivenName = addTextField(jContentPane, _("Given name:"), "3, 23, f, c");
+        textName = addTextField(jContentPane, _("Name:"), "7, 23, f, c");
+        textTitle = addTextField(jContentPane, _("Title:"), "3, 25, f, c");
+        textCompany = addTextField(jContentPane, _("Company:"), "7, 25, f, c");
+        textLocation = addTextField(jContentPane, _("Location:"), "3, 27, f, c");
+        textVoiceNumber = addTextField(jContentPane, _("Voice number:"), "7, 27, f, c");
+        textFaxNumber = addTextField(jContentPane, _("Fax number:"), "3, 29, f, c");
+        textComment = addTextField(jContentPane, _("Comments:"), "7, 29, f, c");
         
         Box buttonBox = new Box(BoxLayout.LINE_AXIS);
         buttonBox.add(Box.createHorizontalGlue());
@@ -197,8 +203,8 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         buttonBox.add(buttonCancel);
         buttonBox.add(Box.createHorizontalGlue());
         
-        jContentPane.add(new JSeparator(JSeparator.HORIZONTAL), "0, 27, 8, 27");
-        jContentPane.add(buttonBox, "0, 29, 8, 29");
+        jContentPane.add(new JSeparator(JSeparator.HORIZONTAL), "0, 31, 8, 31");
+        jContentPane.add(buttonBox, "0, 33, 8, 33");
         
         setContentPane(jContentPane);
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);

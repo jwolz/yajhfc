@@ -137,8 +137,9 @@ class FaxcoverHyla extends Faxcover {
         wOut.write("MaxComments comments BreakIntoCommentsX\n");
         wOut.write("%%EndProlog\n");
         wOut.write("%%Page: \"1\" 1\n");
+        
         // Copy prototype cover page:
-        char[] buf = new char[8191];
+        char[] buf = new char[8100];
         int cRead;
         do {
             cRead = rCover.read(buf);

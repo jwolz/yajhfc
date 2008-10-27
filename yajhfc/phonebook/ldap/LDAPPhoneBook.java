@@ -147,13 +147,16 @@ public class LDAPPhoneBook extends PhoneBook {
 
     @Override
     public String getDisplayCaption() {
-        String rv = PB_Prefix + ":" + settings.serverName + "/" + settings.baseDN;
+        if (settings.displayCaption != null && settings.displayCaption.length() > 0) {
+            return settings.displayCaption;
+        } else {
+            String rv = PB_Prefix + ":" + settings.serverName + "/" + settings.baseDN;
 
-        
-        if (rv.length() > CAPTION_LENGTH)
-            return rv.substring(0, CAPTION_LENGTH-3) + "...";
-        else
-            return rv;
+            if (rv.length() > CAPTION_LENGTH)
+                return rv.substring(0, CAPTION_LENGTH-3) + "...";
+            else
+                return rv;
+        }
     }
     
     @Override

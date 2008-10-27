@@ -140,6 +140,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
             container.add(result, new TableLayoutConstraints(col-2,row,col,row,TableLayoutConstraints.LEFT,TableLayoutConstraints.CENTER));
         } else if (entry.dataType.equals(String.class)) {
             result = new JTextField();
+            result.addMouseListener(clpPop);
             addWithLabel(container, result, entry.caption, new TableLayoutConstraints(col,row,col,row,TableLayoutConstraints.FULL,TableLayoutConstraints.CENTER));
         } else {
             throw new IllegalArgumentException("Unsupported data type for additional field.");

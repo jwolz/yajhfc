@@ -122,7 +122,7 @@ public abstract class AbstractConnectionSettings {
         if (input == null)
             return;
         
-        String[] tokens = input.split(separator);
+        String[] tokens = utils.fastSplit(input, separator.charAt(0));
         for (String line : tokens) {
             int pos = line.indexOf('=');
             if (pos < 0)

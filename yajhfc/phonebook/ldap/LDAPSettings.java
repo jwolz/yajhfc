@@ -33,6 +33,8 @@ public class LDAPSettings extends GeneralConnectionSettings {
     public String objectFilter = "";
     public boolean searchSubTree = true;
     
+    public String displayCaption = "";
+    
     public String[] getAttributes() {
         int count = 0;
         for (int i=0; i < FIELD_COUNT; i++) 

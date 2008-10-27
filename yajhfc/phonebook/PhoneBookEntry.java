@@ -144,10 +144,16 @@ public abstract class PhoneBookEntry {
             else
                 return surname;
         } else {
-            if (givenname != null && givenname.length() > 0)
+            if (givenname != null && givenname.length() > 0) {
                 return givenname;
-            else
-                return utils._("<no name>");
+            } else {
+                String company = getCompany();
+                if (company != null && company.length() > 0) {
+                    return company;
+                } else {
+                    return utils._("<no name>");
+                }
+            }
         }
     }
 
