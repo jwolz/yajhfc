@@ -52,7 +52,7 @@ public class LDAPPhoneBookEntry extends PhoneBookEntry {
                         //NOP
                     }
                     if (val != null) {
-                        data[i] = val.toString();
+                        data[i] = val.toString().trim();
                     } else {
                         data[i] = "";
                     }

@@ -36,7 +36,6 @@ public class JDBCPhoneBookEntry extends SimplePhoneBookEntry {
     static final int ENTRY_CHANGED = 3;
     static final int ENTRY_DELETED = 4;
     
-    private boolean dirty = false;
     
     JDBCPhoneBookEntry(JDBCPhoneBook parent) {
         this.parent = parent;
@@ -250,69 +249,5 @@ public class JDBCPhoneBookEntry extends SimplePhoneBookEntry {
             
         parent.removeFromList(this);
     }
-
-    @Override
-    public void setComment(String newComment) {
-        if (!newComment.equals(comment)) {
-            dirty = true;
-            super.setComment(newComment);
-        }     
-    }
-
-    @Override
-    public void setCompany(String newCompany) {
-        if (!newCompany.equals(company)) {
-            dirty = true;
-            super.setCompany(newCompany);
-        }
-    }
-
-    @Override
-    public void setFaxNumber(String newFaxNumber) {
-        if (!newFaxNumber.equals(faxnumber)) {
-            dirty = true;
-            super.setFaxNumber(newFaxNumber);
-        }
-    }
-
-    @Override
-    public void setGivenName(String newGivenName) {
-        if (!newGivenName.equals(givenname)) {
-            dirty = true;
-            super.setGivenName(newGivenName);
-        }
-    }
-
-    @Override
-    public void setLocation(String newLocation) {
-        if (!newLocation.equals(location)) {
-            dirty = true;
-            super.setLocation(newLocation);
-        }
-    }
-
-    @Override
-    public void setName(String newName) {
-        if (!newName.equals(surname)) {
-            dirty = true;
-            super.setName(newName);
-        }
-    }
-
-    @Override
-    public void setTitle(String newTitle) {
-        if (!newTitle.equals(title)) {
-            dirty = true;
-            super.setTitle(newTitle);
-        }
-    }
-
-    @Override
-    public void setVoiceNumber(String newVoiceNumber) {
-        if (!newVoiceNumber.equals(voicenumber)) {
-            dirty = true;
-            super.setVoiceNumber(newVoiceNumber);
-        }
-    } 
 
 }

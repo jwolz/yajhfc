@@ -331,6 +331,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         textServerName.setText(src.serverName);
         textTitle.setText(src.title);
         textVoiceNumber.setText(src.voiceNumber);
+        textDisplayCaption.setText(src.displayCaption);
         
         checkAskForPassword.setSelected(src.askForCredential);
         checkDoAuth.setSelected(src.useAuth);
@@ -352,6 +353,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         dst.serverName = textServerName.getText();
         dst.title = textTitle.getText();
         dst.voiceNumber = textVoiceNumber.getText();
+        dst.displayCaption = textDisplayCaption.getText();
         
         dst.askForCredential = checkAskForPassword.isSelected();
         dst.useAuth = checkDoAuth.isSelected();

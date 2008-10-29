@@ -34,7 +34,6 @@ import javax.naming.directory.SearchResult;
 
 import yajhfc.PasswordDialog;
 import yajhfc.utils;
-import yajhfc.phonebook.DefaultPhoneBookEntryComparator;
 import yajhfc.phonebook.PhoneBook;
 import yajhfc.phonebook.PhoneBookEntry;
 import yajhfc.phonebook.PhoneBookException;
@@ -161,7 +160,7 @@ public class LDAPPhoneBook extends PhoneBook {
     
     @Override
     public void resort() {
-        Collections.sort(entries, DefaultPhoneBookEntryComparator.globalInstance);
+        Collections.sort(entries);
     }
 
     public PhoneBookEntry getElementAt(int index) {

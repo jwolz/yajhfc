@@ -52,11 +52,11 @@ public class XMLPhoneBook extends PhoneBook {
     private boolean isOpened = false;
     
     public void resort() {
-        Collections.sort(list, DefaultPhoneBookEntryComparator.globalInstance);
+        Collections.sort(list);
     }
     
     private int getInsertionPos(PhoneBookEntry pbe) {
-        int res = Collections.binarySearch(list, pbe, DefaultPhoneBookEntryComparator.globalInstance);
+        int res = Collections.binarySearch(list, pbe);
         if (res >= 0) // Element found?
             return res + 1;
         else
@@ -73,7 +73,7 @@ public class XMLPhoneBook extends PhoneBook {
     }
 
     void deleteEntry(PhoneBookEntry entry) {
-        int index = list.indexOf(entry);
+        int index = utils.identityIndexOf(list, entry);
         if (index >= 0) {
             list.remove(index);
             fireEntriesRemoved(index, entry);
@@ -81,7 +81,7 @@ public class XMLPhoneBook extends PhoneBook {
     }
 
     void writeEntry(PhoneBookEntry entry) {
-        int oldpos = list.indexOf(entry);
+        int oldpos = utils.identityIndexOf(list, entry);
         list.remove(oldpos);
         int pos = getInsertionPos(entry);
         list.add(pos, (XMLPhoneBookEntry)entry);
