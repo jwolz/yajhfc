@@ -37,7 +37,10 @@ public class XMLPhoneBookEntry extends SimplePhoneBookEntry {
     
     @Override
     public void commit() {
-        parent.writeEntry(this);
+        if (dirty) {
+            parent.writeEntry(this);
+            dirty = false;
+        }
     }
     
     @Override
@@ -77,5 +80,6 @@ public class XMLPhoneBookEntry extends SimplePhoneBookEntry {
                 }
             }
         }
+        dirty = false;
     }
 }

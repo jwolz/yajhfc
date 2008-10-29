@@ -31,7 +31,7 @@ import yajhfc.utils;
  *  New PhoneBookEntry classes are only to be created by (non-abstract) PhoneBook implementations.
  *  
  */
-public abstract class PhoneBookEntry {
+public abstract class PhoneBookEntry implements Comparable<PhoneBookEntry>{
 
     public enum PBEntryField {
         Name(utils._("Name")),
@@ -157,4 +157,43 @@ public abstract class PhoneBookEntry {
         }
     }
 
+    // The order items are compared in compareTo
+    protected static final PBEntryField[] sortOrder = {
+        PBEntryField.Name, PBEntryField.GivenName, PBEntryField.Company, PBEntryField.Location, PBEntryField.Title, PBEntryField.FaxNumber, PBEntryField.VoiceNumber, PBEntryField.Comment
+    };
+    public int compareTo(PhoneBookEntry o) {
+        for (PBEntryField entry : sortOrder) {
+            String val1 = getPBField(entry);
+            String val2 = o.getPBField(entry);
+            int cmp;
+            if (val1 != null) {
+                if (val2 != null) {
+                    cmp = val1.compareToIgnoreCase(val2);
+                } else {
+                    cmp = 1;
+                }
+            } else {
+                if (val2 != null) {
+                    cmp = -1;
+                } else {
+                    cmp = 0;
+                }
+            }
+            
+            if (cmp != 0) {
+                return cmp;
+            }
+        }
+        
+        return 0;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof PhoneBookEntry) {
+            return compareTo((PhoneBookEntry)obj) == 0;
+        } else {
+            return false;
+        }
+    }
 }

@@ -53,7 +53,7 @@ public final class utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2008 by Jonas Wolz";
-    public static final String AppVersion = "0.3.8d";
+    public static final String AppVersion = "0.3.8e";
     public static final String AuthorEMail = "Jonas Wolz &lt;jwolz@freenet.de&gt;";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
     
@@ -670,6 +670,22 @@ public final class utils {
         } else {
             return input;
         }
+    }
+    
+    /**
+     * Returns the index of the element in the List that is == the given obj 
+     * (i.e. returns the index of the given instance, not only of an equal object).
+     * @param list
+     * @param obj
+     * @return
+     */
+    public static int identityIndexOf(List<?> list, Object obj) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i) == obj) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
 

@@ -30,7 +30,7 @@ public class LDAPSettings extends GeneralConnectionSettings {
     public String credential = "";
     public boolean askForCredential = false;
     
-    public String objectFilter = "";
+    public String objectFilter = "(facsimileTelephoneNumber=*)";
     public boolean searchSubTree = true;
     
     public String displayCaption = "";

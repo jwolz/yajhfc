@@ -28,15 +28,12 @@ public abstract class SimplePhoneBookEntry extends PhoneBookEntry {
     public String voicenumber;
     public String faxnumber;
     public String comment;
-       
+    
+    protected boolean dirty = false;
+    
     @Override
     public String getName() {
         return surname;
-    }
-
-    @Override
-    public void setName(String newName) {
-        surname = newName;
     }
 
     @Override
@@ -45,28 +42,14 @@ public abstract class SimplePhoneBookEntry extends PhoneBookEntry {
     }
 
     @Override
-    public void setGivenName(String newGivenName) {
-        givenname = newGivenName;
-    }
-
-    @Override
     public String getTitle() {
         return title;
     }
 
-    @Override
-    public void setTitle(String newTitle) {
-        title = newTitle;
-    }
 
     @Override
     public String getCompany() {
         return company;
-    }
-
-    @Override
-    public void setCompany(String newCompany) {
-        company = newCompany;
     }
 
     @Override
@@ -75,38 +58,85 @@ public abstract class SimplePhoneBookEntry extends PhoneBookEntry {
     }
 
     @Override
-    public void setLocation(String newLocation) {
-        location = newLocation;
-    }
-
-    @Override
     public String getVoiceNumber() {
         return voicenumber;
-    }
-
-    @Override
-    public void setVoiceNumber(String newVoiceNumber) {
-        voicenumber = newVoiceNumber;
     }
 
     @Override
     public String getFaxNumber() {
         return faxnumber;
     }
-
-    @Override
-    public void setFaxNumber(String newFaxNumber) {
-        faxnumber = newFaxNumber;
-    }
-
+    
     @Override
     public String getComment() {
         return comment;
     }
-
+    
     @Override
     public void setComment(String newComment) {
-        comment = newComment;
+        if (!newComment.equals(comment)) {
+            dirty = true;
+            comment = newComment;
+        }     
     }
 
+    @Override
+    public void setCompany(String newCompany) {
+        if (!newCompany.equals(company)) {
+            dirty = true;
+            company = newCompany;
+        }
+    }
+
+    @Override
+    public void setFaxNumber(String newFaxNumber) {
+        if (!newFaxNumber.equals(faxnumber)) {
+            dirty = true;
+            faxnumber = newFaxNumber;
+        }
+    }
+
+    @Override
+    public void setGivenName(String newGivenName) {
+        if (!newGivenName.equals(givenname)) {
+            dirty = true;
+            givenname = newGivenName;
+        }
+    }
+
+    @Override
+    public void setLocation(String newLocation) {
+        if (!newLocation.equals(location)) {
+            dirty = true;
+            location = newLocation;
+        }
+    }
+
+    @Override
+    public void setName(String newName) {
+        if (!newName.equals(surname)) {
+            dirty = true;
+            surname = newName;
+        }
+    }
+
+    @Override
+    public void setTitle(String newTitle) {
+        if (!newTitle.equals(title)) {
+            dirty = true;
+            title = newTitle;
+        }
+    }
+
+    @Override
+    public void setVoiceNumber(String newVoiceNumber) {
+        if (!newVoiceNumber.equals(voicenumber)) {
+            dirty = true;
+            voicenumber = newVoiceNumber;
+        }
+    } 
+
+    public boolean isDirty() {
+        return dirty;
+    }
 }

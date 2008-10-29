@@ -60,6 +60,8 @@ import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeCellRenderer;
@@ -543,9 +545,29 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             phoneBookTree.getActionMap().put("RemoveEntry", removeEntryAction);
             treePopup = new JPopupMenu();
             treePopup.add(new JMenuItem(addEntryAction));
-            treePopup.add(new JMenuItem(removeEntryAction));
+            final JMenuItem removeEntryItem = new JMenuItem(removeEntryAction);
+            final JMenuItem removePBItem = new JMenuItem(listRemoveAction);
+            treePopup.add(removeEntryItem);
+            treePopup.add(removePBItem);
             treePopup.addSeparator();
             treePopup.add(new JMenuItem(searchEntryAction));
+            treePopup.addPopupMenuListener(new PopupMenuListener() {
+
+                public void popupMenuCanceled(PopupMenuEvent e) {
+                    // No action
+                }
+
+                public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                    // No action
+                }
+
+                public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                    boolean showRemoveEntry = (selectedItems.size() > 0);
+                    removeEntryItem.setVisible(showRemoveEntry);
+                    removePBItem.setVisible(!showRemoveEntry);
+                }
+                
+            });
             phoneBookTree.setComponentPopupMenu(treePopup);
             
             
@@ -608,16 +630,6 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             openMenu.addSeparator();
             openMenu.add(mi);
             
-            listRemoveAction = new ExcDialogAbstractAction() {
-                public void actualActionPerformed(ActionEvent e) {
-                    if (JOptionPane.showConfirmDialog(NewPhoneBookWin.this, utils._("Do you want to remove the current phone book from the list?"), utils._("Remove from list"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                        closeCurrentPhoneBook();
-                    }
-                }
-            };
-            listRemoveAction.putValue(Action.NAME, utils._("Remove from list"));
-            listRemoveAction.putValue(Action.SMALL_ICON, utils.loadIcon("general/Remove"));
-            
             JMenuItem closeWinMenu = new JMenuItem(utils._("Close"), utils.loadCustomIcon("close.gif"));
             closeWinMenu.setActionCommand("close");
             closeWinMenu.addActionListener(this);
@@ -673,7 +685,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                 if (selectedItems.size() == 0)
                     return;
                 
-                if (JOptionPane.showConfirmDialog(NewPhoneBookWin.this, utils._("Do you want to delete the selected entries?"), "Delete entries", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                if (JOptionPane.showConfirmDialog(NewPhoneBookWin.this, utils._("Do you want to delete the selected entries?"), utils._("Delete entries"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     PhoneBookEntry[] entries = selectedItems.toArray(new PhoneBookEntry[selectedItems.size()]);
                     
                     for (PhoneBookEntry pbe : entries) {
@@ -703,6 +715,16 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         searchEntryAction.putValue(Action.NAME, utils._("Find..."));
         searchEntryAction.putValue(Action.SMALL_ICON, utils.loadIcon("general/Search"));
         searchEntryAction.putValue(Action.SHORT_DESCRIPTION, utils._("Search for an entry"));
+        
+        listRemoveAction = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(ActionEvent e) {
+                if (JOptionPane.showConfirmDialog(NewPhoneBookWin.this, utils._("Do you want to remove the current phone book from the list?"), utils._("Remove from list"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    closeCurrentPhoneBook();
+                }
+            }
+        };
+        listRemoveAction.putValue(Action.NAME, utils._("Remove from list"));
+        listRemoveAction.putValue(Action.SMALL_ICON, utils.loadIcon("general/Remove"));
     }
     
     private void initialize() {

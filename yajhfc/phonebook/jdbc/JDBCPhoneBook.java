@@ -40,7 +40,6 @@ import yajhfc.PasswordDialog;
 import yajhfc.PluginManager;
 import yajhfc.utils;
 import yajhfc.phonebook.AbstractConnectionSettings;
-import yajhfc.phonebook.DefaultPhoneBookEntryComparator;
 import yajhfc.phonebook.GeneralConnectionSettings;
 import yajhfc.phonebook.PhoneBook;
 import yajhfc.phonebook.PhoneBookEntry;
@@ -386,7 +385,7 @@ public class JDBCPhoneBook extends PhoneBook {
     }
     
     private int getInsertionPos(PhoneBookEntry pbe) {
-        int res = Collections.binarySearch(items, pbe, DefaultPhoneBookEntryComparator.globalInstance);
+        int res = Collections.binarySearch(items, pbe);
         if (res >= 0) // Element found?
             return res + 1;
         else
@@ -394,7 +393,7 @@ public class JDBCPhoneBook extends PhoneBook {
     }
     
     void updatePosition(JDBCPhoneBookEntry entry) {
-        int oldpos = items.indexOf(entry);
+        int oldpos = utils.identityIndexOf(items, entry);
         items.remove(oldpos);
         int pos = getInsertionPos(entry);
         items.add(pos, entry);
@@ -402,7 +401,7 @@ public class JDBCPhoneBook extends PhoneBook {
     }
     
     void removeFromList(JDBCPhoneBookEntry entry) {
-        int pos = items.indexOf(entry);
+        int pos = utils.identityIndexOf(items, entry);
         if (pos >= 0) {
             items.remove(pos);
         
@@ -412,7 +411,7 @@ public class JDBCPhoneBook extends PhoneBook {
     
     @Override
     public void resort() {
-        Collections.sort(items, DefaultPhoneBookEntryComparator.globalInstance);
+        Collections.sort(items);
     }
 
     public PhoneBookEntry getElementAt(int index) {
