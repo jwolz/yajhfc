@@ -306,7 +306,7 @@ public class SendController {
                             }
                             stepProgressBar(5);
 
-                            //TEST synchronized (hyfc) {
+                            hyfc.job(0);
                             Job j = hyfc.createJob();
 
                             stepProgressBar(5);
@@ -337,7 +337,7 @@ public class SendController {
                             
                             String faxNumber = utils.sanitizeInput(numItem.faxNumber);
                             j.setDialstring(faxNumber);
-                            j.setProperty("EXTERNAL", faxNumber); // needed to fix an error while sending multiple jobs
+                            //j.setProperty("EXTERNAL", faxNumber); // needed to fix an error while sending multiple jobs
                             j.setMaximumTries(maxTries);
                             j.setNotifyType(notificationType);
                             j.setPageDimension(paperSize.size);
@@ -365,7 +365,6 @@ public class SendController {
                             stepProgressBar(5);
 
                             hyfc.submit(j);
-                            //TEST }
 
                             stepProgressBar(5);
                         } catch (Exception e1) {
@@ -397,6 +396,37 @@ public class SendController {
         this.clientManager = clientManager;
         this.parent = parent;
         this.pollMode = pollMode;
+    }
+    
+    /**
+     * Validates the settings for correctness and shows problems to the user.
+     * @return true if entries are valid
+     */
+    public boolean validateEntries() {    
+        
+        if (numbers.size() == 0) {
+            JOptionPane.showMessageDialog(parent, utils._("To send a fax you have to enter at least one phone number!"), utils._("Warning"), JOptionPane.INFORMATION_MESSAGE);
+            return false;
+        }
+        for (int i=0; i < numbers.size(); i++) {
+            NumberTFLItem number = numbers.get(i);
+            if (number.faxNumber == null || number.faxNumber.length() == 0) {
+                JOptionPane.showMessageDialog(parent, MessageFormat.format(utils._("For recipient {0} (\"{1}\") no fax number has been entered."), i+1, number.name), utils._("Warning"), JOptionPane.INFORMATION_MESSAGE);
+                return false;
+            }
+        }
+        
+        if (files.size() == 0) {
+            if (useCover) {
+                if (JOptionPane.showConfirmDialog(parent, utils._("You haven't selected a file to transmit, so your fax will ONLY contain the cover page.\nContinue anyway?"), utils._("Continue?"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION)
+                    return false;
+            } else {
+                JOptionPane.showMessageDialog(parent, utils._("To send a fax you must select at least one file!"), utils._("Warning"), JOptionPane.INFORMATION_MESSAGE);
+                return false;
+            }
+        }   
+        
+        return true;
     }
     
     public void sendFax() {

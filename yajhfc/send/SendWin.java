@@ -518,24 +518,11 @@ final class SendWin extends JDialog implements SendWinControl  {
                 @Override
                 protected void actualActionPerformed(ActionEvent e) {
                     saveSettingsToSendController();
-                    
-                    if (!pollMode && tflFiles.model.getSize() == 0) {
-                        if (checkUseCover.isSelected()) {
-                            if (JOptionPane.showConfirmDialog(SendWin.this, _("You haven't selected a file to transmit, so your fax will ONLY contain the cover page.\nContinue anyway?"), _("Continue?"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION)
-                                return;
-                        } else {
-                            JOptionPane.showMessageDialog(SendWin.this, _("To send a fax you must select at least one file!"), _("Warning"), JOptionPane.INFORMATION_MESSAGE);
-                            return;
-                        }
-                    }
-                    
-                    if (tflNumbers.model.getSize() == 0) {
-                        JOptionPane.showMessageDialog(SendWin.this, _("To send a fax you have to enter at least one phone number!"), _("Warning"), JOptionPane.INFORMATION_MESSAGE);
-                        return;
-                    }
 
-                    sendController.sendFax();
-                    modalResult = true;
+                    if (sendController.validateEntries()) {
+                        sendController.sendFax();
+                        modalResult = true;
+                    }
                 }
             };
             if (pollMode) {

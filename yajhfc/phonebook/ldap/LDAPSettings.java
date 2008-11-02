@@ -54,7 +54,7 @@ public class LDAPSettings extends GeneralConnectionSettings {
     
     public LDAPSettings() {
         super();
-        name = "surname";
+        name = "sn";
         givenName = "givenName";
         location = "l";
         title = "title";

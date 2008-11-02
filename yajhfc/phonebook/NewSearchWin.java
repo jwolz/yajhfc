@@ -79,7 +79,7 @@ public final class NewSearchWin extends JDialog implements ActionListener {
             } else {
                 pbStartIdx = availPBs.indexOf(selPath.getPathComponent(1));
                 if (selPath.getPathCount() == 3) {
-                    startIdx = ((PhoneBook)selPath.getPathComponent(1)).indexOf((PhoneBookEntry)selPath.getPathComponent(2));
+                    startIdx = ((PhoneBook)selPath.getPathComponent(1)).getEntries().indexOf((PhoneBookEntry)selPath.getPathComponent(2));
                 } else {
                     startIdx = 0;
                 }
@@ -89,7 +89,7 @@ public final class NewSearchWin extends JDialog implements ActionListener {
             do {
                 pb = availPBs.get(pbIdx);
                 if ((searchBackwards && startIdx == 0) ||
-                        (!searchBackwards && startIdx >= pb.getSize()-1)) {
+                        (!searchBackwards && startIdx >= pb.getEntries().size()-1)) {
                     idx = -1;
                 } else {
                     idx = pb.findEntry(startIdx + (searchBackwards ? -1 : 1),
@@ -113,13 +113,13 @@ public final class NewSearchWin extends JDialog implements ActionListener {
                     else 
                         break;   
                 }
-                startIdx = (searchBackwards ? availPBs.get(pbIdx).getSize() : -1);
+                startIdx = (searchBackwards ? availPBs.get(pbIdx).getEntries().size() : -1);
             } while (true);
             
             if (idx < 0) {
                 JOptionPane.showMessageDialog(this, utils._("No matching phone book entry found."));
             } else {
-                tree.setSelectionPath(new TreePath(new Object[] { tree.getModel().getRoot(), pb, pb.getElementAt(idx)}));
+                tree.setSelectionPath(new TreePath(new Object[] { tree.getModel().getRoot(), pb, pb.getEntries().get(idx)}));
             }
         }
     }

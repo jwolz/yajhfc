@@ -77,7 +77,7 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
         if (parent instanceof RootNode) {
             return phoneBooks.get(index);
         } else if (parent instanceof PhoneBook) {
-            return ((PhoneBook)parent).getElementAt(index);
+            return ((PhoneBook)parent).getEntries().get(index);
         } else {
             return null;
         }
@@ -90,7 +90,7 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
         if (parent instanceof RootNode) {
             return phoneBooks.size();
         } else if (parent instanceof PhoneBook) {
-            return ((PhoneBook)parent).getSize();
+            return ((PhoneBook)parent).getEntries().size();
         } else {
             return 0;
         }
@@ -103,7 +103,7 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
         if (parent instanceof RootNode) {
             return phoneBooks.indexOf(child);
         } else if (parent instanceof PhoneBook && child instanceof PhoneBookEntry) {
-            return ((PhoneBook)parent).indexOf((PhoneBookEntry)child);
+            return ((PhoneBook)parent).getEntries().indexOf((PhoneBookEntry)child);
         } else {
             return -1;
         }

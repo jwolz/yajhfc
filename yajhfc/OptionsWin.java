@@ -75,6 +75,7 @@ import yajhfc.faxcover.Faxcover;
 import yajhfc.readstate.AvailablePersistenceMethod;
 import yajhfc.readstate.PersistentReadState;
 import yajhfc.send.SendWinStyle;
+import yajhfc.util.JTableTABAction;
 
 public class OptionsWin extends JDialog {
     static final Logger log = Logger.getLogger(OptionsWin.class.getName());
@@ -538,7 +539,7 @@ public class OptionsWin extends JDialog {
             comboPaperSize = new JComboBox(utils.papersizes);
             comboResolution = new JComboBox(utils.resolutions);
             
-            availableModems = HylaModem.defaultModems;
+            //availableModems = HylaModem.defaultModems;
             comboModem = new JComboBox(availableModems.toArray());
             comboModem.setEditable(true);
             
@@ -678,9 +679,10 @@ public class OptionsWin extends JDialog {
         return PanelSentFmt;
     }
     
-    public OptionsWin(FaxOptions foEdit, Frame owner) {
+    public OptionsWin(FaxOptions foEdit, Frame owner, List<HylaModem> availableModems) {
         super(owner);
         this.foEdit = foEdit;
+        this.availableModems = availableModems;
         recvfmt = new ArrayList<FmtItem>(foEdit.recvfmt);
         sentfmt = new ArrayList<FmtItem>(foEdit.sentfmt);
         sendingfmt = new ArrayList<FmtItem>(foEdit.sendingfmt);
@@ -1047,6 +1049,7 @@ public class OptionsWin extends JDialog {
                 
             });
             tablePlugins.getColumnModel().getColumn(0).setPreferredWidth(300);
+            JTableTABAction.replaceTABWithNextRow(tablePlugins);
             
             JScrollPane scrollTable = new JScrollPane(tablePlugins);
             
