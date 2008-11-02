@@ -39,6 +39,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.print.PrinterException;
 import java.io.File;
+import java.net.SocketException;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.util.Date;
@@ -89,6 +90,7 @@ import yajhfc.phonebook.NewPhoneBookWin;
 import yajhfc.readstate.PersistentReadState;
 import yajhfc.send.SendController;
 import yajhfc.send.SendWinControl;
+import yajhfc.util.JTableTABAction;
 
 @SuppressWarnings("serial")
 public final class mainwin extends JFrame {
@@ -155,7 +157,7 @@ public final class mainwin extends JFrame {
     
     // Actions:
     protected Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward, actAdminMode;
-    protected Action actRefresh, actResend, actPrintTable, actSuspend, actResume, actClipCopy, actShowRowNumbers, actAdjustColumns;
+    protected Action actRefresh, actResend, actPrintTable, actSuspend, actResume, actClipCopy, actShowRowNumbers, actAdjustColumns, actReconnect;
     protected ActionEnabler actChecker;
     
     protected HylaClientManager clientManager;
@@ -472,7 +474,21 @@ public final class mainwin extends JFrame {
                 SendReadyState oldState = sendReady;
                 sendReady = SendReadyState.NeedToWait;
                 
-                OptionsWin ow = new OptionsWin(myopts, mainwin.this);
+                List<HylaModem> modems;
+                if (clientManager != null) {
+                    try {
+                        modems = clientManager.getModems();
+                        if (modems == null) {
+                            modems = HylaModem.defaultModems;
+                        }
+                    } catch (Exception ex) {
+                        modems = HylaModem.defaultModems;
+                    }
+                } else {
+                    modems = HylaModem.defaultModems;
+                }
+                
+                OptionsWin ow = new OptionsWin(myopts, mainwin.this, modems);
                 ow.setModal(true);
                 utils.unsetWaitCursorOnOpen(null, ow);
                 ow.setVisible(true);
@@ -900,6 +916,21 @@ public final class mainwin extends JFrame {
         actAdjustColumns.putValue(Action.SHORT_DESCRIPTION, _("Adjust column widths to fit the window size"));
         actAdjustColumns.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, myopts.adjustColumnWidths);
         
+        actReconnect = new ExcDialogAbstractAction() {
+            @Override
+            protected void actualActionPerformed(ActionEvent e) {
+                utils.setWaitCursor(null);
+                if (clientManager != null) {
+                    doLogout();
+                } else {
+                    reconnectToServer(null);
+                }
+                utils.unsetWaitCursor(null);
+            }
+        };
+        actReconnect.putValue(Action.NAME, _("Connect"));
+        actReconnect.putValue(Action.SHORT_DESCRIPTION, _("Connect or disconnect to the HylaFAX server"));
+        
         actChecker = new ActionEnabler();
     }
     
@@ -1199,9 +1230,10 @@ public final class mainwin extends JFrame {
             actSend.setEnabled(false);
             actPoll.setEnabled(false);
             menuView.setEnabled(false);
+            
+            actReconnect.putValue(Action.NAME, _("Connect"));
             this.setTitle("Disconnected - " + utils.AppName);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.log(Level.WARNING, "Error logging out:", e);
             // do nothing
         }
@@ -1472,6 +1504,8 @@ public final class mainwin extends JFrame {
         table.addKeyListener(getTblKeyListener());
         table.setDefaultRenderer(Date.class, getHylaDateRenderer());
         table.setDefaultRenderer(IconMap.class, new IconMap.TableCellRenderer());
+        
+        JTableTABAction.replaceTABWithNextRow(table);
     }
     
     private MyTableModel getSendingTableModel() {
@@ -1538,6 +1572,7 @@ public final class mainwin extends JFrame {
             menuExtras.addSeparator();
             menuExtras.add(new JMenuItem(actOptions));
             menuExtras.addSeparator();
+            menuExtras.add(new JMenuItem(actReconnect));
             menuExtras.add(new ActionJCheckBoxMenuItem(actAdminMode));
             if (PluginManager.pluginMenuEntries.size() > 0) {
                 menuExtras.addSeparator();
@@ -1759,8 +1794,7 @@ public final class mainwin extends JFrame {
     }
     
     class StatusRefresher extends TimerTask {
-        String text = "";
-        private Runnable statRunner;
+        String oldText = "";
         private boolean cancelled = false;
         
         public synchronized boolean doCancel() {
@@ -1771,6 +1805,7 @@ public final class mainwin extends JFrame {
         public synchronized void run() {
             if (cancelled)
                 return;
+
             String newText;
             HylaFAXClient hyfc = clientManager.beginServerTransaction(mainwin.this);
             if (hyfc == null) {
@@ -1778,24 +1813,29 @@ public final class mainwin extends JFrame {
             } else {
                 try {
                     newText = utils.listToString(hyfc.getList("status"), "\n");
+                } catch (SocketException se) {
+                    log.log(Level.WARNING, "Error refreshing the status, logging out.", se);
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            doLogout();
+                        } 
+                    });
+                    return;
                 } catch (Exception e) {
-                    newText = "Error refreshing the status: " + e.toString();
-                    log.log(Level.WARNING, "Error refreshing the status: ", e);
+                    newText = _("Error refreshing the status:") + " " + e;
+                    log.log(Level.WARNING, "Error refreshing the status:", e);
                 }
             }
-            if (!newText.equals(text)) {
-                text = newText;
-                SwingUtilities.invokeLater(statRunner);
+            if (!newText.equals(oldText)) {
+                oldText = newText;
+                
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        textStatus.setText(oldText);
+                    } 
+                });
             }
             clientManager.endServerTransaction();
-        }
-        
-        public StatusRefresher() {
-            statRunner = new Runnable() {
-                public void run() {
-                    textStatus.setText(text);
-                }
-            };
         }
     };
     
@@ -2080,6 +2120,9 @@ public final class mainwin extends JFrame {
                        
                        actSend.setEnabled(true);
                        actPoll.setEnabled(true);
+                       
+                       actReconnect.putValue(Action.NAME, _("Disconnect"));
+                       
                        sendReady = SendReadyState.Ready;
                        mainwin.this.setEnabled(true);
                        if (utils.debugMode) {

@@ -102,6 +102,7 @@ public abstract class PhoneBook {
      */
     public int findEntry(int startIndex, boolean searchBackwards, boolean caseSensitive, PhoneBookEntry.PBEntryField field, StringFilterOperator op, String compareValue) {
         Pattern regEx = null;
+        List<PhoneBookEntry> entries = getEntries();
         int i, size, increment;
         
         if (op == StringFilterOperator.MATCHES) {
@@ -109,8 +110,8 @@ public abstract class PhoneBook {
         } else if (!caseSensitive) {
             compareValue = compareValue.toLowerCase();
         }
-         
-        size = getSize();
+        
+        size = entries.size();
         
         if (startIndex < 0) {
             if (searchBackwards)
@@ -123,7 +124,7 @@ public abstract class PhoneBook {
         increment = searchBackwards ? -1 : 1;
             
         for (; i >= 0 && i < size; i+=increment) {
-            PhoneBookEntry pbe = getElementAt(i);
+            PhoneBookEntry pbe = entries.get(i);
             String val = pbe.getPBField(field);
             if (!caseSensitive)
                 val = val.toLowerCase();
@@ -160,19 +161,21 @@ public abstract class PhoneBook {
     
     public abstract PhoneBookEntry addNewEntry();
     
-    public int indexOf(PhoneBookEntry pbe) {
-        for (int i = 0; i < getSize(); i++) {
-            if (getElementAt(i).equals(pbe))
-                return i;
-        }
-        return -1;
-    }
+//    public int indexOf(PhoneBookEntry pbe) {
+//        for (int i = 0; i < getSize(); i++) {
+//            if (getElementAt(i).equals(pbe))
+//                return i;
+//        }
+//        return -1;
+//    }
     
     // new interface (no more list model because of incompatibility of the removed event
     //     with the corresponding tree event):
-    public abstract int getSize();
+//    public abstract int getSize();
+//    
+//    public abstract PhoneBookEntry getElementAt(int index);
     
-    public abstract PhoneBookEntry getElementAt(int index);
+    public abstract List<PhoneBookEntry> getEntries();
     
     public void addPhonebookEventListener(PhonebookEventListener pel) {
         listeners.add(pel);
@@ -199,11 +202,12 @@ public abstract class PhoneBook {
         }
         int[] indices = new int[intervalEnd - intervalStart + 1];
         PhoneBookEntry[] entries = new PhoneBookEntry[intervalEnd - intervalStart + 1];
+        List<PhoneBookEntry> entryList = getEntries();
         
         for (int i=intervalStart; i <= intervalEnd; i++) {
             int idx = i-intervalStart;
             indices[idx] = i;
-            entries[idx] = getElementAt(i);
+            entries[idx] = entryList.get(i);
         }
         
         return new PhonebookEvent(this, entries, indices);

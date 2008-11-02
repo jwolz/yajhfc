@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import javax.swing.JFileChooser;
 import javax.xml.parsers.DocumentBuilder;
@@ -88,12 +89,10 @@ public class XMLPhoneBook extends PhoneBook {
         fireEntriesChanged(eventObjectForInterval(oldpos, pos));
     }
 
-    public PhoneBookEntry getElementAt(int index) {
-        return list.get(index);
-    }
-
-    public int getSize() {
-        return list.size();
+    private List<PhoneBookEntry> itemsView;
+    @Override
+    public List<PhoneBookEntry> getEntries() {
+        return itemsView;
     }
 
     @Override
@@ -230,6 +229,7 @@ public class XMLPhoneBook extends PhoneBook {
         super(parent);
         
         list = new ArrayList<XMLPhoneBookEntry>();
+        itemsView = Collections.<PhoneBookEntry>unmodifiableList(list);
     }
 
 }

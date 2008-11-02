@@ -23,6 +23,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
+import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
@@ -47,7 +48,7 @@ public class LDAPPhoneBook extends PhoneBook {
     LDAPSettings settings;
     private DirContext ctx;
     
-    private ArrayList<LDAPPhoneBookEntry> entries = new ArrayList<LDAPPhoneBookEntry>();
+    private final ArrayList<LDAPPhoneBookEntry> entries = new ArrayList<LDAPPhoneBookEntry>();
     
     @Override
     public boolean isReadOnly() {
@@ -163,13 +164,12 @@ public class LDAPPhoneBook extends PhoneBook {
         Collections.sort(entries);
     }
 
-    public PhoneBookEntry getElementAt(int index) {
-        return entries.get(index);
+    private List<PhoneBookEntry> itemsView = Collections.<PhoneBookEntry>unmodifiableList(entries);
+    @Override
+    public List<PhoneBookEntry> getEntries() {
+        return itemsView;
     }
 
-    public int getSize() {
-        return entries.size();
-    }
 
     public LDAPPhoneBook(Dialog parent) {
         super(parent);

@@ -130,7 +130,7 @@ public class AboutDialog extends JDialog implements HyperlinkListener {
             text.setText("Error loading text file " + resName + ".");
         }
         
-        JScrollPane scroll = new JScrollPane(text);
+        JScrollPane scroll = new JScrollPane(text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         return scroll;
         
         /* if (scrollLicense == null) {
@@ -250,7 +250,7 @@ public class AboutDialog extends JDialog implements HyperlinkListener {
     private void initialize() {
         //setResizable(false);
         setModal(true);
-        setSize(500, 380);
+        setSize(640, 380);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         clpText = new ClipboardPopup();
         setContentPane(getjContentPane());

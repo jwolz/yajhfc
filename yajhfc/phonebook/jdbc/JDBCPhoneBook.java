@@ -30,7 +30,9 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
@@ -49,7 +51,7 @@ public class JDBCPhoneBook extends PhoneBook {
     private static final Logger log = Logger.getLogger(JDBCPhoneBook.class.getName());
     
     ConnectionSettings settings;
-    Connection connection;
+    boolean open = false;
     ArrayList<JDBCPhoneBookEntry> items = new ArrayList<JDBCPhoneBookEntry>();
     ArrayList<JDBCPhoneBookEntry> deleted_items = new ArrayList<JDBCPhoneBookEntry>();
     ArrayList<DBKey> rowId = new ArrayList<DBKey>();
@@ -101,15 +103,9 @@ public class JDBCPhoneBook extends PhoneBook {
 
     @Override
     public void close() {        
-        if (connection != null) {
+        if (open) {
             commitToDB();
-            
-            try {
-                connection.close();
-            } catch (Exception e) {
-                //NOP
-            }
-            connection = null;
+            open = false;
         }
     }
 
@@ -229,27 +225,44 @@ public class JDBCPhoneBook extends PhoneBook {
         return s.toString();
     }
     
-    @Override
-    protected void openInternal(String descriptorWithoutPrefix) throws PhoneBookException {
-        settings = new ConnectionSettings(descriptorWithoutPrefix);
-
+    /**
+     * Opens the database connection. The caller is responsible for properly closing it again.
+     * @return A new connection or null if the user canceled the connecting process.
+     * @throws PhoneBookException 
+     */
+    protected Connection openConnection() throws PhoneBookException {
         try {
             PluginManager.registerJDBCDriver(settings.driver);
         } catch (Exception e) {
             ExceptionDialog.showExceptionDialog(parentDialog, utils._("Could not load the specified driver class:"), e);
             throw new PhoneBookException(e, true);
         }
+        String password;
+        if (settings.askForPWD) {
+            password = PasswordDialog.showPasswordDialog(parentDialog, utils._("Database password"), MessageFormat.format(utils._("Please enter the database password for user {0} (database: {1})."), settings.user, settings.dbURL));
+            if (password == null)
+                return null;
+        } else {
+            password = settings.pwd;
+        }
+        
         try {
-            String password;
-            if (settings.askForPWD) {
-                password = PasswordDialog.showPasswordDialog(parentDialog, utils._("Database password"), MessageFormat.format(utils._("Please enter the database password for user {0} (database: {1})."), settings.user, settings.dbURL));
-                if (password == null)
-                    return;
-            } else {
-                password = settings.pwd;
-            }
-            connection = DriverManager.getConnection(settings.dbURL, settings.user, password);
-            
+            return DriverManager.getConnection(settings.dbURL, settings.user, password);
+        } catch (SQLException e) {
+            ExceptionDialog.showExceptionDialog(parentDialog, utils._("Could not connect to the database:"), e);
+            throw new PhoneBookException(e, true);
+        }
+    }
+    
+    @Override
+    protected void openInternal(String descriptorWithoutPrefix) throws PhoneBookException {
+        settings = new ConnectionSettings(descriptorWithoutPrefix);
+
+        Connection connection = openConnection();
+        if (connection == null)
+            return;
+        
+        try {            
             DatabaseMetaData dbmd = connection.getMetaData();
             ResultSet rs = dbmd.getBestRowIdentifier(null, null, settings.table, DatabaseMetaData.bestRowSession, true);
             rowId.clear();
@@ -272,12 +285,8 @@ public class JDBCPhoneBook extends PhoneBook {
                     }
                 }
             }
-        } catch (Exception e) {
-            ExceptionDialog.showExceptionDialog(parentDialog, utils._("Could not connect to the database:"), e);
-            connection = null;
-            throw new PhoneBookException(e, true);
-        }
-        try {
+
+            
             String query = getSELECTQuery();
             if (utils.debugMode) {
                 log.fine("JDBC phone book: SELECT query: " + query);
@@ -302,15 +311,22 @@ public class JDBCPhoneBook extends PhoneBook {
             
             resort();
             
+            open = true;
         } catch (Exception e) {
             ExceptionDialog.showExceptionDialog(parentDialog, utils._("Could not load the phone book:"), e);
             throw new PhoneBookException(e, true);
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                log.log(Level.WARNING, "Error closing the database connection:", e);
+            }
         }
     }
     
     @Override
     public boolean isOpen() {
-        return (connection != null);
+        return open;
     }
 
     @Override
@@ -323,7 +339,13 @@ public class JDBCPhoneBook extends PhoneBook {
         if (isReadOnly())
             return;
         
-        try {   
+        Connection connection = null;
+        try {
+            connection = openConnection();
+            if (connection == null) {
+                return;
+            }
+            
             String query = getINSERTQuery();
             if (utils.debugMode) {
                 log.fine("JDBC phone book: INSERT query: " + query);
@@ -374,13 +396,22 @@ public class JDBCPhoneBook extends PhoneBook {
             connection.commit();
 
             insertStmt.close();
-            insertStmt = null;
             updateStmt.close();
-            updateStmt = null;
             deleteStmt.close();
-            deleteStmt = null;
+        } catch (PhoneBookException pbe) {
+            if (!pbe.messageAlreadyDisplayed()) {
+                ExceptionDialog.showExceptionDialog(parentDialog, utils._("Could not save the phone book:"), pbe);
+            }
         } catch (Exception e) {
             ExceptionDialog.showExceptionDialog(parentDialog, utils._("Could not save the phone book:"), e);
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close(); 
+                }
+            } catch (SQLException e) {
+                log.log(Level.WARNING, "Error closing the database connection:", e);
+            }
         }
     }
     
@@ -414,12 +445,10 @@ public class JDBCPhoneBook extends PhoneBook {
         Collections.sort(items);
     }
 
-    public PhoneBookEntry getElementAt(int index) {
-        return items.get(index);
-    }
-
-    public int getSize() {
-        return items.size();
+    private List<PhoneBookEntry> itemsView = Collections.<PhoneBookEntry>unmodifiableList(items);
+    @Override
+    public List<PhoneBookEntry> getEntries() {
+        return itemsView;
     }
 
     @Override

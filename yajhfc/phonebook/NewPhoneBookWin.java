@@ -140,6 +140,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             textVoicenumber.setText(pb.getVoiceNumber());
             textFaxnumber.setText(pb.getFaxNumber());
             textComment.setText(pb.getComment());
+            textComment.setCaretPosition(0);
             
             textSurname.setEnabled(phoneBook.isFieldNameAvailable());
             textGivenname.setEnabled(phoneBook.isFieldGivenNameAvailable());
@@ -428,9 +429,10 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             if (descriptor != null) 
                 pb.open(descriptor); 
             
-            for (int i=0; i < pb.getSize(); i++) {
+            List<PhoneBookEntry> importedEntries = pb.getEntries();
+            for (int i=0; i < importedEntries.size(); i++) {
                 PhoneBookEntry pbe = currentPhonebook.addNewEntry();
-                pbe.copyFrom(pb.getElementAt(i));
+                pbe.copyFrom(importedEntries.get(i));
             }
             
             if (descriptor != null) // Phone book has been opened above...
@@ -797,6 +799,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             };
             selectAction.putValue(Action.NAME, utils._("Select"));
             selectAction.putValue(Action.SMALL_ICON, utils.loadIcon("general/Undo"));
+            selectAction.setEnabled(false);
             
             JButton buttonSelect = new JButton(selectAction);
             leftPane.add(Box.createVerticalStrut((int)border), "0,3");
@@ -807,6 +810,9 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             
             treePopup.addSeparator();
             treePopup.add(new JMenuItem(selectAction));
+            
+            phoneBookTree.getActionMap().put("selectEntry", selectAction);
+            phoneBookTree.getInputMap().put(KeyStroke.getKeyStroke('\n'), "selectEntry");
         }
     }
     

@@ -75,6 +75,7 @@ import yajhfc.utils;
 import yajhfc.faxcover.Faxcover;
 import yajhfc.phonebook.NewPhoneBookWin;
 import yajhfc.phonebook.PhoneBookEntry;
+import yajhfc.util.JTableTABAction;
 
 /**
  * @author jonas
@@ -181,24 +182,11 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
             @Override
             protected void actualActionPerformed(ActionEvent e) {
                 saveSettingsToSendController();
-                
-                if (tflFiles.model.getSize() == 0) {
-                    if (checkUseCover.isSelected()) {
-                        if (JOptionPane.showConfirmDialog(SimplifiedSendDialog.this, utils._("You haven't selected a file to transmit, so your fax will ONLY contain the cover page.\nContinue anyway?"), utils._("Continue?"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION)
-                            return;
-                    } else {
-                        JOptionPane.showMessageDialog(SimplifiedSendDialog.this, utils._("To send a fax you must select at least one file!"), utils._("Warning"), JOptionPane.INFORMATION_MESSAGE);
-                        return;
-                    }
-                }
-                
-                if (sendController.getNumbers().size() == 0) {
-                    JOptionPane.showMessageDialog(SimplifiedSendDialog.this, utils._("To send a fax you have to enter at least one phone number!"), utils._("Warning"), JOptionPane.INFORMATION_MESSAGE);
-                    return;
-                }
 
-                sendController.sendFax();
-                modalResult = true;
+                if (sendController.validateEntries()) {
+                    sendController.sendFax();
+                    modalResult = true;
+                }
             }
         };
         actSend.putValue(Action.NAME, utils._("Send"));
@@ -392,6 +380,8 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         numberTableModel = new NumberTFLItemTableModel(sendController.numbers);
         tableNumbers = new JTable(numberTableModel);
         tableNumbers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JTableTABAction.wrapDefTabAction(tableNumbers);
+        
         //tableNumbers.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         tableNumbers.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
