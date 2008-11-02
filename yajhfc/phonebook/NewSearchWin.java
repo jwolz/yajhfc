@@ -47,6 +47,7 @@ import javax.swing.tree.TreePath;
 
 import yajhfc.ClipboardPopup;
 import yajhfc.utils;
+import yajhfc.filters.StringFilter;
 import yajhfc.filters.StringFilterOperator;
 
 public final class NewSearchWin extends JDialog implements ActionListener {
@@ -85,6 +86,13 @@ public final class NewSearchWin extends JDialog implements ActionListener {
                 }
             }
             
+            StringFilter<PhoneBookEntry,PBEntryField> filter =
+                new StringFilter<PhoneBookEntry, PBEntryField>(
+                        (PBEntryField)comboFields.getSelectedItem(),
+                        (StringFilterOperator)comboOp.getSelectedItem(),
+                        textCondition.getText(),
+                        checkCaseSensitive.isSelected());
+            
             pbIdx = pbStartIdx;
             do {
                 pb = availPBs.get(pbIdx);
@@ -94,10 +102,7 @@ public final class NewSearchWin extends JDialog implements ActionListener {
                 } else {
                     idx = pb.findEntry(startIdx + (searchBackwards ? -1 : 1),
                             searchBackwards,
-                            checkCaseSensitive.isSelected(),
-                            (PhoneBookEntry.PBEntryField)comboFields.getSelectedItem(),
-                            (StringFilterOperator)comboOp.getSelectedItem(),
-                            textCondition.getText());
+                            filter);
                 }
                 if (idx >= 0)
                     break;
@@ -132,7 +137,7 @@ public final class NewSearchWin extends JDialog implements ActionListener {
             };
             myContentPane = new JPanel(new TableLayout(dLay));
             
-            comboFields = new JComboBox(PhoneBookEntry.PBEntryField.values());
+            comboFields = new JComboBox(PBEntryField.values());
             comboOp = new JComboBox(StringFilterOperator.values());
             
             textCondition = new JTextField(30);

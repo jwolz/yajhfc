@@ -30,7 +30,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public abstract class YajJob {
+import yajhfc.filters.FilterableObject;
+
+public abstract class YajJob implements FilterableObject {
     private static final Logger log = Logger.getLogger(YajJob.class.getName());
     
     protected String[] stringData;
@@ -66,6 +68,10 @@ public abstract class YajJob {
             parsedData[col] = result = parseValue(fmtItem, res);
         }        
         return (result == nullObject) ? null : result;
+    }
+    
+    public Object getFilterData(Object key) {
+        return getData((Integer)key);
     }
     
     /**

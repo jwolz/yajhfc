@@ -20,15 +20,12 @@ package yajhfc.filters;
 import java.util.ArrayList;
 import java.util.List;
 
-import yajhfc.FmtItemList;
-import yajhfc.YajJob;
-import yajhfc.YajJobFilter;
 
-public class AndFilter implements YajJobFilter {
+public class AndFilter<V extends FilterableObject, K extends FilterKey> implements Filter<V, K> {
 
-    protected ArrayList<YajJobFilter> children = new ArrayList<YajJobFilter>();
+    protected ArrayList<Filter<V, K> > children = new ArrayList<Filter<V, K> >();
    
-    public void addChild(YajJobFilter child) {
+    public void addChild(Filter<V, K>  child) {
         children.add(child);
     }
     
@@ -36,34 +33,34 @@ public class AndFilter implements YajJobFilter {
         return children.size();
     }
     
-    public YajJobFilter getChild(int index) {
+    public Filter<V, K>  getChild(int index) {
         return children.get(index);
     }
     
-    public List<YajJobFilter> getChildList() {
+    public List<Filter<V, K> > getChildList() {
         return children;
     }
     
-    public boolean jobIsVisible(YajJob job) {
+    public boolean matchesFilter(V filterObj) {
         if (children.size() == 0)
             return true;
         
         boolean retVal = true;
-        for (YajJobFilter yjf: children) {
-            retVal = retVal && yjf.jobIsVisible(job);
+        for (Filter<V, K>  yjf: children) {
+            retVal = retVal && yjf.matchesFilter(filterObj);
             if (!retVal)
                 return false;
         }
         return retVal;
     }
 
-    public void initFilter(FmtItemList columns) {
-        for (YajJobFilter yjf: children) {
+    public void initFilter(FilterKeyList<K> columns) {
+        for (Filter<V, K>  yjf: children) {
             yjf.initFilter(columns);
         }
     }
 
-    public boolean validate(FmtItemList columns) {
+    public boolean validate(FilterKeyList<K> columns) {
         for (int i = children.size()-1; i >= 0; i--) {
             if (!children.get(i).validate(columns)) {
                 children.remove(i);

@@ -3,6 +3,7 @@ package yajhfc.phonebook;
 import java.text.MessageFormat;
 
 import yajhfc.utils;
+import yajhfc.filters.FilterableObject;
 
 /*
  * YAJHFC - Yet another Java Hylafax client
@@ -31,33 +32,8 @@ import yajhfc.utils;
  *  New PhoneBookEntry classes are only to be created by (non-abstract) PhoneBook implementations.
  *  
  */
-public abstract class PhoneBookEntry implements Comparable<PhoneBookEntry>{
+public abstract class PhoneBookEntry implements Comparable<PhoneBookEntry>, FilterableObject {
 
-    public enum PBEntryField {
-        Name(utils._("Name")),
-        GivenName(utils._("Given name")),
-        Title(utils._("Title")),
-        Company(utils._("Company")),
-        Location(utils._("Location")),
-        VoiceNumber(utils._("Voice number")),
-        FaxNumber(utils._("Fax number")),
-        Comment(utils._("Comments"))
-        ;
-        
-        private String desc;
-        private PBEntryField(String desc) {
-            this.desc = desc;
-        }
-        
-        public String getDescription() {
-            return desc;
-        }
-        
-        public String toString() {
-            return desc;
-        }
-    }
-    
     public String getPBField(PBEntryField field) {
         switch (field) {
         case Name:
@@ -79,6 +55,10 @@ public abstract class PhoneBookEntry implements Comparable<PhoneBookEntry>{
         default:
             return null;
         }
+    }
+    
+    public Object getFilterData(Object key) {
+        return getPBField((PBEntryField)key);
     }
     
     public abstract String getName();

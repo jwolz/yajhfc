@@ -1,7 +1,6 @@
-package yajhfc.filters;
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005-2006 Jonas Wolz
+ * Copyright (C) 2005-2008 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,20 +16,33 @@ package yajhfc.filters;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+package yajhfc.filters;
 
-public class OrFilter<V extends FilterableObject, K extends FilterKey> extends AndFilter<V, K> {
-
-    public boolean matchesFilter(V filterObj) {
-        if (children.size() == 0)
-            return true;
-        
-        boolean retVal = false;
-        for (Filter<V, K>  yjf: children) {
-            retVal = retVal || yjf.matchesFilter(filterObj);
-            if (retVal)
-                return true;
-        }
-        return retVal;
-    }
-
+/**
+ * @author jonas
+ *
+ */
+public interface FilterKeyList<K extends FilterKey> {
+    
+    /**
+     * Translates the key into an intermediate representation used by
+     * {@link FilterableObject#getFilterData(Object)}. 
+     * This can be used if an indexOf-Operation must be performed, for example.
+     * @param key
+     * @return
+     */
+    public Object translateKey(K key);
+    
+    /**
+     * Returns an array of all available key values
+     * @return
+     */
+    public K[] getAvailableKeys();
+    
+    /**
+     * Checks if the given key value is (still) present in the list of keys
+     * @param key
+     * @return
+     */
+    public boolean containsKey(K key);
 }
