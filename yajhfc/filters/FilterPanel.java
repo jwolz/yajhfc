@@ -37,10 +37,9 @@ import yajhfc.ClipboardPopup;
 import yajhfc.FmtItem;
 import yajhfc.FmtItemList;
 import yajhfc.FmtItemRenderer;
-import yajhfc.YajJobFilter;
 import yajhfc.utils;
 
-public class FilterPanel extends JPanel implements ActionListener {
+public class FilterPanel<V extends FilterableObject,K extends FmtItem> extends JPanel implements ActionListener {
 
     private JComboBox comboColumns, comboOperator;
     private JTextField textValue;
@@ -71,17 +70,17 @@ public class FilterPanel extends JPanel implements ActionListener {
         buttonDelete.setActionCommand(cmd);
     }
     
-    public void initFromFilter(YajJobFilter filter) {
+    public void initFromFilter(Filter<V,K> filter) {
         if (filter == null)
             return;
         
-        FmtItem col = FilterCreator.columnFromFilter(filter);
+        K col = FilterCreator.columnFromFilter(filter);
         if (col != null) {
             comboColumns.setSelectedItem(col);
             Object op = FilterCreator.operatorFromFilter(filter);
             if (op != null) {
                 comboOperator.setSelectedItem(op);
-                if (FilterCreator.isInputEnabled(col.dataClass))
+                if (FilterCreator.isInputEnabled(col.getDataType()))
                     textValue.setText(FilterCreator.inputFromFilter(filter));
                 else
                     textValue.setText("");
@@ -113,8 +112,9 @@ public class FilterPanel extends JPanel implements ActionListener {
         textValue.requestFocus();
     }
     
-    public YajJobFilter getFilter() throws ParseException {
-        return FilterCreator.getFilter((FmtItem)comboColumns.getSelectedItem(), comboOperator.getSelectedItem(), textValue.getText());
+    @SuppressWarnings("unchecked")
+    public Filter<V,K> getFilter() throws ParseException {
+        return FilterCreator.getFilter((K)comboColumns.getSelectedItem(), comboOperator.getSelectedItem(), textValue.getText());
     }
     
     @Override
@@ -162,7 +162,7 @@ public class FilterPanel extends JPanel implements ActionListener {
         comboColumns.setSelectedIndex(0);
     }
 
-    public FilterPanel(FmtItemList columns, YajJobFilter initValue) {
+    public FilterPanel(FmtItemList columns, Filter<V,K> initValue) {
         this(columns);
         initFromFilter(initValue);
     }

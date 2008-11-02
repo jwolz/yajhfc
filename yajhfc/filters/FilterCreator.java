@@ -25,10 +25,11 @@ import java.util.logging.Logger;
 import yajhfc.FmtItem;
 import yajhfc.FmtItemList;
 import yajhfc.IconMap;
-import yajhfc.YajJobFilter;
+import yajhfc.YajJob;
 import yajhfc.utils;
 
 public class FilterCreator {
+    //TODO: Try to generalize more...
     private static final Logger log = Logger.getLogger(FilterCreator.class.getName());
     
     private static String[] booleanOperators = {
@@ -51,36 +52,37 @@ public class FilterCreator {
         return (cl != Boolean.class && cl != Void.class);
     }
     
-    public static YajJobFilter getFilter(FmtItem column, Object selectedOperator, String input) throws ParseException {
-        if (column.dataClass == Integer.class) {
-            return new ComparableFilter(column, (ComparableFilterOperator)selectedOperator, Integer.valueOf(input));
-        } else if (column.dataClass == Float.class) {
-            return new ComparableFilter(column, (ComparableFilterOperator)selectedOperator, Float.valueOf(input));
-        } else if (column.dataClass == Double.class) {
-            return new ComparableFilter(column, (ComparableFilterOperator)selectedOperator, Double.valueOf(input));
-        } else if (column.dataClass == Date.class) {
-            return new ComparableFilter(column, (ComparableFilterOperator)selectedOperator, column.dateFormat.fmtOut.parse(input));
-        } else if (column.dataClass == String.class || column.dataClass == IconMap.class) {
-            return new StringFilter(column, (StringFilterOperator)selectedOperator, input);
-        } else if (column.dataClass == Boolean.class) {
-            return new ComparableFilter(column, ComparableFilterOperator.EQUAL, selectedOperator == booleanOperators[0]);
+    public static <V extends FilterableObject,K extends FmtItem> Filter<V,K> getFilter(K column, Object selectedOperator, String input) throws ParseException {
+        Class<?> dataClass = column.getDataType();
+        if (dataClass == Integer.class) {
+            return new ComparableFilter<V,K>(column, (ComparableFilterOperator)selectedOperator, Integer.valueOf(input));
+        } else if (dataClass == Float.class) {
+            return new ComparableFilter<V,K>(column, (ComparableFilterOperator)selectedOperator, Float.valueOf(input));
+        } else if (dataClass == Double.class) {
+            return new ComparableFilter<V,K>(column, (ComparableFilterOperator)selectedOperator, Double.valueOf(input));
+        } else if (dataClass == Date.class) {
+            return new ComparableFilter<V,K>(column, (ComparableFilterOperator)selectedOperator, column.dateFormat.fmtOut.parse(input));
+        } else if (dataClass == String.class || dataClass == IconMap.class) {
+            return new StringFilter<V,K>(column, (StringFilterOperator)selectedOperator, input, true);
+        } else if (dataClass == Boolean.class) {
+            return new ComparableFilter<V,K>(column, ComparableFilterOperator.EQUAL, selectedOperator == booleanOperators[0]);
         } else
             return null;
     }
     
-    public static FmtItem columnFromFilter(YajJobFilter filter) {
+    public static <V extends FilterableObject,K extends FilterKey> K columnFromFilter(Filter<V,K> filter) {
         if (filter instanceof ComparableFilter)
-            return ((ComparableFilter)filter).getColumn();
+            return ((ComparableFilter<V,K>)filter).getColumn();
         else if (filter instanceof StringFilter) {
-            return ((StringFilter)filter).getColumn();
+            return ((StringFilter<V,K>)filter).getColumn();
         } else
             return null;
     }
      
-    public static Object operatorFromFilter(YajJobFilter filter) {
+    public static <V extends FilterableObject,K extends FilterKey> Object operatorFromFilter(Filter<V,K> filter) {
         if (filter instanceof ComparableFilter) {
-            ComparableFilter cf = (ComparableFilter)filter;
-            if (cf.getColumn().dataClass != Boolean.class)
+            ComparableFilter<V,K> cf = (ComparableFilter<V,K>)filter;
+            if (cf.getColumn().getDataType() != Boolean.class)
                 return cf.getOperator();
             else {
                 if (((Boolean)cf.getCompareValue()).booleanValue())
@@ -89,22 +91,22 @@ public class FilterCreator {
                     return booleanOperators[1];
             }
         } else if (filter instanceof StringFilter) {
-            return ((StringFilter)filter).getOperator();
+            return ((StringFilter<V,K>)filter).getOperator();
         } else
             return null;
     }
     
-    public static String inputFromFilter(YajJobFilter filter) {
+    public static <V extends FilterableObject,K extends FmtItem> String inputFromFilter(Filter<V,K> filter) {
         if (filter instanceof ComparableFilter) {
-            ComparableFilter cf = (ComparableFilter)filter;
+            ComparableFilter<V,K> cf = (ComparableFilter<V,K>)filter;
             if (cf.getColumn().dataClass == Date.class)
                 return cf.getColumn().dateFormat.fmtOut.format(cf.getCompareValue());
             else if (cf.getColumn().dataClass == Boolean.class)
                 return "";
             else
-                return cf.getOperator().toString();
+                return cf.getCompareValue().toString();
         } else if (filter instanceof StringFilter) {
-            return ((StringFilter)filter).getCompareValue().toString();
+            return ((StringFilter<V,K>)filter).getCompareValue().toString();
         } else
             return "";
     }
@@ -116,7 +118,7 @@ public class FilterCreator {
      * @param filter
      * @return
      */
-    public static String filterToString(YajJobFilter filter) {
+    public static String filterToString(Filter<YajJob,FmtItem> filter) {
         if (filter == null || !(filter instanceof AndFilter))
             return null;
         
@@ -127,9 +129,9 @@ public class FilterCreator {
             res.append('&');
         }
         res.append('!');
-        for (YajJobFilter yjf: ((AndFilter)filter).getChildList()) {
+        for (Filter<YajJob,FmtItem> yjf: ((AndFilter<YajJob,FmtItem>)filter).getChildList()) {
             if (yjf instanceof ComparableFilter) {
-                ComparableFilter cf = (ComparableFilter)yjf;
+                ComparableFilter<YajJob,FmtItem> cf = (ComparableFilter<YajJob,FmtItem>)yjf;
                 res.append("c$");
                 res.append(cf.getColumn().fmt).append('$');
                 res.append(cf.getOperator().name()).append('$');
@@ -141,7 +143,7 @@ public class FilterCreator {
                 res.append(utils.escapeChars(val, "$!", '~')).append('$');
                 res.append('!');
             } else if (yjf instanceof StringFilter) {
-                StringFilter sf = (StringFilter)yjf;
+                StringFilter<YajJob,FmtItem> sf = (StringFilter<YajJob,FmtItem>)yjf;
                 res.append("s$");
                 res.append(sf.getColumn().fmt).append('$');
                 res.append(sf.getOperator().name()).append('$');
@@ -155,14 +157,14 @@ public class FilterCreator {
     }
     
     @SuppressWarnings("unchecked")
-    public static YajJobFilter stringToFilter(String spec, FmtItemList columns) {
+    public static Filter<YajJob,FmtItem> stringToFilter(String spec, FmtItemList columns) {
         String [] flt1 = utils.fastSplit(spec, '!'); //spec.split("!");
         
         AndFilter af;
         if (flt1[0].equals("|")) {
-            af = new OrFilter();
+            af = new OrFilter<YajJob,FmtItem>();
         } else if (flt1[0].equals("&")) {
-            af = new AndFilter();
+            af = new AndFilter<YajJob,FmtItem>();
         } else {
             log.log(Level.WARNING, "Unknown And/Or specification in stringToFilter: " + flt1[0]);
             return null;
@@ -211,14 +213,14 @@ public class FilterCreator {
                 }                        
                 
                 try {
-                    af.addChild(new ComparableFilter(col, ComparableFilterOperator.valueOf(ComparableFilterOperator.class, flt2[2]), compVal));
+                    af.addChild(new ComparableFilter<YajJob,FmtItem>(col, ComparableFilterOperator.valueOf(ComparableFilterOperator.class, flt2[2]), compVal));
                 } catch (RuntimeException e) {
                     log.log(Level.WARNING, "Exception in stringToFilter: ", e);
                     continue;
                 }
             } else if (flt2[0].equals("s")) {
                 try {
-                    af.addChild(new StringFilter(col, StringFilterOperator.valueOf(StringFilterOperator.class, flt2[2]), utils.unEscapeChars(flt2[3], "$!", '~')));
+                    af.addChild(new StringFilter<YajJob,FmtItem>(col, StringFilterOperator.valueOf(StringFilterOperator.class, flt2[2]), utils.unEscapeChars(flt2[3], "$!", '~'), true));
                 } catch (RuntimeException e) {
                     log.log(Level.WARNING, "Exception in stringToFilter: ",  e);
                     continue;

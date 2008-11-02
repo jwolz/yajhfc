@@ -17,32 +17,30 @@ package yajhfc.filters;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-import yajhfc.FmtItem;
-import yajhfc.FmtItemList;
-import yajhfc.YajJob;
-import yajhfc.YajJobFilter;
 
 
-@SuppressWarnings("unchecked")
-public class ComparableFilter implements YajJobFilter {
+public class ComparableFilter<V extends FilterableObject, K extends FilterKey> implements Filter<V,K> {
 
+    @SuppressWarnings("unchecked")
     protected Comparable compareValue;
     protected ComparableFilterOperator operator;
-    protected FmtItem column = null;
+    protected K column = null;
     
-    protected int colIdx = -1;
+    protected Object colIdx = null;
     
-    public ComparableFilter(FmtItem col, ComparableFilterOperator op, Comparable compareValue) {
+    @SuppressWarnings("unchecked")
+    public ComparableFilter(K col, ComparableFilterOperator op, Comparable compareValue) {
         super();
         this.column = col;
         this.operator = op;
         this.compareValue = compareValue;
     }
 
-    public boolean jobIsVisible(YajJob job) {
-        if (column == null || compareValue == null || operator == null || colIdx < 0)
+    @SuppressWarnings("unchecked")
+    public boolean matchesFilter(V filterObj) {
+        if (column == null || compareValue == null || operator == null || colIdx == null)
             return true;
-        int compResult = compareValue.compareTo(job.getData(colIdx));
+        int compResult = compareValue.compareTo(filterObj.getFilterData(colIdx));
         switch (operator) {
         case EQUAL:
             return (compResult == 0);
@@ -61,11 +59,11 @@ public class ComparableFilter implements YajJobFilter {
         }
     }
 
-    public void initFilter(FmtItemList columns) {
-        colIdx = columns.getCompleteView().indexOf(column);
+    public void initFilter(FilterKeyList<K> columns) {
+        colIdx = columns.translateKey(column);
     }
 
-    public FmtItem getColumn() {
+    public K getColumn() {
         return column;
     }
     
@@ -77,7 +75,7 @@ public class ComparableFilter implements YajJobFilter {
         return operator;
     }
     
-    public boolean validate(FmtItemList columns) {
-        return columns.getCompleteView().contains(column);
+    public boolean validate(FilterKeyList<K> columns) {
+        return columns.containsKey(column);
     }
 }

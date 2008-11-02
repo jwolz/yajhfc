@@ -97,11 +97,11 @@ public class LDAPPhoneBook extends PhoneBook {
             
             Hashtable<String,String> env = new Hashtable<String,String>();
             env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-            env.put(Context.PROVIDER_URL, "ldap://" + settings.serverName  + ":" + settings.port +  "/" + settings.baseDN);
+            env.put(Context.PROVIDER_URL, "ldap://" + settings.serverName  + ":" + settings.port +  "/" + LDAPSettings.sanitizeDN(settings.baseDN));
             
             if (settings.useAuth) {
                 env.put(Context.SECURITY_AUTHENTICATION, "simple");
-                env.put(Context.SECURITY_PRINCIPAL, settings.bindDN);
+                env.put(Context.SECURITY_PRINCIPAL, LDAPSettings.sanitizeDN(settings.bindDN));
                 
                 String password;
                 if (settings.askForCredential) {

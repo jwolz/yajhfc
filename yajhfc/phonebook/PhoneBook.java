@@ -22,9 +22,8 @@ import java.awt.Dialog;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
-import yajhfc.filters.StringFilterOperator;
+import yajhfc.filters.Filter;
 
 /**
  * Abstract class describing a phone book
@@ -89,27 +88,16 @@ public abstract class PhoneBook {
      * The index to start searching at. Use -1 to start from the beginning (first or last item depending on searchBackwards)
      * @param searchBackwards
      * Search beginning at last item (true) in direction to the first one or beginning at the first item
-     * @param caseSensitive
-     * Should the search be case sensitive?
-     * @param field
-     * The phone book field to compare
-     * @param op
-     * The comparision operator
-     * @param compareValue
-     * The value to compare the field values with
+     * @param filter
+     * The filter specifying the condition to search for
      * @return 
      * The index of the matching index or -1 if none was found
      */
-    public int findEntry(int startIndex, boolean searchBackwards, boolean caseSensitive, PhoneBookEntry.PBEntryField field, StringFilterOperator op, String compareValue) {
-        Pattern regEx = null;
+    public int findEntry(int startIndex, boolean searchBackwards, Filter<PhoneBookEntry,PBEntryField> filter) {
         List<PhoneBookEntry> entries = getEntries();
         int i, size, increment;
         
-        if (op == StringFilterOperator.MATCHES) {
-            regEx = Pattern.compile(compareValue, caseSensitive ? 0 : (Pattern.CASE_INSENSITIVE|Pattern.UNICODE_CASE) );
-        } else if (!caseSensitive) {
-            compareValue = compareValue.toLowerCase();
-        }
+        filter.initFilter(PBEntryField.filterKeyList);
         
         size = entries.size();
         
@@ -124,36 +112,8 @@ public abstract class PhoneBook {
         increment = searchBackwards ? -1 : 1;
             
         for (; i >= 0 && i < size; i+=increment) {
-            PhoneBookEntry pbe = entries.get(i);
-            String val = pbe.getPBField(field);
-            if (!caseSensitive)
-                val = val.toLowerCase();
-            
-            switch (op) {
-            case EQUAL:
-                if (val.equals(compareValue))
-                    return i;
-                break;
-            case NOTEQUAL:
-                if (!val.equals(compareValue))
-                    return i;
-                break;
-            case CONTAINS:
-                if (val.contains(compareValue)) 
-                    return i;
-                break;
-            case ENDSWITH:
-                if (val.endsWith(compareValue))
-                    return i;
-                break;
-            case STARTSWITH:
-                if (val.startsWith(compareValue))
-                    return i;
-                break;
-            case MATCHES:
-                if (regEx.matcher(val).matches()) 
-                    return i;
-                break;   
+            if (filter.matchesFilter(entries.get(i))) {
+                return i;
             }
         }
         return -1;
@@ -175,7 +135,30 @@ public abstract class PhoneBook {
 //    
 //    public abstract PhoneBookEntry getElementAt(int index);
     
+    /**
+     * Returns the (unmodifiable) List of all phone book entries when no filter is applied.
+     */
     public abstract List<PhoneBookEntry> getEntries();
+    
+    /**
+     * Returns the entries matching the specified filter.
+     * This is implemented as a member of Phonebook to allow subclasses to use
+     * a more efficient method of filtering than iterating all entries returned
+     * by getEntries() (e.g. a LDAP search).
+     * @return
+     */
+    public List<PhoneBookEntry> getFilteredEntries(Filter<PhoneBookEntry,PBEntryField> filter) {
+        List<PhoneBookEntry> allEntries = getEntries();
+        List<PhoneBookEntry> rv = new ArrayList<PhoneBookEntry>(allEntries.size());
+        
+        filter.initFilter(PBEntryField.filterKeyList);
+        for (PhoneBookEntry entry : allEntries) {
+            if (filter.matchesFilter(entry)){
+                rv.add(entry);
+            }
+        }
+        return rv;
+    }
     
     public void addPhonebookEventListener(PhonebookEventListener pel) {
         listeners.add(pel);

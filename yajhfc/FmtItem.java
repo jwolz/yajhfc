@@ -21,12 +21,14 @@ package yajhfc;
 
 import java.util.Date;
 
-public class FmtItem extends MyManualMapObject {
-    public String fmt;
-    public String longdesc;
-    public String desc;
-    public Class<?> dataClass;
-    public HylaDateField dateFormat = null;
+import yajhfc.filters.FilterKey;
+
+public class FmtItem extends MyManualMapObject implements FilterKey {
+    public final String fmt;
+    public final String longdesc;
+    public final String desc;
+    public final Class<?> dataClass;
+    public final HylaDateField dateFormat;
     
     public String toString() {
         return "%" + fmt;
@@ -37,28 +39,36 @@ public class FmtItem extends MyManualMapObject {
     }
     
     public FmtItem(String fmt, String desc, Class<?> dataClass) {
-        this(fmt, desc, desc, dataClass);
+        this(fmt, desc, desc, dataClass, null);
     }
     
     public FmtItem(String fmt, String desc, String longdesc, HylaDateField dateFormat) {
-        this(fmt, desc, longdesc, Date.class);
-        this.dateFormat = dateFormat;
+        this(fmt, desc, longdesc, Date.class, dateFormat);
     }
     
     
     public FmtItem(String fmt, String desc, String longdesc) {
-        this(fmt, desc, longdesc, String.class);
+        this(fmt, desc, longdesc, String.class, null);
     }
     
     public FmtItem(String fmt, String desc, String longdesc, Class<?> dataClass) {
+        this(fmt,desc,longdesc,dataClass,null);
+    }
+    
+    public FmtItem(String fmt, String desc, String longdesc, Class<?> dataClass, HylaDateField dateFormat) {
         this.fmt = fmt;
         this.desc = desc;
         this.longdesc = longdesc;
         this.dataClass = dataClass;
+        this.dateFormat = dateFormat;
     }
     
     @Override
     public Object getKey() {
         return fmt;
+    }
+
+    public Class<?> getDataType() {
+        return dataClass;
     }
 }

@@ -86,6 +86,7 @@ import yajhfc.filters.CustomFilterDialog;
 import yajhfc.filters.FilterCreator;
 import yajhfc.filters.StringFilter;
 import yajhfc.filters.StringFilterOperator;
+import yajhfc.filters.Filter;
 import yajhfc.phonebook.NewPhoneBookWin;
 import yajhfc.readstate.PersistentReadState;
 import yajhfc.send.SendController;
@@ -1640,8 +1641,8 @@ public final class mainwin extends JFrame {
             }
         }
         
-        private YajJobFilter getOwnFilterFor(MyTableModel model) {
-            return new StringFilter((model == recvTableModel ? utils.recvfmt_Owner : utils.jobfmt_Owner), StringFilterOperator.EQUAL, myopts.user);
+        private Filter<YajJob,FmtItem> getOwnFilterFor(MyTableModel model) {
+            return new StringFilter<YajJob,FmtItem>((model == recvTableModel ? utils.recvfmt_Owner : utils.jobfmt_Owner), StringFilterOperator.EQUAL, myopts.user, true);
         }
         
         private boolean canMarkError(MyTableModel model) {
@@ -1697,7 +1698,7 @@ public final class mainwin extends JFrame {
                 lastSel[idx] = menuViewOwn;
             } else if (data.startsWith("C")) {
                 MyTableModel model = ((TooltipJTable)((JScrollPane)tabMain.getComponent(idx)).getViewport().getView()).getRealModel();
-                YajJobFilter yjf = FilterCreator.stringToFilter(data.substring(1), model.columns);
+                Filter<YajJob,FmtItem> yjf = FilterCreator.stringToFilter(data.substring(1), model.columns);
                 if (yjf == null) {
                     lastSel[idx] = menuViewAll;
                 } else {

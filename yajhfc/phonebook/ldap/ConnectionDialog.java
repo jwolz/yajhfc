@@ -249,11 +249,11 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         try {
             Hashtable<String,String> env = new Hashtable<String,String>();
             env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-            env.put(Context.PROVIDER_URL, "ldap://" + textServerName.getText()  + ":" + textPort.getText() +  "/" + textBaseDN.getText());
+            env.put(Context.PROVIDER_URL, "ldap://" + textServerName.getText()  + ":" + textPort.getText() +  "/" + LDAPSettings.sanitizeDN(textBaseDN.getText()));
             
             if (checkDoAuth.isSelected()) {
                 env.put(Context.SECURITY_AUTHENTICATION, "simple");
-                env.put(Context.SECURITY_PRINCIPAL, textBindDN.getText());
+                env.put(Context.SECURITY_PRINCIPAL, LDAPSettings.sanitizeDN(textBindDN.getText()));
                 
                 String password;
                 if (checkAskForPassword.isSelected()) {

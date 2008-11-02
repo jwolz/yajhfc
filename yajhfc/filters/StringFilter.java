@@ -2,11 +2,6 @@ package yajhfc.filters;
 
 import java.util.regex.Pattern;
 
-import yajhfc.FmtItem;
-import yajhfc.FmtItemList;
-import yajhfc.YajJob;
-import yajhfc.YajJobFilter;
-
 /*
  * YAJHFC - Yet another Java Hylafax client
  * Copyright (C) 2005-2006 Jonas Wolz
@@ -26,31 +21,39 @@ import yajhfc.YajJobFilter;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-public class StringFilter implements YajJobFilter {
+public class StringFilter<V extends FilterableObject, K extends FilterKey>  implements Filter<V, K>  {
 
     protected Object compareValue = null;
-    protected FmtItem column = null;
+    protected K column = null;
     protected StringFilterOperator operator;
+    protected boolean caseSensitive;
     
-    protected int colIdx = -1;
+    protected Object colIdx = null;
     
-    public StringFilter(FmtItem col, StringFilterOperator operator, String compareValue) {
+    public StringFilter(K col, StringFilterOperator operator, String compareValue, boolean caseSensitive) {
         super();
         this.column = col;
         this.operator = operator;
         if (operator == StringFilterOperator.MATCHES) {
-            this.compareValue = Pattern.compile(compareValue);
+            this.compareValue = Pattern.compile(compareValue, caseSensitive ? 0 : (Pattern.CASE_INSENSITIVE|Pattern.UNICODE_CASE));
         } else {
-            this.compareValue = compareValue;
+            this.compareValue = caseSensitive ? compareValue : compareValue.toLowerCase();
         }
+        this.caseSensitive = caseSensitive;
     }
 
-    public boolean jobIsVisible(YajJob job) {
-        if (column == null || compareValue == null || operator == null || colIdx < 0)
+    public boolean matchesFilter(V filterObj) {
+        if (column == null || compareValue == null || operator == null || colIdx == null)
             return true;
-        String value = job.getStringData(colIdx);
-        if (value == null) {
+        Object v = filterObj.getFilterData(colIdx);
+        String value;
+        if (v == null) {
             value = "";
+        } else {
+            value = v.toString();
+        }
+        if (!caseSensitive && operator != StringFilterOperator.MATCHES) {
+            value = value.toLowerCase();
         }
         switch (operator) {
         case EQUAL:
@@ -70,11 +73,11 @@ public class StringFilter implements YajJobFilter {
         }
     }
 
-    public void initFilter(FmtItemList columns) {
-        colIdx = columns.getCompleteView().indexOf(column);
+    public void initFilter(FilterKeyList<K> columns) {
+        colIdx = columns.translateKey(column);
     }
     
-    public FmtItem getColumn() {
+    public K getColumn() {
         return column;
     }
     
@@ -86,7 +89,7 @@ public class StringFilter implements YajJobFilter {
         return operator;
     }
     
-    public boolean validate(FmtItemList columns) {
-        return columns.getCompleteView().contains(column);
+    public boolean validate(FilterKeyList<K> columns) {
+        return columns.containsKey(column);
     }
 }

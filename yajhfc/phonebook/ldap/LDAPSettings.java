@@ -18,6 +18,9 @@ package yajhfc.phonebook.ldap;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+import java.util.logging.Logger;
+
+import yajhfc.utils;
 import yajhfc.phonebook.GeneralConnectionSettings;
 
 
@@ -72,4 +75,81 @@ public class LDAPSettings extends GeneralConnectionSettings {
         this();
         copyFrom(src);
     }
+
+
+    // Parser states:
+    private static final int STATE_NORMAL = 0;
+    private static final int STATE_INQUOTE = 1;
+    private static final int STATE_CURCHARESCAPED = 2;
+    private static final int STATE_STRIPSPACES = 3;
+    /**
+     * Strips spaces after , and ; used as separator to wor around
+     * server bugs.
+     * @param dn
+     * @return
+     */
+    public static final String sanitizeDN(String dn) {
+        StringBuilder rv = new StringBuilder(dn.length());
+        int state = STATE_NORMAL;
+
+        // Simple "parser" to detect commas inside quotes
+        // and escaped commas (i.e. \, and \;)
+        for (int i=0; i < dn.length(); i++) {
+            char c = dn.charAt(i);
+
+            switch (state) {
+            case STATE_NORMAL:
+            default:
+                rv.append(c);
+
+                switch (c) {
+                case '\"':
+                    state = STATE_INQUOTE;
+                    break;
+                case '\\':
+                    state = STATE_CURCHARESCAPED;
+                    break;
+                case ',':
+                case ';':
+                    state = STATE_STRIPSPACES;
+                    break;
+                default:
+                    break;
+                }
+                break;
+            case STATE_INQUOTE:
+                rv.append(c);
+
+                if (c=='\"') {
+                    state = STATE_NORMAL;
+                }
+                break;
+            case STATE_CURCHARESCAPED:
+                rv.append(c);
+
+                state = STATE_NORMAL;
+                break;
+            case STATE_STRIPSPACES:
+                if (!Character.isWhitespace(c)) {
+                    rv.append(c);
+                    state = STATE_NORMAL;
+                }
+                break;
+            }
+        }
+
+        if (utils.debugMode) {
+            Logger.getLogger(LDAPSettings.class.getName()).fine("Changed DN from \"" + dn +  "\" to \"" + rv + "\"");
+        }
+        return rv.toString();
+    }
+
+    // Test code:
+//    public static void main(String[] args) {
+//        System.out.println(sanitizeDN("ou=test,dc=test,dc=de"));
+//        System.out.println(sanitizeDN("ou=test, dc=test,   dc=de"));
+//        System.out.println(sanitizeDN("ou=\"test\", dc=test, dc=de"));
+//        System.out.println(sanitizeDN("ou=\"test, foo\", dc=test, dc=de"));
+//        System.out.println(sanitizeDN("ou=test\\,  bar, dc=test; dc=de"));
+//    }
 }

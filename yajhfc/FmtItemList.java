@@ -25,12 +25,14 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import yajhfc.filters.FilterKeyList;
+
 /**
  * Contains a list of FmtItems.
  * @author jonas
  *
  */
-public class FmtItemList extends ArrayList<FmtItem> {
+public class FmtItemList extends ArrayList<FmtItem> implements FilterKeyList<FmtItem> {
     private static final Logger log = Logger.getLogger(FmtItemList.class.getName());
     
     protected FmtItem[] availableItems;
@@ -182,5 +184,17 @@ public class FmtItemList extends ArrayList<FmtItem> {
             this.additionalItems = additionalItems;
             this.additionalSize = additionalSize;
         }
+    }
+
+    public boolean containsKey(FmtItem key) {
+        return getCompleteView().contains(key);
+    }
+
+    public FmtItem[] getAvailableKeys() {
+        return getCompleteView().toArray(new FmtItem[getCompleteView().size()]);
+    }
+
+    public Object translateKey(FmtItem key) {
+        return getCompleteView().indexOf(key);
     }
 }
