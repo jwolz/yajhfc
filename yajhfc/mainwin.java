@@ -1813,7 +1813,13 @@ public final class mainwin extends JFrame {
                 newText = utils._("Could not log in");
             } else {
                 try {
-                    newText = utils.listToString(hyfc.getList("status"), "\n");
+                    Vector<?> status;
+                    synchronized (hyfc) {
+                        log.finest("In hyfc monitor");
+                        status = hyfc.getList("status");
+                    }
+                    log.finest("Out of hyfc monitor");
+                    newText = utils.listToString(status, "\n");
                 } catch (SocketException se) {
                     log.log(Level.WARNING, "Error refreshing the status, logging out.", se);
                     SwingUtilities.invokeLater(new Runnable() {
@@ -1864,7 +1870,9 @@ public final class mainwin extends JFrame {
             Vector<?> lst;
             try {
                 //System.out.println(System.currentTimeMillis() + ": Getting list...");
-                lst = hyfc.getList("recvq");
+                synchronized (hyfc) {
+                    lst = hyfc.getList("recvq");
+                }
                 //System.out.println(System.currentTimeMillis() + ": Got list...");
                 if ((lastRecvList == null) || !lst.equals(lastRecvList)) {
                     String[][] data = new String[lst.size()][];

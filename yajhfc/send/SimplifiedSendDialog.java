@@ -43,8 +43,10 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
@@ -71,6 +73,7 @@ import yajhfc.HylaModem;
 import yajhfc.HylaServerFile;
 import yajhfc.IconMap;
 import yajhfc.PaperSize;
+import yajhfc.ProgressPanel;
 import yajhfc.utils;
 import yajhfc.faxcover.Faxcover;
 import yajhfc.phonebook.NewPhoneBookWin;
@@ -86,6 +89,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
     SendController sendController;
     
     protected JPanel contentPane, advancedPane;
+    protected ProgressPanel progressPanel;
     protected JButton buttonCancel;
     protected FileTextField ftfFileName;
     protected TextFieldList<HylaTFLItem> tflFiles;
@@ -146,11 +150,12 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         sendController = new SendController(clientManager, this, false);
         
         clpDefault = new ClipboardPopup();
-        createContentPane();
-        setContentPane(contentPane);
+        setContentPane(createContentPane());
         this.setSize(640, initiallyHideFiles ? 400 : 480);
         createAdvancedPane();
         setAdvancedView(utils.getFaxOptions().sendWinIsAdvanced);
+        
+        sendController.setProgressMonitor(progressPanel);
         
         this.addWindowListener(new WindowAdapter() {
             @Override
@@ -168,14 +173,15 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
 
     }
 
-    protected void createContentPane() {
+    protected JComponent createContentPane() {
         final double verticalAreaPart = initiallyHideFiles ? (0.5) : (1.0/3.0);
         double[][] tablelay = {
                 { border, TableLayout.FILL, border, TableLayout.PREFERRED, border },
                 { border, initiallyHideFiles ? 0 : verticalAreaPart , initiallyHideFiles ? 0 : border,  TableLayout.FILL, border, TableLayout.PREFERRED, border,
                         TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, verticalAreaPart*0.5, border, TableLayout.PREFERRED, border}
         };
-
+        
+        progressPanel = new ProgressPanel();
         contentPane = new JPanel(new TableLayout(tablelay));
 
         actSend = new ExcDialogAbstractAction() {
@@ -191,7 +197,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         };
         actSend.putValue(Action.NAME, utils._("Send"));
         actSend.putValue(Action.SMALL_ICON, utils.loadIcon("general/SendMail"));
-        
+
         JButton buttonSend = new JButton(actSend);
 
         actPreview = new ExcDialogAbstractAction() {
@@ -278,6 +284,9 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         addWithLabel(contentPane, scrollComments, utils._("Comments:"), "1,10");
         
         contentPane.add(buttonPanel, "3,1,3,12,f,f");
+        
+        progressPanel.setContentComponent(contentPane);
+        return progressPanel;
     }
     
     protected Component createFileEntryList() {
@@ -346,9 +355,11 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
                 }
             }
         };
+        actPhonebook.putValue(Action.NAME, utils._("Add from phonebook..."));
         actPhonebook.putValue(Action.SHORT_DESCRIPTION, utils._("Choose number from phone book"));
         actPhonebook.putValue(Action.SMALL_ICON, utils.loadIcon("general/Bookmarks"));
-        JButton buttonPhonebook = new JButton(actPhonebook);;
+        JButton buttonPhonebook = new JButton(actPhonebook);
+        buttonPhonebook.setText("");
 
         
         actAddNumber = new ExcDialogAbstractAction() {
@@ -357,29 +368,39 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
                 textNumber.setText("");
             }
         };
+        actAddNumber.putValue(Action.NAME, utils._("Add"));
         actAddNumber.putValue(Action.SMALL_ICON, utils.loadIcon("general/Add"));
         actAddNumber.putValue(Action.SHORT_DESCRIPTION, utils._("Add a new recipient"));
-        
         JButton buttonAddNumber = new JButton(actAddNumber);
+        buttonAddNumber.setText("");
 
         actRemoveNumber = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {
-                int selIdx = tableNumbers.getSelectedRow();
-                if (selIdx >= 0) {
-                    numberTableModel.removeRow(selIdx);
+                int[] selIdx = tableNumbers.getSelectedRows();
+                if (selIdx.length >= 0) {
+                    for (int i = selIdx.length-1; i>=0; i--) {
+                        numberTableModel.removeRow(selIdx[i]);
+                    }
                     actRemoveNumber.setEnabled(false);
                 }
             }    
         };
+        actRemoveNumber.putValue(Action.NAME, utils._("Remove"));
         actRemoveNumber.putValue(Action.SMALL_ICON, utils.loadIcon("general/Delete"));
         actRemoveNumber.putValue(Action.SHORT_DESCRIPTION, utils._("Remove selected recipient"));
         actRemoveNumber.setEnabled(false);
-        
         JButton buttonRemoveNumber = new JButton(actRemoveNumber);
+        buttonRemoveNumber.setText("");
 
+        JPopupMenu tablePopup = new JPopupMenu();
+        tablePopup.add(new JMenuItem(actAddNumber));
+        tablePopup.add(new JMenuItem(actPhonebook));
+        tablePopup.addSeparator();
+        tablePopup.add( new JMenuItem(actRemoveNumber));
+        
         numberTableModel = new NumberTFLItemTableModel(sendController.numbers);
         tableNumbers = new JTable(numberTableModel);
-        tableNumbers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tableNumbers.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         JTableTABAction.wrapDefTabAction(tableNumbers);
         
         //tableNumbers.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -396,10 +417,16 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         firstCol.setHeaderRenderer(new BoldCellRenderer(tableNumbers.getTableHeader().getDefaultRenderer(), boldFont));
         
         JScrollPane tablePane = new JScrollPane(tableNumbers, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        tableNumbers.setComponentPopupMenu(tablePopup);
+        tablePane.setComponentPopupMenu(tablePopup);
+        
+        ClipboardPopup clpNumber = new ClipboardPopup();
+        clpNumber.getPopupMenu().addSeparator();
+        clpNumber.getPopupMenu().add(actAddNumber);
         
         textNumber = new JTextField();
         textNumber.addActionListener(actAddNumber);
-        textNumber.addMouseListener(clpDefault);
+        textNumber.addMouseListener(clpNumber);
         
         tablePanel.add(new JLabel(utils._("Fax number:")), "0,0,1,0, f,f");
         tablePanel.add(textNumber, "0,1");

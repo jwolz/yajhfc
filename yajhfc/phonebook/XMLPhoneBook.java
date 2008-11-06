@@ -49,8 +49,9 @@ public class XMLPhoneBook extends PhoneBook {
     public static final String PB_Description = utils._("A Phonebook saving its entries as a XML file."); // A user-readable description of this Phonebook type
     
     private ArrayList<XMLPhoneBookEntry> list;
-    private String fileName;
+    private File file;
     private boolean isOpened = false;
+    private boolean wasChanged = false;
     
     public void resort() {
         Collections.sort(list);
@@ -70,6 +71,7 @@ public class XMLPhoneBook extends PhoneBook {
         int pos = getInsertionPos(pb);
         list.add(pos, pb);
         fireEntriesAdded(pos, pb);
+        wasChanged = true;
         return pb;
     }
 
@@ -78,6 +80,7 @@ public class XMLPhoneBook extends PhoneBook {
         if (index >= 0) {
             list.remove(index);
             fireEntriesRemoved(index, entry);
+            wasChanged = true;
         }
     }
 
@@ -87,6 +90,7 @@ public class XMLPhoneBook extends PhoneBook {
         int pos = getInsertionPos(entry);
         list.add(pos, (XMLPhoneBookEntry)entry);
         fireEntriesChanged(eventObjectForInterval(oldpos, pos));
+        wasChanged = true;
     }
 
     private List<PhoneBookEntry> itemsView;
@@ -97,7 +101,7 @@ public class XMLPhoneBook extends PhoneBook {
 
     @Override
     public String browseForPhoneBook() {
-        JFileChooser jfc = new yajhfc.util.SafeJFileChooser(fileName);
+        JFileChooser jfc = new yajhfc.util.SafeJFileChooser(file);
         jfc.removeChoosableFileFilter(jfc.getAcceptAllFileFilter());
         ExampleFileFilter ff = new ExampleFileFilter("phonebook", utils._("Phonebook files"));
         jfc.addChoosableFileFilter(ff);
@@ -114,28 +118,30 @@ public class XMLPhoneBook extends PhoneBook {
     public void close() {
         if (!isOpen())
             return;
-        
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            
-            Document doc = builder.newDocument();
-            
-            Element root = doc.createElement("phonebook");
-            doc.appendChild(root);
-            saveToXML(root, doc);
-            
-            root.normalize();
-            TransformerFactory tFactory =
-                TransformerFactory.newInstance();
-            Transformer transformer = tFactory.newTransformer();
-            
-            DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(new FileOutputStream(fileName));
-            transformer.transform(source, result);
-        } catch (Exception e) {
-            ExceptionDialog.showExceptionDialog(parentDialog, utils._("Error saving the phone book: "), e);
-        } 
+        if (wasChanged) {
+            try {
+                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder builder = factory.newDocumentBuilder();
+
+                Document doc = builder.newDocument();
+
+                Element root = doc.createElement("phonebook");
+                doc.appendChild(root);
+                saveToXML(root, doc);
+
+                root.normalize();
+                TransformerFactory tFactory =
+                    TransformerFactory.newInstance();
+                Transformer transformer = tFactory.newTransformer();
+
+                DOMSource source = new DOMSource(doc);
+                StreamResult result = new StreamResult(new FileOutputStream(file));
+                transformer.transform(source, result);
+                wasChanged = false;
+            } catch (Exception e) {
+                ExceptionDialog.showExceptionDialog(parentDialog, utils._("Error saving the phone book: "), e);
+            }
+        }
         isOpened = false;
     }
 
@@ -182,10 +188,14 @@ public class XMLPhoneBook extends PhoneBook {
             list.add(pb);
         } */
 
-        fileName = descriptor;
+        file = new File(descriptor);
+        reloadEntries();
+        isOpened = true;
+    }
+
+    private void reloadEntries() throws PhoneBookException {
         list.clear();
         
-        File file = new File(fileName);
         if (!file.exists()) {
             isOpened = true;
             return;
@@ -200,13 +210,13 @@ public class XMLPhoneBook extends PhoneBook {
             Element root = doc.getDocumentElement();
             
             loadFromXML(root);
+            
+            wasChanged = false;
         } catch (Exception e) {
             throw new PhoneBookException(e, false);
         } 
-        
-        isOpened = true;
     }
-
+    
     @Override
     public boolean isOpen() {
         return isOpened;
@@ -214,15 +224,7 @@ public class XMLPhoneBook extends PhoneBook {
     
     @Override
     public String getDisplayCaption() {
-        String rv = PB_Prefix + ":";
-        int desiredLen = CAPTION_LENGTH - rv.length();
-        
-        if (fileName.length() > desiredLen)
-            rv += "..." + fileName.substring(fileName.length() - desiredLen + 3);
-        else
-            rv += fileName;
-        
-        return rv;
+        return PB_Prefix + ":" + utils.shortenFileNameForDisplay(file, CAPTION_LENGTH - PB_Prefix.length() - 1);
     }
     
     public XMLPhoneBook(Dialog parent) {

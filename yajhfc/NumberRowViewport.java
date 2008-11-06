@@ -58,7 +58,7 @@ public class NumberRowViewport extends JViewport {
         rowNumberTable = new JTable(new RowNumberTableModel(realTable.getModel()));
         rowNumberTable.getTableHeader().setResizingAllowed(false);
         rowNumberTable.getTableHeader().setReorderingAllowed(false);
-        rowNumberTable.getColumnModel().getColumn(0).setPreferredWidth(30);
+        rowNumberTable.getColumnModel().getColumn(0).setPreferredWidth(37);
         rowNumberTable.setFocusable(false);
         setTableColors();
         

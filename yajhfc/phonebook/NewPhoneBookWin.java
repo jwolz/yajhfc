@@ -21,14 +21,18 @@ package yajhfc.phonebook;
 import info.clearthought.layout.TableLayout;
 import info.clearthought.layout.TableLayoutConstraints;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dialog;
+import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -56,10 +60,13 @@ import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.event.TreeSelectionEvent;
@@ -73,12 +80,13 @@ import yajhfc.ExcDialogAbstractAction;
 import yajhfc.ExceptionDialog;
 import yajhfc.FaxOptions;
 import yajhfc.utils;
+import yajhfc.phonebook.PhoneBookTreeModel.PBTreeModelListener;
 
 public final class NewPhoneBookWin extends JDialog implements ActionListener {
 
     private static final Logger log = Logger.getLogger(NewPhoneBookWin.class.getName());
     
-    JSplitPane jContentPane;
+    JSplitPane splitPane;
     JTree phoneBookTree;
     PhoneBookTreeModel treeModel;
     JPanel rightPane, leftPane;
@@ -99,6 +107,10 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     JPopupMenu treePopup;
     
     Action listRemoveAction, addEntryAction, removeEntryAction, searchEntryAction, selectAction;
+    
+    JTextField searchField;
+    JButton clearButton;
+    SearchHelper searchHelper = new SearchHelper();
     
     NewSearchWin searchWin;
     
@@ -446,13 +458,47 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     }
        
     
-    private JSplitPane getJContentPane() {
-        if (jContentPane == null) {
-            jContentPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, getLeftPane(), getRightPane());
-            jContentPane.setDividerLocation(200);
-            jContentPane.setOpaque(true);
+    private JPanel createJContentPane() {
+        JPanel contentPane = new JPanel(new BorderLayout());
+        contentPane.add(createToolBar(), BorderLayout.NORTH);
+        contentPane.add(getSplitPane(), BorderLayout.CENTER);
+        return contentPane;
+    }
+    
+    private JToolBar createToolBar() {
+        JToolBar toolBar = new JToolBar();
+        
+        searchField = new JTextField(20);
+        searchField.getDocument().addDocumentListener(searchHelper);
+        searchField.setActionCommand("focus");
+        searchField.addActionListener(searchHelper);
+        Dimension prefSize = searchField.getPreferredSize();
+        prefSize.width = Integer.MAX_VALUE;
+        prefSize.height += 4;
+        searchField.setMaximumSize(prefSize);
+        
+        clearButton = new JButton(utils._("Reset"));
+        clearButton.setActionCommand("clear");
+        clearButton.addActionListener(searchHelper);
+        clearButton.setEnabled(false);
+        clearButton.setToolTipText(utils._("Reset quick search and show all phone book entries."));
+        
+        toolBar.add(new JLabel(utils._("Search") + ": "));
+        toolBar.add(searchField);
+        toolBar.add(clearButton);
+        toolBar.addSeparator();
+        toolBar.add(searchEntryAction);
+        
+        return toolBar;
+    }
+    
+    private JSplitPane getSplitPane() {
+        if (splitPane == null) {
+            splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, getLeftPane(), getRightPane());
+            splitPane.setDividerLocation(200);
+            splitPane.setOpaque(true);
         }
-        return jContentPane;
+        return splitPane;
     }
     
     private JPanel getLeftPane() {
@@ -464,6 +510,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             leftPane = new JPanel(new TableLayout(dLay), false);
             
             treeModel = new PhoneBookTreeModel();
+            treeModel.addPBTreeModelListener(searchHelper);
             phoneBookTree = new JTree(treeModel);
             treeModel.setTree(phoneBookTree);
             phoneBookTree.setEditable(false);
@@ -656,6 +703,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             entryMenu.add(new JMenuItem(removeEntryAction));
             entryMenu.add(new JSeparator());
             entryMenu.add(new JMenuItem(searchEntryAction));
+            
         }
         return entryMenu;
     }
@@ -731,7 +779,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     
     private void initialize() {
         createActions();
-        setContentPane(getJContentPane());
+        setContentPane(createJContentPane());
         setJMenuBar(getMenu());
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setTitle(utils._("Phone book"));
@@ -813,6 +861,15 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             
             phoneBookTree.getActionMap().put("selectEntry", selectAction);
             phoneBookTree.getInputMap().put(KeyStroke.getKeyStroke('\n'), "selectEntry");
+            
+            phoneBookTree.addMouseListener(new MouseAdapter() {
+               @Override
+                public void mouseClicked(MouseEvent e) {
+                   if (e.getClickCount() == 2) {
+                       selectAction.actionPerformed(null);
+                   }
+                } 
+            });
         }
     }
     
@@ -888,6 +945,51 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                 readFromTextFields(selectedItems.get(0), true); 
             }
         }
+    }
+    
+    class SearchHelper implements DocumentListener, PBTreeModelListener, ActionListener {
+        private boolean eventLock = false;
+        
+        public void changedUpdate(DocumentEvent e) {
+            // do nothing
+        }
+
+        public void insertUpdate(DocumentEvent e) {
+            if (eventLock)
+                return;
+            
+            performQuickSearch();
+        }
+
+        public void removeUpdate(DocumentEvent e) {
+            if (eventLock)
+                return;
+            
+            performQuickSearch();
+        }
+
+        private void performQuickSearch() {
+            String text = searchField.getText();
+            treeModel.applyFilter(text);
+            clearButton.setEnabled(text.length() > 0);
+        }
+        
+        public void filterWasReset() {
+            eventLock = true;
+            searchField.setText("");
+            clearButton.setEnabled(false);
+            eventLock = false;
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            String actCmd = e.getActionCommand();
+            if (actCmd.equals("clear")) {
+                searchField.setText("");
+            } else if (actCmd.equals("focus")) {
+                phoneBookTree.requestFocusInWindow();
+            }
+        }
+        
     }
     
     private class PhonebookMenuActionListener implements ActionListener{
