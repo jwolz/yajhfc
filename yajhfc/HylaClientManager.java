@@ -104,6 +104,7 @@ public class HylaClientManager {
             client = new HylaFAXClient();
             synchronized (client) {
                 //client.setDebug(utils.debugMode);
+                client.setSocketTimeout(0);
                 try {
                     client.open(myopts.host, myopts.port);
                     if (utils.debugMode) {

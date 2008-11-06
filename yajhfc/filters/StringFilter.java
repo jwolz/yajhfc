@@ -1,6 +1,5 @@
 package yajhfc.filters;
 
-import java.util.regex.Pattern;
 
 /*
  * YAJHFC - Yet another Java Hylafax client
@@ -21,30 +20,19 @@ import java.util.regex.Pattern;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-public class StringFilter<V extends FilterableObject, K extends FilterKey>  implements Filter<V, K>  {
-
-    protected Object compareValue = null;
+public class StringFilter<V extends FilterableObject, K extends FilterKey> extends AbstractStringFilter<V, K> implements Filter<V, K>  {
     protected K column = null;
-    protected StringFilterOperator operator;
-    protected boolean caseSensitive;
     
     protected Object colIdx = null;
     
     public StringFilter(K col, StringFilterOperator operator, String compareValue, boolean caseSensitive) {
-        super();
+        super(operator, compareValue, caseSensitive);
         this.column = col;
-        this.operator = operator;
-        if (operator == StringFilterOperator.MATCHES) {
-            this.compareValue = Pattern.compile(compareValue, caseSensitive ? 0 : (Pattern.CASE_INSENSITIVE|Pattern.UNICODE_CASE));
-        } else {
-            this.compareValue = caseSensitive ? compareValue : compareValue.toLowerCase();
-        }
-        this.caseSensitive = caseSensitive;
     }
 
     public boolean matchesFilter(V filterObj) {
-        if (column == null || compareValue == null || operator == null || colIdx == null)
-            return true;
+        if (column == null || colIdx == null)
+            return false;
         Object v = filterObj.getFilterData(colIdx);
         String value;
         if (v == null) {
@@ -52,25 +40,7 @@ public class StringFilter<V extends FilterableObject, K extends FilterKey>  impl
         } else {
             value = v.toString();
         }
-        if (!caseSensitive && operator != StringFilterOperator.MATCHES) {
-            value = value.toLowerCase();
-        }
-        switch (operator) {
-        case EQUAL:
-            return value.equals((String)compareValue);
-        case NOTEQUAL:
-            return !value.equals((String)compareValue);
-        case CONTAINS:
-            return value.contains((String)compareValue);
-        case STARTSWITH:
-            return value.startsWith((String)compareValue);
-        case ENDSWITH:
-            return value.endsWith((String)compareValue);
-        case MATCHES:
-            return ((Pattern)compareValue).matcher(value).matches();
-        default:
-            return true;
-        }
+        return doActualMatch(value);
     }
 
     public void initFilter(FilterKeyList<K> columns) {
@@ -79,14 +49,6 @@ public class StringFilter<V extends FilterableObject, K extends FilterKey>  impl
     
     public K getColumn() {
         return column;
-    }
-    
-    public Object getCompareValue() {
-        return compareValue;
-    }
-    
-    public StringFilterOperator getOperator() {
-        return operator;
     }
     
     public boolean validate(FilterKeyList<K> columns) {

@@ -46,6 +46,7 @@ import yajhfc.PaperSize;
 import yajhfc.ProgressWorker;
 import yajhfc.utils;
 import yajhfc.FormattedFile.FileFormat;
+import yajhfc.ProgressWorker.ProgressUI;
 import yajhfc.faxcover.Faxcover;
 import yajhfc.faxcover.Faxcover.InvalidCoverFormatException;
 
@@ -73,6 +74,18 @@ public class SendController {
     protected int resolution = utils.getFaxOptions().resolution.type;
     protected int killTime = utils.getFaxOptions().killTime;
     
+    protected ProgressUI progressMonitor = null;
+    
+    static final int FILE_DISPLAY_LEN = 30;
+    
+    public ProgressUI getProgressMonitor() {
+        return progressMonitor;
+    }
+
+    public void setProgressMonitor(ProgressUI progressMonitor) {
+        this.progressMonitor = progressMonitor;
+    }
+
     /**
      * The selected modem. Either a HylaModem or a String containing the modem's name.
      */
@@ -200,7 +213,7 @@ public class SendController {
                 }
                 try {
                     for (HylaTFLItem item : files) {
-                        updateNote(MessageFormat.format(utils._("Formatting {0}"), item.getText()));
+                        updateNote(MessageFormat.format(utils._("Formatting {0}"), utils.shortenFileNameForDisplay(item.getText(), FILE_DISPLAY_LEN)));
                         item.preview(SendController.this.parent, hyfc);
                         stepProgressBar(step);
                     }
@@ -211,6 +224,10 @@ public class SendController {
                 showExceptionDialog(utils._("Error previewing the documents:"), e1);
             } 
         } 
+        
+        public PreviewWorker() {
+            this.progressMonitor = SendController.this.progressMonitor;
+        }
     }
     class SendWorker extends ProgressWorker {
         private final Logger log = Logger.getLogger(SendWorker.class.getName());    
@@ -264,6 +281,7 @@ public class SendController {
                 FaxOptions fo = utils.getFaxOptions();                    
 
                 synchronized (hyfc) {
+                    log.finest("In hyfc monitor");
                     if (!pollMode) {
                         setPaperSizes();
 
@@ -277,7 +295,7 @@ public class SendController {
                         hyfc.type(HylaFAXClient.TYPE_IMAGE);
 
                         for (HylaTFLItem item : files) {
-                            updateNote(MessageFormat.format(utils._("Uploading {0}"), item.getText()));
+                            updateNote(MessageFormat.format(utils._("Uploading {0}"), utils.shortenFileNameForDisplay(item.getText(), FILE_DISPLAY_LEN)));
                             item.upload(hyfc);
 
                             stepProgressBar(20);
@@ -372,7 +390,8 @@ public class SendController {
                         }
                     }
                 }
-
+                log.finest("Out of hyfc monitor");
+                
                 updateNote(utils._("Cleaning up"));
                 for (HylaTFLItem item  : files) {
                     item.cleanup();
@@ -389,13 +408,21 @@ public class SendController {
         protected void done() {
             SendController.this.parent.dispose();
         }
+        
+        public SendWorker() {
+            this.progressMonitor = SendController.this.progressMonitor;
+        }
     }
     
-    
     public SendController(HylaClientManager clientManager, Dialog parent, boolean pollMode) {
+        this(clientManager, parent, pollMode, null);
+    }
+    
+    public SendController(HylaClientManager clientManager, Dialog parent, boolean pollMode, ProgressUI progressMonitor) {
         this.clientManager = clientManager;
         this.parent = parent;
         this.pollMode = pollMode;
+        this.progressMonitor = progressMonitor;
     }
     
     /**

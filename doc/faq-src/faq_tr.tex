@@ -1,0 +1,219 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[latin5]{inputenc}
+\usepackage{url}
+\usepackage[left=3cm,right=3cm,top=2cm,bottom=2cm,nohead]{geometry}
+\usepackage[colorlinks=false,pdfborder=0 0 0]{hyperref}
+\usepackage[T1]{fontenc}
+\usepackage[turkish]{babel}
+
+%opening
+\title{YajHFC SSS}
+\author{}
+\date{}
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\section{Kurulum}
+\subsection{Windows için faks görüntüleyici nereden temin edebilirim?}
+
+Bazýlarý fakslarý düþük çözünürlükte yanlýþ boyutlarda (yarýsý) gösterse de 
+genellikle herhangi bir TIFF görüntüleyebilen yazýlým kullanabilirsiniz.
+
+Neyse ki tüm yeni windows sürümleri bu iþi doðru yapan programla beraber geliyorlar.
+
+\begin{description}
+\item[Windows 95/98/ME/2000:]
+Donatýlar/Görüntüleme uygulamasýný kullanabilirsiniz.
+	YajHFC ile kullanmak için diskinizdeki \texttt{kodakimg.exe}'i seçmek için 
+	\texttt{Faks görüntülüyeci için komut satýrý}ndaki gözat düðmesini kullanýn.\\
+	Bu genellikle Windows dizininde (win 98/ME) \emph{veya} \\
+\verb.Program Files\Windows NT\Accessories\ImageVue. dizininde bulunur. (win 2k). 
+       
+\item[Windows XP:]
+Birleþik ``resim ve faks görünütleyici'' kullanabilirsiniz
+	Kullanmak için aþaðýdaki metini \texttt{Faks görüntüleyici için komut satýrý} kutusuna girin:\\
+	\verb#rundll32.exe shimgvw.dll,ImageView_Fullscreen %s#
+ \end{description}
+
+      
+\subsection{Linux/*BSD/... için faks görünütüleyici nereden temin edebilirim?}
+\texttt{kfax} bende gayet iyi çalýþýyor fakat windowsdaki gibi TIFF dosyalarýný görüntüleyen
+her hangi bir yazýlým kullanabilirsiniz, bu yazýlýmlarý daðýtýmýnýzýn paket yöneticisinden araþtýrabilirsiniz.
+
+
+\subsection{Mac OS X'de faks görüntüleyici olarak ne kullanmalýyým?}
+\texttt{Faks görüntüleyici için komut satýrý} kutusuna sadece \verb.open %s. girmeniz yeterli.
+Fakslar öntanýmlý uyguluma ile açýlacaktýr.
+Scott Harris'a bu çözüm için teþekkürler.
+
+
+
+
+\subsection{PostScript görüntüleyici nerden bulabilirim?}
+\begin{description}
+\item[Linux/*BSD/...:] Sadece PostScript görüntüleyici pkaetlerden birini kurun.
+		(örn. \texttt{gv, kghostview, gnome-gv, ...})
+
+
+\end{description}
+		
+\section{Program kullanýmý}
+
+\subsection{PostScript kapak sayfasý þablonunu nasýl düzenleyebilirim?}
+O þablonlar HylaFAX \texttt{faxcover} programýnýn kullandýðý ayný özel PostScript biçimini kullanmalý.
+Bu tür dosylarýn nasýl oluþturulacaðý ve düzenleneceðine dair ipuclarý için aþaðýdaki safyalara bakabilirsiniz:
+
+
+Seçenek olarak, YajHFC 0.3.7 sürümünden itibaren, kapak sayfalarýný, HTML yada bir eklenti ile XSL:FO veya ODT (OpenDocument Text) biçiminde kullanabilirsiniz.
+Alternatively, starting with YajHFC 0.3.7, you can use Cover pages in HTML or, with a plugin, in XSL:FO or ODT (OpenDocument Text) format.
+
+\subsection{Bir HTML belge kapak sayfasý oluþturdum fakat YajHFC'de biçim yanlýþ görünüyor!}
+
+YajHFC, HTML'yi PostScripte çevirmek için Java (\texttt{HTMLEditorKit} / \texttt{HTMLDocument}) içersindeki birleþik HTML desteðini kullanýr. Bu destek oldukça kýsýtlýdýr ki özellikle yanlýz HTML 3.2'yi destekler.\\
+Bunun anlamý karmaþýk düzenler genelde YajHFC içinde doðru iþlenmez.
+Ýstediðiniz düzeni baþarmak için aþaðýdaki seçenekler mevcut:
+
+\begin{itemize}
+ \item Düzen doðru görünene kadar deneme yanýlma yöntemini kullanabilirsiniz (Gönder iletisindeki önizleme düðmesi dönüþtürülmüþ HTML düzenini gösterecektir.)
+ \item Baþka bir kapak sayfasý biçimi kullanabilirsiniz (XSL:FO veya FOP eklentisi ile ODT gibi)
+\end{itemize}
+
+ \subsection{Bir HTML kapak sayfasýnda hangi alanlar tanýnýr}
+Bir HTML kapak sayfasý kullanýlýrken, aþaðýdaki ``kelimeler'' karþýlýðý olan deðerlerle deðiþtirilir (büyük/küçük harf duyarlý):
+
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+\bfseries Kelime & \bfseries Anlamý \\
+\hline\hline
+\ttfamily @@Name@@ & Alýcý adý \\\hline
+\ttfamily @@Location@@ & Alýcý yeri (adresi) \\\hline
+\ttfamily @@Company@@ & Alýcý þirketi \\\hline
+\ttfamily @@Faxnumber@@ & Alýcý faks numarasý \\\hline
+\ttfamily @@Voicenumber@@ & Alýcý telefon numarasý \\\hline
+\ttfamily @@FromName@@ & Gönderen adý \\\hline
+\ttfamily @@FromLocation@@ & Gönderen yeri (adresi) \\\hline
+\ttfamily @@FromCompany@@ & Gönderen þirketi \\\hline
+\ttfamily @@FromFaxnumber@@ & Gönderen faks numarasý \\\hline
+\ttfamily @@FromVoicenumber@@ & Gönderen telefon numarasý \\\hline
+\ttfamily @@FromEMail@@ & Gönderen email adresi \\\hline
+\ttfamily @@Subject@@ & Faksýn konusu \\\hline
+\ttfamily @@Date@@ & Bugünün tarihi \\\hline
+\ttfamily @@PageCount@@ & Kapak sayfasý hariç faks sayfa adedi \\\hline
+\ttfamily @@Comments@@ & Bu faks için girilen yorumlar \\\hline
+\end{tabular}
+\end{center}
+
+Bu deðiþimler kaynak kodu seviyesinde yapýlýr yani biçimleme, birisi içersinde yapýlýrsa bu kelimeler muhtemelen tanýnmayacaktýr. (örn. \texttt{@@sub\textit{ject@@}})
+
+\subsection{Önceki iletiyi daha cok sevdim. Onu tekrar kullanabilir miyim?}
+
+Seçenekler iletiþimini açýn ve ``Gönderme iletiþim tipi'' olarak \texttt{Geleneksel} seçin.
+
+\subsection{Telefon defterine JDBC üzerinden eriþmek istiyorum ancak java çaðrýlýrken doðru sýnýf yolunu belirtmeme raðmen YajHFC sürücüyü bulamýyor.}
+
+\texttt{-jar} komut satýrý deðiþkenini kullanýrsanýz, java kullanýcý tanýmlý sýnýf yolunu gözardý eder.
+Yani, lütfen YajHFC'yi aþaðýdaki komutlarla baþlatýn (\texttt{/yol/dbdriver.jar} ve \texttt{/yol/yajhfc.jar}'ý elbette ilgili olan gerçek yol ve dosya adlarýyla deðiþtirin):
+
+\begin{description}
+\item [Linux/Unix:] \verb#java -classpath /yol/dbdriver.jar:/yol/yajhfc.jar yajhfc.Launcher#
+\item [Windows:] \verb#java -classpath c:\yol\dbdriver.jar;c:\yol\yajhfc.jar yajhfc.Launcher#
+\end{description}
+
+\subsection{Özel filtre iletiþiminde \texttt{matches} iþleç için ne deðer girebilirim?}
+
+Düzenli Ýfadeler. Kabul edilen sözdizimi hakkýnda kýsa bir baþvuru kaynaðý aþaðýdadýr:
+\url{http://java.sun.com/j2se/1.5.0/docs/api/java/util/regex/Pattern.html}
+
+Lütfen Düzenli Ýfadelerin joker karakterlerle ayný olmadýðýný dikkate alýn:
+Örneðin, \verb.*. joker karakterinin etkili olmasý için \verb#.*# kullanmak zorundasýnýz 
+ve \verb#?# joker karakteri için \verb#.#.
+
+\subsection{YajHFC hangi komut satýrý deðiþkenlerini anlýyor?}
+
+\begin{verbatim}
+Genel Kullaným:
+java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose]
+         [--configdir=directory] [--loadplugin=filename] [--logfile=filename]
+         [--showtab=0|R|1|S|2|T] [--recipient=...] [--stdin | filename ...]
+Deðiþken açýklamasý:
+Dosya adý	Gönderilecek PostScript dosya veya dosyalarýnýn adý.
+--stdin 	Standart giriþten gönderilecek dosyalarý okur
+--recipient 	Faksý yollamak için alýcýnýn telefon numarasýný tanýmlar.
+		Çoklu alýcýlar için çoklu deðiþken tanýmlayabilirsiniz.
+--admin		Yönetici kipinde baþlatýr
+--debug		Hata ayýklama çýktýsý verir
+--logfile	Hata ayýklama çýktýlarýný kaydetmek için günlük dosyasý (belirtilmezse, stdout kullanýr)
+--background	Eðer çalýþan kopya yoksa, yeni bir kopya çalýþtýrýr
+		ve (dosya gönderilten sonra) sonlandýrýr.
+--noclose	Faks gönderildikten sonra YajHFC'yi kapatmaz
+--showtab	Açýlýþta gösterilecek sekmeleri ayarlar. "Gelen" için 0 yada R, 
+		"Giden" için 1 yada S, "Gönderiliyor" sekmesi için 2 yada T tanýmlayýn.
+--loadplugin	Yüklenecek YajHFC jar eklenti dosyasýný tanýmlar.
+--no-plugins	plugin.lst dosyasýndan eklenti yüklenmesini devre dýþý býrakýr.
+--configdir	~/.yajhfc yerine kullanýlacak ayar dizinini tanýmlar
+--help		Bu metini görüntüler
+\end{verbatim}
+
+
+\subsection{Fakslarý görüntülemeye çalýþtýðýmda, bütün belgeler PostScript/PDF olmasýna raðmen daima 
+   \texttt{PCL dosya biçimi desteklenmiyor} hatasý alýyorum.}
+
+Seçenekler iletiþimindeki \texttt{PCL dosya türü hata düzeltme kullan} onay kutusunu iþaretleyin ve tekrar deneyin.
+
+Bazý HylaFAX sürümleri, hatalý olarak, bir iþlem ile ilgili tüm belgeler için
+``PCL'' dosya türü bildirir. Eðer bu onay kutusu iþaretlenirse, YajHFC, 
+PCL dosya türü bildirildiðinde dosya türünü tahmin etmeye calýþýr (genellikle gayet iyi çalýþýr). 
+
+
+\subsection{Bir yada birden fazla faksý bir dizide gönderdiðimde sýk sýk hata alýyorum. Bununla ilgili ne yapabilirim?}
+
+HylaFAX sunucularýn bazý sürümlerinde oturum baþýna birden fazla faks gönderildiðinde bu sorun oluþuyor gibi görünüyor.
+
+Bu sorunu çözmek için Seçenekler iletiþimindeki \texttt{Sunucu} sekmesine gidin, \texttt{Tüm iþlemler için yeni oturum aç} kutusunu iþaterleyin ve sorunun devam edip etmediðini deneyin.
+Ýþe yaramazsa, lütfen hatayý bana mail atýn.
+
+\subsection{Windows altýnda çalýþan YajHFC bazen kendi ayarlarýný \texttt{C:\textbackslash Documents and Settings\textbackslash KULLANICIADI\textbackslash .yajhfc} yerine \texttt{C:\textbackslash .yajhfc} içerisine kaydediyor}
+
+Öntanýmlý olarak YajHFC kendi ayarlarýný Java sistem özellikleri \texttt{user.home} tarafýndan döndürülen dizinin 
+\texttt{.yajhfc} altdizini içersine kaydeder.
+Bazen bazý Java sürümlerinde bu özellik doðru ayarlanmamýþ gibi görünüyor.
+
+Çözüm olarak, YajHFC'yi Java'nýn \texttt{-D} komut satýrý anahtarý kullanarak baþlatýrken, bu özelliði ayarlayabilirsiniz. Örneðin: \\
+\texttt{java -Duser.home=\%USERPROFILE\% -jar "C:\textbackslash Program Files\textbackslash yajhfc.jar"}
+
+\subsection{XYZ sütunun anlamý nedir?}
+
+Ben de tam olarak bilmiyorum çünkü sütun açýklamarý 
+tamamen \verb.faxstat(1). kullanma klavuzundan (JobFmt/RcvFmt) kopyalanmýþtýr
+ve kýsaltýlmýþtýr/çevirilmiþtir. 
+
+\section{Diðer}
+
+\subsection{Neden parolalar þifresiz olarak kaydediliyor?}
+
+Çünkü daha iyi bir yöntem yok.
+
+YajHFC bir þekilde kaydetmeden önce kodlayabilirdi/``þifreleyebilirdi'' fakat
+bunu yapsaydým, herzaman þifreyi çözmek için kaynak koda bakabilirdiniz 
+(YajHFC kaynak kodu kapalý olsa dahi hala kaynak koda dönüþtürebilir 
+yada bunu yapmak için denemeler yapabilirdiniz).
+
+Tek güvenli yöntem, YajHFC'yi çalýþtýrdýðýnýzda her zaman sizden ana parolayý 
+istemesidir, fakat benim fikrime göre bu, ``gerçek'' parolayý girmenin ötesinde
+bir geliþme saðlamayacaktýr.
+
+
+subsection{Neden böyle aptal bir isim seçtiniz?}
+
+YajHFC, java ve \texttt{gnu.hylafax} kütüphaneleri için bir deneme projesi olarak baþladý
+yani ``güzel'' bir isime sahip deðildi. Bir süre üzerinde çalýþtýktan sonra 
+gerçekten kullanýlabilir bir duruma geldiðini farkettim ve bu ismi seçtim. 
+Çünkü o sýralarda ayný zamanda SuSe'nin yast'ý ile de oynuyordum ve bir çok java hylaFAX istemcisi 
+olduðunu biliyordum. Kýsaca þöyle adlandýrdým:
+``\textbf{y}et \textbf{a}nother \textbf{J}ava \textbf{H}ylaFAX \textbf{c}lient''
+
+\end{document}

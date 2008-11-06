@@ -130,7 +130,8 @@ public class FormattedFile {
         //fileConverters.put(FileFormat.RTF, new EditorPaneFileConverter("text/rtf"));
     }
     
-    private static final short[] JPEGSignature = { 0xff, 0xd8, 0xff, 0xe0, -1, -1, 'J', 'F', 'I', 'F', 0 };
+    //private static final short[] JPEGSignature = { 0xff, 0xd8, 0xff, 0xe0, -1, -1, 'J', 'F', 'I', 'F', 0 };
+    private static final short[] JPEGSignature = { 0xff, 0xd8, 0xff }; //, -1, -1, -1, 'J', 'F', 'I', 'F', 0 };
 
     private static final short[] PNGSignature = { 137,  80,  78,  71,  13,  10,  26,  10 };
 

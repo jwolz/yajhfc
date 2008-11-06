@@ -53,7 +53,7 @@ public final class utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2008 by Jonas Wolz";
-    public static final String AppVersion = "0.3.8g";
+    public static final String AppVersion = "0.3.8h";
     public static final String AuthorEMail = "Jonas Wolz &lt;jwolz@freenet.de&gt;";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
     
@@ -686,6 +686,30 @@ public final class utils {
             }
         }
         return -1;
+    }
+    
+    /**
+     * Shortens the name of the given file to the desired length (for display to the user)
+     * @param file
+     * @param desiredLen
+     * @return
+     */
+    public static String shortenFileNameForDisplay(File file, int desiredLen) {
+        return shortenFileNameForDisplay(file.getAbsolutePath(), desiredLen);
+    }
+    
+    /**
+     * Shortens the name of the given file to the desired length (for display to the user)
+     * @param file
+     * @param desiredLen
+     * @return
+     */
+    public static String shortenFileNameForDisplay(String fileName, int desiredLen) {
+        if (fileName.length() > desiredLen) {
+            return "..." + fileName.substring(fileName.length() - desiredLen + 3);
+        } else {
+            return fileName;
+        }
     }
 }
 

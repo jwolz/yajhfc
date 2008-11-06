@@ -51,6 +51,8 @@ public abstract class PhoneBook {
     
     protected String strDescriptor;
     
+    protected List<PhoneBookEntry> lastFilterResult = null;
+    
     public String getDescriptor() {
         return strDescriptor;
     }
@@ -140,24 +142,40 @@ public abstract class PhoneBook {
      */
     public abstract List<PhoneBookEntry> getEntries();
     
+    
+    
     /**
      * Returns the entries matching the specified filter.
      * This is implemented as a member of Phonebook to allow subclasses to use
-     * a more efficient method of filtering than iterating all entries returned
-     * by getEntries() (e.g. a LDAP search).
+     * a more efficient method of filtering (e.g. a LDAP search) than 
+     * iterating all entries returned by getEntries().
      * @return
      */
-    public List<PhoneBookEntry> getFilteredEntries(Filter<PhoneBookEntry,PBEntryField> filter) {
-        List<PhoneBookEntry> allEntries = getEntries();
-        List<PhoneBookEntry> rv = new ArrayList<PhoneBookEntry>(allEntries.size());
-        
-        filter.initFilter(PBEntryField.filterKeyList);
-        for (PhoneBookEntry entry : allEntries) {
-            if (filter.matchesFilter(entry)){
-                rv.add(entry);
+    public List<PhoneBookEntry> applyFilter(Filter<PhoneBookEntry,PBEntryField> filter) {
+        if (filter != null) {
+            List<PhoneBookEntry> allEntries = getEntries();
+            List<PhoneBookEntry> rv = new ArrayList<PhoneBookEntry>(allEntries.size());
+
+            filter.initFilter(PBEntryField.filterKeyList);
+            for (PhoneBookEntry entry : allEntries) {
+                if (filter.matchesFilter(entry)){
+                    rv.add(entry);
+                }
             }
+            lastFilterResult = rv;
+            return rv;
+        } else {
+            lastFilterResult = null;
+            return null;
         }
-        return rv;
+    }
+    
+    /**
+     * Returns the result of the last filter application or null if no such result exists.
+     * @return
+     */
+    public List<PhoneBookEntry> getLastFilterResult() {
+        return lastFilterResult;
     }
     
     public void addPhonebookEventListener(PhonebookEventListener pel) {
@@ -240,6 +258,8 @@ public abstract class PhoneBook {
     public abstract void resort();
     
     protected abstract void openInternal(String descriptorWithoutPrefix) throws PhoneBookException;
+    
+    //public abstract void reloadEntries() throws PhoneBookException;
     
     public abstract void close();
     

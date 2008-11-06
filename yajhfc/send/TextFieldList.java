@@ -141,7 +141,7 @@ public abstract class TextFieldList<T extends TFLItem> extends JPanel implements
                     }
                     if (list.getSelectedIndex() >= 0) {
                         lastSelection = null;
-                        model.remove(list.getSelectedIndex());
+                        model.removeAll(list.getSelectedIndices());
                         //textField.setText("");
                     }
                 };
@@ -279,6 +279,8 @@ public abstract class TextFieldList<T extends TFLItem> extends JPanel implements
         for (JComponent comp : localComponents) {
             comp.addFocusListener(this);
         }
+        
+        updateAddEnabled();
     }
 
     /**
@@ -355,8 +357,20 @@ public abstract class TextFieldList<T extends TFLItem> extends JPanel implements
             textField.setText("");
     }
     
+    private void updateAddEnabled() {
+        getAddAction().setEnabled(textField.getDocument().getLength() > 0);
+    }
+    
     public void changedUpdate(DocumentEvent e) {
-        getAddAction().setEnabled(textField.getDocument().getLength() > 0);        
+        updateAddEnabled();
+    }
+    
+    public void insertUpdate(DocumentEvent e) {
+        updateAddEnabled();
+    }
+
+    public void removeUpdate(DocumentEvent e) {
+        updateAddEnabled();
     }
     
     public void commit() {
@@ -406,14 +420,6 @@ public abstract class TextFieldList<T extends TFLItem> extends JPanel implements
     }
 
     public void mouseExited(MouseEvent e) {
-        // method stub
-    }
-
-    public void insertUpdate(DocumentEvent e) {
-        // method stub
-    }
-
-    public void removeUpdate(DocumentEvent e) {
         // method stub
     }
     

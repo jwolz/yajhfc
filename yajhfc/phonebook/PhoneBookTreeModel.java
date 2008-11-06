@@ -19,27 +19,36 @@
 package yajhfc.phonebook;
 
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.List;
 
 import javax.swing.JTree;
+import javax.swing.event.EventListenerList;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import yajhfc.utils;
+import yajhfc.filters.ConcatStringFilter;
+import yajhfc.filters.Filter;
+import yajhfc.filters.OrFilter;
+import yajhfc.filters.StringFilter;
+import yajhfc.filters.StringFilterOperator;
 
 /**
  * @author jonas
  *
  */
 public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
-
+    //private static final Logger log = Logger.getLogger(PhoneBookTreeModel.class.getName());
+    
     protected final List<PhoneBook> phoneBooks = new ArrayList<PhoneBook>();
-    protected final List<TreeModelListener> treeModelListeners = new ArrayList<TreeModelListener>();
+    protected final EventListenerList listeners = new EventListenerList();
     
     protected final RootNode rootNode;
     protected JTree tree;
+    protected boolean showFilteredResults = false;
     
     public void addPhoneBook(PhoneBook pb) {
         phoneBooks.add(pb);
@@ -67,7 +76,20 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
      * @see javax.swing.tree.TreeModel#addTreeModelListener(javax.swing.event.TreeModelListener)
      */
     public void addTreeModelListener(TreeModelListener l) {
-        treeModelListeners.add(l);
+        listeners.add(TreeModelListener.class, l);
+    }
+    /* (non-Javadoc)
+     * @see javax.swing.tree.TreeModel#removeTreeModelListener(javax.swing.event.TreeModelListener)
+     */
+    public void removeTreeModelListener(TreeModelListener l) {
+        listeners.remove(TreeModelListener.class, l);
+    }
+    
+    public void addPBTreeModelListener(PBTreeModelListener l) {
+        listeners.add(PBTreeModelListener.class, l);
+    }
+    public void removePBTreeModelListener(PBTreeModelListener l) {
+        listeners.remove(PBTreeModelListener.class, l);
     }
 
     /* (non-Javadoc)
@@ -77,7 +99,8 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
         if (parent instanceof RootNode) {
             return phoneBooks.get(index);
         } else if (parent instanceof PhoneBook) {
-            return ((PhoneBook)parent).getEntries().get(index);
+            return (showFilteredResults ? ((PhoneBook)parent).getLastFilterResult() :
+                ((PhoneBook)parent).getEntries()).get(index);
         } else {
             return null;
         }
@@ -90,7 +113,8 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
         if (parent instanceof RootNode) {
             return phoneBooks.size();
         } else if (parent instanceof PhoneBook) {
-            return ((PhoneBook)parent).getEntries().size();
+            return (showFilteredResults ? ((PhoneBook)parent).getLastFilterResult() :
+                ((PhoneBook)parent).getEntries()).size();
         } else {
             return 0;
         }
@@ -103,7 +127,8 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
         if (parent instanceof RootNode) {
             return phoneBooks.indexOf(child);
         } else if (parent instanceof PhoneBook && child instanceof PhoneBookEntry) {
-            return ((PhoneBook)parent).getEntries().indexOf((PhoneBookEntry)child);
+            return (showFilteredResults ? ((PhoneBook)parent).getLastFilterResult() :
+                ((PhoneBook)parent).getEntries()).indexOf((PhoneBookEntry)child);
         } else {
             return -1;
         }
@@ -122,14 +147,7 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
     public boolean isLeaf(Object node) {
         return !((node instanceof RootNode) || (node instanceof PhoneBook));
     }
-
-    /* (non-Javadoc)
-     * @see javax.swing.tree.TreeModel#removeTreeModelListener(javax.swing.event.TreeModelListener)
-     */
-    public void removeTreeModelListener(TreeModelListener l) {
-        treeModelListeners.remove(l);
-    }
-
+    
     /* (non-Javadoc)
      * @see javax.swing.tree.TreeModel#valueForPathChanged(javax.swing.tree.TreePath, java.lang.Object)
      */
@@ -138,50 +156,210 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
         
     }
     
-    protected void fireTreeStructureChanged(TreeModelEvent tme) {
-        for (TreeModelListener tml : treeModelListeners) {
-            tml.treeStructureChanged(tme);
+    /**
+     * Used to reset the filter and signalize this fact to listeners
+     */
+    protected void resetFilter() {
+        applyFilter((Filter<PhoneBookEntry,PBEntryField>)null);
+        fireFilterWasReset();
+    }
+    
+    /**
+     * 
+     * @param quickSearchVal
+     */
+    public void applyFilter(String quickSearchVal) {
+        if (quickSearchVal == null || quickSearchVal.length() == 0) {
+            applyFilter((Filter<PhoneBookEntry,PBEntryField>)null);
+        } else {
+            OrFilter<PhoneBookEntry,PBEntryField> filter = new OrFilter<PhoneBookEntry, PBEntryField>();
+            filter.addChild(new ConcatStringFilter<PhoneBookEntry, PBEntryField>(
+                    PBEntryField.class, 
+                    new Object[] { PBEntryField.GivenName, " ", PBEntryField.Name, ", ", PBEntryField.Company },
+                    StringFilterOperator.CONTAINS, quickSearchVal, false));
+            filter.addChild(new StringFilter<PhoneBookEntry, PBEntryField>(PBEntryField.FaxNumber, StringFilterOperator.CONTAINS, quickSearchVal, false));
+            applyFilter(filter);
         }
     }
     
-    protected void fireTreeNodesChanged(TreeModelEvent tme) {
-        for (TreeModelListener tml : treeModelListeners) {
-            tml.treeNodesChanged(tme);
+    /**
+     * Applies a filter to this tree model. Specifying null resets the filtering (i.e.
+     * all entries are shown) *without* firing the filterWasReset event. 
+     * @param filter
+     */
+    public void applyFilter(Filter<PhoneBookEntry,PBEntryField> filter) {
+        boolean oldFiltered = showFilteredResults;
+        if (filter == null) {
+            showFilteredResults = false;
+        } else {
+            showFilteredResults = true;
         }
-    }
-    
-    protected void fireTreeNodesInserted(TreeModelEvent tme) {
-        for (TreeModelListener tml : treeModelListeners) {
-            tml.treeNodesInserted(tme);
-        }
-    }
-    
-    protected void fireTreeNodesRemoved(TreeModelEvent tme) {
-        for (TreeModelListener tml : treeModelListeners) {
-            tml.treeNodesRemoved(tme);
-        }
-    }
-
-    public void elementsAdded(PhonebookEvent e) {
-        fireTreeNodesInserted(new TreeModelEvent(this, new Object[] {rootNode, e.getPhonebook()}, e.getIndices(), e.getEntries()));     
-    }
-
-    public void elementsChanged(PhonebookEvent e) {
+        
         TreePath[] oldSelection = null;
         if (tree != null) {
             oldSelection = tree.getSelectionPaths();
         }
         
-        //fireTreeNodesChanged(treeModelEventFromListDataEvent(e));
-        fireTreeStructureChanged(new TreeModelEvent(this, new Object[] {rootNode, e.getSource()}));
+        for (PhoneBook pb : phoneBooks) {
+            List<PhoneBookEntry> oldEntries = oldFiltered ? pb.getLastFilterResult() : pb.getEntries();
+            pb.applyFilter(filter);
+            
+            List<PhoneBookEntry> newEntries = showFilteredResults ? pb.getLastFilterResult() : pb.getEntries();
+            if (!listQuickEquals(oldEntries, newEntries)) {
+                fireTreeStructureChanged(new TreeModelEvent(this, new Object[] {rootNode, pb}));
+            }
+        }
         
         if (tree != null) {
             tree.setSelectionPaths(oldSelection);
         }
     }
+    
+    private boolean listQuickEquals(List<?> list1, List<?> list2) {
+        if (list1.size() != list2.size()) {
+            return false;
+        } else {
+            for (int i = 0; i < list1.size(); i++) {
+                if (list1.get(i) != list2.get(i)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+    
+//    /**
+//     * Computes the difference between the two phone books. It must be assured that
+//     * smaller contains a sub set of larger *and* that the elements are in the same order
+//     * if they exist.
+//     * @param larger
+//     * @param smaller
+//     * @return null if one of the above conditions is not met.
+//     */
+//    private static final int[] zeroArray = new int[0];
+//    protected int[] diffPhoneBooks(List<PhoneBookEntry> larger, List<PhoneBookEntry> smaller) {
+//        if (larger.size() < smaller.size()) {
+//            List<PhoneBookEntry> temp = larger;
+//            larger = smaller;
+//            smaller = temp;
+//        }
+//        
+//        int lsize = larger.size();
+//        int ssize = smaller.size();
+//        if (lsize == ssize) {
+//            return zeroArray;
+//        }
+//        
+//        int[] res = new int[lsize];
+//        int resPtr = 0;
+//        
+//        int l,s;
+//        for (l = 0, s = 0 ;l < lsize && s < ssize; ) {
+//            PhoneBookEntry lentry = larger.get(l);
+//            PhoneBookEntry sentry = smaller.get(s);
+//            
+//            if (lentry == sentry) {
+//                l++;
+//                s++;
+//            } else {
+//                res[resPtr++] = l++;
+//            }
+//        }
+//        if (s < ssize) {
+//            log.warning("s < ssize!");
+//            return null;
+//        }
+//        for (; l < lsize; l++) {
+//            res[resPtr++] = l;
+//        }
+//        
+//        if (resPtr == 0) {
+//            return zeroArray;
+//        } else if (resPtr < lsize) {
+//            int[] rv = new int[resPtr];
+//            System.arraycopy(res, 0, rv, 0, resPtr);
+//            return rv;
+//        } else {
+//            return res;
+//        }
+//    }
+
+    protected void fireTreeStructureChanged(TreeModelEvent tme) {
+        Object[] l = listeners.getListenerList();
+        for (int i = l.length-2; i>=0; i-=2) {
+            if (l[i] == TreeModelListener.class) {
+                ((TreeModelListener)l[i+1]).treeStructureChanged(tme);
+            }
+        }
+    }
+    
+    protected void fireTreeNodesChanged(TreeModelEvent tme) {
+        Object[] l = listeners.getListenerList();
+        for (int i = l.length-2; i>=0; i-=2) {
+            if (l[i] == TreeModelListener.class) {
+                ((TreeModelListener)l[i+1]).treeNodesChanged(tme);
+            }
+        }
+    }
+    
+    protected void fireTreeNodesInserted(TreeModelEvent tme) {
+        Object[] l = listeners.getListenerList();
+        for (int i = l.length-2; i>=0; i-=2) {
+            if (l[i] == TreeModelListener.class) {
+                ((TreeModelListener)l[i+1]).treeNodesInserted(tme);
+            }
+        }
+    }
+    
+    protected void fireTreeNodesRemoved(TreeModelEvent tme) {
+        Object[] l = listeners.getListenerList();
+        for (int i = l.length-2; i>=0; i-=2) {
+            if (l[i] == TreeModelListener.class) {
+                ((TreeModelListener)l[i+1]).treeNodesRemoved(tme);
+            }
+        }
+    }
+    
+    protected void fireFilterWasReset() {
+        Object[] l = listeners.getListenerList();
+        for (int i = l.length-2; i>=0; i-=2) {
+            if (l[i] == PBTreeModelListener.class) {
+                ((PBTreeModelListener)l[i+1]).filterWasReset();
+            }
+        }
+    }
+
+    public void elementsAdded(PhonebookEvent e) {
+        if (showFilteredResults) {
+            resetFilter();
+        } else {
+            fireTreeNodesInserted(new TreeModelEvent(this, new Object[] {rootNode, e.getPhonebook()}, e.getIndices(), e.getEntries()));
+        }
+    }
+
+    public void elementsChanged(PhonebookEvent e) {
+        if (showFilteredResults) {
+            resetFilter();
+        } else {
+            TreePath[] oldSelection = null;
+            if (tree != null) {
+                oldSelection = tree.getSelectionPaths();
+            }
+            
+            fireTreeStructureChanged(new TreeModelEvent(this, new Object[] {rootNode, e.getSource()}));
+            
+            if (tree != null) {
+                tree.setSelectionPaths(oldSelection);
+            }
+        }
+    }
 
     public void elementsRemoved(PhonebookEvent e) {
-        fireTreeNodesRemoved(new TreeModelEvent(this, new Object[] {rootNode, e.getPhonebook()}, e.getIndices(), e.getEntries()));     
+        if (showFilteredResults) {
+            resetFilter();
+        } else {
+            fireTreeNodesRemoved(new TreeModelEvent(this, new Object[] {rootNode, e.getPhonebook()}, e.getIndices(), e.getEntries()));
+        }
     }
     
     public JTree getTree() {
@@ -207,5 +385,13 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
         public RootNode(String caption) {
             this.caption = caption;
         }
+    }
+    
+    public interface PBTreeModelListener extends EventListener {
+        /**
+         * Fired to signalize that the filter has been reset due to changes in 
+         * the underlying data model.
+         */
+        public void filterWasReset();
     }
 }
