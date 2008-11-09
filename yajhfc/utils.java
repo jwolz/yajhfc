@@ -53,7 +53,7 @@ public final class utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2008 by Jonas Wolz";
-    public static final String AppVersion = "0.3.8h";
+    public static final String AppVersion = "0.3.9rc";
     public static final String AuthorEMail = "Jonas Wolz &lt;jwolz@freenet.de&gt;";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
     
@@ -503,13 +503,13 @@ public final class utils {
         }
         
         String[] tryList = {
-                "_" + loc.getLanguage() + "_" + loc.getCountry() + "_" + loc.getVariant(),
-                "_" + loc.getLanguage() + "_" + loc.getCountry(),
-                "_" + loc.getLanguage()
+                prefix + "_" + loc.getLanguage() + "_" + loc.getCountry() + "_" + loc.getVariant() + suffix,
+                prefix + "_" + loc.getLanguage() + "_" + loc.getCountry() + suffix,
+                prefix + "_" + loc.getLanguage() + suffix
         };
         URL lURL = null;
         for (int i = 0; i < tryList.length; i++) {
-            lURL = utils.class.getResource(prefix + tryList[i] + suffix);
+            lURL = utils.class.getResource(tryList[i]);
             if (lURL != null)
                 return lURL;
         }

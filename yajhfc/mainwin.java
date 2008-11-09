@@ -83,10 +83,10 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import yajhfc.PluginManager.PluginMenuCreator;
 import yajhfc.filters.CustomFilterDialog;
+import yajhfc.filters.Filter;
 import yajhfc.filters.FilterCreator;
 import yajhfc.filters.StringFilter;
 import yajhfc.filters.StringFilterOperator;
-import yajhfc.filters.Filter;
 import yajhfc.phonebook.NewPhoneBookWin;
 import yajhfc.readstate.PersistentReadState;
 import yajhfc.send.SendController;
@@ -1162,6 +1162,7 @@ public final class mainwin extends JFrame {
                 myopts.storeToFile(FaxOptions.getDefaultConfigFile());
                 saved = true;
                 Launcher.releaseLock();
+                Thread.yield();
                 System.exit(0);
             }
             
@@ -1173,7 +1174,9 @@ public final class mainwin extends JFrame {
         });
         setIconImage(Toolkit.getDefaultToolkit().getImage(mainwin.class.getResource("icon.png")));
         
-        MyInit();
+        utmrTable = new java.util.Timer("RefreshTimer", true);
+        reloadTableColumnSettings();
+        menuViewListener.loadFromOptions();
         
         if (myopts.mainWinBounds != null)
             this.setBounds(myopts.mainWinBounds);
@@ -1185,21 +1188,23 @@ public final class mainwin extends JFrame {
         actChecker.doEnableCheck();
         
     }
-
     
-    private void MyInit() {         
-        utmrTable = new java.util.Timer("RefreshTimer", true);
-        reloadTableColumnSettings();
-        menuViewListener.loadFromOptions();
+    void invokeLogoutThreaded() {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                doLogout();
+            } 
+        });
     }
     
     void doLogout() {
         try {
+            log.fine("Logging out...");
             tablePanel.showIndeterminateProgress(_("Logging out..."));
             if (tableRefresher != null)
-                tableRefresher.doCancel();
+                tableRefresher.cancel();
             if (statRefresher != null)
-                statRefresher.doCancel();
+                statRefresher.cancel();
             
             if (clientManager != null) {                
                 myopts.recvColState = getTableRecv().getColumnCfgString();
@@ -1213,8 +1218,7 @@ public final class mainwin extends JFrame {
                 
                 recvTableModel.cleanupReadState();
                 
-                //hyfc.quit();
-                clientManager.forceLogout();
+                utmrTable.schedule(new AsyncLogoutTask(clientManager), 0);
                 clientManager = null;
             }
             //tmrStat.stop();
@@ -1234,6 +1238,7 @@ public final class mainwin extends JFrame {
             
             actReconnect.putValue(Action.NAME, _("Connect"));
             this.setTitle("Disconnected - " + utils.AppName);
+            log.fine("Successfully logged out");
         } catch (Exception e) {
             log.log(Level.WARNING, "Error logging out:", e);
             // do nothing
@@ -1796,17 +1801,8 @@ public final class mainwin extends JFrame {
     
     class StatusRefresher extends TimerTask {
         String oldText = "";
-        private boolean cancelled = false;
-        
-        public synchronized boolean doCancel() {
-            cancelled = true;
-            return cancel();
-        }
 
         public synchronized void run() {
-            if (cancelled)
-                return;
-
             String newText;
             HylaFAXClient hyfc = clientManager.beginServerTransaction(mainwin.this);
             if (hyfc == null) {
@@ -1822,11 +1818,8 @@ public final class mainwin extends JFrame {
                     newText = utils.listToString(status, "\n");
                 } catch (SocketException se) {
                     log.log(Level.WARNING, "Error refreshing the status, logging out.", se);
-                    SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                            doLogout();
-                        } 
-                    });
+                    cancel();
+                    invokeLogoutThreaded();
                     return;
                 } catch (Exception e) {
                     newText = _("Error refreshing the status:") + " " + e;
@@ -1851,18 +1844,10 @@ public final class mainwin extends JFrame {
         private Vector<?> lastRecvList = null, lastSentList = null, lastSendingList = null;
         // Uncomment for archive support.
 //        private Vector<?> lastArchiveList = null;
-        private boolean cancelled = false;
         //public boolean didFirstRun = false;
         
-        public synchronized boolean doCancel() {
-            cancelled = true;
-            return cancel();
-        }
         
-        public synchronized void run() {
-            if (cancelled)
-                return;
-            
+        public synchronized void run() {            
             HylaFAXClient hyfc = clientManager.beginServerTransaction(mainwin.this);
             if (hyfc == null) {
                 return;
@@ -1895,6 +1880,11 @@ public final class mainwin extends JFrame {
 //                    }
                     //System.out.println(System.currentTimeMillis() + ": Did invokeLater()");
                 }
+            } catch (SocketException se) {
+                log.log(Level.WARNING, "A socket error occured refreshing the tables, logging out.", se);
+                cancel();
+                invokeLogoutThreaded();
+                return;
             } catch (Exception e) {
                 log.log(Level.WARNING, "An error occured refreshing the tables: ", e);
 //                if (utils.debugMode) {
@@ -1917,6 +1907,11 @@ public final class mainwin extends JFrame {
                     SwingUtilities.invokeLater(new TableDataRunner(sentTableModel, data));
                     lastSentList = lst;
                 }
+            } catch (SocketException se) {
+                log.log(Level.WARNING, "A socket error occured refreshing the tables, logging out.", se);
+                cancel();
+                invokeLogoutThreaded();
+                return;
             } catch (Exception e) {
                 log.log(Level.WARNING, "An error occured refreshing the tables: ", e);
 //                if (utils.debugMode) {
@@ -1939,6 +1934,11 @@ public final class mainwin extends JFrame {
                     SwingUtilities.invokeLater(new TableDataRunner(sendingTableModel, data));
                     lastSendingList = lst;
                 }
+            } catch (SocketException se) {
+                log.log(Level.WARNING, "A socket error occured refreshing the tables, logging out.", se);
+                cancel();
+                invokeLogoutThreaded();
+                return;
             } catch (Exception e) {
                 log.log(Level.WARNING, "An error occured refreshing the tables: ", e);
 //                if (utils.debugMode) {
@@ -1968,8 +1968,7 @@ public final class mainwin extends JFrame {
 //            }
             
             if (tablePanel.isShowingProgress()) {
-                SwingUtilities.invokeLater(new Runnable() 
-                {
+                SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
                         tablePanel.hideProgress();
                     }
@@ -2182,6 +2181,25 @@ public final class mainwin extends JFrame {
     
     public java.util.Timer getRefreshTimer() {
         return utmrTable;
+    }
+    
+    private static class AsyncLogoutTask extends TimerTask {
+        private HylaClientManager clientManager;
+
+        @Override
+        public void run() {
+            try {
+                clientManager.forceLogout();
+            } catch (Exception e) {
+                log.log(Level.WARNING, "Error logging out:", e);
+            }
+        }
+
+        public AsyncLogoutTask(HylaClientManager clientManager) {
+            super();
+            this.clientManager = clientManager;
+        }
+        
     }
 }  
 

@@ -65,8 +65,9 @@ CHANGES
 -------
 
 0.3.9:
-- Several bug fixes
-- Italian translation added 
+- Italian and Turkish translations added
+- "Quick search" for phone books
+- Lots of bug fixes and small improvements 
 
 0.3.8a:
 - Bug fix for XML phone books
