@@ -69,6 +69,7 @@ public class FaxOptions {
     public int mainwinLastTab;
     
     public int statusUpdateInterval, tableUpdateInterval;
+    public int socketTimeout = 90000;
     
     //public String lastPhonebook;
     

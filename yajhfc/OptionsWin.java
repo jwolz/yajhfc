@@ -97,7 +97,7 @@ public class OptionsWin extends JDialog {
     JComboBox comboTZone, comboNotify, comboPaperSize, comboResolution; //, comboNewFaxAction;
     JComboBox comboLang, comboLookAndFeel, comboModem, comboSendWinStyle;
     JCheckBox checkPasv, checkPCLBug, checkAskPassword, checkAskAdminPassword, checkUseCustomDefCover;
-    JSpinner spinMaxTry, spinMaxDial, spinOffset, spinKillTime;
+    JSpinner spinMaxTry, spinMaxDial, spinOffset, spinKillTime, spinSocketTimeout;
     //JButton buttonBrowseViewer;
     FileTextField ftfFaxViewer, ftfPSViewer, ftfCustomDefCover;
     
@@ -211,6 +211,7 @@ public class OptionsWin extends JDialog {
         spinTableInterval.setValue(foEdit.tableUpdateInterval / 1000.0);
         spinStatusInterval.setValue(foEdit.statusUpdateInterval / 1000.0);
         spinKillTime.setValue(foEdit.killTime);
+        spinSocketTimeout.setValue(foEdit.socketTimeout / 1000.0);
         
         ftfCustomDefCover.setText(foEdit.defaultCover);
         checkUseCustomDefCover.setSelected(foEdit.useCustomDefaultCover);
@@ -480,12 +481,14 @@ public class OptionsWin extends JDialog {
         if (panelServerRetrieval == null) {
             double[][] tablelay = {
                     {border, TableLayout.FILL, border},
-                    new double[13]
+                    new double[15]
             };
             double rowh = 1 / (double)(tablelay[1].length - 1);
             //tablelay[1][0] = border;
             tablelay[1][tablelay[1].length - 1] = border;
             Arrays.fill(tablelay[1], 0, tablelay[1].length - 1, rowh);
+            tablelay[1][3] = tablelay[1][5] = tablelay[1][7] = rowh*0.5;
+            tablelay[1][8] = tablelay[1][10] = tablelay[1][12] = rowh*1.5;
             tablelay[1][tablelay[1].length - 2] = TableLayout.FILL;
             
             panelServerRetrieval = new JPanel(new TableLayout(tablelay), false);
@@ -496,6 +499,8 @@ public class OptionsWin extends JDialog {
             
             spinStatusInterval = new JSpinner(new SpinnerNumberModel(1, 0.5, 86400, 1));
             spinTableInterval = new JSpinner(new SpinnerNumberModel(3, 0.5, 86400, 1));
+            spinSocketTimeout = new JSpinner(new SpinnerNumberModel((double)90, 0, 86400, 1));
+            spinSocketTimeout.setToolTipText(_("The maximum time to wait for a interaction with the server to complete. Values below 5 are not recommended; 0 disables this timeout."));
             
             checkPreferTIFF = new JCheckBox("<html>" + _("Prefer rendered TIFF (experimental)") + "</html>");
             checkPreferTIFF.setToolTipText(_("Try to fetch the rendered TIFF from the HylaFAX server instead of the source file."));
@@ -510,7 +515,8 @@ public class OptionsWin extends JDialog {
             panelServerRetrieval.add(checkPreferTIFF, "1, 6, 1, 7");
             
             addWithLabel(panelServerRetrieval, spinTableInterval, "<html>" + _("Table refresh interval (secs.):") + "</html>", "1, 9, 1, 9, f, c");
-            addWithLabel(panelServerRetrieval, spinStatusInterval, "<html>" + _("Server status refresh interval (secs.):") + "</html>", "1, 11, 1, 11, f, c"); 
+            addWithLabel(panelServerRetrieval, spinStatusInterval, "<html>" + _("Server status refresh interval (secs.):") + "</html>", "1, 11, 1, 11, f, c");
+            addWithLabel(panelServerRetrieval, spinSocketTimeout, "<html>" + _("Server socket timeout (secs):") + "</html>", "1, 13, 1, 13, f, c"); 
         }
         return panelServerRetrieval;
     }
@@ -791,6 +797,7 @@ public class OptionsWin extends JDialog {
                 foEdit.dateOffsetSecs = (Integer)spinOffset.getValue();
                 foEdit.tableUpdateInterval = (int)(((Double)spinTableInterval.getValue()).doubleValue() * 1000);
                 foEdit.statusUpdateInterval = (int)(((Double)spinStatusInterval.getValue()).doubleValue() * 1000);
+                foEdit.socketTimeout = (int)(((Double)spinSocketTimeout.getValue()).doubleValue() * 1000);
                 foEdit.killTime = (Integer)spinKillTime.getValue();
                 
                 foEdit.notifyAddress = textNotifyAddress.getText();

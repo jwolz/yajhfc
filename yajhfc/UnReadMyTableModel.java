@@ -57,8 +57,7 @@ public class UnReadMyTableModel extends MyTableModel implements ReadStateChanged
     
     public UnReadMyTableModel(PersistentReadState persistentReadState) {
         super();
-        this.persistentReadState = persistentReadState;
-        persistentReadState.addReadStateChangedListener(this);
+        setPersistentReadState(persistentReadState);
     }
     
     public void addUnreadItemListener(UnreadItemListener l) {
@@ -328,7 +327,11 @@ public class UnReadMyTableModel extends MyTableModel implements ReadStateChanged
     }
 
     public void setPersistentReadState(PersistentReadState persistentReadState) {
+        if (this.persistentReadState != null) {
+            this.persistentReadState.removeReadStateChangedListener(this);
+        }
         this.persistentReadState = persistentReadState;
+        persistentReadState.addReadStateChangedListener(this);
     }
 }
 

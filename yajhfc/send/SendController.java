@@ -76,7 +76,7 @@ public class SendController {
     
     protected ProgressUI progressMonitor = null;
     
-    static final int FILE_DISPLAY_LEN = 30;
+    private static final int FILE_DISPLAY_LEN = 30;
     
     public ProgressUI getProgressMonitor() {
         return progressMonitor;
@@ -324,7 +324,6 @@ public class SendController {
                             }
                             stepProgressBar(5);
 
-                            hyfc.job(0);
                             Job j = hyfc.createJob();
 
                             stepProgressBar(5);
