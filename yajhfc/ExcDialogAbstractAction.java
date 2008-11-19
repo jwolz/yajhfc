@@ -62,7 +62,7 @@ public abstract class ExcDialogAbstractAction extends AbstractAction {
     /* (non-Javadoc)
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
-    public void actionPerformed(ActionEvent e) {
+    public final void actionPerformed(ActionEvent e) {
         try {
             actualActionPerformed(e);
         } catch (Exception ex) {

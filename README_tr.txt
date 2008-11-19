@@ -8,13 +8,13 @@ YajHFC (Yet Another Java HylaFAX Client), HylaFAX faks sunucusu
 (http://www.hylafax.org/) için Java'da yazılmış istemcidir.
 
 Özellikleri:
-* PostScript, PDF ve çeşitli diğer biçimlerde belgeleri faxlama
+* PostScript, PDF ve çeşitli diğer biçimlerde belgeleri fakslama
 * Faksları sorgulama
 * Şablonlardan kapak sayfası oluşturmayı destekler
 * Alınan ve gönderilen faksları görüntüleme
-* Telefon Defteri
+* Telefon Defteri (Girdiler isteğe bağlı olarak SQL veritabanı veya LDAP dizininden okunabilir)
 * Bir iletişimde görünür tablo sütunlarını seçebilme
-* 6 Dil desteği: İngilizce, Fransızca, Almanca, Rusça, İspanyolca ve Türkçe
+* Yedi Dil desteği: İngilizce, Fransızca, Almanca, İtalyanca, Rusça, İspanyolca ve Türkçe
 
 Web sitesi: http://yajhfc.berlios.de/
 email:    Jonas Wolz <jwolz@freenet.de>
@@ -37,7 +37,7 @@ LİSANS
 -------
 
 YajHFC GPL altında özgür yazılım lisanslıdır.
-ayrıntılar için KOPYALAMA dosyasına bakınız.
+ayrıntılar için COPYING dosyasına bakınız.
 
 KAYNAK KOD
 -----------
@@ -65,18 +65,19 @@ DEĞİŞİKLİKLER
 -------
 
 0.3.9:
-- Bir kaç hata düzeltildi
-- İtelyanca çeviri eklendi 
+- İtalyanca ve Türkçe çeviri eklendi 
+- Telefon defteri için "Hızlı arama"
+- Bir çok hata düzeltildi ve küçük geliştirmeler
 
 0.3.8a:
 - XML telefon defteri hatası giderildi.
-- Kullanıcı Arayüzünde ufak iyileştirilmeler yapıldı
+- Kullanıcı Arayüzünde ufak geliştirmeler yapıldı
 
 0.3.8:
 - Çoklu telefon defteri desteği için gelişmiş telefon defteri penceresi 
 - Faks okundu/okunmadı durumunu merkezi veritabanı tablosuna kaydetme desteği
 - JDBC sürücüleri ve eklentiler eklemek için görsel panel
-- YajHFC Rusca çevirisi eklendi.
+- YajHFC Rusça çevirisi eklendi.
 
 0.3.7:
 - Yeni sadeleştirilmiş gönderi iletişimi
@@ -191,7 +192,7 @@ Tercüman için (belgelendirmeyi çevirmeden) yeni çeviri oluşturmak için ön
 bir kaç saat ve her yeni sürüme yaklaşık bir saat ayırmak gerekir.
 Bunu yapmak için "İleri" seviye teknik bilgiye ihtiyacınız yok (sadece bir
 metin düzenleyici ile nasıl çalışacağınızı bilmeniz yeterli,
-ki özelleştirilmiş yazılım kurarak çok daha kolaylaşır).
+ki özel yazılım kurarak çok daha kolaylaşır).
 
-Kısaca, eğer ana dilinize çevirilmiş bir YajHFC isterseniz, tercümanların daima başımın üstünde
+Kısaca, eğer ana dilinize çevirilmiş bir YajHFC isterseniz, gönüllülerin daima başımın üstünde
 yeri var. ;-)

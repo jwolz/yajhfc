@@ -64,6 +64,15 @@ de Java (más avanzado que los programas "Hola mundo") utilizando la IDE Eclipse
 CAMBIOS
 -------
 
+0.3.9:
+- Se añaden las traducciones de italiano y turco
+- "Búsqueda rápida" para las agendas telefónicas
+- Varias correcciones de errores y pequeñas mejoras
+
+0.3.8a:
+- Corrección de un error para las agendas telefónicas en formato XML
+- Pequeñas mejoras en la interfaz de usuario
+
 0.3.8:
 - Ventana mejorada de la agenda telefónica con soporte para múltiples agendas telefónicas
 - Soporte para guardar el estado de los faxes leídos / no leídos en la tabla de una base de datos central
