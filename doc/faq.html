@@ -38,50 +38,52 @@ Contents</A>
 <!--Table of Contents-->
 
 <UL>
-<LI><A NAME="tex2html27"
+<LI><A NAME="tex2html28"
   HREF="faq.html#SECTION00020000000000000000">Installation</A>
 <UL>
-<LI><A NAME="tex2html28"
-  HREF="faq.html#SECTION00021000000000000000">Where do I get a fax viewer for Windows?</A>
 <LI><A NAME="tex2html29"
-  HREF="faq.html#SECTION00022000000000000000">Where do I get a fax viewer for Linux/*BSD/... ?</A>
+  HREF="faq.html#SECTION00021000000000000000">Where do I get a fax viewer for Windows?</A>
 <LI><A NAME="tex2html30"
-  HREF="faq.html#SECTION00023000000000000000">What should I use as a fax viewer on Mac OS X?</A>
+  HREF="faq.html#SECTION00022000000000000000">Where do I get a fax viewer for Linux/*BSD/... ?</A>
 <LI><A NAME="tex2html31"
+  HREF="faq.html#SECTION00023000000000000000">What should I use as a fax viewer on Mac OS X?</A>
+<LI><A NAME="tex2html32"
   HREF="faq.html#SECTION00024000000000000000">Where do I get a PostScript viewer?</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html32"
+<LI><A NAME="tex2html33"
   HREF="faq.html#SECTION00030000000000000000">Usage of the program</A>
 <UL>
-<LI><A NAME="tex2html33"
-  HREF="faq.html#SECTION00031000000000000000">How can I edit PostScript cover page templates?</A>
 <LI><A NAME="tex2html34"
-  HREF="faq.html#SECTION00032000000000000000">I created a HTML document/cover page but the formatting in YajHFC looks wrong!</A>
+  HREF="faq.html#SECTION00031000000000000000">How can I edit PostScript cover page templates?</A>
 <LI><A NAME="tex2html35"
-  HREF="faq.html#SECTION00033000000000000000">Which fields are recognized in a HTML cover page?</A>
+  HREF="faq.html#SECTION00032000000000000000">I created a HTML document/cover page but the formatting in YajHFC looks wrong!</A>
 <LI><A NAME="tex2html36"
-  HREF="faq.html#SECTION00034000000000000000">I liked the old send dialog better. Can I have it back?</A>
+  HREF="faq.html#SECTION00033000000000000000">Which fields are recognized in a HTML cover page?</A>
 <LI><A NAME="tex2html37"
-  HREF="faq.html#SECTION00035000000000000000">I want to access a phone book over JDBC, but YajHFC won't find the driver even if I specify a correct class path when invoking java.</A>
+  HREF="faq.html#SECTION00034000000000000000">I liked the old send dialog better. Can I have it back?</A>
 <LI><A NAME="tex2html38"
-  HREF="faq.html#SECTION00036000000000000000">What can I enter as a value for the matches Operator in the custom filter dialog?</A>
+  HREF="faq.html#SECTION00035000000000000000">I want to access a phone book over JDBC, but YajHFC won't find the driver even if I specify a correct class path when invoking java.</A>
 <LI><A NAME="tex2html39"
-  HREF="faq.html#SECTION00037000000000000000">Which command line arguments does YajHFC understand?</A>
+  HREF="faq.html#SECTION00036000000000000000">What can I enter as a value for the matches Operator in the custom filter dialog?</A>
 <LI><A NAME="tex2html40"
-  HREF="faq.html#SECTION00038000000000000000">When trying to view sent faxes I always get an error message saying File format PCL not supported, although all the documents are PostScript/PDF.</A>
+  HREF="faq.html#SECTION00037000000000000000">Which command line arguments does YajHFC understand?</A>
 <LI><A NAME="tex2html41"
-  HREF="faq.html#SECTION00039000000000000000">YajHFC running under Windows sometimes saves its configuration in C:\.yajhfc instead of C:\Documents and Settings\USERNAME\.yajhfc</A>
+  HREF="faq.html#SECTION00038000000000000000">When trying to view sent faxes I always get an error message saying File format PCL not supported, although all the documents are PostScript/PDF.</A>
 <LI><A NAME="tex2html42"
-  HREF="faq.html#SECTION000310000000000000000">What does the column XYZ mean?</A>
+  HREF="faq.html#SECTION00039000000000000000">I often get an error when I am sending two or more faxes in a row. What can I do about it?</A>
+<LI><A NAME="tex2html43"
+  HREF="faq.html#SECTION000310000000000000000">YajHFC running under Windows sometimes saves its configuration in C:\.yajhfc instead of C:\Documents and Settings\USERNAME\.yajhfc</A>
+<LI><A NAME="tex2html44"
+  HREF="faq.html#SECTION000311000000000000000">What does the column XYZ mean?</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html43"
+<LI><A NAME="tex2html45"
   HREF="faq.html#SECTION00040000000000000000">Miscellaneous</A>
 <UL>
-<LI><A NAME="tex2html44"
+<LI><A NAME="tex2html46"
   HREF="faq.html#SECTION00041000000000000000">Why are passwords stored in clear text?</A>
-<LI><A NAME="tex2html45"
+<LI><A NAME="tex2html47"
   HREF="faq.html#SECTION00042000000000000000">Why did you choose that stupid name?</A>
 </UL></UL>
 <!--End of Table of Contents-->
@@ -361,6 +363,19 @@ file type if PCL is reported (which usually works pretty well).
 <P>
 
 <H2><A NAME="SECTION00039000000000000000">
+I often get an error when I am sending two or more faxes in a row. What can I do about it?</A>
+</H2>
+
+<P>
+Some versions of the HylaFAX server seem to have problems when more than one fax is submitted per session.
+
+<P>
+To work around that problem, go to the <TT>Server</TT> tab in the Options dialog, check the <TT>Create new session for every action</TT> box and try if the problem persists.
+If this does <I>not</I> help, please mail me a bug report.
+
+<P>
+
+<H2><A NAME="SECTION000310000000000000000">
 YajHFC running under Windows sometimes saves its configuration in <TT>C:\.yajhfc</TT> instead of <TT>C:\Documents and Settings\USERNAME\.yajhfc</TT></A>
 </H2>
 
@@ -375,7 +390,7 @@ As a workaround, you can set this property explicitely when starting YajHFC by u
 
 <P>
 
-<H2><A NAME="SECTION000310000000000000000">
+<H2><A NAME="SECTION000311000000000000000">
 What does the column XYZ mean?</A>
 </H2>
 
@@ -444,11 +459,11 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>-no_subdir -split 0 -html_version 3.2,latin1,unicode,utf8 -no_navigation faq.tex</TT>
 <P>
-The translation was initiated by Jonas Wolz on 2008-08-10
+The translation was initiated by Jonas Wolz on 2008-11-09
 <BR><HR>
 <ADDRESS>
 Jonas Wolz
-2008-08-10
+2008-11-09
 </ADDRESS>
 </BODY>
 </HTML>

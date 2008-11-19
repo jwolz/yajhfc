@@ -12,9 +12,9 @@ Features:
 * Polling faxes
 * Support for generating cover pages from templates
 * Viewing sent and received faxes
-* Phone book
+* Phone book (entries can optionally be read from SQL databases or LDAP directories)
 * Visible table columns may be selected in a dialog
-* Supports five languages: English, French, German, Russian and Spanish
+* Supports seven languages: English, French, German, Italian, Russian, Spanish and Turkish
 
 Homepage: http://yajhfc.berlios.de/
 email:    Jonas Wolz <jwolz@freenet.de>
@@ -24,7 +24,7 @@ INSTALLATION
 
 Requirements:
 * JRE 5.0 or higher
-* A running hylafax server in your network (of course ;-) )
+* A running HylaFAX server in your network (of course ;-) )
 * Some program to view TIFF files (also see the FAQ)
 * Optional: A PostScript viewer (e.g. Ghostview)
 

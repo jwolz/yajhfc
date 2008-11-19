@@ -10,14 +10,14 @@ Client für den HylaFAX Faxserver (http://www.hylafax.org/).
 Features:
 * Verschicken von Dokumenten im PostScript- (PS) und PDF-Format
 * Faxabruf
-* Die Generierung von Deckblättern aus Vorlagen
+* Generierung von Deckblättern aus Vorlagen
 * Anzeige von empfangenen und gesendeten Faxen
-* Telefonbuch
+* Telefonbuch (Einträge können optional auch aus SQL-Datenbanken und LDAP-Verzeichnissen geladen werden)
 * Eine Auswahl der anzuzeigenden Tabellenspalten ist über ein Dialogfeld möglich
-* Unterstützt drei Sprachen: Deutsch, Englisch und Spanisch
+* Unterstützt sieben Sprachen: Deutsch, Englisch, Französisch, Italienisch, Russisch, Spanisch und Türkisch
 
-Homepage: http://www.yajhfc.de.vu/
-E-Mail:   Jonas Wolz <jwolz@freenet.de>
+Homepage: http://yajhfc.berlios.de/
+E-Mail:   Jonas Wolz <jonas.wolz@freenet.de>
 
 INSTALLATION
 ------------

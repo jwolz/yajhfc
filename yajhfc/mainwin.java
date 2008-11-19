@@ -96,7 +96,7 @@ import yajhfc.util.JTableTABAction;
 @SuppressWarnings("serial")
 public final class mainwin extends JFrame {
     
-    private static final Logger log = Logger.getLogger(mainwin.class.getName());
+    static final Logger log = Logger.getLogger(mainwin.class.getName());
     // Uncomment for archive support (change 3 -> 4)
     private static final int TABLE_COUNT = 3;
     
@@ -929,10 +929,15 @@ public final class mainwin extends JFrame {
                 utils.unsetWaitCursor(null);
             }
         };
-        actReconnect.putValue(Action.NAME, _("Connect"));
         actReconnect.putValue(Action.SHORT_DESCRIPTION, _("Connect or disconnect to the HylaFAX server"));
+        setActReconnectState(true);
         
         actChecker = new ActionEnabler();
+    }
+    
+    void setActReconnectState(boolean showConnect) {
+        actReconnect.putValue(Action.NAME, showConnect ? _("Connect") : _("Disconnect"));
+        actReconnect.putValue(Action.SMALL_ICON, utils.loadCustomIcon(showConnect ? "disconnected.png" : "connected.png"));
     }
     
     private JPopupMenu getTblPopup() {
@@ -1236,7 +1241,7 @@ public final class mainwin extends JFrame {
             actPoll.setEnabled(false);
             menuView.setEnabled(false);
             
-            actReconnect.putValue(Action.NAME, _("Connect"));
+            setActReconnectState(true);
             this.setTitle("Disconnected - " + utils.AppName);
             log.fine("Successfully logged out");
         } catch (Exception e) {
@@ -1794,48 +1799,56 @@ public final class mainwin extends JFrame {
             actSuspend.setEnabled(suspResumeState);
             actResume.setEnabled(suspResumeState);
             actClipCopy.setEnabled(showState);
-            
+
             actFaxRead.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, faxReadSelected);
         }
     }
-    
+
     class StatusRefresher extends TimerTask {
         String oldText = "";
 
         public synchronized void run() {
-            String newText;
-            HylaFAXClient hyfc = clientManager.beginServerTransaction(mainwin.this);
-            if (hyfc == null) {
-                newText = utils._("Could not log in");
-            } else {
-                try {
-                    Vector<?> status;
-                    synchronized (hyfc) {
-                        log.finest("In hyfc monitor");
-                        status = hyfc.getList("status");
-                    }
-                    log.finest("Out of hyfc monitor");
-                    newText = utils.listToString(status, "\n");
-                } catch (SocketException se) {
-                    log.log(Level.WARNING, "Error refreshing the status, logging out.", se);
+            try {
+                String newText;
+                HylaFAXClient hyfc = clientManager.beginServerTransaction(mainwin.this);
+                if (hyfc == null) {
+                    newText = utils._("Could not log in");
                     cancel();
                     invokeLogoutThreaded();
                     return;
-                } catch (Exception e) {
-                    newText = _("Error refreshing the status:") + " " + e;
-                    log.log(Level.WARNING, "Error refreshing the status:", e);
+                } else {
+                    try {
+                        Vector<?> status;
+                        synchronized (hyfc) {
+                            log.finest("In hyfc monitor");
+                            status = hyfc.getList("status");
+                        }
+                        log.finest("Out of hyfc monitor");
+                        newText = utils.listToString(status, "\n");
+                    } catch (SocketException se) {
+                        log.log(Level.WARNING, "Error refreshing the status, logging out.", se);
+                        cancel();
+                        invokeLogoutThreaded();
+                        return;
+                    } catch (Exception e) {
+                        newText = _("Error refreshing the status:") + " " + e;
+                        log.log(Level.WARNING, "Error refreshing the status:", e);
+                    }
                 }
+                if (!newText.equals(oldText)) {
+                    oldText = newText;
+
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            textStatus.setText(oldText);
+                        } 
+                    });
+                }
+                if (clientManager != null)
+                    clientManager.endServerTransaction();
+            } catch (Exception ex) {
+                log.log(Level.SEVERE, "Error refreshing the status:", ex);
             }
-            if (!newText.equals(oldText)) {
-                oldText = newText;
-                
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        textStatus.setText(oldText);
-                    } 
-                });
-            }
-            clientManager.endServerTransaction();
         }
     };
     
@@ -1845,136 +1858,174 @@ public final class mainwin extends JFrame {
         // Uncomment for archive support.
 //        private Vector<?> lastArchiveList = null;
         //public boolean didFirstRun = false;
+        private boolean cancelled = false;
         
+        @Override
+        public boolean cancel() {
+            cancelled = true;
+            return super.cancel();
+        }
         
-        public synchronized void run() {            
-            HylaFAXClient hyfc = clientManager.beginServerTransaction(mainwin.this);
-            if (hyfc == null) {
-                return;
-            }
-            Vector<?> lst;
+        public synchronized void run() {
             try {
-                //System.out.println(System.currentTimeMillis() + ": Getting list...");
-                synchronized (hyfc) {
-                    lst = hyfc.getList("recvq");
+                log.fine("Begin table refresh");
+                
+                HylaFAXClient hyfc = clientManager.beginServerTransaction(mainwin.this);
+                if (hyfc == null) {
+                    return;
                 }
-                //System.out.println(System.currentTimeMillis() + ": Got list...");
-                if ((lastRecvList == null) || !lst.equals(lastRecvList)) {
-                    String[][] data = new String[lst.size()][];
-                    for (int i = 0; i < lst.size(); i++) {
-                        //data[i] = ((String)lst.get(i)).split("\\|");
-                        data[i] = utils.fastSplit((String)lst.get(i), '|');
+                Vector<?> lst;
+                try {
+                    //System.out.println(System.currentTimeMillis() + ": Getting list...");
+                    synchronized (hyfc) {
+                        lst = hyfc.getList("recvq");
                     }
-                    SwingUtilities.invokeLater(new TableDataRunner(recvTableModel, data));
-                    lastRecvList = lst;
-                    
-//                    if (!didFirstRun) {
-//                        // Read the read/unread status *after* the table contents has been set 
-//                        SwingUtilities.invokeLater(new Runnable() {
-//                            public void run() {
-//                                recvTableModel.loadReadState(PersistentReadState.CURRENT);
-//                                tableRecv.repaint();
-//                            }
-//                        });
-//                        didFirstRun = true;
-//                    }
-                    //System.out.println(System.currentTimeMillis() + ": Did invokeLater()");
-                }
-            } catch (SocketException se) {
-                log.log(Level.WARNING, "A socket error occured refreshing the tables, logging out.", se);
-                cancel();
-                invokeLogoutThreaded();
-                return;
-            } catch (Exception e) {
-                log.log(Level.WARNING, "An error occured refreshing the tables: ", e);
-//                if (utils.debugMode) {
-//                    utils.debugOut.println("An error occured refreshing the tables: ");
-//                    e.printStackTrace(utils.debugOut);
-//                }
-            }        
-            
-            try {
-                synchronized (hyfc) {
-                    hyfc.jobfmt(sentfmt);
-                    lst = hyfc.getList("doneq");
-                }
-                if ((lastSentList == null) || !lst.equals(lastSentList)) {
-                    String[][] data = new String[lst.size()][];
-                    for (int i = 0; i < lst.size(); i++) {
-                        //data[i] = ((String)lst.get(i)).split("\\|");
-                        data[i] = utils.fastSplit((String)lst.get(i), '|');
-                    }
-                    SwingUtilities.invokeLater(new TableDataRunner(sentTableModel, data));
-                    lastSentList = lst;
-                }
-            } catch (SocketException se) {
-                log.log(Level.WARNING, "A socket error occured refreshing the tables, logging out.", se);
-                cancel();
-                invokeLogoutThreaded();
-                return;
-            } catch (Exception e) {
-                log.log(Level.WARNING, "An error occured refreshing the tables: ", e);
-//                if (utils.debugMode) {
-//                    utils.debugOut.println("An error occured refreshing the tables: ");
-//                    e.printStackTrace(utils.debugOut);
-//                }
-            }
-            
-            try {
-                synchronized (hyfc) {
-                    hyfc.jobfmt(sendingfmt);
-                    lst = hyfc.getList("sendq");
-                }
-                if ((lastSendingList == null) || !lst.equals(lastSendingList)) {
-                    String[][] data = new String[lst.size()][];
-                    for (int i = 0; i < lst.size(); i++) {
-                        //data[i] = ((String)lst.get(i)).split("\\|");
-                        data[i] = utils.fastSplit((String)lst.get(i), '|');
-                    }
-                    SwingUtilities.invokeLater(new TableDataRunner(sendingTableModel, data));
-                    lastSendingList = lst;
-                }
-            } catch (SocketException se) {
-                log.log(Level.WARNING, "A socket error occured refreshing the tables, logging out.", se);
-                cancel();
-                invokeLogoutThreaded();
-                return;
-            } catch (Exception e) {
-                log.log(Level.WARNING, "An error occured refreshing the tables: ", e);
-//                if (utils.debugMode) {
-//                    utils.debugOut.println("An error occured refreshing the tables: ");
-//                    e.printStackTrace(utils.debugOut);
-//                }
-            }
+                    //System.out.println(System.currentTimeMillis() + ": Got list...");
+                    if ((lastRecvList == null) || !lst.equals(lastRecvList)) {
+                        String[][] data = new String[lst.size()][];
+                        for (int i = 0; i < lst.size(); i++) {
+                            //data[i] = ((String)lst.get(i)).split("\\|");
+                            data[i] = utils.fastSplit((String)lst.get(i), '|');
+                        }
+                        SwingUtilities.invokeLater(new TableDataRunner(recvTableModel, data));
+                        lastRecvList = lst;
 
-            // Uncomment for archive support.
-//            if (myopts.showArchive) {
-//                try {
-//                    synchronized (hyfc) {
-//                        lst = hyfc.getNameList("archive");
-//                    }
-//                    if ((lastArchiveList == null) || !lst.equals(lastArchiveList)) {
-//                        final List<ArchiveYajJob> archiveJobs = ArchiveYajJob.getArchiveFiles(hyfc, lst, archiveTableModel.columns);
-//                        SwingUtilities.invokeLater(new Runnable() {
-//                           public void run() {
-//                               archiveTableModel.setData(archiveJobs);
-//                            } 
-//                        });
-//                        lastArchiveList = lst;
-//                    }
-//                } catch (Exception e) {
-//                    log.log(Level.WARNING, "An error occured refreshing the tables: ", e);
-//                }
-//            }
-            
-            if (tablePanel.isShowingProgress()) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        tablePanel.hideProgress();
+                        //                    if (!didFirstRun) {
+                        //                        // Read the read/unread status *after* the table contents has been set 
+                        //                        SwingUtilities.invokeLater(new Runnable() {
+                        //                            public void run() {
+                        //                                recvTableModel.loadReadState(PersistentReadState.CURRENT);
+                        //                                tableRecv.repaint();
+                        //                            }
+                        //                        });
+                        //                        didFirstRun = true;
+                        //                    }
+                        //System.out.println(System.currentTimeMillis() + ": Did invokeLater()");
                     }
-                });
+                } catch (SocketException se) {
+                    log.log(Level.WARNING, "A socket error occured refreshing the tables, logging out.", se);
+                    cancel();
+                    invokeLogoutThreaded();
+                    return;
+                } catch (Exception e) {
+                    log.log(Level.WARNING, "An error occured refreshing the tables: ", e);
+                    //                if (utils.debugMode) {
+                    //                    utils.debugOut.println("An error occured refreshing the tables: ");
+                    //                    e.printStackTrace(utils.debugOut);
+                    //                }
+                }        
+
+                log.fine("recvq complete");
+                if (cancelled) {
+                    log.fine("Already cancelled");
+                    return;
+                }
+                
+                try {
+                    synchronized (hyfc) {
+                        hyfc.jobfmt(sentfmt);
+                        lst = hyfc.getList("doneq");
+                    }
+                    if ((lastSentList == null) || !lst.equals(lastSentList)) {
+                        String[][] data = new String[lst.size()][];
+                        for (int i = 0; i < lst.size(); i++) {
+                            //data[i] = ((String)lst.get(i)).split("\\|");
+                            data[i] = utils.fastSplit((String)lst.get(i), '|');
+                        }
+                        SwingUtilities.invokeLater(new TableDataRunner(sentTableModel, data));
+                        lastSentList = lst;
+                    }
+                } catch (SocketException se) {
+                    log.log(Level.WARNING, "A socket error occured refreshing the tables, logging out.", se);
+                    cancel();
+                    invokeLogoutThreaded();
+                    return;
+                } catch (Exception e) {
+                    log.log(Level.WARNING, "An error occured refreshing the tables: ", e);
+                    //                if (utils.debugMode) {
+                    //                    utils.debugOut.println("An error occured refreshing the tables: ");
+                    //                    e.printStackTrace(utils.debugOut);
+                    //                }
+                }
+
+                log.fine("doneq complete");
+                if (cancelled) {
+                    log.fine("Already cancelled");
+                    return;
+                }
+                
+                try {
+                    synchronized (hyfc) {
+                        hyfc.jobfmt(sendingfmt);
+                        lst = hyfc.getList("sendq");
+                    }
+                    if ((lastSendingList == null) || !lst.equals(lastSendingList)) {
+                        String[][] data = new String[lst.size()][];
+                        for (int i = 0; i < lst.size(); i++) {
+                            //data[i] = ((String)lst.get(i)).split("\\|");
+                            data[i] = utils.fastSplit((String)lst.get(i), '|');
+                        }
+                        SwingUtilities.invokeLater(new TableDataRunner(sendingTableModel, data));
+                        lastSendingList = lst;
+                    }
+                } catch (SocketException se) {
+                    log.log(Level.WARNING, "A socket error occured refreshing the tables, logging out.", se);
+                    cancel();
+                    invokeLogoutThreaded();
+                    return;
+                } catch (Exception e) {
+                    log.log(Level.WARNING, "An error occured refreshing the tables: ", e);
+                    //                if (utils.debugMode) {
+                    //                    utils.debugOut.println("An error occured refreshing the tables: ");
+                    //                    e.printStackTrace(utils.debugOut);
+                    //                }
+                }
+                
+                log.fine("sendq complete");
+
+                if (cancelled) {
+                    log.fine("Already cancelled");
+                    return;
+                }
+                // Uncomment for archive support.
+                //            if (myopts.showArchive) {
+                //                try {
+                //                    synchronized (hyfc) {
+                //                        lst = hyfc.getNameList("archive");
+                //                    }
+                //                    if ((lastArchiveList == null) || !lst.equals(lastArchiveList)) {
+                //                        final List<ArchiveYajJob> archiveJobs = ArchiveYajJob.getArchiveFiles(hyfc, lst, archiveTableModel.columns);
+                //                        SwingUtilities.invokeLater(new Runnable() {
+                //                           public void run() {
+                //                               archiveTableModel.setData(archiveJobs);
+                //                            } 
+                //                        });
+                //                        lastArchiveList = lst;
+                //                    }
+                //                } catch (Exception e) {
+                //                    log.log(Level.WARNING, "An error occured refreshing the tables: ", e);
+                //                }
+                //            }
+
+                if (tablePanel.isShowingProgress()) {
+                    log.fine("Hiding progress...");
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            if (cancelled) {
+                                log.fine("Already cancelled");
+                                return;
+                            }
+                            tablePanel.hideProgress();
+                            log.fine("Progress hidden");
+                        }
+                    });
+                }
+                if (clientManager != null)
+                    clientManager.endServerTransaction();
+                log.fine("Tables refresh complete");
+            } catch (Exception ex) {
+                log.log(Level.SEVERE, "Error refreshing the tables:", ex);
             }
-            clientManager.endServerTransaction();
         }
         
         public TableRefresher(String sentfmt, String sendingfmt) {
@@ -1987,6 +2038,10 @@ public final class mainwin extends JFrame {
             private MyTableModel tm;
                     
             public void run() {
+                if (cancelled) {
+                    log.fine("Already cancelled");
+                    return;
+                }
                 //System.out.println(System.currentTimeMillis() + ": About to set data...");
                 tm.setData(data);         
                 //System.out.println(System.currentTimeMillis() + ": Set data.");
@@ -2129,7 +2184,7 @@ public final class mainwin extends JFrame {
                        actSend.setEnabled(true);
                        actPoll.setEnabled(true);
                        
-                       actReconnect.putValue(Action.NAME, _("Disconnect"));
+                       setActReconnectState(false);
                        
                        sendReady = SendReadyState.Ready;
                        mainwin.this.setEnabled(true);

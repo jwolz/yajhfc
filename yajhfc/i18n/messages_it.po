@@ -144,6 +144,8 @@ msgid ""
 "The maximum time to wait for a interaction with the server to complete. "
 "Values below 5 are not recommended; 0 disables this timeout."
 msgstr ""
+"Il tempo massimo di attesa per il completamento di un'interazione con il server. "
+"Valori inferiori a 5 non sono raccomandati; 0 disabilita questo timeout"
 
 #: ../OptionsWin.java:505
 msgid "Prefer rendered TIFF (experimental)"
@@ -193,7 +195,7 @@ msgstr "Intervallo di aggiornamento  dello stato server (sec.):"
 
 #: ../OptionsWin.java:519
 msgid "Server socket timeout (secs):"
-msgstr ""
+msgstr "Timeout per server socket (secondi)"
 
 #: ../OptionsWin.java:537
 msgid "Delivery settings"
@@ -468,7 +470,7 @@ msgstr "Documenti PDF"
 
 #: ../FormattedFile.java:41
 msgid "PCL files"
-msgstr "File PLC"
+msgstr "File PCL"
 
 #: ../FormattedFile.java:42
 msgid "JPEG pictures"
@@ -484,7 +486,7 @@ msgstr "Immagini GIF"
 
 #: ../FormattedFile.java:45
 msgid "TIFF pictures"
-msgstr "Immagini picture"
+msgstr "Immagini TIFF"
 
 #: ../FormattedFile.java:46
 msgid "Plain text files"
@@ -533,7 +535,7 @@ msgstr "Bloccato (da attività concorrente verso la stessa destinazione)"
 
 #: ../SentYajJob.java:207
 msgid "Done"
-msgstr "Fatto"
+msgstr "Completato"
 
 #: ../SentYajJob.java:209
 msgid "Failed"
@@ -1125,11 +1127,11 @@ msgstr "Adatta larghezza colonne alla pagina"
 
 #: ../mainwin.java:932 ../mainwin.java:1244
 msgid "Connect"
-msgstr ""
+msgstr "Connetti"
 
 #: ../mainwin.java:933
 msgid "Connect or disconnect to the HylaFAX server"
-msgstr ""
+msgstr "Connette o disconnette al server HylaFAX"
 
 #: ../mainwin.java:940 ../mainwin.java:1556
 msgid "Fax"
@@ -1264,11 +1266,11 @@ msgstr "Formato rubrica non supportato."
 
 #: ../phonebook/NewPhoneBookWin.java:480
 msgid "Reset"
-msgstr ""
+msgstr "Reimposta"
 
 #: ../phonebook/NewPhoneBookWin.java:484
 msgid "Reset quick search and show all phone book entries."
-msgstr ""
+msgstr "Reimposta la ricerca veloce e mostra tutti gli elementi della rubrica"
 
 #: ../phonebook/NewPhoneBookWin.java:486 ../phonebook/NewSearchWin.java:146
 msgid "Search"
@@ -2249,7 +2251,7 @@ msgstr ">> Avanzato"
 
 #: ../send/SimplifiedSendDialog.java:128
 msgid "<< Simplified"
-msgstr "<< Semplice"
+msgstr "<< Semplificato"
 
 #: ../send/SimplifiedSendDialog.java:135
 msgid "Send fax"
@@ -2347,7 +2349,7 @@ msgstr "Per l'invio del fax devi inserire almeno un numero fax!"
 #: ../send/SendController.java:440
 #, java-format
 msgid "For recipient {0} (\"{1}\") no fax number has been entered."
-msgstr ""
+msgstr "Non è stato immesso un numero di fax per il destinatario {0} (\"{1}\")."
 
 #: ../send/SendController.java:447
 msgid ""
