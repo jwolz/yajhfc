@@ -43,7 +43,9 @@ import java.net.SocketException;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimerTask;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -91,7 +93,10 @@ import yajhfc.phonebook.NewPhoneBookWin;
 import yajhfc.readstate.PersistentReadState;
 import yajhfc.send.SendController;
 import yajhfc.send.SendWinControl;
+import yajhfc.tray.TrayFactory;
+import yajhfc.tray.YajHFCTrayIcon;
 import yajhfc.util.JTableTABAction;
+import yajhfc.util.ToolbarEditorDialog;
 
 @SuppressWarnings("serial")
 public final class mainwin extends JFrame {
@@ -158,8 +163,10 @@ public final class mainwin extends JFrame {
     
     // Actions:
     protected Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward, actAdminMode;
-    protected Action actRefresh, actResend, actPrintTable, actSuspend, actResume, actClipCopy, actShowRowNumbers, actAdjustColumns, actReconnect;
+    protected Action actRefresh, actResend, actPrintTable, actSuspend, actResume, actClipCopy, actShowRowNumbers, actAdjustColumns, actReconnect, actEditToolbar;
     protected ActionEnabler actChecker;
+    protected Map<String,Action> availableActions = new HashMap<String,Action>();
+    protected YajHFCTrayIcon trayIcon = null;
     
     protected HylaClientManager clientManager;
     
@@ -344,7 +351,7 @@ public final class mainwin extends JFrame {
         protected void done() {
             if (sMax >= 0 && selTable == tableRecv) {
                 tableRecv.getSorter().fireTableRowsUpdated(sMin, sMax);
-                actFaxRead.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, true);
+                actFaxRead.putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, true);
             }
         }
         
@@ -493,9 +500,10 @@ public final class mainwin extends JFrame {
                 ow.setModal(true);
                 utils.unsetWaitCursorOnOpen(null, ow);
                 ow.setVisible(true);
-                if (ow.getModalResult()) 
+                if (ow.getModalResult()) {
+                    showOrHideTrayIcon();
                     reconnectToServer(null);
-                else
+                } else
                     sendReady = oldState;
                     
             }
@@ -503,6 +511,7 @@ public final class mainwin extends JFrame {
         actOptions.putValue(Action.NAME, _("Options") + "...");
         actOptions.putValue(Action.SHORT_DESCRIPTION, _("Shows the Options dialog"));
         actOptions.putValue(Action.SMALL_ICON, utils.loadIcon("general/Preferences"));
+        putAvailableAction("Options", actOptions);
         
         actSend = new ExcDialogAbstractAction() {
             public void actualActionPerformed(java.awt.event.ActionEvent e) {
@@ -519,6 +528,7 @@ public final class mainwin extends JFrame {
         actSend.putValue(Action.NAME, _("Send") + "...");
         actSend.putValue(Action.SHORT_DESCRIPTION, _("Shows the send fax dialog"));
         actSend.putValue(Action.SMALL_ICON, utils.loadIcon("general/SendMail"));
+        putAvailableAction("Send", actSend);
         
         actPoll = new ExcDialogAbstractAction() {
             public void actualActionPerformed(java.awt.event.ActionEvent e) {
@@ -531,6 +541,7 @@ public final class mainwin extends JFrame {
         actPoll.putValue(Action.NAME, _("Poll") + "...");
         actPoll.putValue(Action.SHORT_DESCRIPTION, _("Shows the poll fax dialog"));
         actPoll.putValue(Action.SMALL_ICON, utils.loadIcon("general/Import"));
+        putAvailableAction("Poll", actPoll);
         
         actDelete = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {
@@ -553,6 +564,7 @@ public final class mainwin extends JFrame {
         actDelete.putValue(Action.NAME, _("Delete"));
         actDelete.putValue(Action.SHORT_DESCRIPTION, _("Deletes the selected fax"));
         actDelete.putValue(Action.SMALL_ICON, utils.loadIcon("general/Delete"));
+        putAvailableAction("Delete", actDelete);
         
         actShow = new ExcDialogAbstractAction() {
             public void actualActionPerformed(java.awt.event.ActionEvent e) {
@@ -565,6 +577,7 @@ public final class mainwin extends JFrame {
         actShow.putValue(Action.NAME, _("Show") + "...");
         actShow.putValue(Action.SHORT_DESCRIPTION, _("Displays the selected fax"));
         actShow.putValue(Action.SMALL_ICON, utils.loadIcon("general/Zoom"));
+        putAvailableAction("Show", actShow);
         
         actExit = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {
@@ -575,6 +588,7 @@ public final class mainwin extends JFrame {
         actExit.putValue(Action.NAME, _("Exit"));
         actExit.putValue(Action.SHORT_DESCRIPTION, _("Exits the application"));
         actExit.putValue(Action.SMALL_ICON, utils.loadIcon("general/Stop"));
+        putAvailableAction("Exit", actExit);
         
         actAbout = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {
@@ -589,6 +603,7 @@ public final class mainwin extends JFrame {
         actAbout.putValue(Action.NAME, _("About") +  "...");
         actAbout.putValue(Action.SHORT_DESCRIPTION, _("Shows the about dialog"));
         actAbout.putValue(Action.SMALL_ICON, utils.loadIcon("general/About"));
+        putAvailableAction("About", actAbout);
         
         actPhonebook = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {
@@ -602,6 +617,7 @@ public final class mainwin extends JFrame {
         actPhonebook.putValue(Action.NAME, _("Phone book") +  "...");
         actPhonebook.putValue(Action.SHORT_DESCRIPTION, _("Display/edit the phone book"));
         actPhonebook.putValue(Action.SMALL_ICON, utils.loadIcon("general/Bookmarks"));
+        putAvailableAction("Phonebook", actPhonebook);
         
         actReadme = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {
@@ -615,10 +631,11 @@ public final class mainwin extends JFrame {
         actReadme.putValue(Action.NAME, _("Documentation") +  "...");
         actReadme.putValue(Action.SHORT_DESCRIPTION, _("Shows the README files"));
         actReadme.putValue(Action.SMALL_ICON, utils.loadIcon("general/Help"));
+        putAvailableAction("Readme", actReadme);
         
         actFaxRead = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {
-                Boolean state = (Boolean)getValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY);
+                Boolean state = (Boolean)getValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY);
                 boolean newState;
                 if (state == null)
                     newState = true;
@@ -636,13 +653,14 @@ public final class mainwin extends JFrame {
                     }
                     if (sMax >= 0)
                         tableRecv.getSorter().fireTableRowsUpdated(sMin, sMax);
-                    putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, newState);
+                    putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, newState);
                 }
             };
         };
         actFaxRead.putValue(Action.NAME, _("Marked as read"));
         actFaxRead.putValue(Action.SHORT_DESCRIPTION, _("Marks the selected fax as read/unread"));
-        actFaxRead.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, true);
+        actFaxRead.putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, true);
+        putAvailableAction("FaxRead", actFaxRead);
         
         actFaxSave = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {
@@ -711,6 +729,7 @@ public final class mainwin extends JFrame {
         actFaxSave.putValue(Action.NAME, _("Save fax..."));
         actFaxSave.putValue(Action.SHORT_DESCRIPTION, _("Saves the selected fax on disk"));
         actFaxSave.putValue(Action.SMALL_ICON, utils.loadIcon("general/SaveAs"));
+        putAvailableAction("FaxSave", actFaxSave);
         
         actForward = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {
@@ -739,18 +758,19 @@ public final class mainwin extends JFrame {
         actForward.putValue(Action.NAME, _("Forward fax..."));
         actForward.putValue(Action.SHORT_DESCRIPTION, _("Forwards the fax"));
         actForward.putValue(Action.SMALL_ICON, utils.loadIcon("general/Redo"));
+        putAvailableAction("Forward", actForward);
         
         actAdminMode = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {
                 utils.setWaitCursor(null);
-                Boolean state = (Boolean)getValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY);
+                Boolean state = (Boolean)getValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY);
                 boolean newState;
                 if (state == null)
                     newState = false;
                 else
                     newState = !state;
 
-                putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, newState);
+                putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, newState);
                 
                 reconnectToServer(null);
                 utils.unsetWaitCursor(null);
@@ -758,7 +778,8 @@ public final class mainwin extends JFrame {
         };
         actAdminMode.putValue(Action.NAME, _("Admin mode"));
         actAdminMode.putValue(Action.SHORT_DESCRIPTION, _("Connect to the server in admin mode (e.g. to delete faxes)"));
-        actAdminMode.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, adminState);
+        actAdminMode.putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, adminState);
+        putAvailableAction("AdminMode", actAdminMode);
         
         actRefresh = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {
@@ -772,6 +793,7 @@ public final class mainwin extends JFrame {
         actRefresh.putValue(Action.SHORT_DESCRIPTION, _("Refresh tables and server status"));
         actRefresh.putValue(Action.SMALL_ICON, utils.loadIcon("general/Refresh"));
         actRefresh.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
+        putAvailableAction("Refresh", actRefresh);
         
         actResend = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {                
@@ -823,6 +845,7 @@ public final class mainwin extends JFrame {
         actResend.putValue(Action.NAME, _("Resend fax..."));
         actResend.putValue(Action.SHORT_DESCRIPTION, _("Resend the fax"));
         actResend.putValue(Action.SMALL_ICON, utils.loadIcon("general/Export"));
+        putAvailableAction("Resend", actResend);
         
         actPrintTable = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {
@@ -841,6 +864,7 @@ public final class mainwin extends JFrame {
         actPrintTable.putValue(Action.NAME, _("Print table..."));
         actPrintTable.putValue(Action.SHORT_DESCRIPTION, _("Prints the currently displayed table"));
         actPrintTable.putValue(Action.SMALL_ICON, utils.loadIcon("general/Print"));
+        putAvailableAction("PrintTable", actPrintTable);
         
         actSuspend = new ExcDialogAbstractAction() {
             public void actualActionPerformed(java.awt.event.ActionEvent e) {
@@ -852,6 +876,7 @@ public final class mainwin extends JFrame {
         actSuspend.putValue(Action.NAME, _("Suspend"));
         actSuspend.putValue(Action.SHORT_DESCRIPTION, _("Suspends the transfer of the selected fax"));
         actSuspend.putValue(Action.SMALL_ICON, utils.loadIcon("media/Pause"));
+        putAvailableAction("Suspend", actSuspend);
         
         actResume = new ExcDialogAbstractAction() {
             public void actualActionPerformed(java.awt.event.ActionEvent e) {
@@ -863,6 +888,7 @@ public final class mainwin extends JFrame {
         actResume.putValue(Action.NAME, _("Resume"));
         actResume.putValue(Action.SHORT_DESCRIPTION, _("Resumes the transfer of the selected fax"));
         actResume.putValue(Action.SMALL_ICON, utils.loadIcon("media/Play"));
+        putAvailableAction("Resume", actResume);
         
         actClipCopy = new ExcDialogAbstractAction() {
             public void actualActionPerformed(java.awt.event.ActionEvent e) {
@@ -873,10 +899,11 @@ public final class mainwin extends JFrame {
         actClipCopy.putValue(Action.NAME, _("Copy"));
         actClipCopy.putValue(Action.SHORT_DESCRIPTION, _("Copies the selected table items to the clipboard"));
         actClipCopy.putValue(Action.SMALL_ICON, utils.loadIcon("general/Copy"));
+        putAvailableAction("ClipCopy", actClipCopy);
         
         actShowRowNumbers = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {
-                Boolean state = (Boolean)getValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY);
+                Boolean state = (Boolean)getValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY);
                 boolean newState;
                 if (state == null)
                     newState = false;
@@ -887,16 +914,17 @@ public final class mainwin extends JFrame {
                 sentRowNumbers.setVisible(newState);
                 sendingRowNumbers.setVisible(newState);
                 
-                putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, newState);
+                putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, newState);
             };
         };
         actShowRowNumbers.putValue(Action.NAME, _("Show row numbers"));
         actShowRowNumbers.putValue(Action.SHORT_DESCRIPTION, _("Show row numbers"));
-        actShowRowNumbers.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, myopts.showRowNumbers);
+        actShowRowNumbers.putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, myopts.showRowNumbers);
+        putAvailableAction("ShowRowNumbers", actShowRowNumbers);
         
         actAdjustColumns = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {
-                Boolean state = (Boolean)getValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY);
+                Boolean state = (Boolean)getValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY);
                 boolean newState;
                 if (state == null)
                     newState = false;
@@ -910,12 +938,13 @@ public final class mainwin extends JFrame {
                 // Uncomment for archive support.
 //                tableArchive.setAutoResizeMode(newMode);
                 
-                putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, newState);
+                putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, newState);
             };
         };
         actAdjustColumns.putValue(Action.NAME, _("Adjust column widths"));
         actAdjustColumns.putValue(Action.SHORT_DESCRIPTION, _("Adjust column widths to fit the window size"));
-        actAdjustColumns.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, myopts.adjustColumnWidths);
+        actAdjustColumns.putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, myopts.adjustColumnWidths);
+        putAvailableAction("AdjustColumns", actAdjustColumns);
         
         actReconnect = new ExcDialogAbstractAction() {
             @Override
@@ -930,9 +959,28 @@ public final class mainwin extends JFrame {
             }
         };
         actReconnect.putValue(Action.SHORT_DESCRIPTION, _("Connect or disconnect to the HylaFAX server"));
+        putAvailableAction("Reconnect", actReconnect);
         setActReconnectState(true);
         
+        actEditToolbar = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(java.awt.event.ActionEvent e) {
+                ToolbarEditorDialog ted = new ToolbarEditorDialog(mainwin.this, availableActions, toolbar, FaxOptions.DEF_TOOLBAR_CONFIG);
+                ted.setVisible(true);
+            }
+        };
+        actEditToolbar.putValue(Action.NAME, _("Customize toolbar") + "...");
+        actEditToolbar.putValue(Action.SHORT_DESCRIPTION, _("Customize the toolbar"));
+        //actEditToolbar.putValue(Action.SMALL_ICON, utils.loadIcon("media/Play"));
+        putAvailableAction("EditToolbar", actEditToolbar);
+             
         actChecker = new ActionEnabler();
+    }
+    
+    private void putAvailableAction(String key, Action act) {
+        if (availableActions.put(key, act) != null) {
+            log.severe("Action " + key + " already existed!");
+        }
+        act.putValue(Action.ACTION_COMMAND_KEY, key);
     }
     
     void setActReconnectState(boolean showConnect) {
@@ -1063,18 +1111,19 @@ public final class mainwin extends JFrame {
     private JToolBar getToolbar() {
         if (toolbar == null) {
             toolbar = new JToolBar();
-
-            toolbar.add(actSend);
-            toolbar.addSeparator();
-            toolbar.add(actShow);
-            toolbar.add(actDelete);
-            toolbar.addSeparator();
-            toolbar.add(actRefresh);
-            toolbar.addSeparator();
-            toolbar.add(actPhonebook);
-            toolbar.addSeparator();
-            toolbar.add(actResume);
-            toolbar.add(actSuspend);
+            
+            ToolbarEditorDialog.loadConfigFromString(toolbar, myopts.toolbarConfig, availableActions);
+//            toolbar.add(actSend);
+//            toolbar.addSeparator();
+//            toolbar.add(actShow);
+//            toolbar.add(actDelete);
+//            toolbar.addSeparator();
+//            toolbar.add(actRefresh);
+//            toolbar.addSeparator();
+//            toolbar.add(actPhonebook);
+//            toolbar.addSeparator();
+//            toolbar.add(actResume);
+//            toolbar.add(actSuspend);
         }
         return toolbar;
     }
@@ -1159,10 +1208,11 @@ public final class mainwin extends JFrame {
                 myopts.mainWinBounds = getBounds();
                 myopts.mainwinLastTab = getTabMain().getSelectedIndex();
                 
-                Boolean selVal = (Boolean)actShowRowNumbers.getValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY);
+                Boolean selVal = (Boolean)actShowRowNumbers.getValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY);
                 myopts.showRowNumbers = (selVal != null && selVal.booleanValue());
-                selVal = (Boolean)actAdjustColumns.getValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY);
+                selVal = (Boolean)actAdjustColumns.getValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY);
                 myopts.adjustColumnWidths = (selVal != null && selVal.booleanValue());
+                myopts.toolbarConfig = ToolbarEditorDialog.saveConfigToString(toolbar);
                 
                 myopts.storeToFile(FaxOptions.getDefaultConfigFile());
                 saved = true;
@@ -1192,6 +1242,20 @@ public final class mainwin extends JFrame {
         tabMain.setSelectedIndex(myopts.mainwinLastTab);
         actChecker.doEnableCheck();
         
+        showOrHideTrayIcon();
+    }
+    
+    void showOrHideTrayIcon() {
+        if (myopts.minimizeToTray) {
+            if (trayIcon == null && TrayFactory.trayIsAvailable()) {
+                trayIcon = new YajHFCTrayIcon(this, recvTableModel, actSend, actReconnect, null, actExit, null, actAbout);
+            }
+        } else {
+            if (trayIcon != null) {
+                trayIcon.dispose();
+                trayIcon = null;
+            }
+        }
     }
     
     void invokeLogoutThreaded() {
@@ -1243,6 +1307,9 @@ public final class mainwin extends JFrame {
             
             setActReconnectState(true);
             this.setTitle("Disconnected - " + utils.AppName);
+            if (trayIcon != null) {
+                trayIcon.setConnectedState(false);
+            }
             log.fine("Successfully logged out");
         } catch (Exception e) {
             log.log(Level.WARNING, "Error logging out:", e);
@@ -1289,7 +1356,7 @@ public final class mainwin extends JFrame {
         this.setEnabled(false);
         tablePanel.showIndeterminateProgress(_("Logging in..."));
         
-        new LoginThread((Boolean)actAdminMode.getValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY), loginAction).start();
+        new LoginThread((Boolean)actAdminMode.getValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY), loginAction).start();
         
     }
     
@@ -1415,7 +1482,17 @@ public final class mainwin extends JFrame {
         return textStatus;
     }
 
-
+    public void bringToFront() {
+        if (!isVisible()) {
+            setVisible(true);
+        }
+        
+        int state = getExtendedState();
+        if ((state & mainwin.ICONIFIED) != 0) 
+            setExtendedState(state & (~mainwin.ICONIFIED));
+        toFront();
+    }
+    
     private UnReadMyTableModel getRecvTableModel() {
         if (recvTableModel == null) {
             recvTableModel = new UnReadMyTableModel(PersistentReadState.getCurrent());
@@ -1425,10 +1502,7 @@ public final class mainwin extends JFrame {
                         return;
                     
                     if ((myopts.newFaxAction & utils.NEWFAX_TOFRONT) != 0) {
-                        int state = getExtendedState();
-                        if ((state & mainwin.ICONIFIED) != 0) 
-                            setExtendedState(state & (~mainwin.ICONIFIED));
-                        toFront();
+                        bringToFront();
                     }
                     if ((myopts.newFaxAction & utils.NEWFAX_BEEP) != 0) {
                         Toolkit.getDefaultToolkit().beep();
@@ -1455,7 +1529,11 @@ public final class mainwin extends JFrame {
                         }
                         clientManager.endServerTransaction();
                     }
-                };
+                }
+                
+                public void readStateChanged() {
+                    // NOP
+                }
             });
         }
         return recvTableModel;
@@ -1582,6 +1660,7 @@ public final class mainwin extends JFrame {
             menuExtras.add(new JMenuItem(actPrintTable));
             menuExtras.addSeparator();
             menuExtras.add(new JMenuItem(actOptions));
+            menuExtras.add(new JMenuItem(actEditToolbar));
             menuExtras.addSeparator();
             menuExtras.add(new JMenuItem(actReconnect));
             menuExtras.add(new ActionJCheckBoxMenuItem(actAdminMode));
@@ -1800,7 +1879,7 @@ public final class mainwin extends JFrame {
             actResume.setEnabled(suspResumeState);
             actClipCopy.setEnabled(showState);
 
-            actFaxRead.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, faxReadSelected);
+            actFaxRead.putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, faxReadSelected);
         }
     }
 
@@ -2162,8 +2241,11 @@ public final class mainwin extends JFrame {
                 SwingUtilities.invokeLater(new Runnable() {
                    public void run() {
                        mainwin.this.setTitle(myopts.user + "@" + myopts.host + (clientManager.isAdminMode() ? " (admin)" : "") + " - " +utils.AppName);
+                       if (trayIcon != null) {
+                           trayIcon.setConnectedState(true);
+                       }
                        
-                       actAdminMode.putValue(ActionJCheckBoxMenuItem.SELECTED_PROPERTY, clientManager.isAdminMode());
+                       actAdminMode.putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, clientManager.isAdminMode());
                        if (clientManager.isAdminMode()) {
                            // A reddish gray
                            Color defStatusBackground = getDefStatusBackground();
@@ -2188,6 +2270,7 @@ public final class mainwin extends JFrame {
                        
                        sendReady = SendReadyState.Ready;
                        mainwin.this.setEnabled(true);
+                       
                        if (utils.debugMode) {
                            log.info("Finished init work!");
                        }

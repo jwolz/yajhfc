@@ -46,12 +46,15 @@ public abstract class AbstractConnectionSettings {
     }
     
 
-    protected final Map<String,Field> availableFields = new TreeMap<String,Field>();
+    protected final Map<String,SettingField> availableFields = new TreeMap<String,SettingField>();
     
     public AbstractConnectionSettings() {
         readAvailableFields();
     }
 
+    /**
+     * Reads all available *public* fields using reflection.
+     */
     protected void readAvailableFields() {
         availableFields.clear();
         
@@ -61,16 +64,17 @@ public abstract class AbstractConnectionSettings {
             if (Modifier.isFinal(f.getModifiers()))
                 continue;
             
-            availableFields.put(f.getName(), f);
+            availableFields.put(f.getName(), new ReflectionField(f));
         }     
     }
+
     
     public Set<String> getAvailableFields() {
         return availableFields.keySet();
     }
     
     public void setField(String fieldName, Object value) throws IllegalArgumentException, IllegalAccessException {
-        Field f = availableFields.get(fieldName);
+        SettingField f = availableFields.get(fieldName);
         if (f == null) {
             throw new IllegalArgumentException("Field " + fieldName + " not found.");
         }
@@ -78,7 +82,7 @@ public abstract class AbstractConnectionSettings {
     }
     
     public Object getField(String fieldName) throws IllegalArgumentException, IllegalAccessException {
-        Field f = availableFields.get(fieldName);
+        SettingField f = availableFields.get(fieldName);
         if (f == null) {
             throw new IllegalArgumentException("Field " + fieldName + " not found.");
         }
@@ -90,7 +94,7 @@ public abstract class AbstractConnectionSettings {
             return;
         
 
-        for (Field f : availableFields.values()) {
+        for (SettingField f : availableFields.values()) {
             try {
                 f.set(this, f.get(other));
             } catch (Exception e) {
@@ -101,7 +105,7 @@ public abstract class AbstractConnectionSettings {
     
     public String saveToString() {
         StringBuilder builder = new StringBuilder();
-        for (Field f : availableFields.values()) {            
+        for (SettingField f : availableFields.values()) {            
             try {
                 String val;
                 val = f.get(this).toString();
@@ -131,7 +135,7 @@ public abstract class AbstractConnectionSettings {
             String fieldName = line.substring(0, pos);
             String value = utils.unEscapeChars(line.substring(pos+1), separator, escapeChar);
             try {
-                Field f = availableFields.get(fieldName);
+                SettingField f = availableFields.get(fieldName);
                 if (f == null) {
                     log.warning("Field not found: " + fieldName);
                     continue;
@@ -150,5 +154,52 @@ public abstract class AbstractConnectionSettings {
                 log.log(Level.WARNING, "Exception loading fields:", e);
             }
         }
+    }
+    
+    public interface SettingField {
+        public abstract String getName();
+        public abstract Object get(AbstractConnectionSettings instance);
+        public abstract void set(AbstractConnectionSettings instance, Object value);
+        public abstract Class<?> getType();
+    }
+    
+    protected static class ReflectionField implements SettingField {
+        protected final Field field;
+        
+        public String getName() {
+            return field.getName();
+        }
+
+        public Class<?> getType() {
+            return field.getType();
+        }
+
+        public Object get(AbstractConnectionSettings instance) {
+            try {
+                return field.get(instance);
+            } catch (IllegalArgumentException e) {
+                log.log(Level.WARNING, "Could not read value:", e);
+                return null;
+            } catch (IllegalAccessException e) {
+                log.log(Level.WARNING, "Could not read value:", e);
+                return null;
+            }
+        }
+
+        public void set(AbstractConnectionSettings instance, Object value) {
+            try {
+                field.set(instance, value);
+            } catch (IllegalArgumentException e) {
+                log.log(Level.WARNING, "Could not write value:", e);
+            } catch (IllegalAccessException e) {
+                log.log(Level.WARNING, "Could not write value:", e);
+            }
+        }
+
+        public ReflectionField(Field field) {
+            super();
+            this.field = field;
+        }
+
     }
 }

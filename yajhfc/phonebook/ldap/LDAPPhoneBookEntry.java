@@ -23,25 +23,20 @@ import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.SearchResult;
 
-import yajhfc.phonebook.PhoneBookEntry;
+import yajhfc.phonebook.PBEntryField;
+import yajhfc.phonebook.SimplePhoneBookEntry;
 
-public class LDAPPhoneBookEntry extends PhoneBookEntry {
-
-    private String[] data;
-    //private LDAPPhoneBook parent;
+public class LDAPPhoneBookEntry extends SimplePhoneBookEntry {
     
     LDAPPhoneBookEntry(LDAPPhoneBook parent, SearchResult res){
-        //this.parent = parent;
         
         Attributes attrs = res.getAttributes();
         LDAPSettings settings = parent.settings;
-        
-        data = new String[LDAPSettings.FIELD_COUNT];
-        
-        for (int i=0; i < LDAPSettings.FIELD_COUNT; i++) {
-            String attrname = settings.getMappingFor(i);
+              
+        for (PBEntryField field : PBEntryField.values()) {
+            String attrname = settings.getMappingFor(field);
             if (attrname == null) {
-                data[i] = "";
+                setFieldUndirty(field, "");
             } else {
                 Attribute a = attrs.get(attrname);
                 if (a != null) {
@@ -52,12 +47,12 @@ public class LDAPPhoneBookEntry extends PhoneBookEntry {
                         //NOP
                     }
                     if (val != null) {
-                        data[i] = val.toString().trim();
+                        setFieldUndirty(field, val.toString().trim());
                     } else {
-                        data[i] = "";
+                        setFieldUndirty(field, "");
                     }
                 } else {
-                    data[i] = "";
+                    setFieldUndirty(field, "");
                 }
             }
         }
@@ -75,75 +70,8 @@ public class LDAPPhoneBookEntry extends PhoneBookEntry {
     }
 
     @Override
-    public String getComment() {
-        return data[LDAPSettings.COMMENT_FIELD];
-    }
-
-    @Override
-    public String getCompany() {
-        return data[LDAPSettings.COMPANY_FIELD];
-    }
-
-    @Override
-    public String getFaxNumber() {
-        return data[LDAPSettings.FAXNUMBER_FIELD];
-    }
-
-    @Override
-    public String getGivenName() {
-        return data[LDAPSettings.GIVENNAME_FIELD];
-    }
-
-    @Override
-    public String getLocation() {
-        return data[LDAPSettings.LOCATION_FIELD];
-    }
-
-    @Override
-    public String getName() {
-        return data[LDAPSettings.SURNAME_FIELD];
-    }
-
-    @Override
-    public String getTitle() {
-        return data[LDAPSettings.TITLE_FIELD];
-    }
-
-    @Override
-    public String getVoiceNumber() {
-        return data[LDAPSettings.VOICENUMBER_FIELD];
-    }
-
-    @Override
-    public void setComment(String newComment) {
-    }
-
-    @Override
-    public void setCompany(String newCompany) {
-    }
-
-    @Override
-    public void setFaxNumber(String newFaxNumber) {
-    }
-
-    @Override
-    public void setGivenName(String newGivenName) {
-    }
-
-    @Override
-    public void setLocation(String newLocation) {
-    }
-
-    @Override
-    public void setName(String newName) {
-    }
-
-    @Override
-    public void setTitle(String newTitle) {
-    }
-
-    @Override
-    public void setVoiceNumber(String newVoiceNumber) {
+    public void setField(PBEntryField field, String value) {
+        //NOP
     }
 
 }

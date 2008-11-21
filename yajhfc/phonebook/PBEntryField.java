@@ -23,19 +23,23 @@ import yajhfc.filters.FilterKey;
 import yajhfc.filters.FilterKeyList;
 
 public enum PBEntryField implements FilterKey {
-    Name(utils._("Name")),
-    GivenName(utils._("Given name")),
-    Title(utils._("Title")),
-    Company(utils._("Company")),
-    Location(utils._("Location")),
-    VoiceNumber(utils._("Voice number")),
-    FaxNumber(utils._("Fax number")),
-    Comment(utils._("Comments"))
+    GivenName(utils._("Given name"), "givenname", true),
+    Name(utils._("Name"), "surname", true),
+    Title(utils._("Title"), "title", true),
+    Company(utils._("Company"), "company", true),
+    Location(utils._("Location"), "location", false),
+    VoiceNumber(utils._("Voice number"), "voicenumber", false),
+    FaxNumber(utils._("Fax number"), "faxnumber", false),
+    Comment(utils._("Comments"), "comment", false)
     ;
     
-    private String desc;
-    private PBEntryField(String desc) {
+    private final String desc;
+    private final String key;
+    private final boolean shortLength;
+    private PBEntryField(String desc, String key, boolean shortLength) {
         this.desc = desc;
+        this.key = key;
+        this.shortLength = shortLength;
     }
     
     public String getDescription() {
@@ -46,6 +50,18 @@ public enum PBEntryField implements FilterKey {
         return desc;
     }
 
+    public String getKey() {
+        return key;
+    }
+    
+    /**
+     * Returns if the field's value has a short length (for automatic GUI creation)
+     * @return
+     */
+    public boolean isShortLength() {
+        return shortLength;
+    }
+    
     public Class<?> getDataType() {
         return String.class;
     }

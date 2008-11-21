@@ -43,9 +43,11 @@ import yajhfc.PluginManager;
 import yajhfc.utils;
 import yajhfc.phonebook.AbstractConnectionSettings;
 import yajhfc.phonebook.GeneralConnectionSettings;
+import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.PhoneBook;
 import yajhfc.phonebook.PhoneBookEntry;
 import yajhfc.phonebook.PhoneBookException;
+import yajhfc.phonebook.GeneralConnectionSettings.PBEntrySettingsField;
 
 public class JDBCPhoneBook extends PhoneBook {
     private static final Logger log = Logger.getLogger(JDBCPhoneBook.class.getName());
@@ -58,14 +60,19 @@ public class JDBCPhoneBook extends PhoneBook {
     
     protected static final Map<String,ConnectionDialog.FieldMapEntry> fieldNameMap = new HashMap<String,ConnectionDialog.FieldMapEntry>(); 
     static {
-        fieldNameMap.put("givenName", new ConnectionDialog.FieldMapEntry(utils._("Given name:"),0));
-        fieldNameMap.put("name", new ConnectionDialog.FieldMapEntry(utils._("Name:"),1));
-        fieldNameMap.put("title", new ConnectionDialog.FieldMapEntry(utils. _("Title:"),2));
-        fieldNameMap.put("company", new ConnectionDialog.FieldMapEntry(utils._("Company:"),3));
-        fieldNameMap.put("location", new ConnectionDialog.FieldMapEntry(utils._("Location:"),4));
-        fieldNameMap.put("faxNumber", new ConnectionDialog.FieldMapEntry(utils._("Fax number:"),5));
-        fieldNameMap.put("voiceNumber", new ConnectionDialog.FieldMapEntry(utils._("Voice number:"),6));
-        fieldNameMap.put("comment", new ConnectionDialog.FieldMapEntry(utils._("Comments:"),7));
+        PBEntrySettingsField[] fields = GeneralConnectionSettings.entryFields;
+        for (int i = 0; i < fields.length; i++) {
+            PBEntrySettingsField field = fields[i];
+            fieldNameMap.put(field.getName(), new ConnectionDialog.FieldMapEntry(field.getField().getDescription()+":", i));
+        }
+//        fieldNameMap.put("givenName", new ConnectionDialog.FieldMapEntry(utils._("Given name:"),0));
+//        fieldNameMap.put("name", new ConnectionDialog.FieldMapEntry(utils._("Name:"),1));
+//        fieldNameMap.put("title", new ConnectionDialog.FieldMapEntry(utils. _("Title:"),2));
+//        fieldNameMap.put("company", new ConnectionDialog.FieldMapEntry(utils._("Company:"),3));
+//        fieldNameMap.put("location", new ConnectionDialog.FieldMapEntry(utils._("Location:"),4));
+//        fieldNameMap.put("faxNumber", new ConnectionDialog.FieldMapEntry(utils._("Fax number:"),5));
+//        fieldNameMap.put("voiceNumber", new ConnectionDialog.FieldMapEntry(utils._("Voice number:"),6));
+//        fieldNameMap.put("comment", new ConnectionDialog.FieldMapEntry(utils._("Comments:"),7));
         
         fieldNameMap.put("readOnly", new ConnectionDialog.FieldMapEntry(utils._("Open as read only"),1,false,Boolean.class));
         fieldNameMap.put("displayCaption", new ConnectionDialog.FieldMapEntry(utils._("Phonebook name to display:"),0,false,String.class));
@@ -110,50 +117,22 @@ public class JDBCPhoneBook extends PhoneBook {
     }
 
     private boolean isDataField(String fieldName) {
-        return
-        (fieldName.equalsIgnoreCase(settings.name)) ||
-        (fieldName.equalsIgnoreCase(settings.givenName)) ||
-        (fieldName.equalsIgnoreCase(settings.comment)) ||
-        (fieldName.equalsIgnoreCase(settings.company)) ||
-        (fieldName.equalsIgnoreCase(settings.faxNumber)) ||
-        (fieldName.equalsIgnoreCase(settings.location)) ||
-        (fieldName.equalsIgnoreCase(settings.title)) ||
-        (fieldName.equalsIgnoreCase(settings.voiceNumber));
+        for (PBEntryField field : PBEntryField.values()) {
+            if (fieldName.equalsIgnoreCase(settings.getMappingFor(field))) {
+                return true;
+            }
+        }
+        return false;
     }
     
     private int appendFieldList(StringBuilder s, String suffix, String separator) {
         int fieldCount = 0;
-        if (!ConnectionSettings.isNoField(settings.name)) {
-            s.append(settings.name).append(suffix).append(separator);
-            fieldCount++;
-        }
-        if (!ConnectionSettings.isNoField(settings.givenName)) {
-            s.append(settings.givenName).append(suffix).append(separator);
-            fieldCount++;
-        }
-        if (!ConnectionSettings.isNoField(settings.company)) {
-            s.append(settings.company).append(suffix).append(separator);
-            fieldCount++;
-        }
-        if (!ConnectionSettings.isNoField(settings.location)) {
-            s.append(settings.location).append(suffix).append(separator);
-            fieldCount++;
-        }
-        if (!ConnectionSettings.isNoField(settings.title)) {
-            s.append(settings.title).append(suffix).append(separator);
-            fieldCount++;
-        }
-        if (!ConnectionSettings.isNoField(settings.faxNumber)) {
-            s.append(settings.faxNumber).append(suffix).append(separator);
-            fieldCount++;
-        }
-        if (!ConnectionSettings.isNoField(settings.voiceNumber)) {
-            s.append(settings.voiceNumber).append(suffix).append(separator);
-            fieldCount++;
-        }
-        if (!ConnectionSettings.isNoField(settings.comment)) {
-            s.append(settings.comment).append(suffix).append(separator);
-            fieldCount++;
+        for (PBEntryField field : PBEntryField.values()) {
+            String fieldName = settings.getMappingFor(field);
+            if (!ConnectionSettings.isNoField(fieldName)) {
+                s.append(fieldName).append(suffix).append(separator);
+                fieldCount++;
+            }
         }
         s.setLength(s.length()-separator.length()); // Strip last separator
         
@@ -276,8 +255,8 @@ public class JDBCPhoneBook extends PhoneBook {
             if (rowId.size() == 0) {
                 log.info("No key found, using all data fields as replacement");
                 
-                for (int i = 0; i < GeneralConnectionSettings.FIELD_COUNT; i++) {
-                    String mapping = settings.getMappingFor(i);
+                for (PBEntryField field : PBEntryField.values()) {
+                    String mapping = settings.getMappingFor(field);
                     if (!AbstractConnectionSettings.isNoField(mapping)) {
                         DBKey key = new DBKey(mapping);
                         key.isDataColumn = true;
@@ -465,29 +444,9 @@ public class JDBCPhoneBook extends PhoneBook {
         }
     }
     
-    public boolean isFieldNameAvailable() {
-        return (!ConnectionSettings.isNoField(settings.name));
-    }
-    public boolean isFieldGivenNameAvailable() {
-        return (!ConnectionSettings.isNoField(settings.givenName));
-    }
-    public boolean isFieldTitleAvailable() {
-        return (!ConnectionSettings.isNoField(settings.title));
-    }
-    public boolean isFieldCompanyAvailable() {
-        return (!ConnectionSettings.isNoField(settings.company));
-    }
-    public boolean isFieldLocationAvailable() {
-        return (!ConnectionSettings.isNoField(settings.location));
-    }
-    public boolean isFieldVoiceNumberAvailable() {
-        return (!ConnectionSettings.isNoField(settings.voiceNumber));
-    }
-    public boolean isFieldFaxNumberAvailable() {
-        return (!ConnectionSettings.isNoField(settings.faxNumber));
-    }
-    public boolean isFieldCommentAvailable() {
-        return (!ConnectionSettings.isNoField(settings.comment));
+    @Override
+    public boolean isFieldAvailable(PBEntryField field) {
+        return (!ConnectionSettings.isNoField(settings.getMappingFor(field)));
     }
     
     static class DBKey {

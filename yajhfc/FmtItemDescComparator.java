@@ -1,7 +1,6 @@
-package yajhfc;
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005 Jonas Wolz
+ * Copyright (C) 2005-2008 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,19 +16,14 @@ package yajhfc;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+package yajhfc;
 
-import java.util.EventListener;
+import java.util.Comparator;
 
-public interface UnreadItemListener extends EventListener {
-    /**
-     * Called when new, unread faxes are available
-     * @param evt
-     */
-    public void newItemsAvailable(UnreadItemEvent evt);
+public class FmtItemDescComparator implements Comparator<FmtItem> {
+    public int compare(FmtItem o1, FmtItem o2) {
+        return o1.desc.compareTo(o2.desc);
+    }        
     
-    /**
-     * Called when the read state of a job possibly changed for any reason. 
-     * Might be called quite often.
-     */
-    public void readStateChanged();
+    public static final FmtItemDescComparator globalInstance = new FmtItemDescComparator();
 }

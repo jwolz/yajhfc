@@ -18,6 +18,7 @@
  */
 package yajhfc.send;
 
+import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.PhoneBookEntry;
 
 class NumberTFLItem extends TFLItem {
@@ -35,18 +36,18 @@ class NumberTFLItem extends TFLItem {
     }
     
     public void loadFromPBE(PhoneBookEntry pbe) {
-        faxNumber = pbe.getFaxNumber();
+        faxNumber = pbe.getField(PBEntryField.FaxNumber);
         
-        company = pbe.getCompany();
-        location = pbe.getLocation();
-        voiceNumber = pbe.getVoiceNumber();
+        company = pbe.getField(PBEntryField.Company);
+        location = pbe.getField(PBEntryField.Location);
+        voiceNumber = pbe.getField(PBEntryField.VoiceNumber);
         
         StringBuilder nameBuilder = new StringBuilder();
-        if (pbe.getTitle().length() > 0)
-            nameBuilder.append(pbe.getTitle()).append(' ');
-        if (pbe.getGivenName().length() > 0)
-            nameBuilder.append(pbe.getGivenName()).append(' ');
-        nameBuilder.append(pbe.getName());
+        if (pbe.getField(PBEntryField.Title).length() > 0)
+            nameBuilder.append(pbe.getField(PBEntryField.Title)).append(' ');
+        if (pbe.getField(PBEntryField.GivenName).length() > 0)
+            nameBuilder.append(pbe.getField(PBEntryField.GivenName)).append(' ');
+        nameBuilder.append(pbe.getField(PBEntryField.Name));
         name = nameBuilder.toString();
     }
     

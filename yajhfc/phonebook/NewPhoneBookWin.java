@@ -38,7 +38,9 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -71,6 +73,7 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.text.JTextComponent;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
@@ -86,6 +89,8 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
 
     private static final Logger log = Logger.getLogger(NewPhoneBookWin.class.getName());
     
+    private static final String PBFIELD_PROP = "YajHFC-PBEntryfield";
+    
     JSplitPane splitPane;
     JTree phoneBookTree;
     PhoneBookTreeModel treeModel;
@@ -94,8 +99,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     JTextField textDescriptor;
     JButton buttonBrowse;
     
-    JTextField textSurname, textGivenname, textTitle, textCompany, textLocation;
-    JTextField textVoicenumber, textFaxnumber;
+    Map<PBEntryField,JTextComponent> entryFields = new EnumMap<PBEntryField, JTextComponent>(PBEntryField.class);
     JScrollPane scrollComment;
     JTextArea textComment;
     
@@ -124,55 +128,22 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     public void writeToTextFields(PhoneBook phoneBook, PhoneBookEntry pb) {
         
         if (pb == null || phoneBook == null) {
-            textSurname.setText("");
-            textGivenname.setText("");
-            textTitle.setText("");
-            textCompany.setText("");
-            textLocation.setText("");
-            textVoicenumber.setText("");
-            textFaxnumber.setText("");
-            textComment.setText("");
-            
-            textSurname.setEnabled(false);
-            textGivenname.setEnabled(false);
-            textTitle.setEnabled(false);
-            textCompany.setEnabled(false);
-            textLocation.setEnabled(false);
-            textVoicenumber.setEnabled(false);
-            textFaxnumber.setEnabled(false);
-            
+            for (JTextComponent comp : entryFields.values()) {
+                comp.setText("");
+                comp.setEnabled(false);
+            }
             scrollComment.setEnabled(false);
-            textComment.setEnabled(false);
         } else {
-            textSurname.setText(pb.getName());
-            textGivenname.setText(pb.getGivenName());
-            textTitle.setText(pb.getTitle());
-            textCompany.setText(pb.getCompany());
-            textLocation.setText(pb.getLocation());
-            textVoicenumber.setText(pb.getVoiceNumber());
-            textFaxnumber.setText(pb.getFaxNumber());
-            textComment.setText(pb.getComment());
-            textComment.setCaretPosition(0);
-            
-            textSurname.setEnabled(phoneBook.isFieldNameAvailable());
-            textGivenname.setEnabled(phoneBook.isFieldGivenNameAvailable());
-            textTitle.setEnabled(phoneBook.isFieldTitleAvailable());
-            textCompany.setEnabled(phoneBook.isFieldCompanyAvailable());
-            textLocation.setEnabled(phoneBook.isFieldLocationAvailable());
-            textVoicenumber.setEnabled(phoneBook.isFieldVoiceNumberAvailable());
-            textFaxnumber.setEnabled(phoneBook.isFieldFaxNumberAvailable());
-            scrollComment.setEnabled(phoneBook.isFieldCommentAvailable());
-            textComment.setEnabled(phoneBook.isFieldCommentAvailable());
-            
             boolean editable = !phoneBook.isReadOnly();
-            textSurname.setEditable(editable);
-            textGivenname.setEditable(editable);
-            textTitle.setEditable(editable);
-            textCompany.setEditable(editable);
-            textLocation.setEditable(editable);
-            textVoicenumber.setEditable(editable);
-            textFaxnumber.setEditable(editable);
-            textComment.setEditable(editable);
+            for (Map.Entry<PBEntryField, JTextComponent> entry : entryFields.entrySet()) {
+                JTextComponent comp = entry.getValue();
+                PBEntryField field = entry.getKey();
+                
+                comp.setText(pb.getField(field));
+                comp.setEnabled(phoneBook.isFieldAvailable(field));
+                comp.setEditable(editable);
+            }
+            scrollComment.setEnabled(textComment.isEnabled());
         }
     }
     
@@ -180,24 +151,24 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         if (pb == null)
            return; 
         
-        pb.setName(textSurname.getText());
-        pb.setGivenName(textGivenname.getText());
-        pb.setTitle(textTitle.getText());
-        pb.setCompany(textCompany.getText());
-        pb.setLocation(textLocation.getText());
-        pb.setVoiceNumber(textVoicenumber.getText());
-        pb.setFaxNumber(textFaxnumber.getText());
-        pb.setComment(textComment.getText());
-        
+        for (Map.Entry<PBEntryField, JTextComponent> entry : entryFields.entrySet()) {
+            JTextComponent comp = entry.getValue();
+            PBEntryField field = entry.getKey();
+            
+            pb.setField(field, comp.getText());
+        }
+
         if (updateOnly)
             pb.updateDisplay();
         else
             pb.commit();
     }
     
-    private void addWithLabel(JPanel pane, JComponent comp, String text, String layout) {
-        TableLayoutConstraints c = new TableLayoutConstraints(layout);
-        
+//    private void addWithLabel(JPanel pane, JComponent comp, String text, String layout) {
+//        addWithLabel(pane, comp, text, new TableLayoutConstraints(layout));
+//    }
+    
+    private void addWithLabel(JPanel pane, JComponent comp, String text, TableLayoutConstraints c) {
         pane.add(comp, c);
         
         JLabel lbl = new JLabel(text);
@@ -209,24 +180,37 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     }
     
     
-    private JTextField createEntryTextField() {
+    private JTextField createEntryTextField(PBEntryField field) {
         JTextField res = new JTextField();
         res.addFocusListener(entryListener);
         res.addActionListener(entryListener);
         res.addMouseListener(getDefClPop());
+        
+        entryFields.put(field, res);
+        res.putClientProperty(PBFIELD_PROP, field);
         return res;
     }
     
     private JPanel getRightPane() {
         if (rightPane == null) {
+            int longFields = 0;
+            int shortFields = 0;
+            for (PBEntryField field : PBEntryField.values()) {
+                if (field.isShortLength()) {
+                    shortFields++;
+                } else {
+                    longFields++;
+                }
+            }
+            final int rowCount = 5 + 2 * (longFields + (shortFields+1)/2);
             double[][] dLay = {
                     {border, 0.5, border, TableLayout.FILL, border},
-                    new double[17]
+                    new double[rowCount]
             };
-            final double rowH = 1.0 / (double)(dLay[1].length+3);
-            Arrays.fill(dLay[1], 1, dLay[1].length - 2, rowH);
-            dLay[1][0] = dLay[1][dLay[1].length - 1] = border;
-            dLay[1][dLay[1].length - 2] = TableLayout.FILL;
+            final double rowH = 1.0 / (double)(rowCount+3);
+            Arrays.fill(dLay[1], 1, rowCount - 2, rowH);
+            dLay[1][0] = dLay[1][rowCount - 1] = border;
+            dLay[1][rowCount - 2] = TableLayout.FILL;
             
             rightPane = new JPanel(new TableLayout(dLay));
             
@@ -254,29 +238,40 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             
             entryListener = new EntryTextFieldListener();
             
-            textSurname = createEntryTextField();
-            textGivenname = createEntryTextField();
-            textCompany = createEntryTextField(); 
-            textLocation = createEntryTextField();
-            textVoicenumber = createEntryTextField();
-            textFaxnumber = createEntryTextField();
-            textTitle = createEntryTextField();
+            int row = 5;
+            int col = 1;
+            for (PBEntryField field : PBEntryField.values()) {
+                if (field != PBEntryField.Comment) {
+                    JTextField textField = createEntryTextField(field);
+                    TableLayoutConstraints layout;
+                    if (field.isShortLength()) {
+                        layout = new TableLayoutConstraints(col, row, col, row, TableLayoutConstraints.FULL, TableLayoutConstraints.CENTER);
+                        if (col == 1) {
+                            col = 3;
+                        } else {
+                            row += 2;
+                            col  = 1;
+                        }
+                    } else {
+                        layout = new TableLayoutConstraints(1, row, 3, row, TableLayoutConstraints.FULL, TableLayoutConstraints.CENTER);
+                        col  = 1;
+                        row += 2;
+                    }
+                    addWithLabel(rightPane, textField, field.getDescription()+":", layout);
+                }
+            }
             
             textComment = new JTextArea();
             textComment.setWrapStyleWord(true);
             textComment.setLineWrap(true);
             textComment.addFocusListener(entryListener);
             textComment.addMouseListener(getDefClPop());
+            entryFields.put(PBEntryField.Comment, textComment);
+            textComment.putClientProperty(PBFIELD_PROP, PBEntryField.Comment);
+            
             scrollComment = new JScrollPane(textComment, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
             
-            addWithLabel(rightPane, textGivenname, utils._("Given name:"), "1, 5, F, C");
-            addWithLabel(rightPane, textSurname, utils._("Surname:"), "3, 5, F, C");
-            addWithLabel(rightPane, textCompany, utils._("Company:"), "1, 7, F, C");
-            addWithLabel(rightPane, textTitle, utils._("Title:"), "3, 7, F, C");
-            addWithLabel(rightPane, textLocation, utils._("Location:"), "1, 9, 3, 9, F, C");
-            addWithLabel(rightPane, textVoicenumber, utils._("Voice number:"),  "1, 11, 3, 11, F, C");
-            addWithLabel(rightPane, textFaxnumber, utils._("Fax number:"), "1, 13, 3, 13, F, C");
-            addWithLabel(rightPane, scrollComment, utils._("Comments:"), "1, 15, 3, 15");
+            addWithLabel(rightPane, scrollComment, utils._("Comments:"), new TableLayoutConstraints(1,row,3,row,TableLayoutConstraints.FULL,TableLayoutConstraints.FULL));
             
         }
         return rightPane;

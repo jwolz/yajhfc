@@ -34,57 +34,13 @@ import yajhfc.filters.FilterableObject;
  */
 public abstract class PhoneBookEntry implements Comparable<PhoneBookEntry>, FilterableObject {
 
-    public String getPBField(PBEntryField field) {
-        switch (field) {
-        case Name:
-            return getName();
-        case GivenName:
-            return getGivenName();
-        case Title:
-            return getTitle();
-        case Company:
-            return getCompany();
-        case Location:
-            return getLocation();
-        case VoiceNumber:
-            return getVoiceNumber();
-        case FaxNumber:
-            return getFaxNumber();
-        case Comment:
-            return getComment();
-        default:
-            return null;
-        }
-    }
+    public abstract String getField(PBEntryField field);
+    public abstract void setField(PBEntryField field, String value);
     
     public Object getFilterData(Object key) {
-        return getPBField((PBEntryField)key);
+        return getField((PBEntryField)key);
     }
     
-    public abstract String getName();
-    public abstract void setName(String newName);
-
-    public abstract String getGivenName();
-    public abstract void setGivenName(String newGivenName);
-
-    public abstract String getTitle();
-    public abstract void setTitle(String newTitle);
-
-    public abstract String getCompany();
-    public abstract void setCompany(String newCompany);
-
-    public abstract String getLocation();
-    public abstract void setLocation(String newLocation);
-
-    public abstract String getVoiceNumber();
-    public abstract void setVoiceNumber(String newVoiceNumber);
-
-    public abstract String getFaxNumber();
-    public abstract void setFaxNumber(String newFaxNumber);
-
-    public abstract String getComment();
-    public abstract void setComment(String newComment);
-
     /**
      * Deletes this entry from the phonebook
      */
@@ -103,19 +59,14 @@ public abstract class PhoneBookEntry implements Comparable<PhoneBookEntry>, Filt
     }
 
     public void copyFrom(PhoneBookEntry other) {
-        setName(other.getName());
-        setGivenName(other.getGivenName());
-        setTitle(other.getTitle());
-        setCompany(other.getCompany());
-        setLocation(other.getLocation());
-        setVoiceNumber(other.getVoiceNumber());
-        setFaxNumber(other.getFaxNumber());
-        setComment(other.getComment());
+        for (PBEntryField field : PBEntryField.values()) {
+            setField(field, other.getField(field));
+        }
     }
 
     public String toString() {
-        String surname = getName();
-        String givenname = getGivenName();
+        String surname = getField(PBEntryField.Name);
+        String givenname = getField(PBEntryField.GivenName);
 
         if (surname != null && surname.length() > 0) {
             if (givenname != null && givenname.length() > 0)
@@ -127,7 +78,7 @@ public abstract class PhoneBookEntry implements Comparable<PhoneBookEntry>, Filt
             if (givenname != null && givenname.length() > 0) {
                 return givenname;
             } else {
-                String company = getCompany();
+                String company = getField(PBEntryField.Company);
                 if (company != null && company.length() > 0) {
                     return company;
                 } else {
@@ -143,8 +94,8 @@ public abstract class PhoneBookEntry implements Comparable<PhoneBookEntry>, Filt
     };
     public int compareTo(PhoneBookEntry o) {
         for (PBEntryField entry : sortOrder) {
-            String val1 = getPBField(entry);
-            String val2 = o.getPBField(entry);
+            String val1 = getField(entry);
+            String val2 = o.getField(entry);
             int cmp;
             if (val1 != null) {
                 if (val2 != null) {

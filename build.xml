@@ -88,6 +88,16 @@
 			</classpath>
 		</javac>
 
+		<!-- the parts of the source code only Java 6 compatible -->
+		<javac srcdir="${src}/java6-src" includes="yajhfc/**/*.java" destdir="${build}" source="1.5" target="1.6" encoding="iso-8859-1" debug="true" debuglevel="lines,source">
+			<classpath>
+				<pathelement path="${classpath}"/>
+				<pathelement location="${gnu.hylafax.classFileLocation}"/>
+				<pathelement location="${jar-extra}"/>
+				<pathelement location="${src}"/>
+			</classpath>
+		</javac>
+
 	</target>
 
 	<!--
