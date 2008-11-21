@@ -1,7 +1,6 @@
-package yajhfc;
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005-2006 Jonas Wolz
+ * Copyright (C) 2005-2008 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,13 +16,18 @@ package yajhfc;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+package yajhfc;
 
 import java.beans.PropertyChangeListener;
 
 import javax.swing.Action;
-import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JToggleButton;
 
-public class ActionJCheckBoxMenuItem extends JCheckBoxMenuItem {
+/**
+ * @author jonas
+ *
+ */
+public class ActionToggleButton extends JToggleButton {
     
     @Override
     protected PropertyChangeListener createActionPropertyChangeListener(Action a) {
@@ -39,12 +43,11 @@ public class ActionJCheckBoxMenuItem extends JCheckBoxMenuItem {
         super.configurePropertiesFromAction(a);
     }
     
-    public ActionJCheckBoxMenuItem() {
+    public ActionToggleButton() {
         super();
     }
     
-    public ActionJCheckBoxMenuItem(Action a) {
+    public ActionToggleButton(Action a) {
         super(a);
     }
-    
 }

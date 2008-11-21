@@ -22,6 +22,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.SimplePhoneBookEntry;
 import yajhfc.utils;
 
@@ -56,14 +57,9 @@ public class JDBCPhoneBookEntry extends SimplePhoneBookEntry {
     }
     void readFromCurrentDataset(ResultSet rs) throws SQLException {        
         ConnectionSettings cs = parent.settings;
-        surname = fetchValue(cs.name, rs);
-        givenname = fetchValue(cs.givenName, rs);
-        company = fetchValue(cs.company, rs);
-        title = fetchValue(cs.title, rs);
-        location = fetchValue(cs.location, rs);
-        comment = fetchValue(cs.comment, rs);
-        voicenumber = fetchValue(cs.voiceNumber, rs);
-        faxnumber = fetchValue(cs.faxNumber, rs);
+        for (PBEntryField field : PBEntryField.values()) {
+            setFieldUndirty(field, fetchValue(cs.getMappingFor(field), rs));
+        }
         
         readKeys(rs);
         entryStatus = ENTRY_UNCHANGED;
@@ -74,96 +70,26 @@ public class JDBCPhoneBookEntry extends SimplePhoneBookEntry {
             rowKeys[i] = rs.getObject(parent.rowId.get(i).columnName);
         }
     }
-    /*
-    private void updateResultSet(ResultSet rs) throws SQLException {
-        ConnectionSettings settings = parent.settings;
-
-        if (!ConnectionSettings.isNoField(settings.name)) {
-            rs.updateString(settings.name, surname);
-        }
-        if (!ConnectionSettings.isNoField(settings.givenName)) {
-            rs.updateString(settings.givenName, givenname);
-        }
-        if (!ConnectionSettings.isNoField(settings.company)) {
-            rs.updateString(settings.company, company);
-        }
-        if (!ConnectionSettings.isNoField(settings.location)) {
-            rs.updateString(settings.location, location);
-        }
-        if (!ConnectionSettings.isNoField(settings.title)) {
-            rs.updateString(settings.title, title);
-        }
-        if (!ConnectionSettings.isNoField(settings.faxNumber)) {
-            rs.updateString(settings.faxNumber, faxnumber);
-        }
-        if (!ConnectionSettings.isNoField(settings.voiceNumber)) {
-            rs.updateString(settings.voiceNumber, voicenumber);
-        }
-        if (!ConnectionSettings.isNoField(settings.comment)) {
-            rs.updateString(settings.comment, comment);
-        }
-    }*/
     
+    /**
+     * Sets the changed value in the prepared statement. The order of fields must
+     * be the one specified by PBEntryField.values().
+     * @param stmt
+     * @param offset
+     * @return
+     * @throws SQLException
+     */
     private int setChangedValues(PreparedStatement stmt, int offset) throws SQLException{
         ConnectionSettings settings = parent.settings;
 
-        if (!ConnectionSettings.isNoField(settings.name)) {
-            stmt.setString(offset, this.surname);
-            offset++;
-        }
-        if (!ConnectionSettings.isNoField(settings.givenName)) {
-            stmt.setString(offset, this.givenname);
-            offset++;
-        }
-        if (!ConnectionSettings.isNoField(settings.company)) {
-            stmt.setString(offset, this.company);
-            offset++;
-        }
-        if (!ConnectionSettings.isNoField( settings.location)) {
-            stmt.setString(offset, this.location);
-            offset++;
-        }
-        if (!ConnectionSettings.isNoField(settings.title)) {
-            stmt.setString(offset, this.title);
-            offset++;
-        }
-        if (!ConnectionSettings.isNoField(settings.faxNumber)) {
-            stmt.setString(offset, this.faxnumber);
-            offset++;
-        }
-        if (!ConnectionSettings.isNoField(settings.voiceNumber)) {
-            stmt.setString(offset, this.voicenumber);
-            offset++;
-        }
-        if (!ConnectionSettings.isNoField(settings.comment)) {
-            stmt.setString(offset, this.comment);
-            offset++;
+        for (PBEntryField field : PBEntryField.values()) {
+            if (!ConnectionSettings.isNoField(settings.getMappingFor(field))) {
+                stmt.setString(offset, getField(field));
+                offset++;
+            }
         }
         return offset;
     }
-    /*
-    private String getValueForDBField(String fieldName) {
-        ConnectionSettings settings = parent.settings;
-        
-        if (fieldName.equalsIgnoreCase(settings.comment))
-            return comment;
-        if (fieldName.equalsIgnoreCase(settings.company))
-            return company;
-        if (fieldName.equalsIgnoreCase(settings.faxNumber))
-            return faxnumber;
-        if (fieldName.equalsIgnoreCase(settings.givenName))
-            return givenname;
-        if (fieldName.equalsIgnoreCase(settings.location))
-            return location;
-        if (fieldName.equalsIgnoreCase(settings.name))
-            return surname;
-        if (fieldName.equalsIgnoreCase(settings.title))
-            return title;
-        if (fieldName.equalsIgnoreCase(settings.voiceNumber))
-            return voicenumber;
-
-        return null;
-    }*/
     
     private int setOriginalValues(PreparedStatement stmt, int offset) throws SQLException{
 
@@ -174,35 +100,6 @@ public class JDBCPhoneBookEntry extends SimplePhoneBookEntry {
     }
     
     void commitToDB(PreparedStatement insertStmt, PreparedStatement updateStmt, PreparedStatement deleteStmt) throws SQLException {
-        /*
-            if (inserted) {
-                int off = setChangedValues(parent.updateStmt, 1);
-                setOriginalValues(parent.updateStmt, off);
-                parent.updateStmt.execute();
-
-                if (parent.updateStmt.getUpdateCount() == 0) {
-                    //TODO: Warn user
-                    return;
-                }
-
-                for (int i = 0; i < parent.rowId.size(); i++) {
-                    if (parent.rowId.get(i).isDataColumn)
-                        rowKeys[i] = getValueForDBField(parent.rowId.get(i).columnName);
-                }
-            } else {
-                /*setChangedValues(parent.insertStmt, 1);
-                parent.insertStmt.execute();*//*
-                ResultSet rs = parent.selectStmt.executeQuery();
-                rs.moveToInsertRow();
-                updateResultSet(rs);
-                rs.insertRow();
-
-                rs.refreshRow();
-                readKeys(rs);
-                rs.close();
-
-                inserted = true;
-            }*/
         switch (entryStatus) {
         case ENTRY_UNCHANGED:
             break;

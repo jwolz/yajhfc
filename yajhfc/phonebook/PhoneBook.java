@@ -263,28 +263,7 @@ public abstract class PhoneBook {
     
     public abstract void close();
     
-    public boolean isFieldNameAvailable() {
-        return true;
-    }
-    public boolean isFieldGivenNameAvailable() {
-        return true;
-    }
-    public boolean isFieldTitleAvailable() {
-        return true;
-    }
-    public boolean isFieldCompanyAvailable() {
-        return true;
-    }
-    public boolean isFieldLocationAvailable() {
-        return true;
-    }
-    public boolean isFieldVoiceNumberAvailable() {
-        return true;
-    }
-    public boolean isFieldFaxNumberAvailable() {
-        return true;
-    }
-    public boolean isFieldCommentAvailable() {
+    public boolean isFieldAvailable(PBEntryField field) {
         return true;
     }
     

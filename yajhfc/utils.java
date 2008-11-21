@@ -53,7 +53,7 @@ public final class utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2008 by Jonas Wolz";
-    public static final String AppVersion = "0.3.9";
+    public static final String AppVersion = "0.3.9a";
     public static final String AuthorEMail = "Jonas Wolz &lt;jwolz@freenet.de&gt;";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
     
@@ -146,6 +146,9 @@ public final class utils {
     public static final FmtItem recvfmt_InProgress 
         = new FmtItem("z", _("In progress"), _("A ``*'' if receive is going on; otherwise `` '' (space)"), Boolean.class);
     
+    public static final FmtItem recvfmt_Sender 
+        = new FmtItem("s", _("Sender"), _("Sender identity (TSI)"));
+    
     public static final FmtItem[] recvfmts = {
             new FmtItem("Y", _("Time/Date"),  _("Extended representation of the time when the receive happened"), new HylaDateField("yyyy:MM:dd HH:mm:ss", _("dd/MM/yyyy HH:mm:ss"))), 
             new FmtItem("a", _("SubAddress"), _("SubAddress received from sender (if any)")), 
@@ -164,7 +167,7 @@ public final class utils {
             new FmtItem("p", _("Pages"), _("Number of pages in document"), Integer.class), 
             new FmtItem("q", _("Protection"), _("UNIX-style protection flags")), 
             new FmtItem("r", _("Resolution"), _("Resolution of received data"), Integer.class), 
-            new FmtItem("s", _("Sender"), _("Sender identity (TSI)")), 
+            recvfmt_Sender, 
             new FmtItem("t", _("Date"), _("Compact representation of the time when the receive happened"), new HylaDateField("ddMMMyy", _("dd/MM/yyyy"))), 
             new FmtItem("w", _("Page width"), _("Page width in mm"), Integer.class), 
             recvfmt_InProgress

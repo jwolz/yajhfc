@@ -87,7 +87,7 @@ public class OptionsWin extends JDialog {
     JPanel PanelCommon = null;
     JPanel panelSendSettings = null;
     JPanel panelServerSettings;
-    fmtEditor PanelRecvFmt = null, PanelSentFmt = null, PanelSendingFmt = null;
+    fmtEditor<FmtItem> PanelRecvFmt = null, PanelSentFmt = null, PanelSendingFmt = null;
         
     JPanel PanelButtons;
     JButton ButtonOK, ButtonCancel;
@@ -109,7 +109,7 @@ public class OptionsWin extends JDialog {
     JCheckBox checkNewFax_Beep, checkNewFax_ToFront, checkNewFax_Open, checkNewFax_MarkAsRead;
     JSpinner spinStatusInterval, spinTableInterval;
     
-    JCheckBox checkPreferTIFF, checkUseDisconnected;
+    JCheckBox checkPreferTIFF, checkUseDisconnected, checkMinimizeToTray;
     
     JPanel panelPersistence;
     JComboBox comboPersistenceMethods;
@@ -199,6 +199,7 @@ public class OptionsWin extends JDialog {
         checkAskAdminPassword.setSelected(foEdit.askAdminPassword);
         checkPreferTIFF.setSelected(foEdit.preferRenderedTIFF);
         checkUseDisconnected.setSelected(foEdit.useDisconnectedMode);
+        checkMinimizeToTray.setSelected(foEdit.minimizeToTray);
         
         checkNewFax_Beep.setSelected((foEdit.newFaxAction & utils.NEWFAX_BEEP) != 0);
         checkNewFax_ToFront.setSelected((foEdit.newFaxAction & utils.NEWFAX_TOFRONT) != 0);
@@ -400,15 +401,22 @@ public class OptionsWin extends JDialog {
     
     private JPanel getPanelUI() {
         if (panelUI == null) {
-            double[][] tablelay = {
+            final int rowCount = 8;
+            final double[][] tablelay = {
                     {border, TableLayout.FILL, border},
-                    new double[8]
+                    new double[rowCount]
             };
-            double rowh = 1 / (double)(tablelay[1].length - 1);
+            final double rowh = 2 / (double)(rowCount - 1);
             //tablelay[1][0] = border;
-            tablelay[1][tablelay[1].length - 1] = border;
-            Arrays.fill(tablelay[1], 0, tablelay[1].length - 1, rowh);
-            tablelay[1][tablelay[1].length - 2] = TableLayout.FILL;
+            tablelay[1][rowCount - 1] = border;
+            for (int i = 0; i < rowCount-2; i++) {
+                if (i%2 == 0) {
+                    tablelay[1][i] = TableLayout.PREFERRED;
+                } else {
+                    tablelay[1][i] = rowh;
+                }
+            }
+            tablelay[1][rowCount - 2] = TableLayout.FILL;
             
             panelUI = new JPanel(new TableLayout(tablelay), false);
             panelUI.setBorder(BorderFactory.createTitledBorder(_("User interface")));
@@ -433,12 +441,15 @@ public class OptionsWin extends JDialog {
             
             comboSendWinStyle = new JComboBox(SendWinStyle.values());
             
+            checkMinimizeToTray = new JCheckBox(_("Minimize to tray"));
+            checkMinimizeToTray.setToolTipText(_("Minimize to system tray (works only with Java 6 or higher)"));
 
             addWithLabel(panelUI, comboLang, _("Language:"), "1, 1, 1, 1, f, c");
             addWithLabel(panelUI, comboLookAndFeel, _("Look and Feel:"), "1, 3, 1, 3, f, c");
             addWithLabel(panelUI, comboSendWinStyle, _("Style of send dialog:"), "1, 5, 1, 5, f, c");
             //addWithLabel(panelUI, comboNewFaxAction, "<html>" + _("When a new fax is received:") + "</html>", "1, 3, 1, 3, f, c");
-
+            
+            panelUI.add(checkMinimizeToTray, "1,6,1,6,f,c");
         }
         return panelUI;
     }
@@ -664,7 +675,7 @@ public class OptionsWin extends JDialog {
     @SuppressWarnings("unchecked")
     private fmtEditor getPanelRecvFmt() {
         if (PanelRecvFmt == null) {
-            PanelRecvFmt = new fmtEditor(utils.recvfmts, recvfmt, Collections.EMPTY_LIST); //Arrays.asList(utils.requiredRecvFmts));
+            PanelRecvFmt = new fmtEditor(utils.recvfmts, recvfmt, Collections.EMPTY_LIST, new FmtItemRenderer(), FmtItemDescComparator.globalInstance, null, _("Selected columns:"), _("Available columns:")); //Arrays.asList(utils.requiredRecvFmts));
         }
         return PanelRecvFmt;
     }
@@ -672,7 +683,7 @@ public class OptionsWin extends JDialog {
     @SuppressWarnings("unchecked")
     private fmtEditor getPanelSendingFmt() {
         if (PanelSendingFmt == null) {
-            PanelSendingFmt = new fmtEditor(utils.jobfmts, sendingfmt, Collections.EMPTY_LIST); // Arrays.asList(utils.requiredSendingFmts));
+            PanelSendingFmt = new fmtEditor(utils.jobfmts, sendingfmt, Collections.EMPTY_LIST, new FmtItemRenderer(), FmtItemDescComparator.globalInstance, null, _("Selected columns:"), _("Available columns:")); // Arrays.asList(utils.requiredSendingFmts));
         }
         return PanelSendingFmt;
     }
@@ -680,7 +691,7 @@ public class OptionsWin extends JDialog {
     @SuppressWarnings("unchecked")
     private fmtEditor getPanelSentFmt() {
         if (PanelSentFmt == null) {
-            PanelSentFmt = new fmtEditor(utils.jobfmts, sentfmt, Collections.EMPTY_LIST); //Arrays.asList(utils.requiredSentFmts));
+            PanelSentFmt = new fmtEditor(utils.jobfmts, sentfmt, Collections.EMPTY_LIST, new FmtItemRenderer(), FmtItemDescComparator.globalInstance, null, _("Selected columns:"), _("Available columns:")); //Arrays.asList(utils.requiredSentFmts));
         }
         return PanelSentFmt;
     }
@@ -836,6 +847,7 @@ public class OptionsWin extends JDialog {
                 foEdit.askAdminPassword = checkAskAdminPassword.isSelected();
                 foEdit.preferRenderedTIFF = checkPreferTIFF.isSelected();
                 foEdit.useDisconnectedMode = checkUseDisconnected.isSelected();
+                foEdit.minimizeToTray = checkMinimizeToTray.isSelected();
                 
                 int val = 0;
                 if (checkNewFax_Beep.isSelected())

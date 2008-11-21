@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 
 import yajhfc.utils;
 import yajhfc.phonebook.GeneralConnectionSettings;
+import yajhfc.phonebook.PBEntryField;
 
 
 public class LDAPSettings extends GeneralConnectionSettings {
@@ -40,14 +41,14 @@ public class LDAPSettings extends GeneralConnectionSettings {
     
     public String[] getAttributes() {
         int count = 0;
-        for (int i=0; i < FIELD_COUNT; i++) 
-            if (!isNoField(getMappingFor(i)))
+        for (PBEntryField field : PBEntryField.values()) 
+            if (!isNoField(getMappingFor(field)))
                 count++;
         
         String[] rv = new String[count];
         int j = 0;
-        for (int i=0; i < FIELD_COUNT; i++) {
-            String mapping = getMappingFor(i);
+        for (PBEntryField field : PBEntryField.values()) {
+            String mapping = getMappingFor(field);
             if (!isNoField(mapping)) 
                 rv[j++] = mapping;
         }
@@ -57,14 +58,14 @@ public class LDAPSettings extends GeneralConnectionSettings {
     
     public LDAPSettings() {
         super();
-        name = "sn";
-        givenName = "givenName";
-        location = "l";
-        title = "title";
-        company = "o";
-        voiceNumber = "telephoneNumber";
-        faxNumber = "facsimileTelephoneNumber";
-        comment = "description";
+        setMappingFor(PBEntryField.Name, "sn");
+        setMappingFor(PBEntryField.GivenName,"givenName");
+        setMappingFor(PBEntryField.Location, "l");
+        setMappingFor(PBEntryField.Title, "title");
+        setMappingFor(PBEntryField.Company, "o");
+        setMappingFor(PBEntryField.VoiceNumber, "telephoneNumber");
+        setMappingFor(PBEntryField.FaxNumber, "facsimileTelephoneNumber");
+        setMappingFor(PBEntryField.Comment, "description");
     }
     
     public LDAPSettings(String serialized) {

@@ -121,6 +121,11 @@ public class FaxOptions {
     public String persistenceMethod = "local";
     public String persistenceConfig = "";
     
+    public static final String DEF_TOOLBAR_CONFIG = "Send|---|Show|Delete|---|Refresh|---|Phonebook|---|Resume|Suspend";
+    public String toolbarConfig = DEF_TOOLBAR_CONFIG;
+    
+    public boolean minimizeToTray = true;
+    
     // Uncomment for archive support.
 //    public boolean showArchive = true;
 //    public FmtItemList archiveFmt;

@@ -28,7 +28,9 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
+import java.util.EnumMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
@@ -57,25 +59,29 @@ import yajhfc.ExceptionDialog;
 import yajhfc.IntVerifier;
 import yajhfc.PasswordDialog;
 import yajhfc.utils;
+import yajhfc.phonebook.PBEntryField;
 
 public final class ConnectionDialog extends JDialog implements ActionListener {
-
-    private JTextField textName, textGivenName, textTitle, textCompany, textLocation, textVoiceNumber, textFaxNumber, textComment;
     private JTextField textServerName, textPort, textBaseDN, textBindDN, textFilter, textDisplayCaption;
     private JCheckBox checkAskForPassword, checkDoAuth, checkSearchSubtree;
     private JPasswordField textPassword;
     private JButton buttonOK, buttonCancel, buttonTest;
     private ClipboardPopup clpPop;
     
+    private EnumMap<PBEntryField,JTextField> mappingFields = new EnumMap<PBEntryField, JTextField>(PBEntryField.class);
+    
     private final static double border = 10;
     
     public boolean clickedOK;
-    
+        
     private JLabel addWithLabel(JPanel container, Component comp, String label, String layout) {
+        return addWithLabel(container, comp, label, new TableLayoutConstraints(layout));
+    }
+    
+    private JLabel addWithLabel(JPanel container, Component comp, String label, TableLayoutConstraints c) {
         JLabel lbl = new JLabel(label);
         lbl.setLabelFor(comp);
         
-        TableLayoutConstraints c = new TableLayoutConstraints(layout);
         container.add(comp, c);
         
         c.col1 = c.col2 = c.col1 - 2;
@@ -86,15 +92,17 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         return lbl; 
     }
 
-    private JTextField addTextField(JPanel container, String label, String layout) {
+    private JTextField addTextField(JPanel container, PBEntryField field, TableLayoutConstraints layout) {
         JTextField rv = new JTextField();
         rv.addMouseListener(clpPop);
+        String label = field.getDescription() + ":";
         addWithLabel(container, rv, label, layout);
+        mappingFields.put(field, rv);
         return rv;
     }
     
     private void initialize() {
-        final int rowCount = 35;
+        final int rowCount = 27 + ((PBEntryField.values().length + 1)/2)*2;
         double dLay[][] = {
                 {border, TableLayout.PREFERRED, border, 0.5, border, TableLayout.PREFERRED, border, TableLayout.FILL, border},      
                 new double[rowCount]
@@ -187,14 +195,18 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         jContentPane.add(new JSeparator(JSeparator.HORIZONTAL), "0, 19, 8, 19");
         
         jContentPane.add(new JLabel(_("Please enter which LDAP attributes correspond to the Phonebook entry fields of YajHFC (default should usually work):")), "1, 21, 7, 21, f, c");
-        textGivenName = addTextField(jContentPane, _("Given name:"), "3, 23, f, c");
-        textName = addTextField(jContentPane, _("Name:"), "7, 23, f, c");
-        textTitle = addTextField(jContentPane, _("Title:"), "3, 25, f, c");
-        textCompany = addTextField(jContentPane, _("Company:"), "7, 25, f, c");
-        textLocation = addTextField(jContentPane, _("Location:"), "3, 27, f, c");
-        textVoiceNumber = addTextField(jContentPane, _("Voice number:"), "7, 27, f, c");
-        textFaxNumber = addTextField(jContentPane, _("Fax number:"), "3, 29, f, c");
-        textComment = addTextField(jContentPane, _("Comments:"), "7, 29, f, c");
+        
+        int row = 23;
+        int col = 3;
+        for (PBEntryField field : PBEntryField.values()) {
+            addTextField(jContentPane, field, new TableLayoutConstraints(col,row,col,row,TableLayoutConstraints.FULL,TableLayoutConstraints.CENTER));
+            if (col == 3) {
+                col = 7;
+            } else {
+                col = 3;
+                row += 2;
+            }
+        }
         
         Box buttonBox = new Box(BoxLayout.LINE_AXIS);
         buttonBox.add(Box.createHorizontalGlue());
@@ -203,8 +215,8 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         buttonBox.add(buttonCancel);
         buttonBox.add(Box.createHorizontalGlue());
         
-        jContentPane.add(new JSeparator(JSeparator.HORIZONTAL), "0, 31, 8, 31");
-        jContentPane.add(buttonBox, "0, 33, 8, 33");
+        jContentPane.add(new JSeparator(JSeparator.HORIZONTAL), new TableLayoutConstraints(0, rowCount-4, 8, rowCount-4)); 
+        jContentPane.add(buttonBox, new TableLayoutConstraints(0, rowCount-2, 8, rowCount-2)); 
         
         setContentPane(jContentPane);
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -319,19 +331,15 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
     private void readFromConnectionSettings(LDAPSettings src) {
         textBaseDN.setText(src.baseDN);
         textBindDN.setText(src.bindDN);
-        textComment.setText(src.comment);
-        textCompany.setText(src.company);
-        textFaxNumber.setText(src.faxNumber);
         textFilter.setText(src.objectFilter);
-        textGivenName.setText(src.givenName);
-        textLocation.setText(src.location);
-        textName.setText(src.name);
         textPassword.setText(src.credential);
         textPort.setText(Integer.toString(src.port));
         textServerName.setText(src.serverName);
-        textTitle.setText(src.title);
-        textVoiceNumber.setText(src.voiceNumber);
         textDisplayCaption.setText(src.displayCaption);
+        
+        for (Map.Entry<PBEntryField, JTextField> entry : mappingFields.entrySet()) {
+            entry.getValue().setText(src.getMappingFor(entry.getKey()));
+        }
         
         checkAskForPassword.setSelected(src.askForCredential);
         checkDoAuth.setSelected(src.useAuth);
@@ -341,19 +349,15 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
     private void writeToConnectionSettings(LDAPSettings dst) {
         dst.baseDN = textBaseDN.getText();
         dst.bindDN = textBindDN.getText();
-        dst.comment = textComment.getText();
-        dst.company = textCompany.getText();
-        dst.faxNumber = textFaxNumber.getText();
         dst.objectFilter = textFilter.getText();
-        dst.givenName = textGivenName.getText();
-        dst.location = textLocation.getText();
-        dst.name = textName.getText();
         dst.credential = new String(textPassword.getPassword());
         dst.port = Integer.parseInt(textPort.getText());
         dst.serverName = textServerName.getText();
-        dst.title = textTitle.getText();
-        dst.voiceNumber = textVoiceNumber.getText();
         dst.displayCaption = textDisplayCaption.getText();
+        
+        for (Map.Entry<PBEntryField, JTextField> entry : mappingFields.entrySet()) {
+            dst.setMappingFor(entry.getKey(), entry.getValue().getText());
+        }
         
         dst.askForCredential = checkAskForPassword.isSelected();
         dst.useAuth = checkDoAuth.isSelected();

@@ -18,6 +18,8 @@ package yajhfc.phonebook;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,6 +30,14 @@ import org.w3c.dom.NodeList;
 
 public class XMLPhoneBookEntry extends SimplePhoneBookEntry {
     private static final Logger log = Logger.getLogger(XMLPhoneBookEntry.class.getName());
+    
+    protected static final Map<String,PBEntryField> keyToFieldMap;
+    static {
+        keyToFieldMap = new HashMap<String,PBEntryField>();
+        for (PBEntryField field : PBEntryField.values()) {
+            keyToFieldMap.put(field.getKey(), field);
+        }
+    }
     
     private XMLPhoneBook parent;
     
@@ -49,19 +59,17 @@ public class XMLPhoneBookEntry extends SimplePhoneBookEntry {
     }
     
     public void saveToXML(Element el, Document doc) {
-        java.lang.reflect.Field[] f = XMLPhoneBookEntry.class.getFields();
-        
-        for (int i = 0; i < f.length; i++) {
+        for (PBEntryField field : PBEntryField.values()) {
             try {
-                Object val = f[i].get(this);
+                String val = getField(field);
                 if (val == null)
                     continue;
                 
-                Element dataEl = doc.createElement(f[i].getName());
-                dataEl.setTextContent(val.toString());
+                Element dataEl = doc.createElement(field.getKey());
+                dataEl.setTextContent(val);
                 el.appendChild(dataEl);
             } catch (Exception e) {
-                log.log(Level.WARNING, "Error writing element " + f[i].getName() + ": ", e);
+                log.log(Level.WARNING, "Error writing element " + field + ": ", e);
             }
         }
     }
@@ -73,8 +81,12 @@ public class XMLPhoneBookEntry extends SimplePhoneBookEntry {
             Node item = nl.item(i);
             if ((item.getNodeType() == Node.ELEMENT_NODE)) {
                 try {
-                    java.lang.reflect.Field f = XMLPhoneBookEntry.class.getField(item.getNodeName());
-                    f.set(this, item.getTextContent());
+                    PBEntryField field = keyToFieldMap.get(item.getNodeName());
+                    if (field == null) {
+                        log.warning("Unknown field: " + item.getNodeName());
+                    } else {
+                        setFieldUndirty(field, item.getTextContent());
+                    }
                 } catch (Exception e) {
                     log.log(Level.WARNING, "Error reading element " + item.getNodeName() + ": ", e);
                 }

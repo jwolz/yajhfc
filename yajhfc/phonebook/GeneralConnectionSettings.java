@@ -1,4 +1,7 @@
 package yajhfc.phonebook;
+
+import java.util.Arrays;
+
 /*
  * YAJHFC - Yet another Java Hylafax client
  * Copyright (C) 2007 Jonas Wolz
@@ -20,47 +23,80 @@ package yajhfc.phonebook;
 
 
 public class GeneralConnectionSettings extends AbstractConnectionSettings {    
-    public String name = "";
-    public String givenName = "";
-    public String title = "";
-    public String location = "";
-    public String company = "";
-    public String faxNumber = "";
-    public String voiceNumber = "";
-    public String comment = "";
-     
-    public static final int SURNAME_FIELD = 0;
-    public static final int GIVENNAME_FIELD = 1;
-    public static final int LOCATION_FIELD = 2;
-    public static final int TITLE_FIELD = 3;
-    public static final int COMPANY_FIELD = 4;
-    public static final int VOICENUMBER_FIELD = 5;
-    public static final int FAXNUMBER_FIELD = 6;
-    public static final int COMMENT_FIELD = 7;
+//    public String name = "";
+//    public String givenName = "";
+//    public String title = "";
+//    public String location = "";
+//    public String company = "";
+//    public String faxNumber = "";
+//    public String voiceNumber = "";
+//    public String comment = "";
+    public static final PBEntrySettingsField[] entryFields;
+    static {
+        final PBEntryField[] fields = PBEntryField.values();
+        entryFields = new PBEntrySettingsField[fields.length];
+        for (int i = 0; i < entryFields.length; i++) {
+            PBEntryField field = fields[i];
+            String name = field.name();
+            name = Character.toLowerCase(name.charAt(0)) + name.substring(1);
+            entryFields[i] = new PBEntrySettingsField(field, name);
+        }
+    }
     
-    public static final int FIELD_COUNT = 8;
+    private String[] pbFields = new String[PBEntryField.values().length];
     
-    public String getMappingFor(int fieldIdx) {
-        switch (fieldIdx) {
-        case SURNAME_FIELD:
-            return name;
-        case GIVENNAME_FIELD:
-            return givenName;
-        case LOCATION_FIELD:
-            return location;
-        case TITLE_FIELD:
-            return title;
-        case COMPANY_FIELD:
-            return company;
-        case VOICENUMBER_FIELD:
-            return voiceNumber;
-        case FAXNUMBER_FIELD:
-            return faxNumber;
-        case COMMENT_FIELD:
-            return comment;
-        default:
-            throw new IllegalArgumentException("Unknown field " + fieldIdx);
+    public String getMappingFor(PBEntryField field) {
+        return pbFields[field.ordinal()];
+    }
+
+    public void setMappingFor(PBEntryField field, String mapping) {
+        pbFields[field.ordinal()] = mapping;
+    }
+    
+    @Override
+    protected void readAvailableFields() {
+        super.readAvailableFields();
+        for (SettingField field : entryFields) {
+            availableFields.put(field.getName(), field);
         }
     }
 
+    public GeneralConnectionSettings() {
+        this(AbstractConnectionSettings.noField);
+    }
+    
+    public GeneralConnectionSettings(String defaultMapping) {
+        Arrays.fill(pbFields, defaultMapping);
+    }
+    
+    public static class PBEntrySettingsField implements SettingField {
+        private final PBEntryField field;
+        private final String name;
+        
+        public Object get(AbstractConnectionSettings instance) {
+            return ((GeneralConnectionSettings)instance).getMappingFor(field);
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public Class<?> getType() {
+            return String.class;
+        }
+
+        public void set(AbstractConnectionSettings instance, Object value) {
+            ((GeneralConnectionSettings)instance).setMappingFor(field, (String)value);
+        }
+
+        public PBEntryField getField() {
+            return field;
+        }
+        
+        PBEntrySettingsField(PBEntryField field, String name) {
+            super();
+            this.field = field;
+            this.name = name;
+        }
+    }
 }

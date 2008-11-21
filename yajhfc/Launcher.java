@@ -714,7 +714,7 @@ public final class Launcher {
                         case -1: // Connection closed without sending any data
                             SwingUtilities.invokeLater(new Runnable() {
                                 public void run() {
-                                    application.toFront();
+                                    application.bringToFront();
                                 };
                             });
                             if (!srv.isClosed()) {
@@ -768,7 +768,7 @@ public final class Launcher {
         protected boolean closeAfterSubmit;
         
         public void run() {
-            application.toFront();
+            application.bringToFront();
             doSubmit();
             if (closeAfterSubmit)
                 application.dispose();
