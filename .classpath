@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="build/|doc/|jar/|java6-src/|yajhfc/i18n/|yajhfc/images/" kind="src" path=""/>
+	<classpathentry excluding="yajhfc/i18n/|yajhfc/images/" kind="src" path="src"/>
+	<classpathentry kind="src" path="java1-src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/home/jonas/java/jlfgr-1_0.jar"/>
 	<classpathentry kind="lib" path="/home/jonas/java/TableLayout/TableLayout.jar" sourcepath="/home/jonas/java/TableLayout/TableLayout-src.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/gnu-hylafax-trunk"/>
-	<classpathentry kind="output" path=""/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>
