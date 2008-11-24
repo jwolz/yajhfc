@@ -1,1 +1,0 @@
-awk -F ' [ ]+' '{ printf "new FmtItem(\"%s\", \"%s\"), \n", $2, $3}' > /tmp/jobfmt 

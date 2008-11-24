@@ -51,7 +51,7 @@
 		
 		<!-- Find out if we have valid, precompiled translations -->
 		<uptodate property="i18n.havePrecompiled">
-			<srcfiles dir="${src}/yajhfc/i18n/" includes="*_*.po"/>
+			<srcfiles dir="${src}/src/yajhfc/i18n/" includes="*_*.po"/>
 			<compositemapper>
 				<mapper type="glob" from="m*.po" to="M*.class" />
 				<mapper type="glob" from="m*.po" to="M*$1.class" />
@@ -80,7 +80,7 @@
 
 	<target name="compile" depends="init" description="compile the source code" >
 		<!-- Compile the java code from ${src} into ${build} -->
-		<javac srcdir="${src}" includes="yajhfc/**/*.java" destdir="${build}" source="1.5" target="1.5" encoding="iso-8859-1" debug="true" debuglevel="lines,source">
+		<javac srcdir="${src}/src" includes="yajhfc/**/*.java" destdir="${build}" source="1.5" target="1.5" encoding="iso-8859-1" debug="true" debuglevel="lines,source">
 			<classpath>
 				<pathelement path="${classpath}"/>
 				<pathelement location="${gnu.hylafax.classFileLocation}"/>
@@ -90,6 +90,17 @@
 
 		<!-- the parts of the source code only Java 6 compatible -->
 		<javac srcdir="${src}/java6-src" includes="yajhfc/**/*.java" destdir="${build}" source="1.5" target="1.6" encoding="iso-8859-1" debug="true" debuglevel="lines,source">
+			<classpath>
+				<pathelement path="${classpath}"/>
+				<pathelement location="${gnu.hylafax.classFileLocation}"/>
+				<pathelement location="${jar-extra}"/>
+				<pathelement location="${src}"/>
+			</classpath>
+		</javac>
+
+
+		<!-- the parts of the source code only Java 6 compatible -->
+		<javac srcdir="${src}/java1-src" includes="yajhfc/**/*.java" destdir="${build}" source="1.3" target="1.1" encoding="iso-8859-1" debug="true" debuglevel="lines,source">
 			<classpath>
 				<pathelement path="${classpath}"/>
 				<pathelement location="${gnu.hylafax.classFileLocation}"/>
@@ -115,7 +126,7 @@
 	-->
 
 	<target name="i18n" unless="i18n.havePrecompiled" depends="init" description="compile the translations">
-		<exec executable="/bin/sh" dir="${src}/yajhfc/i18n/" osfamily="unix">
+		<exec executable="/bin/sh" dir="${src}/src/yajhfc/i18n/" osfamily="unix">
 			<arg value="./fmtall.sh"/>
 		</exec>
 	</target>
@@ -123,17 +134,18 @@
 	<target name="dist" depends="compile,i18n,doc" description="generate the distribution" >
 		<jar jarfile="${jar-output}" manifest="${jar-extra}/manifest.txt">
 			<fileset dir="${build}" includes="yajhfc/**"/>
-			<fileset dir="${src}" includes="yajhfc/i18n/*.class"/>
+			<fileset dir="${src}/src" includes="yajhfc/i18n/*.class"/>
 			<fileset dir="${jar-extra}" includes="info/**/*.class,toolbarButtonGraphics/**/*.gif,org/**/*.class"/>
 			<fileset dir="${gnu.hylafax.classFileLocation}" includes="**/*.class"/>
-			<fileset dir="${src}" includes="COPYING,README*.txt,yajhfc/*.png,yajhfc/images/*,doc/*.html,doc/*.css,yajhfc/faxcover/*.ps"/>
+			<fileset dir="${src}" includes="COPYING,README*.txt,doc/*.html,doc/*.css"/>
+			<fileset dir="${src}/src" includes="yajhfc/*.png,yajhfc/images/*,yajhfc/faxcover/*.ps"/>
 		</jar>
 	</target>
 
 	<target name="sourcedist" depends="init,i18n,doc" description="generate the source distribution" >
 		<zip destfile="${srczip-output}">
 			<zipfileset dir="${src}" prefix="yajhfc/">
-				<exclude name="yajhfc/**/*.class"/>
+				<exclude name="bin/"/>
 				<exclude name="build/"/>
 				<exclude name="**/*.jar"/>
 				<exclude name="doc/faq-src/*"/>
@@ -144,7 +156,6 @@
 				<include name="doc/faq-src/.latex2html-init"/>
 				<include name="doc/faq-src/*.tex"/>
 				<include name="doc/faq-src/*.sh"/>
-				<include name="yajhfc/i18n/*.class"/>
 			</zipfileset>
 		</zip>
 	</target>
