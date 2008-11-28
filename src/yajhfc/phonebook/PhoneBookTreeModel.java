@@ -103,8 +103,10 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
         if (parent instanceof RootNode) {
             return phoneBooks.get(index);
         } else if (parent instanceof PhoneBook) {
-            return (showFilteredResults ? ((PhoneBook)parent).getLastFilterResult() :
-                ((PhoneBook)parent).getEntries()).get(index);
+            List<PhoneBookEntry> childs = (showFilteredResults ? 
+                    ((PhoneBook)parent).getLastFilterResult() :
+                        ((PhoneBook)parent).getEntries());
+            return (childs == null) ? null : childs.get(index);
         } else {
             return null;
         }
@@ -117,8 +119,10 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
         if (parent instanceof RootNode) {
             return phoneBooks.size();
         } else if (parent instanceof PhoneBook) {
-            return (showFilteredResults ? ((PhoneBook)parent).getLastFilterResult() :
-                ((PhoneBook)parent).getEntries()).size();
+            List<PhoneBookEntry> childs = (showFilteredResults ? 
+                    ((PhoneBook)parent).getLastFilterResult() :
+                        ((PhoneBook)parent).getEntries());
+            return (childs == null) ? 0 : childs.size();
         } else {
             return 0;
         }
@@ -131,8 +135,10 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
         if (parent instanceof RootNode) {
             return phoneBooks.indexOf(child);
         } else if (parent instanceof PhoneBook && child instanceof PhoneBookEntry) {
-            return (showFilteredResults ? ((PhoneBook)parent).getLastFilterResult() :
-                ((PhoneBook)parent).getEntries()).indexOf((PhoneBookEntry)child);
+            List<PhoneBookEntry> childs = (showFilteredResults ? 
+                    ((PhoneBook)parent).getLastFilterResult() :
+                        ((PhoneBook)parent).getEntries());
+            return (childs == null) ? -1 : childs.indexOf((PhoneBookEntry)child);
         } else {
             return -1;
         }
@@ -179,7 +185,7 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
             OrFilter<PhoneBookEntry,PBEntryField> filter = new OrFilter<PhoneBookEntry, PBEntryField>();
             filter.addChild(new ConcatStringFilter<PhoneBookEntry, PBEntryField>(
                     PBEntryField.class, 
-                    new Object[] { PBEntryField.GivenName, " ", PBEntryField.Name, ", ", PBEntryField.Company },
+                    new Object[] { PBEntryField.GivenName, " ", PBEntryField.Name, ", ", PBEntryField.Department, ", ", PBEntryField.Company },
                     StringFilterOperator.CONTAINS, quickSearchVal, false));
             filter.addChild(new StringFilter<PhoneBookEntry, PBEntryField>(PBEntryField.FaxNumber, StringFilterOperator.CONTAINS, quickSearchVal, false));
             applyFilter(filter);
@@ -220,6 +226,11 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
     }
     
     private static boolean listQuickEquals(List<?> list1, List<?> list2) {
+        if (list1 == list2)
+            return true;
+        else if (list1 == null || list2 == null) 
+            return false;
+
         if (list1.size() != list2.size()) {
             return false;
         } else {

@@ -36,6 +36,10 @@ public class DefaultPBEntryFieldContainer extends EnumMap<PBEntryField, String>
         return get(field);
     }
     
+    public void setField(PBEntryField field, String value) {
+        put(field, value);
+    }
+    
     public void copyFrom(PBEntryFieldContainer other) {
         for (PBEntryField field : PBEntryField.values()) {
             put(field, other.getField(field));

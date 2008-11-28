@@ -21,13 +21,12 @@ package yajhfc.send;
 import gnu.hylafax.HylaFAXClient;
 import gnu.inet.ftp.ServerResponseException;
 
-import java.awt.Component;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
 import yajhfc.HylaServerFile;
-import yajhfc.file.UnknownFormatException;
+import yajhfc.file.FormattedFile;
 
 public class ServerFileTFLItem extends HylaTFLItem {
     private HylaServerFile hysf;
@@ -43,16 +42,27 @@ public class ServerFileTFLItem extends HylaTFLItem {
     }
 
     @Override
-    public boolean preview(Component parent, HylaFAXClient hyfc) throws IOException, UnknownFormatException {
+    public FormattedFile getPreviewFilename(HylaFAXClient hyfc) throws IOException {
         try {
-            hysf.view(hyfc);
-            return true;
+            return new FormattedFile(hysf.getPreviewFile(hyfc));
         } catch (ServerResponseException e) {
             IOException ioEx = new IOException(e.getMessage());
             ioEx.initCause(e);
             throw ioEx;
         }
     }
+    
+//    @Override
+//    public boolean preview(Component parent, HylaFAXClient hyfc) throws IOException, UnknownFormatException {
+//        try {
+//            hysf.view(hyfc);
+//            return true;
+//        } catch (ServerResponseException e) {
+//            IOException ioEx = new IOException(e.getMessage());
+//            ioEx.initCause(e);
+//            throw ioEx;
+//        }
+//    }
     
     @Override
     public String getText() {

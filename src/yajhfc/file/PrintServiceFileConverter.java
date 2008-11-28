@@ -1,8 +1,8 @@
 package yajhfc.file;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.text.MessageFormat;
 
@@ -20,6 +20,7 @@ import javax.print.event.PrintJobListener;
 
 import yajhfc.PaperSize;
 import yajhfc.Utils;
+import yajhfc.util.ReplacerOutputStream;
 
 /*
  * YAJHFC - Yet another Java Hylafax client
@@ -60,9 +61,25 @@ public class PrintServiceFileConverter implements PrintJobListener, FileConverte
         }
     }
     
+    private static final byte[] jdk16PSToReplace;
+    private static final byte[] jdk16PSReplacement;
+    static {
+        byte[] bytes;
+        try {
+            bytes = "/DeferredMediaSelection true".getBytes("ISO-8859-1");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            bytes = new byte[0];
+        }
+        jdk16PSToReplace = bytes;
+        jdk16PSReplacement = new byte[0];
+    }
     protected void convertUsingPrintService(Object inObject, OutputStream destination, PaperSize paperSize) throws ConversionException {
-        if (!(destination instanceof BufferedOutputStream))
-            destination = new BufferedOutputStream(destination);
+//        if (!(destination instanceof BufferedOutputStream))
+//            destination = new BufferedOutputStream(destination);
+        if (Utils.getFaxOptions().useJDK16PSBugfix) {
+            destination = new ReplacerOutputStream(destination, jdk16PSToReplace, jdk16PSReplacement);
+        }
         
         StreamPrintServiceFactory[] services = StreamPrintServiceFactory.lookupStreamPrintServiceFactories(flavor, DocFlavor.BYTE_ARRAY.POSTSCRIPT.getMimeType());
         if (services.length < 1) {
@@ -78,16 +95,21 @@ public class PrintServiceFileConverter implements PrintJobListener, FileConverte
         PrintRequestAttributeSet prset = new HashPrintRequestAttributeSet();
         
         MediaSize mediaSize;
-        if (paperSize.desc.equals("A4"))
+        switch (paperSize) {
+        default:
+        case A4:
             mediaSize = MediaSize.ISO.A4;
-        else if (paperSize.desc.equals("A5"))
+            break;
+        case A5:
             mediaSize = MediaSize.ISO.A5;
-        else if (paperSize.desc.equals("Letter"))
+            break;
+        case LETTER:
             mediaSize = MediaSize.NA.LETTER;
-        else if (paperSize.desc.equals("Legal"))
+            break;
+        case LEGAL:
             mediaSize = MediaSize.NA.LEGAL;
-        else
-            mediaSize = MediaSize.ISO.A4;
+            break;
+        }
         prset.add(mediaSize.getMediaSizeName());
         
         try {

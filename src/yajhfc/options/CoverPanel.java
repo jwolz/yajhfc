@@ -222,7 +222,7 @@ public class CoverPanel extends JPanel implements OptionsPage {
 
     public void saveSettings(FaxOptions foEdit) {
         for (Map.Entry<PBEntryField, JTextComponent> entry : entryFields.entrySet()) {
-            foEdit.setCoverFrom(entry.getKey(), entry.getValue().getText());
+            foEdit.getCoverFrom().setField(entry.getKey(), entry.getValue().getText());
         }
         
         foEdit.defaultCover = ftfCustomDefCover.getText();
@@ -232,10 +232,6 @@ public class CoverPanel extends JPanel implements OptionsPage {
         foEdit.coverCompanyRule = (CompanyRule)comboCompanyRule.getSelectedItem();
         foEdit.coverLocationRule = (LocationRule)comboLocationRule.getSelectedItem();
         foEdit.coverZIPCodeRule = (ZIPCodeRule)comboZIPCodeRule.getSelectedItem();
-    }
-
-    public boolean validateSettings() {
-        return validateSettings(null);
     }
 
     public boolean validateSettings(OptionsWin optionsWin) {

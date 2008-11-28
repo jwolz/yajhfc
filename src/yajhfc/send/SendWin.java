@@ -53,9 +53,9 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
-import yajhfc.FaxIntProperty;
+import yajhfc.FaxNotification;
 import yajhfc.FaxOptions;
-import yajhfc.FaxStringProperty;
+import yajhfc.FaxResolution;
 import yajhfc.FileTextField;
 import yajhfc.HylaClientManager;
 import yajhfc.HylaModem;
@@ -438,12 +438,12 @@ final class SendWin extends JDialog implements SendWinControl  {
             clpNumbers.getPopupMenu().add(tflNumbers.getAddAction());
             textNumber.addMouseListener(clpNumbers);
             
-            comboNotification = new JComboBox(Utils.notifications);
+            comboNotification = new JComboBox(FaxNotification.values());
             comboNotification.setRenderer(new IconMap.ListCellRenderer());
             
-            comboPaperSize = new JComboBox(Utils.papersizes);
+            comboPaperSize = new JComboBox(PaperSize.values());
             
-            comboResolution = new JComboBox(Utils.resolutions);
+            comboResolution = new JComboBox(FaxResolution.values());
             
             spinKillTime = new JSpinner(new SpinnerNumberModel(180, 0, 2000, 15));
             
@@ -676,9 +676,9 @@ final class SendWin extends JDialog implements SendWinControl  {
             sendController.setComments(textToComments.getText());
         sendController.setKillTime((Integer)spinKillTime.getValue());
         sendController.setMaxTries((Integer)spinMaxTries.getValue());
-        sendController.setNotificationType(((FaxStringProperty)comboNotification.getSelectedItem()).type);
+        sendController.setNotificationType(((FaxNotification)comboNotification.getSelectedItem()).getType());
         sendController.setPaperSize((PaperSize)comboPaperSize.getSelectedItem());
-        sendController.setResolution(((FaxIntProperty)comboResolution.getSelectedItem()).type);
+        sendController.setResolution(((FaxResolution)comboResolution.getSelectedItem()).getResolution());
         sendController.setSelectedModem(comboModem.getSelectedItem());
         
         if (textSubject != null)

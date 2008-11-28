@@ -1,5 +1,6 @@
 package yajhfc.phonebook;
 
+import yajhfc.Utils;
 import yajhfc.filters.FilterableObject;
 import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 
@@ -94,9 +95,27 @@ public abstract class PhoneBookEntry implements Comparable<PhoneBookEntry>, Filt
     }
 
     // The order items are compared in compareTo
-    protected static final PBEntryField[] sortOrder = {
-        PBEntryField.Name, PBEntryField.GivenName, PBEntryField.Company, PBEntryField.Location, PBEntryField.Title, PBEntryField.FaxNumber, PBEntryField.VoiceNumber, PBEntryField.Comment
-    };
+    protected static final PBEntryField[] sortOrder;
+    static {
+        // Build sort order:
+        // The prefix of fields that should preferably be compared
+        final PBEntryField[] prefix = {
+                PBEntryField.Name, PBEntryField.GivenName, PBEntryField.Company, PBEntryField.Location
+        };
+        // Append the rest of the fields to the prefix, so all fields are compared
+        final PBEntryField[] vals = PBEntryField.values();
+        sortOrder = new PBEntryField[vals.length];
+        System.arraycopy(prefix, 0, sortOrder, 0, prefix.length);
+        
+        int j = prefix.length;
+        for (PBEntryField field : vals) {
+            // Add any field not in the prefix
+            if (Utils.indexOfArray(prefix, field) < 0) {
+                sortOrder[j++] = field;
+            }
+        }
+    }
+
     public int compareTo(PhoneBookEntry o) {
         for (PBEntryField entry : sortOrder) {
             String val1 = getField(entry);

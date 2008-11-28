@@ -35,18 +35,19 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import yajhfc.file.FormattedFile.FileFormat;
 import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.convrules.CompanyRule;
 import yajhfc.phonebook.convrules.LocationRule;
-import yajhfc.phonebook.convrules.ZIPCodeRule;
 import yajhfc.phonebook.convrules.NameRule;
 import yajhfc.phonebook.convrules.PBEntryFieldContainer;
+import yajhfc.phonebook.convrules.ZIPCodeRule;
 import yajhfc.send.SendWinStyle;
 
 public class FaxOptions {
     private static final Logger log = Logger.getLogger(FaxOptions.class.getName());
     
-    public FaxStringProperty tzone = null;
+    public FaxTimezone tzone;
     public String host;
     public int port;
     public boolean pasv;
@@ -59,10 +60,12 @@ public class FaxOptions {
     
     public String faxViewer;
     public String psViewer;
+    public String pdfViewer;
+    public boolean viewPDFAsPS = true;
     
     public String notifyAddress;
-    public FaxStringProperty notifyWhen = null;
-    public FaxIntProperty resolution = null;
+    public FaxNotification notifyWhen = null;
+    public FaxResolution resolution = null;
     public PaperSize paperSize = null;
     
     public int maxTry; 
@@ -107,7 +110,7 @@ public class FaxOptions {
     public String defaultCover = null;
     public boolean useCustomDefaultCover = false;
     
-    public YajLanguage locale = Utils.AvailableLocales[0];
+    public YajLanguage locale = YajLanguage.SYSTEM_DEFAULT;
     
     // Offset for displayed date values in seconds:
     public int dateOffsetSecs = 0;
@@ -145,6 +148,12 @@ public class FaxOptions {
     public LocationRule coverLocationRule = LocationRule.STREET_LOCATION;
     public CompanyRule coverCompanyRule = CompanyRule.DEPARTMENT_COMPANY;
     
+    public boolean useJDK16PSBugfix = true;
+    public boolean createSingleFileForViewing = false;
+    public FileFormat singleFileFormat = FileFormat.PDF;
+    public String ghostScriptLocation;
+    
+    
     // Uncomment for archive support.
 //    public boolean showArchive = true;
 //    public FmtItemList archiveFmt;
@@ -156,7 +165,7 @@ public class FaxOptions {
         this.user = System.getProperty("user.name");
         this.pass = "";
         this.pasv = true;
-        this.tzone = Utils.timezones[0];
+        this.tzone = FaxTimezone.LOCAL;
         
         this.recvfmt = new FmtItemList(Utils.recvfmts, Utils.requiredRecvFmts);
         this.recvfmt.add(Utils.recvfmts[0]);  // Y
@@ -193,30 +202,37 @@ public class FaxOptions {
             startCmd += " /C start \"Viewer\" \"%s\"";
             
             this.psViewer = startCmd;  //"rundll32.exe URL.DLL,FileProtocolHandler \"%s\"";//"gsview32.exe";
+            this.pdfViewer = startCmd;
             if (sysname.indexOf("XP") >= 0 || sysname.indexOf("Vista") >= 0) 
                 this.faxViewer = "rundll32.exe shimgvw.dll,ImageView_Fullscreen %s";
             else
                 this.faxViewer = startCmd; //"rundll32.exe URL.DLL,FileProtocolHandler \"%s\"";//"kodakimg.exe";
+            
+            this.ghostScriptLocation = "gswin32.exe";
         } else {
             Map<String,String> env = System.getenv();
             if ("true".equals(env.get("KDE_FULL_SESSION"))) {
                 this.faxViewer = "kfmclient exec %s";
                 this.psViewer = "kfmclient exec %s";
+                this.pdfViewer = "kfmclient exec %s";
             } else {
                 String gnome = env.get("GNOME_DESKTOP_SESSION_ID");
                 if (gnome != null && gnome.length() > 0) {
                     this.faxViewer = "gnome-open %s";
                     this.psViewer = "gnome-open %s";
+                    this.pdfViewer = "gnome-open %s";
                 } else {
                     this.faxViewer = "kfax %s";
-                    this.psViewer = "gv %s";                    
+                    this.psViewer = "gv %s";
+                    this.pdfViewer = "xpdf %s";
                 }
             }
+            this.ghostScriptLocation = "gs";
         }
         
-        this.resolution = Utils.resolutions[0];
-        this.paperSize = Utils.papersizes[0];
-        this.notifyWhen = Utils.notifications[2];
+        this.resolution = FaxResolution.HIGH;
+        this.paperSize = PaperSize.A4;
+        this.notifyWhen = FaxNotification.DONE_AND_REQUEUE;
         this.notifyAddress = this.user +  "@localhost"; //+ this.host;
         this.maxTry = 6;
         this.maxDial = 12;  
@@ -265,9 +281,11 @@ public class FaxOptions {
                 String name = f[i].getName();
                 if ((val instanceof String) || (val instanceof Integer) || (val instanceof Boolean))
                     p.setProperty(name, val.toString());
-                else if (val instanceof MyManualMapObject) 
+                else if (val instanceof YajLanguage) {
+                    p.setProperty(name, ((YajLanguage)val).getLangCode());
+                } else/*if (val instanceof MyManualMapObject) 
                     p.setProperty(name, ((MyManualMapObject)val).getKey().toString());
-                else if (val instanceof FmtItemList) {
+                else*/ if (val instanceof FmtItemList) {
                     p.setProperty(name, ((FmtItemList)val).saveToString());
                 } else /*if (val instanceof Vector) {
                     Vector vec = (Vector)val;
@@ -337,64 +355,68 @@ public class FaxOptions {
                 return FromVoiceNumber;
             case ZIPCode:
                 return FromZIPCode;
-            case Comment:
             default:
+                log.warning("Unknown PBEntryField: " + field.name());
+                // Fall through intended
+            case Comment:
                 return "";
             }
-        };
+        }
+        
+        public void setField(PBEntryField field, String value) {
+            switch (field) {
+            case Company:
+                FromCompany = value;
+                break;
+            case Country:
+                FromCountry = value;
+                break;
+            case Department:
+                FromDepartment = value;
+                break;
+            case EMailAddress:
+                FromEMail = value;
+                break;
+            case FaxNumber:
+                FromFaxNumber = value;
+                break;
+            case GivenName:
+                FromGivenName = value;
+                break;
+            case Location:
+                FromLocation = value;
+                break;
+            case Name:
+                FromName = value;
+                break;
+            case Position:
+                FromPosition = value;
+                break;
+            case State:
+                FromState = value;
+                break;
+            case Street:
+                FromStreet = value;
+                break;
+            case Title:
+                FromTitle = value;
+                break;
+            case VoiceNumber:
+                FromVoiceNumber = value;
+                break;
+            case ZIPCode:
+                FromZIPCode = value;
+                break;
+            default:
+                log.warning("Unknown PBEntryField: " + field.name());
+                // Fall through intended
+            case Comment:
+                break;
+            }
+        }
     };
     public PBEntryFieldContainer getCoverFrom() {
         return coverFrom;
-    }
-    
-    public void setCoverFrom(PBEntryField field, String value) {
-        switch (field) {
-        case Company:
-            FromCompany = value;
-            break;
-        case Country:
-            FromCountry = value;
-            break;
-        case Department:
-            FromDepartment = value;
-            break;
-        case EMailAddress:
-            FromEMail = value;
-            break;
-        case FaxNumber:
-            FromFaxNumber = value;
-            break;
-        case GivenName:
-            FromGivenName = value;
-            break;
-        case Location:
-            FromLocation = value;
-            break;
-        case Name:
-            FromName = value;
-            break;
-        case Position:
-            FromPosition = value;
-            break;
-        case State:
-            FromState = value;
-            break;
-        case Street:
-            FromStreet = value;
-            break;
-        case Title:
-            FromTitle = value;
-            break;
-        case VoiceNumber:
-            FromVoiceNumber = value;
-            break;
-        case ZIPCode:
-            FromZIPCode = value;
-            break;
-        case Comment:
-        default:
-            break;
-        }
     }
     
     @SuppressWarnings("unchecked")
@@ -449,20 +471,12 @@ public class FaxOptions {
                     f.setInt(this, Integer.parseInt(p.getProperty(fName)));
                 else if (Boolean.TYPE.isAssignableFrom(fcls))
                     f.setBoolean(this, Boolean.parseBoolean(p.getProperty(fName)));
-                else if (MyManualMapObject.class.isAssignableFrom(fcls)) {
+                else if (YajLanguage.class.isAssignableFrom(fcls)) {
+                    f.set(this, YajLanguage.languageFromLangCode(p.getProperty(fName)));
+                } else /* if (MyManualMapObject.class.isAssignableFrom(fcls)) {
                     MyManualMapObject[] dataarray;
                     
-                    if (fName.equals("tzone")) 
-                        dataarray = Utils.timezones;
-                    else if (fName.equals("notifyWhen"))
-                        dataarray = Utils.notifications;
-                    else if (fName.equals("resolution"))
-                        dataarray = Utils.resolutions;
-                    else if (fName.equals("paperSize"))
-                        dataarray = Utils.papersizes;
-                    /*else if (fName.equals("newFaxAction"))
-                        dataarray = Utils.newFaxActions;*/
-                    else if (fName.equals("locale"))
+                    if (fName.equals("locale"))
                         dataarray = Utils.AvailableLocales;
                     else {
                         log.log(Level.WARNING, "Unknown MyManualMapObject field: " + fName);
@@ -473,8 +487,7 @@ public class FaxOptions {
                         f.set(this, res);
                     else
                         log.log(Level.WARNING, "Unknown value for MyManualMapObject field " + fName);
-                }
-                else if (FmtItemList.class.isAssignableFrom(fcls)) {
+                } else */ if (FmtItemList.class.isAssignableFrom(fcls)) {
                     FmtItemList fim = (FmtItemList)f.get(this);
                     fim.loadFromString(p.getProperty(fName));
                 } else /*if (Vector.class.isAssignableFrom(fcls)) {

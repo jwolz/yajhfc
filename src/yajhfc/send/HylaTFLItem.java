@@ -21,22 +21,16 @@ package yajhfc.send;
 import gnu.hylafax.HylaFAXClient;
 import gnu.inet.ftp.ServerResponseException;
 
-import java.awt.Component;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.MessageFormat;
-
-import javax.swing.JOptionPane;
 
 import yajhfc.PaperSize;
-import yajhfc.Utils;
 import yajhfc.file.FormattedFile;
-import yajhfc.file.UnknownFormatException;
 
 public abstract class HylaTFLItem extends TFLItem {
     protected String serverName = "<invalid>";
-    protected PaperSize desiredPaperSize = Utils.papersizes[0];
+    protected PaperSize desiredPaperSize = PaperSize.A4;
     
     public abstract void upload(HylaFAXClient hyfc) throws FileNotFoundException, IOException, ServerResponseException ;
     
@@ -44,25 +38,25 @@ public abstract class HylaTFLItem extends TFLItem {
     public abstract InputStream getInputStream() throws FileNotFoundException, IOException;
     
     
-    /**
-     * Previews the file in a viewer.
-     */
-    public boolean preview(Component parent, HylaFAXClient hyfc) throws IOException, UnknownFormatException {
-        FormattedFile previewFile = getPreviewFilename();
-        if (previewFile == null) {
-            JOptionPane.showMessageDialog(parent, MessageFormat.format(Utils._("Preview is not supported for document \"{0}\"."), this.getText()), Utils._("Preview"), JOptionPane.INFORMATION_MESSAGE);
-            return false;
-        }
-        previewFile.view();
-        return true;
-    }
+//    /**
+//     * Previews the file in a viewer.
+//     */
+//    public boolean preview(Component parent, HylaFAXClient hyfc) throws IOException, UnknownFormatException {
+//        FormattedFile previewFile = getPreviewFilename(hyfc);
+//        if (previewFile == null) {
+//            JOptionPane.showMessageDialog(parent, MessageFormat.format(Utils._("Preview is not supported for document \"{0}\"."), this.getText()), Utils._("Preview"), JOptionPane.INFORMATION_MESSAGE);
+//            return false;
+//        }
+//        previewFile.view();
+//        return true;
+//    }
     
     /**
      * Returns a local file to be used by the default implementation of preview().
      * Return null if preview is not supported.
      * @return
      */
-    protected FormattedFile getPreviewFilename() {
+    public FormattedFile getPreviewFilename(HylaFAXClient hyfc) throws IOException {
         return null;
     }
     

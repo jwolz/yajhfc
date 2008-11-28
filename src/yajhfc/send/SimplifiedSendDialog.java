@@ -59,9 +59,9 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import yajhfc.FaxIntProperty;
+import yajhfc.FaxNotification;
 import yajhfc.FaxOptions;
-import yajhfc.FaxStringProperty;
+import yajhfc.FaxResolution;
 import yajhfc.FileTextField;
 import yajhfc.HylaClientManager;
 import yajhfc.HylaModem;
@@ -172,6 +172,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         else
             Utils.setDefWinPos(this);
 
+        enableCoverComps(Utils.getFaxOptions().useCover);
     }
 
     protected JComponent createContentPane() {
@@ -476,12 +477,12 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         }
         ftfCustomCover.getJTextField().addMouseListener(clpDefault);
 
-        comboNotification = new JComboBox(Utils.notifications);
+        comboNotification = new JComboBox(FaxNotification.values());
         comboNotification.setRenderer(new IconMap.ListCellRenderer());
 
-        comboPaperSize = new JComboBox(Utils.papersizes);
+        comboPaperSize = new JComboBox(PaperSize.values());
 
-        comboResolution = new JComboBox(Utils.resolutions);
+        comboResolution = new JComboBox(FaxResolution.values());
 
         spinKillTime = new JSpinner(new SpinnerNumberModel(180, 0, 2000, 15));
 
@@ -549,9 +550,9 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         sendController.setComments(textComments.getText());
         sendController.setKillTime((Integer)spinKillTime.getValue());
         sendController.setMaxTries((Integer)spinMaxTries.getValue());
-        sendController.setNotificationType(((FaxStringProperty)comboNotification.getSelectedItem()).type);
+        sendController.setNotificationType(((FaxNotification)comboNotification.getSelectedItem()).getType());
         sendController.setPaperSize((PaperSize)comboPaperSize.getSelectedItem());
-        sendController.setResolution(((FaxIntProperty)comboResolution.getSelectedItem()).type);
+        sendController.setResolution(((FaxResolution)comboResolution.getSelectedItem()).getResolution());
         sendController.setSelectedModem(comboModem.getSelectedItem());
         
         sendController.setSubject(textSubject.getText());

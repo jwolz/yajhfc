@@ -35,11 +35,7 @@ public interface OptionsPage {
      * @param foEdit
      */
     public void saveSettings(FaxOptions foEdit);
-    /**
-     * Validates the user's settings
-     * @return true if settings are valid, false otherwise
-     */
-    public boolean validateSettings();
+
     /**
      * Validates the user's settings
      * @param optionsWin

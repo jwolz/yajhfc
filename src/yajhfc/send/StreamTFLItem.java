@@ -62,7 +62,7 @@ public class StreamTFLItem extends HylaTFLItem {
     }
     
     @Override
-    protected FormattedFile getPreviewFilename() {
+    public FormattedFile getPreviewFilename(HylaFAXClient hyfc) {
         return tempFile;
     }
 

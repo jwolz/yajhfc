@@ -33,7 +33,7 @@ public enum NameRule implements EntryToStringRule {
     TITLE_NAME_GIVENNAME_JOBTITLE(new ConcatRule(PBEntryField.Title, " ", PBEntryField.Name, ", ", PBEntryField.GivenName, ", ", PBEntryField.Position))
     ;
     
-    private String displayName;
+    private final String displayName;
     private final EntryToStringRule rule;
     
     public String getDisplayName() {

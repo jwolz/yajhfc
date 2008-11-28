@@ -84,4 +84,7 @@ public class ConcatStringFilter<V extends FilterableObject, K extends FilterKey>
         return true;
     }
 
+    public Object[] getConcatVals() {
+        return concatVals;
+    }
 }

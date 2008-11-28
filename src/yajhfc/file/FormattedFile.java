@@ -277,8 +277,14 @@ public class FormattedFile {
             execCmd = Utils.getFaxOptions().faxViewer;
             break;
         case PostScript:
-        case PDF:
             execCmd = Utils.getFaxOptions().psViewer;
+            break;
+        case PDF:
+            if (Utils.getFaxOptions().viewPDFAsPS) {
+                execCmd = Utils.getFaxOptions().psViewer;
+            } else {
+                execCmd = Utils.getFaxOptions().pdfViewer;
+            }
             break;
         default:
             throw new UnknownFormatException(MessageFormat.format(Utils._("File format {0} not supported."), format.toString()));

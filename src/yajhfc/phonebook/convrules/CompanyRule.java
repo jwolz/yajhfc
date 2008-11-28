@@ -26,10 +26,11 @@ import yajhfc.phonebook.PBEntryField;
  */
 public enum CompanyRule implements EntryToStringRule {
     COMPANY(new ConcatRule(PBEntryField.Company)),
-    DEPARTMENT_COMPANY(new ConcatRule(PBEntryField.Department, ", ", PBEntryField.Company))
+    DEPARTMENT_COMPANY(new ConcatRule(PBEntryField.Department, ", ", PBEntryField.Company)),
+    COMPANY_DEPARTMENT(new ConcatRule(PBEntryField.Company, " (", PBEntryField.Department, ")"))
     ;
     
-    private String displayName;
+    private final  String displayName;
     private final EntryToStringRule rule;
     
     public String getDisplayName() {

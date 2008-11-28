@@ -266,29 +266,7 @@ public class JDBCPhoneBook extends PhoneBook {
             }
 
             
-            String query = getSELECTQuery();
-            if (Utils.debugMode) {
-                log.fine("JDBC phone book: SELECT query: " + query);
-            }
-            if (query == null) {
-                JOptionPane.showMessageDialog(parentDialog, Utils._("Cannot open phonebook since no database fields were selected!"));
-                return;
-            }
-            /*selectStmt = connection.prepareStatement(query, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE);
-            ResultSet resultSet = selectStmt.executeQuery();*/
-            Statement stmt = connection.createStatement();
-            ResultSet resultSet = stmt.executeQuery(query);
-            
-            items.clear();
-            while (resultSet.next()) {
-                JDBCPhoneBookEntry jPBE = new JDBCPhoneBookEntry(this);
-                jPBE.readFromCurrentDataset(resultSet);
-                items.add(jPBE);
-            }
-            resultSet.close();
-            stmt.close();
-            
-            resort();
+            loadItems(connection);
             
             open = true;
         } catch (Exception e) {
@@ -303,6 +281,31 @@ public class JDBCPhoneBook extends PhoneBook {
         }
     }
     
+    protected void loadItems(Connection connection) throws SQLException {
+        String query = getSELECTQuery();
+        if (Utils.debugMode) {
+            log.fine("JDBC phone book: SELECT query: " + query);
+        }
+        if (query == null) {
+            JOptionPane.showMessageDialog(parentDialog, Utils._("Cannot open phonebook since no database fields were selected!"));
+            return;
+        }
+        Statement stmt = connection.createStatement();
+        ResultSet resultSet = stmt.executeQuery(query);
+        
+        deleted_items.clear();
+        items.clear();
+        while (resultSet.next()) {
+            JDBCPhoneBookEntry jPBE = new JDBCPhoneBookEntry(this);
+            jPBE.readFromCurrentDataset(resultSet);
+            items.add(jPBE);
+        }
+        resultSet.close();
+        stmt.close();
+        
+        resort();
+    }
+    
     @Override
     public boolean isOpen() {
         return open;
@@ -313,70 +316,19 @@ public class JDBCPhoneBook extends PhoneBook {
         return settings.readOnly;
     }
     
-    void commitToDB() {
-        PreparedStatement insertStmt, updateStmt, deleteStmt;
+    protected void commitToDB() {
         if (isReadOnly())
             return;
-        
+
         Connection connection = null;
         try {
             connection = openConnection();
             if (connection == null) {
                 return;
             }
-            
-            String query = getINSERTQuery();
-            if (Utils.debugMode) {
-                log.fine("JDBC phone book: INSERT query: " + query);
-            }
-            if (query == null) {
-                JOptionPane.showMessageDialog(parentDialog, MessageFormat.format(Utils._("Could not save the changes: No valid {0} query."), "INSERT"), Utils._("Error"), JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            insertStmt = connection.prepareStatement(query);
 
-            query = getUPDATEQuery();
-            if (Utils.debugMode) {
-                log.fine("JDBC phone book: UPDATE query: " + query);
-            }
-            if (query == null) {
-                JOptionPane.showMessageDialog(parentDialog, MessageFormat.format(Utils._("Could not save the changes: No valid {0} query."), "UPDATE"), Utils._("Error"), JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            updateStmt = connection.prepareStatement(query);
+            commitToDB(connection);
 
-            query = getDELETEQuery();
-            if (Utils.debugMode) {
-                log.fine("JDBC phone book: DELETE query: " + query);
-            }
-            if (query == null) {
-                JOptionPane.showMessageDialog(parentDialog, MessageFormat.format(Utils._("Could not save the changes: No valid {0} query."), "DELETE"), Utils._("Error"), JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            deleteStmt = connection.prepareStatement(query);
-
-            connection.setAutoCommit(false);
-
-            for (JDBCPhoneBookEntry e : deleted_items) {
-                try {
-                    e.commitToDB(insertStmt, updateStmt, deleteStmt);
-                } catch (SQLException ex) {
-                    ExceptionDialog.showExceptionDialog(parentDialog, MessageFormat.format(Utils._("Could not save the changes for entry {0}:"), e.toString()), ex);
-                } 
-            }
-            for (JDBCPhoneBookEntry e : items) {
-                try {
-                    e.commitToDB(insertStmt, updateStmt, deleteStmt);
-                } catch (SQLException ex) {
-                    ExceptionDialog.showExceptionDialog(parentDialog, MessageFormat.format(Utils._("Could not save the changes for entry {0}:"), e.toString()), ex);
-                }                
-            }
-
-            connection.commit();
-
-            insertStmt.close();
-            updateStmt.close();
-            deleteStmt.close();
         } catch (PhoneBookException pbe) {
             if (!pbe.messageAlreadyDisplayed()) {
                 ExceptionDialog.showExceptionDialog(parentDialog, Utils._("Could not save the phone book:"), pbe);
@@ -392,6 +344,65 @@ public class JDBCPhoneBook extends PhoneBook {
                 log.log(Level.WARNING, "Error closing the database connection:", e);
             }
         }
+    }
+
+    protected void commitToDB(Connection connection) throws SQLException {
+        PreparedStatement insertStmt, updateStmt, deleteStmt;
+        if (isReadOnly())
+            return;
+        
+        String query = getINSERTQuery();
+        if (Utils.debugMode) {
+            log.fine("JDBC phone book: INSERT query: " + query);
+        }
+        if (query == null) {
+            JOptionPane.showMessageDialog(parentDialog, MessageFormat.format(Utils._("Could not save the changes: No valid {0} query."), "INSERT"), Utils._("Error"), JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        insertStmt = connection.prepareStatement(query);
+
+        query = getUPDATEQuery();
+        if (Utils.debugMode) {
+            log.fine("JDBC phone book: UPDATE query: " + query);
+        }
+        if (query == null) {
+            JOptionPane.showMessageDialog(parentDialog, MessageFormat.format(Utils._("Could not save the changes: No valid {0} query."), "UPDATE"), Utils._("Error"), JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        updateStmt = connection.prepareStatement(query);
+
+        query = getDELETEQuery();
+        if (Utils.debugMode) {
+            log.fine("JDBC phone book: DELETE query: " + query);
+        }
+        if (query == null) {
+            JOptionPane.showMessageDialog(parentDialog, MessageFormat.format(Utils._("Could not save the changes: No valid {0} query."), "DELETE"), Utils._("Error"), JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        deleteStmt = connection.prepareStatement(query);
+
+        connection.setAutoCommit(false);
+
+        for (JDBCPhoneBookEntry e : deleted_items) {
+            try {
+                e.commitToDB(insertStmt, updateStmt, deleteStmt);
+            } catch (SQLException ex) {
+                ExceptionDialog.showExceptionDialog(parentDialog, MessageFormat.format(Utils._("Could not save the changes for entry {0}:"), e.toString()), ex);
+            } 
+        }
+        for (JDBCPhoneBookEntry e : items) {
+            try {
+                e.commitToDB(insertStmt, updateStmt, deleteStmt);
+            } catch (SQLException ex) {
+                ExceptionDialog.showExceptionDialog(parentDialog, MessageFormat.format(Utils._("Could not save the changes for entry {0}:"), e.toString()), ex);
+            }                
+        }
+
+        connection.commit();
+
+        insertStmt.close();
+        updateStmt.close();
+        deleteStmt.close();
     }
     
     private int getInsertionPos(PhoneBookEntry pbe) {
@@ -449,7 +460,7 @@ public class JDBCPhoneBook extends PhoneBook {
         return (!ConnectionSettings.isNoField(settings.getMappingFor(field)));
     }
     
-    static class DBKey {
+    protected static class DBKey {
         public String columnName;
         public boolean isDataColumn;
         

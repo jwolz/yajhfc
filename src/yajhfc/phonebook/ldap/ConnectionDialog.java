@@ -62,15 +62,15 @@ import yajhfc.util.IntVerifier;
 import yajhfc.util.PasswordDialog;
 
 public final class ConnectionDialog extends JDialog implements ActionListener {
-    private JTextField textServerName, textPort, textBaseDN, textBindDN, textFilter, textDisplayCaption;
-    private JCheckBox checkAskForPassword, checkDoAuth, checkSearchSubtree;
+    private JTextField textServerName, textPort, textBaseDN, textBindDN, textFilter, textDisplayCaption, textCountLimit;
+    private JCheckBox checkAskForPassword, checkDoAuth, checkSearchSubtree, checkInitiallyShowAll;
     private JPasswordField textPassword;
     private JButton buttonOK, buttonCancel, buttonTest;
     private ClipboardPopup clpPop;
     
     private EnumMap<PBEntryField,JTextField> mappingFields = new EnumMap<PBEntryField, JTextField>(PBEntryField.class);
     
-    private final static double border = 10;
+    private final static int border = 10;
     
     public boolean clickedOK;
         
@@ -86,7 +86,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         
         c.col1 = c.col2 = c.col1 - 2;
         c.vAlign = TableLayoutConstraints.CENTER;
-        c.hAlign = TableLayoutConstraints.LEFT;
+        c.hAlign = TableLayoutConstraints.RIGHT;
         container.add(lbl, c);
         
         return lbl; 
@@ -102,7 +102,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
     }
     
     private void initialize() {
-        final int rowCount = 27 + ((PBEntryField.values().length + 1)/2)*2;
+        final int rowCount = 29 + ((PBEntryField.values().length + 1)/2)*2;
         double dLay[][] = {
                 {border, TableLayout.PREFERRED, border, 0.5, border, TableLayout.PREFERRED, border, TableLayout.FILL, border},      
                 new double[rowCount]
@@ -115,7 +115,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
                 dLay[1][i] = rowh;
             }
         }
-        dLay[1][11] = dLay[1][15] = dLay[1][19] = dLay[1][rowCount - 4] = 
+        dLay[1][11] = dLay[1][15] = dLay[1][21] = dLay[1][rowCount - 4] = 
         dLay[1][rowCount - 2] = TableLayout.PREFERRED; //Separators/Labels
         
         dLay[1][1] = TableLayout.FILL;
@@ -165,6 +165,14 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         
         checkSearchSubtree = new JCheckBox(_("Also search subtrees"));
         
+        textCountLimit = new JTextField();
+        textCountLimit.setInputVerifier(new IntVerifier());
+        textCountLimit.addMouseListener(clpPop);
+        textCountLimit.setToolTipText(_("The maximum number of items loaded"));
+        
+        checkInitiallyShowAll = new JCheckBox(_("Load all entries when opened"));
+        checkInitiallyShowAll.setToolTipText(_("If checked, all entries in the directory are loaded when the phone book is opened. If not, entries are loaded only if a quick search is performed."));
+        
         CancelAction actCancel = new CancelAction(this);
         buttonCancel = actCancel.createCancelButton();
         
@@ -192,11 +200,14 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         addWithLabel(jContentPane, textFilter, _("Object filter:"), "3, 17, 5, 17, f, c");
         jContentPane.add(checkSearchSubtree, "7, 17");
         
-        jContentPane.add(new JSeparator(JSeparator.HORIZONTAL), "0, 19, 8, 19");
+        jContentPane.add(checkInitiallyShowAll, "1,19,3,19,f,c");
+        addWithLabel(jContentPane, textCountLimit, _("Count limit:"), "7,19,f,c");
         
-        jContentPane.add(new JLabel(_("Please enter which LDAP attributes correspond to the Phonebook entry fields of YajHFC (default should usually work):")), "1, 21, 7, 21, f, c");
+        jContentPane.add(new JSeparator(JSeparator.HORIZONTAL), "0, 21, 8, 21");
         
-        int row = 23;
+        jContentPane.add(new JLabel("<html>" + _("Please enter which LDAP attributes correspond to the Phonebook entry fields of YajHFC (default should usually work):") + "</html>"), "1, 23, 7, 23, f, c");
+        
+        int row = 25;
         int col = 3;
         for (PBEntryField field : PBEntryField.values()) {
             addTextField(jContentPane, field, new TableLayoutConstraints(col,row,col,row,TableLayoutConstraints.FULL,TableLayoutConstraints.CENTER));
@@ -336,6 +347,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         textPort.setText(Integer.toString(src.port));
         textServerName.setText(src.serverName);
         textDisplayCaption.setText(src.displayCaption);
+        textCountLimit.setText(Integer.toString(src.countLimit));
         
         for (Map.Entry<PBEntryField, JTextField> entry : mappingFields.entrySet()) {
             entry.getValue().setText(src.getMappingFor(entry.getKey()));
@@ -344,6 +356,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         checkAskForPassword.setSelected(src.askForCredential);
         checkDoAuth.setSelected(src.useAuth);
         checkSearchSubtree.setSelected(src.searchSubTree);
+        checkInitiallyShowAll.setSelected(src.initiallyLoadAll);
     }
     
     private void writeToConnectionSettings(LDAPSettings dst) {
@@ -354,6 +367,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         dst.port = Integer.parseInt(textPort.getText());
         dst.serverName = textServerName.getText();
         dst.displayCaption = textDisplayCaption.getText();
+        dst.countLimit = Integer.parseInt(textCountLimit.getText());
         
         for (Map.Entry<PBEntryField, JTextField> entry : mappingFields.entrySet()) {
             dst.setMappingFor(entry.getKey(), entry.getValue().getText());
@@ -362,6 +376,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         dst.askForCredential = checkAskForPassword.isSelected();
         dst.useAuth = checkDoAuth.isSelected();
         dst.searchSubTree = checkSearchSubtree.isSelected();
+        dst.initiallyLoadAll = checkInitiallyShowAll.isSelected();
     }
     
     public ConnectionDialog(Frame owner) {

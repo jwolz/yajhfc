@@ -18,13 +18,21 @@ package yajhfc;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+import gnu.hylafax.Pagesize;
+
 import java.awt.Dimension;
 
-public class PaperSize extends MyManualMapObject {
-    public String desc;
-    public Dimension size;
+public enum PaperSize {
+    A4("A4", Pagesize.A4),
+    A5("A5", Pagesize.A5),
+    LETTER("Letter", Pagesize.LETTER),
+    LEGAL("Legal", Pagesize.LEGAL)
+    ;
     
-    public PaperSize(String desc, Dimension size) {
+    private final String desc;
+    private final Dimension size;
+    
+    private PaperSize(String desc, Dimension size) {
         this.desc = desc;
         this.size = size;        
     }
@@ -33,9 +41,12 @@ public class PaperSize extends MyManualMapObject {
         return desc;
     }
     
-    @Override
-    public Object getKey() {
-        return desc;
+    public Dimension getSize() {
+        return size;
+    }
+    
+    public String getKey() {
+        return name();
     }
 }
 

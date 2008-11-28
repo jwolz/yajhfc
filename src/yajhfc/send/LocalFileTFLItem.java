@@ -90,7 +90,7 @@ public class LocalFileTFLItem extends HylaTFLItem {
     }
     
     @Override
-    protected FormattedFile getPreviewFilename() {
+    public FormattedFile getPreviewFilename(HylaFAXClient hyfc) {
         try {
             prepareFile();
         } catch (Exception ex) {

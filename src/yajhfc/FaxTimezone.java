@@ -1,7 +1,6 @@
-package yajhfc;
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005 Jonas Wolz
+ * Copyright (C) 2005-2008 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,27 +16,37 @@ package yajhfc;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+package yajhfc;
 
+import gnu.hylafax.HylaFAXClientProtocol;
 
-public class FaxIntProperty extends MyManualMapObject{
-    public String desc;
-    public int type;
+/**
+ * @author jonas
+ *
+ */
+public enum FaxTimezone {
+    LOCAL(Utils._("Local timezone"), HylaFAXClientProtocol.TZONE_LOCAL),
+    GMT(Utils._("GMT"), HylaFAXClientProtocol.TZONE_GMT);
     
-    public FaxIntProperty(String desc, int type) {
-        this.desc = desc;
-        this.type = type;        
+    private final String text;
+    private final String timezone;
+    
+    public String getText() {
+        return text;
     }
     
-    public String toString() {
-        return desc;
+    public String getTimezone() {
+        return timezone;
     }
     
     @Override
-    public Object getKey() {
-        return type;
+    public String toString() {
+        return text;
     }
-    
-    public Object stringToKey(String strKey) {
-        return Integer.valueOf(strKey);
+
+    private FaxTimezone(String text, String timezone) {
+        this.text = text;
+        this.timezone = timezone;
     }
+
 }

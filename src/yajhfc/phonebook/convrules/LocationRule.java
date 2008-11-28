@@ -38,11 +38,16 @@ public enum LocationRule {
 
     public EntryToStringRule generateRule(ZIPCodeRule zipCodeRule) {
         int prefixLen = prefix.length;
-        Object[] resArray = new Object[prefixLen + suffix.length + 1];
+        int suffixLen = suffix.length;
+        Object[] resArray = new Object[prefixLen + suffixLen + 1];
         
-        System.arraycopy(prefix, 0, resArray, 0, prefixLen);
+        if (prefixLen > 0)
+            System.arraycopy(prefix, 0, resArray, 0, prefixLen);
+        
         resArray[prefixLen] = zipCodeRule;
-        System.arraycopy(suffix, 0, resArray, prefixLen+1, suffix.length);
+        
+        if (suffixLen > 0)
+            System.arraycopy(suffix, 0, resArray, prefixLen+1, suffixLen);
         
         return new ConcatRule(resArray);
     }

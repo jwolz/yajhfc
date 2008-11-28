@@ -20,27 +20,55 @@ package yajhfc;
 
 import java.util.Locale;
 
-public class YajLanguage extends MyManualMapObject {
-    
-    protected Locale locale;
+public enum YajLanguage  {
+    SYSTEM_DEFAULT(null),
+    ENGLISH(Locale.ENGLISH),
+    FRENCH(Locale.FRENCH),
+    GERMAN(Locale.GERMAN),
+    ITALIAN(Locale.ITALIAN),
+    SPANISH(new Locale("es")),
+    RUSSIAN(new Locale("ru")),
+    TURKISH(new Locale("tr"))
+    ;
+    private final Locale locale;
     
     public String toString() {
-        if (Utils.getLocale().getLanguage().equals(locale.getLanguage()))
-            return locale.getDisplayLanguage(Utils.getLocale());
-        else 
-            return locale.getDisplayLanguage(locale) + " (" + locale.getDisplayLanguage(Utils.getLocale()) + ")";
-    }
+        if (locale == null) {
+            return Utils._("(System default)");
+        } else {
+                if (Utils.getLocale().getLanguage().equals(locale.getLanguage()))
+                    return locale.getDisplayLanguage(Utils.getLocale());
+                else 
+                    return locale.getDisplayLanguage(locale) + " (" + locale.getDisplayLanguage(Utils.getLocale()) + ")";
+            }
+        }
     
     public Locale getLocale() {
-        return locale;
+        if (locale == null) {
+            return Locale.getDefault();
+        } else {
+            return locale;
+        }
     }
     
-    @Override
-    public Object getKey() {
-        return locale.getLanguage();
+    public String getLangCode() {
+        if (locale == null) {
+            return "auto";
+        } else {
+            return locale.getLanguage();
+        }
     }
 
-    public YajLanguage(Locale locale) {
+    private YajLanguage(Locale locale) {
         this.locale = locale;
+    }
+    
+    public static YajLanguage languageFromLangCode(String langCode) {
+        for (YajLanguage lang : values()) {
+            if (lang.getLangCode().equals(langCode)) {
+                return lang;
+            }
+        }
+        return SYSTEM_DEFAULT;
     }
 }

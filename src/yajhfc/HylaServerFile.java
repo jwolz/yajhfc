@@ -33,6 +33,7 @@ import yajhfc.file.FormattedFile.FileFormat;
 public class HylaServerFile {
     protected String path;
     protected FileFormat type;
+    protected File previewFile = null;
     
     public String getPath() {
         return path;
@@ -64,18 +65,24 @@ public class HylaServerFile {
             return type.getDefaultExtension();
     }
     
+    public File getPreviewFile(HylaFAXClient hyfc) throws IOException, ServerResponseException {
+        if (previewFile == null) {
+            previewFile = File.createTempFile("fax", "." + getDefaultExtension());
+            previewFile.deleteOnExit();
+            
+            download(hyfc, previewFile);     
+        }
+        return previewFile;
+    }
+    
     public void view(HylaFAXClient hyfc)
         throws IOException, FileNotFoundException, ServerResponseException, UnknownFormatException {
-        
-        File tmptif = File.createTempFile("fax", "." + getDefaultExtension());
-        tmptif.deleteOnExit();
-        
-        download(hyfc, tmptif);        
+        String fileName = getPreviewFile(hyfc).getPath();   
         
         if (type == FileFormat.Unknown) { // Try to autodetect
-            type = FormattedFile.detectFileFormat(tmptif.getPath());
+            type = FormattedFile.detectFileFormat(fileName);
         }
-        FormattedFile.viewFile(tmptif.getPath(), type);
+        FormattedFile.viewFile(fileName, type);
     }
     
     @Override

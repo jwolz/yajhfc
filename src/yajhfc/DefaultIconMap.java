@@ -95,16 +95,16 @@ public class DefaultIconMap implements IconMap {
             }
             switch (c) {
             case ' ':
-                original = Utils.notifications[0]; // never
+                original = FaxNotification.NEVER; // never
                 break;
             case 'D':
-                original = Utils.notifications[1]; // done
+                original = FaxNotification.DONE; // done
                 break;
             case 'Q':
-                original = Utils.notifications[2]; // requeue
+                original = FaxNotification.REQUEUE; // requeue
                 break;
             case 'A':
-                original = Utils.notifications[3]; // all
+                original = FaxNotification.DONE_AND_REQUEUE; // all
                 break;
             default:
                 original = null;
