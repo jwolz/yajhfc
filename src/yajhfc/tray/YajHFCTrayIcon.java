@@ -114,7 +114,7 @@ public class YajHFCTrayIcon implements UnreadItemListener, WindowListener {
     public void newItemsAvailable(UnreadItemEvent evt) {
         if (trayIcon != null && !evt.isOldDataNull()) {
             StringBuffer msg = new StringBuffer();
-            new MessageFormat(Utils._("{0} faxes received ({1} unread fax(es)):")).format(new Object[] { evt.getItems().size(), recvModel.getNumberOfUnreadFaxes()}, msg, null);
+            new MessageFormat(Utils._("{0} fax(es) received ({1} unread fax(es)):")).format(new Object[] { evt.getItems().size(), recvModel.getNumberOfUnreadFaxes()}, msg, null);
             int senderIdx = recvModel.columns.getCompleteView().indexOf(Utils.recvfmt_Sender);
             if (senderIdx >= 0) {
                 for (YajJob job : evt.getItems()) {

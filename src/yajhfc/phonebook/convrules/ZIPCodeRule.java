@@ -31,7 +31,7 @@ public enum ZIPCodeRule implements EntryToStringRule {
     ZIPCODE_LOCATION_STATE(new ConcatRule(PBEntryField.ZIPCode, " ", PBEntryField.Location, ", ", PBEntryField.State)),
     ;
     
-    private String displayName;
+    private final String displayName;
     private final EntryToStringRule rule;
     
     public String getDisplayName() {

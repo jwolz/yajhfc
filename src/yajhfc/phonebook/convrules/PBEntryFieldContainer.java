@@ -32,4 +32,10 @@ public interface PBEntryFieldContainer {
      * @return
      */
     public String getField(PBEntryField field);
+    
+    /**
+     * Sets the value of the given phone book field
+     * @param field
+     */
+    public void setField(PBEntryField field, String value);
 }

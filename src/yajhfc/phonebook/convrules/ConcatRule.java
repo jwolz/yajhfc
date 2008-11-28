@@ -37,6 +37,10 @@ public class ConcatRule extends DefaultEntryToStringRule {
         Object lastItem = null;
         boolean ignoreNext = false;
         
+        // Concatenate the children.
+        // A non-PBEntryField and non-EntryToStringRule child is only appended
+        // if *both* its predecessor and successor (if these exist) are of non-zero length
+        // PBEntryField and EntryToStringRule entries are always appended.
         for (Object child : children) {         
             if (child instanceof PBEntryField) {
                 String val = entry.getField((PBEntryField)child);
@@ -83,6 +87,11 @@ public class ConcatRule extends DefaultEntryToStringRule {
         return res.toString();
     }
     
+    /**
+     * Converts an Object array as used by a ConcatRule into a String representation.
+     * @param res
+     * @param children
+     */
     public static void objectArrayToString(StringBuilder res, Object[] children) {
         for (Object child : children) {
             if (child instanceof PBEntryField) {

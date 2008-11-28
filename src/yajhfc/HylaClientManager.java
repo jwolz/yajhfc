@@ -164,7 +164,7 @@ public class HylaClientManager {
                     }
 
                     client.setPassive(myopts.pasv);
-                    client.tzone(myopts.tzone.type);
+                    client.tzone(myopts.tzone.getTimezone());
 
                     client.rcvfmt(myopts.recvfmt.getFormatString());
                     return client;

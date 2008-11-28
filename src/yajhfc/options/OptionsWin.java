@@ -83,9 +83,10 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import yajhfc.FaxIntProperty;
+import yajhfc.FaxNotification;
 import yajhfc.FaxOptions;
-import yajhfc.FaxStringProperty;
+import yajhfc.FaxResolution;
+import yajhfc.FaxTimezone;
 import yajhfc.FileTextField;
 import yajhfc.FmtItem;
 import yajhfc.FmtItemDescComparator;
@@ -95,8 +96,8 @@ import yajhfc.IconMap;
 import yajhfc.PaperSize;
 import yajhfc.PluginManager;
 import yajhfc.PluginTableModel;
-import yajhfc.YajLanguage;
 import yajhfc.Utils;
+import yajhfc.YajLanguage;
 import yajhfc.PluginManager.PluginType;
 import yajhfc.readstate.AvailablePersistenceMethod;
 import yajhfc.readstate.PersistentReadState;
@@ -360,12 +361,11 @@ public class OptionsWin extends JDialog {
 //        return TabMain;
 //    }
     
-    private JComponent getMainPanel() {
-        
+    private void createRootNode() {
         rootNode = new PanelTreeNode(null, null, "root", null);
         List<PanelTreeNode> rootChilds = new ArrayList<PanelTreeNode>();
 
-        rootChilds.add(new PanelTreeNode(rootNode, getPanelCommon(), _("Common"), Utils.loadIcon("general/Preferences")));
+        rootChilds.add(new PanelTreeNode(rootNode, getPanelCommon(), _("General"), Utils.loadIcon("general/Preferences")));
         rootChilds.add(new PanelTreeNode(rootNode, getPanelServerSettings(), _("Server"), Utils.loadIcon("development/Server")));
         PanelTreeNode deliveryNode = new PanelTreeNode(rootNode, getPanelSend(), _("Delivery"), Utils.loadIcon("general/SendMail"));
         CoverPanel coverPanel = new CoverPanel();
@@ -394,6 +394,10 @@ public class OptionsWin extends JDialog {
         rootChilds.add(tables);
 
         rootNode.setChildren(rootChilds);
+    }
+    
+    private JComponent getMainPanel() {
+        createRootNode();
 
         mainTree = new JTree(new DefaultTreeModel(rootNode));
         mainTree.setRootVisible(false);
@@ -563,7 +567,7 @@ public class OptionsWin extends JDialog {
             
             //comboNewFaxAction = new JComboBox(Utils.newFaxActions);
             
-            comboLang = new JComboBox(Utils.AvailableLocales);
+            comboLang = new JComboBox(YajLanguage.values());
             
             lookAndFeels = LF_Entry.getLookAndFeelList();
             comboLookAndFeel = new JComboBox(lookAndFeels);
@@ -691,11 +695,11 @@ public class OptionsWin extends JDialog {
             textNotifyAddress = new JTextField();
             textNotifyAddress.addMouseListener(clpDef);
             
-            comboTZone = new JComboBox(Utils.timezones);
-            comboNotify = new JComboBox(Utils.notifications);
+            comboTZone = new JComboBox(FaxTimezone.values());
+            comboNotify = new JComboBox(FaxNotification.values());
             comboNotify.setRenderer(new IconMap.ListCellRenderer());
-            comboPaperSize = new JComboBox(Utils.papersizes);
-            comboResolution = new JComboBox(Utils.resolutions);
+            comboPaperSize = new JComboBox(PaperSize.values());
+            comboResolution = new JComboBox(FaxResolution.values());
             
             //availableModems = HylaModem.defaultModems;
             comboModem = new JComboBox(availableModems.toArray());
@@ -912,10 +916,10 @@ public class OptionsWin extends JDialog {
                 foEdit.psViewer = ftfPSViewer.getText();
                 foEdit.AdminPassword = new String(textAdminPassword.getPassword());
                 
-                foEdit.notifyWhen = (FaxStringProperty)comboNotify.getSelectedItem();
+                foEdit.notifyWhen = (FaxNotification)comboNotify.getSelectedItem();
                 foEdit.paperSize = (PaperSize)comboPaperSize.getSelectedItem();
-                foEdit.resolution = (FaxIntProperty)comboResolution.getSelectedItem();
-                foEdit.tzone = (FaxStringProperty)comboTZone.getSelectedItem();
+                foEdit.resolution = (FaxResolution)comboResolution.getSelectedItem();
+                foEdit.tzone = (FaxTimezone)comboTZone.getSelectedItem();
                 //foEdit.newFaxAction = (FaxIntProperty)comboNewFaxAction.getSelectedItem();
                 foEdit.sendWinStyle = (SendWinStyle)comboSendWinStyle.getSelectedItem();
                 

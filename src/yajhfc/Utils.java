@@ -18,10 +18,6 @@ package yajhfc;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-import gnu.hylafax.HylaFAXClientProtocol;
-import gnu.hylafax.Job;
-import gnu.hylafax.Pagesize;
-
 import java.awt.Cursor;
 import java.awt.Dialog;
 import java.awt.Frame;
@@ -174,37 +170,12 @@ public final class Utils {
             recvfmt_InProgress
     };
     
-    public static final PaperSize[] papersizes = {
-            new PaperSize("A4", Pagesize.A4),
-            new PaperSize("A5", Pagesize.A5),
-            new PaperSize("Letter", Pagesize.LETTER),
-            new PaperSize("Legal", Pagesize.LEGAL)
-    };
     
-    public static final FaxIntProperty[] resolutions = {
-            new FaxIntProperty(_("High (196 lpi)"), Job.RESOLUTION_MEDIUM),
-            new FaxIntProperty(_("Low (98 lpi)"), Job.RESOLUTION_LOW)      
-    };
-    
-    public static final FaxStringAndIconProperty[] notifications = {
-            new FaxStringAndIconProperty(_("Never"), Job.NOTIFY_NONE, Utils.loadCustomIcon("notify_NONE.png")),
-            new FaxStringAndIconProperty(_("Delivered"), Job.NOTIFY_DONE, Utils.loadCustomIcon("notify_DONE.png")),
-            new FaxStringAndIconProperty(_("Requeued"), Job.NOTIFY_REQUEUE, Utils.loadCustomIcon("notify_REQUEUE.png")),
-            new FaxStringAndIconProperty(_("Delivered or requeued"), Job.NOTIFY_ALL, Utils.loadCustomIcon("notify_ALL.png"))
-    };
-    
-    public static final FaxStringProperty[] timezones = {
-        new FaxStringProperty(_("Local timezone"), HylaFAXClientProtocol.TZONE_LOCAL),
-        new FaxStringProperty(_("GMT"), HylaFAXClientProtocol.TZONE_GMT)
-    };
-    
-
     public static final FmtItem[] requiredSendingFmts = {
         jobfmt_JobID,
         jobfmt_Owner,
         jobfmt_Jobstate
     };
-
 
     public static final FmtItem[] requiredSentFmts = requiredSendingFmts;
 
@@ -223,28 +194,6 @@ public final class Utils {
     public static final int NEWFAX_VIEWER = 4;
     public static final int NEWFAX_MARKASREAD = 8;
     
-    /*
-    public static final FaxIntProperty[] newFaxActions = {
-        new FaxIntProperty(_("No action"), NEWFAX_NOACTION),
-        new FaxIntProperty(_("Beep"), NEWFAX_BEEP),
-        new FaxIntProperty(_("Bring to front"), NEWFAX_TOFRONT),
-        new FaxIntProperty(_("Beep & bring to front"), NEWFAX_BEEP | NEWFAX_TOFRONT),
-        new FaxIntProperty(_("Open in viewer"), NEWFAX_VIEWER),
-        new FaxIntProperty(_("Beep & open in viewer"), NEWFAX_VIEWER | NEWFAX_BEEP)
-    };
-    */
-    
-    // Update this when new translations are added!
-    public static final YajLanguage[] AvailableLocales = {
-        new YajAutoLanguage(),
-        new YajLanguage(Locale.ENGLISH),
-        new YajLanguage(Locale.FRENCH),
-        new YajLanguage(Locale.GERMAN),
-        new YajLanguage(Locale.ITALIAN),
-        new YajLanguage(new Locale("es")),
-        new YajLanguage(new Locale("ru")),
-        new YajLanguage(new Locale("tr"))
-    };
     
     private static File applicationDir;
     public static File getApplicationDir() {

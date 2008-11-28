@@ -119,15 +119,15 @@ class FaxcoverHyla extends Faxcover {
         wOut.write("%%CreationDate: " + (new Date()).toString() + "\n");
         wOut.write("%%Origin: 0 0\n");
         wOut.write(String.format(Locale.US, "%%%%BoundingBox: 0 0 %.0f %.0f\n",
-                (pageSize.size.width/25.4)*72, (pageSize.size.height/25.4)*72));
+                (pageSize.getSize().width/25.4)*72, (pageSize.getSize().height/25.4)*72));
         wOut.write("%%Pages: 1 +1\n");
         wOut.write("%%EndComments\n");
         wOut.write("%%BeginProlog\n");
         wOut.write(String.format(Locale.US, "%d dict begin\n", maxcomments*2 + 80));
         wOut.write(prologue);
         emitToDefs();
-        wOut.write(String.format(Locale.US, "/pageWidth %d def\n", pageSize.size.width));
-        wOut.write(String.format(Locale.US, "/pageLength %d def\n", pageSize.size.height));
+        wOut.write(String.format(Locale.US, "/pageWidth %d def\n", pageSize.getSize().width));
+        wOut.write(String.format(Locale.US, "/pageLength %d def\n", pageSize.getSize().height));
         emitFromDefs();
         coverDef("page-count", String.valueOf(pageCount));
         emitDateDefs();

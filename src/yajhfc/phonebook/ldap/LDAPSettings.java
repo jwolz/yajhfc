@@ -33,6 +33,8 @@ public class LDAPSettings extends GeneralConnectionSettings {
     public String bindDN = "";
     public String credential = "";
     public boolean askForCredential = false;
+    public boolean initiallyLoadAll = true;
+    public int countLimit = 1000;
     
     public String objectFilter = "(facsimileTelephoneNumber=*)";
     public boolean searchSubTree = true;
@@ -91,12 +93,12 @@ public class LDAPSettings extends GeneralConnectionSettings {
     private static final int STATE_CURCHARESCAPED = 2;
     private static final int STATE_STRIPSPACES = 3;
     /**
-     * Strips spaces after , and ; used as separator to wor around
+     * Strips spaces after , and ; used as separator to work around
      * server bugs.
      * @param dn
      * @return
      */
-    public static final String sanitizeDN(String dn) {
+    public static String sanitizeDN(String dn) {
         StringBuilder rv = new StringBuilder(dn.length());
         int state = STATE_NORMAL;
 

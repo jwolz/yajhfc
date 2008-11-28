@@ -1,6 +1,6 @@
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005-2007 Jonas Wolz
+ * Copyright (C) 2005-2008 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,38 +18,36 @@
  */
 package yajhfc;
 
-import javax.swing.Icon;
+import gnu.hylafax.Job;
 
 /**
- * A fax string property with an attached icon.
  * @author jonas
  *
  */
-public class FaxStringAndIconProperty extends FaxStringProperty implements
-        IconMap {
-
-    protected Icon displayIcon;
-
-    public FaxStringAndIconProperty(String desc, String type, Icon displayIcon) {
-        super(desc, type);
-        this.displayIcon = displayIcon;
-    }
-
-    /* (non-Javadoc)
-     * @see yajhfc.IconMap#getDisplayIcon()
-     */
-    public Icon getDisplayIcon() {
-        return displayIcon;
-    }
-
-    /* (non-Javadoc)
-     * @see yajhfc.IconMap#getText()
-     */
+public enum FaxResolution {
+    HIGH(Utils._("High (196 lpi)"), Job.RESOLUTION_MEDIUM),
+    LOW(Utils._("Low (98 lpi)"), Job.RESOLUTION_LOW)   
+    ;
+    
+    private final String text;
+    private final int resolution;
+    
     public String getText() {
-        return desc;
+        return text;
+    }
+    
+    public int getResolution() {
+        return resolution;
+    }
+    
+    @Override
+    public String toString() {
+        return text;
     }
 
-    public String getDescription() {
-        return null;
+    private FaxResolution(String text, int resolution) {
+        this.text = text;
+        this.resolution = resolution;
     }
+
 }

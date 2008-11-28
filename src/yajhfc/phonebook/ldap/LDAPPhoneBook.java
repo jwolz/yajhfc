@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
@@ -34,9 +36,17 @@ import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
 import yajhfc.Utils;
+import yajhfc.filters.AndFilter;
+import yajhfc.filters.ConcatStringFilter;
+import yajhfc.filters.Filter;
+import yajhfc.filters.OrFilter;
+import yajhfc.filters.StringFilter;
+import yajhfc.filters.StringFilterOperator;
+import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.PhoneBook;
 import yajhfc.phonebook.PhoneBookEntry;
 import yajhfc.phonebook.PhoneBookException;
+import yajhfc.util.ExceptionDialog;
 import yajhfc.util.PasswordDialog;
 
 public class LDAPPhoneBook extends PhoneBook {
@@ -44,6 +54,8 @@ public class LDAPPhoneBook extends PhoneBook {
     public static final String PB_Prefix = "LDAP";      // The prefix of this Phonebook type's descriptor
     public static final String PB_DisplayName = Utils._("LDAP Phonebook (read only)"); // A user-readable name for this Phonebook type
     public static final String PB_Description = Utils._("A Phonebook reading its entries from an LDAP directory."); // A user-readable description of this Phonebook type
+
+    private static final Logger log = Logger.getLogger(LDAPPhoneBook.class.getName());
     
     LDAPSettings settings;
     private DirContext ctx;
@@ -118,33 +130,189 @@ public class LDAPPhoneBook extends PhoneBook {
             
             ctx = new InitialDirContext(env);
             
-            SearchControls sctl = new SearchControls();
-            if (settings.searchSubTree) 
-                sctl.setSearchScope(SearchControls.SUBTREE_SCOPE);
-            else
-                sctl.setSearchScope(SearchControls.ONELEVEL_SCOPE);
-            
-            sctl.setReturningAttributes(settings.getAttributes());
-            
-            String filter;
-            if (settings.objectFilter == null || settings.objectFilter.length() == 0)
-                filter = "(objectClass=*)";
-            else
-                filter = settings.objectFilter;
-            
-            NamingEnumeration<SearchResult> res = ctx.search("", filter, sctl);
-            while (res.hasMore()) {
-                entries.add(new LDAPPhoneBookEntry(this, res.next()));
+            if (settings.initiallyLoadAll) {
+                loadEntries(entries, null, settings.countLimit);
             }
-            res.close();
-            
-            resort();
         } catch (NamingException e) {
             ctx = null;
             throw new PhoneBookException(e, false);
         }
     }
+    
+    @SuppressWarnings("unchecked")
+    protected <T extends PhoneBookEntry> void loadEntries(List<T> targetList, Filter<PhoneBookEntry,PBEntryField> pbFilter, int countLimit) throws NamingException {
+        
+        SearchControls sctl = new SearchControls();
+        if (settings.searchSubTree) 
+            sctl.setSearchScope(SearchControls.SUBTREE_SCOPE);
+        else
+            sctl.setSearchScope(SearchControls.ONELEVEL_SCOPE);
+        
+        sctl.setCountLimit(countLimit);
+        sctl.setReturningAttributes(settings.getAttributes());
+        
+        String filter = getLDAPFilter(pbFilter);
+        if (Utils.debugMode) {
+            log.fine("LDAP filter: " + filter);
+        }
+        //System.out.println(filter);
+        
+        NamingEnumeration<SearchResult> res = ctx.search("", filter, sctl);
+        while (res.hasMore()) {
+            targetList.add((T)new LDAPPhoneBookEntry(this, res.next()));
+        }
+        res.close();
+        
+        Collections.sort(targetList);
+    }
 
+    @Override
+    public List<PhoneBookEntry> applyFilter(
+            Filter<PhoneBookEntry, PBEntryField> filter) {
+        if (settings.initiallyLoadAll || filter == null) {
+            return super.applyFilter(filter);
+        } else {
+            List<PhoneBookEntry> resultList = new ArrayList<PhoneBookEntry>();
+            try {
+                loadEntries(resultList, filter, settings.countLimit);
+            } catch (NamingException e) {
+                ExceptionDialog.showExceptionDialog(this.parentDialog, Utils._("Error executing the search:"), e);
+            }
+            lastFilterResult = resultList;
+            return resultList;
+        }
+    }
+    
+    protected String getLDAPFilter(Filter<PhoneBookEntry,PBEntryField> pbFilter) {
+        String initialFilter;
+        if (settings.objectFilter == null || settings.objectFilter.length() == 0) {
+            initialFilter = "(objectClass=*)";
+        } else {
+            initialFilter = settings.objectFilter;
+        }
+        
+        if (pbFilter == null) {
+            return initialFilter;
+        } else {
+            StringBuilder res = new StringBuilder();
+            res.append("(&");
+            if (initialFilter.charAt(0) == '(' && initialFilter.charAt(initialFilter.length() - 1) == ')') {
+                res.append(initialFilter);
+            } else {
+                res.append('(').append(initialFilter).append(')');
+            }
+            appendLDAPSearchForFilter(res, pbFilter);
+            res.append(')');
+            return res.toString();
+        }
+    }
+    
+    protected static final Pattern tokenSplitter = Pattern.compile("(\\s|[,;])+");
+    protected void appendLDAPSearchForFilter(StringBuilder appendTo, Filter<PhoneBookEntry,PBEntryField> filter) {
+        if (filter instanceof AndFilter) { 
+            AndFilter<PhoneBookEntry, PBEntryField> andFilter = (AndFilter<PhoneBookEntry, PBEntryField>)filter;
+            appendTo.append('(');
+            if (filter instanceof OrFilter) {
+                appendTo.append('|');
+            } else { // "plain" AndFilter
+                appendTo.append('&');
+            }
+            for (Filter<PhoneBookEntry, PBEntryField> child : andFilter.getChildList()) {
+                appendLDAPSearchForFilter(appendTo, child);
+            }
+            appendTo.append(')');
+        } else if (filter instanceof StringFilter) {
+            StringFilter<PhoneBookEntry, PBEntryField> strFilter = (StringFilter<PhoneBookEntry, PBEntryField>)filter;
+            appendStringFilter(appendTo, strFilter.getColumn(), strFilter.getOperator(), strFilter.getCompareValue().toString());
+        } else if (filter instanceof ConcatStringFilter) {
+            ConcatStringFilter<PhoneBookEntry, PBEntryField> strFilter = (ConcatStringFilter<PhoneBookEntry, PBEntryField>)filter;
+            String[] tokens = tokenSplitter.split(strFilter.getCompareValue().toString());
+            if (tokens.length > 1) {
+                appendTo.append("(&");
+            }
+            for (String token : tokens) {
+                appendTo.append("(|");
+                for (Object o : strFilter.getConcatVals()) {
+                    if (o instanceof PBEntryField) {
+                        appendStringFilter(appendTo, (PBEntryField)o, strFilter.getOperator(), token);
+                    }
+                }
+                appendTo.append(')');
+            }
+            if (tokens.length > 1) {
+                appendTo.append(')');
+            }
+        } else {
+            log.severe("Unsupported filter type: " + filter.getClass());
+            appendTo.append("(objectClass=*)");
+        }
+    }
+    
+    protected void appendStringFilter(StringBuilder appendTo, PBEntryField field, StringFilterOperator operator, String compVal) {
+        String mapping = settings.getMappingFor(field);
+        if (LDAPSettings.isNoField(mapping)) {
+            appendTo.append("(objectClass=*)");
+        } else {
+            appendTo.append('(');
+            switch (operator) {
+            case CONTAINS:
+                appendTo.append(mapping);
+                appendTo.append("=*");
+                appendEscaped(appendTo, compVal);
+                appendTo.append('*');
+                break;
+            case ENDSWITH:
+                appendTo.append(mapping);
+                appendTo.append("=*");
+                appendEscaped(appendTo, compVal);
+                break;
+            case STARTSWITH:
+                appendTo.append(mapping);
+                appendTo.append('=');
+                appendEscaped(appendTo, compVal);
+                appendTo.append('*');
+                break;
+            default:
+                log.warning("Unsupported String operator " + operator.name()); 
+                // Fall through intended!
+            case EQUAL:
+                appendTo.append(mapping);
+                appendTo.append('=');
+                appendEscaped(appendTo, compVal);
+                break;
+            case NOTEQUAL:
+                appendTo.append("!(");
+                appendTo.append(mapping);
+                appendTo.append('=');
+                appendEscaped(appendTo, compVal);
+                appendTo.append(')');
+                break;
+            }
+            appendTo.append(')');
+        }
+    }
+    
+    public static void appendEscaped(StringBuilder appendTo, String toAppend) {
+        for (int i=0; i<toAppend.length(); i++) {
+            char c = toAppend.charAt(i);
+            switch (c) {
+            case 0:
+            case '*':
+            case '(':
+            case ')':
+            case '\\':
+                appendTo.append('\\').
+                    append(Character.forDigit((c & 0xf), 16)).
+                    append(Character.forDigit((c >> 4) & 0xf, 16));
+                break;
+            default:
+                appendTo.append(c);
+                break;
+            }
+        }
+    }
+    
+    
     @Override
     public String getDisplayCaption() {
         if (settings.displayCaption != null && settings.displayCaption.length() > 0) {

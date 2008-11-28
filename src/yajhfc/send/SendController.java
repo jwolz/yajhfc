@@ -46,7 +46,7 @@ import yajhfc.Utils;
 import yajhfc.faxcover.Faxcover;
 import yajhfc.faxcover.Faxcover.InvalidCoverFormatException;
 import yajhfc.file.FormattedFile;
-import yajhfc.file.FormattedFile.FileFormat;
+import yajhfc.file.MultiFileConverter;
 import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
 import yajhfc.phonebook.convrules.NameRule;
@@ -73,8 +73,8 @@ public class SendController {
     protected File customCover = null;
     
     protected int maxTries = Utils.getFaxOptions().maxTry;
-    protected String notificationType = Utils.getFaxOptions().notifyWhen.type;
-    protected int resolution = Utils.getFaxOptions().resolution.type;
+    protected String notificationType = Utils.getFaxOptions().notifyWhen.getType();
+    protected int resolution = Utils.getFaxOptions().resolution.getResolution();
     protected int killTime = Utils.getFaxOptions().killTime;
     
     protected ProgressUI progressMonitor = null;
@@ -177,7 +177,7 @@ public class SendController {
         }
         
         protected int calculateMaxProgress() {
-            return 10000;
+            return 15000;
         }
 
         @Override
@@ -185,13 +185,15 @@ public class SendController {
             try {
                 int step;
                 setPaperSizes();
-
+                List<FormattedFile> viewFiles = new ArrayList<FormattedFile>(files.size() + 1);
+                
                 if (useCover) {
                     step = 10000 / (files.size() + 1);
                     updateNote(Utils._("Creating cover page"));
 
                     File coverFile = makeCoverFile(initFaxCover(), selectedNumber);
-                    FormattedFile.viewFile(coverFile.getPath(), FileFormat.PostScript);
+                    //FormattedFile.viewFile(coverFile.getPath(), FileFormat.PostScript);
+                    viewFiles.add(new FormattedFile(coverFile));
                     setProgress(step);
                 } else {
                     if (files.size() > 0)
@@ -206,12 +208,15 @@ public class SendController {
                 try {
                     for (HylaTFLItem item : files) {
                         updateNote(MessageFormat.format(Utils._("Formatting {0}"), Utils.shortenFileNameForDisplay(item.getText(), FILE_DISPLAY_LEN)));
-                        item.preview(SendController.this.parent, hyfc);
+                        //item.preview(SendController.this.parent, hyfc);
+                        viewFiles.add(item.getPreviewFilename(hyfc));
                         stepProgressBar(step);
                     }
                 } finally {
                     clientManager.endServerTransaction();                    
                 }
+                updateNote(Utils._("Launching viewer..."));
+                MultiFileConverter.viewMultipleFiles(viewFiles.toArray(new FormattedFile[viewFiles.size()]), paperSize);
             } catch (Exception e1) {
                 showExceptionDialog(Utils._("Error previewing the documents:"), e1);
             } 
@@ -349,7 +354,7 @@ public class SendController {
                             //j.setProperty("EXTERNAL", faxNumber); // needed to fix an error while sending multiple jobs
                             j.setMaximumTries(maxTries);
                             j.setNotifyType(notificationType);
-                            j.setPageDimension(paperSize.size);
+                            j.setPageDimension(paperSize.getSize());
                             j.setVerticalResolution(resolution);
                             j.setSendTime("NOW"); // bug fix 
                             j.setKilltime(Utils.minutesToHylaTime(killTime));  

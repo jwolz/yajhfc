@@ -1,7 +1,6 @@
-package yajhfc;
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005 Jonas Wolz
+ * Copyright (C) 2005-2008 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,23 +16,30 @@ package yajhfc;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+package yajhfc.file;
 
+import yajhfc.file.FormattedFile.FileFormat;
 
-public class FaxStringProperty extends MyManualMapObject {
-    public String desc;
-    public String type;
+/**
+ * @author jonas
+ *
+ */
+public class PSMultiFileConverter extends PDFMultiFileConverter {
+    private static final String[] additionalGSParams = {
+    };
     
-    public FaxStringProperty(String desc, String type) {
-        this.desc = desc;
-        this.type = type;        
-    }
-    
-    public String toString() {
-        return desc;
+    @Override
+    public FileFormat getTargetFormat() {
+        return FileFormat.PostScript;
     }
     
     @Override
-    public Object getKey() {
-        return type;
+    protected String[] getAdditionalGSParams() {
+        return additionalGSParams;
+    }
+    
+    @Override
+    protected String getGSDevice() {
+        return "pswrite";
     }
 }

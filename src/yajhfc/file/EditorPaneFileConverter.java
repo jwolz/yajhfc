@@ -77,7 +77,7 @@ public class EditorPaneFileConverter extends PrintServiceFileConverter {
     public void convertToHylaFormat(URL inURL, OutputStream destination,
             PaperSize paperSize, URL baseURL) throws ConversionException {
         try {            
-            PrintableEditorPane pep = new PrintableEditorPane(paperSize.size);
+            PrintableEditorPane pep = new PrintableEditorPane(paperSize.getSize());
      
             pep.loadURL(inURL, contentType, baseURL);
             convertUsingPrintService(pep, destination, paperSize);
