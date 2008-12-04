@@ -141,7 +141,7 @@
 			<fileset dir="${src}/src" includes="yajhfc/*.png,yajhfc/images/*,yajhfc/faxcover/*.ps"/>
 		</jar>
 	</target>
-
+	
 	<target name="sourcedist" depends="init,i18n,doc" description="generate the source distribution" >
 		<zip destfile="${srczip-output}">
 			<zipfileset dir="${src}" prefix="yajhfc/">
@@ -184,5 +184,12 @@
 		<!-- Delete the ${build} directory tree and the jar file -->
 		<delete dir="${build}"/>
 		<delete file="${jar-output}"/>
+	</target>
+
+	<target name="upload-dist" depends="dist" description="upload developer version to ftp.berlios.de">
+		<exec dir="${src}" executable="scp">
+			<arg value="${jar-output}"/>
+			<arg value="jwolz@shell.berlios.de:/home/groups/ftp/pub/yajhfc/temp/"/>
+		</exec>
 	</target>
 </project>

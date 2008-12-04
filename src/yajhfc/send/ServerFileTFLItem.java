@@ -44,7 +44,7 @@ public class ServerFileTFLItem extends HylaTFLItem {
     @Override
     public FormattedFile getPreviewFilename(HylaFAXClient hyfc) throws IOException {
         try {
-            return new FormattedFile(hysf.getPreviewFile(hyfc));
+            return hysf.getPreviewFile(hyfc);
         } catch (ServerResponseException e) {
             IOException ioEx = new IOException(e.getMessage());
             ioEx.initCause(e);

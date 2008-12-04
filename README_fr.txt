@@ -61,6 +61,11 @@ YajHFC a ete originellement ecrit comme un premier projet Java
 
 MODIFICATIONS
 -------------
+0.3.9:
+- Traduction italiennes et turques ajoutees
+- "Recherche rapide" Pour les carnets d'adresse
+- Beaucoup de corections de bugs et quelques ameliorations
+
 0.3.8:
 - Amelioration de la fenetre d'annuaire avec un meilleur support du multi annuaire
 - Support de l'nregistrement de l'etat lu/non lu des faxs dans une base de donnee centrale.

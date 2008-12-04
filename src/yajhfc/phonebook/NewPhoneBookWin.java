@@ -107,8 +107,6 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     
     EntryTextFieldListener entryListener;
     
-    ClipboardPopup defClPop;
-    
     JMenu pbMenu, importMenu, openMenu, entryMenu;
     JPopupMenu treePopup;
     
@@ -283,10 +281,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
        
             
     private ClipboardPopup getDefClPop() {
-        if (defClPop == null) {
-            defClPop = new ClipboardPopup();
-        }
-        return defClPop;
+        return ClipboardPopup.DEFAULT_POPUP;
     }
     
     public PhoneBook getCurrentPhoneBook() {
@@ -475,6 +470,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         prefSize.width = Integer.MAX_VALUE;
         prefSize.height += 4;
         searchField.setMaximumSize(prefSize);
+        searchField.addMouseListener(getDefClPop());
         
         clearButton = new JButton(Utils._("Reset"));
         clearButton.setActionCommand("clear");

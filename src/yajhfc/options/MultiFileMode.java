@@ -16,34 +16,29 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package yajhfc.send;
+package yajhfc.options;
 
-import yajhfc.phonebook.PBEntryField;
-import yajhfc.phonebook.PhoneBookEntry;
-import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
+import yajhfc.Utils;
 
-public class NumberTFLItem extends TFLItem {
-    public final DefaultPBEntryFieldContainer fields = new DefaultPBEntryFieldContainer("");
+/**
+ * @author jonas
+ *
+ */
+public enum MultiFileMode {
+    NONE(Utils._("Multiple files, no conversion")),
+    EXCEPT_COVER(Utils._("Single file except for cover (needs GhostScript+tiff2pdf)")),
+    FULL_FAX(Utils._("Complete fax as single file (needs GhostScript+tiff2pdf)"))
+    ;
     
+    private final String desc;
+
     @Override
-    public String getText() {
-        return fields.get(PBEntryField.FaxNumber);
+    public String toString() {
+        return desc;
     }
     
-    @Override
-    public void setText(String newText) {
-        fields.put(PBEntryField.FaxNumber, newText);
+    private MultiFileMode(String desc) {
+        this.desc = desc;
     }
     
-    public void loadFromPBE(PhoneBookEntry pbe) {
-        fields.copyFrom(pbe);
-    }
-    
-    public NumberTFLItem(String number) {
-        setText(number);
-    }
-    
-    public NumberTFLItem(PhoneBookEntry pbe) {
-        loadFromPBE(pbe);
-    }
 }

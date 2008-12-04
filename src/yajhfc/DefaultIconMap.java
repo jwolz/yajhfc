@@ -63,7 +63,7 @@ public class DefaultIconMap implements IconMap {
      */
     protected static final Map<String,IconMap> instanceCache = new HashMap<String,IconMap>();
     
-    public static IconMap getInstance(FmtItem fmtItem, String textData) {
+    public static IconMap getInstance(FmtItem0 fmtItem, String textData) {
         String cacheKey = fmtItem.fmt + "|" + textData;
         IconMap res = instanceCache.get(cacheKey);
         if (res != null) {

@@ -40,6 +40,10 @@ import javax.swing.JProgressBar;
 public class ProgressPanel extends JLayeredPane implements ProgressWorker.ProgressUI {
 
     protected JPanel progressPanel;
+    public JPanel getProgressPanel() {
+        return progressPanel;
+    }
+
     protected JProgressBar progressBar;
     protected JLabel progressLabel;
     protected JLabel noteLabel;
@@ -51,7 +55,7 @@ public class ProgressPanel extends JLayeredPane implements ProgressWorker.Progre
     protected static final int inset = 6;
     
     public ProgressPanel() {     
-        progressPanel = new JPanel(null);
+        progressPanel = new JPanel(null, false);
         progressPanel.setLayout(new BoxLayout(progressPanel, BoxLayout.Y_AXIS));
         progressPanel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createRaisedBevelBorder(),

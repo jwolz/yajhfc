@@ -24,7 +24,7 @@ import java.util.Arrays;
 
 import javax.swing.table.AbstractTableModel;
 
-import yajhfc.FmtItem;
+import yajhfc.FmtItem0;
 import yajhfc.FmtItemList;
 import yajhfc.Utils;
 import yajhfc.filters.Filter;
@@ -36,7 +36,7 @@ public class MyTableModel extends AbstractTableModel {
      * jobs: *All* Jobs from the HylaFAX server
      */
     protected YajJob[] jobs; 
-    protected Filter<YajJob,FmtItem> jobFilter = null;
+    protected Filter<YajJob,FmtItem0> jobFilter = null;
     protected int rowCount = 0;
     /**
      * visibleJobs: Only the visible Jobs (after jobFilter has been applied).
@@ -50,12 +50,12 @@ public class MyTableModel extends AbstractTableModel {
     
     public Color errorColor = defErrorColor;
     
-    public void setJobFilter(Filter<YajJob,FmtItem> jobFilter) {
+    public void setJobFilter(Filter<YajJob,FmtItem0> jobFilter) {
         this.jobFilter = jobFilter;
         refreshVisibleJobs();
     }
     
-    public Filter<YajJob,FmtItem> getJobFilter() {
+    public Filter<YajJob,FmtItem0> getJobFilter() {
         return jobFilter;
     }
     

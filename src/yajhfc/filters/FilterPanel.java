@@ -33,13 +33,13 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
-import yajhfc.FmtItem;
+import yajhfc.FmtItem0;
 import yajhfc.FmtItemList;
 import yajhfc.FmtItemRenderer;
 import yajhfc.Utils;
 import yajhfc.util.ClipboardPopup;
 
-public class FilterPanel<V extends FilterableObject,K extends FmtItem> extends JPanel implements ActionListener {
+public class FilterPanel<V extends FilterableObject,K extends FmtItem0> extends JPanel implements ActionListener {
 
     private JComboBox comboColumns, comboOperator;
     private JTextField textValue;
@@ -47,7 +47,7 @@ public class FilterPanel<V extends FilterableObject,K extends FmtItem> extends J
     private DefaultComboBoxModel colModel;
     private Class<?> oldClass;
     
-    private static final FmtItem voidFmtItem = new FmtItem("", Utils._("(none)"), Void.class);
+    private static final FmtItem0 voidFmtItem = new FmtItem0("", Utils._("(none)"), Void.class);
     private static final String[] comboOperatorDummy = { "                         " };
     
     public void addDeleteActionListener(ActionListener al) {
@@ -91,7 +91,7 @@ public class FilterPanel<V extends FilterableObject,K extends FmtItem> extends J
     
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("columnsel")) {
-            Class<?> colClass = ((FmtItem)comboColumns.getSelectedItem()).dataClass;
+            Class<?> colClass = ((FmtItem0)comboColumns.getSelectedItem()).dataClass;
             if (oldClass != colClass) {
                 oldClass = colClass;
                 Object [] ops = FilterCreator.getOperators(colClass);
@@ -130,7 +130,7 @@ public class FilterPanel<V extends FilterableObject,K extends FmtItem> extends J
         setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
         setBorder(BorderFactory.createCompoundBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED), BorderFactory.createEmptyBorder(border, border, border, border)));
         
-        colModel = new DefaultComboBoxModel(new Vector<FmtItem>(columns.getCompleteView()));
+        colModel = new DefaultComboBoxModel(new Vector<FmtItem0>(columns.getCompleteView()));
         colModel.insertElementAt(voidFmtItem, 0);
         comboColumns = new JComboBox(colModel);
         comboColumns.setRenderer(new FmtItemRenderer());
@@ -146,7 +146,7 @@ public class FilterPanel<V extends FilterableObject,K extends FmtItem> extends J
         
         textValue = new JTextField(20);
         textValue.setEnabled(false);
-        textValue.addMouseListener(new ClipboardPopup());
+        textValue.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
         
         buttonDelete = new JButton(Utils.loadIcon("general/Delete"));
         buttonDelete.setToolTipText(Utils._("Remove this condition"));

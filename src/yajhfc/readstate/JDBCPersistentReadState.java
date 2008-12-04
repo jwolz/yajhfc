@@ -82,9 +82,11 @@ public class JDBCPersistentReadState extends PersistentReadState {
 
         String password;
         if (settings.askForPWD) {
-            password = PasswordDialog.showPasswordDialog(Launcher2.application, Utils._("Database password"), MessageFormat.format(Utils._("Please enter the database password for user {0} (database: {1})."), settings.user, settings.dbURL));
-            if (password == null)
+            String[] pwd = PasswordDialog.showPasswordDialog(Launcher2.application, Utils._("Database password"), MessageFormat.format(Utils._("Please enter the database password (database: {0})."), settings.dbURL), settings.user, false);
+            if (pwd == null)
                 return;
+            else
+                password = pwd[1];
         } else {
             password = settings.pwd;
         }

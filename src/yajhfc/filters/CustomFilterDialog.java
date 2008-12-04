@@ -48,7 +48,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
-import yajhfc.FmtItem;
+import yajhfc.FmtItem0;
 import yajhfc.FmtItemList;
 import yajhfc.Utils;
 import yajhfc.model.YajJob;
@@ -64,9 +64,9 @@ public class CustomFilterDialog extends JDialog
     
     private FmtItemList columns;
     
-    public Filter<YajJob,FmtItem> returnValue = null;
+    public Filter<YajJob,FmtItem0> returnValue = null;
     
-    private void initialize(String tableName, FmtItemList columns, Filter<YajJob,FmtItem> init) {
+    private void initialize(String tableName, FmtItemList columns, Filter<YajJob,FmtItem0> init) {
         final int border = 12;
         double[][] dLay = {
                 { border, TableLayout.FILL, border, TableLayout.PREFERRED, border},
@@ -133,8 +133,8 @@ public class CustomFilterDialog extends JDialog
         scrollConditions = new JScrollPane(panelConditions, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         if (init != null && (init instanceof AndFilter)) {
-            for (Filter<YajJob,FmtItem> yjf : ((AndFilter<YajJob,FmtItem>)init).getChildList()) {
-                FilterPanel<YajJob,FmtItem> fp = newFilterPanel();
+            for (Filter<YajJob,FmtItem0> yjf : ((AndFilter<YajJob,FmtItem0>)init).getChildList()) {
+                FilterPanel<YajJob,FmtItem0> fp = newFilterPanel();
                 fp.initFromFilter(yjf);
                 panelConditions.add(fp);
             }
@@ -182,8 +182,8 @@ public class CustomFilterDialog extends JDialog
         }
     }
     
-    private FilterPanel<YajJob,FmtItem> newFilterPanel() {
-        FilterPanel<YajJob,FmtItem> fp = new FilterPanel<YajJob,FmtItem>(columns);
+    private FilterPanel<YajJob,FmtItem0> newFilterPanel() {
+        FilterPanel<YajJob,FmtItem0> fp = new FilterPanel<YajJob,FmtItem0>(columns);
         fp.setDeleteActionCommand("fp_delete");
         fp.addDeleteActionListener(this);
         
@@ -194,25 +194,25 @@ public class CustomFilterDialog extends JDialog
     public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand();
         if (cmd.equals("ok")) {
-            AndFilter<YajJob,FmtItem> af;
+            AndFilter<YajJob,FmtItem0> af;
             if (radAll.isSelected())
-                af = new AndFilter<YajJob,FmtItem>();
+                af = new AndFilter<YajJob,FmtItem0>();
             else
-                af = new OrFilter<YajJob,FmtItem>();
+                af = new OrFilter<YajJob,FmtItem0>();
             
             for (Component comp : panelConditions.getComponents()) {
                 if (comp instanceof FilterPanel) {
                     try {
-                        Filter<YajJob,FmtItem> ch = ((FilterPanel<YajJob,FmtItem>)comp).getFilter();
+                        Filter<YajJob,FmtItem0> ch = ((FilterPanel<YajJob,FmtItem0>)comp).getFilter();
                         if (ch != null)
                             af.addChild(ch);
                     } catch (ParseException e1) {
                         JOptionPane.showMessageDialog(this, Utils._("Please enter a valid date/time!\n(Hint: Exactly the same format as in the fax job table is expected)"), Utils._("Error"), JOptionPane.ERROR_MESSAGE);
-                        ((FilterPanel<YajJob,FmtItem>)comp).focusInput();
+                        ((FilterPanel<YajJob,FmtItem0>)comp).focusInput();
                         return;
                     } catch (NumberFormatException e1) {
                         JOptionPane.showMessageDialog(this, Utils._("Please enter a valid number!"), Utils._("Error"), JOptionPane.ERROR_MESSAGE);
-                        ((FilterPanel<YajJob,FmtItem>)comp).focusInput();
+                        ((FilterPanel<YajJob,FmtItem0>)comp).focusInput();
                         return;
                     }
                 }
@@ -236,12 +236,12 @@ public class CustomFilterDialog extends JDialog
         }
     }
     
-    public CustomFilterDialog(Frame owner, String tableName, FmtItemList columns, Filter<YajJob,FmtItem> init) throws HeadlessException {
+    public CustomFilterDialog(Frame owner, String tableName, FmtItemList columns, Filter<YajJob,FmtItem0> init) throws HeadlessException {
         super(owner, true);
         initialize(tableName, columns, init);
     }
 
-    public CustomFilterDialog(Dialog owner, String tableName, FmtItemList columns, Filter<YajJob,FmtItem> init) throws HeadlessException {
+    public CustomFilterDialog(Dialog owner, String tableName, FmtItemList columns, Filter<YajJob,FmtItem0> init) throws HeadlessException {
         super(owner,  true);
         initialize(tableName, columns, init);
     }

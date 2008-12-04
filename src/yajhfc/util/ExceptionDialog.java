@@ -61,7 +61,6 @@ public class ExceptionDialog extends JDialog implements ActionListener {
     private JPanel contentPane;
     private Box boxButtons/*, boxLabels*/;
     private Component strutStacktrace;
-    private ClipboardPopup clpDef;
     private boolean detailState = false;
     private String fullMessage;
     
@@ -113,8 +112,6 @@ public class ExceptionDialog extends JDialog implements ActionListener {
         StringWriter stringBuf = new StringWriter();
         exc.printStackTrace(new PrintWriter(stringBuf));
         
-        clpDef = new ClipboardPopup();
-        
         String stacktrace = stringBuf.toString();
         
         StringBuilder sb = new StringBuilder();
@@ -128,7 +125,7 @@ public class ExceptionDialog extends JDialog implements ActionListener {
         textStacktrace = new JTextArea(stacktrace);
         textStacktrace.setFont(new Font("DialogInput", Font.PLAIN, 12));
         textStacktrace.setEditable(false);
-        textStacktrace.addMouseListener(clpDef);
+        textStacktrace.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
         textStacktrace.setRows(8);
         //textStacktrace.setColumns(40);
         

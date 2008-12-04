@@ -57,7 +57,19 @@ Thanks to Scott Harris for figuring this out.
 \item[Linux/*BSD/...:] Just install one of the Postscript viewer packages
                 (e.g. \texttt{gv, kghostview, gnome-gv, ...})
 \end{description}
-		
+
+\subsection{Where can I get GhostScript from?}
+\begin{description}
+\item[Windows:] Download it from \url{http://www.cs.wisc.edu/~ghost/}
+\item[Linux/*BSD/...:] Install the GhostScript package for your distribution (on most installations this package will already be installed; if not: the package name usually begins with \texttt{ghostscript} or \texttt{gs})
+\end{description}
+
+\subsection{Where can I get TIFF2PDF from?}
+\begin{description}
+\item[Windows:] Download it from \url{http://gnuwin32.sourceforge.net/downlinks/tiff.php}\\ If this link does not work, please see \url{http://gnuwin32.sourceforge.net/packages/tiff.htm} or \url{http://www.libtiff.org/}.
+\item[Linux/*BSD/...:] Install the libtiff tools package for your distribution. Usually this package will have the word \texttt{tiff} in its name (on Debian/Ubuntu it is called \texttt{libtiff-tools} and on SUSE \texttt{tiff}).
+\end{description}
+
 \section{Usage of the program}	
 
 \subsection{How can I edit PostScript cover page templates?}
@@ -91,13 +103,13 @@ The following ``words'' are replaced (case insensitively) with the corresponding
 \bfseries Word & \bfseries Meaning \\
 \hline\hline
 \ttfamily @@Name@@ & The recipient's name \\\hline
-\ttfamily @@Location@@ & The recipient's location \\\hline
 \ttfamily @@Company@@ & The recipient's company \\\hline
+\ttfamily @@Location@@ & The recipient's location \\\hline
 \ttfamily @@Faxnumber@@ & The recipient's fax number \\\hline
 \ttfamily @@Voicenumber@@ & The recipient's voice number \\\hline
 \ttfamily @@FromName@@ & The sender's name \\\hline
-\ttfamily @@FromLocation@@ & The sender's location \\\hline
 \ttfamily @@FromCompany@@ & The sender's company \\\hline
+\ttfamily @@FromLocation@@ & The sender's location \\\hline
 \ttfamily @@FromFaxnumber@@ & The sender's fax number \\\hline
 \ttfamily @@FromVoicenumber@@ & The sender's voice number \\\hline
 \ttfamily @@FromEMail@@ & The sender's e-mail address \\\hline
@@ -105,6 +117,39 @@ The following ``words'' are replaced (case insensitively) with the corresponding
 \ttfamily @@Date@@ & Today's date \\\hline
 \ttfamily @@PageCount@@ & The number of pages excluding the cover page \\\hline
 \ttfamily @@Comments@@ & The comments entered for this fax \\\hline
+\end{tabular}
+\end{center}
+
+Starting with version 0.4.0 the following additional fields are available (note that the \textit{italic} fields will be empty when you use resend fax):
+\begin{center}
+\begin{tabular}{|l|p{.7\textwidth}|}
+\hline
+\bfseries Word & \bfseries Meaning \\
+\hline\hline
+\ttfamily @@Surname@@ & The recipient's surname (resent faxes: the same as \texttt{@@Name@@}) \\\hline
+\ttfamily\itshape @@GivenName@@ & The recipient's given name \\\hline
+\ttfamily\itshape @@Title@@ & The recipient's title \\\hline
+\ttfamily\itshape @@Position@@ & The recipient's position \\\hline
+\ttfamily\itshape @@Department@@ & The recipient's department\\\hline
+\ttfamily @@CompanyName@@ & The recipient's company name (without department) (resent faxes: the same as \texttt{@@Company@@})\\\hline
+\ttfamily\itshape @@Street@@ & The recipient's street name \\\hline
+\ttfamily @@Place@@ & The recipient's location (without street or ZIP code) (resent faxes: the same as \texttt{@@Location@@})\\\hline
+\ttfamily\itshape @@ZIPCode@@ & The recipient's ZIP Code \\\hline
+\ttfamily\itshape @@State@@ & The recipient's state\\\hline
+\ttfamily\itshape @@Country@@ & The recipient's country\\\hline
+\ttfamily\itshape @@EMail@@ & The recipient's e-mail address\\\hline\hline
+\ttfamily @@FromSurname@@ & The sender's  surname \\\hline
+\ttfamily @@FromGivenName@@ & The sender's  given name \\\hline
+\ttfamily @@FromTitle@@ & The sender's  title \\\hline
+\ttfamily @@FromPosition@@ & The sender's position \\\hline
+\ttfamily @@FromDepartment@@ & The sender's  department\\\hline
+\ttfamily @@FromCompanyName@@ & The sender's  company name (without department)\\\hline
+\ttfamily @@FromStreet@@ & The sender's  street name \\\hline
+\ttfamily @@FromPlace@@ & The sender's  location (without street or ZIP code)\\\hline
+\ttfamily @@FromZIPCode@@ & The sender's  ZIP Code \\\hline
+\ttfamily @@FromState@@ & The sender's  state\\\hline
+\ttfamily @@FromCountry@@ & The sender's  country\\\hline
+\ttfamily @@FromEMail@@ & The sender's  e-mail address\\\hline
 \end{tabular}
 \end{center}
 
@@ -189,6 +234,34 @@ As a workaround, you can set this property explicitely when starting YajHFC by u
 Most likely, I don't know exactly either, because the column descriptions
 are simply copied from the \verb.faxstat(1). man page (JobFmt/RcvFmt) and 
 abbreviated/translated.
+
+\subsection{The tray icon is not shown!}
+
+The tray icon will only be shown when you run YajHFC under Java 1.6 (``Java 6'').
+If you use Java 1.5 (``Java 5''), a tray icon is not supported.
+
+So, please make sure you have Java 1.6 installed. If you are absolutely sure you have Java 1.6 installed and the tray icon is still not shown, please mail me a bug report.
+
+\subsection{How can I set some default settings?}
+
+Starting with version 0.4.0 the following files (if they exist) are loaded in order to retrieved the saved settings:
+\begin{enumerate}
+ \item \texttt{[Directory where yajhfc.jar resides]/settings.default}
+ \item the user settings from \texttt{\{user.home\}\footnote{In Windows \texttt{user.home} usually is \texttt{C:\textbackslash Documents and Settings\textbackslash USERNAME}.}/.yajhfc/settings} (if you specified \texttt{--configdir=DIR}, \texttt{DIR/settings} is used instead)
+ \item \texttt{[Directory where yajhfc.jar resides]/settings.override}
+\end{enumerate}
+
+Settings from files loaded later override the settings specified in the files loaded earlier, i.e. the settings from \texttt{settings.override} take precedence over those in the user settings and \texttt{settings.default}.
+\medskip
+
+This mechanism can be used to specify default settings (e.g. in a networked environment): \\
+Simply configure one YajHFC installation as you like, then copy \texttt{\{user.home\}/.yajhfc/settings} to the directory where \texttt{yajhfc.jar} is and rename it to \texttt{settings.default}.
+\medskip
+
+Overrides can be specified in a similar fashion. In this case, you are encouraged to edit the settings file (it is a plain text file), and remove any lines that specify settings you wish not to override (usually you will want to remove at least \texttt{user} and \texttt{pass} (user name and password used to connect to the HylaFAX server), \texttt{FromName}, \texttt{*ColState} (the widths of the table columns), \texttt{*Bounds} (the position of the different windows) and \texttt{mainwinLastTab}).
+
+Note, however that the user can still set these settings to a different value for a running YajHFC instance. They are reset to the override values only when YajHFC is started again (i.e. the user can set these settings, but they are not saved between different runs of YajHFC).
+
 
 \section{Miscellaneous}
 

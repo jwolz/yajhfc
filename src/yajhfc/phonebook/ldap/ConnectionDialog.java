@@ -27,7 +27,6 @@ import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.MessageFormat;
 import java.util.EnumMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -66,7 +65,6 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
     private JCheckBox checkAskForPassword, checkDoAuth, checkSearchSubtree, checkInitiallyShowAll;
     private JPasswordField textPassword;
     private JButton buttonOK, buttonCancel, buttonTest;
-    private ClipboardPopup clpPop;
     
     private EnumMap<PBEntryField,JTextField> mappingFields = new EnumMap<PBEntryField, JTextField>(PBEntryField.class);
     
@@ -93,8 +91,8 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
     }
 
     private JTextField addTextField(JPanel container, PBEntryField field, TableLayoutConstraints layout) {
-        JTextField rv = new JTextField();
-        rv.addMouseListener(clpPop);
+        JTextField rv = new JTextField(20);
+        rv.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
         String label = field.getDescription() + ":";
         addWithLabel(container, rv, label, layout);
         mappingFields.put(field, rv);
@@ -123,27 +121,25 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         TableLayout lay = new TableLayout(dLay);
         JPanel jContentPane = new JPanel(lay);
         
-        clpPop = new ClipboardPopup();
+        textServerName = new JTextField(10);
+        textServerName.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
         
-        textServerName = new JTextField();
-        textServerName.addMouseListener(clpPop);
-        
-        textPort = new JTextField();
+        textPort = new JTextField(5);
         textPort.setInputVerifier(new IntVerifier());
-        textPort.addMouseListener(clpPop);
+        textPort.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
         
-        textBaseDN = new JTextField();
-        textBaseDN.addMouseListener(clpPop);
+        textBaseDN = new JTextField(2);
+        textBaseDN.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
         
         checkDoAuth = new JCheckBox(_("Use authentication"));
         
-        textBindDN = new JTextField();
-        textBindDN.addMouseListener(clpPop);
+        textBindDN = new JTextField(20);
+        textBindDN.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
         
-        textPassword = new JPasswordField();
+        textPassword = new JPasswordField(2);
         
-        textDisplayCaption = new JTextField();
-        textDisplayCaption.addMouseListener(clpPop);
+        textDisplayCaption = new JTextField(16);
+        textDisplayCaption.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
         
         checkAskForPassword = new JCheckBox(_("Always ask"));
         
@@ -159,15 +155,15 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         checkDoAuth.addChangeListener(credentialListener);
         credentialListener.stateChanged(null);
         
-        textFilter = new JTextField();
-        textFilter.addMouseListener(clpPop);
+        textFilter = new JTextField(2);
+        textFilter.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
         textFilter.setToolTipText(Utils._("RFC 2254 Filter expression (e.g. \"objectClass=person\") selecting the directory entries to include. Leave blank to include all."));
         
         checkSearchSubtree = new JCheckBox(_("Also search subtrees"));
         
-        textCountLimit = new JTextField();
+        textCountLimit = new JTextField(5);
         textCountLimit.setInputVerifier(new IntVerifier());
-        textCountLimit.addMouseListener(clpPop);
+        textCountLimit.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
         textCountLimit.setToolTipText(_("The maximum number of items loaded"));
         
         checkInitiallyShowAll = new JCheckBox(_("Load all entries when opened"));
@@ -280,9 +276,11 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
                 
                 String password;
                 if (checkAskForPassword.isSelected()) {
-                    password = PasswordDialog.showPasswordDialog(this, Utils._("LDAP password"), MessageFormat.format(Utils._("Please enter the LDAP password for user {0}."), textBindDN.getText()));
-                    if (password == null)
+                    String[] pwd = PasswordDialog.showPasswordDialog(this, Utils._("LDAP password"), Utils._("Please enter the LDAP password:"), textBindDN.getText(), false);
+                    if (pwd == null)
                         return false;
+                    else
+                        password = pwd[1];
                 } else {
                     password = new String(textPassword.getPassword());
                 }

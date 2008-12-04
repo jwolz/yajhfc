@@ -87,8 +87,7 @@ import yajhfc.FaxNotification;
 import yajhfc.FaxOptions;
 import yajhfc.FaxResolution;
 import yajhfc.FaxTimezone;
-import yajhfc.FileTextField;
-import yajhfc.FmtItem;
+import yajhfc.FmtItem0;
 import yajhfc.FmtItemDescComparator;
 import yajhfc.FmtItemRenderer;
 import yajhfc.HylaModem;
@@ -120,7 +119,7 @@ public class OptionsWin extends JDialog {
     //JTabbedPane TabMain = null;
     JPanel PanelCommon = null;
     JPanel panelServerSettings;
-    fmtEditor<FmtItem> PanelRecvFmt = null, PanelSentFmt = null, PanelSendingFmt = null;
+    fmtEditor<FmtItem0> PanelRecvFmt = null, PanelSentFmt = null, PanelSendingFmt = null;
         
     JPanel PanelButtons;
     JButton ButtonOK, ButtonCancel;
@@ -129,19 +128,17 @@ public class OptionsWin extends JDialog {
     JPasswordField textPassword, textAdminPassword;
     JComboBox comboTZone, comboNotify, comboPaperSize, comboResolution; //, comboNewFaxAction;
     JComboBox comboLang, comboLookAndFeel, comboModem, comboSendWinStyle;
-    JCheckBox checkPasv, checkPCLBug, checkAskPassword, checkAskAdminPassword;
+    JCheckBox checkPasv, checkPCLBug, checkAskPassword, checkAskAdminPassword, checkAskUsername;
     JSpinner spinMaxTry, spinMaxDial, spinOffset, spinKillTime, spinSocketTimeout;
     //JButton buttonBrowseViewer;
-    FileTextField ftfFaxViewer, ftfPSViewer;
     
-    ClipboardPopup clpDef;
     JPanel panelServer, panelSend, panelPaths, panelUI;
     
     JPanel panelServerRetrieval, panelNewFaxAction;
     JCheckBox checkNewFax_Beep, checkNewFax_ToFront, checkNewFax_Open, checkNewFax_MarkAsRead;
     JSpinner spinStatusInterval, spinTableInterval;
     
-    JCheckBox checkPreferTIFF, checkUseDisconnected, checkMinimizeToTray;
+    JCheckBox checkPreferTIFF, checkUseDisconnected, checkShowTrayIcon, checkMinimizeToTray;
     
     JPanel panelPersistence;
     JComboBox comboPersistenceMethods;
@@ -154,12 +151,12 @@ public class OptionsWin extends JDialog {
     JButton buttonAddJDBC, buttonAddPlugin, buttonRemovePlugin;
     
     JTree mainTree;
-    PanelTreeNode rootNode;
+    PanelTreeNode rootNode, serverSettingsNode;
     JLabel treeSelLabel;
     JPanel tabPanel;
 
     FaxOptions foEdit = null;
-    List<FmtItem> recvfmt, sentfmt, sendingfmt;
+    List<FmtItem0> recvfmt, sentfmt, sendingfmt;
     Vector<LF_Entry> lookAndFeels;
     
     List<HylaModem> availableModems;
@@ -179,7 +176,6 @@ public class OptionsWin extends JDialog {
         this.setResizable(true);
         this.setTitle(_("Options"));
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        clpDef = new ClipboardPopup();
         this.setContentPane(getJContentPane());
         
         modalResult = false;
@@ -191,8 +187,6 @@ public class OptionsWin extends JDialog {
         textUser.setText(foEdit.user);
         textPassword.setText(foEdit.pass);
         textAdminPassword.setText(foEdit.AdminPassword);
-        ftfFaxViewer.setText(foEdit.faxViewer);
-        ftfPSViewer.setText(foEdit.psViewer);
         
         comboNotify.setSelectedItem(foEdit.notifyWhen);
         comboPaperSize.setSelectedItem(foEdit.paperSize);
@@ -235,8 +229,10 @@ public class OptionsWin extends JDialog {
         checkPCLBug.setSelected(foEdit.pclBug);
         checkAskPassword.setSelected(foEdit.askPassword);
         checkAskAdminPassword.setSelected(foEdit.askAdminPassword);
+        checkAskUsername.setSelected(foEdit.askUsername);
         checkPreferTIFF.setSelected(foEdit.preferRenderedTIFF);
         checkUseDisconnected.setSelected(foEdit.useDisconnectedMode);
+        checkShowTrayIcon.setSelected(foEdit.showTrayIcon);
         checkMinimizeToTray.setSelected(foEdit.minimizeToTray);
         
         checkNewFax_Beep.setSelected((foEdit.newFaxAction & Utils.NEWFAX_BEEP) != 0);
@@ -261,7 +257,7 @@ public class OptionsWin extends JDialog {
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
-               foEdit.optWinPos = getLocation();
+               foEdit.optWinBounds = getBounds();
                
                if (changedLF && !modalResult) {
                    Utils.setLookAndFeel(foEdit.lookAndFeel);
@@ -269,17 +265,16 @@ public class OptionsWin extends JDialog {
             }
         });
         
-        if (foEdit.optWinPos != null)
-            this.setLocation(foEdit.optWinPos);
+        if (foEdit.optWinBounds != null)
+            this.setBounds(foEdit.optWinBounds);
         else
             //this.setLocationByPlatform(true);
             Utils.setDefWinPos(this);
         
         // Small special handling for new users
         if (foEdit.host.length() == 0) {
-            //TODO
             //TabMain.setSelectedIndex(1);
-            mainTree.setSelectionPath(new TreePath(new Object[] { rootNode, rootNode.getChildAt(1) }));
+            mainTree.setSelectionPath(new TreePath(new Object[] { rootNode, serverSettingsNode }));
         } else {
             mainTree.setSelectionRow(0);
         }
@@ -315,7 +310,14 @@ public class OptionsWin extends JDialog {
             PanelButtons.add(Box.createHorizontalGlue());
             
             ButtonOK = new JButton(_("OK"));
-            ButtonOK.addActionListener(new ButtonOKActionListener());
+            ButtonOK.addActionListener(new ActionListener() {
+               public void actionPerformed(ActionEvent e) {
+                   saveSettings(foEdit);
+                   
+                   modalResult = true;
+                   dispose();
+                } 
+            });
             ButtonOK.setPreferredSize(buttonSize);
             PanelButtons.add(ButtonOK);
             
@@ -366,7 +368,13 @@ public class OptionsWin extends JDialog {
         List<PanelTreeNode> rootChilds = new ArrayList<PanelTreeNode>();
 
         rootChilds.add(new PanelTreeNode(rootNode, getPanelCommon(), _("General"), Utils.loadIcon("general/Preferences")));
-        rootChilds.add(new PanelTreeNode(rootNode, getPanelServerSettings(), _("Server"), Utils.loadIcon("development/Server")));
+        
+        PathAndViewPanel pathPanel = new PathAndViewPanel();
+        optionsPages.add(pathPanel);
+        rootChilds.add(new PanelTreeNode(rootNode, pathPanel, _("Paths and viewers"), Utils.loadIcon("development/Host")));
+
+        rootChilds.add(serverSettingsNode = new PanelTreeNode(rootNode, getPanelServerSettings(), _("Server"), Utils.loadIcon("development/Server")));
+        
         PanelTreeNode deliveryNode = new PanelTreeNode(rootNode, getPanelSend(), _("Delivery"), Utils.loadIcon("general/SendMail"));
         CoverPanel coverPanel = new CoverPanel();
         optionsPages.add(coverPanel);
@@ -374,6 +382,7 @@ public class OptionsWin extends JDialog {
                 new PanelTreeNode(deliveryNode, coverPanel, _("Cover page"), Utils.loadIcon("general/ComposeMail"))
         });
         rootChilds.add(deliveryNode);
+        
         rootChilds.add(new PanelTreeNode(rootNode, getPanelPlugins(), _("Plugins & JDBC"), Utils.loadIcon("development/Jar")));
 
         JLabel tableLabel = new JLabel(_("Please select on the left which table you want to edit."));
@@ -477,14 +486,14 @@ public class OptionsWin extends JDialog {
         if (PanelCommon == null) {
             double[][] tablelay = {
                     {border, 0.4, border, TableLayout.FILL, border},
-                    { border, 0.55, border, TableLayout.FILL, border }
+                    { border, 0.7, border, TableLayout.FILL, border }
             };
             PanelCommon = new JPanel(new TableLayout(tablelay), false);
             
             //PanelCommon.add(getPanelServer(), "1,1");
             PanelCommon.add(getPanelUI(), "1,1");
             PanelCommon.add(getPanelNewFaxAction(), "3,1");
-            PanelCommon.add(getPanelPaths(), "1,3,3,3");
+            //PanelCommon.add(getPanelPaths(), "1,3,3,3");
         }
         return PanelCommon;
     }
@@ -506,12 +515,12 @@ public class OptionsWin extends JDialog {
             panelServer.setBorder(BorderFactory.createTitledBorder(_("Connection settings:")));
                         
             textHost = new JTextField();
-            textHost.addMouseListener(clpDef);
+            textHost.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
             textPort = new JTextField();
-            textPort.addMouseListener(clpDef);
+            textPort.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
             textPort.setInputVerifier(new IntVerifier(1, 65536));
             textUser = new JTextField();
-            textUser.addMouseListener(clpDef);
+            textUser.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
             textPassword = new JPasswordField();
             textAdminPassword = new JPasswordField();
             checkAskPassword = new JCheckBox(_("Always ask"));
@@ -526,12 +535,27 @@ public class OptionsWin extends JDialog {
                     textAdminPassword.setEnabled(!checkAskAdminPassword.isSelected());
                  } 
              });
+            checkAskUsername = new JCheckBox(_("Always ask"));
+            checkAskUsername.addItemListener(new ItemListener() {
+                public void itemStateChanged(ItemEvent e) {
+                    if (checkAskUsername.isSelected()) {
+                        checkAskPassword.setSelected(true);
+                        checkAskAdminPassword.setSelected(true);
+                        checkAskPassword.setEnabled(false);
+                        checkAskAdminPassword.setEnabled(false);
+                    } else {
+                        checkAskPassword.setEnabled(true);
+                        checkAskAdminPassword.setEnabled(true);
+                    }
+                }
+            });
             
             checkPasv = new JCheckBox(_("Use passive mode to fetch faxes"));
             
             addWithLabel(panelServer, textHost, _("Host name:"), "1, 2, 5, 2, f, c");
             addWithLabel(panelServer, textPort, _("Port:"), "7, 2, f, c");
             addWithLabel(panelServer, textUser, _("Username:"), "1, 4, 5, 4, f, c");
+            panelServer.add(checkAskUsername, "6,4,7,4,f,c");
             //addWithLabel(panelServer, textPassword, _("Password:"), "5, 4, 7, 4, f, c");
             addWithLabel(panelServer, textPassword, _("Password:"), "1, 6, 5, 6, f, c");
             panelServer.add(checkAskPassword, "6, 6, 7, 6, f, c");
@@ -545,7 +569,7 @@ public class OptionsWin extends JDialog {
     
     private JPanel getPanelUI() {
         if (panelUI == null) {
-            final int rowCount = 8;
+            final int rowCount = 10;
             final double[][] tablelay = {
                     {border, TableLayout.FILL, border},
                     new double[rowCount]
@@ -585,15 +609,26 @@ public class OptionsWin extends JDialog {
             
             comboSendWinStyle = new JComboBox(SendWinStyle.values());
             
+            checkShowTrayIcon = new JCheckBox(_("Show tray icon"));
+            checkShowTrayIcon.setToolTipText(_("Show a system tray icon (works only with Java 6 or higher)"));
+            checkShowTrayIcon.addItemListener(new ItemListener() {
+               public void itemStateChanged(ItemEvent e) {
+                   checkMinimizeToTray.setEnabled(checkShowTrayIcon.isSelected());
+                   
+                } 
+            });
+            
             checkMinimizeToTray = new JCheckBox(_("Minimize to tray"));
-            checkMinimizeToTray.setToolTipText(_("Minimize to system tray (works only with Java 6 or higher)"));
+            checkMinimizeToTray.setEnabled(false);
+            //checkMinimizeToTray.setToolTipText(_("Minimize to system tray (works only with Java 6 or higher)"));
 
             addWithLabel(panelUI, comboLang, _("Language:"), "1, 1, 1, 1, f, c");
             addWithLabel(panelUI, comboLookAndFeel, _("Look and Feel:"), "1, 3, 1, 3, f, c");
             addWithLabel(panelUI, comboSendWinStyle, _("Style of send dialog:"), "1, 5, 1, 5, f, c");
             //addWithLabel(panelUI, comboNewFaxAction, "<html>" + _("When a new fax is received:") + "</html>", "1, 3, 1, 3, f, c");
             
-            panelUI.add(checkMinimizeToTray, "1,6,1,6,f,c");
+            panelUI.add(checkShowTrayIcon, "1,7,1,7,f,c");
+            panelUI.add(checkMinimizeToTray, "1,8,1,8,f,c");
         }
         return panelUI;
     }
@@ -693,7 +728,7 @@ public class OptionsWin extends JDialog {
             panelSend.setBorder(BorderFactory.createTitledBorder(_("Delivery settings")));
            
             textNotifyAddress = new JTextField();
-            textNotifyAddress.addMouseListener(clpDef);
+            textNotifyAddress.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
             
             comboTZone = new JComboBox(FaxTimezone.values());
             comboNotify = new JComboBox(FaxNotification.values());
@@ -726,33 +761,7 @@ public class OptionsWin extends JDialog {
     
 
     
-    private JPanel getPanelPaths() {
-        if (panelPaths == null) {         
-            double[][] tablelay = {
-                    {border, TableLayout.FILL, border},
-                    new double[6]
-            };
-            double rowh = 1 / (double)(tablelay[1].length - 2);
-            tablelay[1][0] = 0;
-            tablelay[1][tablelay[1].length - 1] = border;
-            Arrays.fill(tablelay[1], 1, tablelay[1].length - 2, rowh);
-            tablelay[1][tablelay[1].length - 2] = TableLayout.FILL;
-            
-            panelPaths = new JPanel(new TableLayout(tablelay), false);
-            panelPaths.setBorder(BorderFactory.createTitledBorder(_("Path settings")));
-            
-            ftfFaxViewer = new ExeFileTextField();
-            ftfFaxViewer.getJTextField().addMouseListener(clpDef);
-            ftfPSViewer = new ExeFileTextField();
-            ftfPSViewer.getJTextField().addMouseListener(clpDef);
-            
-            panelPaths.add(new JLabel(_("Command line for fax viewer: (insert %s as a placeholder for the filename)")), "1, 1 f b");
-            panelPaths.add(ftfFaxViewer, "1, 2, f, c");
-            panelPaths.add(new JLabel(_("Command line for Postscript viewer: (insert %s as a placeholder for the filename)")), "1, 3 f b");
-            panelPaths.add(ftfPSViewer, "1, 4, f, c");
-        }
-        return panelPaths;
-    }
+
     
     private JLabel addWithLabel(JPanel pane, JComponent comp, String text, String layout) {
         TableLayoutConstraints c = new TableLayoutConstraints(layout);
@@ -797,25 +806,11 @@ public class OptionsWin extends JDialog {
         super(owner);
         this.foEdit = foEdit;
         this.availableModems = availableModems;
-        recvfmt = new ArrayList<FmtItem>(foEdit.recvfmt);
-        sentfmt = new ArrayList<FmtItem>(foEdit.sentfmt);
-        sendingfmt = new ArrayList<FmtItem>(foEdit.sendingfmt);
+        recvfmt = new ArrayList<FmtItem0>(foEdit.recvfmt);
+        sentfmt = new ArrayList<FmtItem0>(foEdit.sentfmt);
+        sendingfmt = new ArrayList<FmtItem0>(foEdit.sendingfmt);
         
         initialize();
-    }
-    
-    static class ExeFileTextField extends FileTextField {
-        protected String readTextFieldFileName() {
-            return this.getText().replaceAll("\"|%s", "").trim();
-        };
-        
-        @Override
-        protected void writeTextFieldFileName(String fName) {
-            if (fName.contains(" ")) 
-                this.setText("\"" + fName + "\" %s");
-            else
-                this.setText(fName + " %s");
-        }
     }
     
     static class LF_Entry {
@@ -872,188 +867,169 @@ public class OptionsWin extends JDialog {
         }
     }
 
+    private String getModem() {
+        Object sel = comboModem.getSelectedItem();
+        if (Utils.debugMode) {
+            log.info("Selected modem (" + sel.getClass().getCanonicalName() + "): " + sel);
+        }
+        if (sel instanceof HylaModem) {
+            return ((HylaModem)sel).getInternalName();
+        } else {
+            String str = sel.toString();
+            int pos = str.indexOf(' '); // Use part up to the first space
+            if (pos == -1)
+                return str;
+            else
+                return str.substring(0, pos);
+        }
+    }
     
-    class ButtonOKActionListener implements ActionListener {
-        private String getModem() {
-            Object sel = comboModem.getSelectedItem();
-            if (Utils.debugMode) {
-                log.info("Selected modem (" + sel.getClass().getCanonicalName() + "): " + sel);
-            }
-            if (sel instanceof HylaModem) {
-                return ((HylaModem)sel).getInternalName();
-            } else {
-                String str = sel.toString();
-                int pos = str.indexOf(' '); // Use part up to the first space
-                if (pos == -1)
-                    return str;
-                else
-                    return str.substring(0, pos);
-            }
+    public void saveSettings(FaxOptions foEdit) {
+        
+        if (!validateInput()) {
+            return;
         }
         
-        public void actionPerformed(ActionEvent e) {
+        try {
+            foEdit.port = Integer.parseInt(textPort.getText());
             
-            if (!validateInput()) {
-                return;
+            foEdit.maxDial = ((Integer)spinMaxDial.getValue()).intValue();
+            foEdit.maxTry = ((Integer)spinMaxTry.getValue()).intValue();
+            foEdit.dateOffsetSecs = (Integer)spinOffset.getValue();
+            foEdit.tableUpdateInterval = (int)(((Double)spinTableInterval.getValue()).doubleValue() * 1000);
+            foEdit.statusUpdateInterval = (int)(((Double)spinStatusInterval.getValue()).doubleValue() * 1000);
+            foEdit.socketTimeout = (int)(((Double)spinSocketTimeout.getValue()).doubleValue() * 1000);
+            foEdit.killTime = (Integer)spinKillTime.getValue();
+            
+            foEdit.notifyAddress = textNotifyAddress.getText();
+            foEdit.host = textHost.getText();
+            foEdit.user = textUser.getText();
+            foEdit.pass = new String(textPassword.getPassword());
+            foEdit.AdminPassword = new String(textAdminPassword.getPassword());
+            
+            foEdit.notifyWhen = (FaxNotification)comboNotify.getSelectedItem();
+            foEdit.paperSize = (PaperSize)comboPaperSize.getSelectedItem();
+            foEdit.resolution = (FaxResolution)comboResolution.getSelectedItem();
+            foEdit.tzone = (FaxTimezone)comboTZone.getSelectedItem();
+            //foEdit.newFaxAction = (FaxIntProperty)comboNewFaxAction.getSelectedItem();
+            foEdit.sendWinStyle = (SendWinStyle)comboSendWinStyle.getSelectedItem();
+            
+            String newLF = ((LF_Entry)comboLookAndFeel.getSelectedItem()).className;
+            if (!newLF.equals(foEdit.lookAndFeel)) {
+                foEdit.lookAndFeel = newLF;
+                //JOptionPane.showMessageDialog(OptionsWin.this, _("You must restart the program for a change of the look&feel to take effect."), _("Options"), JOptionPane.INFORMATION_MESSAGE);
+                
+                Utils.setLookAndFeel(newLF);
+                refreshLF();
             }
             
-            try {
-                foEdit.port = Integer.parseInt(textPort.getText());
-                
-                foEdit.maxDial = ((Integer)spinMaxDial.getValue()).intValue();
-                foEdit.maxTry = ((Integer)spinMaxTry.getValue()).intValue();
-                foEdit.dateOffsetSecs = (Integer)spinOffset.getValue();
-                foEdit.tableUpdateInterval = (int)(((Double)spinTableInterval.getValue()).doubleValue() * 1000);
-                foEdit.statusUpdateInterval = (int)(((Double)spinStatusInterval.getValue()).doubleValue() * 1000);
-                foEdit.socketTimeout = (int)(((Double)spinSocketTimeout.getValue()).doubleValue() * 1000);
-                foEdit.killTime = (Integer)spinKillTime.getValue();
-                
-                foEdit.notifyAddress = textNotifyAddress.getText();
-                foEdit.host = textHost.getText();
-                foEdit.user = textUser.getText();
-                foEdit.pass = new String(textPassword.getPassword());
-                foEdit.faxViewer = ftfFaxViewer.getText();
-                foEdit.psViewer = ftfPSViewer.getText();
-                foEdit.AdminPassword = new String(textAdminPassword.getPassword());
-                
-                foEdit.notifyWhen = (FaxNotification)comboNotify.getSelectedItem();
-                foEdit.paperSize = (PaperSize)comboPaperSize.getSelectedItem();
-                foEdit.resolution = (FaxResolution)comboResolution.getSelectedItem();
-                foEdit.tzone = (FaxTimezone)comboTZone.getSelectedItem();
-                //foEdit.newFaxAction = (FaxIntProperty)comboNewFaxAction.getSelectedItem();
-                foEdit.sendWinStyle = (SendWinStyle)comboSendWinStyle.getSelectedItem();
-                
-                String newLF = ((LF_Entry)comboLookAndFeel.getSelectedItem()).className;
-                if (!newLF.equals(foEdit.lookAndFeel)) {
-                    foEdit.lookAndFeel = newLF;
-                    //JOptionPane.showMessageDialog(OptionsWin.this, _("You must restart the program for a change of the look&feel to take effect."), _("Options"), JOptionPane.INFORMATION_MESSAGE);
-                    
-                    Utils.setLookAndFeel(newLF);
-                    refreshLF();
-                }
-                
-                YajLanguage newLang = (YajLanguage)comboLang.getSelectedItem();
-                if (!newLang.equals(foEdit.locale)) {
-                    foEdit.locale = newLang;
-                    JOptionPane.showMessageDialog(OptionsWin.this, _("You must restart the program for the change of the language to take effect."), _("Options"), JOptionPane.INFORMATION_MESSAGE);
-                }
-                
-                foEdit.pasv = checkPasv.isSelected();
-                foEdit.pclBug = checkPCLBug.isSelected();
-                foEdit.askPassword = checkAskPassword.isSelected();
-                foEdit.askAdminPassword = checkAskAdminPassword.isSelected();
-                foEdit.preferRenderedTIFF = checkPreferTIFF.isSelected();
-                foEdit.useDisconnectedMode = checkUseDisconnected.isSelected();
-                foEdit.minimizeToTray = checkMinimizeToTray.isSelected();
-                
-                int val = 0;
-                if (checkNewFax_Beep.isSelected())
-                    val |= Utils.NEWFAX_BEEP;
-                if (checkNewFax_ToFront.isSelected())
-                    val |= Utils.NEWFAX_TOFRONT;
-                if (checkNewFax_Open.isSelected())
-                    val |= Utils.NEWFAX_VIEWER;
-                if (checkNewFax_MarkAsRead.isSelected())
-                    val |= Utils.NEWFAX_MARKASREAD;
-                foEdit.newFaxAction = val;
-                
-                foEdit.recvfmt.clear();
-                foEdit.recvfmt.addAll(recvfmt);
-                foEdit.sentfmt.clear();
-                foEdit.sentfmt.addAll(sentfmt);
-                foEdit.sendingfmt.clear();
-                foEdit.sendingfmt.addAll(sendingfmt);
-                
-                foEdit.defaultModem = getModem();
-                
-                // Save persistence settings:
-                String persistenceMethod = ((AvailablePersistenceMethod)comboPersistenceMethods.getSelectedItem()).getKey();
-                String config = persistenceConfigs.get(persistenceMethod);
-                if (config == null) config = "";
-                if (!(persistenceMethod.equals(foEdit.persistenceMethod) && config.equals(foEdit.persistenceConfig))) {
-                    PersistentReadState.getCurrent().persistReadState();
-                    PersistentReadState.resetCurrent();
-                }
-                foEdit.persistenceMethod = persistenceMethod;
-                foEdit.persistenceConfig = config;
-                
-                if (PluginManager.updatePluginList(pluginTableModel.getEntries())) {
-                    JOptionPane.showMessageDialog(OptionsWin.this, Utils._("You will need to restart the program for the changes to the list of plugins and JDBC drivers to take full effect."), Utils._("Plugins & JDBC"), JOptionPane.INFORMATION_MESSAGE);
-                }
-                
-                for (OptionsPage page : optionsPages) {
-                    page.saveSettings(foEdit);
-                }
-                
-            } catch (Exception e1) {
-                ExceptionDialog.showExceptionDialog(OptionsWin.this, Utils._("Error saving the settings:"), e1);
-                return;
+            YajLanguage newLang = (YajLanguage)comboLang.getSelectedItem();
+            if (!newLang.equals(foEdit.locale)) {
+                foEdit.locale = newLang;
+                JOptionPane.showMessageDialog(OptionsWin.this, _("You must restart the program for the change of the language to take effect."), _("Options"), JOptionPane.INFORMATION_MESSAGE);
             }
             
-            modalResult = true;
-            dispose();
-        }
-        
-        /**
-         * Validate input. Return true if input is valid.
-         * @return
-         */
-        private boolean validateInput() {
+            foEdit.pasv = checkPasv.isSelected();
+            foEdit.pclBug = checkPCLBug.isSelected();
+            foEdit.askPassword = checkAskPassword.isSelected();
+            foEdit.askAdminPassword = checkAskAdminPassword.isSelected();
+            foEdit.askUsername = checkAskUsername.isSelected();
+            foEdit.preferRenderedTIFF = checkPreferTIFF.isSelected();
+            foEdit.useDisconnectedMode = checkUseDisconnected.isSelected();
+            foEdit.showTrayIcon = checkShowTrayIcon.isSelected();
+            foEdit.minimizeToTray = checkMinimizeToTray.isSelected();
             
-            if (textHost.getText().length() == 0) {
-                focusComponent(textHost);
-                JOptionPane.showMessageDialog(OptionsWin.this, _("Please enter a host name."), _("Error"), JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
+            int val = 0;
+            if (checkNewFax_Beep.isSelected())
+                val |= Utils.NEWFAX_BEEP;
+            if (checkNewFax_ToFront.isSelected())
+                val |= Utils.NEWFAX_TOFRONT;
+            if (checkNewFax_Open.isSelected())
+                val |= Utils.NEWFAX_VIEWER;
+            if (checkNewFax_MarkAsRead.isSelected())
+                val |= Utils.NEWFAX_MARKASREAD;
+            foEdit.newFaxAction = val;
             
-            if (textUser.getText().length() == 0) {
-                focusComponent(textUser);
-                JOptionPane.showMessageDialog(OptionsWin.this, _("Please enter a user name."), _("Error"), JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
+            foEdit.recvfmt.clear();
+            foEdit.recvfmt.addAll(recvfmt);
+            foEdit.sentfmt.clear();
+            foEdit.sentfmt.addAll(sentfmt);
+            foEdit.sendingfmt.clear();
+            foEdit.sendingfmt.addAll(sendingfmt);
             
-            if (ftfFaxViewer.getText().length() == 0) {
-                focusComponent(ftfFaxViewer.getJTextField());
-                JOptionPane.showMessageDialog(OptionsWin.this, _("Please enter the command line for the fax viewer."), _("Error"), JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
+            foEdit.defaultModem = getModem();
             
-            if (ftfPSViewer.getText().length() == 0) {
-                focusComponent(ftfPSViewer.getJTextField());
-                JOptionPane.showMessageDialog(OptionsWin.this, _("Please enter the command line for the PostScript viewer."), _("Error"), JOptionPane.ERROR_MESSAGE);
-                return false;
+            // Save persistence settings:
+            String persistenceMethod = ((AvailablePersistenceMethod)comboPersistenceMethods.getSelectedItem()).getKey();
+            String config = persistenceConfigs.get(persistenceMethod);
+            if (config == null) config = "";
+            if (!(persistenceMethod.equals(foEdit.persistenceMethod) && config.equals(foEdit.persistenceConfig))) {
+                PersistentReadState.getCurrent().persistReadState();
+                PersistentReadState.resetCurrent();
             }
+            foEdit.persistenceMethod = persistenceMethod;
+            foEdit.persistenceConfig = config;
             
-            String port = textPort.getText();
-            boolean valid = true;
-            if (port.length() == 0) {
-                valid = false;
-            } else {
-                try {
-                    int iPort = Integer.parseInt(port);
-                    valid = (iPort > 0 && iPort < 65536);
-                } catch (NumberFormatException e) {
-                    valid = false;
-                }
-            }
-            if (!valid) {
-                focusComponent(textPort);
-                JOptionPane.showMessageDialog(OptionsWin.this, _("Please enter a valid port number."), _("Error"), JOptionPane.ERROR_MESSAGE);
-                return false;
+            if (PluginManager.updatePluginList(pluginTableModel.getEntries())) {
+                JOptionPane.showMessageDialog(OptionsWin.this, Utils._("You will need to restart the program for the changes to the list of plugins and JDBC drivers to take full effect."), Utils._("Plugins & JDBC"), JOptionPane.INFORMATION_MESSAGE);
             }
             
             for (OptionsPage page : optionsPages) {
-                if (!page.validateSettings(OptionsWin.this)) {
-                    return false;
-                }
+                page.saveSettings(foEdit);
             }
             
-            return true;
+        } catch (Exception e1) {
+            ExceptionDialog.showExceptionDialog(OptionsWin.this, Utils._("Error saving the settings:"), e1);
+            return;
         }
         
-
     }
-
+    
+    /**
+     * Validate input. Return true if input is valid.
+     * @return
+     */
+    private boolean validateInput() {
+        
+        if (textHost.getText().length() == 0) {
+            focusComponent(textHost);
+            JOptionPane.showMessageDialog(OptionsWin.this, _("Please enter a host name."), _("Error"), JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        
+        if (textUser.getText().length() == 0) {
+            focusComponent(textUser);
+            JOptionPane.showMessageDialog(OptionsWin.this, _("Please enter a user name."), _("Error"), JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        
+        String port = textPort.getText();
+        boolean valid = true;
+        if (port.length() == 0) {
+            valid = false;
+        } else {
+            try {
+                int iPort = Integer.parseInt(port);
+                valid = (iPort > 0 && iPort < 65536);
+            } catch (NumberFormatException e) {
+                valid = false;
+            }
+        }
+        if (!valid) {
+            focusComponent(textPort);
+            JOptionPane.showMessageDialog(OptionsWin.this, _("Please enter a valid port number."), _("Error"), JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        
+        for (OptionsPage page : optionsPages) {
+            if (!page.validateSettings(OptionsWin.this)) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
     public void focusComponent(Component comp) {
         focusTab(comp);
         comp.requestFocusInWindow();

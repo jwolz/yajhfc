@@ -51,6 +51,7 @@ public class YajHFCTrayIcon implements UnreadItemListener, WindowListener {
     MainWin mainw;
     private Action showAction;
     private boolean connected = false;
+    private boolean minimizeToTray = false;
     private UnReadMyTableModel recvModel;
     
     /**
@@ -146,8 +147,16 @@ public class YajHFCTrayIcon implements UnreadItemListener, WindowListener {
         }
     }
 
+    public void setMinimizeToTray(boolean minimizeToTray) {
+        this.minimizeToTray = minimizeToTray;
+    }
+    
+    public boolean isMinimizeToTray() {
+        return minimizeToTray;
+    }
+    
     public void windowIconified(WindowEvent e) {
-        if (trayIcon != null) {
+        if (minimizeToTray && trayIcon != null) {
             mainw.setVisible(false);
         }
     }

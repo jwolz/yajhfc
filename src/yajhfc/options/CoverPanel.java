@@ -67,8 +67,6 @@ public class CoverPanel extends JPanel implements OptionsPage {
     JPanel panelCover;
     JComboBox comboNameRule, comboCompanyRule, comboLocationRule, comboZIPCodeRule;
     
-    ClipboardPopup clpDef = new ClipboardPopup();
-    
     
     public CoverPanel() {
         super(new BorderLayout(), false);
@@ -92,7 +90,7 @@ public class CoverPanel extends JPanel implements OptionsPage {
         checkUseCustomDefCover.setAlignmentX(JComponent.LEFT_ALIGNMENT);
         
         ftfCustomDefCover = new FileTextField();
-        ftfCustomDefCover.getJTextField().addMouseListener(clpDef);
+        ftfCustomDefCover.getJTextField().addMouseListener(ClipboardPopup.DEFAULT_POPUP);
         ftfCustomDefCover.setFileFilters(Faxcover.getAcceptedFileFilters());
         ftfCustomDefCover.setEnabled(false);
         ftfCustomDefCover.setAlignmentX(JComponent.LEFT_ALIGNMENT);
@@ -137,7 +135,7 @@ public class CoverPanel extends JPanel implements OptionsPage {
     
     private JTextField createEntryTextField(PBEntryField field) {
         JTextField res = new JTextField();
-        res.addMouseListener(clpDef);
+        res.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
         
         entryFields.put(field, res);
         return res;

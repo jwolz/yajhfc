@@ -27,13 +27,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import yajhfc.file.FormattedFile;
-import yajhfc.file.UnknownFormatException;
 import yajhfc.file.FormattedFile.FileFormat;
 
 public class HylaServerFile {
     protected String path;
     protected FileFormat type;
-    protected File previewFile = null;
+    protected FormattedFile previewFile = null;
     
     public String getPath() {
         return path;
@@ -65,25 +64,20 @@ public class HylaServerFile {
             return type.getDefaultExtension();
     }
     
-    public File getPreviewFile(HylaFAXClient hyfc) throws IOException, ServerResponseException {
+    public FormattedFile getPreviewFile(HylaFAXClient hyfc) throws IOException, ServerResponseException {
         if (previewFile == null) {
-            previewFile = File.createTempFile("fax", "." + getDefaultExtension());
-            previewFile.deleteOnExit();
+            File tmpFile = File.createTempFile("fax", "." + getDefaultExtension());
+            tmpFile.deleteOnExit();
             
-            download(hyfc, previewFile);     
+            download(hyfc, tmpFile);     
+            if (type == FileFormat.Unknown) { // Try to autodetect
+                type = FormattedFile.detectFileFormat(tmpFile);
+            }
+            previewFile = new FormattedFile(tmpFile, type);
         }
         return previewFile;
     }
     
-    public void view(HylaFAXClient hyfc)
-        throws IOException, FileNotFoundException, ServerResponseException, UnknownFormatException {
-        String fileName = getPreviewFile(hyfc).getPath();   
-        
-        if (type == FileFormat.Unknown) { // Try to autodetect
-            type = FormattedFile.detectFileFormat(fileName);
-        }
-        FormattedFile.viewFile(fileName, type);
-    }
     
     @Override
     public String toString() {

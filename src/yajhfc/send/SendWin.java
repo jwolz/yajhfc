@@ -117,7 +117,7 @@ final class SendWin extends JDialog implements SendWinControl  {
     JScrollPane scrollToComments = null;
     JTextArea textToComments = null;
     
-    ClipboardPopup defClPop, clpNumbers, clpFiles;
+    ClipboardPopup clpNumbers, clpFiles;
     
     boolean pollMode = false;
     boolean modalResult = false;
@@ -199,15 +199,15 @@ final class SendWin extends JDialog implements SendWinControl  {
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
-                Utils.getFaxOptions().sendWinPos = getLocation();
+                Utils.getFaxOptions().sendWinBounds = getBounds();
             }     
             
         });
         
-        if (fo.sendWinPos != null)
-            this.setLocation(fo.sendWinPos);
-        /*else
-            this.setLocationByPlatform(true);*/
+        if (fo.sendWinBounds != null)
+            this.setBounds(fo.sendWinBounds);
+        else 
+            Utils.setDefWinPos(this);
         
         if (pollMode) {
             ftfFilename.setText(_("<none>"));
@@ -469,7 +469,7 @@ final class SendWin extends JDialog implements SendWinControl  {
         if (tabMain == null) {
             tabMain = new JTabbedPane(JTabbedPane.BOTTOM);
             
-            tabMain.addTab(_("Common"), getPaneCommon());
+            tabMain.addTab(_("General"), getPaneCommon());
             tabMain.addTab(_("Cover page"), getPaneCover());
 
         }
@@ -632,10 +632,7 @@ final class SendWin extends JDialog implements SendWinControl  {
     }
     
     private ClipboardPopup getDefClPop() {
-        if (defClPop == null) {
-            defClPop = new ClipboardPopup();
-        }
-        return defClPop;
+        return ClipboardPopup.DEFAULT_POPUP;
     }
     
     public void addLocalFile(String fileName) {

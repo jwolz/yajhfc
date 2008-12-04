@@ -5,7 +5,6 @@ import gnu.inet.ftp.ServerResponseException;
 
 import java.awt.Window;
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -21,7 +20,7 @@ public class HylaClientManager {
     protected FaxOptions myopts;
     protected String password;
     protected String adminPassword;
-    protected String lastUser;
+    protected String userName;
     protected int transactionCounter;
     protected List<HylaModem> modems = null;
     
@@ -50,6 +49,11 @@ public class HylaClientManager {
             adminPassword = myopts.AdminPassword;
         else
             adminPassword = null;
+        
+        if (!myopts.askUsername) 
+            userName = myopts.user;
+        else 
+            userName = null;
     }
     
     public HylaFAXClient beginServerTransaction(Window owner) {
@@ -102,8 +106,16 @@ public class HylaClientManager {
         if (Utils.debugMode) {
             log.fine("HylaClientManager -> forceLogin");
         }
-        if (client == null)
-        {
+        if (client == null) {
+            if (userName == null) {
+                String[] pwd = PasswordDialog.showPasswordDialogThreaded(owner, Utils._("Log in"), Utils._("Please enter the credentials to log into the HylaFAX server:"), myopts.user, true);
+                if (pwd == null) {
+                    return null;
+                }
+                userName = pwd[0];
+                password = pwd[1];
+            }
+            
             client = new HylaFAXClient();
             synchronized (client) {
                 //client.setDebug(Utils.debugMode);
@@ -114,18 +126,20 @@ public class HylaClientManager {
                         log.info("Greeting was: " + client.getGreeting());
                     }
                     
-                    while (client.user(myopts.user)) {                
+
+                    while (client.user(userName)) {                
                         if (password == null) {
 
-                            String pwd = PasswordDialog.showPasswordDialogThreaded(owner, Utils._("User password"), MessageFormat.format(Utils._("Please enter the password for user \"{0}\"."), myopts.user));
+                            String[] pwd = PasswordDialog.showPasswordDialogThreaded(owner, Utils._("User password"), Utils._("Please enter the user password:"), userName, false);
                             if (pwd == null) { // User cancelled
                                 client.quit();
                                 //doErrorCleanup(); // TODO
                                 return null;
                             } else
                                 try {
-                                    client.pass(pwd);
-                                    password = pwd;
+                                    client.pass(pwd[1]);
+                                    
+                                    password = pwd[1]; // password after pass is important for repeated asks
                                     //repeatAsk = false;
                                     break;
                                 } catch (ServerResponseException e) {
@@ -142,13 +156,13 @@ public class HylaClientManager {
                         boolean authOK = false;
                         if (adminPassword == null) {
                             do {
-                                String pwd = PasswordDialog.showPasswordDialogThreaded(owner, Utils._("Admin password"), MessageFormat.format(Utils._("Please enter the administrative password for user \"{0}\"."), myopts.user));
+                                String[] pwd = PasswordDialog.showPasswordDialogThreaded(owner, Utils._("Admin password"), Utils._("Please enter the administrative password:"), userName, false);
                                 if (pwd == null) { // User cancelled
                                     break; //Continue in "normal" mode
                                 } else
                                     try {
-                                        client.admin(pwd);
-                                        adminPassword = pwd;
+                                        client.admin(pwd[1]);
+                                        adminPassword = pwd[1];
                                         authOK = true;
                                     } catch (ServerResponseException e) {
                                         ExceptionDialog.showExceptionDialogThreaded(owner, Utils._("An error occured in response to the password:"), e);

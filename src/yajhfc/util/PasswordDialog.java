@@ -29,10 +29,12 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import yajhfc.Utils;
@@ -41,24 +43,33 @@ public class PasswordDialog extends JDialog {
 
     private JPanel jContentFrame;
     private JLabel labelPrompt;
+    private JTextField userField;
     private JPasswordField passField;
     private JButton btnOK, btnCancel;
     
-    public String returnValue = null;
+    public String returnedPassword = null;
+    public String returnedUsername = null;
     
-    private void initialize(String prompt) {
+    private void initialize(String prompt, String userName, boolean editableUserName) {
         final int border = 12;
         jContentFrame = new JPanel(new BorderLayout());
         
         labelPrompt = new JLabel(prompt, JLabel.CENTER);
-        labelPrompt.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        labelPrompt.setAlignmentX(JLabel.LEFT_ALIGNMENT);
         
         passField = new JPasswordField(10);
+        passField.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+        
+        userField = new JTextField(10);
+        userField.setText(userName);
+        userField.setEditable(editableUserName);
+        userField.setAlignmentX(JComponent.LEFT_ALIGNMENT);
         
         btnOK = new JButton(Utils._("OK"));
         btnOK.addActionListener(new ActionListener() {
            public void actionPerformed(ActionEvent e) {
-               returnValue = new String(passField.getPassword());
+               returnedPassword = new String(passField.getPassword());
+               returnedUsername = userField.getText();
                dispose();
             }             
         });
@@ -66,15 +77,26 @@ public class PasswordDialog extends JDialog {
         CancelAction actCancel = new CancelAction(this);
         btnCancel = actCancel.createCancelButton();
         
+        JLabel labelUserName = new JLabel(Utils._("User name:"));
+        labelUserName.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+        
+        JLabel labelPassword = new JLabel(Utils._("Password:"));
+        labelUserName.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+        
         Dimension boxy = new Dimension(border, border);
         jContentFrame.add(Box.createRigidArea(boxy), BorderLayout.NORTH);
         jContentFrame.add(Box.createRigidArea(boxy), BorderLayout.SOUTH);
         jContentFrame.add(Box.createRigidArea(boxy), BorderLayout.EAST);
         jContentFrame.add(Box.createRigidArea(boxy), BorderLayout.WEST);
         
+        boxy = new Dimension(0, border);
         Box box = Box.createVerticalBox();
         box.add(labelPrompt);
         box.add(Box.createRigidArea(boxy));
+        box.add(labelUserName);
+        box.add(userField);
+        box.add(Box.createRigidArea(boxy));
+        box.add(labelPassword);
         box.add(passField);
         box.add(Box.createRigidArea(boxy));
         
@@ -84,6 +106,7 @@ public class PasswordDialog extends JDialog {
         boxButtons.add(Box.createRigidArea(boxy));
         boxButtons.add(btnCancel);
         boxButtons.add(Box.createHorizontalGlue());
+        boxButtons.setAlignmentX(JComponent.LEFT_ALIGNMENT);
         
         box.add(boxButtons);
         
@@ -99,32 +122,69 @@ public class PasswordDialog extends JDialog {
     
     
 
-    public PasswordDialog(Frame owner, String title, String prompt)  {
+    public PasswordDialog(Frame owner, String title, String prompt, String userName, boolean editableUsername)  {
         super(owner, title, true);
-        initialize(prompt);       
+        initialize(prompt, userName, editableUsername);       
         this.setLocationRelativeTo(owner);
     }
 
-    public PasswordDialog(Dialog owner, String title, String prompt)  {
+    public PasswordDialog(Dialog owner, String title, String prompt, String userName, boolean editableUsername)  {
         super(owner, title, true);
-        initialize(prompt);
+        initialize(prompt, userName, editableUsername);
         this.setLocationRelativeTo(owner);
     }
     
-    public static String showPasswordDialog(Frame owner, String title, String prompt) {
-        PasswordDialog pdlg = new PasswordDialog(owner, title, prompt);
+    /**
+     * Shows the password dialog and returns a tuple (username, password)
+     * or null if the user selected cancel.
+     * @param owner
+     * @param title
+     * @param prompt
+     * @param userName
+     * @param editableUsername
+     * @return
+     */
+    public static String[] showPasswordDialog(Frame owner, String title, String prompt, String userName, boolean editableUsername) {
+        PasswordDialog pdlg = new PasswordDialog(owner, title, prompt, userName, editableUsername);
         pdlg.setVisible(true);
-        return pdlg.returnValue;
+        if (pdlg.returnedPassword != null) {
+            return new String[] { pdlg.returnedUsername, pdlg.returnedPassword };
+        } else {
+            return null;
+        }
     }
-
-    public static String showPasswordDialog(Dialog owner, String title, String prompt) {
-        PasswordDialog pdlg = new PasswordDialog(owner, title, prompt);
+    
+    /**
+     * Shows the password dialog and returns a tuple (username, password)
+     * or null if the user selected cancel.
+     * @param owner
+     * @param title
+     * @param prompt
+     * @param userName
+     * @param editableUsername
+     * @return
+     */
+    public static String[] showPasswordDialog(Dialog owner, String title, String prompt, String userName, boolean editableUsername) {
+        PasswordDialog pdlg = new PasswordDialog(owner, title, prompt, userName, editableUsername);
         pdlg.setVisible(true);
-        return pdlg.returnValue;
+        if (pdlg.returnedPassword != null) {
+            return new String[] { pdlg.returnedUsername, pdlg.returnedPassword };
+        } else {
+            return null;
+        }
     }
-        
-    public static String showPasswordDialogThreaded(Window owner, String title, String prompt) {
-        DisplayRunnable runner = new DisplayRunnable(owner, title, prompt);
+    /**
+     * Shows the password dialog in the event dispatching thread and returns a tuple (username, password)
+     * or null if the user selected cancel.
+     * @param owner
+     * @param title
+     * @param prompt
+     * @param userName
+     * @param editableUsername
+     * @return
+     */
+    public static String[] showPasswordDialogThreaded(Window owner, String title, String prompt, String userName, boolean editableUsername) {
+        DisplayRunnable runner = new DisplayRunnable(owner, title, prompt, userName, editableUsername);
         try {
             SwingUtilities.invokeAndWait(runner);
             return runner.result;
@@ -136,7 +196,7 @@ public class PasswordDialog extends JDialog {
             return null;
         }
     }
-    
+
     /**
      * Implements an Runnable that may be used in conjunction with the SwingUtilities.invoke*()
      * to display an password dialog from another thread 
@@ -144,22 +204,24 @@ public class PasswordDialog extends JDialog {
      *
      */
     public static class DisplayRunnable implements Runnable {
-        protected Window owner;
-        protected String title;
-        protected String prompt;
+        protected final Window owner;
+        protected final String title;
+        protected final String prompt;
+        protected final boolean editableUsername;
+        protected final String userName;
         
-        public String result;
+        public String[] result;
         
         public void run() {
             result = null;
             if (owner instanceof Dialog) {
-                result = showPasswordDialog((Dialog)owner, title, prompt);
+                result = showPasswordDialog((Dialog)owner, title, prompt, userName, editableUsername);
             } else if (owner instanceof Frame) {
-                result = showPasswordDialog((Frame)owner, title, prompt);
+                result = showPasswordDialog((Frame)owner, title, prompt, userName, editableUsername);
             }
         }
 
-        public DisplayRunnable(Window owner, String title, String prompt) {
+        public DisplayRunnable(Window owner, String title, String prompt, String userName, boolean editableUsername) {
             super();
             this.owner = owner;
             if (!(owner instanceof Frame || owner instanceof Dialog)) {
@@ -167,6 +229,8 @@ public class PasswordDialog extends JDialog {
             }
             this.title = title;
             this.prompt = prompt;
+            this.userName = userName;
+            this.editableUsername = editableUsername;
         }
     }
 }

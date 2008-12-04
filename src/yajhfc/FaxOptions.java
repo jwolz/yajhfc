@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -36,6 +35,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import yajhfc.file.FormattedFile.FileFormat;
+import yajhfc.options.MultiFileMode;
 import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.convrules.CompanyRule;
 import yajhfc.phonebook.convrules.LocationRule;
@@ -72,8 +72,8 @@ public class FaxOptions {
     public int maxDial;
     public int killTime = 180;
     
-    public Rectangle mainWinBounds, phoneWinBounds, customFilterBounds = null;
-    public Point sendWinPos, optWinPos;
+    public Rectangle mainWinBounds, phoneWinBounds, customFilterBounds;
+    public Rectangle sendWinBounds, optWinBounds;
     public String recvColState, sentColState, sendingColState/*, recvReadState*/;
     public int mainwinLastTab;
     
@@ -102,7 +102,7 @@ public class FaxOptions {
     //public FaxIntProperty newFaxAction = Utils.newFaxActions[3];
     public int newFaxAction = Utils.NEWFAX_BEEP | Utils.NEWFAX_TOFRONT;
     public boolean pclBug = false;
-    public boolean askPassword = false, askAdminPassword = true;
+    public boolean askPassword = false, askAdminPassword = true, askUsername = false;
     public String AdminPassword = "";
     
     public String recvFilter = null, sentFilter = null, sendingFilter = null;
@@ -124,7 +124,7 @@ public class FaxOptions {
     public static final String LOOKANDFEEL_SYSTEM = "!system!";
     public static final String LOOKANDFEEL_CROSSPLATFORM = "!crossplatform!"; 
     
-    public ArrayList<String> phoneBooks = new ArrayList<String>();
+    public List<String> phoneBooks = new ArrayList<String>();
     //public int lastSelectedPhonebook = 0;
     
     public boolean useDisconnectedMode = false;
@@ -141,6 +141,7 @@ public class FaxOptions {
     public static final String DEF_TOOLBAR_CONFIG = "Send|---|Show|Delete|---|Refresh|---|Phonebook|---|Resume|Suspend";
     public String toolbarConfig = DEF_TOOLBAR_CONFIG;
     
+    public boolean showTrayIcon = true;
     public boolean minimizeToTray = true;
     public NameRule phonebookDisplayStyle = NameRule.GIVENNAME_NAME;
     public NameRule coverNameRule = NameRule.TITLE_GIVENNAME_NAME_JOBTITLE;
@@ -149,9 +150,13 @@ public class FaxOptions {
     public CompanyRule coverCompanyRule = CompanyRule.DEPARTMENT_COMPANY;
     
     public boolean useJDK16PSBugfix = true;
-    public boolean createSingleFileForViewing = false;
+    
+    public boolean createSingleFilesForViewing = false;
+    public boolean alwaysCreateTargetFormat = false;
+    public MultiFileMode multiFileSendMode = MultiFileMode.NONE;
     public FileFormat singleFileFormat = FileFormat.PDF;
     public String ghostScriptLocation;
+    public String tiff2PDFLocation;
     
     
     // Uncomment for archive support.
@@ -208,7 +213,8 @@ public class FaxOptions {
             else
                 this.faxViewer = startCmd; //"rundll32.exe URL.DLL,FileProtocolHandler \"%s\"";//"kodakimg.exe";
             
-            this.ghostScriptLocation = "gswin32.exe";
+            this.ghostScriptLocation = "gswin32c.exe";
+            this.tiff2PDFLocation = "tiff2pdf.exe";
         } else {
             Map<String,String> env = System.getenv();
             if ("true".equals(env.get("KDE_FULL_SESSION"))) {
@@ -228,6 +234,7 @@ public class FaxOptions {
                 }
             }
             this.ghostScriptLocation = "gs";
+            this.tiff2PDFLocation = "tiff2pdf";
         }
         
         this.resolution = FaxResolution.HIGH;
@@ -238,8 +245,6 @@ public class FaxOptions {
         this.maxDial = 12;  
         
         mainWinBounds = null;
-        optWinPos = null;
-        sendWinPos = null;
         phoneWinBounds = null;
         mainwinLastTab = 0;
         
@@ -271,7 +276,7 @@ public class FaxOptions {
         
         for (int i = 0; i < f.length; i++) {
             try {
-                if (Modifier.isStatic(f[i].getModifiers())) // || Modifier.isFinal(f[i].getModifiers()))
+                if (Modifier.isStatic(f[i].getModifiers()))
                     continue;
                 
                 Object val = f[i].get(this);
@@ -283,17 +288,9 @@ public class FaxOptions {
                     p.setProperty(name, val.toString());
                 else if (val instanceof YajLanguage) {
                     p.setProperty(name, ((YajLanguage)val).getLangCode());
-                } else/*if (val instanceof MyManualMapObject) 
-                    p.setProperty(name, ((MyManualMapObject)val).getKey().toString());
-                else*/ if (val instanceof FmtItemList) {
+                } else if (val instanceof FmtItemList) {
                     p.setProperty(name, ((FmtItemList)val).saveToString());
-                } else /*if (val instanceof Vector) {
-                    Vector vec = (Vector)val;
-                    StringBuilder saveval = new StringBuilder();
-                    for (int j = 0; j < vec.size(); j++) 
-                        saveval.append(((FmtItem)vec.get(j)).fmt).append(sep);
-                    p.setProperty(name, saveval.toString());
-                } else*/ if (val instanceof Rectangle) {
+                } else if (val instanceof Rectangle) {
                     Rectangle rval = (Rectangle)val;
                     p.setProperty(name, "" + rval.x + sep + rval.y + sep + rval.width + sep + rval.height);
                 } else if (val instanceof Point) {
@@ -303,7 +300,7 @@ public class FaxOptions {
                     List lst = (List)val;
                     int idx = 0;
                     for (Object o : lst) {
-                        p.setProperty(name + "." + (++idx), (String)o);
+                        p.setProperty(name + '.' + (++idx), (String)o);
                     }
                 } else if (val instanceof Enum) {
                     p.setProperty(name, ((Enum)val).name());
@@ -420,121 +417,94 @@ public class FaxOptions {
     }
     
     @SuppressWarnings("unchecked")
-    public void loadFromFile(File file) {
-        if (Utils.debugMode) {
-            log.info("Loading prefs from " + file);
-        }
+    /**
+     * Loads the settings from the specified files. The files are loaded in the specified
+     * order, i.e. settings from "later" files override the earlier ones
+     */
+    public void loadFromFile(File... files) {
         Properties p = new Properties();
-        //System.err.println(fileName);
-        try {
-            FileInputStream filin = new FileInputStream(file);
-            p.load(filin);
-            filin.close();
-        } catch (FileNotFoundException e) {
-            return; // No file yet
-        } catch (IOException e) {
-            log.log(Level.WARNING, "Error reading file '" + file + "': " , e);
+        for (File file : files) {
+            if (Utils.debugMode) {
+                log.info("Loading prefs from " + file);
+            }
+            try {
+                if (file.exists()) {
+                    FileInputStream filin = new FileInputStream(file);
+                    p.load(filin);
+                    filin.close();
+                } else {
+                    if (Utils.debugMode) {
+                        log.info(file + " not found");
+                    }
+                }
+            } catch (FileNotFoundException e) {
+                if (Utils.debugMode) {
+                    log.log(Level.INFO, file + " not found", e);
+                }
+                continue; // No file yet
+            } catch (IOException e) {
+                log.log(Level.WARNING, "Error reading file '" + file + "': " , e);
+                continue;
+            }
+        }
+        if (p.size() == 0) {
+            log.info("No settings to load found.");
             return;
         }
+        
         if (Utils.debugMode) {
             log.config("---- BEGIN preferences dump");
             Utils.dumpProperties(p, log, "pass", "AdminPassword");
             log.config("---- END preferences dump");
         }
-        // Clear all lists:
-        phoneBooks.clear();
-        
-        Enumeration<?> e = p.propertyNames();
-        while (e.hasMoreElements()) {
-            String propName = (String)e.nextElement();
-            
-            // Special case for old "lastPhonebook" property
-            if (propName.equals("lastPhonebook")) {
-                phoneBooks.add(p.getProperty(propName));
+
+        for (Field f : FaxOptions.class.getFields()) {
+            if (Modifier.isStatic(f.getModifiers()))
                 continue;
-            }
             
             try {
-                String fName;
-                int pntIdx = propName.indexOf('.');
-                if (pntIdx >= 0) { //Lists
-                    fName = propName.substring(0, pntIdx); // Cut off parts right of point
-                } else {
-                    fName = propName;
-                }
-                
-                Field f = FaxOptions.class.getField(fName);
                 Class<?> fcls = f.getType();
-                if (String.class.isAssignableFrom(fcls))
-                    f.set(this, p.getProperty(fName));
-                else if (Integer.TYPE.isAssignableFrom(fcls))
-                    f.setInt(this, Integer.parseInt(p.getProperty(fName)));
-                else if (Boolean.TYPE.isAssignableFrom(fcls))
-                    f.setBoolean(this, Boolean.parseBoolean(p.getProperty(fName)));
-                else if (YajLanguage.class.isAssignableFrom(fcls)) {
-                    f.set(this, YajLanguage.languageFromLangCode(p.getProperty(fName)));
-                } else /* if (MyManualMapObject.class.isAssignableFrom(fcls)) {
-                    MyManualMapObject[] dataarray;
-                    
-                    if (fName.equals("locale"))
-                        dataarray = Utils.AvailableLocales;
-                    else {
-                        log.log(Level.WARNING, "Unknown MyManualMapObject field: " + fName);
-                        continue;
+                if (List.class.isAssignableFrom(fcls) 
+                        && (!FmtItemList.class.isAssignableFrom(fcls))) {
+                    final String fieldName = f.getName();
+                    final List<String> list = (List<String>)f.get(this);
+                    list.clear();
+
+                    int i = 1;
+                    String val;
+                    while ((val = p.getProperty(fieldName + '.' + i)) != null) {
+                        list.add(val);
+                        i++;
                     }
-                    Object res = Utils.findInArray(dataarray, p.getProperty(fName));
-                    if (res != null)
-                        f.set(this, res);
-                    else
-                        log.log(Level.WARNING, "Unknown value for MyManualMapObject field " + fName);
-                } else */ if (FmtItemList.class.isAssignableFrom(fcls)) {
-                    FmtItemList fim = (FmtItemList)f.get(this);
-                    fim.loadFromString(p.getProperty(fName));
-                } else /*if (Vector.class.isAssignableFrom(fcls)) {
-                    String[] fields = Utils.fastSplit(p.getProperty(fName), sep);
-                    FmtItem[] dataarray, required;
-                    Vector<FmtItem> vecres = new Vector<FmtItem>();
-                    
-                    if (fName.equals("recvfmt")) {
-                        dataarray = Utils.recvfmts;
-                        required = Utils.requiredRecvFmts;
-                    } else if (fName.equals("sentfmt")) {
-                        dataarray = Utils.jobfmts;
-                        required = Utils.requiredSentFmts;
-                    } else if (fName.equals("sendingfmt")) {
-                        dataarray = Utils.jobfmts;
-                        required = Utils.requiredSendingFmts;
-                    } else {
-                        System.err.println("Unknown vector field name: " + fName);
-                        continue;
-                    }
-                    for (int i=0; i < fields.length; i++) {
-                        FmtItem res = (FmtItem)Utils.findInArray(dataarray, fields[i]);
-                        if (res == null) 
-                            System.err.println("FmtItem for " + fields[i] + "not found.");
-                        else 
-                            if (!vecres.contains(res))
-                                vecres.add(res);
-                    }
-                    
-                    Utils.addUniqueToVec(vecres, required);
-                    f.set(this, vecres);
-                } else */ if (Rectangle.class.isAssignableFrom(fcls)) {
-                    String [] v =  Utils.fastSplit(p.getProperty(fName), sep);
-                    f.set(this, new Rectangle(Integer.parseInt(v[0]), Integer.parseInt(v[1]), Integer.parseInt(v[2]), Integer.parseInt(v[3])));
-                } else if (Point.class.isAssignableFrom(fcls)) {
-                    String [] v =  Utils.fastSplit(p.getProperty(fName), sep);
-                    f.set(this, new Point(Integer.parseInt(v[0]), Integer.parseInt(v[1])));
-                } else if (List.class.isAssignableFrom(fcls)) {
-                    List lst = (List)f.get(this);
-                    lst.add(p.getProperty(propName));
-                } else if (Enum.class.isAssignableFrom(fcls)) {
-                    f.set(this, Enum.valueOf((Class<? extends Enum>)fcls, p.getProperty(propName)));
                 } else {
-                    log.log(Level.WARNING, "Unknown field type " + fcls.getName());
+                    String val = p.getProperty(f.getName());
+                    if (val != null) {
+                        if (String.class.isAssignableFrom(fcls))
+                            f.set(this, val);
+                        else if (Integer.TYPE.isAssignableFrom(fcls))
+                            f.setInt(this, Integer.parseInt(val));
+                        else if (Boolean.TYPE.isAssignableFrom(fcls))
+                            f.setBoolean(this, Boolean.parseBoolean(val));
+                        else if (YajLanguage.class.isAssignableFrom(fcls)) {
+                            f.set(this, YajLanguage.languageFromLangCode(val));
+                        } else if (FmtItemList.class.isAssignableFrom(fcls)) {
+                            FmtItemList fim = (FmtItemList)f.get(this);
+                            fim.loadFromString(val);
+                        } else  if (Rectangle.class.isAssignableFrom(fcls)) {
+                            String [] v =  Utils.fastSplit(val, sep);
+                            f.set(this, new Rectangle(Integer.parseInt(v[0]), Integer.parseInt(v[1]), Integer.parseInt(v[2]), Integer.parseInt(v[3])));
+                        } else if (Point.class.isAssignableFrom(fcls)) {
+                            String [] v =  Utils.fastSplit(val, sep);
+                            f.set(this, new Point(Integer.parseInt(v[0]), Integer.parseInt(v[1])));
+                        } else if (Enum.class.isAssignableFrom(fcls)) {
+                            f.set(this, Enum.valueOf((Class<? extends Enum>)fcls, val));
+                        } else {
+                            log.log(Level.WARNING, "Unknown field type " + fcls);
+                        }
+                    }
                 }
             } catch (Exception e1) {
-                log.log(Level.WARNING, "Couldn't load setting for " + propName + ": ", e1);
+                log.log(Level.WARNING, "Couldn't load setting for " + f + ": ", e1);
             }
         }
     }

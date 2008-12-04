@@ -21,17 +21,16 @@ package yajhfc.send;
 import gnu.hylafax.HylaFAXClient;
 import gnu.hylafax.Job;
 
-import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.Window;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -61,7 +60,7 @@ public class SendController {
     
     // These properties are set in the constructor:
     protected HylaClientManager clientManager;
-    protected Dialog parent;
+    protected Window parent;
     protected boolean pollMode;
     
     // These properties have default values and may be set using getters and setters
@@ -76,8 +75,15 @@ public class SendController {
     protected String notificationType = Utils.getFaxOptions().notifyWhen.getType();
     protected int resolution = Utils.getFaxOptions().resolution.getResolution();
     protected int killTime = Utils.getFaxOptions().killTime;
+    // null = "NOW"
+    protected Date sendTime = null;
     
     protected ProgressUI progressMonitor = null;
+    
+    /**
+     * The selected modem. Either a HylaModem or a String containing the modem's name.
+     */
+    protected Object selectedModem = Utils.getFaxOptions().defaultModem;
     
     private static final int FILE_DISPLAY_LEN = 30;
     
@@ -88,11 +94,6 @@ public class SendController {
     public void setProgressMonitor(ProgressUI progressMonitor) {
         this.progressMonitor = progressMonitor;
     }
-
-    /**
-     * The selected modem. Either a HylaModem or a String containing the modem's name.
-     */
-    protected Object selectedModem;
 
     private void setPaperSizes() {
         //PaperSize desiredSize = (PaperSize)comboPaperSize.getSelectedItem();
@@ -174,6 +175,7 @@ public class SendController {
         
         public PreviewWorker(NumberTFLItem selectedNumber) {
             this.selectedNumber = selectedNumber;
+            this.progressMonitor = SendController.this.progressMonitor;
         }
         
         protected int calculateMaxProgress() {
@@ -215,19 +217,17 @@ public class SendController {
                 } finally {
                     clientManager.endServerTransaction();                    
                 }
-                updateNote(Utils._("Launching viewer..."));
-                MultiFileConverter.viewMultipleFiles(viewFiles.toArray(new FormattedFile[viewFiles.size()]), paperSize);
+                updateNote(Utils._("Launching viewer"));
+                MultiFileConverter.viewMultipleFiles(viewFiles, paperSize, true);
             } catch (Exception e1) {
                 showExceptionDialog(Utils._("Error previewing the documents:"), e1);
             } 
         } 
         
-        public PreviewWorker() {
-            this.progressMonitor = SendController.this.progressMonitor;
-        }
     }
     class SendWorker extends ProgressWorker {
         private final Logger log = Logger.getLogger(SendWorker.class.getName());    
+        private final SendFileManager fileManager;
         
         private void setIfNotEmpty(Job j, String prop, String val) {
             try {
@@ -258,7 +258,7 @@ public class SendController {
         @Override
         protected int calculateMaxProgress() {
             int maxProgress;
-            maxProgress = 20 * files.size() + 20 * numbers.size() + 10;
+            maxProgress = 20 * numbers.size() + 10 + fileManager.calcMaxProgress();
             if (useCover) {
                 maxProgress += 20;
             }
@@ -277,50 +277,33 @@ public class SendController {
                 Faxcover cover = null;
                 FaxOptions fo = Utils.getFaxOptions();                    
 
-                synchronized (hyfc) {
-                    log.finest("In hyfc monitor");
-                    if (!pollMode) {
-                        setPaperSizes();
+                if (!pollMode) {
+                    setPaperSizes();
 
-                        if (useCover) {
-                            cover = initFaxCover();
-                            stepProgressBar(20);
-                        }
-
-                        // Upload documents:
-                        //TEST synchronized (hyfc) {
-                        hyfc.type(HylaFAXClient.TYPE_IMAGE);
-
-                        for (HylaTFLItem item : files) {
-                            updateNote(MessageFormat.format(Utils._("Uploading {0}"), Utils.shortenFileNameForDisplay(item.getText(), FILE_DISPLAY_LEN)));
-                            item.upload(hyfc);
-
-                            stepProgressBar(20);
-                        }
-                        //TEST }
-                    }            
-
-                    String modem = Utils.sanitizeInput(getModem());
-                    if (Utils.debugMode) {
-                        log.fine("Use modem: " + modem);
-                        //Utils.debugOut.println(modem);
+                    if (useCover) {
+                        cover = initFaxCover();
+                        stepProgressBar(20);
                     }
-                    for (NumberTFLItem numItem : numbers) {
-                        updateNote(MessageFormat.format(Utils._("Creating job to {0}"), numItem.getText()));
 
-                        try {
-                            String coverName = null;
-                            if (cover != null) {
-                                File coverFile = makeCoverFile(cover, numItem);
+                    fileManager.uploadFiles(hyfc, this);
+                }            
 
-                                FileInputStream fi = new FileInputStream(coverFile);
-                                coverName = hyfc.putTemporary(fi);
-                                fi.close();
+                String modem = Utils.sanitizeInput(getModem());
+                if (Utils.debugMode) {
+                    log.fine("Use modem: " + modem);
+                    //Utils.debugOut.println(modem);
+                }
+                for (NumberTFLItem numItem : numbers) {
+                    updateNote(MessageFormat.format(Utils._("Creating job to {0}"), numItem.getText()));
 
-                                coverFile.delete();
-                            }
-                            stepProgressBar(5);
+                    try {
+                        if (cover != null) {
+                            fileManager.setCoverFile(makeCoverFile(cover, numItem), hyfc);
+                        }
+                        stepProgressBar(5);
 
+                        synchronized (hyfc) {
+                            log.finest("In hyfc monitor");
                             Job j = hyfc.createJob();
 
                             stepProgressBar(5);
@@ -348,7 +331,7 @@ public class SendController {
                                     setIfNotEmpty(j, "USRKEY", subject);
                                 }
                             }
-                            
+
                             String faxNumber = Utils.sanitizeInput(numItem.fields.get(PBEntryField.FaxNumber));
                             j.setDialstring(faxNumber);
                             //j.setProperty("EXTERNAL", faxNumber); // needed to fix an error while sending multiple jobs
@@ -356,7 +339,11 @@ public class SendController {
                             j.setNotifyType(notificationType);
                             j.setPageDimension(paperSize.getSize());
                             j.setVerticalResolution(resolution);
-                            j.setSendTime("NOW"); // bug fix 
+                            if (sendTime == null) {
+                                j.setSendTime("NOW"); // bug fix
+                            } else {
+                                j.setSendTime(sendTime);
+                            }
                             j.setKilltime(Utils.minutesToHylaTime(killTime));  
 
                             j.setProperty("MODEM", modem);
@@ -364,12 +351,7 @@ public class SendController {
                             if (pollMode) 
                                 j.setProperty("POLL", "\"\" \"\"");
                             else {               
-                                if (coverName != null)
-                                    j.setProperty("COVER", coverName);
-
-                                for (HylaTFLItem item : files) {
-                                    j.addDocument(item.getServerName());                        
-                                }
+                                fileManager.attachDocuments(hyfc, j, this);
 
                                 fo.useCover = useCover;
                                 fo.useCustomCover = (customCover != null);
@@ -379,20 +361,16 @@ public class SendController {
                             stepProgressBar(5);
 
                             hyfc.submit(j);
-
-                            stepProgressBar(5);
-                        } catch (Exception e1) {
-                            showExceptionDialog(MessageFormat.format(Utils._("An error occured while submitting the fax job for phone number \"{0}\" (will try to submit the fax to the other numbers anyway): "), numItem.getText()) , e1);
                         }
+                        log.finest("Out of hyfc monitor");
+                        stepProgressBar(5);
+                    } catch (Exception e1) {
+                        showExceptionDialog(MessageFormat.format(Utils._("An error occured while submitting the fax job for phone number \"{0}\" (will try to submit the fax to the other numbers anyway): "), numItem.getText()) , e1);
                     }
                 }
-                log.finest("Out of hyfc monitor");
-                
-                updateNote(Utils._("Cleaning up"));
-                for (HylaTFLItem item  : files) {
-                    item.cleanup();
-                }
 
+                updateNote(Utils._("Cleaning up"));
+                fileManager.cleanup();
             } catch (Exception e1) {
                 //JOptionPane.showMessageDialog(ButtonSend, _("An error occured while submitting the fax: ") + "\n" + e1.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
                 showExceptionDialog(Utils._("An error occured while submitting the fax: "), e1);
@@ -407,14 +385,15 @@ public class SendController {
         
         public SendWorker() {
             this.progressMonitor = SendController.this.progressMonitor;
+            this.fileManager = new SendFileManager(paperSize, files);
         }
     }
     
-    public SendController(HylaClientManager clientManager, Dialog parent, boolean pollMode) {
+    public SendController(HylaClientManager clientManager, Window parent, boolean pollMode) {
         this(clientManager, parent, pollMode, null);
     }
     
-    public SendController(HylaClientManager clientManager, Dialog parent, boolean pollMode, ProgressUI progressMonitor) {
+    public SendController(HylaClientManager clientManager, Window parent, boolean pollMode, ProgressUI progressMonitor) {
         this.clientManager = clientManager;
         this.parent = parent;
         this.pollMode = pollMode;
@@ -579,6 +558,18 @@ public class SendController {
 
     public List<HylaTFLItem> getFiles() {
         return files;
+    }
+    
+    public Date getSendTime() {
+        return sendTime;
+    }
+
+    /**
+     * Sets the time to send. null means "now"
+     * @param sendTime
+     */
+    public void setSendTime(Date sendTime) {
+        this.sendTime = sendTime;
     }
     
     public static SendWinControl createSendWindow(Frame owner, HylaClientManager manager, boolean pollMode, boolean initiallyHideFiles) {
