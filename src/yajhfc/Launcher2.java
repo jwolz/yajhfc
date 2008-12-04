@@ -165,7 +165,7 @@ public final class Launcher2 {
     }
     
     
-    private static void printHelp() {
+    private static void printHelp() { //TODO: Update this
         System.out.print(
             "General usage:\n"+
             "java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose] \n" +
@@ -187,6 +187,7 @@ public final class Launcher2 {
             "--loadplugin Specifies the jar file of a YajHFC plugin to load.\n" +
             "--loaddriver Specifies the location of a JDBC driver JAR file.\n" +
             "--no-plugins Disables loading plugins from the plugin.lst file.\n" +
+            "--no-gui     Sends a fax with a minimal GUI.\n" +
             "--configdir  Sets a configuration directory to use instead of ~/.yajhfc\n" +
             "--help       Displays this text.\n"
             );   
@@ -225,6 +226,7 @@ public final class Launcher2 {
         boolean closeAfterSubmit = true;
         boolean debugMode = false;
         boolean noPlugins = false;
+        boolean noGUI = false;
         int selectedTab = -1;
         String logFile = null;
         boolean appendToLog = false;
@@ -283,6 +285,8 @@ public final class Launcher2 {
                     appendToLog = true;
                 } else if (curArg.equals("--no-plugins")) {
                     noPlugins = true;
+                } else if (curArg.equals("--no-gui")) {
+                    noGUI = true;
                 } else {
                     System.err.println("Unknown command line argument: " + curArg);
                 }
@@ -340,81 +344,62 @@ public final class Launcher2 {
             }
         }
         
+        if (noGUI) {
+            launchLog.fine("Starting up without GUI...");
+            NoGUISender.startUpWithoutUI(recipients, fileNames, plugins, noPlugins, useStdin);
+            return;
+        }
+        
         Socket oldinst = checkLock();
         
         if (forkNewInst && (oldinst == null)) {
-            try {
-                int argcount = 4;
-                if (adminMode)
-                    argcount++;
-                if (Utils.debugMode)
-                    argcount++;
-                if (!closeAfterSubmit)
-                    argcount++;
-                if (logFile != null) 
-                    argcount++;
-                if (cmdLineConfDir != null)
-                    argcount++;
-                if (selectedTab >= 0)
-                    argcount++;
-                if (noPlugins)
-                    argcount++;
-                argcount += plugins.size();
+            try {                
+                List<String> launchArgs = new ArrayList<String>(20);
+                launchArgs.add(System.getProperty("java.home") + File.separatorChar + "bin" + File.separatorChar + "java");
+                launchArgs.add("-classpath");
+                launchArgs.add(System.getProperty("java.class.path"));
+                launchArgs.add(Launcher2.class.getCanonicalName());
                 
-                String[] launchArgs = new String[argcount];
-                launchArgs[0] = System.getProperty("java.home") + File.separatorChar + "bin" + File.separatorChar + "java";
-                launchArgs[1] = "-classpath";
-                launchArgs[2] = System.getProperty("java.class.path");
-                launchArgs[3] = Launcher2.class.getCanonicalName();
-                
-                //When adding something here, also modify argcount above!
-                int argidx = 4;
+
                 if (adminMode) {
-                    launchArgs[argidx] = "--admin";
-                    argidx++;
+                    launchArgs.add("--admin");
                 }
                 if (Utils.debugMode) {
-                    launchArgs[argidx] = "--debug";
-                    argidx++;
+                    launchArgs.add("--debug");
                 }
                 if (logFile != null) {
-                    launchArgs[argidx] = "--appendlogfile=\"" + logFile + "\"";
-                    argidx++;
+                    launchArgs.add("--appendlogfile=\"" + logFile + "\"");
                 }
                 if (!closeAfterSubmit) {
-                    launchArgs[argidx] = "--noclose";
-                    argidx++;
+                    launchArgs.add("--noclose");
                 }
                 if (cmdLineConfDir != null) {
-                    launchArgs[argidx] = "--configdir=" + cmdLineConfDir;
-                    argidx++;
+                    launchArgs.add("--configdir=" + cmdLineConfDir);
                 }
                 if (selectedTab >= 0) {
-                    launchArgs[argidx] = "--showtab=" + selectedTab;
-                    argidx++;
+                    launchArgs.add("--showtab=" + selectedTab);
                 }
                 if (noPlugins) {
-                    launchArgs[argidx] = "--no-plugins";
-                    argidx++;
+                    launchArgs.add("--no-plugins");
                 }
                 for (PluginInfo entry : plugins) {
                     switch (entry.type) {
                     case PLUGIN:
-                        launchArgs[argidx++] = "--loadplugin=\"" + entry.file.getAbsolutePath() + "\"";
+                        launchArgs.add("--loadplugin=\"" + entry.file.getAbsolutePath() + "\"");
                         break;
                     case JDBCDRIVER:
-                        launchArgs[argidx++] = "--loaddriver=\"" + entry.file.getAbsolutePath() + "\"";
+                        launchArgs.add("--loaddriver=\"" + entry.file.getAbsolutePath() + "\"");
                         break;
                     }
                 }
                 
                 if (Utils.debugMode) {
                     launchLog.info("Launching new instance:");
-                    for (int i = 0; i < launchArgs.length; i++) {
-                        launchLog.info("launchArgs[" + i + "] = " + launchArgs[i]);
+                    for (int i = 0; i < launchArgs.size(); i++) {
+                        launchLog.info("launchArgs[" + i + "] = " + launchArgs.get(i));
                     }
                 }
-                Runtime.getRuntime().exec(launchArgs);
+                new ProcessBuilder(launchArgs).start();
                 
                 int time = 0;
                 if (Utils.debugMode) {
@@ -537,6 +522,7 @@ public final class Launcher2 {
             }
         }
     }
+    
     
     private static class LogFilePrompter implements Runnable {
         protected String selection = null;

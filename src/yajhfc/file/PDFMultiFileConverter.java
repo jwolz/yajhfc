@@ -38,9 +38,16 @@ public class PDFMultiFileConverter extends MultiFileConverter {
     private static final Logger log = Logger.getLogger(PDFMultiFileConverter.class.getName());
     
     private static final String[] additionalGSParams = {
+        "-dPDFSETTINGS=/default",
         "-dDownsampleColorImages=true",
         "-dDownsampleGrayImages=true",
         "-dDownsampleMonoImages=true",
+        "-dMonoImageDownsampleType=/Bicubic",
+        "-dGrayImageDownsampleType=/Bicubic",
+        "-dColorImageDownsampleType=/Bicubic",
+        "-dMonoImageResolution=196",
+        "-dGrayImageResolution=196",
+        "-dColorImageResolution=196",        
         "-dOptimize=true",
         "-c",
         ".setpdfwrite"
@@ -48,13 +55,11 @@ public class PDFMultiFileConverter extends MultiFileConverter {
     
     protected static final String[] defaultGSParams = {
         "-q",
-        "-r196",
         "-dBATCH",
         "-dSAFER",
         "-dNOPAUSE"
     };
     
-    protected String gsPath = "/usr/bin/gs";
     
     /* (non-Javadoc)
      * @see yajhfc.file.MultiFileConverter#convertMultiplePSorPDFFiles(java.io.File[], java.io.File)
@@ -62,9 +67,10 @@ public class PDFMultiFileConverter extends MultiFileConverter {
     @Override
     public void convertMultiplePSorPDFFiles(File[] files, File targetFile, PaperSize paperSize)
             throws IOException, ConversionException {
+        String gsPath = Utils.getFaxOptions().ghostScriptLocation;
         
         String[] additionalParams = getAdditionalGSParams();
-        String[] cmdList =  new String[4 + additionalParams.length + defaultGSParams.length + 2*files.length];
+        String[] cmdList =  new String[5 + additionalParams.length + defaultGSParams.length + 2*files.length];
         int listIndex = 0;
         
         cmdList[listIndex++] = gsPath;
@@ -73,6 +79,7 @@ public class PDFMultiFileConverter extends MultiFileConverter {
         cmdList[listIndex++] = "-sDEVICE=" + getGSDevice();
         cmdList[listIndex++] = "-sOutputFile=" + targetFile.getAbsolutePath();
         cmdList[listIndex++] = "-sPaperSize=" + paperSize.name().toLowerCase();
+        cmdList[listIndex++] = calcResolution(paperSize);
         System.arraycopy(additionalParams, 0, cmdList, listIndex, additionalParams.length);
         listIndex += additionalParams.length;
         for (File file : files) {
@@ -113,6 +120,14 @@ public class PDFMultiFileConverter extends MultiFileConverter {
         return FileFormat.PDF;
     }
 
+    /**
+     * Returns the GhostScript "-r" parameter
+     * @param paperSize
+     * @return
+     */
+    protected String calcResolution(PaperSize paperSize) {
+        return "-r196";
+    }
     
     protected String[] getAdditionalGSParams() {
         return additionalGSParams;

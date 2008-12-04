@@ -83,7 +83,7 @@ public class FormattedFile {
     }
     
     
-    public File file = null;
+    public final File file;
     public FileFormat format = FileFormat.Unknown;
 
     public FormattedFile(String fileName, FileFormat format) {
@@ -175,6 +175,10 @@ public class FormattedFile {
     
     public static FileFormat detectFileFormat(String fileName) throws FileNotFoundException, IOException {
         return detectFileFormat(new FileInputStream(fileName));
+    }
+    
+    public static FileFormat detectFileFormat(File file) throws FileNotFoundException, IOException {
+        return detectFileFormat(new FileInputStream(file));
     }
     
     /**

@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import yajhfc.DefaultIconMap;
-import yajhfc.FmtItem;
+import yajhfc.FmtItem0;
 import yajhfc.FmtItemList;
 import yajhfc.HylaServerFile;
 import yajhfc.IconMap;
@@ -70,7 +70,7 @@ public abstract class YajJob implements FilterableObject {
         
         if (result == null) { // Not parsed
             String res = getStringData(col);
-            FmtItem fmtItem = columns.getCompleteView().get(col);
+            FmtItem0 fmtItem = columns.getCompleteView().get(col);
             parsedData[col] = result = parseValue(fmtItem, res);
         }        
         return (result == nullObject) ? null : result;
@@ -88,7 +88,7 @@ public abstract class YajJob implements FilterableObject {
      * @param data
      * @return
      */
-    protected Object parseValue(FmtItem fmtItem, String data) {
+    protected Object parseValue(FmtItem0 fmtItem, String data) {
         if (data == null) {
             return  nullObject;
         } else {

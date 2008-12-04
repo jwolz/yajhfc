@@ -141,7 +141,7 @@ public final class NewSearchWin extends JDialog implements ActionListener {
             comboOp = new JComboBox(StringFilterOperator.values());
             
             textCondition = new JTextField(30);
-            textCondition.addMouseListener(new ClipboardPopup());
+            textCondition.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
             
             buttonSearch = new JButton(Utils._("Search"), Utils.loadIcon("general/Find"));
             buttonSearch.setActionCommand("search");

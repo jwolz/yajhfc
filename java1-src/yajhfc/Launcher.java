@@ -48,7 +48,8 @@ public class Launcher {
                 }
             }
         } catch (NumberFormatException e) {
-            System.err.println("Could not determine Java version.");
+            System.err.println("Could not determine Java version.\n Reason:");
+            e.printStackTrace();
         }
         if (javaMajor < 1 || (javaMajor == 1 && javaMinor < 5)) {
             showMessage("You need at least Java 1.5 (Java 5) to run YajHFC. The installed version is " + javaVer + ".", "Error");
@@ -63,6 +64,7 @@ public class Launcher {
         try {
             startRealLauncher(args);
         } catch (Throwable t) {
+            t.printStackTrace();
             showMessage(t.toString(), "Error");
         }
     }

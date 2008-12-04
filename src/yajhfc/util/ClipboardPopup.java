@@ -130,4 +130,8 @@ public class ClipboardPopup implements MouseListener, ActionListener {
         // method stub
     }
 
+    /**
+     * The application wide, shared default popup
+     */
+    public static final ClipboardPopup DEFAULT_POPUP = new ClipboardPopup();
 }

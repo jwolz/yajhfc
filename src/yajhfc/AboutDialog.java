@@ -73,7 +73,6 @@ public class AboutDialog extends JDialog implements HyperlinkListener {
     private JTabbedPane tabMain;
     private JPanel aboutPane;
     //private ArrayList<JScrollPane> scrollTxt;
-    private ClipboardPopup clpText;
     
     public void hyperlinkUpdate(HyperlinkEvent e) {
         if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
@@ -109,7 +108,7 @@ public class AboutDialog extends JDialog implements HyperlinkListener {
         JEditorPane text = new JEditorPane();
         text.setEditable(false);
         text.setFont(new Font("DialogInput", java.awt.Font.PLAIN, 12));
-        text.addMouseListener(clpText);
+        text.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
         text.addHyperlinkListener(this);
         
         try {
@@ -151,7 +150,7 @@ public class AboutDialog extends JDialog implements HyperlinkListener {
         JTextArea text = new JTextArea();
         text.setEditable(false);
         text.setFont(new Font("DialogInput", java.awt.Font.PLAIN, 12));
-        text.addMouseListener(clpText);
+        text.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
 
         Properties sp = System.getProperties();
         String[] keys = new String[sp.size()];
@@ -255,7 +254,6 @@ public class AboutDialog extends JDialog implements HyperlinkListener {
         setModal(true);
         setSize(640, 380);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        clpText = new ClipboardPopup();
         setContentPane(getjContentPane());
         
         getRootPane().setDefaultButton(buttonOK);

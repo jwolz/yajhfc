@@ -50,7 +50,7 @@ public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2008 by Jonas Wolz";
-    public static final String AppVersion = "0.3.9b";
+    public static final String AppVersion = "0.3.9c";
     public static final String AuthorEMail = "Jonas Wolz &lt;jwolz@freenet.de&gt;";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
     
@@ -63,123 +63,123 @@ public final class Utils {
     private static boolean TriedMsgLoad = false;
     private static File configDir = null;
     
-    public static final FmtItem jobfmt_JobID =
-        new FmtItem("j", _("ID"), _("Job identifier"), Integer.class);
+    public static final FmtItem0 jobfmt_JobID =
+        new FmtItem0("j", _("ID"), _("Job identifier"), Integer.class);
     
-    public static final FmtItem jobfmt_Owner =
-        new FmtItem("o", _("Owner"),  _("Job owner"));
+    public static final FmtItem0 jobfmt_Owner =
+        new FmtItem0("o", _("Owner"),  _("Job owner"));
     
-    public static final FmtItem jobfmt_Jobstate =
-        new FmtItem("a", _("Job state"), _("Job state (one-character symbol)"), IconMap.class);
+    public static final FmtItem0 jobfmt_Jobstate =
+        new FmtItem0("a", _("Job state"), _("Job state (one-character symbol)"), IconMap.class);
     
-    public static final FmtItem jobfmt_Status =
-        new FmtItem("s", _("Status"), _("Job status information from last failure"));
+    public static final FmtItem0 jobfmt_Status =
+        new FmtItem0("s", _("Status"), _("Job status information from last failure"));
     
-    public static final FmtItem[] jobfmts =
+    public static final FmtItem0[] jobfmts =
     { 
-            new FmtItem("A", _("SubAddress"), _("Destination SubAddress")), 
-            new FmtItem("B", _("Password"), _("Destination Password")), 
-            new FmtItem("C", _("Company"), _("Destination company name")), 
-            new FmtItem("D", _("Dials: toal/max."), _("Total # dials/maximum # dials")), 
-            new FmtItem("E", _("Speed"), _("Desired signalling rate"), Integer.class), 
-            new FmtItem("F", _("Tagline format"), _("Client-specific tagline format string")), 
-            new FmtItem("G", _("Desired min-scanline time")), 
-            new FmtItem("H", _("Desired data format")), 
-            new FmtItem("I", _("Priority"), _("Client-specified scheduling priority"), Integer.class), 
-            new FmtItem("J", _("Tag string"), _("Client-specified job tag string")), 
-            new FmtItem("K", _("Use ECM?"), _("Desired use of ECM (one-character symbol)")), 
-            new FmtItem("L", _("Location"), _("Destination geographic location")), 
-            new FmtItem("M", _("Sender e-mail"), _("Notification e-mail address")), 
-            new FmtItem("N", _("Private Tagline?"), _("Desired use of private tagline (one-character symbol)")), 
-            new FmtItem("O", _("Use continuation cover"), _("Whether to use continuation cover page (one-character symbol)")), 
-            new FmtItem("P", _("Pages done/total"), _("# pages transmitted/total # pages to transmit")), 
-            new FmtItem("Q", _("Minimal signalling rate"), _("Client-specified minimum acceptable signalling rate"), Integer.class), 
-            new FmtItem("R", _("Receiver"), _("Destination person (receiver)")), 
-            new FmtItem("S", _("Sender"), _("Sender's identity")), 
-            new FmtItem("T", _("Tries: done/max."), _("Total # tries/maximum # tries")), 
-            new FmtItem("U", _("Page chopping threshold (inches)"), Float.class), 
-            new FmtItem("V", _("Job done operation")), 
-            new FmtItem("W", _("Communication identifier")), 
-            new FmtItem("X", _("Job type"), _("Job type (one-character symbol)")), 
-            new FmtItem("Y", _("Scheduled time"), _("Scheduled date and time"), new HylaDateField("yyyy/MM/dd HH.mm.ss", _("dd/MM/yyyy HH:mm:ss"))), 
-            new FmtItem("Z", _("Scheduled time in seconds since the UNIX epoch")), 
+            new FmtItem0("A", _("SubAddress"), _("Destination SubAddress")), 
+            new FmtItem0("B", _("Password"), _("Destination Password")), 
+            new FmtItem0("C", _("Company"), _("Destination company name")), 
+            new FmtItem0("D", _("Dials: toal/max."), _("Total # dials/maximum # dials")), 
+            new FmtItem0("E", _("Speed"), _("Desired signalling rate"), Integer.class), 
+            new FmtItem0("F", _("Tagline format"), _("Client-specific tagline format string")), 
+            new FmtItem0("G", _("Desired min-scanline time")), 
+            new FmtItem0("H", _("Desired data format")), 
+            new FmtItem0("I", _("Priority"), _("Client-specified scheduling priority"), Integer.class), 
+            new FmtItem0("J", _("Tag string"), _("Client-specified job tag string")), 
+            new FmtItem0("K", _("Use ECM?"), _("Desired use of ECM (one-character symbol)")), 
+            new FmtItem0("L", _("Location"), _("Destination geographic location")), 
+            new FmtItem0("M", _("Sender e-mail"), _("Notification e-mail address")), 
+            new FmtItem0("N", _("Private Tagline?"), _("Desired use of private tagline (one-character symbol)")), 
+            new FmtItem0("O", _("Use continuation cover"), _("Whether to use continuation cover page (one-character symbol)")), 
+            new FmtItem0("P", _("Pages done/total"), _("# pages transmitted/total # pages to transmit")), 
+            new FmtItem0("Q", _("Minimal signalling rate"), _("Client-specified minimum acceptable signalling rate"), Integer.class), 
+            new FmtItem0("R", _("Receiver"), _("Destination person (receiver)")), 
+            new FmtItem0("S", _("Sender"), _("Sender's identity")), 
+            new FmtItem0("T", _("Tries: done/max."), _("Total # tries/maximum # tries")), 
+            new FmtItem0("U", _("Page chopping threshold (inches)"), Float.class), 
+            new FmtItem0("V", _("Job done operation")), 
+            new FmtItem0("W", _("Communication identifier")), 
+            new FmtItem0("X", _("Job type"), _("Job type (one-character symbol)")), 
+            new FmtItem0("Y", _("Scheduled time"), _("Scheduled date and time"), new HylaDateField("yyyy/MM/dd HH.mm.ss", _("dd/MM/yyyy HH:mm:ss"))), 
+            new FmtItem0("Z", _("Scheduled time in seconds since the UNIX epoch")), 
             jobfmt_Jobstate, 
-            new FmtItem("b", _("# consecutive failed tries"), Integer.class), 
-            new FmtItem("c", _("Client machine name")), 
-            new FmtItem("d", _("Total # dials"), Integer.class), 
-            new FmtItem("e", _("Number"), _("Public (external) format of dialstring")), 
-            new FmtItem("f", _("# consecutive failed dials")), 
-            new FmtItem("g", _("Group identifier")), 
-            new FmtItem("h", _("Page chop handling"), _("Page chop handling (one-character symbol)")), 
-            new FmtItem("i", _("Scheduling priority"), _("Current scheduling priority")), 
+            new FmtItem0("b", _("# consecutive failed tries"), Integer.class), 
+            new FmtItem0("c", _("Client machine name")), 
+            new FmtItem0("d", _("Total # dials"), Integer.class), 
+            new FmtItem0("e", _("Number"), _("Public (external) format of dialstring")), 
+            new FmtItem0("f", _("# consecutive failed dials")), 
+            new FmtItem0("g", _("Group identifier")), 
+            new FmtItem0("h", _("Page chop handling"), _("Page chop handling (one-character symbol)")), 
+            new FmtItem0("i", _("Scheduling priority"), _("Current scheduling priority")), 
             jobfmt_JobID, 
-            new FmtItem("k", _("Job kill time")), 
-            new FmtItem("l", _("Page length"), _("Page length in mm"), Integer.class), 
-            new FmtItem("m", _("Modem"), _("Assigned modem")), 
-            new FmtItem("n", _("Notification"), _("E-mail notification handling (one-character symbol)"), IconMap.class), 
+            new FmtItem0("k", _("Job kill time")), 
+            new FmtItem0("l", _("Page length"), _("Page length in mm"), Integer.class), 
+            new FmtItem0("m", _("Modem"), _("Assigned modem")), 
+            new FmtItem0("n", _("Notification"), _("E-mail notification handling (one-character symbol)"), IconMap.class), 
             jobfmt_Owner, 
-            new FmtItem("p", _("# pages"), _("# pages transmitted"), Integer.class), 
-            new FmtItem("q", _("Retry time"), _("Job retry time (MM::SS)")/*, new HylaDateField("mm:ss", _("mm:ss"))*/), 
-            new FmtItem("r", _("Resolution"), _("Document resolution in lines/inch"), Integer.class), 
+            new FmtItem0("p", _("# pages"), _("# pages transmitted"), Integer.class), 
+            new FmtItem0("q", _("Retry time"), _("Job retry time (MM::SS)")/*, new HylaDateField("mm:ss", _("mm:ss"))*/), 
+            new FmtItem0("r", _("Resolution"), _("Document resolution in lines/inch"), Integer.class), 
             jobfmt_Status, 
-            new FmtItem("t", _("Tries"), _("Total # tries attempted"), Integer.class), 
-            new FmtItem("u", _("Max. tries"), _("Maximum # tries"), Integer.class), 
-            new FmtItem("v", _("Specified number"), _("Client-specified dialstring")), 
-            new FmtItem("w", _("Page width"), _("Page width in mm"), Integer.class), 
-            new FmtItem("x", _("Maximum # dials"), Integer.class), 
-            new FmtItem("y", _("Pages"), _("Total # pages to transmit"), Integer.class), 
-            new FmtItem("z", _("Time to send job"))
+            new FmtItem0("t", _("Tries"), _("Total # tries attempted"), Integer.class), 
+            new FmtItem0("u", _("Max. tries"), _("Maximum # tries"), Integer.class), 
+            new FmtItem0("v", _("Specified number"), _("Client-specified dialstring")), 
+            new FmtItem0("w", _("Page width"), _("Page width in mm"), Integer.class), 
+            new FmtItem0("x", _("Maximum # dials"), Integer.class), 
+            new FmtItem0("y", _("Pages"), _("Total # pages to transmit"), Integer.class), 
+            new FmtItem0("z", _("Time to send job"))
     };
     
-    public static final FmtItem recvfmt_FileName 
-        = new FmtItem("f", _("Filename"), _("Document filename (relative to the recvq directory)"));
+    public static final FmtItem0 recvfmt_FileName 
+        = new FmtItem0("f", _("Filename"), _("Document filename (relative to the recvq directory)"));
     
-    public static final FmtItem recvfmt_Owner
-        = new FmtItem("o", _("Owner"), _("File owner"));
+    public static final FmtItem0 recvfmt_Owner
+        = new FmtItem0("o", _("Owner"), _("File owner"));
     
-    public static final FmtItem recvfmt_ErrorDesc 
-        = new FmtItem("e", _("Error description"), _("Error description if an error occurred during receive"));
+    public static final FmtItem0 recvfmt_ErrorDesc 
+        = new FmtItem0("e", _("Error description"), _("Error description if an error occurred during receive"));
     
-    public static final FmtItem recvfmt_InProgress 
-        = new FmtItem("z", _("In progress"), _("A ``*'' if receive is going on; otherwise `` '' (space)"), Boolean.class);
+    public static final FmtItem0 recvfmt_InProgress 
+        = new FmtItem0("z", _("In progress"), _("A ``*'' if receive is going on; otherwise `` '' (space)"), Boolean.class);
     
-    public static final FmtItem recvfmt_Sender 
-        = new FmtItem("s", _("Sender"), _("Sender identity (TSI)"));
+    public static final FmtItem0 recvfmt_Sender 
+        = new FmtItem0("s", _("Sender"), _("Sender identity (TSI)"));
     
-    public static final FmtItem[] recvfmts = {
-            new FmtItem("Y", _("Time/Date"),  _("Extended representation of the time when the receive happened"), new HylaDateField("yyyy:MM:dd HH:mm:ss", _("dd/MM/yyyy HH:mm:ss"))), 
-            new FmtItem("a", _("SubAddress"), _("SubAddress received from sender (if any)")), 
-            new FmtItem("b", _("Speed"), _("Signalling rate used during receive"), Integer.class), 
-            new FmtItem("d", _("Format"), _("Data format used during receive")), 
+    public static final FmtItem0[] recvfmts = {
+            new FmtItem0("Y", _("Time/Date"),  _("Extended representation of the time when the receive happened"), new HylaDateField("yyyy:MM:dd HH:mm:ss", _("dd/MM/yyyy HH:mm:ss"))), 
+            new FmtItem0("a", _("SubAddress"), _("SubAddress received from sender (if any)")), 
+            new FmtItem0("b", _("Speed"), _("Signalling rate used during receive"), Integer.class), 
+            new FmtItem0("d", _("Format"), _("Data format used during receive")), 
             recvfmt_ErrorDesc, 
             //new FmtItem("f", "Document filename (relative to the recvq directory)"), 
             recvfmt_FileName,
-            new FmtItem("h", _("Time to receive"), _("Time spent receiving document (HH:MM:SS)"), new HylaDateField("m:ss", _("mm:ss"))), 
-            new FmtItem("i", _("CIDName"), _("CIDName value for received fax")), 
-            new FmtItem("j", _("CIDNumber"), _("CIDNumber value for received fax")), 
-            new FmtItem("l", _("Page length"), _("Page length in mm"), Integer.class), 
-            new FmtItem("m", _("Fax Protection"), _("Fax-style protection mode string (``-rwxrwx'')")), 
-            new FmtItem("n", _("File size"), _("File size (number of bytes)"), Integer.class), 
+            new FmtItem0("h", _("Time to receive"), _("Time spent receiving document (HH:MM:SS)"), new HylaDateField("m:ss", _("mm:ss"))), 
+            new FmtItem0("i", _("CIDName"), _("CIDName value for received fax")), 
+            new FmtItem0("j", _("CIDNumber"), _("CIDNumber value for received fax")), 
+            new FmtItem0("l", _("Page length"), _("Page length in mm"), Integer.class), 
+            new FmtItem0("m", _("Fax Protection"), _("Fax-style protection mode string (``-rwxrwx'')")), 
+            new FmtItem0("n", _("File size"), _("File size (number of bytes)"), Integer.class), 
             recvfmt_Owner, 
-            new FmtItem("p", _("Pages"), _("Number of pages in document"), Integer.class), 
-            new FmtItem("q", _("Protection"), _("UNIX-style protection flags")), 
-            new FmtItem("r", _("Resolution"), _("Resolution of received data"), Integer.class), 
+            new FmtItem0("p", _("Pages"), _("Number of pages in document"), Integer.class), 
+            new FmtItem0("q", _("Protection"), _("UNIX-style protection flags")), 
+            new FmtItem0("r", _("Resolution"), _("Resolution of received data"), Integer.class), 
             recvfmt_Sender, 
-            new FmtItem("t", _("Date"), _("Compact representation of the time when the receive happened"), new HylaDateField("ddMMMyy", _("dd/MM/yyyy"))), 
-            new FmtItem("w", _("Page width"), _("Page width in mm"), Integer.class), 
+            new FmtItem0("t", _("Date"), _("Compact representation of the time when the receive happened"), new HylaDateField("ddMMMyy", _("dd/MM/yyyy"))), 
+            new FmtItem0("w", _("Page width"), _("Page width in mm"), Integer.class), 
             recvfmt_InProgress
     };
     
     
-    public static final FmtItem[] requiredSendingFmts = {
+    public static final FmtItem0[] requiredSendingFmts = {
         jobfmt_JobID,
         jobfmt_Owner,
         jobfmt_Jobstate
     };
 
-    public static final FmtItem[] requiredSentFmts = requiredSendingFmts;
+    public static final FmtItem0[] requiredSentFmts = requiredSendingFmts;
 
-    public static final FmtItem[] requiredRecvFmts = {
+    public static final FmtItem0[] requiredRecvFmts = {
         recvfmt_FileName,
         recvfmt_Owner,
         recvfmt_InProgress,
@@ -237,7 +237,11 @@ public final class Utils {
     public static FaxOptions getFaxOptions() {
         if (theoptions == null) {
             theoptions = new FaxOptions();
-            theoptions.loadFromFile(FaxOptions.getDefaultConfigFile());
+            theoptions.loadFromFile(
+                    new File(getApplicationDir(), "settings.default"),
+                    FaxOptions.getDefaultConfigFile(),
+                    new File(getApplicationDir(), "settings.override")
+                    );
         }
         return theoptions;
     }
@@ -663,6 +667,82 @@ public final class Utils {
         } else {
             return fileName;
         }
+    }
+    
+    /**
+     * Extracts the executable name from the given command line
+     * @param cmdLine
+     * @return
+     */
+    public static String extractExecutableFromCmdLine(String cmdLine) {
+        cmdLine = cmdLine.trim();
+        if (cmdLine.startsWith("\"")) {
+            int quotePos = cmdLine.indexOf('\"', 1);
+            if (quotePos > 0) {
+                return cmdLine.substring(1, quotePos);
+            }
+        }
+        
+        int spacePos = cmdLine.indexOf(' ');
+        if (spacePos > 0) {
+            return cmdLine.substring(0, spacePos);
+        } else {
+            return cmdLine;
+        }
+    }
+    
+    /**
+     * Searches for the given executable in the system path. Returns a File pointing
+     * to it if it is found or null if it can not be found.
+     * @param exeToFind
+     * @return
+     */
+    public static File searchExecutableInPath(String exeToFind) {
+        String path = System.getenv("PATH");
+        String[] pathComps;
+        if (path != null) {
+            pathComps = fastSplit(path, File.pathSeparatorChar);
+        } else {
+            pathComps = null;
+        }
+        
+        File exe = searchInPath(pathComps, exeToFind);
+        if (exe != null) {
+            return exe;
+        }
+        
+        // For Windows, try to append .exe, .com, ...
+        if (System.getProperty("os.name").contains("Windows")) {
+            String exts = System.getenv("PATHEXT");
+            String[] appendExts;
+            if (exts != null) {
+                appendExts = fastSplit(exts, File.pathSeparatorChar);
+            } else {
+                appendExts = new String[] { ".exe", ".com", ".bat", ".pif" };
+            }
+            for (String ext : appendExts) {
+                exe = searchInPath(pathComps, exeToFind + ext);
+                if (exe != null) {
+                    return exe;
+                }
+            }
+        }
+        
+        return null;
+    }
+    private static File searchInPath(String[] pathComps, String exeName) {
+        File exe = new File(exeName);
+        if (exe.exists()) {
+            return exe;
+        } else if (pathComps != null) {
+            for (String dir : pathComps) {
+                exe = new File(dir, exeName);
+                if (exe.exists()) {
+                    return exe;
+                } 
+            }
+        }
+        return null;
     }
 }
 

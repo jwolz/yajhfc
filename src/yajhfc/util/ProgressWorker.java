@@ -20,8 +20,7 @@ package yajhfc.util;
 
 
 import java.awt.Component;
-import java.awt.Dialog;
-import java.awt.Frame;
+import java.awt.Window;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Logger;
 
@@ -151,10 +150,8 @@ public abstract class ProgressWorker extends Thread{
         }
     }
     
-    public void startWork(Dialog parent, String text) {
-        startWorkPriv(parent, text);
-    }
-    public void startWork(Frame parent, String text) {
+    
+    public void startWork(Window parent, String text) {
         startWorkPriv(parent, text);
     }
     

@@ -63,6 +63,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.text.JTextComponent;
 
 import yajhfc.PluginManager;
+import yajhfc.Utils;
 import yajhfc.phonebook.AbstractConnectionSettings;
 import yajhfc.util.CancelAction;
 import yajhfc.util.ClipboardPopup;
@@ -79,7 +80,6 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
     private JCheckBox checkAskForPassword;
     private JPasswordField textPassword;
     private JButton buttonOK, buttonCancel, buttonTest;
-    private ClipboardPopup clpPop;
     private boolean noFieldOK;
     
     private final static double border = 10;
@@ -140,7 +140,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
             container.add(result, new TableLayoutConstraints(col-2,row,col,row,TableLayoutConstraints.LEFT,TableLayoutConstraints.CENTER));
         } else if (entry.dataType.equals(String.class)) {
             result = new JTextField();
-            result.addMouseListener(clpPop);
+            result.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
             addWithLabel(container, result, entry.caption, new TableLayoutConstraints(col,row,col,row,TableLayoutConstraints.FULL,TableLayoutConstraints.CENTER));
         } else {
             throw new IllegalArgumentException("Unsupported data type for additional field.");
@@ -182,16 +182,14 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         TableLayout lay = new TableLayout(dLay);
         JPanel jContentPane = new JPanel(lay);
         
-        clpPop = new ClipboardPopup();
-        
         textDriverClass = new JTextField();
-        textDriverClass.addMouseListener(clpPop);
+        textDriverClass.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
         
         textURL = new JTextField();
-        textURL.addMouseListener(clpPop);
+        textURL.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
         
         textUserName = new JTextField();
-        textUserName.addMouseListener(clpPop);
+        textUserName.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
         
         textPassword = new JPasswordField();
 
@@ -316,9 +314,11 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         try {
             String password;
             if (checkAskForPassword.isSelected()) {
-                password = PasswordDialog.showPasswordDialog(this, _("Database password"), MessageFormat.format(_("Please enter the database password for user {0} (database: {1})."), textUserName.getText(), textURL.getText()));
-                if (password == null)
+                String[] pwd = PasswordDialog.showPasswordDialog(this, Utils._("Database password"), MessageFormat.format(Utils._("Please enter the database password (database: {0}):"), textURL.getText()), textUserName.getText(), false);
+                if (pwd == null)
                     return false;
+                else
+                    password = pwd[1];
             } else {
                 password = new String(textPassword.getPassword());
             }

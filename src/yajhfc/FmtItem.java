@@ -1,7 +1,6 @@
-package yajhfc;
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005 Jonas Wolz
+ * Copyright (C) 2005-2008 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,58 +16,43 @@ package yajhfc;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+package yajhfc;
 
-
-import java.util.Date;
+import java.text.DateFormat;
 
 import yajhfc.filters.FilterKey;
 
-public class FmtItem extends MyManualMapObject implements FilterKey {
-    public final String fmt;
-    public final String longdesc;
-    public final String desc;
-    public final Class<?> dataClass;
-    public final HylaDateField dateFormat;
+/**
+ * @author jonas
+ *
+ */
+public interface FmtItem extends FilterKey {
+    /**
+     * Returns the format used by HylaFAX
+     * @return
+     */
+    public String getHylaFmt();
+    /**
+     * Returns the (short) description for display to the user
+     * @return
+     */
+    public String getDescription();
+    /**
+     * Returns the long description for tool tips
+     * @return
+     */
+    public String getLongDescription();
     
-    public String toString() {
-        return "%" + fmt;
-    }
-     
-    public FmtItem(String fmt, String desc) {
-        this(fmt, desc, desc);
-    }
-    
-    public FmtItem(String fmt, String desc, Class<?> dataClass) {
-        this(fmt, desc, desc, dataClass, null);
-    }
-    
-    public FmtItem(String fmt, String desc, String longdesc, HylaDateField dateFormat) {
-        this(fmt, desc, longdesc, Date.class, dateFormat);
-    }
-    
-    
-    public FmtItem(String fmt, String desc, String longdesc) {
-        this(fmt, desc, longdesc, String.class, null);
-    }
-    
-    public FmtItem(String fmt, String desc, String longdesc, Class<?> dataClass) {
-        this(fmt,desc,longdesc,dataClass,null);
-    }
-    
-    public FmtItem(String fmt, String desc, String longdesc, Class<?> dataClass, HylaDateField dateFormat) {
-        this.fmt = fmt;
-        this.desc = desc;
-        this.longdesc = longdesc;
-        this.dataClass = dataClass;
-        this.dateFormat = dateFormat;
-    }
-    
-    @Override
-    public Object getKey() {
-        return fmt;
-    }
-
-    public Class<?> getDataType() {
-        return dataClass;
-    }
+    /**
+     * Returns the date format used to parse the value from the HylaFAX server.
+     * Is null if getDataType() != Date.class
+     * @return
+     */
+    public DateFormat getHylaDateFormat();
+    /**
+     * Returns the date format used to format the value displayed to the user.
+     * Is null if getDataType() != Date.class
+     * @return
+     */
+    public DateFormat getDisplayDateFormat();
 }

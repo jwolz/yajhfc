@@ -115,8 +115,6 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
     protected JCheckBox checkCustomCover;
     protected FileTextField ftfCustomCover;
     
-    protected ClipboardPopup clpDefault;
-    
     protected Action actAddNumber, actRemoveNumber;
     
     protected boolean isAdvancedView = false;
@@ -150,7 +148,6 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
     private void initialize() {
         sendController = new SendController(clientManager, this, false);
         
-        clpDefault = new ClipboardPopup();
         setContentPane(createContentPane());
         this.setSize(640, initiallyHideFiles ? 400 : 480);
         createAdvancedPane();
@@ -161,14 +158,14 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
-                Utils.getFaxOptions().sendWinPos = getLocation();
+                Utils.getFaxOptions().sendWinBounds = getBounds();
                 Utils.getFaxOptions().sendWinIsAdvanced = isAdvancedView;
             }     
             
         });
         
-        if (Utils.getFaxOptions().sendWinPos != null)
-            this.setLocation(Utils.getFaxOptions().sendWinPos);
+        if (Utils.getFaxOptions().sendWinBounds != null)
+            this.setBounds(Utils.getFaxOptions().sendWinBounds);
         else
             Utils.setDefWinPos(this);
 
@@ -269,12 +266,12 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         });
         
         textSubject = new JTextField();
-        textSubject.addMouseListener(clpDefault);
+        textSubject.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
         
         textComments = new JTextArea();
         textComments.setWrapStyleWord(true);
         textComments.setLineWrap(true);
-        textComments.addMouseListener(clpDefault);
+        textComments.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
         JScrollPane scrollComments = new JScrollPane(textComments, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         
         if (!initiallyHideFiles) {
@@ -475,7 +472,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         } else {
             ftfCustomCover.setText(fo.defaultCover);
         }
-        ftfCustomCover.getJTextField().addMouseListener(clpDefault);
+        ftfCustomCover.getJTextField().addMouseListener(ClipboardPopup.DEFAULT_POPUP);
 
         comboNotification = new JComboBox(FaxNotification.values());
         comboNotification.setRenderer(new IconMap.ListCellRenderer());

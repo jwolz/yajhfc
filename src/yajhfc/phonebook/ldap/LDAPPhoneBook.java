@@ -19,7 +19,6 @@ package yajhfc.phonebook.ldap;
  */
 
 import java.awt.Dialog;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
@@ -117,9 +116,11 @@ public class LDAPPhoneBook extends PhoneBook {
                 
                 String password;
                 if (settings.askForCredential) {
-                    password = PasswordDialog.showPasswordDialog(parentDialog, Utils._("LDAP password"), MessageFormat.format(Utils._("Please enter the LDAP password for user {0}."), settings.bindDN));
-                    if (password == null)
+                    String[] pwd = PasswordDialog.showPasswordDialog(parentDialog, Utils._("LDAP password"), Utils._("Please enter the LDAP password:"), settings.bindDN, false);
+                    if (pwd == null)
                         return;
+                    else
+                        password = pwd[1];
                 } else {
                     password = settings.credential;
                 }

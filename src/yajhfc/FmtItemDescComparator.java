@@ -20,8 +20,8 @@ package yajhfc;
 
 import java.util.Comparator;
 
-public class FmtItemDescComparator implements Comparator<FmtItem> {
-    public int compare(FmtItem o1, FmtItem o2) {
+public class FmtItemDescComparator implements Comparator<FmtItem0> {
+    public int compare(FmtItem0 o1, FmtItem0 o2) {
         return o1.desc.compareTo(o2.desc);
     }        
     

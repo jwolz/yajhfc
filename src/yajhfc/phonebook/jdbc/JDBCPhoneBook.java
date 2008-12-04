@@ -218,9 +218,11 @@ public class JDBCPhoneBook extends PhoneBook {
         }
         String password;
         if (settings.askForPWD) {
-            password = PasswordDialog.showPasswordDialog(parentDialog, Utils._("Database password"), MessageFormat.format(Utils._("Please enter the database password for user {0} (database: {1})."), settings.user, settings.dbURL));
-            if (password == null)
+            String[] pwd = PasswordDialog.showPasswordDialog(parentDialog, Utils._("Database password"), MessageFormat.format(Utils._("Please enter the database password (database: {0}):"), settings.dbURL), settings.user, false);
+            if (pwd == null)
                 return null;
+            else
+                password = pwd[1];
         } else {
             password = settings.pwd;
         }
