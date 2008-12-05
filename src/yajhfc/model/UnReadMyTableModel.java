@@ -29,19 +29,20 @@ import java.util.Set;
 import javax.swing.SwingUtilities;
 import javax.swing.event.EventListenerList;
 
+import yajhfc.RecvFormat;
 import yajhfc.readstate.PersistentReadState;
 import yajhfc.readstate.ReadStateChangedListener;
 
 /**
  * Implements a table model with read/unread state
  */
-public class UnReadMyTableModel extends MyTableModel implements ReadStateChangedListener {
+public class UnReadMyTableModel extends MyTableModel<RecvFormat> implements ReadStateChangedListener {
     public Font readFont = null;
     public Font unreadFont = null;    
     protected EventListenerList listenerList = new EventListenerList();
     protected PersistentReadState persistentReadState;
     
-    protected static final Comparator<YajJob> jobComparator = new Comparator<YajJob>() {
+    protected static final Comparator<YajJob<RecvFormat>> jobComparator = new Comparator<YajJob<RecvFormat>>() {
         @SuppressWarnings("unchecked")
         public int compare(YajJob o1, YajJob o2) {
             if (o1 == o2)
@@ -79,7 +80,7 @@ public class UnReadMyTableModel extends MyTableModel implements ReadStateChanged
             return 0;
         
         int numUnread = 0;
-        for (YajJob job : visibleJobs) {
+        for (YajJob<RecvFormat> job : visibleJobs) {
             if (!((RecvYajJob)job).isRead()) {
                 numUnread++;
             }
@@ -115,13 +116,13 @@ public class UnReadMyTableModel extends MyTableModel implements ReadStateChanged
     }
     
     @Override
-    protected YajJob createYajJob(String[] data) {
+    protected YajJob<RecvFormat> createYajJob(String[] data) {
         return new RecvYajJob(columns, data, this);
     }
     
     @Override
     public void setData(String[][] arg0) {
-        YajJob[] oldJobs = jobs;
+        YajJob<RecvFormat>[] oldJobs = jobs;
         super.setData(arg0);
         
         // We have got new data...
@@ -216,7 +217,7 @@ public class UnReadMyTableModel extends MyTableModel implements ReadStateChanged
             return;
         
         Set<String> existingJobs = new HashSet<String>();
-        for (YajJob j : jobs) {
+        for (YajJob<RecvFormat> j : jobs) {
             existingJobs.add((String)j.getIDValue());
         }
         persistentReadState.cleanupState(existingJobs);

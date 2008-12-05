@@ -63,14 +63,14 @@ public class DefaultIconMap implements IconMap {
      */
     protected static final Map<String,IconMap> instanceCache = new HashMap<String,IconMap>();
     
-    public static IconMap getInstance(FmtItem0 fmtItem, String textData) {
-        String cacheKey = fmtItem.fmt + "|" + textData;
+    public static IconMap getInstance(FmtItem fmtItem, String textData) {
+        String cacheKey = fmtItem.getHylaFmt() + "|" + textData;
         IconMap res = instanceCache.get(cacheKey);
         if (res != null) {
             return res;
         }
         
-        if (fmtItem.fmt.equals("a")) { // Mapping for job state
+        if (fmtItem == JobFormat.a) { // Mapping for job state
             String filename;
             char state;
             if (textData.length() == 0) {
@@ -84,7 +84,7 @@ public class DefaultIconMap implements IconMap {
                 filename = "jobstate_" + state + ".gif";
             }
             res = new DefaultIconMap(textData, Utils.loadCustomIcon(filename), SentYajJob.getDescriptionForJobState(state));
-        } else if (fmtItem.fmt.equals("n")) { // Mapping for notification state
+        } else if (fmtItem == JobFormat.n) { // Mapping for notification state
             IconMap original;
             
             char c;

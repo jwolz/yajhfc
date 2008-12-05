@@ -32,10 +32,11 @@ import java.util.logging.Logger;
 
 import yajhfc.FmtItemList;
 import yajhfc.HylaServerFile;
+import yajhfc.JobFormat;
 import yajhfc.Utils;
 import yajhfc.file.FormattedFile.FileFormat;
 
-public class SentYajJob extends YajJob {
+public class SentYajJob extends YajJob<JobFormat> {
     private static final Logger log = Logger.getLogger(SentYajJob.class.getName());
     
     protected int statusCol;
@@ -185,14 +186,14 @@ public class SentYajJob extends YajJob {
     }
     
     @Override
-    public void setColumns(FmtItemList columns) {
-        jobIDCol = columns.getCompleteView().indexOf(Utils.jobfmt_JobID);
-        statusCol = columns.getCompleteView().indexOf(Utils.jobfmt_Jobstate);
+    public void setColumns(FmtItemList<JobFormat> columns) {
+        jobIDCol = columns.getCompleteView().indexOf(JobFormat.j);
+        statusCol = columns.getCompleteView().indexOf(JobFormat.a);
         
         super.setColumns(columns);
     }
     
-    public SentYajJob(FmtItemList cols, String[] stringData) {
+    public SentYajJob(FmtItemList<JobFormat> cols, String[] stringData) {
         super(cols, stringData);
     }
     

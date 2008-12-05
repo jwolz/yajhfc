@@ -19,11 +19,11 @@
 package yajhfc.tray;
 
 import java.awt.AWTException;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.PopupMenu;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
-import java.awt.TrayIcon.MessageType;
 import java.awt.event.ActionListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,10 +36,10 @@ public class DefaultTrayManager implements TrayManager {
 
     private static final Logger log = Logger.getLogger(DefaultTrayManager.class.getName());
     
-    public Object installTrayIcon(Image image, String tooltip, PopupMenu popup,
+    public ITrayIcon installTrayIcon(Image image, String tooltip, PopupMenu popup,
             ActionListener clickListener) {
         try {
-            TrayIcon icon = new TrayIcon(image, tooltip, popup);
+            DefaultTrayIcon icon = new DefaultTrayIcon(image, tooltip, popup);
             icon.addActionListener(clickListener);
             icon.setImageAutoSize(true);
             SystemTray.getSystemTray().add(icon);
@@ -51,49 +51,14 @@ public class DefaultTrayManager implements TrayManager {
         }
     }
 
-    public void removeTrayIcon(Object trayIcon) {
+    public void removeTrayIcon(ITrayIcon trayIcon) {
         SystemTray.getSystemTray().remove((TrayIcon)trayIcon);
     }
 
-    public void updateIcon(Object trayIcon, Image newIcon) {
-        TrayIcon icon = (TrayIcon)trayIcon;
-        icon.setImage(newIcon);
+    public Dimension getTrayIconSize() {
+        return SystemTray.getSystemTray().getTrayIconSize();
     }
 
-    public void updateTooltip(Object trayIcon, String newTooltip) {
-        TrayIcon icon = (TrayIcon)trayIcon;
-        icon.setToolTip(newTooltip);
-    }
 
-    public void updateTooltipAndIcon(Object trayIcon, Image newIcon,
-            String newTooltip) {
-        TrayIcon icon = (TrayIcon)trayIcon;
-        icon.setImage(newIcon);
-        icon.setToolTip(newTooltip);
-    }
-
-    public void displayMessage(Object trayIcon, String caption, String message,
-            int messageType) {
-        TrayIcon icon = (TrayIcon)trayIcon;
-        
-        MessageType msgType;
-        switch (messageType) {
-        case MSGTYPE_INFO:
-            msgType = MessageType.INFO;
-            break;
-        case MSGTYPE_WARNING:
-            msgType = MessageType.WARNING;
-            break;
-        case MSGTYPE_ERROR:
-            msgType = MessageType.ERROR;
-            break;
-        case MSGTYPE_NONE:
-        default:
-            msgType = MessageType.NONE;
-            break;
-        }
-        
-        icon.displayMessage(caption, message, msgType);
-    }
 
 }

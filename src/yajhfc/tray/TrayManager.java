@@ -18,21 +18,18 @@
  */
 package yajhfc.tray;
 
+import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.PopupMenu;
 import java.awt.event.ActionListener;
 
 /**
+ * This interface wraps the java.awt.SystemTray method and works
+ * as a factory for ITrayIcon objects
  * @author jonas
  *
  */
 public interface TrayManager {
-    
-    public static final int MSGTYPE_NONE = 0;
-    public static final int MSGTYPE_INFO = 1;
-    public static final int MSGTYPE_WARNING = 2;
-    public static final int MSGTYPE_ERROR = 3;
-    
     /**
      * Installs a new tray icon and returns the corresponding TrayIcon object
      * @param image
@@ -40,42 +37,17 @@ public interface TrayManager {
      * @param popup
      * @return
      */
-    public Object installTrayIcon(Image image, String tooltip, PopupMenu popup, ActionListener clickListener);
+    public ITrayIcon installTrayIcon(Image image, String tooltip, PopupMenu popup, ActionListener clickListener);
     
     /**
-     * Updates the tray icon's tooltip
-     * @param trayIcon
-     * @param newTooltip
+     * Returns the size of the tray icon in the system tray
+     * @return
      */
-    public void updateTooltip(Object trayIcon, String newTooltip);
-    
-    /**
-     * Updates the tray icon
-     * @param trayIcon
-     * @param newIcon
-     */
-    public void updateIcon(Object trayIcon, Image newIcon);
-    
-    /**
-     * Updates the tray icon and its tooltip
-     * @param trayIcon
-     * @param newTooltip
-     */
-    public void updateTooltipAndIcon(Object trayIcon, Image newIcon, String newTooltip);
-    
-    
-    /**
-     * Displays a message in the system tray.
-     * @param trayIcon
-     * @param caption
-     * @param message
-     * @param messageType
-     */
-    public void displayMessage(Object trayIcon, String caption, String message, int messageType);
+    public Dimension getTrayIconSize();
     
     /**
      * Removes the tray icon
      * @param trayIcon
      */
-    public void removeTrayIcon(Object trayIcon);
+    public void removeTrayIcon(ITrayIcon trayIcon);
 }

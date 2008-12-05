@@ -18,6 +18,7 @@
  */
 package yajhfc;
 
+import java.lang.reflect.Array;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,28 +33,27 @@ import yajhfc.filters.FilterKeyList;
  * @author jonas
  *
  */
-public class FmtItemList extends ArrayList<FmtItem0> implements FilterKeyList<FmtItem0> {
+public class FmtItemList<T extends FmtItem> extends ArrayList<T> implements FilterKeyList<T> {
     private static final Logger log = Logger.getLogger(FmtItemList.class.getName());
     
-    protected FmtItem0[] availableItems;
-    protected FmtItem0[] obligateItems;
-    protected List<FmtItem0> completeView;
+    protected T[] availableItems;
+    protected T[] obligateItems;
+    protected List<T> completeView;
 
     /**
      * Returns a view of this list that has the obligateItems appended to the end if necessary.
      * @return
      */
-    public List<FmtItem0> getCompleteView() {
+    public List<T> getCompleteView() {
         if (completeView == null) {
-            FmtItem0[] additionalItems = new FmtItem0[obligateItems.length];
-            int arrayPtr = 0;
-            for (FmtItem0 fi : obligateItems) {
+            List<T> additionalItems = new ArrayList<T>(obligateItems.length);
+            for (T fi : obligateItems) {
                 if (!this.contains(fi)) {
-                    additionalItems[arrayPtr++] = fi;
+                    additionalItems.add(fi);
                 }
             }
-            if (arrayPtr > 0) {
-                completeView = new CompleteView(additionalItems, arrayPtr);
+            if (additionalItems.size() > 0) {
+                completeView = new CompleteView(additionalItems);
             } else {
                 completeView = this; // Optimization: If all required items are present, the "full view" is identical
             }
@@ -66,7 +66,12 @@ public class FmtItemList extends ArrayList<FmtItem0> implements FilterKeyList<Fm
      * @return
      */
     public String getFormatString() {
-        return Utils.listToString(getCompleteView(), "|");
+        StringBuilder res = new StringBuilder();
+        for (T item : getCompleteView()) {
+            res.append('%').append(item.getHylaFmt()).append('|');
+        }
+        res.deleteCharAt(res.length()-1);
+        return res.toString();
     }
     
     private static final char sep = '|';
@@ -77,8 +82,8 @@ public class FmtItemList extends ArrayList<FmtItem0> implements FilterKeyList<Fm
      */
     public String saveToString() {
         StringBuilder saveval = new StringBuilder();
-        for (FmtItem0 fi : this) {
-            saveval.append(fi.fmt).append(sep);
+        for (T fi : this) {
+            saveval.append(fi.getHylaFmt()).append(sep);
         }
         return saveval.toString();
     }
@@ -93,7 +98,7 @@ public class FmtItemList extends ArrayList<FmtItem0> implements FilterKeyList<Fm
         this.clear();
         
         for (int i=0; i < fields.length; i++) {
-            FmtItem0 res = (FmtItem0)Utils.findInArray(availableItems, fields[i]);
+            T res = itemFromHylaFmt(fields[i]);
             if (res == null) {
                 log.log(Level.WARNING, "FmtItem for " + fields[i] + "not found.");
             } else {
@@ -104,27 +109,36 @@ public class FmtItemList extends ArrayList<FmtItem0> implements FilterKeyList<Fm
         }
     }
     
+    private T itemFromHylaFmt(String hylaFmt) {
+        for (T item : availableItems) {
+            if (item.getHylaFmt().equals(hylaFmt)) {
+                return item;
+            }
+        }
+        return null;
+    }
+    
     // Override methods modifying the list to reset the complete view
     @Override
-    public boolean add(FmtItem0 o) {
+    public boolean add(T o) {
         completeView = null;
         return super.add(o);
     }
 
     @Override
-    public void add(int index, FmtItem0 element) {
+    public void add(int index, T element) {
         completeView = null;
         super.add(index, element);
     }
 
     @Override
-    public boolean addAll(Collection<? extends FmtItem0> c) {
+    public boolean addAll(Collection<? extends T> c) {
         completeView = null;
         return super.addAll(c);
     }
 
     @Override
-    public boolean addAll(int index, Collection<? extends FmtItem0> c) {
+    public boolean addAll(int index, Collection<? extends T> c) {
         completeView = null;
         return super.addAll(index, c);
     }
@@ -136,7 +150,7 @@ public class FmtItemList extends ArrayList<FmtItem0> implements FilterKeyList<Fm
     }
 
     @Override
-    public FmtItem0 remove(int index) {
+    public T remove(int index) {
         completeView = null;
         return super.remove(index);
     }
@@ -148,28 +162,27 @@ public class FmtItemList extends ArrayList<FmtItem0> implements FilterKeyList<Fm
     }
 
     @Override
-    public FmtItem0 set(int index, FmtItem0 element) {
+    public T set(int index, T element) {
         completeView = null;
         return super.set(index, element);
     }
 
-    public FmtItemList(FmtItem0[] allItems, FmtItem0[] obligateItems) {
+    public FmtItemList(T[] allItems, T[] obligateItems) {
         super();
         this.availableItems = allItems;
         this.obligateItems = obligateItems;
     }
     
-    protected class CompleteView extends AbstractList<FmtItem0> {
-        protected FmtItem0[] additionalItems;
-        protected int additionalSize; 
+    protected class CompleteView extends AbstractList<T> {
+        protected List<T> additionalItems;
         
         @Override
-        public FmtItem0 get(int index) {
+        public T get(int index) {
             int additionalIdx = index - FmtItemList.this.size();
             if (additionalIdx < 0) {
                 return FmtItemList.this.get(index);
-            } else if (additionalIdx < additionalSize){
-                return additionalItems[additionalIdx];
+            } else if (additionalIdx < additionalItems.size()){
+                return additionalItems.get(additionalIdx);
             } else {
                 throw new ArrayIndexOutOfBoundsException(index);
             }
@@ -177,24 +190,28 @@ public class FmtItemList extends ArrayList<FmtItem0> implements FilterKeyList<Fm
 
         @Override
         public int size() {
-            return FmtItemList.this.size() + additionalSize;
+            return FmtItemList.this.size() + additionalItems.size();
         }
         
-        public CompleteView(FmtItem0[] additionalItems, int additionalSize) {
+        public CompleteView(List<T> additionalItems) {
             this.additionalItems = additionalItems;
-            this.additionalSize = additionalSize;
         }
     }
 
-    public boolean containsKey(FmtItem0 key) {
+    public boolean containsKey(T key) {
         return getCompleteView().contains(key);
     }
 
-    public FmtItem0[] getAvailableKeys() {
-        return getCompleteView().toArray(new FmtItem0[getCompleteView().size()]);
+    public T[] getAvailableKeys() {
+        return getCompleteView().toArray(newArray(getCompleteView().size()));
     }
 
-    public Object translateKey(FmtItem0 key) {
+    public Object translateKey(T key) {
         return getCompleteView().indexOf(key);
+    }
+    
+    @SuppressWarnings("unchecked")
+    private T[] newArray(int size) {
+        return (T[])Array.newInstance(availableItems.getClass().getComponentType(), size);
     }
 }

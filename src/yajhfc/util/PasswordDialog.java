@@ -118,6 +118,14 @@ public class PasswordDialog extends JDialog {
         this.getRootPane().setDefaultButton(btnOK);
         this.pack();
         //this.setLocationByPlatform(true);
+        
+        if (editableUserName) {
+            userField.requestFocusInWindow();
+            userField.setSelectionStart(0);
+            userField.setSelectionStart(userName.length());
+        } else {
+            passField.requestFocusInWindow();
+        }
     }
     
     

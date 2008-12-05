@@ -20,6 +20,7 @@ package yajhfc.filters;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Vector;
 
@@ -33,13 +34,13 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
-import yajhfc.FmtItem0;
+import yajhfc.FmtItem;
 import yajhfc.FmtItemList;
 import yajhfc.FmtItemRenderer;
 import yajhfc.Utils;
 import yajhfc.util.ClipboardPopup;
 
-public class FilterPanel<V extends FilterableObject,K extends FmtItem0> extends JPanel implements ActionListener {
+public class FilterPanel<V extends FilterableObject,K extends FmtItem> extends JPanel implements ActionListener {
 
     private JComboBox comboColumns, comboOperator;
     private JTextField textValue;
@@ -47,7 +48,34 @@ public class FilterPanel<V extends FilterableObject,K extends FmtItem0> extends 
     private DefaultComboBoxModel colModel;
     private Class<?> oldClass;
     
-    private static final FmtItem0 voidFmtItem = new FmtItem0("", Utils._("(none)"), Void.class);
+    private static final FmtItem voidFmtItem = new FmtItem() {
+        private final String desc = Utils._("(none)");
+        
+        public String getDescription() {
+            return desc;
+        }
+
+        public DateFormat getDisplayDateFormat() {
+            return null;
+        }
+
+        public DateFormat getHylaDateFormat() {
+            return null;
+        }
+
+        public String getHylaFmt() {
+            return "";
+        }
+
+        public String getLongDescription() {
+            return desc;
+        }
+
+        public Class<?> getDataType() {
+            return Void.class;
+        }
+        
+    }; 
     private static final String[] comboOperatorDummy = { "                         " };
     
     public void addDeleteActionListener(ActionListener al) {
@@ -91,7 +119,7 @@ public class FilterPanel<V extends FilterableObject,K extends FmtItem0> extends 
     
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("columnsel")) {
-            Class<?> colClass = ((FmtItem0)comboColumns.getSelectedItem()).dataClass;
+            Class<?> colClass = ((FmtItem)comboColumns.getSelectedItem()).getDataType();
             if (oldClass != colClass) {
                 oldClass = colClass;
                 Object [] ops = FilterCreator.getOperators(colClass);
@@ -122,7 +150,7 @@ public class FilterPanel<V extends FilterableObject,K extends FmtItem0> extends 
         return new Dimension(Integer.MAX_VALUE, getPreferredSize().height);
     }
     
-    public FilterPanel(FmtItemList columns) {
+    public FilterPanel(FmtItemList<? extends K> columns) {
         super(null, false);
         
         final int border = 12;
@@ -130,7 +158,7 @@ public class FilterPanel<V extends FilterableObject,K extends FmtItem0> extends 
         setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
         setBorder(BorderFactory.createCompoundBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED), BorderFactory.createEmptyBorder(border, border, border, border)));
         
-        colModel = new DefaultComboBoxModel(new Vector<FmtItem0>(columns.getCompleteView()));
+        colModel = new DefaultComboBoxModel(new Vector<FmtItem>(columns.getCompleteView()));
         colModel.insertElementAt(voidFmtItem, 0);
         comboColumns = new JComboBox(colModel);
         comboColumns.setRenderer(new FmtItemRenderer());
@@ -162,7 +190,7 @@ public class FilterPanel<V extends FilterableObject,K extends FmtItem0> extends 
         comboColumns.setSelectedIndex(0);
     }
 
-    public FilterPanel(FmtItemList columns, Filter<V,K> initValue) {
+    public FilterPanel(FmtItemList<K> columns, Filter<V,K> initValue) {
         this(columns);
         initFromFilter(initValue);
     }

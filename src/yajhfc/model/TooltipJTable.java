@@ -33,6 +33,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import yajhfc.FmtItem;
 import yajhfc.Utils;
 import yajhfc.util.TableSorter;
 
@@ -40,7 +41,7 @@ import yajhfc.util.TableSorter;
  * JTable with tooltips and other extensions. <p>
  * Create a new table with: new TooltipJTable(realTableModel)
  */
-public class TooltipJTable extends JTable {
+public class TooltipJTable<T extends FmtItem> extends JTable {
     private static final Logger log = Logger.getLogger(TooltipJTable.class.getName());
     
     @Override
@@ -50,20 +51,21 @@ public class TooltipJTable extends JTable {
                 int index = columnModel.getColumnIndexAtX(event.getPoint().x);
                 int realIndex = 
                     columnModel.getColumn(index).getModelIndex();
-                return getRealModel().columns.get(realIndex).longdesc;
+                return getRealModel().columns.get(realIndex).getLongDescription();
             }
         };
     }
     
-    public MyTableModel getRealModel() {
-        return (MyTableModel)((TableSorter)dataModel).getTableModel();
+    @SuppressWarnings("unchecked")
+    public MyTableModel<T> getRealModel() {
+        return (MyTableModel<T>)((TableSorter)dataModel).getTableModel();
     }  
     
     public TableSorter getSorter() {
         return (TableSorter)dataModel;
     }
     
-    public TooltipJTable(MyTableModel model) {
+    public TooltipJTable(MyTableModel<T> model) {
         super(new TableSorter(model));
         getSorter().setTableHeader(getTableHeader());
         getTableHeader().setReorderingAllowed(false);
@@ -129,14 +131,14 @@ public class TooltipJTable extends JTable {
         } 
     }
     
-    public YajJob getJobForRow(int rowIndex) {
+    public YajJob<T> getJobForRow(int rowIndex) {
         return getRealModel().getJob(getSorter().modelIndex(rowIndex));
     }
     
     @Override
     public void columnAdded(TableColumnModelEvent e) {
         // Set identifier 
-        getColumnModel().getColumn(e.getToIndex()).setIdentifier(getRealModel().columns.get(e.getToIndex()).fmt);
+        getColumnModel().getColumn(e.getToIndex()).setIdentifier(getRealModel().columns.get(e.getToIndex()).getHylaFmt());
         super.columnAdded(e);
     }
     
@@ -146,7 +148,7 @@ public class TooltipJTable extends JTable {
         
         int realRow = getSorter().modelIndex(row);
         int realCol =  getColumnModel().getColumn(column).getModelIndex(); 
-        MyTableModel realModel = getRealModel(); 
+        MyTableModel<T> realModel = getRealModel(); 
         
         Font customFnt = realModel.getCellFont(realRow, realCol);
         if (customFnt != null) {

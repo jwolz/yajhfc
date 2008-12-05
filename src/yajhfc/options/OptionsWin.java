@@ -87,14 +87,15 @@ import yajhfc.FaxNotification;
 import yajhfc.FaxOptions;
 import yajhfc.FaxResolution;
 import yajhfc.FaxTimezone;
-import yajhfc.FmtItem0;
 import yajhfc.FmtItemDescComparator;
 import yajhfc.FmtItemRenderer;
 import yajhfc.HylaModem;
 import yajhfc.IconMap;
+import yajhfc.JobFormat;
 import yajhfc.PaperSize;
 import yajhfc.PluginManager;
 import yajhfc.PluginTableModel;
+import yajhfc.RecvFormat;
 import yajhfc.Utils;
 import yajhfc.YajLanguage;
 import yajhfc.PluginManager.PluginType;
@@ -119,7 +120,8 @@ public class OptionsWin extends JDialog {
     //JTabbedPane TabMain = null;
     JPanel PanelCommon = null;
     JPanel panelServerSettings;
-    fmtEditor<FmtItem0> PanelRecvFmt = null, PanelSentFmt = null, PanelSendingFmt = null;
+    fmtEditor<RecvFormat> PanelRecvFmt = null;
+    fmtEditor<JobFormat> PanelSentFmt = null, PanelSendingFmt = null;
         
     JPanel PanelButtons;
     JButton ButtonOK, ButtonCancel;
@@ -156,7 +158,8 @@ public class OptionsWin extends JDialog {
     JPanel tabPanel;
 
     FaxOptions foEdit = null;
-    List<FmtItem0> recvfmt, sentfmt, sendingfmt;
+    List<RecvFormat> recvfmt;
+    List<JobFormat> sentfmt, sendingfmt;
     Vector<LF_Entry> lookAndFeels;
     
     List<HylaModem> availableModems;
@@ -235,10 +238,10 @@ public class OptionsWin extends JDialog {
         checkShowTrayIcon.setSelected(foEdit.showTrayIcon);
         checkMinimizeToTray.setSelected(foEdit.minimizeToTray);
         
-        checkNewFax_Beep.setSelected((foEdit.newFaxAction & Utils.NEWFAX_BEEP) != 0);
-        checkNewFax_ToFront.setSelected((foEdit.newFaxAction & Utils.NEWFAX_TOFRONT) != 0);
-        checkNewFax_Open.setSelected((foEdit.newFaxAction & Utils.NEWFAX_VIEWER) != 0);
-        checkNewFax_MarkAsRead.setSelected((foEdit.newFaxAction & Utils.NEWFAX_MARKASREAD) != 0);
+        checkNewFax_Beep.setSelected((foEdit.newFaxAction & FaxOptions.NEWFAX_BEEP) != 0);
+        checkNewFax_ToFront.setSelected((foEdit.newFaxAction & FaxOptions.NEWFAX_TOFRONT) != 0);
+        checkNewFax_Open.setSelected((foEdit.newFaxAction & FaxOptions.NEWFAX_VIEWER) != 0);
+        checkNewFax_MarkAsRead.setSelected((foEdit.newFaxAction & FaxOptions.NEWFAX_MARKASREAD) != 0);
         
         spinMaxDial.setValue(Integer.valueOf(foEdit.maxDial));
         spinMaxTry.setValue(Integer.valueOf(foEdit.maxTry));
@@ -781,7 +784,7 @@ public class OptionsWin extends JDialog {
     @SuppressWarnings("unchecked")
     private fmtEditor getPanelRecvFmt() {
         if (PanelRecvFmt == null) {
-            PanelRecvFmt = new fmtEditor(Utils.recvfmts, recvfmt, Collections.EMPTY_LIST, new FmtItemRenderer(), FmtItemDescComparator.globalInstance, null, _("Selected columns:"), _("Available columns:")); //Arrays.asList(Utils.requiredRecvFmts));
+            PanelRecvFmt = new fmtEditor(RecvFormat.values(), recvfmt, Collections.EMPTY_LIST, new FmtItemRenderer(), FmtItemDescComparator.globalInstance, null, _("Selected columns:"), _("Available columns:")); //Arrays.asList(Utils.requiredRecvFmts));
         }
         return PanelRecvFmt;
     }
@@ -789,7 +792,7 @@ public class OptionsWin extends JDialog {
     @SuppressWarnings("unchecked")
     private fmtEditor getPanelSendingFmt() {
         if (PanelSendingFmt == null) {
-            PanelSendingFmt = new fmtEditor(Utils.jobfmts, sendingfmt, Collections.EMPTY_LIST, new FmtItemRenderer(), FmtItemDescComparator.globalInstance, null, _("Selected columns:"), _("Available columns:")); // Arrays.asList(Utils.requiredSendingFmts));
+            PanelSendingFmt = new fmtEditor(JobFormat.values(), sendingfmt, Collections.EMPTY_LIST, new FmtItemRenderer(), FmtItemDescComparator.globalInstance, null, _("Selected columns:"), _("Available columns:")); // Arrays.asList(Utils.requiredSendingFmts));
         }
         return PanelSendingFmt;
     }
@@ -797,7 +800,7 @@ public class OptionsWin extends JDialog {
     @SuppressWarnings("unchecked")
     private fmtEditor getPanelSentFmt() {
         if (PanelSentFmt == null) {
-            PanelSentFmt = new fmtEditor(Utils.jobfmts, sentfmt, Collections.EMPTY_LIST, new FmtItemRenderer(), FmtItemDescComparator.globalInstance, null, _("Selected columns:"), _("Available columns:")); //Arrays.asList(Utils.requiredSentFmts));
+            PanelSentFmt = new fmtEditor(JobFormat.values(), sentfmt, Collections.EMPTY_LIST, new FmtItemRenderer(), FmtItemDescComparator.globalInstance, null, _("Selected columns:"), _("Available columns:")); //Arrays.asList(Utils.requiredSentFmts));
         }
         return PanelSentFmt;
     }
@@ -806,9 +809,9 @@ public class OptionsWin extends JDialog {
         super(owner);
         this.foEdit = foEdit;
         this.availableModems = availableModems;
-        recvfmt = new ArrayList<FmtItem0>(foEdit.recvfmt);
-        sentfmt = new ArrayList<FmtItem0>(foEdit.sentfmt);
-        sendingfmt = new ArrayList<FmtItem0>(foEdit.sendingfmt);
+        recvfmt = new ArrayList<RecvFormat>(foEdit.recvfmt);
+        sentfmt = new ArrayList<JobFormat>(foEdit.sentfmt);
+        sendingfmt = new ArrayList<JobFormat>(foEdit.sendingfmt);
         
         initialize();
     }
@@ -941,13 +944,13 @@ public class OptionsWin extends JDialog {
             
             int val = 0;
             if (checkNewFax_Beep.isSelected())
-                val |= Utils.NEWFAX_BEEP;
+                val |= FaxOptions.NEWFAX_BEEP;
             if (checkNewFax_ToFront.isSelected())
-                val |= Utils.NEWFAX_TOFRONT;
+                val |= FaxOptions.NEWFAX_TOFRONT;
             if (checkNewFax_Open.isSelected())
-                val |= Utils.NEWFAX_VIEWER;
+                val |= FaxOptions.NEWFAX_VIEWER;
             if (checkNewFax_MarkAsRead.isSelected())
-                val |= Utils.NEWFAX_MARKASREAD;
+                val |= FaxOptions.NEWFAX_MARKASREAD;
             foEdit.newFaxAction = val;
             
             foEdit.recvfmt.clear();
