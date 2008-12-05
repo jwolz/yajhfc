@@ -268,4 +268,8 @@ public class HylaClientManager {
         }
         return modems;
     }
+    
+    public String getUser() {
+        return userName;
+    }
 }

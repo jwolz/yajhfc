@@ -27,10 +27,10 @@ import java.util.List;
 
 import yajhfc.FmtItemList;
 import yajhfc.HylaServerFile;
-import yajhfc.Utils;
+import yajhfc.RecvFormat;
 import yajhfc.file.FormattedFile.FileFormat;
 
-public class RecvYajJob extends YajJob {
+public class RecvYajJob extends YajJob<RecvFormat> {
     protected int fileNameCol;
     protected int errorCol;
     protected int progressCol;
@@ -65,11 +65,11 @@ public class RecvYajJob extends YajJob {
     }
     
     @Override
-    public void setColumns(FmtItemList columns) {
+    public void setColumns(FmtItemList<RecvFormat> columns) {
         super.setColumns(columns);
-        fileNameCol = columns.getCompleteView().indexOf(Utils.recvfmt_FileName);
-        errorCol = columns.getCompleteView().indexOf(Utils.recvfmt_ErrorDesc);
-        progressCol = columns.getCompleteView().indexOf(Utils.recvfmt_InProgress);
+        fileNameCol = columns.getCompleteView().indexOf(RecvFormat.f);
+        errorCol = columns.getCompleteView().indexOf(RecvFormat.e);
+        progressCol = columns.getCompleteView().indexOf(RecvFormat.z);
     }
     
     public String getServerTIF() {
@@ -93,7 +93,7 @@ public class RecvYajJob extends YajJob {
         return stringData[fileNameCol];
     }
     
-    public RecvYajJob(FmtItemList cols, String[] stringData, UnReadMyTableModel tableModel) {
+    public RecvYajJob(FmtItemList<RecvFormat> cols, String[] stringData, UnReadMyTableModel tableModel) {
         super(cols, stringData);
         this.tableModel = tableModel;
         this.read = tableModel.persistentReadState.isRead((String)getIDValue());

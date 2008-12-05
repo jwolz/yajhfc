@@ -308,7 +308,7 @@ public class SendController {
 
                             stepProgressBar(5);
 
-                            j.setFromUser(Utils.sanitizeInput(fo.user));
+                            j.setFromUser(Utils.sanitizeInput(clientManager.getUser()));
                             String notifyAddr = Utils.sanitizeInput(fo.notifyAddress);
                             if (notifyAddr != null && notifyAddr.length() > 0) {
                                 j.setNotifyAddress(notifyAddr);

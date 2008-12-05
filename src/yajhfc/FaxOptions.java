@@ -54,9 +54,9 @@ public class FaxOptions {
     public String user;
     public String pass;
     
-    public final FmtItemList recvfmt;
-    public final FmtItemList sentfmt;
-    public final FmtItemList sendingfmt;
+    public final FmtItemList<RecvFormat> recvfmt;
+    public final FmtItemList<JobFormat> sentfmt;
+    public final FmtItemList<JobFormat> sendingfmt;
     
     public String faxViewer;
     public String psViewer;
@@ -99,8 +99,15 @@ public class FaxOptions {
     public String FromZIPCode= "";
     public boolean useCover, useCustomCover;
     
-    //public FaxIntProperty newFaxAction = Utils.newFaxActions[3];
-    public int newFaxAction = Utils.NEWFAX_BEEP | Utils.NEWFAX_TOFRONT;
+    // Basic actions when a new fax is detected.
+    // The constants should be powers of 2 to make it possible to combine several of them
+    public static final int NEWFAX_NOACTION = 0;
+    public static final int NEWFAX_BEEP = 1;
+    public static final int NEWFAX_TOFRONT = 2;
+    public static final int NEWFAX_VIEWER = 4;
+    public static final int NEWFAX_MARKASREAD = 8;
+    
+    public int newFaxAction = FaxOptions.NEWFAX_BEEP | FaxOptions.NEWFAX_TOFRONT;
     public boolean pclBug = false;
     public boolean askPassword = false, askAdminPassword = true, askUsername = false;
     public String AdminPassword = "";
@@ -172,26 +179,26 @@ public class FaxOptions {
         this.pasv = true;
         this.tzone = FaxTimezone.LOCAL;
         
-        this.recvfmt = new FmtItemList(Utils.recvfmts, Utils.requiredRecvFmts);
-        this.recvfmt.add(Utils.recvfmts[0]);  // Y
-        this.recvfmt.add(Utils.recvfmts[16]); // s
-        this.recvfmt.add(Utils.recvfmts[4]);  // e
-        this.recvfmt.add(Utils.recvfmts[6]);  // h
-        this.recvfmt.add(Utils.recvfmts[13]); // p
-        this.recvfmt.add(Utils.recvfmt_FileName);
+        this.recvfmt = new FmtItemList<RecvFormat>(RecvFormat.values(), RecvFormat.getRequiredFormats());
+        this.recvfmt.add(RecvFormat.Y);
+        this.recvfmt.add(RecvFormat.s);
+        this.recvfmt.add(RecvFormat.e);
+        this.recvfmt.add(RecvFormat.h);
+        this.recvfmt.add(RecvFormat.p);
+        this.recvfmt.add(RecvFormat.f);
         //this.recvFileCol = 2;
-        this.recvColState = String.valueOf(this.recvfmt.indexOf(Utils.recvfmt_FileName) + 1); // 0 means: no sorting
+        this.recvColState = String.valueOf(this.recvfmt.indexOf(RecvFormat.f) + 1); // 0 means: no sorting
         
-        this.sentfmt = new FmtItemList(Utils.jobfmts, Utils.requiredSentFmts);
-        this.sentfmt.add(Utils.jobfmts[40]); //o
-        this.sentfmt.add(Utils.jobfmts[30]); //e 
-        this.sentfmt.add(Utils.jobfmts[44]);       
-        this.sentfmt.add(Utils.jobfmts[45]);
-        this.sentfmt.add(Utils.jobfmt_JobID);
-        this.sentfmt.add(Utils.jobfmt_Jobstate);
-        this.sentfmt.add(Utils.jobfmts[51]);
+        this.sentfmt = new FmtItemList<JobFormat>(JobFormat.values(), JobFormat.getRequiredFormats());
+        this.sentfmt.add(JobFormat.o); 
+        this.sentfmt.add(JobFormat.e); //e 
+        this.sentfmt.add(JobFormat.s);       
+        this.sentfmt.add(JobFormat.t);
+        this.sentfmt.add(JobFormat.j);
+        this.sentfmt.add(JobFormat.s);
+        this.sentfmt.add(JobFormat.z);
         
-        this.sendingfmt = new FmtItemList(Utils.jobfmts, Utils.requiredSendingFmts);
+        this.sendingfmt = new FmtItemList<JobFormat>(JobFormat.values(), JobFormat.getRequiredFormats());
         this.sendingfmt.addAll(this.sentfmt);
         
         // Uncomment for archive support.
@@ -412,6 +419,7 @@ public class FaxOptions {
             }
         }
     };
+
     public PBEntryFieldContainer getCoverFrom() {
         return coverFrom;
     }

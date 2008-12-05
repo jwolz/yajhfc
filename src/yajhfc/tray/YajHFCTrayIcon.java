@@ -32,12 +32,14 @@ import java.util.logging.Logger;
 
 import javax.swing.Action;
 
+import yajhfc.Launcher2;
 import yajhfc.MainWin;
+import yajhfc.RecvFormat;
 import yajhfc.Utils;
+import yajhfc.model.RecvYajJob;
 import yajhfc.model.UnReadMyTableModel;
 import yajhfc.model.UnreadItemEvent;
 import yajhfc.model.UnreadItemListener;
-import yajhfc.model.YajJob;
 import yajhfc.util.ExcDialogAbstractAction;
 
 /**
@@ -47,7 +49,7 @@ import yajhfc.util.ExcDialogAbstractAction;
  */
 public class YajHFCTrayIcon implements UnreadItemListener, WindowListener {
 
-    private Object trayIcon = null;
+    private ITrayIcon trayIcon = null;
     MainWin mainw;
     private Action showAction;
     private boolean connected = false;
@@ -116,15 +118,15 @@ public class YajHFCTrayIcon implements UnreadItemListener, WindowListener {
         if (trayIcon != null && !evt.isOldDataNull()) {
             StringBuffer msg = new StringBuffer();
             new MessageFormat(Utils._("{0} fax(es) received ({1} unread fax(es)):")).format(new Object[] { evt.getItems().size(), recvModel.getNumberOfUnreadFaxes()}, msg, null);
-            int senderIdx = recvModel.columns.getCompleteView().indexOf(Utils.recvfmt_Sender);
+            int senderIdx = recvModel.columns.getCompleteView().indexOf(RecvFormat.s);
             if (senderIdx >= 0) {
-                for (YajJob job : evt.getItems()) {
+                for (RecvYajJob job : evt.getItems()) {
                     msg.append('\n');
                     msg.append(job.getStringData(senderIdx));
                 }
             }
 
-            TrayFactory.getTrayManager().displayMessage(trayIcon, Utils._("New fax received"), msg.toString(), TrayManager.MSGTYPE_INFO);
+            trayIcon.displayMessage(Utils._("New fax received"), msg.toString(), ITrayIcon.MSGTYPE_INFO);
             updateTooltip();
         }
     }
@@ -135,7 +137,8 @@ public class YajHFCTrayIcon implements UnreadItemListener, WindowListener {
             String text;
             if (connected) {
                 StringBuffer textBuf = new StringBuffer();
-                textBuf.append(Utils.getFaxOptions().user).append('@').append(Utils.getFaxOptions().host);
+                String userName = (Launcher2.application.getClientManager() == null) ? Utils.getFaxOptions().user : Launcher2.application.getClientManager().getUser();
+                textBuf.append(userName).append('@').append(Utils.getFaxOptions().host);
                 textBuf.append(" - ");
                 new MessageFormat(Utils._("{0} unread fax(es)")).format(new Object[] {numUnread}, textBuf, null);
                 text = textBuf.toString();
@@ -143,7 +146,7 @@ public class YajHFCTrayIcon implements UnreadItemListener, WindowListener {
                 text = Utils._("Disconnected");
             }           
 
-            TrayFactory.getTrayManager().updateTooltip(trayIcon, text);
+            trayIcon.setToolTip(text);
         }
     }
 

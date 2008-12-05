@@ -140,13 +140,13 @@ public final class MainWin extends JFrame {
     protected JScrollPane scrollSent = null;
     protected JScrollPane scrollSending = null;
     
-    protected TooltipJTable tableRecv = null;
-    protected TooltipJTable tableSent = null;
-    protected TooltipJTable tableSending = null;
+    protected TooltipJTable<RecvFormat> tableRecv = null;
+    protected TooltipJTable<JobFormat> tableSent = null;
+    protected TooltipJTable<JobFormat> tableSending = null;
     
     protected UnReadMyTableModel recvTableModel = null;  
-    protected MyTableModel sentTableModel = null;  
-    protected MyTableModel sendingTableModel = null; 
+    protected MyTableModel<JobFormat> sentTableModel = null;  
+    protected MyTableModel<JobFormat> sendingTableModel = null; 
     
     protected NumberRowViewport recvRowNumbers, sentRowNumbers, sendingRowNumbers;
     
@@ -203,7 +203,7 @@ public final class MainWin extends JFrame {
     
     // Worker classes:
     private class DeleteWorker extends ProgressWorker {
-        private TooltipJTable selTable;
+        private TooltipJTable<? extends FmtItem> selTable;
         
         @Override
         protected int calculateMaxProgress() {
@@ -219,7 +219,7 @@ public final class MainWin extends JFrame {
             int[] selRows =  selTable.getSelectedRows();
 
             for (int i : selRows) {
-                YajJob yj = null;
+                YajJob<? extends FmtItem> yj = null;
                 try {
                     yj = selTable.getJobForRow(i);
                     updateNote(MessageFormat.format(_("Deleting fax {0}"), yj.getIDValue()));
@@ -245,14 +245,14 @@ public final class MainWin extends JFrame {
             refreshTables();
         }
         
-        public DeleteWorker(TooltipJTable selTable) {
+        public DeleteWorker(TooltipJTable<? extends FmtItem> selTable) {
             this.selTable = selTable;
             this.progressMonitor = tablePanel;
             this.setCloseOnExit(false);
         }
     }
     private class MultiSaveWorker extends ProgressWorker {
-        private TooltipJTable selTable;
+        private TooltipJTable<? extends FmtItem> selTable;
         private File targetDir;
         private int fileCounter;
         private final boolean askForEveryFile;
@@ -274,7 +274,7 @@ public final class MainWin extends JFrame {
                 int[] selRows =  selTable.getSelectedRows();
 
                 for (int i : selRows) {
-                    YajJob yj = null;
+                    YajJob<? extends FmtItem> yj = null;
                     try {
                         yj = selTable.getJobForRow(i);
                         List<HylaServerFile> hsfs = yj.getServerFilenames(hyfc);
@@ -342,7 +342,7 @@ public final class MainWin extends JFrame {
             }
         }
         
-        public MultiSaveWorker(TooltipJTable selTable, File targetDir, boolean askForEveryFile) {
+        public MultiSaveWorker(TooltipJTable<? extends FmtItem> selTable, File targetDir, boolean askForEveryFile) {
             this.selTable = selTable;
             this.targetDir = targetDir;
             this.progressMonitor = tablePanel;
@@ -351,7 +351,7 @@ public final class MainWin extends JFrame {
         }
     }
     private class ShowWorker extends ProgressWorker {
-        private TooltipJTable selTable;
+        private TooltipJTable<? extends FmtItem> selTable;
         private int sMin, sMax;
         
         @Override
@@ -368,7 +368,7 @@ public final class MainWin extends JFrame {
             int[] selRows =  selTable.getSelectedRows();
             sMin = Integer.MAX_VALUE; sMax = Integer.MIN_VALUE;
             for (int i : selRows) {
-                YajJob yj = null;
+                YajJob<? extends FmtItem> yj = null;
                 try {
                     yj = selTable.getJobForRow(i);
                     updateNote(MessageFormat.format(_("Displaying fax {0}"), yj.getIDValue()));
@@ -422,7 +422,7 @@ public final class MainWin extends JFrame {
             }
         }
         
-        public ShowWorker(TooltipJTable selTable) {
+        public ShowWorker(TooltipJTable<? extends FmtItem> selTable) {
             this.selTable = selTable;
             this.progressMonitor = tablePanel;
             this.setCloseOnExit(true);
@@ -430,7 +430,7 @@ public final class MainWin extends JFrame {
     }
     // Worker classes:
     private class SuspendWorker extends ProgressWorker {
-        private TooltipJTable selTable;
+        private TooltipJTable<? extends FmtItem> selTable;
         
         @Override
         protected int calculateMaxProgress() {
@@ -478,7 +478,7 @@ public final class MainWin extends JFrame {
             refreshTables();
         }
         
-        public SuspendWorker(TooltipJTable selTable) {
+        public SuspendWorker(TooltipJTable<? extends FmtItem> selTable) {
             this.selTable = selTable;
             this.progressMonitor = tablePanel;
             this.setCloseOnExit(false);
@@ -486,7 +486,7 @@ public final class MainWin extends JFrame {
     }
     // Worker classes:
     private class ResumeWorker extends ProgressWorker {
-        private TooltipJTable selTable;
+        private TooltipJTable<? extends FmtItem> selTable;
         
         @Override
         protected int calculateMaxProgress() {
@@ -533,14 +533,14 @@ public final class MainWin extends JFrame {
             refreshTables();
         }
         
-        public ResumeWorker(TooltipJTable selTable) {
+        public ResumeWorker(TooltipJTable<? extends FmtItem> selTable) {
             this.selTable = selTable;
             this.progressMonitor = tablePanel;
             this.setCloseOnExit(false);
         }
     }
     private class SaveToFormatWorker extends ProgressWorker {
-        private TooltipJTable selTable;
+        private TooltipJTable<? extends FmtItem> selTable;
         private File targetDir;
         private int fileCounter;
         private JFileChooser fileChooser;
@@ -564,7 +564,7 @@ public final class MainWin extends JFrame {
                 List<FormattedFile> ffs = new ArrayList<FormattedFile>();
 
                 for (int i : selRows) {
-                    YajJob yj = null;
+                    YajJob<? extends FmtItem> yj = null;
                     try {
                         yj = selTable.getJobForRow(i);
                         updateNote(MessageFormat.format(_("Saving fax {0}"), yj.getIDValue()));
@@ -625,7 +625,7 @@ public final class MainWin extends JFrame {
             }
         }
         
-        public SaveToFormatWorker(TooltipJTable selTable, File targetDir, boolean askForEveryFile, FileFormat desiredFormat) {
+        public SaveToFormatWorker(TooltipJTable<? extends FmtItem> selTable, File targetDir, boolean askForEveryFile, FileFormat desiredFormat) {
             this.selTable = selTable;
             this.targetDir = targetDir;
             this.progressMonitor = tablePanel;
@@ -638,7 +638,7 @@ public final class MainWin extends JFrame {
         private final FileFormat desiredFormat;
 
         public void actualActionPerformed(ActionEvent e) {
-            TooltipJTable selTable = (TooltipJTable)((JScrollPane)tabMain.getSelectedComponent()).getViewport().getView();
+            TooltipJTable<? extends FmtItem> selTable = getSelectedTable();
             if (selTable.getSelectedRowCount() == 0) {
                 return;
             }
@@ -750,7 +750,7 @@ public final class MainWin extends JFrame {
         
         actDelete = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {
-                TooltipJTable selTable = (TooltipJTable)((JScrollPane)tabMain.getSelectedComponent()).getViewport().getView();
+                TooltipJTable<? extends FmtItem> selTable = getSelectedTable();
                 
                 String msgText;
                 
@@ -773,7 +773,7 @@ public final class MainWin extends JFrame {
         
         actShow = new ExcDialogAbstractAction() {
             public void actualActionPerformed(java.awt.event.ActionEvent e) {
-                TooltipJTable selTable = (TooltipJTable)((JScrollPane)tabMain.getSelectedComponent()).getViewport().getView();
+                TooltipJTable<? extends FmtItem> selTable = getSelectedTable();
                 
                 ShowWorker wrk = new ShowWorker(selTable);
                 wrk.startWork(MainWin.this, _("Viewing faxes"));
@@ -869,8 +869,7 @@ public final class MainWin extends JFrame {
         
         actFaxSave = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {
-                TooltipJTable selTable = (TooltipJTable)((JScrollPane)tabMain.getSelectedComponent()).getViewport().getView();
-                
+                TooltipJTable<? extends FmtItem> selTable = getSelectedTable();                
                 
                 if (selTable.getSelectedRowCount() == 0) {
                     return;
@@ -966,7 +965,7 @@ public final class MainWin extends JFrame {
         
         actResend = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {                
-                TooltipJTable selTable = (TooltipJTable)((JScrollPane)tabMain.getSelectedComponent()).getViewport().getView();
+                TooltipJTable<? extends FmtItem> selTable = getSelectedTable();
                 if (!(selTable == tableSent && selTable != tableSending) || selTable.getSelectedRow() < 0)
                     return;
                 
@@ -1018,7 +1017,7 @@ public final class MainWin extends JFrame {
         
         actPrintTable = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {
-                TooltipJTable selTable = (TooltipJTable)((JScrollPane)tabMain.getSelectedComponent()).getViewport().getView();
+                TooltipJTable<? extends FmtItem> selTable = getSelectedTable();
                 try {
                     MessageFormat header = new MessageFormat(tabMain.getToolTipTextAt(tabMain.getSelectedIndex()));
                     Date now = new Date();
@@ -1037,7 +1036,7 @@ public final class MainWin extends JFrame {
         
         actSuspend = new ExcDialogAbstractAction() {
             public void actualActionPerformed(java.awt.event.ActionEvent e) {
-                TooltipJTable selTable = (TooltipJTable)((JScrollPane)tabMain.getSelectedComponent()).getViewport().getView();
+                TooltipJTable<? extends FmtItem> selTable = getSelectedTable();
                 SuspendWorker wrk = new SuspendWorker(selTable);
                 wrk.startWork(MainWin.this, _("Suspending jobs"));
             }
@@ -1049,7 +1048,7 @@ public final class MainWin extends JFrame {
         
         actResume = new ExcDialogAbstractAction() {
             public void actualActionPerformed(java.awt.event.ActionEvent e) {
-                TooltipJTable selTable = (TooltipJTable)((JScrollPane)tabMain.getSelectedComponent()).getViewport().getView();
+                TooltipJTable<? extends FmtItem> selTable = getSelectedTable();
                 ResumeWorker wrk = new ResumeWorker(selTable);
                 wrk.startWork(MainWin.this, _("Resuming jobs"));
             }
@@ -1061,7 +1060,7 @@ public final class MainWin extends JFrame {
         
         actClipCopy = new ExcDialogAbstractAction() {
             public void actualActionPerformed(java.awt.event.ActionEvent e) {
-                TooltipJTable selTable = (TooltipJTable)((JScrollPane)tabMain.getSelectedComponent()).getViewport().getView();
+                TooltipJTable<? extends FmtItem> selTable = getSelectedTable();
                 selTable.getTransferHandler().exportToClipboard(selTable, Toolkit.getDefaultToolkit().getSystemClipboard(), TransferHandler.COPY);
             }
         };
@@ -1158,6 +1157,14 @@ public final class MainWin extends JFrame {
         act.putValue(Action.ACTION_COMMAND_KEY, key);
     }
     
+    @SuppressWarnings("unchecked")
+    TooltipJTable<? extends FmtItem> getSelectedTable() {
+        return (TooltipJTable)((JScrollPane)tabMain.getSelectedComponent()).getViewport().getView();
+    }
+    @SuppressWarnings("unchecked")
+    TooltipJTable<? extends FmtItem> getTableByIndex(int index) {
+        return (TooltipJTable)((JScrollPane)tabMain.getComponent(index)).getViewport().getView();
+    }
     
     void setActReconnectState(boolean showConnect) {
         actReconnect.putValue(Action.NAME, showConnect ? _("Connect") : _("Disconnect"));
@@ -1270,12 +1277,13 @@ public final class MainWin extends JFrame {
     private DefaultTableCellRenderer getHylaDateRenderer() {
         if (hylaDateRenderer == null) {
             hylaDateRenderer = new DefaultTableCellRenderer() {
+                @SuppressWarnings("unchecked")
                 @Override
                 public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                     if (value != null) {
                         int realCol = table.getColumnModel().getColumn(column).getModelIndex();
-                        MyTableModel model = ((TooltipJTable)table).getRealModel();
-                        value = model.columns.get(realCol).dateFormat.fmtOut.format(value);
+                        MyTableModel<? extends FmtItem> model = ((TooltipJTable<? extends FmtItem>)table).getRealModel();
+                        value = model.columns.get(realCol).getDisplayDateFormat().format(value);
                     }
                     return super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
                             row, column);
@@ -1499,17 +1507,17 @@ public final class MainWin extends JFrame {
     }
     
     private void reloadTableColumnSettings() {
-        MyTableModel tm = getRecvTableModel();
+        UnReadMyTableModel tm = getRecvTableModel();
         tm.columns = myopts.recvfmt;
         tm.fireTableStructureChanged();
         
-        tm = getSentTableModel();
-        tm.columns = myopts.sentfmt;
-        tm.fireTableStructureChanged();
+        MyTableModel<JobFormat> tm2 = getSentTableModel();
+        tm2.columns = myopts.sentfmt;
+        tm2.fireTableStructureChanged();
 
-        tm = getSendingTableModel();
-        tm.columns = myopts.sendingfmt;
-        tm.fireTableStructureChanged();
+        tm2 = getSendingTableModel();
+        tm2.columns = myopts.sendingfmt;
+        tm2.fireTableStructureChanged();
         
         // Uncomment for archive support.
 //        tm = getArchiveTableModel();
@@ -1620,9 +1628,9 @@ public final class MainWin extends JFrame {
         return scrollRecv;
     }
 
-    private TooltipJTable getTableRecv() {
+    private TooltipJTable<RecvFormat> getTableRecv() {
         if (tableRecv == null) {
-            tableRecv = new TooltipJTable(getRecvTableModel());
+            tableRecv = new TooltipJTable<RecvFormat>(getRecvTableModel());
             doCommonTableSetup(tableRecv);
             
             recvTableModel.unreadFont = tableRecv.getFont().deriveFont(Font.BOLD);
@@ -1681,13 +1689,13 @@ public final class MainWin extends JFrame {
                     if (evt.isOldDataNull())
                         return;
                     
-                    if ((myopts.newFaxAction & Utils.NEWFAX_TOFRONT) != 0) {
+                    if ((myopts.newFaxAction & FaxOptions.NEWFAX_TOFRONT) != 0) {
                         bringToFront();
                     }
-                    if ((myopts.newFaxAction & Utils.NEWFAX_BEEP) != 0) {
+                    if ((myopts.newFaxAction & FaxOptions.NEWFAX_BEEP) != 0) {
                         Toolkit.getDefaultToolkit().beep();
                     }
-                    if ((myopts.newFaxAction & Utils.NEWFAX_VIEWER) != 0) {
+                    if ((myopts.newFaxAction & FaxOptions.NEWFAX_VIEWER) != 0) {
                         HylaFAXClient hyfc = clientManager.beginServerTransaction(MainWin.this);
                         if (hyfc == null) {
                             return;
@@ -1703,7 +1711,7 @@ public final class MainWin extends JFrame {
                                     }
                                 }
                             }
-                            if ((myopts.newFaxAction & Utils.NEWFAX_MARKASREAD) != 0) {
+                            if ((myopts.newFaxAction & FaxOptions.NEWFAX_MARKASREAD) != 0) {
                                 j.setRead(true);
                             }
                         }
@@ -1731,17 +1739,22 @@ public final class MainWin extends JFrame {
         return scrollSent;
     }
 
-    private TooltipJTable getTableSent() {
+    private TooltipJTable<JobFormat> getTableSent() {
         if (tableSent == null) {
-            tableSent = new TooltipJTable(getSentTableModel());
+            tableSent = new TooltipJTable<JobFormat>(getSentTableModel());
             doCommonTableSetup(tableSent);
         }
         return tableSent;
     }
 
-    private MyTableModel getSentTableModel() {
+    private MyTableModel<JobFormat> getSentTableModel() {
         if (sentTableModel == null) {
-            sentTableModel = new MyTableModel();
+            sentTableModel = new MyTableModel<JobFormat>() {
+                @Override
+                protected YajJob<JobFormat> createYajJob(String[] data) {
+                    return new SentYajJob(this.columns, data);
+                }
+            };
         }
         return sentTableModel;
     }
@@ -1757,15 +1770,15 @@ public final class MainWin extends JFrame {
         return scrollSending;
     }
 
-    private TooltipJTable getTableSending() {
+    private TooltipJTable<JobFormat> getTableSending() {
         if (tableSending == null) {
-            tableSending = new TooltipJTable(getSendingTableModel());
+            tableSending = new TooltipJTable<JobFormat>(getSendingTableModel());
             doCommonTableSetup(tableSending);
         }
         return tableSending;
     }
 
-    private void doCommonTableSetup(TooltipJTable table) {
+    private void doCommonTableSetup(TooltipJTable<? extends FmtItem> table) {
         table.setShowGrid(true);
         table.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         table.getSelectionModel().addListSelectionListener(actChecker);
@@ -1777,11 +1790,11 @@ public final class MainWin extends JFrame {
         JTableTABAction.replaceTABWithNextRow(table);
     }
     
-    private MyTableModel getSendingTableModel() {
+    private MyTableModel<JobFormat> getSendingTableModel() {
         if (sendingTableModel == null) {
-            sendingTableModel = new MyTableModel() {
+            sendingTableModel = new MyTableModel<JobFormat>() {
                 @Override
-                protected YajJob createYajJob(String[] data) {
+                protected YajJob<JobFormat> createYajJob(String[] data) {
                     return new SendingYajJob(this.columns, data);
                 }
             };
@@ -1861,9 +1874,10 @@ public final class MainWin extends JFrame {
     class MenuViewListener implements ActionListener, ChangeListener {
         private JRadioButtonMenuItem[] lastSel = new JRadioButtonMenuItem[TABLE_COUNT];
         
+        @SuppressWarnings("unchecked")
         public void actionPerformed(ActionEvent e) {
             String cmd = e.getActionCommand();
-            MyTableModel model = ((TooltipJTable)((JScrollPane)tabMain.getSelectedComponent()).getViewport().getView()).getRealModel();
+            MyTableModel model = getSelectedTable().getRealModel();
             int selTab = tabMain.getSelectedIndex();
             
             if (cmd.equals("view_all")) {
@@ -1886,8 +1900,7 @@ public final class MainWin extends JFrame {
             } else if (cmd.equals("mark_failed")) {
                 myopts.markFailedJobs = menuMarkError.isSelected();
                 
-                TooltipJTable selTable = (TooltipJTable)((JScrollPane)tabMain.getSelectedComponent()).getViewport().getView();
-                selTable.repaint();
+                getSelectedTable().repaint();
             }
         }
         
@@ -1899,7 +1912,7 @@ public final class MainWin extends JFrame {
         }
         
         public void stateChanged(ChangeEvent e) {
-            MyTableModel model = ((TooltipJTable)((JScrollPane)tabMain.getSelectedComponent()).getViewport().getView()).getRealModel();
+            MyTableModel<? extends FmtItem> model = getSelectedTable().getRealModel();
             boolean viewOwnState  = ownFilterOK(model);
             boolean markErrorState = canMarkError(model);
             
@@ -1912,24 +1925,25 @@ public final class MainWin extends JFrame {
             }
         }
         
-        private Filter<YajJob,FmtItem0> getOwnFilterFor(MyTableModel model) {
-            return new StringFilter<YajJob,FmtItem0>((model == recvTableModel ? Utils.recvfmt_Owner : Utils.jobfmt_Owner), StringFilterOperator.EQUAL, myopts.user, true);
+        private Filter<YajJob<? extends FmtItem>,? extends FmtItem> getOwnFilterFor(MyTableModel<? extends FmtItem> model) {
+            String user = (clientManager != null) ? clientManager.getUser() : myopts.user;
+            return new StringFilter<YajJob<? extends FmtItem>,FmtItem>((model == recvTableModel ? RecvFormat.o : JobFormat.o), StringFilterOperator.EQUAL, user, true);
         }
         
-        private boolean canMarkError(MyTableModel model) {
+        private boolean canMarkError(MyTableModel<? extends FmtItem> model) {
             if (model == sentTableModel || model == sendingTableModel) { 
-                return model.columns.getCompleteView().contains(Utils.jobfmt_Jobstate) || model.columns.getCompleteView().contains(Utils.jobfmt_Status);
+                return model.columns.getCompleteView().contains(JobFormat.a) || model.columns.getCompleteView().contains(JobFormat.s);
             } else if (model == recvTableModel) { 
-                return myopts.recvfmt.getCompleteView().contains(Utils.recvfmt_ErrorDesc);
+                return myopts.recvfmt.getCompleteView().contains(RecvFormat.e);
             } else //TODO for archive support?
                 return false;
         }
         
-        private boolean ownFilterOK(MyTableModel model) {
+        private boolean ownFilterOK(MyTableModel<? extends FmtItem> model) {
             if (model == recvTableModel) { 
-                return model.columns.getCompleteView().contains(Utils.recvfmt_Owner);
+                return model.columns.getCompleteView().contains(RecvFormat.o);
             } else if (model == sentTableModel || model == sendingTableModel) { 
-                return model.columns.getCompleteView().contains(Utils.jobfmt_Owner);
+                return model.columns.getCompleteView().contains(JobFormat.o);
                 // Uncomment for archive support.
 //            } else if (model == archiveTableModel) {
 //                return model.columns.getCompleteView().contains(ArchiveYajJob.ownerField);
@@ -1939,9 +1953,10 @@ public final class MainWin extends JFrame {
         /**
          * Re-validates the filters on reconnection
          */
+        @SuppressWarnings("unchecked")
         public void reConnected() {
             for (int i = 0; i < lastSel.length; i++) {
-                MyTableModel model = ((TooltipJTable)((JScrollPane)tabMain.getComponent(i)).getViewport().getView()).getRealModel();
+                MyTableModel model = getTableByIndex(i).getRealModel();
                 if (lastSel[i] == menuViewOwn) {
                     if (ownFilterOK(model)) 
                         model.setJobFilter(getOwnFilterFor(model));
@@ -1962,14 +1977,15 @@ public final class MainWin extends JFrame {
         }
         
 
+        @SuppressWarnings("unchecked")
         private void loadSaveString(int idx, String data) {
             if ((data == null) || data.equals("A")) {
                 lastSel[idx] = menuViewAll;
             } else if (data.equals("O")) {
                 lastSel[idx] = menuViewOwn;
             } else if (data.startsWith("C")) {
-                MyTableModel model = ((TooltipJTable)((JScrollPane)tabMain.getComponent(idx)).getViewport().getView()).getRealModel();
-                Filter<YajJob,FmtItem0> yjf = FilterCreator.stringToFilter(data.substring(1), model.columns);
+                MyTableModel model = getTableByIndex(idx).getRealModel();
+                Filter<YajJob,FmtItem> yjf = FilterCreator.stringToFilter(data.substring(1), model.columns);
                 if (yjf == null) {
                     lastSel[idx] = menuViewAll;
                 } else {
@@ -1992,7 +2008,7 @@ public final class MainWin extends JFrame {
             } else if (lastSel[idx] == menuViewOwn) {
                 return "O";
             } else if (lastSel[idx] == menuViewCustom) {
-                MyTableModel model = ((TooltipJTable)((JScrollPane)tabMain.getComponent(idx)).getViewport().getView()).getRealModel();
+                MyTableModel<? extends FmtItem> model = getTableByIndex(idx).getRealModel();
                 return "C" + FilterCreator.filterToString(model.getJobFilter());
             } else
                 return null;
@@ -2298,7 +2314,7 @@ public final class MainWin extends JFrame {
         
         class TableDataRunner implements Runnable {
             private String[][] data = null;
-            private MyTableModel tm;
+            private MyTableModel<? extends FmtItem> tm;
                     
             public void run() {
                 if (cancelled) {
@@ -2310,7 +2326,7 @@ public final class MainWin extends JFrame {
                 //System.out.println(System.currentTimeMillis() + ": Set data.");
             }
             
-            public TableDataRunner(MyTableModel tm, String[][] data) {
+            public TableDataRunner(MyTableModel<? extends FmtItem> tm, String[][] data) {
                 this.tm = tm;
                 this.data = data;
             }
@@ -2424,7 +2440,7 @@ public final class MainWin extends JFrame {
                 // Final UI updates:
                 SwingUtilities.invokeLater(new Runnable() {
                    public void run() {
-                       MainWin.this.setTitle(myopts.user + "@" + myopts.host + (clientManager.isAdminMode() ? " (admin)" : "") + " - " +Utils.AppName);
+                       MainWin.this.setTitle(clientManager.getUser() + "@" + myopts.host + (clientManager.isAdminMode() ? " (admin)" : "") + " - " +Utils.AppName);
                        if (trayIcon != null) {
                            trayIcon.setConnectedState(true);
                        }

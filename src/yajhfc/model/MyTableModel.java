@@ -24,38 +24,38 @@ import java.util.Arrays;
 
 import javax.swing.table.AbstractTableModel;
 
-import yajhfc.FmtItem0;
+import yajhfc.FmtItem;
 import yajhfc.FmtItemList;
 import yajhfc.Utils;
 import yajhfc.filters.Filter;
 
-public class MyTableModel extends AbstractTableModel {
+public abstract class MyTableModel<T extends FmtItem> extends AbstractTableModel {
     
     protected String[][] rawData;
     /**
      * jobs: *All* Jobs from the HylaFAX server
      */
-    protected YajJob[] jobs; 
-    protected Filter<YajJob,FmtItem0> jobFilter = null;
+    protected YajJob<T>[] jobs; 
+    protected Filter<YajJob<T>,T> jobFilter = null;
     protected int rowCount = 0;
     /**
      * visibleJobs: Only the visible Jobs (after jobFilter has been applied).
      * n.b.: if jobFilter == null then visibleJobs == jobs
      */
-    protected YajJob[] visibleJobs;
+    protected YajJob<T>[] visibleJobs;
     
-    public FmtItemList columns;
+    public FmtItemList<T> columns;
     
     private static final Color defErrorColor = new Color(255, 230, 230);
     
     public Color errorColor = defErrorColor;
     
-    public void setJobFilter(Filter<YajJob,FmtItem0> jobFilter) {
+    public void setJobFilter(Filter<YajJob<T>,T> jobFilter) {
         this.jobFilter = jobFilter;
         refreshVisibleJobs();
     }
     
-    public Filter<YajJob,FmtItem0> getJobFilter() {
+    public Filter<YajJob<T>,T> getJobFilter() {
         return jobFilter;
     }
     
@@ -96,10 +96,9 @@ public class MyTableModel extends AbstractTableModel {
         return null;
     }
     
-    protected YajJob createYajJob(String[] data) {
-        return new SentYajJob(columns, data);
-    }
+    protected abstract YajJob<T> createYajJob(String[] data);
     
+    @SuppressWarnings("unchecked")
     public void setData(String[][] newData) {
         if (!Arrays.deepEquals(rawData, newData)) {
             rawData = newData;
@@ -119,6 +118,7 @@ public class MyTableModel extends AbstractTableModel {
     /**
      * Reloads the visible Jobs array. Called if either jobs[] or jobFilter has changed.
      */
+    @SuppressWarnings("unchecked")
     protected void refreshVisibleJobs() {
         if (jobs == null) {
             rowCount = 0;
@@ -172,11 +172,11 @@ public class MyTableModel extends AbstractTableModel {
         return visibleJobs[rowIndex].getData(columnIndex);
     }
     
-    public YajJob getJob(int rowIndex) {
+    public YajJob<T> getJob(int rowIndex) {
         return visibleJobs[rowIndex];
     }
     
-    public YajJob getRealJob(int rowIndex) {
+    public YajJob<T> getRealJob(int rowIndex) {
         return jobs[rowIndex];
     }
     
@@ -185,11 +185,11 @@ public class MyTableModel extends AbstractTableModel {
     }
     
     public String getColumnName(int column) {
-        return columns.get(column).desc;
+        return columns.get(column).getDescription();
     }
     
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        return columns.get(columnIndex).dataClass;
+        return columns.get(columnIndex).getDataType();
     }
 }

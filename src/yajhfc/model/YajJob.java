@@ -31,19 +31,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import yajhfc.DefaultIconMap;
-import yajhfc.FmtItem0;
+import yajhfc.FmtItem;
 import yajhfc.FmtItemList;
 import yajhfc.HylaServerFile;
 import yajhfc.IconMap;
 import yajhfc.Utils;
 import yajhfc.filters.FilterableObject;
 
-public abstract class YajJob implements FilterableObject {
+public abstract class YajJob<T extends FmtItem> implements FilterableObject {
     private static final Logger log = Logger.getLogger(YajJob.class.getName());
     
     protected String[] stringData;
     protected Object[] parsedData;
-    protected FmtItemList columns;
+    protected FmtItemList<T> columns;
     // Placeholder to mark "null"-Values in parsedData:
     protected final static Object nullObject = new Object();
     
@@ -70,7 +70,7 @@ public abstract class YajJob implements FilterableObject {
         
         if (result == null) { // Not parsed
             String res = getStringData(col);
-            FmtItem0 fmtItem = columns.getCompleteView().get(col);
+            T fmtItem = columns.getCompleteView().get(col);
             parsedData[col] = result = parseValue(fmtItem, res);
         }        
         return (result == nullObject) ? null : result;
@@ -88,11 +88,11 @@ public abstract class YajJob implements FilterableObject {
      * @param data
      * @return
      */
-    protected Object parseValue(FmtItem0 fmtItem, String data) {
+    protected Object parseValue(T fmtItem, String data) {
         if (data == null) {
             return  nullObject;
         } else {
-            Class<?> dataClass = fmtItem.dataClass;
+            Class<?> dataClass = fmtItem.getDataType();
 
             if (dataClass == String.class) {
                 return data;
@@ -111,7 +111,7 @@ public abstract class YajJob implements FilterableObject {
                         else if (dataClass == Double.class)
                             return  Double.valueOf(data);
                         else if (dataClass == Date.class) {
-                            Date d = fmtItem.dateFormat.fmtIn.parse(data);
+                            Date d = fmtItem.getHylaDateFormat().parse(data);
                             if (d != null && Utils.getFaxOptions().dateOffsetSecs != 0) {
                                 Calendar cal = Calendar.getInstance(Utils.getLocale());
                                 cal.setTime(d);
@@ -140,11 +140,11 @@ public abstract class YajJob implements FilterableObject {
         }
     }
     
-    public FmtItemList getColumns() {
+    public FmtItemList<T> getColumns() {
         return columns;
     }
     
-    public void setColumns(FmtItemList columns) {
+    public void setColumns(FmtItemList<T> columns) {
         this.columns = columns;
         parsedData = new Object[columns.getCompleteView().size()];
     }
@@ -172,7 +172,7 @@ public abstract class YajJob implements FilterableObject {
      */ 
     public abstract Object getIDValue();
     
-    public YajJob(FmtItemList cols, String[] stringData) {
+    public YajJob(FmtItemList<T> cols, String[] stringData) {
         setColumns(cols);
         setStringDataArray(stringData);
     }

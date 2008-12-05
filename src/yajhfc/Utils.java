@@ -50,7 +50,7 @@ public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2008 by Jonas Wolz";
-    public static final String AppVersion = "0.3.9c";
+    public static final String AppVersion = "0.3.9d";
     public static final String AuthorEMail = "Jonas Wolz &lt;jwolz@freenet.de&gt;";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
     
@@ -62,138 +62,6 @@ public final class Utils {
     private static ResourceBundle msgs = null;
     private static boolean TriedMsgLoad = false;
     private static File configDir = null;
-    
-    public static final FmtItem0 jobfmt_JobID =
-        new FmtItem0("j", _("ID"), _("Job identifier"), Integer.class);
-    
-    public static final FmtItem0 jobfmt_Owner =
-        new FmtItem0("o", _("Owner"),  _("Job owner"));
-    
-    public static final FmtItem0 jobfmt_Jobstate =
-        new FmtItem0("a", _("Job state"), _("Job state (one-character symbol)"), IconMap.class);
-    
-    public static final FmtItem0 jobfmt_Status =
-        new FmtItem0("s", _("Status"), _("Job status information from last failure"));
-    
-    public static final FmtItem0[] jobfmts =
-    { 
-            new FmtItem0("A", _("SubAddress"), _("Destination SubAddress")), 
-            new FmtItem0("B", _("Password"), _("Destination Password")), 
-            new FmtItem0("C", _("Company"), _("Destination company name")), 
-            new FmtItem0("D", _("Dials: toal/max."), _("Total # dials/maximum # dials")), 
-            new FmtItem0("E", _("Speed"), _("Desired signalling rate"), Integer.class), 
-            new FmtItem0("F", _("Tagline format"), _("Client-specific tagline format string")), 
-            new FmtItem0("G", _("Desired min-scanline time")), 
-            new FmtItem0("H", _("Desired data format")), 
-            new FmtItem0("I", _("Priority"), _("Client-specified scheduling priority"), Integer.class), 
-            new FmtItem0("J", _("Tag string"), _("Client-specified job tag string")), 
-            new FmtItem0("K", _("Use ECM?"), _("Desired use of ECM (one-character symbol)")), 
-            new FmtItem0("L", _("Location"), _("Destination geographic location")), 
-            new FmtItem0("M", _("Sender e-mail"), _("Notification e-mail address")), 
-            new FmtItem0("N", _("Private Tagline?"), _("Desired use of private tagline (one-character symbol)")), 
-            new FmtItem0("O", _("Use continuation cover"), _("Whether to use continuation cover page (one-character symbol)")), 
-            new FmtItem0("P", _("Pages done/total"), _("# pages transmitted/total # pages to transmit")), 
-            new FmtItem0("Q", _("Minimal signalling rate"), _("Client-specified minimum acceptable signalling rate"), Integer.class), 
-            new FmtItem0("R", _("Receiver"), _("Destination person (receiver)")), 
-            new FmtItem0("S", _("Sender"), _("Sender's identity")), 
-            new FmtItem0("T", _("Tries: done/max."), _("Total # tries/maximum # tries")), 
-            new FmtItem0("U", _("Page chopping threshold (inches)"), Float.class), 
-            new FmtItem0("V", _("Job done operation")), 
-            new FmtItem0("W", _("Communication identifier")), 
-            new FmtItem0("X", _("Job type"), _("Job type (one-character symbol)")), 
-            new FmtItem0("Y", _("Scheduled time"), _("Scheduled date and time"), new HylaDateField("yyyy/MM/dd HH.mm.ss", _("dd/MM/yyyy HH:mm:ss"))), 
-            new FmtItem0("Z", _("Scheduled time in seconds since the UNIX epoch")), 
-            jobfmt_Jobstate, 
-            new FmtItem0("b", _("# consecutive failed tries"), Integer.class), 
-            new FmtItem0("c", _("Client machine name")), 
-            new FmtItem0("d", _("Total # dials"), Integer.class), 
-            new FmtItem0("e", _("Number"), _("Public (external) format of dialstring")), 
-            new FmtItem0("f", _("# consecutive failed dials")), 
-            new FmtItem0("g", _("Group identifier")), 
-            new FmtItem0("h", _("Page chop handling"), _("Page chop handling (one-character symbol)")), 
-            new FmtItem0("i", _("Scheduling priority"), _("Current scheduling priority")), 
-            jobfmt_JobID, 
-            new FmtItem0("k", _("Job kill time")), 
-            new FmtItem0("l", _("Page length"), _("Page length in mm"), Integer.class), 
-            new FmtItem0("m", _("Modem"), _("Assigned modem")), 
-            new FmtItem0("n", _("Notification"), _("E-mail notification handling (one-character symbol)"), IconMap.class), 
-            jobfmt_Owner, 
-            new FmtItem0("p", _("# pages"), _("# pages transmitted"), Integer.class), 
-            new FmtItem0("q", _("Retry time"), _("Job retry time (MM::SS)")/*, new HylaDateField("mm:ss", _("mm:ss"))*/), 
-            new FmtItem0("r", _("Resolution"), _("Document resolution in lines/inch"), Integer.class), 
-            jobfmt_Status, 
-            new FmtItem0("t", _("Tries"), _("Total # tries attempted"), Integer.class), 
-            new FmtItem0("u", _("Max. tries"), _("Maximum # tries"), Integer.class), 
-            new FmtItem0("v", _("Specified number"), _("Client-specified dialstring")), 
-            new FmtItem0("w", _("Page width"), _("Page width in mm"), Integer.class), 
-            new FmtItem0("x", _("Maximum # dials"), Integer.class), 
-            new FmtItem0("y", _("Pages"), _("Total # pages to transmit"), Integer.class), 
-            new FmtItem0("z", _("Time to send job"))
-    };
-    
-    public static final FmtItem0 recvfmt_FileName 
-        = new FmtItem0("f", _("Filename"), _("Document filename (relative to the recvq directory)"));
-    
-    public static final FmtItem0 recvfmt_Owner
-        = new FmtItem0("o", _("Owner"), _("File owner"));
-    
-    public static final FmtItem0 recvfmt_ErrorDesc 
-        = new FmtItem0("e", _("Error description"), _("Error description if an error occurred during receive"));
-    
-    public static final FmtItem0 recvfmt_InProgress 
-        = new FmtItem0("z", _("In progress"), _("A ``*'' if receive is going on; otherwise `` '' (space)"), Boolean.class);
-    
-    public static final FmtItem0 recvfmt_Sender 
-        = new FmtItem0("s", _("Sender"), _("Sender identity (TSI)"));
-    
-    public static final FmtItem0[] recvfmts = {
-            new FmtItem0("Y", _("Time/Date"),  _("Extended representation of the time when the receive happened"), new HylaDateField("yyyy:MM:dd HH:mm:ss", _("dd/MM/yyyy HH:mm:ss"))), 
-            new FmtItem0("a", _("SubAddress"), _("SubAddress received from sender (if any)")), 
-            new FmtItem0("b", _("Speed"), _("Signalling rate used during receive"), Integer.class), 
-            new FmtItem0("d", _("Format"), _("Data format used during receive")), 
-            recvfmt_ErrorDesc, 
-            //new FmtItem("f", "Document filename (relative to the recvq directory)"), 
-            recvfmt_FileName,
-            new FmtItem0("h", _("Time to receive"), _("Time spent receiving document (HH:MM:SS)"), new HylaDateField("m:ss", _("mm:ss"))), 
-            new FmtItem0("i", _("CIDName"), _("CIDName value for received fax")), 
-            new FmtItem0("j", _("CIDNumber"), _("CIDNumber value for received fax")), 
-            new FmtItem0("l", _("Page length"), _("Page length in mm"), Integer.class), 
-            new FmtItem0("m", _("Fax Protection"), _("Fax-style protection mode string (``-rwxrwx'')")), 
-            new FmtItem0("n", _("File size"), _("File size (number of bytes)"), Integer.class), 
-            recvfmt_Owner, 
-            new FmtItem0("p", _("Pages"), _("Number of pages in document"), Integer.class), 
-            new FmtItem0("q", _("Protection"), _("UNIX-style protection flags")), 
-            new FmtItem0("r", _("Resolution"), _("Resolution of received data"), Integer.class), 
-            recvfmt_Sender, 
-            new FmtItem0("t", _("Date"), _("Compact representation of the time when the receive happened"), new HylaDateField("ddMMMyy", _("dd/MM/yyyy"))), 
-            new FmtItem0("w", _("Page width"), _("Page width in mm"), Integer.class), 
-            recvfmt_InProgress
-    };
-    
-    
-    public static final FmtItem0[] requiredSendingFmts = {
-        jobfmt_JobID,
-        jobfmt_Owner,
-        jobfmt_Jobstate
-    };
-
-    public static final FmtItem0[] requiredSentFmts = requiredSendingFmts;
-
-    public static final FmtItem0[] requiredRecvFmts = {
-        recvfmt_FileName,
-        recvfmt_Owner,
-        recvfmt_InProgress,
-        recvfmt_ErrorDesc
-    };
-    
-    // Basic actions when a new fax is detected.
-    // The constants should be powers of 2 to make it possible to combine several of them
-    public static final int NEWFAX_NOACTION = 0;
-    public static final int NEWFAX_BEEP = 1;
-    public static final int NEWFAX_TOFRONT = 2;
-    public static final int NEWFAX_VIEWER = 4;
-    public static final int NEWFAX_MARKASREAD = 8;
-    
     
     private static File applicationDir;
     public static File getApplicationDir() {
@@ -301,13 +169,6 @@ public final class Utils {
                 msgs = null;
             }
         }
-    }
-    
-    public static MyManualMapObject findInArray(MyManualMapObject[] array, Object key) {
-        for (int i = 0; i < array.length; i++)
-            if (array[i].equals(key)) 
-                return array[i];
-        return null;
     }
     
     public static String minutesToHylaTime(int mins) {

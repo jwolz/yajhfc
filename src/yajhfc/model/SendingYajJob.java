@@ -25,6 +25,7 @@ import gnu.inet.ftp.ServerResponseException;
 import java.io.IOException;
 
 import yajhfc.FmtItemList;
+import yajhfc.JobFormat;
 
 public class SendingYajJob extends SentYajJob {
 
@@ -52,7 +53,7 @@ public class SendingYajJob extends SentYajJob {
         }
     }
     
-    public SendingYajJob(FmtItemList cols, String[] stringData) {
+    public SendingYajJob(FmtItemList<JobFormat> cols, String[] stringData) {
         super(cols, stringData);
     }
 
