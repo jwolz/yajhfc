@@ -21,10 +21,7 @@ package yajhfc;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -425,36 +422,8 @@ public class FaxOptions {
     }
     
     @SuppressWarnings("unchecked")
-    /**
-     * Loads the settings from the specified files. The files are loaded in the specified
-     * order, i.e. settings from "later" files override the earlier ones
-     */
-    public void loadFromFile(File... files) {
-        Properties p = new Properties();
-        for (File file : files) {
-            if (Utils.debugMode) {
-                log.info("Loading prefs from " + file);
-            }
-            try {
-                if (file.exists()) {
-                    FileInputStream filin = new FileInputStream(file);
-                    p.load(filin);
-                    filin.close();
-                } else {
-                    if (Utils.debugMode) {
-                        log.info(file + " not found");
-                    }
-                }
-            } catch (FileNotFoundException e) {
-                if (Utils.debugMode) {
-                    log.log(Level.INFO, file + " not found", e);
-                }
-                continue; // No file yet
-            } catch (IOException e) {
-                log.log(Level.WARNING, "Error reading file '" + file + "': " , e);
-                continue;
-            }
-        }
+    public void loadFromProperties(Properties p) {
+
         if (p.size() == 0) {
             log.info("No settings to load found.");
             return;
@@ -515,9 +484,5 @@ public class FaxOptions {
                 log.log(Level.WARNING, "Couldn't load setting for " + f + ": ", e1);
             }
         }
-    }
-    
-    public static File getDefaultConfigFile() {
-        return new File(Utils.getConfigDir(), "settings");
     }
 }

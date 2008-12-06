@@ -49,6 +49,7 @@ import yajhfc.file.MultiFileConverter;
 import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
 import yajhfc.phonebook.convrules.NameRule;
+import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 import yajhfc.util.ProgressWorker;
 import yajhfc.util.ProgressWorker.ProgressUI;
 
@@ -66,7 +67,7 @@ public class SendController {
     // These properties have default values and may be set using getters and setters
     protected boolean useCover = false;
     protected List<HylaTFLItem> files = new ArrayList<HylaTFLItem>();
-    protected List<NumberTFLItem> numbers = new ArrayList<NumberTFLItem>();
+    protected List<PBEntryFieldContainer> numbers = new ArrayList<PBEntryFieldContainer>();
     protected String subject = "", comments = "";
     protected PaperSize paperSize = Utils.getFaxOptions().paperSize; 
     protected File customCover = null;
@@ -151,11 +152,11 @@ public class SendController {
 
         return cov;
     }
-    protected File makeCoverFile(Faxcover cov, NumberTFLItem to) throws IOException, FileNotFoundException {
+    protected File makeCoverFile(Faxcover cov, PBEntryFieldContainer to) throws IOException, FileNotFoundException {
         File coverFile;
 
         if (to != null) {
-            cov.toData = to.fields;
+            cov.toData = to;
         } else {
             cov.toData = new DefaultPBEntryFieldContainer("");
         }
@@ -171,9 +172,9 @@ public class SendController {
     }
 
     class PreviewWorker extends ProgressWorker {
-        protected NumberTFLItem selectedNumber;
+        protected PBEntryFieldContainer selectedNumber;
         
-        public PreviewWorker(NumberTFLItem selectedNumber) {
+        public PreviewWorker(PBEntryFieldContainer selectedNumber) {
             this.selectedNumber = selectedNumber;
             this.progressMonitor = SendController.this.progressMonitor;
         }
@@ -293,8 +294,8 @@ public class SendController {
                     log.fine("Use modem: " + modem);
                     //Utils.debugOut.println(modem);
                 }
-                for (NumberTFLItem numItem : numbers) {
-                    updateNote(MessageFormat.format(Utils._("Creating job to {0}"), numItem.getText()));
+                for (PBEntryFieldContainer numItem : numbers) {
+                    updateNote(MessageFormat.format(Utils._("Creating job to {0}"), numItem.getField(PBEntryField.FaxNumber)));
 
                     try {
                         if (cover != null) {
@@ -317,10 +318,10 @@ public class SendController {
 
                             if (!pollMode) {
                                 // Set general job information...
-                                setIfNotEmpty(j, "TOUSER", fo.coverNameRule.applyRule(numItem.fields));
-                                setIfNotEmpty(j, "TOCOMPANY", fo.coverCompanyRule.applyRule(numItem.fields));
-                                setIfNotEmpty(j, "TOLOCATION", fo.coverLocationRule.generateRule(fo.coverZIPCodeRule).applyRule(numItem.fields));
-                                setIfNotEmpty(j, "TOVOICE", numItem.fields.get(PBEntryField.VoiceNumber));
+                                setIfNotEmpty(j, "TOUSER", fo.coverNameRule.applyRule(numItem));
+                                setIfNotEmpty(j, "TOCOMPANY", fo.coverCompanyRule.applyRule(numItem));
+                                setIfNotEmpty(j, "TOLOCATION", fo.coverLocationRule.generateRule(fo.coverZIPCodeRule).applyRule(numItem));
+                                setIfNotEmpty(j, "TOVOICE", numItem.getField(PBEntryField.VoiceNumber));
                                 setIfNotEmpty(j, "REGARDING", subject);
                                 setIfNotEmpty(j, "COMMENTS", comments);
                                 setIfNotEmpty(j, "FROMCOMPANY", fo.FromCompany);
@@ -332,7 +333,7 @@ public class SendController {
                                 }
                             }
 
-                            String faxNumber = Utils.sanitizeInput(numItem.fields.get(PBEntryField.FaxNumber));
+                            String faxNumber = Utils.sanitizeInput(numItem.getField(PBEntryField.FaxNumber));
                             j.setDialstring(faxNumber);
                             //j.setProperty("EXTERNAL", faxNumber); // needed to fix an error while sending multiple jobs
                             j.setMaximumTries(maxTries);
@@ -365,7 +366,7 @@ public class SendController {
                         log.finest("Out of hyfc monitor");
                         stepProgressBar(5);
                     } catch (Exception e1) {
-                        showExceptionDialog(MessageFormat.format(Utils._("An error occured while submitting the fax job for phone number \"{0}\" (will try to submit the fax to the other numbers anyway): "), numItem.getText()) , e1);
+                        showExceptionDialog(MessageFormat.format(Utils._("An error occured while submitting the fax job for phone number \"{0}\" (will try to submit the fax to the other numbers anyway): "), numItem.getField(PBEntryField.FaxNumber)) , e1);
                     }
                 }
 
@@ -411,10 +412,10 @@ public class SendController {
             return false;
         }
         for (int i=0; i < numbers.size(); i++) {
-            NumberTFLItem number = numbers.get(i);
-            String faxNumber = number.fields.get(PBEntryField.FaxNumber);
+            PBEntryFieldContainer number = numbers.get(i);
+            String faxNumber = number.getField(PBEntryField.FaxNumber);
             if (faxNumber == null || faxNumber.length() == 0) {
-                JOptionPane.showMessageDialog(parent, MessageFormat.format(Utils._("For recipient {0} (\"{1}\") no fax number has been entered."), i+1, NameRule.GIVENNAME_NAME.applyRule(number.fields)), Utils._("Warning"), JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(parent, MessageFormat.format(Utils._("For recipient {0} (\"{1}\") no fax number has been entered."), i+1, NameRule.GIVENNAME_NAME.applyRule(number)), Utils._("Warning"), JOptionPane.INFORMATION_MESSAGE);
                 return false;
             }
         }
@@ -437,7 +438,7 @@ public class SendController {
         wrk.startWork(parent, Utils._("Sending fax"));
     }
     
-    public void previewFax(NumberTFLItem selectedNumber) {
+    public void previewFax(PBEntryFieldContainer selectedNumber) {
         PreviewWorker wrk = new PreviewWorker(selectedNumber);
         wrk.startWork(parent, Utils._("Previewing fax"));
     }
@@ -452,11 +453,11 @@ public class SendController {
         this.useCover = useCover;
     }
 
-    public List<NumberTFLItem> getNumbers() {
+    public List<PBEntryFieldContainer> getNumbers() {
         return numbers;
     }
 
-    public void setNumbers(List<NumberTFLItem> numbers) {
+    public void setNumbers(List<PBEntryFieldContainer> numbers) {
         this.numbers = numbers;
     }
 

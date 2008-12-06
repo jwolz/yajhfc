@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: messages_it\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-03 11:48+0100\n"
+"POT-Creation-Date: 2008-12-04 12:31+0100\n"
 "PO-Revision-Date: 2008-10-25 18:41GMT\n"
 "Last-Translator: Jonas Wolz <jwolz@freenet.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
@@ -40,9 +40,9 @@ msgid "$LANGUAGE$ translation by {0}"
 msgstr "$LINGUA$ tradotta da {0}"
 
 #: ../AboutDialog.java:223 ../filters/CustomFilterDialog.java:79
-#: ../options/OptionsWin.java:311 ../phonebook/ldap/ConnectionDialog.java:176
-#: ../phonebook/jdbc/ConnectionDialog.java:212 ../util/ExceptionDialog.java:78
-#: ../util/ToolbarEditorDialog.java:122 ../util/PasswordDialog.java:58
+#: ../options/OptionsWin.java:315 ../phonebook/ldap/ConnectionDialog.java:175
+#: ../phonebook/jdbc/ConnectionDialog.java:213 ../util/ExceptionDialog.java:78
+#: ../util/ToolbarEditorDialog.java:122 ../util/PasswordDialog.java:68
 msgid "OK"
 msgstr "OK"
 
@@ -71,25 +71,25 @@ msgstr "Documentazione"
 msgid "Any modem"
 msgstr "Qualsiasi modem"
 
-#: ../tray/YajHFCTrayIcon.java:76
+#: ../tray/YajHFCTrayIcon.java:78
 msgid "Restore"
 msgstr ""
 
-#: ../tray/YajHFCTrayIcon.java:118
+#: ../tray/YajHFCTrayIcon.java:120
 #, java-format
 msgid "{0} fax(es) received ({1} unread fax(es)):"
 msgstr ""
 
-#: ../tray/YajHFCTrayIcon.java:127
+#: ../tray/YajHFCTrayIcon.java:129
 msgid "New fax received"
 msgstr ""
 
-#: ../tray/YajHFCTrayIcon.java:140
+#: ../tray/YajHFCTrayIcon.java:142
 #, java-format
 msgid "{0} unread fax(es)"
 msgstr ""
 
-#: ../tray/YajHFCTrayIcon.java:143
+#: ../tray/YajHFCTrayIcon.java:145
 msgid "Disconnected"
 msgstr ""
 
@@ -321,36 +321,36 @@ msgid ""
 msgstr ""
 
 #: ../MainWin.java:647 ../filters/CustomFilterDialog.java:210
-#: ../filters/CustomFilterDialog.java:214 ../options/OptionsWin.java:979
-#: ../options/OptionsWin.java:985 ../options/OptionsWin.java:1005
+#: ../filters/CustomFilterDialog.java:214 ../options/OptionsWin.java:999
+#: ../options/OptionsWin.java:1005 ../options/OptionsWin.java:1023
 #: ../options/CoverPanel.java:239 ../options/PathAndViewPanel.java:236
 #: ../options/PathAndViewPanel.java:242 ../options/PathAndViewPanel.java:248
 #: ../options/PathAndViewPanel.java:256 ../options/PathAndViewPanel.java:262
 #: ../phonebook/NewPhoneBookWin.java:316 ../phonebook/NewPhoneBookWin.java:431
-#: ../phonebook/ldap/ConnectionDialog.java:255
-#: ../phonebook/jdbc/JDBCPhoneBook.java:359
-#: ../phonebook/jdbc/JDBCPhoneBook.java:369
-#: ../phonebook/jdbc/JDBCPhoneBook.java:379
-#: ../phonebook/jdbc/ConnectionDialog.java:288
-#: ../phonebook/jdbc/ConnectionDialog.java:292
-#: ../phonebook/jdbc/ConnectionDialog.java:402
+#: ../phonebook/ldap/ConnectionDialog.java:254
+#: ../phonebook/jdbc/JDBCPhoneBook.java:361
+#: ../phonebook/jdbc/JDBCPhoneBook.java:371
+#: ../phonebook/jdbc/JDBCPhoneBook.java:381
+#: ../phonebook/jdbc/ConnectionDialog.java:289
+#: ../phonebook/jdbc/ConnectionDialog.java:293
+#: ../phonebook/jdbc/ConnectionDialog.java:405
 #: ../util/ExceptionDialog.java:232 ../util/ExceptionDialog.java:241
 #: ../util/ExceptionDialog.java:293 ../send/SendController.java:122
 #: ../send/SendController.java:127
 msgid "Error"
 msgstr "Errore"
 
-#: ../MainWin.java:653 ../MainWin.java:881
+#: ../MainWin.java:653 ../MainWin.java:880
 msgid "Select a directory to save the faxes in"
 msgstr "Seleziona una directory in cui salvare i fax"
 
-#: ../MainWin.java:654 ../MainWin.java:882
+#: ../MainWin.java:654 ../MainWin.java:881
 #: ../phonebook/NewPhoneBookWin.java:873
 msgid "Select"
 msgstr "seleziona"
 
-#: ../MainWin.java:661 ../MainWin.java:666 ../MainWin.java:889
-#: ../MainWin.java:894
+#: ../MainWin.java:661 ../MainWin.java:666 ../MainWin.java:888
+#: ../MainWin.java:893
 msgid "Saving faxes"
 msgstr "Salvataggio fax"
 
@@ -364,8 +364,8 @@ msgstr ""
 msgid "Saves the selected fax(es) as single {0} file"
 msgstr ""
 
-#: ../MainWin.java:716 ../options/OptionsWin.java:177
-#: ../options/OptionsWin.java:913
+#: ../MainWin.java:716 ../options/OptionsWin.java:180
+#: ../options/OptionsWin.java:932
 msgid "Options"
 msgstr "Opzioni"
 
@@ -459,220 +459,220 @@ msgstr "Segna come già letto"
 msgid "Marks the selected fax as read/unread"
 msgstr "Segna il fax selezionato come letto/non letto"
 
-#: ../MainWin.java:898
+#: ../MainWin.java:897
 msgid "Save fax..."
 msgstr "Salva fax..."
 
-#: ../MainWin.java:899
+#: ../MainWin.java:898
 msgid "Saves the selected fax on disk"
 msgstr "Salva il fax selezionato su disco"
 
-#: ../MainWin.java:914
+#: ../MainWin.java:913
 msgid "Couldn't get a filename for the fax:"
 msgstr "Non ho ottenuto un fome file fax:"
 
-#: ../MainWin.java:927
+#: ../MainWin.java:926
 msgid "Forward fax..."
 msgstr "Inoltra fax..."
 
-#: ../MainWin.java:928
+#: ../MainWin.java:927
 msgid "Forwards the fax"
 msgstr "Inoltra il fax"
 
-#: ../MainWin.java:948
+#: ../MainWin.java:947
 msgid "Admin mode"
 msgstr "Modalità amministratore"
 
-#: ../MainWin.java:949
+#: ../MainWin.java:948
 msgid "Connect to the server in admin mode (e.g. to delete faxes)"
 msgstr ""
 "Connessione al server in modalità amministratore (es. eliminazione fax)"
 
-#: ../MainWin.java:961
+#: ../MainWin.java:960
 msgid "Refresh"
 msgstr "Aggiornamento"
 
-#: ../MainWin.java:962
+#: ../MainWin.java:961
 msgid "Refresh tables and server status"
 msgstr "Aggiornamento dello stato del server e delle tabelle"
 
-#: ../MainWin.java:995
+#: ../MainWin.java:994
 msgid "Could not get all of the job information necessary to resend the fax:"
 msgstr ""
 "Non è possibile recuperare tutte le informazioni del job per il reinvio del "
 "fax:"
 
-#: ../MainWin.java:1014
+#: ../MainWin.java:1013
 msgid "Resend fax..."
 msgstr "Reinvio fax..."
 
-#: ../MainWin.java:1015
+#: ../MainWin.java:1014
 msgid "Resend the fax"
 msgstr "Reinvio del fax"
 
-#: ../MainWin.java:1025
+#: ../MainWin.java:1024
 #, java-format
 msgid "page {0}"
 msgstr "Pagina {0}"
 
-#: ../MainWin.java:1029
+#: ../MainWin.java:1028
 msgid "Error printing the table:"
 msgstr "Errore di stampa della tabella:"
 
-#: ../MainWin.java:1033
+#: ../MainWin.java:1032
 msgid "Print table..."
 msgstr "Stampa tabella..."
 
-#: ../MainWin.java:1034
+#: ../MainWin.java:1033
 msgid "Prints the currently displayed table"
 msgstr "Stampa la tabella visualizzata "
 
-#: ../MainWin.java:1042
+#: ../MainWin.java:1041
 msgid "Suspending jobs"
 msgstr "Sospensione del job"
 
-#: ../MainWin.java:1045
+#: ../MainWin.java:1044
 msgid "Suspend"
 msgstr "Sospendi"
 
-#: ../MainWin.java:1046
+#: ../MainWin.java:1045
 msgid "Suspends the transfer of the selected fax"
 msgstr "Sospende il trasferimento del fax selezionato"
 
-#: ../MainWin.java:1054
+#: ../MainWin.java:1053
 msgid "Resuming jobs"
 msgstr "Ripristino del job"
 
-#: ../MainWin.java:1057
+#: ../MainWin.java:1056
 msgid "Resume"
 msgstr "Ripristinio"
 
-#: ../MainWin.java:1058
+#: ../MainWin.java:1057
 msgid "Resumes the transfer of the selected fax"
 msgstr "Ripistino del trasferimento del fax selezionato"
 
-#: ../MainWin.java:1068 ../util/ExceptionDialog.java:82
+#: ../MainWin.java:1067 ../util/ExceptionDialog.java:82
 #: ../util/ClipboardPopup.java:54
 msgid "Copy"
 msgstr "Copia"
 
-#: ../MainWin.java:1069
+#: ../MainWin.java:1068
 msgid "Copies the selected table items to the clipboard"
 msgstr "Copia la voce selezionata negli appunti"
 
-#: ../MainWin.java:1089 ../MainWin.java:1090
+#: ../MainWin.java:1088 ../MainWin.java:1089
 msgid "Show row numbers"
 msgstr "Mostra il numero della riga"
 
-#: ../MainWin.java:1113
+#: ../MainWin.java:1112
 msgid "Adjust column widths"
 msgstr "Regola larghezza colonne "
 
-#: ../MainWin.java:1114
+#: ../MainWin.java:1113
 msgid "Adjust column widths to fit the window size"
 msgstr "Adatta larghezza colonne alla pagina"
 
-#: ../MainWin.java:1130
+#: ../MainWin.java:1129
 msgid "Connect or disconnect to the HylaFAX server"
 msgstr "Connette o disconnette al server HylaFAX"
 
-#: ../MainWin.java:1140 ../util/ToolbarEditorDialog.java:100
+#: ../MainWin.java:1139 ../util/ToolbarEditorDialog.java:100
 msgid "Customize toolbar"
 msgstr ""
 
-#: ../MainWin.java:1141
+#: ../MainWin.java:1140
 msgid "Customize the toolbar"
 msgstr ""
 
-#: ../MainWin.java:1163
+#: ../MainWin.java:1170
 msgid "Connect"
 msgstr "Connetti"
 
-#: ../MainWin.java:1163
+#: ../MainWin.java:1170
 msgid "Disconnect"
 msgstr ""
 
-#: ../MainWin.java:1169 ../MainWin.java:1814
+#: ../MainWin.java:1176 ../MainWin.java:1827
 msgid "Fax"
 msgstr "Fax"
 
-#: ../MainWin.java:1190 ../MainWin.java:2445
+#: ../MainWin.java:1197 ../MainWin.java:2461
 msgid "Fetching fax list..."
 msgstr "Recupero della lista fax..."
 
-#: ../MainWin.java:1310
+#: ../MainWin.java:1318
 msgid "View"
 msgstr "visualizza"
 
-#: ../MainWin.java:1314
+#: ../MainWin.java:1322
 msgid "All faxes"
 msgstr "Tutti i fax"
 
-#: ../MainWin.java:1319
+#: ../MainWin.java:1327
 msgid "Only own faxes"
 msgstr "Solo i propri fax"
 
-#: ../MainWin.java:1323
+#: ../MainWin.java:1331
 msgid "Custom filter..."
 msgstr "Filtro personalizzato..."
 
-#: ../MainWin.java:1327
+#: ../MainWin.java:1335
 msgid "Mark failed jobs"
 msgstr "Segnala i job falliti"
 
-#: ../MainWin.java:1452
+#: ../MainWin.java:1460
 msgid "Logging out..."
 msgstr "Uscita in corso..."
 
-#: ../MainWin.java:1482
+#: ../MainWin.java:1490
 msgid "Disconnected."
 msgstr "Disconesso."
 
-#: ../MainWin.java:1537 ../NoGUISender.java:137
+#: ../MainWin.java:1545 ../NoGUISender.java:137
 msgid "Logging in..."
 msgstr "Accesso in corso..."
 
-#: ../MainWin.java:1588
+#: ../MainWin.java:1596
 msgid "Help"
 msgstr "Aiuto"
 
-#: ../MainWin.java:1599 ../options/OptionsWin.java:398
+#: ../MainWin.java:1607 ../options/OptionsWin.java:402
 msgid "Received"
 msgstr "Ricevuti"
 
-#: ../MainWin.java:1599
+#: ../MainWin.java:1607
 msgid "Received faxes"
 msgstr "Fax ricevuti"
 
-#: ../MainWin.java:1600 ../options/OptionsWin.java:399
+#: ../MainWin.java:1608 ../options/OptionsWin.java:403
 msgid "Sent"
 msgstr "Inviati"
 
-#: ../MainWin.java:1600
+#: ../MainWin.java:1608
 msgid "Sent faxes"
 msgstr "Fax inviati"
 
-#: ../MainWin.java:1601 ../options/OptionsWin.java:400
+#: ../MainWin.java:1609 ../options/OptionsWin.java:404
 msgid "Transmitting"
 msgstr "In trasmissione"
 
-#: ../MainWin.java:1601
+#: ../MainWin.java:1609
 msgid "Faxes in the output queue"
 msgstr "Fax in coda di output"
 
-#: ../MainWin.java:1838
+#: ../MainWin.java:1851
 msgid "Extras"
 msgstr "Extra"
 
-#: ../MainWin.java:2078
+#: ../MainWin.java:2094
 msgid "Could not log in"
 msgstr "Impossibile accedere"
 
-#: ../MainWin.java:2097
+#: ../MainWin.java:2113
 msgid "Error refreshing the status:"
 msgstr ""
 
-#: ../MainWin.java:2474 ../HylaClientManager.java:172
+#: ../MainWin.java:2490 ../HylaClientManager.java:186
 msgid "An error occured connecting to the server:"
 msgstr "Errore di connessione al server"
 
@@ -806,11 +806,11 @@ msgstr "Inserisci almeno una condizione per il filtro."
 msgid "Warning"
 msgstr "Avviso"
 
-#: ../filters/FilterPanel.java:50
+#: ../filters/FilterPanel.java:52
 msgid "(none)"
 msgstr "(vuoto)"
 
-#: ../filters/FilterPanel.java:152
+#: ../filters/FilterPanel.java:180
 msgid "Remove this condition"
 msgstr "Elimina questa condizione"
 
@@ -830,27 +830,397 @@ msgstr "Finisce con"
 msgid "matches"
 msgstr "Riscontrati"
 
-#: ../HylaClientManager.java:120
+#: ../JobFormat.java:34 ../RecvFormat.java:39
+msgid "SubAddress"
+msgstr "Sottoindirizzo"
+
+#: ../JobFormat.java:34
+msgid "Destination SubAddress"
+msgstr "Sottoindirizzo destinazione"
+
+#: ../JobFormat.java:38
+msgid "Password"
+msgstr "Password"
+
+#: ../JobFormat.java:38
+msgid "Destination Password"
+msgstr "Password destinazione"
+
+#: ../JobFormat.java:42 ../phonebook/PBEntryField.java:29
+msgid "Company"
+msgstr "Società"
+
+#: ../JobFormat.java:42
+msgid "Destination company name"
+msgstr "Azienda destinataria"
+
+#: ../JobFormat.java:46
+msgid "Dials: total/max."
+msgstr ""
+
+#: ../JobFormat.java:46
+msgid "Total # dials/maximum # dials"
+msgstr "Totale # chiamate/massime #chiamte"
+
+#: ../JobFormat.java:50 ../RecvFormat.java:43
+msgid "Speed"
+msgstr "Velocità"
+
+#: ../JobFormat.java:50
+msgid "Desired signalling rate"
+msgstr "Frequenza di segnalazioni desiderate"
+
+#: ../JobFormat.java:54
+msgid "Tagline format"
+msgstr "Formato etichetta"
+
+#: ../JobFormat.java:54
+msgid "Client-specific tagline format string"
+msgstr "Formato della stringa per l'etichetta specifica del client"
+
+#: ../JobFormat.java:58
+msgid "Desired min-scanline time"
+msgstr "Tempo di scansione (min.)"
+
+#: ../JobFormat.java:62
+msgid "Desired data format"
+msgstr "Formattazione desiderata della data"
+
+#: ../JobFormat.java:66
+msgid "Priority"
+msgstr "Priorità"
+
+#: ../JobFormat.java:66
+msgid "Client-specified scheduling priority"
+msgstr "Programmazione della priorita specifica del client"
+
+#: ../JobFormat.java:70
+msgid "Tag string"
+msgstr "Stringa etichetta"
+
+#: ../JobFormat.java:70
+msgid "Client-specified job tag string"
+msgstr "Stringa etichetta del job specifico dell'utente"
+
+#: ../JobFormat.java:74
+msgid "Use ECM?"
+msgstr "Uso ECM?"
+
+#: ../JobFormat.java:74
+msgid "Desired use of ECM (one-character symbol)"
+msgstr "Utilizzo di ECM desiderato (stringa di un carattere)"
+
+#: ../JobFormat.java:78 ../phonebook/PBEntryField.java:33
+msgid "Location"
+msgstr "Indirizzo"
+
+#: ../JobFormat.java:78
+msgid "Destination geographic location"
+msgstr "Indirizzo di destinazione"
+
+#: ../JobFormat.java:82
+msgid "Sender e-mail"
+msgstr "E-mail del Mittente"
+
+#: ../JobFormat.java:82
+msgid "Notification e-mail address"
+msgstr "E-mail per le notifiche"
+
+#: ../JobFormat.java:86
+msgid "Private Tagline?"
+msgstr "Tag line privato"
+
+#: ../JobFormat.java:86
+msgid "Desired use of private tagline (one-character symbol)"
+msgstr "Etichetta privata desiderata (simbolo di un carattere)"
+
+#: ../JobFormat.java:90
+msgid "Use continuation cover"
+msgstr "Usa copertina in serie"
+
+#: ../JobFormat.java:90
+msgid "Whether to use continuation cover page (one-character symbol)"
+msgstr "Consecutiva alla copertina (simbolo di un carattere)"
+
+#: ../JobFormat.java:94
+msgid "Pages done/total"
+msgstr "Pagine eseguite/totali"
+
+#: ../JobFormat.java:94
+msgid "# pages transmitted/total # pages to transmit"
+msgstr "#pagine trasmesse/totali # pagine da trasmettere"
+
+#: ../JobFormat.java:98
+msgid "Minimal signalling rate"
+msgstr "Frequenza di segnalazione minima"
+
+#: ../JobFormat.java:98
+msgid "Client-specified minimum acceptable signalling rate"
+msgstr "Frequenza minima di segnalaziono specifica dell'utente"
+
+#: ../JobFormat.java:102
+msgid "Receiver"
+msgstr "Destinatario"
+
+#: ../JobFormat.java:102
+msgid "Destination person (receiver)"
+msgstr "Persona destinataria (ricevente)"
+
+#: ../JobFormat.java:106 ../RecvFormat.java:99
+msgid "Sender"
+msgstr "Mittente"
+
+#: ../JobFormat.java:106
+msgid "Sender's identity"
+msgstr "Identità del mittente"
+
+#: ../JobFormat.java:110
+msgid "Tries: done/max."
+msgstr "Tentativi: eseguiti/massimi."
+
+#: ../JobFormat.java:110
+msgid "Total # tries/maximum # tries"
+msgstr "Totale # tentativi/massimi #tentativi"
+
+#: ../JobFormat.java:114
+msgid "Page chopping threshold (inches)"
+msgstr "Soglia di ritaglio della pagina (pollici)"
+
+#: ../JobFormat.java:118
+msgid "Job done operation"
+msgstr "Operazioni job eseguite"
+
+#: ../JobFormat.java:122
+msgid "Communication identifier"
+msgstr "Identificativo di comunicazione"
+
+#: ../JobFormat.java:126
+msgid "Job type"
+msgstr "Tipo di job"
+
+#: ../JobFormat.java:126
+msgid "Job type (one-character symbol)"
+msgstr "Tipo job (simbolo di un carattere)"
+
+#: ../JobFormat.java:130
+msgid "Scheduled time"
+msgstr "Programmazione oraria"
+
+#: ../JobFormat.java:130
+msgid "Scheduled date and time"
+msgstr "Programmazione per ora e data"
+
+#: ../JobFormat.java:130 ../RecvFormat.java:35
+msgid "dd/MM/yyyy HH:mm:ss"
+msgstr "dd/MM/yyyy HH:mm:ss"
+
+#: ../JobFormat.java:134
+msgid "Scheduled time in seconds since the UNIX epoch"
+msgstr "Tempo programmato "
+
+#: ../JobFormat.java:138
+msgid "Job state"
+msgstr "Stato del job"
+
+#: ../JobFormat.java:138
+msgid "Job state (one-character symbol)"
+msgstr "Stato del job (simbolo di un carattere)"
+
+#: ../JobFormat.java:142
+msgid "# consecutive failed tries"
+msgstr "# tentativi falliti consecutivamente"
+
+#: ../JobFormat.java:146
+msgid "Client machine name"
+msgstr "Nome della macchina client"
+
+#: ../JobFormat.java:150
+msgid "Total # dials"
+msgstr "Totale # chiamate"
+
+#: ../JobFormat.java:154
+msgid "Number"
+msgstr "Numero"
+
+#: ../JobFormat.java:154
+msgid "Public (external) format of dialstring"
+msgstr "Formato della stringa per pubblico (esterno)"
+
+#: ../JobFormat.java:158
+msgid "# consecutive failed dials"
+msgstr "#comunicazioni fallite consecutivamente"
+
+#: ../JobFormat.java:162
+msgid "Group identifier"
+msgstr "Identificativo gruppo"
+
+#: ../JobFormat.java:166
+msgid "Page chop handling"
+msgstr "Mantenere ritaglio pagina"
+
+#: ../JobFormat.java:166
+msgid "Page chop handling (one-character symbol)"
+msgstr "mantenere ritaglio pagina (simbolo di un carattere)"
+
+#: ../JobFormat.java:170
+msgid "Scheduling priority"
+msgstr "Priorità di schedulazione"
+
+#: ../JobFormat.java:170
+msgid "Current scheduling priority"
+msgstr "Priorità di schedulazione corrente"
+
+#: ../JobFormat.java:174
+msgid "ID"
+msgstr "ID"
+
+#: ../JobFormat.java:174
+msgid "Job identifier"
+msgstr "Identificativo di job"
+
+#: ../JobFormat.java:178
+msgid "Job kill time"
+msgstr "Ora di terminazione del job"
+
+#: ../JobFormat.java:182 ../RecvFormat.java:71
+msgid "Page length"
+msgstr "Lunghezza pagina"
+
+#: ../JobFormat.java:182 ../RecvFormat.java:71
+msgid "Page length in mm"
+msgstr "Lunghezza pagina in mm"
+
+#: ../JobFormat.java:186
+msgid "Modem"
+msgstr "Modem"
+
+#: ../JobFormat.java:186
+msgid "Assigned modem"
+msgstr "Modem assegnato"
+
+#: ../JobFormat.java:190
+msgid "Notification"
+msgstr "Notifica"
+
+#: ../JobFormat.java:190
+msgid "E-mail notification handling (one-character symbol)"
+msgstr "Gestione delle notifiche e-mail (un solo carattere simbolo)"
+
+#: ../JobFormat.java:194 ../RecvFormat.java:83
+msgid "Owner"
+msgstr "Proprietario"
+
+#: ../JobFormat.java:194
+msgid "Job owner"
+msgstr "Proprietario del job"
+
+#: ../JobFormat.java:198
+msgid "# pages"
+msgstr "# pagine"
+
+#: ../JobFormat.java:198
+msgid "# pages transmitted"
+msgstr "#pagina trasmessa"
+
+#: ../JobFormat.java:202
+msgid "Retry time"
+msgstr "Tempo per nuovo tentativo"
+
+#: ../JobFormat.java:202
+msgid "Job retry time (MM::SS)"
+msgstr "tempo di renivio del job (MM::SS)"
+
+#: ../JobFormat.java:206 ../RecvFormat.java:95
+msgid "Resolution"
+msgstr "Risoluzione"
+
+#: ../JobFormat.java:206
+msgid "Document resolution in lines/inch"
+msgstr "Risoluzione del documento in linee/pollice"
+
+#: ../JobFormat.java:210
+msgid "Status"
+msgstr "Stato"
+
+#: ../JobFormat.java:210
+msgid "Job status information from last failure"
+msgstr "Informazini sullo stato del job dall'ultimo fallimento"
+
+#: ../JobFormat.java:214
+msgid "Tries"
+msgstr "Tentativi"
+
+#: ../JobFormat.java:214
+msgid "Total # tries attempted"
+msgstr "#tentativi totali effettuati"
+
+#: ../JobFormat.java:218
+msgid "Max. tries"
+msgstr "Num. massimo tentativi"
+
+#: ../JobFormat.java:218
+msgid "Maximum # tries"
+msgstr "Massimi # tentativi"
+
+#: ../JobFormat.java:222
+msgid "Specified number"
+msgstr "Numero specificato"
+
+#: ../JobFormat.java:222
+msgid "Client-specified dialstring"
+msgstr "Stringa di composizione del client"
+
+#: ../JobFormat.java:226 ../RecvFormat.java:107
+msgid "Page width"
+msgstr "Larghezza della pagina"
+
+#: ../JobFormat.java:226 ../RecvFormat.java:107
+msgid "Page width in mm"
+msgstr "Larghezza della pagina in mm"
+
+#: ../JobFormat.java:230
+msgid "Maximum # dials"
+msgstr "Massimi # tentativi"
+
+#: ../JobFormat.java:234 ../RecvFormat.java:87
+msgid "Pages"
+msgstr "Pagine"
+
+#: ../JobFormat.java:234
+msgid "Total # pages to transmit"
+msgstr "Totale # pagine da trasmettere"
+
+#: ../JobFormat.java:238
+msgid "Time to send job"
+msgstr "Ora di invio del job"
+
+#: ../HylaClientManager.java:111
+msgid "Log in"
+msgstr ""
+
+#: ../HylaClientManager.java:111
+msgid "Please enter the credentials to log into the HylaFAX server:"
+msgstr ""
+
+#: ../HylaClientManager.java:133
 msgid "User password"
 msgstr "Password utente"
 
-#: ../HylaClientManager.java:120
-#, java-format
-msgid "Please enter the password for user \"{0}\"."
-msgstr "Inserisci la password utente\"{0}\"."
+#: ../HylaClientManager.java:133
+msgid "Please enter the user password:"
+msgstr ""
 
-#: ../HylaClientManager.java:132 ../HylaClientManager.java:154
+#: ../HylaClientManager.java:146 ../HylaClientManager.java:168
 msgid "An error occured in response to the password:"
 msgstr "Errore in risposta alla password:"
 
-#: ../HylaClientManager.java:145
+#: ../HylaClientManager.java:159
 msgid "Admin password"
 msgstr "Password amministratore"
 
-#: ../HylaClientManager.java:145
-#, java-format
-msgid "Please enter the administrative password for user \"{0}\"."
-msgstr "Insrisci la password amministratore per l''utente \"{0}\"."
+#: ../HylaClientManager.java:159
+msgid "Please enter the administrative password:"
+msgstr ""
 
 #: ../Launcher2.java:413
 msgid "The new instance did not start after 20 seconds."
@@ -868,628 +1238,136 @@ msgstr ""
 msgid "There already is a running instance!"
 msgstr "Esiste già una istanza in esecuzione!"
 
-#: ../Utils.java:67
-msgid "ID"
-msgstr "ID"
-
-#: ../Utils.java:67
-msgid "Job identifier"
-msgstr "Identificativo di job"
-
-#: ../Utils.java:70 ../Utils.java:138
-msgid "Owner"
-msgstr "Proprietario"
-
-#: ../Utils.java:70
-msgid "Job owner"
-msgstr "Proprietario del job"
-
-#: ../Utils.java:73
-msgid "Job state"
-msgstr "Stato del job"
-
-#: ../Utils.java:73
-msgid "Job state (one-character symbol)"
-msgstr "Stato del job (simbolo di un carattere)"
-
-#: ../Utils.java:76
-msgid "Status"
-msgstr "Stato"
-
-#: ../Utils.java:76
-msgid "Job status information from last failure"
-msgstr "Informazini sullo stato del job dall'ultimo fallimento"
-
-#: ../Utils.java:80 ../Utils.java:151
-msgid "SubAddress"
-msgstr "Sottoindirizzo"
-
-#: ../Utils.java:80
-msgid "Destination SubAddress"
-msgstr "Sottoindirizzo destinazione"
-
-#: ../Utils.java:81
-msgid "Password"
-msgstr "Password"
-
-#: ../Utils.java:81
-msgid "Destination Password"
-msgstr "Password destinazione"
-
-#: ../Utils.java:82 ../phonebook/PBEntryField.java:29
-msgid "Company"
-msgstr "Società"
-
-#: ../Utils.java:82
-msgid "Destination company name"
-msgstr "Azienda destinataria"
-
-#: ../Utils.java:83
-msgid "Dials: toal/max."
-msgstr "Chiamate: totali/massime."
-
-#: ../Utils.java:83
-msgid "Total # dials/maximum # dials"
-msgstr "Totale # chiamate/massime #chiamte"
-
-#: ../Utils.java:84 ../Utils.java:152
-msgid "Speed"
-msgstr "Velocità"
-
-#: ../Utils.java:84
-msgid "Desired signalling rate"
-msgstr "Frequenza di segnalazioni desiderate"
-
-#: ../Utils.java:85
-msgid "Tagline format"
-msgstr "Formato etichetta"
-
-#: ../Utils.java:85
-msgid "Client-specific tagline format string"
-msgstr "Formato della stringa per l'etichetta specifica del client"
-
-#: ../Utils.java:86
-msgid "Desired min-scanline time"
-msgstr "Tempo di scansione (min.)"
-
-#: ../Utils.java:87
-msgid "Desired data format"
-msgstr "Formattazione desiderata della data"
-
-#: ../Utils.java:88
-msgid "Priority"
-msgstr "Priorità"
-
-#: ../Utils.java:88
-msgid "Client-specified scheduling priority"
-msgstr "Programmazione della priorita specifica del client"
-
-#: ../Utils.java:89
-msgid "Tag string"
-msgstr "Stringa etichetta"
-
-#: ../Utils.java:89
-msgid "Client-specified job tag string"
-msgstr "Stringa etichetta del job specifico dell'utente"
-
-#: ../Utils.java:90
-msgid "Use ECM?"
-msgstr "Uso ECM?"
-
-#: ../Utils.java:90
-msgid "Desired use of ECM (one-character symbol)"
-msgstr "Utilizzo di ECM desiderato (stringa di un carattere)"
-
-#: ../Utils.java:91 ../phonebook/PBEntryField.java:33
-msgid "Location"
-msgstr "Indirizzo"
-
-#: ../Utils.java:91
-msgid "Destination geographic location"
-msgstr "Indirizzo di destinazione"
-
-#: ../Utils.java:92
-msgid "Sender e-mail"
-msgstr "E-mail del Mittente"
-
-#: ../Utils.java:92
-msgid "Notification e-mail address"
-msgstr "E-mail per le notifiche"
-
-#: ../Utils.java:93
-msgid "Private Tagline?"
-msgstr "Tag line privato"
-
-#: ../Utils.java:93
-msgid "Desired use of private tagline (one-character symbol)"
-msgstr "Etichetta privata desiderata (simbolo di un carattere)"
-
-#: ../Utils.java:94
-msgid "Use continuation cover"
-msgstr "Usa copertina in serie"
-
-#: ../Utils.java:94
-msgid "Whether to use continuation cover page (one-character symbol)"
-msgstr "Consecutiva alla copertina (simbolo di un carattere)"
-
-#: ../Utils.java:95
-msgid "Pages done/total"
-msgstr "Pagine eseguite/totali"
-
-#: ../Utils.java:95
-msgid "# pages transmitted/total # pages to transmit"
-msgstr "#pagine trasmesse/totali # pagine da trasmettere"
-
-#: ../Utils.java:96
-msgid "Minimal signalling rate"
-msgstr "Frequenza di segnalazione minima"
-
-#: ../Utils.java:96
-msgid "Client-specified minimum acceptable signalling rate"
-msgstr "Frequenza minima di segnalaziono specifica dell'utente"
-
-#: ../Utils.java:97
-msgid "Receiver"
-msgstr "Destinatario"
-
-#: ../Utils.java:97
-msgid "Destination person (receiver)"
-msgstr "Persona destinataria (ricevente)"
-
-#: ../Utils.java:98 ../Utils.java:147
-msgid "Sender"
-msgstr "Mittente"
-
-#: ../Utils.java:98
-msgid "Sender's identity"
-msgstr "Identità del mittente"
-
-#: ../Utils.java:99
-msgid "Tries: done/max."
-msgstr "Tentativi: eseguiti/massimi."
-
-#: ../Utils.java:99
-msgid "Total # tries/maximum # tries"
-msgstr "Totale # tentativi/massimi #tentativi"
-
-#: ../Utils.java:100
-msgid "Page chopping threshold (inches)"
-msgstr "Soglia di ritaglio della pagina (pollici)"
-
-#: ../Utils.java:101
-msgid "Job done operation"
-msgstr "Operazioni job eseguite"
-
-#: ../Utils.java:102
-msgid "Communication identifier"
-msgstr "Identificativo di comunicazione"
-
-#: ../Utils.java:103
-msgid "Job type"
-msgstr "Tipo di job"
-
-#: ../Utils.java:103
-msgid "Job type (one-character symbol)"
-msgstr "Tipo job (simbolo di un carattere)"
-
-#: ../Utils.java:104
-msgid "Scheduled time"
-msgstr "Programmazione oraria"
-
-#: ../Utils.java:104
-msgid "Scheduled date and time"
-msgstr "Programmazione per ora e data"
-
-#: ../Utils.java:104 ../Utils.java:150
-msgid "dd/MM/yyyy HH:mm:ss"
-msgstr "dd/MM/yyyy HH:mm:ss"
-
-#: ../Utils.java:105
-msgid "Scheduled time in seconds since the UNIX epoch"
-msgstr "Tempo programmato "
-
-#: ../Utils.java:107
-msgid "# consecutive failed tries"
-msgstr "# tentativi falliti consecutivamente"
-
-#: ../Utils.java:108
-msgid "Client machine name"
-msgstr "Nome della macchina client"
-
-#: ../Utils.java:109
-msgid "Total # dials"
-msgstr "Totale # chiamate"
-
-#: ../Utils.java:110
-msgid "Number"
-msgstr "Numero"
-
-#: ../Utils.java:110
-msgid "Public (external) format of dialstring"
-msgstr "Formato della stringa per pubblico (esterno)"
-
-#: ../Utils.java:111
-msgid "# consecutive failed dials"
-msgstr "#comunicazioni fallite consecutivamente"
-
-#: ../Utils.java:112
-msgid "Group identifier"
-msgstr "Identificativo gruppo"
-
-#: ../Utils.java:113
-msgid "Page chop handling"
-msgstr "Mantenere ritaglio pagina"
-
-#: ../Utils.java:113
-msgid "Page chop handling (one-character symbol)"
-msgstr "mantenere ritaglio pagina (simbolo di un carattere)"
-
-#: ../Utils.java:114
-msgid "Scheduling priority"
-msgstr "Priorità di schedulazione"
-
-#: ../Utils.java:114
-msgid "Current scheduling priority"
-msgstr "Priorità di schedulazione corrente"
-
-#: ../Utils.java:116
-msgid "Job kill time"
-msgstr "Ora di terminazione del job"
-
-#: ../Utils.java:117 ../Utils.java:160
-msgid "Page length"
-msgstr "Lunghezza pagina"
-
-#: ../Utils.java:117 ../Utils.java:160
-msgid "Page length in mm"
-msgstr "Lunghezza pagina in mm"
-
-#: ../Utils.java:118
-msgid "Modem"
-msgstr "Modem"
-
-#: ../Utils.java:118
-msgid "Assigned modem"
-msgstr "Modem assegnato"
-
-#: ../Utils.java:119
-msgid "Notification"
-msgstr "Notifica"
-
-#: ../Utils.java:119
-msgid "E-mail notification handling (one-character symbol)"
-msgstr "Gestione delle notifiche e-mail (un solo carattere simbolo)"
-
-#: ../Utils.java:121
-msgid "# pages"
-msgstr "# pagine"
-
-#: ../Utils.java:121
-msgid "# pages transmitted"
-msgstr "#pagina trasmessa"
-
-#: ../Utils.java:122
-msgid "Retry time"
-msgstr "Tempo per nuovo tentativo"
-
-#: ../Utils.java:122
-msgid "Job retry time (MM::SS)"
-msgstr "tempo di renivio del job (MM::SS)"
-
-#: ../Utils.java:123 ../Utils.java:166
-msgid "Resolution"
-msgstr "Risoluzione"
-
-#: ../Utils.java:123
-msgid "Document resolution in lines/inch"
-msgstr "Risoluzione del documento in linee/pollice"
-
-#: ../Utils.java:125
-msgid "Tries"
-msgstr "Tentativi"
-
-#: ../Utils.java:125
-msgid "Total # tries attempted"
-msgstr "#tentativi totali effettuati"
-
-#: ../Utils.java:126
-msgid "Max. tries"
-msgstr "Num. massimo tentativi"
-
-#: ../Utils.java:126
-msgid "Maximum # tries"
-msgstr "Massimi # tentativi"
-
-#: ../Utils.java:127
-msgid "Specified number"
-msgstr "Numero specificato"
-
-#: ../Utils.java:127
-msgid "Client-specified dialstring"
-msgstr "Stringa di composizione del client"
-
-#: ../Utils.java:128 ../Utils.java:169
-msgid "Page width"
-msgstr "Larghezza della pagina"
-
-#: ../Utils.java:128 ../Utils.java:169
-msgid "Page width in mm"
-msgstr "Larghezza della pagina in mm"
-
-#: ../Utils.java:129
-msgid "Maximum # dials"
-msgstr "Massimi # tentativi"
-
-#: ../Utils.java:130 ../Utils.java:164
-msgid "Pages"
-msgstr "Pagine"
-
-#: ../Utils.java:130
-msgid "Total # pages to transmit"
-msgstr "Totale # pagine da trasmettere"
-
-#: ../Utils.java:131
-msgid "Time to send job"
-msgstr "Ora di invio del job"
-
-#: ../Utils.java:135
-msgid "Filename"
-msgstr "Nome del file"
-
-#: ../Utils.java:135
-msgid "Document filename (relative to the recvq directory)"
-msgstr "Nome file del documento (relativo alla directory recvq)"
-
-#: ../Utils.java:138
-msgid "File owner"
-msgstr "Proprietario del file"
-
-#: ../Utils.java:141
-msgid "Error description"
-msgstr "Descrizione errore"
-
-#: ../Utils.java:141
-msgid "Error description if an error occurred during receive"
-msgstr "Descrizione errore in caso di errore in ricezione"
-
-#: ../Utils.java:144
-msgid "In progress"
-msgstr "In corso di esecuzione"
-
-#: ../Utils.java:144
-msgid "A ``*'' if receive is going on; otherwise `` '' (space)"
-msgstr "Un ``*'' se prosegue la ricezione; altrimenti `` '' (spazio)"
-
-#: ../Utils.java:147
-msgid "Sender identity (TSI)"
-msgstr "Identità del mittente (TSI)"
-
-#: ../Utils.java:150
-msgid "Time/Date"
-msgstr "Ora/Data"
-
-#: ../Utils.java:150
-msgid "Extended representation of the time when the receive happened"
-msgstr "Rappresentazione estesa dell'orario di ricezione avvenuta"
-
-#: ../Utils.java:151
-msgid "SubAddress received from sender (if any)"
-msgstr "Sottoindirizzo ricevuto dal mittente (se esiste)"
-
-#: ../Utils.java:152
-msgid "Signalling rate used during receive"
-msgstr "Frequenza di segnalazione usata durante la ricezione"
-
-#: ../Utils.java:153
-msgid "Format"
-msgstr "formato"
-
-#: ../Utils.java:153
-msgid "Data format used during receive"
-msgstr "Formato data usato per la ricezione"
-
-#: ../Utils.java:157
-msgid "Time to receive"
-msgstr "Ora di ricezione"
-
-#: ../Utils.java:157
-msgid "Time spent receiving document (HH:MM:SS)"
-msgstr "Durata impiegata per la ricezione (HH:MM:SS)"
-
-#: ../Utils.java:157
-msgid "mm:ss"
-msgstr "mm:ss"
-
-#: ../Utils.java:158
-msgid "CIDName"
-msgstr "Nome CID"
-
-#: ../Utils.java:158
-msgid "CIDName value for received fax"
-msgstr "Valore CIDName per fax ricevuti"
-
-#: ../Utils.java:159
-msgid "CIDNumber"
-msgstr "Numero CID"
-
-#: ../Utils.java:159
-msgid "CIDNumber value for received fax"
-msgstr "Valore CIDNumber per fax ricevuti"
-
-#: ../Utils.java:161
-msgid "Fax Protection"
-msgstr "Protezione fax"
-
-#: ../Utils.java:161
-msgid "Fax-style protection mode string (``-rwxrwx'')"
-msgstr "Stringa per protezione fax  (``-rwxrwx'')"
-
-#: ../Utils.java:162
-msgid "File size"
-msgstr "Dimensioni del file"
-
-#: ../Utils.java:162
-msgid "File size (number of bytes)"
-msgstr "Dimensione del file (numero di byte)"
-
-#: ../Utils.java:164
-msgid "Number of pages in document"
-msgstr "Numero di pagine del documento"
-
-#: ../Utils.java:165
-msgid "Protection"
-msgstr "Protezione"
-
-#: ../Utils.java:165
-msgid "UNIX-style protection flags"
-msgstr "Flag di protezione stile UNIX"
-
-#: ../Utils.java:166
-msgid "Resolution of received data"
-msgstr "Risoluzione dei dati ricevuti"
-
-#: ../Utils.java:168
-msgid "Date"
-msgstr "Data"
-
-#: ../Utils.java:168
-msgid "Compact representation of the time when the receive happened"
-msgstr "Rappresentazione compatta dell'orario di ricezione avvenuta"
-
-#: ../Utils.java:168
-msgid "dd/MM/yyyy"
-msgstr "dd/MM/yyyy"
-
-#: ../options/OptionsWin.java:369 ../options/CoverPanel.java:81
+#: ../options/OptionsWin.java:373 ../options/CoverPanel.java:81
 #: ../send/SendWin.java:472
 msgid "General"
 msgstr "Comuni"
 
-#: ../options/OptionsWin.java:373
+#: ../options/OptionsWin.java:377
 msgid "Paths and viewers"
 msgstr ""
 
-#: ../options/OptionsWin.java:375
+#: ../options/OptionsWin.java:379
 msgid "Server"
 msgstr "Server"
 
-#: ../options/OptionsWin.java:377
+#: ../options/OptionsWin.java:381
 msgid "Delivery"
 msgstr "Consegna"
 
-#: ../options/OptionsWin.java:381 ../send/SendWin.java:473
+#: ../options/OptionsWin.java:385 ../send/SendWin.java:473
 msgid "Cover page"
 msgstr "Copertina"
 
-#: ../options/OptionsWin.java:385 ../options/OptionsWin.java:957
+#: ../options/OptionsWin.java:389 ../options/OptionsWin.java:977
 msgid "Plugins & JDBC"
 msgstr "Plugin & JDBC"
 
-#: ../options/OptionsWin.java:387
+#: ../options/OptionsWin.java:391
 msgid "Please select on the left which table you want to edit."
 msgstr ""
 
-#: ../options/OptionsWin.java:395
+#: ../options/OptionsWin.java:399
 msgid "Tables"
 msgstr ""
 
-#: ../options/OptionsWin.java:396
+#: ../options/OptionsWin.java:400
 #, java-format
 msgid "Table \"{0}\""
 msgstr "Tabella \"{0}\""
 
-#: ../options/OptionsWin.java:514
+#: ../options/OptionsWin.java:518
 msgid "Connection settings:"
 msgstr "Impostazioni di connessione"
 
-#: ../options/OptionsWin.java:525 ../options/OptionsWin.java:531
-#: ../phonebook/ldap/ConnectionDialog.java:145
-#: ../phonebook/jdbc/ConnectionDialog.java:202
+#: ../options/OptionsWin.java:529 ../options/OptionsWin.java:535
+#: ../options/OptionsWin.java:541 ../phonebook/ldap/ConnectionDialog.java:144
+#: ../phonebook/jdbc/ConnectionDialog.java:203
 msgid "Always ask"
 msgstr "Chiedi sempre"
 
-#: ../options/OptionsWin.java:538
+#: ../options/OptionsWin.java:556
 msgid "Use passive mode to fetch faxes"
 msgstr "Usa modalità passiva per il recupero fax"
 
-#: ../options/OptionsWin.java:540
+#: ../options/OptionsWin.java:558
 msgid "Host name:"
 msgstr "Nome Host:"
 
-#: ../options/OptionsWin.java:541 ../phonebook/ldap/ConnectionDialog.java:184
+#: ../options/OptionsWin.java:559 ../phonebook/ldap/ConnectionDialog.java:183
 msgid "Port:"
 msgstr "Porta:"
 
-#: ../options/OptionsWin.java:542 ../phonebook/jdbc/ConnectionDialog.java:223
+#: ../options/OptionsWin.java:560 ../phonebook/jdbc/ConnectionDialog.java:224
 msgid "Username:"
 msgstr "Username:"
 
-#: ../options/OptionsWin.java:544 ../phonebook/ldap/ConnectionDialog.java:189
-#: ../phonebook/jdbc/ConnectionDialog.java:226
+#: ../options/OptionsWin.java:563 ../phonebook/ldap/ConnectionDialog.java:188
+#: ../phonebook/jdbc/ConnectionDialog.java:227 ../util/PasswordDialog.java:83
 msgid "Password:"
 msgstr "Password:"
 
-#: ../options/OptionsWin.java:546
+#: ../options/OptionsWin.java:565
 msgid "Admin Password:"
 msgstr "Password amministratore:"
 
-#: ../options/OptionsWin.java:574
+#: ../options/OptionsWin.java:593
 msgid "User interface"
 msgstr "Interfaccia utente"
 
-#: ../options/OptionsWin.java:596
+#: ../options/OptionsWin.java:615
 msgid "Show tray icon"
 msgstr ""
 
-#: ../options/OptionsWin.java:597
+#: ../options/OptionsWin.java:616
 msgid "Show a system tray icon (works only with Java 6 or higher)"
 msgstr ""
 
-#: ../options/OptionsWin.java:605
+#: ../options/OptionsWin.java:624
 msgid "Minimize to tray"
 msgstr ""
 
-#: ../options/OptionsWin.java:609
+#: ../options/OptionsWin.java:628
 msgid "Language:"
 msgstr "Lingua:"
 
-#: ../options/OptionsWin.java:610
+#: ../options/OptionsWin.java:629
 msgid "Look and Feel:"
 msgstr "Aspetto"
 
-#: ../options/OptionsWin.java:611
+#: ../options/OptionsWin.java:630
 msgid "Style of send dialog:"
 msgstr "Stile della finestra di invio:"
 
-#: ../options/OptionsWin.java:633
+#: ../options/OptionsWin.java:652
 msgid "Actions after receiving a new fax:"
 msgstr "Azioni dopo la ricezione di un nuovo fax:"
 
-#: ../options/OptionsWin.java:635
+#: ../options/OptionsWin.java:654
 msgid "Beep"
 msgstr "Beep"
 
-#: ../options/OptionsWin.java:636
+#: ../options/OptionsWin.java:655
 msgid "Bring to front"
 msgstr "Porta in primo piano"
 
-#: ../options/OptionsWin.java:637
+#: ../options/OptionsWin.java:656
 msgid "Open in viewer"
 msgstr "Apri nel visualizzatore"
 
-#: ../options/OptionsWin.java:643
+#: ../options/OptionsWin.java:662
 msgid "And mark as read"
 msgstr "E segnala come letto"
 
-#: ../options/OptionsWin.java:669
+#: ../options/OptionsWin.java:688
 msgid "General settings:"
 msgstr "Impostazioni generali:"
 
-#: ../options/OptionsWin.java:671
+#: ../options/OptionsWin.java:690
 msgid "Use PCL file type bugfix"
 msgstr "Usa il file PCL per il bugfix"
 
-#: ../options/OptionsWin.java:677
+#: ../options/OptionsWin.java:696
 msgid ""
 "The maximum time to wait for a interaction with the server to complete. "
 "Values below 5 are not recommended; 0 disables this timeout."
@@ -1498,11 +1376,11 @@ msgstr ""
 "server. Valori inferiori a 5 non sono raccomandati; 0 disabilita questo "
 "timeout"
 
-#: ../options/OptionsWin.java:679
+#: ../options/OptionsWin.java:698
 msgid "Prefer rendered TIFF (experimental)"
 msgstr "Renderizza in TIFF (SPERIMENTALE)"
 
-#: ../options/OptionsWin.java:680
+#: ../options/OptionsWin.java:699
 msgid ""
 "Try to fetch the rendered TIFF from the HylaFAX server instead of the source "
 "file."
@@ -1510,11 +1388,11 @@ msgstr ""
 "Tentativo di recupero del file renderizzato in TIFF dal server Hylafax al "
 "posto del file sogente."
 
-#: ../options/OptionsWin.java:682
+#: ../options/OptionsWin.java:701
 msgid "Create new session for every action"
 msgstr "Crea una nuova sessione per ogni azione"
 
-#: ../options/OptionsWin.java:683
+#: ../options/OptionsWin.java:702
 msgid ""
 "Connect to the server and log in for every action (e.g. view a fax, update "
 "tables, ...) and disconnect afterwards. This impairs performance but might "
@@ -1524,11 +1402,11 @@ msgstr ""
 "aggiorna tabelle,...) e disconnetti succesivamente. Questo mette a rischio "
 "le prestazione ma può risolvere alcuni bug."
 
-#: ../options/OptionsWin.java:685
+#: ../options/OptionsWin.java:704
 msgid "Date/Time offset:"
 msgstr "Offset Data/Ora"
 
-#: ../options/OptionsWin.java:686
+#: ../options/OptionsWin.java:705
 msgid ""
 "Offset to be added to dates received from the HylaFAX server before "
 "displaying them."
@@ -1536,89 +1414,89 @@ msgstr ""
 "Offset da aggiungere gli orari ricevuti dal server HylaFax prima di "
 "visualizzarli."
 
-#: ../options/OptionsWin.java:691
+#: ../options/OptionsWin.java:710
 msgid "Table refresh interval (secs.):"
 msgstr "Intervallo di aggiornamento delle tabelle (sec.):"
 
-#: ../options/OptionsWin.java:692
+#: ../options/OptionsWin.java:711
 msgid "Server status refresh interval (secs.):"
 msgstr "Intervallo di aggiornamento  dello stato server (sec.):"
 
-#: ../options/OptionsWin.java:693
+#: ../options/OptionsWin.java:712
 msgid "Server socket timeout (secs):"
 msgstr "Timeout per server socket (secondi)"
 
-#: ../options/OptionsWin.java:712
+#: ../options/OptionsWin.java:731
 msgid "Delivery settings"
 msgstr "Impostazioni di consegna"
 
-#: ../options/OptionsWin.java:732
+#: ../options/OptionsWin.java:751
 msgid "E-mail address for notifications:"
 msgstr "Indirizzo e-mail per le notifiche:"
 
-#: ../options/OptionsWin.java:733 ../send/SendWin.java:458
+#: ../options/OptionsWin.java:752 ../send/SendWin.java:458
 #: ../send/SimplifiedSendDialog.java:496
 msgid "Notify when:"
 msgstr "Notifica quando:"
 
-#: ../options/OptionsWin.java:734 ../send/SendWin.java:459
+#: ../options/OptionsWin.java:753 ../send/SendWin.java:459
 #: ../send/SimplifiedSendDialog.java:497
 msgid "Modem:"
 msgstr "Modem:"
 
-#: ../options/OptionsWin.java:735
+#: ../options/OptionsWin.java:754
 msgid "Time zone:"
 msgstr "Fuso orario:"
 
-#: ../options/OptionsWin.java:736 ../send/SendWin.java:460
+#: ../options/OptionsWin.java:755 ../send/SendWin.java:460
 #: ../send/SimplifiedSendDialog.java:498
 msgid "Resolution:"
 msgstr "Risoluzione:"
 
-#: ../options/OptionsWin.java:737 ../send/SendWin.java:461
+#: ../options/OptionsWin.java:756 ../send/SendWin.java:461
 #: ../send/SimplifiedSendDialog.java:499
 msgid "Paper size:"
 msgstr "Formato carta:"
 
-#: ../options/OptionsWin.java:738 ../send/SendWin.java:462
+#: ../options/OptionsWin.java:757 ../send/SendWin.java:462
 #: ../send/SimplifiedSendDialog.java:500
 msgid "Cancel job after (minutes):"
 msgstr "Annulla job dopo (minuti):"
 
-#: ../options/OptionsWin.java:739
+#: ../options/OptionsWin.java:758
 msgid "Maximum dials:"
 msgstr "Num. massimo composizione numero:"
 
-#: ../options/OptionsWin.java:740 ../send/SendWin.java:463
+#: ../options/OptionsWin.java:759 ../send/SendWin.java:463
 #: ../send/SimplifiedSendDialog.java:501
 msgid "Maximum tries:"
 msgstr "Num. massimo tentativi:"
 
-#: ../options/OptionsWin.java:768 ../options/OptionsWin.java:776
-#: ../options/OptionsWin.java:784
+#: ../options/OptionsWin.java:787 ../options/OptionsWin.java:795
+#: ../options/OptionsWin.java:803
 msgid "Selected columns:"
 msgstr "Colonne selezionate:"
 
-#: ../options/OptionsWin.java:768 ../options/OptionsWin.java:776
-#: ../options/OptionsWin.java:784
+#: ../options/OptionsWin.java:787 ../options/OptionsWin.java:795
+#: ../options/OptionsWin.java:803
 msgid "Available columns:"
 msgstr "Colonne disponibili:"
 
-#: ../options/OptionsWin.java:832
+#: ../options/OptionsWin.java:851
 msgid "(System native)"
 msgstr "(Nativo per il sistema)"
 
-#: ../options/OptionsWin.java:833
+#: ../options/OptionsWin.java:852
 msgid "(Crossplatform)"
 msgstr "(Multipiattaforma)"
 
-#: ../options/OptionsWin.java:913
+#: ../options/OptionsWin.java:932
 msgid ""
 "You must restart the program for the change of the language to take effect."
 msgstr ""
 "Riavviare il il programma per rendere effettivo il cambiamento della lingua. "
 
-#: ../options/OptionsWin.java:957
+#: ../options/OptionsWin.java:977
 msgid ""
 "You will need to restart the program for the changes to the list of plugins "
 "and JDBC drivers to take full effect."
@@ -1626,53 +1504,53 @@ msgstr ""
 "Necessiterà il riavvio del programma per rendere effettive le modifiche alla "
 "lista di plugin ed ai driver JDBC."
 
-#: ../options/OptionsWin.java:965
+#: ../options/OptionsWin.java:985
 msgid "Error saving the settings:"
 msgstr "Errore nel salvataggio delle impostazioni"
 
-#: ../options/OptionsWin.java:979
+#: ../options/OptionsWin.java:999
 msgid "Please enter a host name."
 msgstr "Inserisci un nome Host"
 
-#: ../options/OptionsWin.java:985
+#: ../options/OptionsWin.java:1005
 msgid "Please enter a user name."
 msgstr "Inserisci uno username"
 
-#: ../options/OptionsWin.java:1005
+#: ../options/OptionsWin.java:1023
 msgid "Please enter a valid port number."
 msgstr "Inserisci un numro di porta valido"
 
-#: ../options/OptionsWin.java:1053
+#: ../options/OptionsWin.java:1071
 msgid "Read/Unread state of faxes"
 msgstr "Stato dei fax letti/non letti"
 
-#: ../options/OptionsWin.java:1087
+#: ../options/OptionsWin.java:1105
 msgid "Configure..."
 msgstr "Configura..."
 
-#: ../options/OptionsWin.java:1091
+#: ../options/OptionsWin.java:1109
 msgid "Save location:"
 msgstr "Locazione di salvataggio:"
 
-#: ../options/OptionsWin.java:1146
+#: ../options/OptionsWin.java:1164
 msgid "JAR files"
 msgstr "File JAR"
 
-#: ../options/OptionsWin.java:1159 ../options/OptionsWin.java:1183
+#: ../options/OptionsWin.java:1177 ../options/OptionsWin.java:1201
 msgid "Add JDBC driver"
 msgstr "Aggiungi driver JDBC"
 
-#: ../options/OptionsWin.java:1165 ../options/OptionsWin.java:1170
-#: ../options/OptionsWin.java:1186
+#: ../options/OptionsWin.java:1183 ../options/OptionsWin.java:1188
+#: ../options/OptionsWin.java:1204
 msgid "Add plugin"
 msgstr "Aggiungi plugin"
 
-#: ../options/OptionsWin.java:1170
+#: ../options/OptionsWin.java:1188
 #, java-format
 msgid "The file {0} is not a valid YajHFC plugin!"
 msgstr "formato file {0} non riconosciuto come YajHFC plugin!"
 
-#: ../options/OptionsWin.java:1189
+#: ../options/OptionsWin.java:1207
 msgid "Remove item"
 msgstr "Rimuovi oggetto"
 
@@ -1905,34 +1783,33 @@ msgstr ""
 msgid "Error executing the desired action:"
 msgstr "Errore nell'esecuzione dell'azione desiderata:"
 
-#: ../phonebook/ldap/LDAPPhoneBook.java:55
+#: ../phonebook/ldap/LDAPPhoneBook.java:54
 msgid "LDAP Phonebook (read only)"
 msgstr "Rubrica LDAP (Sola lettura)"
 
-#: ../phonebook/ldap/LDAPPhoneBook.java:56
+#: ../phonebook/ldap/LDAPPhoneBook.java:55
 msgid "A Phonebook reading its entries from an LDAP directory."
 msgstr "Una rubrica legge che le sue voci da una directory LDAP. "
 
-#: ../phonebook/ldap/LDAPPhoneBook.java:120
-#: ../phonebook/ldap/ConnectionDialog.java:280
+#: ../phonebook/ldap/LDAPPhoneBook.java:119
+#: ../phonebook/ldap/ConnectionDialog.java:279
 msgid "LDAP password"
 msgstr "Password LDAP"
 
-#: ../phonebook/ldap/LDAPPhoneBook.java:120
-#: ../phonebook/ldap/ConnectionDialog.java:280
-#, java-format
-msgid "Please enter the LDAP password for user {0}."
-msgstr "Inserire la passwordi amministratore LDAP per l''utente {0}."
+#: ../phonebook/ldap/LDAPPhoneBook.java:119
+#: ../phonebook/ldap/ConnectionDialog.java:279
+msgid "Please enter the LDAP password:"
+msgstr ""
 
-#: ../phonebook/ldap/LDAPPhoneBook.java:179
+#: ../phonebook/ldap/LDAPPhoneBook.java:180
 msgid "Error executing the search:"
 msgstr ""
 
-#: ../phonebook/ldap/ConnectionDialog.java:135
+#: ../phonebook/ldap/ConnectionDialog.java:134
 msgid "Use authentication"
 msgstr "Utilizza l'autenticazione"
 
-#: ../phonebook/ldap/ConnectionDialog.java:161
+#: ../phonebook/ldap/ConnectionDialog.java:160
 msgid ""
 "RFC 2254 Filter expression (e.g. \"objectClass=person\") selecting the "
 "directory entries to include. Leave blank to include all."
@@ -1940,55 +1817,55 @@ msgstr ""
 "Espressione filtri RFC 2254 (es. \"objectClass=persona\") selezionare "
 "l'intera directory da includere. Lasciando vuoto includi tutto."
 
-#: ../phonebook/ldap/ConnectionDialog.java:163
+#: ../phonebook/ldap/ConnectionDialog.java:162
 msgid "Also search subtrees"
 msgstr "Cerca anche nei sotto alberi"
 
-#: ../phonebook/ldap/ConnectionDialog.java:168
+#: ../phonebook/ldap/ConnectionDialog.java:167
 msgid "The maximum number of items loaded"
 msgstr ""
 
-#: ../phonebook/ldap/ConnectionDialog.java:170
+#: ../phonebook/ldap/ConnectionDialog.java:169
 msgid "Load all entries when opened"
 msgstr ""
 
-#: ../phonebook/ldap/ConnectionDialog.java:171
+#: ../phonebook/ldap/ConnectionDialog.java:170
 msgid ""
 "If checked, all entries in the directory are loaded when the phone book is "
 "opened. If not, entries are loaded only if a quick search is performed."
 msgstr ""
 
-#: ../phonebook/ldap/ConnectionDialog.java:179
-#: ../phonebook/jdbc/ConnectionDialog.java:215
+#: ../phonebook/ldap/ConnectionDialog.java:178
+#: ../phonebook/jdbc/ConnectionDialog.java:216
 msgid "Test connection"
 msgstr "Testi di connessione"
 
-#: ../phonebook/ldap/ConnectionDialog.java:183
+#: ../phonebook/ldap/ConnectionDialog.java:182
 msgid "Server name:"
 msgstr "Nome del server:"
 
-#: ../phonebook/ldap/ConnectionDialog.java:185
+#: ../phonebook/ldap/ConnectionDialog.java:184
 msgid "Root (Base DN):"
 msgstr "Root (Base DN):"
 
-#: ../phonebook/ldap/ConnectionDialog.java:188
+#: ../phonebook/ldap/ConnectionDialog.java:187
 msgid "User name (Bind DN):"
 msgstr "Nome utente (Bind DN):"
 
-#: ../phonebook/ldap/ConnectionDialog.java:193
+#: ../phonebook/ldap/ConnectionDialog.java:192
 #: ../phonebook/jdbc/JDBCPhoneBook.java:78
 msgid "Phonebook name to display:"
 msgstr ""
 
-#: ../phonebook/ldap/ConnectionDialog.java:197
+#: ../phonebook/ldap/ConnectionDialog.java:196
 msgid "Object filter:"
 msgstr "Filtro oggetto:"
 
-#: ../phonebook/ldap/ConnectionDialog.java:201
+#: ../phonebook/ldap/ConnectionDialog.java:200
 msgid "Count limit:"
 msgstr ""
 
-#: ../phonebook/ldap/ConnectionDialog.java:205
+#: ../phonebook/ldap/ConnectionDialog.java:204
 msgid ""
 "Please enter which LDAP attributes correspond to the Phonebook entry fields "
 "of YajHFC (default should usually work):"
@@ -1996,20 +1873,20 @@ msgstr ""
 "Inserisci quale attributo LDAP corrisponde con il campo voce di rubrica di "
 "YajHFC (i valori di default solitamente funzionano): "
 
-#: ../phonebook/ldap/ConnectionDialog.java:255
+#: ../phonebook/ldap/ConnectionDialog.java:254
 msgid "You have to specify a server name and port."
 msgstr "Devi sepecificare il nome del server e la porta."
 
-#: ../phonebook/ldap/ConnectionDialog.java:313
+#: ../phonebook/ldap/ConnectionDialog.java:314
 msgid "Could not connect to the LDAP server:"
 msgstr "Impossibile connettersi al server LDAP:"
 
-#: ../phonebook/ldap/ConnectionDialog.java:332
+#: ../phonebook/ldap/ConnectionDialog.java:333
 msgid "Connection to the LDAP server succeeded."
 msgstr "Connessione al server LDAP effettuata."
 
-#: ../phonebook/ldap/ConnectionDialog.java:380
-#: ../phonebook/ldap/ConnectionDialog.java:385
+#: ../phonebook/ldap/ConnectionDialog.java:381
+#: ../phonebook/ldap/ConnectionDialog.java:386
 msgid "New LDAP phonebook"
 msgstr "Nuova rubrica LDAP"
 
@@ -2150,84 +2027,83 @@ msgstr ""
 "rubrica di YajHYC:"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:216
-#: ../phonebook/jdbc/ConnectionDialog.java:310
+#: ../phonebook/jdbc/ConnectionDialog.java:311
 msgid "Could not load the specified driver class:"
 msgstr "Non è possibile caricare la classe di driver specificata:"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:221
-#: ../phonebook/jdbc/ConnectionDialog.java:316
+#: ../phonebook/jdbc/ConnectionDialog.java:317
 #: ../readstate/JDBCPersistentReadState.java:85
 msgid "Database password"
 msgstr "Password database"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:221
-#: ../phonebook/jdbc/ConnectionDialog.java:316
-#: ../readstate/JDBCPersistentReadState.java:85
+#: ../phonebook/jdbc/ConnectionDialog.java:317
 #, java-format
-msgid "Please enter the database password for user {0} (database: {1})."
-msgstr "Inserire la password del database per l''utente {0} (database: {1})."
+msgid "Please enter the database password (database: {0}):"
+msgstr ""
 
-#: ../phonebook/jdbc/JDBCPhoneBook.java:231
-#: ../phonebook/jdbc/ConnectionDialog.java:341
+#: ../phonebook/jdbc/JDBCPhoneBook.java:233
+#: ../phonebook/jdbc/ConnectionDialog.java:344
 msgid "Could not connect to the database:"
 msgstr "Impossibile connettersi al database:"
 
-#: ../phonebook/jdbc/JDBCPhoneBook.java:273
+#: ../phonebook/jdbc/JDBCPhoneBook.java:275
 msgid "Could not load the phone book:"
 msgstr "Impossibile caricare la rubrica:"
 
-#: ../phonebook/jdbc/JDBCPhoneBook.java:290
+#: ../phonebook/jdbc/JDBCPhoneBook.java:292
 msgid "Cannot open phonebook since no database fields were selected!"
 msgstr ""
 "Impossibile aprire la rubrica se non è selezionato nessun campo del database!"
 
-#: ../phonebook/jdbc/JDBCPhoneBook.java:334
-#: ../phonebook/jdbc/JDBCPhoneBook.java:337
+#: ../phonebook/jdbc/JDBCPhoneBook.java:336
+#: ../phonebook/jdbc/JDBCPhoneBook.java:339
 msgid "Could not save the phone book:"
 msgstr "Impossibile salvare la rubrica:"
 
-#: ../phonebook/jdbc/JDBCPhoneBook.java:359
-#: ../phonebook/jdbc/JDBCPhoneBook.java:369
-#: ../phonebook/jdbc/JDBCPhoneBook.java:379
+#: ../phonebook/jdbc/JDBCPhoneBook.java:361
+#: ../phonebook/jdbc/JDBCPhoneBook.java:371
+#: ../phonebook/jdbc/JDBCPhoneBook.java:381
 #, java-format
 msgid "Could not save the changes: No valid {0} query."
 msgstr "Impossibile salvare le modifiche :query {0} non valida."
 
-#: ../phonebook/jdbc/JDBCPhoneBook.java:390
-#: ../phonebook/jdbc/JDBCPhoneBook.java:397
+#: ../phonebook/jdbc/JDBCPhoneBook.java:392
+#: ../phonebook/jdbc/JDBCPhoneBook.java:399
 #, java-format
 msgid "Could not save the changes for entry {0}:"
 msgstr "Impossibile salvare le modifiche per la voce {0}:"
 
-#: ../phonebook/jdbc/ConnectionDialog.java:219
+#: ../phonebook/jdbc/ConnectionDialog.java:220
 msgid "Driver class:"
 msgstr "Classe del driver:"
 
-#: ../phonebook/jdbc/ConnectionDialog.java:221
+#: ../phonebook/jdbc/ConnectionDialog.java:222
 msgid "Database URL:"
 msgstr "URL del database:"
 
-#: ../phonebook/jdbc/ConnectionDialog.java:231
+#: ../phonebook/jdbc/ConnectionDialog.java:232
 msgid "Table:"
 msgstr "Tabella:"
 
-#: ../phonebook/jdbc/ConnectionDialog.java:288
+#: ../phonebook/jdbc/ConnectionDialog.java:289
 msgid "You have to specify a driver class."
 msgstr "Specificare la classe di driver."
 
-#: ../phonebook/jdbc/ConnectionDialog.java:292
+#: ../phonebook/jdbc/ConnectionDialog.java:293
 msgid "You have to specify a database URL."
 msgstr "Specificare l'URL del database."
 
-#: ../phonebook/jdbc/ConnectionDialog.java:390
+#: ../phonebook/jdbc/ConnectionDialog.java:393
 msgid "Could not get the field names:"
 msgstr "Non è possibile prendere il campo nomi:"
 
-#: ../phonebook/jdbc/ConnectionDialog.java:402
+#: ../phonebook/jdbc/ConnectionDialog.java:405
 msgid "You have to specify a database table."
 msgstr "Sepcificare una tabella del database."
 
-#: ../phonebook/jdbc/ConnectionDialog.java:410
+#: ../phonebook/jdbc/ConnectionDialog.java:413
 msgid "Connection to the database succeeded."
 msgstr "Connessione al database avvenuta"
 
@@ -2255,7 +2131,12 @@ msgstr "Nome file del fax:"
 msgid "Read/Unread State:"
 msgstr "Stato Letto/Non letto"
 
-#: ../readstate/JDBCPersistentReadState.java:140
+#: ../readstate/JDBCPersistentReadState.java:85
+#, java-format
+msgid "Please enter the database password (database: {0})."
+msgstr ""
+
+#: ../readstate/JDBCPersistentReadState.java:142
 msgid ""
 "Could not open the database table to store the read/unread state. The "
 "current read/unread state will not be saved.\n"
@@ -2265,15 +2146,15 @@ msgstr ""
 "non letto. L'attuale stato letto/non letto non sarà salvato.\n"
 "Motivo:"
 
-#: ../readstate/JDBCPersistentReadState.java:371
+#: ../readstate/JDBCPersistentReadState.java:373
 msgid "Database table"
 msgstr "Tabella database"
 
-#: ../readstate/JDBCPersistentReadState.java:385
+#: ../readstate/JDBCPersistentReadState.java:387
 msgid "JDBC settings to save read/unread state"
 msgstr "Impostazioni JDBC per il salvataggio dello stato /letto/non letto"
 
-#: ../readstate/JDBCPersistentReadState.java:386
+#: ../readstate/JDBCPersistentReadState.java:388
 msgid ""
 "Please select which fields in the table correspond to the necessary fields "
 "to save the read/unread state"
@@ -2289,27 +2170,27 @@ msgstr "File locale"
 msgid "Error sending the fax:"
 msgstr ""
 
-#: ../model/SentYajJob.java:208
+#: ../model/SentYajJob.java:209
 msgid "Blocked (by concurrent activity to the same destination)"
 msgstr "Bloccato (da attività concorrente verso la stessa destinazione)"
 
-#: ../model/SentYajJob.java:210
+#: ../model/SentYajJob.java:211
 msgid "Done"
 msgstr "Completato"
 
-#: ../model/SentYajJob.java:212
+#: ../model/SentYajJob.java:213
 msgid "Failed"
 msgstr "Fallito"
 
-#: ../model/SentYajJob.java:214
+#: ../model/SentYajJob.java:215
 msgid "Pending (waiting for the time to send to arrive)"
 msgstr "In attesa (aspetta il trasferimento)"
 
-#: ../model/SentYajJob.java:216
+#: ../model/SentYajJob.java:217
 msgid "Running"
 msgstr "In esecuzione"
 
-#: ../model/SentYajJob.java:218
+#: ../model/SentYajJob.java:219
 msgid ""
 "Sleeping (waiting for a scheduled timeout such as a delay between attempts "
 "to send)"
@@ -2317,17 +2198,145 @@ msgstr ""
 "Sleeping (in attesa di un timeout pianificato un come intervallo  fra "
 "tentativi di invio"
 
-#: ../model/SentYajJob.java:220
+#: ../model/SentYajJob.java:221
 msgid "Suspended (not being scheduled)"
 msgstr "Sospeso (non viene pianificato)"
 
-#: ../model/SentYajJob.java:222
+#: ../model/SentYajJob.java:223
 msgid "Undefined"
 msgstr "Non definito"
 
-#: ../model/SentYajJob.java:224
+#: ../model/SentYajJob.java:225
 msgid "Waiting (for resources such as a free modem)"
 msgstr "In attesa (che si liberi la risorsa es. modem)"
+
+#: ../RecvFormat.java:35
+msgid "Time/Date"
+msgstr "Ora/Data"
+
+#: ../RecvFormat.java:35
+msgid "Extended representation of the time when the receive happened"
+msgstr "Rappresentazione estesa dell'orario di ricezione avvenuta"
+
+#: ../RecvFormat.java:39
+msgid "SubAddress received from sender (if any)"
+msgstr "Sottoindirizzo ricevuto dal mittente (se esiste)"
+
+#: ../RecvFormat.java:43
+msgid "Signalling rate used during receive"
+msgstr "Frequenza di segnalazione usata durante la ricezione"
+
+#: ../RecvFormat.java:47
+msgid "Format"
+msgstr "formato"
+
+#: ../RecvFormat.java:47
+msgid "Data format used during receive"
+msgstr "Formato data usato per la ricezione"
+
+#: ../RecvFormat.java:51
+msgid "Error description"
+msgstr "Descrizione errore"
+
+#: ../RecvFormat.java:51
+msgid "Error description if an error occurred during receive"
+msgstr "Descrizione errore in caso di errore in ricezione"
+
+#: ../RecvFormat.java:55
+msgid "Filename"
+msgstr "Nome del file"
+
+#: ../RecvFormat.java:55
+msgid "Document filename (relative to the recvq directory)"
+msgstr "Nome file del documento (relativo alla directory recvq)"
+
+#: ../RecvFormat.java:59
+msgid "Time to receive"
+msgstr "Ora di ricezione"
+
+#: ../RecvFormat.java:59
+msgid "Time spent receiving document (HH:MM:SS)"
+msgstr "Durata impiegata per la ricezione (HH:MM:SS)"
+
+#: ../RecvFormat.java:59
+msgid "mm:ss"
+msgstr "mm:ss"
+
+#: ../RecvFormat.java:63
+msgid "CIDName"
+msgstr "Nome CID"
+
+#: ../RecvFormat.java:63
+msgid "CIDName value for received fax"
+msgstr "Valore CIDName per fax ricevuti"
+
+#: ../RecvFormat.java:67
+msgid "CIDNumber"
+msgstr "Numero CID"
+
+#: ../RecvFormat.java:67
+msgid "CIDNumber value for received fax"
+msgstr "Valore CIDNumber per fax ricevuti"
+
+#: ../RecvFormat.java:75
+msgid "Fax Protection"
+msgstr "Protezione fax"
+
+#: ../RecvFormat.java:75
+msgid "Fax-style protection mode string (``-rwxrwx'')"
+msgstr "Stringa per protezione fax  (``-rwxrwx'')"
+
+#: ../RecvFormat.java:79
+msgid "File size"
+msgstr "Dimensioni del file"
+
+#: ../RecvFormat.java:79
+msgid "File size (number of bytes)"
+msgstr "Dimensione del file (numero di byte)"
+
+#: ../RecvFormat.java:83
+msgid "File owner"
+msgstr "Proprietario del file"
+
+#: ../RecvFormat.java:87
+msgid "Number of pages in document"
+msgstr "Numero di pagine del documento"
+
+#: ../RecvFormat.java:91
+msgid "Protection"
+msgstr "Protezione"
+
+#: ../RecvFormat.java:91
+msgid "UNIX-style protection flags"
+msgstr "Flag di protezione stile UNIX"
+
+#: ../RecvFormat.java:95
+msgid "Resolution of received data"
+msgstr "Risoluzione dei dati ricevuti"
+
+#: ../RecvFormat.java:99
+msgid "Sender identity (TSI)"
+msgstr "Identità del mittente (TSI)"
+
+#: ../RecvFormat.java:103
+msgid "Date"
+msgstr "Data"
+
+#: ../RecvFormat.java:103
+msgid "Compact representation of the time when the receive happened"
+msgstr "Rappresentazione compatta dell'orario di ricezione avvenuta"
+
+#: ../RecvFormat.java:103
+msgid "dd/MM/yyyy"
+msgstr "dd/MM/yyyy"
+
+#: ../RecvFormat.java:111
+msgid "In progress"
+msgstr "In corso di esecuzione"
+
+#: ../RecvFormat.java:111
+msgid "A ``*'' if receive is going on; otherwise `` '' (space)"
+msgstr "Un ``*'' se prosegue la ricezione; altrimenti `` '' (spazio)"
 
 #: ../util/ExceptionDialog.java:80 ../util/ExceptionDialog.java:204
 msgid "Details"
@@ -2355,6 +2364,10 @@ msgstr ""
 #: ../util/ExcDialogAbstractAction.java:90
 msgid "An Error occurred executing the desired action:"
 msgstr "Si è verificato un errore nell'esecuzione dell'azione desiderata:"
+
+#: ../util/PasswordDialog.java:80
+msgid "User name:"
+msgstr ""
 
 #: ../util/ClipboardPopup.java:52
 msgid "Cut"
@@ -2637,6 +2650,22 @@ msgstr "Aggiorna"
 #: ../send/TextFieldList.java:170
 msgid "Updates the selected list item"
 msgstr "Aggiorna l'elemento della lista selezionato"
+
+#~ msgid "Please enter the password for user \"{0}\"."
+#~ msgstr "Inserisci la password utente\"{0}\"."
+
+#~ msgid "Please enter the administrative password for user \"{0}\"."
+#~ msgstr "Insrisci la password amministratore per l''utente \"{0}\"."
+
+#~ msgid "Dials: toal/max."
+#~ msgstr "Chiamate: totali/massime."
+
+#~ msgid "Please enter the LDAP password for user {0}."
+#~ msgstr "Inserire la passwordi amministratore LDAP per l''utente {0}."
+
+#~ msgid "Please enter the database password for user {0} (database: {1})."
+#~ msgstr ""
+#~ "Inserire la password del database per l''utente {0} (database: {1})."
 
 #~ msgid "Preview is not supported for document \"{0}\"."
 #~ msgstr "L''anteprima non è supportata per il documento \"{0}\"."

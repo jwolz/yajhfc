@@ -43,13 +43,14 @@ public class LDAPSettings extends GeneralConnectionSettings {
     
     public String[] getAttributes() {
         int count = 0;
-        for (PBEntryField field : PBEntryField.values()) 
+        final PBEntryField[] values =  PBEntryField.values();
+        for (PBEntryField field : values) 
             if (!isNoField(getMappingFor(field)))
                 count++;
         
         String[] rv = new String[count];
         int j = 0;
-        for (PBEntryField field : PBEntryField.values()) {
+        for (PBEntryField field : values) {
             String mapping = getMappingFor(field);
             if (!isNoField(mapping)) 
                 rv[j++] = mapping;

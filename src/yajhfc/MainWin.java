@@ -1399,7 +1399,7 @@ public final class MainWin extends JFrame {
                 myopts.adjustColumnWidths = (selVal != null && selVal.booleanValue());
                 myopts.toolbarConfig = ToolbarEditorDialog.saveConfigToString(toolbar);
                 
-                myopts.storeToFile(FaxOptions.getDefaultConfigFile());
+                myopts.storeToFile(Utils.getDefaultConfigFile());
                 saved = true;
                 Launcher2.releaseLock();
                 Thread.yield();

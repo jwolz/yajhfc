@@ -32,7 +32,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.swing.Action;
@@ -68,6 +71,7 @@ import yajhfc.file.FormattedFile;
 import yajhfc.phonebook.NewPhoneBookWin;
 import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.PhoneBookEntry;
+import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 import yajhfc.util.CancelAction;
 import yajhfc.util.ClipboardPopup;
 import yajhfc.util.ExcDialogAbstractAction;
@@ -345,7 +349,7 @@ final class SendWin extends JDialog implements SendWinControl  {
             tablelay[1][tablelay[1].length - 2] = TableLayout.FILL;
             
             paneCommon = new JPanel(new TableLayout(tablelay));
-            
+                        
             tflFiles = new TextFieldList<HylaTFLItem>(getFtfFilename().getJTextField(), true, sendController.getFiles()) {
                 @Override
                 protected HylaTFLItem createListItem(String text) {
@@ -379,7 +383,10 @@ final class SendWin extends JDialog implements SendWinControl  {
             buttonPhonebook.setMaximumSize(d);
             textNumber.setMaximumSize(d2);
             
-            tflNumbers = new TextFieldList<NumberTFLItem>(textNumber, false, sendController.getNumbers()) {
+            List<NumberTFLItem> numbers = new ArrayList<NumberTFLItem>();
+            List<PBEntryFieldContainer> numberView = Collections.<PBEntryFieldContainer>unmodifiableList(numbers);
+            sendController.setNumbers(numberView);
+            tflNumbers = new TextFieldList<NumberTFLItem>(textNumber, false, numbers) {
                 @Override
                 protected NumberTFLItem createListItem(String text) {
                     NumberTFLItem rv = new NumberTFLItem(text);

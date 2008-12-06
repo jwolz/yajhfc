@@ -74,6 +74,8 @@ import yajhfc.file.FormattedFile;
 import yajhfc.phonebook.NewPhoneBookWin;
 import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.PhoneBookEntry;
+import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
+import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 import yajhfc.util.CancelAction;
 import yajhfc.util.ClipboardPopup;
 import yajhfc.util.ExcDialogAbstractAction;
@@ -96,7 +98,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
     protected TextFieldList<HylaTFLItem> tflFiles;
     protected JButton buttonAdvanced;
     protected JTable tableNumbers;
-    protected NumberTFLItemTableModel numberTableModel;
+    protected PBEntryFieldTableModel numberTableModel;
     protected JTextField textNumber;
     protected Action actSend, actPreview, actPhonebook;
     
@@ -212,7 +214,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
                 }
 
                 // If nothing is selected, use the first element for preview
-                NumberTFLItem coverItem;
+                PBEntryFieldContainer coverItem;
                 int selIdx = tableNumbers.getSelectedRow();
                 if (selIdx < 0) {
                     if (sendController.getNumbers().size() > 0) {
@@ -349,7 +351,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
                 if (pbs != null) {
                     for (PhoneBookEntry pb : pbs)
                     {
-                        numberTableModel.addRow(new NumberTFLItem(pb));
+                        numberTableModel.addRow(new DefaultPBEntryFieldContainer(pb));
                     }
                 }
             }
@@ -363,7 +365,9 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         
         actAddNumber = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {
-                numberTableModel.addRow(new NumberTFLItem(textNumber.getText()));
+                PBEntryFieldContainer pbe = new DefaultPBEntryFieldContainer("");
+                pbe.setField(PBEntryField.FaxNumber, textNumber.getText());
+                numberTableModel.addRow(pbe);
                 textNumber.setText("");
             }
         };
@@ -397,7 +401,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         tablePopup.addSeparator();
         tablePopup.add( new JMenuItem(actRemoveNumber));
         
-        numberTableModel = new NumberTFLItemTableModel(sendController.numbers);
+        numberTableModel = new PBEntryFieldTableModel(sendController.numbers);
         tableNumbers = new JTable(numberTableModel);
         tableNumbers.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         tableNumbers.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -599,11 +603,12 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
 
     public void addRecipient(String faxNumber, String name, String company,
             String location, String voiceNumber) {
-        NumberTFLItem tfl = new NumberTFLItem(faxNumber);
-        tfl.fields.put(PBEntryField.Name, name);
-        tfl.fields.put(PBEntryField.Company, company);
-        tfl.fields.put(PBEntryField.Location, location);
-        tfl.fields.put(PBEntryField.VoiceNumber, voiceNumber);
+        PBEntryFieldContainer tfl = new DefaultPBEntryFieldContainer("");
+        tfl.setField(PBEntryField.FaxNumber, faxNumber);
+        tfl.setField(PBEntryField.Name, name);
+        tfl.setField(PBEntryField.Company, company);
+        tfl.setField(PBEntryField.Location, location);
+        tfl.setField(PBEntryField.VoiceNumber, voiceNumber);
         numberTableModel.addRow(tfl);
     }
 
