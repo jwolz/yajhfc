@@ -21,8 +21,9 @@ package yajhfc.send;
 import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.PhoneBookEntry;
 import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
+import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 
-public class NumberTFLItem extends TFLItem {
+public class NumberTFLItem extends TFLItem implements PBEntryFieldContainer {
     public final DefaultPBEntryFieldContainer fields = new DefaultPBEntryFieldContainer("");
     
     @Override
@@ -45,5 +46,13 @@ public class NumberTFLItem extends TFLItem {
     
     public NumberTFLItem(PhoneBookEntry pbe) {
         loadFromPBE(pbe);
+    }
+
+    public String getField(PBEntryField field) {
+        return fields.get(field);
+    }
+
+    public void setField(PBEntryField field, String value) {
+        fields.put(field, value);
     }
 }

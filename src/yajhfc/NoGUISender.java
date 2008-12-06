@@ -30,8 +30,10 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
 import yajhfc.PluginManager.PluginInfo;
+import yajhfc.phonebook.PBEntryField;
+import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
+import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 import yajhfc.send.LocalFileTFLItem;
-import yajhfc.send.NumberTFLItem;
 import yajhfc.send.SendController;
 import yajhfc.send.StreamTFLItem;
 import yajhfc.util.ExceptionDialog;
@@ -144,7 +146,9 @@ public class NoGUISender extends JFrame implements ProgressUI {
             SendController sendController = new SendController(clientManager, progressFrame, false, progressFrame);
             
             for (String number : recipients) {
-                sendController.getNumbers().add(new NumberTFLItem(number));
+                PBEntryFieldContainer pbe = new DefaultPBEntryFieldContainer("");
+                pbe.setField(PBEntryField.FaxNumber, number);
+                sendController.getNumbers().add(pbe);
             }
             if (useStdIn) {
                 sendController.getFiles().add(new StreamTFLItem(System.in));

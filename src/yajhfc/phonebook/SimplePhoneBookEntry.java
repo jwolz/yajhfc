@@ -23,8 +23,10 @@ package yajhfc.phonebook;
 
 public abstract class SimplePhoneBookEntry extends PhoneBookEntry {
 
+    protected static final int dataLen = PBEntryField.values().length;
+    
     // Not using an EnumMap here to save some memory (we will have lots of Entries...)
-    protected String[] data = new String[PBEntryField.values().length];
+    protected String[] data = new String[dataLen];
     
     protected boolean dirty = false;
     /**

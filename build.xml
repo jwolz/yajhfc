@@ -80,7 +80,7 @@
 
 	<target name="compile" depends="init" description="compile the source code" >
 		<!-- Compile the java code from ${src} into ${build} -->
-		<javac srcdir="${src}/src" includes="yajhfc/**/*.java" destdir="${build}" source="1.5" target="1.5" encoding="iso-8859-1" debug="true" debuglevel="lines,source">
+		<javac srcdir="${src}/src" includes="yajhfc/**/*.java,gnu/**/*.java" destdir="${build}" source="1.5" target="1.5" encoding="iso-8859-1" debug="true" debuglevel="lines,source">
 			<classpath>
 				<pathelement path="${classpath}"/>
 				<pathelement location="${gnu.hylafax.classFileLocation}"/>
@@ -133,8 +133,8 @@
 
 	<target name="dist" depends="compile,i18n,doc" description="generate the distribution" >
 		<jar jarfile="${jar-output}" manifest="${jar-extra}/manifest.txt">
-			<fileset dir="${build}" includes="yajhfc/**"/>
-			<fileset dir="${src}/src" includes="yajhfc/i18n/*.class"/>
+			<fileset dir="${build}" includes="yajhfc/**,gnu/**"/>
+			<fileset dir="${src}/src" includes="yajhfc/i18n/*.class,gnu/**/*.properties"/>
 			<fileset dir="${jar-extra}" includes="info/**/*.class,toolbarButtonGraphics/**/*.gif,org/**/*.class"/>
 			<fileset dir="${gnu.hylafax.classFileLocation}" includes="**/*.class"/>
 			<fileset dir="${src}" includes="COPYING,README*.txt,doc/*.html,doc/*.css"/>

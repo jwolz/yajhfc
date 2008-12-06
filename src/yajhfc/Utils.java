@@ -26,6 +26,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -105,11 +106,8 @@ public final class Utils {
     public static FaxOptions getFaxOptions() {
         if (theoptions == null) {
             theoptions = new FaxOptions();
-            theoptions.loadFromFile(
-                    new File(getApplicationDir(), "settings.default"),
-                    FaxOptions.getDefaultConfigFile(),
-                    new File(getApplicationDir(), "settings.override")
-                    );
+            theoptions.loadFromProperties(getSettingsProperties());
+            settingsProperties = null; // Not needed any more
         }
         return theoptions;
     }
@@ -118,18 +116,9 @@ public final class Utils {
     public static Locale getLocale() {
         if (myLocale == null) {
             // Need to load locale setting manually to avoid a
-            // chicken-egg problem with the initialization of the FmtItem-Arrays above
-            Properties prop = new Properties();
-            String locale;
-            try {
-                FileInputStream fIn = new FileInputStream(FaxOptions.getDefaultConfigFile());
-                prop.load(fIn);
-                fIn.close();
-                locale = prop.getProperty("locale", "auto");
-            } catch (Exception ex) {
-                locale = "auto";
-            }
-            
+            // chicken-egg problem with the initialization of enum descriptions
+            Properties prop = getSettingsProperties();
+            String locale = prop.getProperty("locale", "auto");
             if (locale.equals("auto")) {
                 myLocale = Locale.getDefault();
             } else {
@@ -137,6 +126,53 @@ public final class Utils {
             }
         }
         return myLocale;
+    }
+    
+    public static File getDefaultConfigFile() {
+        return new File(getConfigDir(), "settings");
+    }
+    
+    private static Properties settingsProperties;
+    private static Properties getSettingsProperties() {
+        if (settingsProperties == null) {
+            /*
+             * Load the settings properties from the specified files. The files are loaded in the specified
+             * order, i.e. settings from "later" files override the earlier ones
+             */
+            final File[] files = {
+                    new File(getApplicationDir(), "settings.default"),
+                    getDefaultConfigFile(),
+                    new File(getApplicationDir(), "settings.override")
+            };
+
+            Properties p = new Properties();
+            for (File file : files) {
+                if (Utils.debugMode) {
+                    log.info("Loading prefs from " + file);
+                }
+                try {
+                    if (file.exists()) {
+                        FileInputStream filin = new FileInputStream(file);
+                        p.load(filin);
+                        filin.close();
+                    } else {
+                        if (Utils.debugMode) {
+                            log.info(file + " not found");
+                        }
+                    }
+                } catch (FileNotFoundException e) {
+                    if (Utils.debugMode) {
+                        log.log(Level.INFO, file + " not found", e);
+                    }
+                    continue; // No file yet
+                } catch (IOException e) {
+                    log.log(Level.WARNING, "Error reading file '" + file + "': " , e);
+                    continue;
+                }
+            }
+            settingsProperties = p;
+        }
+        return settingsProperties;
     }
     
     public static String _(String key) {

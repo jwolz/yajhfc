@@ -30,6 +30,9 @@ package yajhfc;
  * experience knows a better way to accomplish this functionality, please let me know.
  */
 
+import gnu.getopt.Getopt;
+import gnu.getopt.LongOpt;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -44,6 +47,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -58,6 +62,7 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import java.util.logging.StreamHandler;
+import java.util.regex.Pattern;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -165,50 +170,123 @@ public final class Launcher2 {
     }
     
     
-    private static void printHelp() { //TODO: Update this
-        System.out.print(
-            "General usage:\n"+
-            "java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose] \n" +
-            "         [--configdir=directory] [--loadplugin=filename] [--logfile=filename]\n" +
-            "         [--showtab=0|R|1|S|2|T] [--recipient=...] [--stdin | filename ...]\n"+
-            "Argument description:\n"+
-            "filename     One or more file names of PostScript files to send.\n"+
-            "--stdin      Read the file to send from standard input.\n"+
-            "--recipient  Specifies the phone number of a recipient to send the fax to.\n"+
-            "             You may specify multiple arguments for multiple recipients.\n"+
-            "--admin      Start up in admin mode.\n"+
-            "--debug      Output some debugging information.\n"+
-            "--logfile    The logfile to log debug information to (if not specified, use stdout).\n"+
-            "--background If there is no already running instance, launch a new instance \n" +
-            "             and terminate (after submitting the file to send).\n" +
-            "--noclose    Do not close YajHFC after submitting the fax.\n"+
-            "--showtab    Sets the tab to display on startup. Specify 0 or R for the \"Received\", \n"+
-            "             1 or S for the \"Sent\" or 2 or T for the \"Transmitting\" tab.\n"+
-            "--loadplugin Specifies the jar file of a YajHFC plugin to load.\n" +
-            "--loaddriver Specifies the location of a JDBC driver JAR file.\n" +
-            "--no-plugins Disables loading plugins from the plugin.lst file.\n" +
-            "--no-gui     Sends a fax with a minimal GUI.\n" +
-            "--configdir  Sets a configuration directory to use instead of ~/.yajhfc\n" +
-            "--help       Displays this text.\n"
-            );   
-    }
     
     /**
-     * Strips quotes (" or ') at the beginning and end of the specified String
-     * @param str
-     * @return
+     * The minimum value of a "real" short option
      */
-    public static String stripQuotes(String str)
-    {
-        char c = str.charAt(0);
-        if (c == '\"' || c == '\'') {
-            c = str.charAt(str.length()-1);
-            if (c == '\"' || c == '\'') {
-                return str.substring(1, str.length()-2);
-            }
+    private static final int MIN_OPT_VAL = 'A';
+    /**
+     * Prints usage information
+     * @param out
+     */
+    public static void printHelp(PrintStream outStream, LongOpt[] options) {
+        StringBuilder out = new StringBuilder();
+        
+        int optionwidth = 0;
+        for (LongOpt option : options) {
+            if (option instanceof ExtLongOpt)
+                optionwidth = Math.max(optionwidth, option.getName().length());
         }
-        return str;
+        optionwidth += 1;
+        out.append("Usage:\n");
+        out.append("java -jar yajhfc.jar [OPTIONS]... [FILES TO SEND]...\n\n");
+        out.append("Argument description:\n");
+        for (LongOpt option : options) {
+            if (!(option instanceof ExtLongOpt))
+                continue;
+            
+             if (option.getVal() < MIN_OPT_VAL) {
+                 out.append("  ");
+             } else {
+                 out.append('-');
+                 out.append((char)option.getVal());
+             }
+             if (option.getName() == null) {
+                 appendSpaces(out, optionwidth + 4);
+             } else {
+                 if (option.getVal() < MIN_OPT_VAL) {
+                     out.append("  --");
+                 } else {
+                     out.append(", --");
+                 }
+                 out.append(option.getName());
+                 appendSpaces(out, optionwidth-option.getName().length());
+             }
+             printWrapped(out, optionwidth + 6, ((ExtLongOpt)option).getDescription());
+             out.append('\n');
+        }
+        
+        outStream.print(out);
     }
+    
+    private static void appendSpaces(StringBuilder out, int numspaces) {
+        for (int i=0; i<numspaces; i++) {
+            out.append(' ');
+        }
+    }
+    
+    private static final int SCREEN_WIDTH = 80;
+    private static Pattern wordSplitter;
+    private static void printWrapped(StringBuilder out, int indent, String text) {
+        int pos = indent;
+        if (wordSplitter == null)
+            wordSplitter = Pattern.compile("(\\s|\n)+");
+        for (String word: wordSplitter.split(text)) {
+            pos += word.length();
+            if (pos > SCREEN_WIDTH) {
+                out.append('\n');
+                appendSpaces(out, indent);
+                pos = indent + word.length();
+            }
+            out.append(word);
+            out.append(' ');
+        }
+    }
+    
+//    private static void printHelp() {
+//        System.out.print(
+//            "General usage:\n"+
+//            "java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose] \n" +
+//            "         [--configdir=directory] [--loadplugin=filename] [--logfile=filename]\n" +
+//            "         [--showtab=0|R|1|S|2|T] [--recipient=...] [--stdin | filename ...]\n"+
+//            "Argument description:\n"+
+//            "filename     One or more file names of PostScript files to send.\n"+
+//            "--stdin      Read the file to send from standard input.\n"+
+//            "--recipient  Specifies the phone number of a recipient to send the fax to.\n"+
+//            "             You may specify multiple arguments for multiple recipients.\n"+
+//            "--admin      Start up in admin mode.\n"+
+//            "--debug      Output some debugging information.\n"+
+//            "--logfile    The logfile to log debug information to (if not specified, use stdout).\n"+
+//            "--background If there is no already running instance, launch a new instance \n" +
+//            "             and terminate (after submitting the file to send).\n" +
+//            "--noclose    Do not close YajHFC after submitting the fax.\n"+
+//            "--showtab    Sets the tab to display on startup. Specify 0 or R for the \"Received\", \n"+
+//            "             1 or S for the \"Sent\" or 2 or T for the \"Transmitting\" tab.\n"+
+//            "--loadplugin Specifies the jar file of a YajHFC plugin to load.\n" +
+//            "--loaddriver Specifies the location of a JDBC driver JAR file.\n" +
+//            "--no-plugins Disables loading plugins from the plugin.lst file.\n" +
+//            "--no-gui     Sends a fax with a minimal GUI.\n" +
+//            "--configdir  Sets a configuration directory to use instead of ~/.yajhfc\n" +
+//            "--help       Displays this text.\n"
+//            );   
+//    }
+//
+//    /**
+//     * Strips quotes (" or ') at the beginning and end of the specified String
+//     * @param str
+//     * @return
+//     */
+//    public static String stripQuotes(String str)
+//    {
+//        char c = str.charAt(0);
+//        if (c == '\"' || c == '\'') {
+//            c = str.charAt(str.length()-1);
+//            if (c == '\"' || c == '\'') {
+//                return str.substring(1, str.length()-1);
+//            }
+//        }
+//        return str;
+//    }
     
    
     
@@ -231,70 +309,173 @@ public final class Launcher2 {
         String logFile = null;
         boolean appendToLog = false;
         
-        for (int i = 0; i < args.length; i++) {
-            String curArg = args[i];
-            if (curArg.startsWith("--")) { // command line argument
-                if (curArg.equals("--help")) {
-                    printHelp();
-                    System.exit(0);
-                } else if (curArg.equals("--stdin"))
-                    useStdin = true;
-                else if (curArg.equals("--admin"))
-                    adminMode = true;
-                else if (curArg.equals("--debug"))
-                    debugMode = true;
-                else if (curArg.equals("--background"))
-                    forkNewInst = true;
-                else if (curArg.equals("--noclose")) 
-                    closeAfterSubmit = false;
-                else if (curArg.startsWith("--configdir="))
-                    cmdLineConfDir = stripQuotes(curArg.substring(12)); // 12 == "--configdir=".length()
-                else if (curArg.startsWith("--recipient="))
-                    recipients.add(stripQuotes(curArg.substring(12))); // 12 == "--recipient=".length()
-                else if (curArg.startsWith("--showtab=") && curArg.length() > 10) { // 10 == ""--showtab="".length()
-                    switch (curArg.charAt(10)) {
-                    case '0':
-                    case 'R':
-                    case 'r':
-                        selectedTab = 0;
-                        break;
-                    case '1':
-                    case 'S':
-                    case 's':
-                        selectedTab = 1;
-                        break;
-                    case '2':
-                    case 'T':
-                    case 't':
-                        selectedTab = 2;
-                        break;
-                    default:
-                        System.err.println("Unknown tab: " + curArg.substring(10));
-                    }
-                } else if (curArg.startsWith("--loadplugin=")) {
-                    plugins.add(new PluginInfo(new File(stripQuotes(curArg.substring("--loadplugin=".length()))),
-                            PluginType.PLUGIN, false));
-                } else if (curArg.startsWith("--loaddriver=")) {
-                    plugins.add(new PluginInfo(new File(stripQuotes(curArg.substring("--loaddriver=".length()))), 
-                            PluginType.JDBCDRIVER, false));
-                } else if (curArg.startsWith("--logfile=")) {
-                    logFile = stripQuotes(curArg.substring("--logfile=".length()));
-                    appendToLog = false;
-                } else if (curArg.startsWith("--appendlogfile=")) {
-                    logFile = stripQuotes(curArg.substring("--appendlogfile=".length()));
-                    appendToLog = true;
-                } else if (curArg.equals("--no-plugins")) {
-                    noPlugins = true;
-                } else if (curArg.equals("--no-gui")) {
-                    noGUI = true;
-                } else {
-                    System.err.println("Unknown command line argument: " + curArg);
+        final LongOpt[] longOpts = new LongOpt[] {
+                new ExtLongOpt("recipient", LongOpt.REQUIRED_ARGUMENT, null, 'r', "Read the file to send from standard input."),
+                new ExtLongOpt("stdin", LongOpt.NO_ARGUMENT, null, 1, "Specifies the phone number of a recipient to send the fax to. You may specify multiple arguments for multiple recipients."),
+                new ExtLongOpt("admin", LongOpt.NO_ARGUMENT, null, 'A', "Start up in admin mode."),
+                new ExtLongOpt("debug", LongOpt.NO_ARGUMENT, null, 'd', "Output some debugging information."),
+                new ExtLongOpt("logfile", LongOpt.REQUIRED_ARGUMENT, null, 'l', "The logfile to log debug information to (if not specified, use stdout)."),
+                new LongOpt("appendlogfile", LongOpt.REQUIRED_ARGUMENT, null, 6),
+                new ExtLongOpt("background", LongOpt.NO_ARGUMENT, null, 2, "If there is no already running instance, launch a new instance and terminate (after submitting the file to send)."),
+                new ExtLongOpt("noclose", LongOpt.NO_ARGUMENT, null, 3, "Do not close YajHFC after submitting the fax."),
+                new ExtLongOpt("showtab", LongOpt.REQUIRED_ARGUMENT, null, 'T', "Sets the tab to display on startup. Specify 0 or R for the \"Received\", 1 or S for the \"Sent\" or 2 or T for the \"Transmitting\" tab."),
+                new ExtLongOpt("loadplugin", LongOpt.REQUIRED_ARGUMENT, null, 4, "Specifies the jar file of a YajHFC plugin to load."),
+                new ExtLongOpt("loaddriver", LongOpt.REQUIRED_ARGUMENT, null, 5, "Specifies the location of a JDBC driver JAR file to load."),
+                new ExtLongOpt("no-plugins", LongOpt.NO_ARGUMENT, null, 7, "Disables loading plugins from the plugin.lst file."),
+                new ExtLongOpt("no-gui", LongOpt.NO_ARGUMENT, null, 8, "Sends a fax with a minimal GUI."),
+                new ExtLongOpt("configdir", LongOpt.REQUIRED_ARGUMENT, null, 'c', "Sets a configuration directory to use instead of ~/.yajhfc"),
+                new ExtLongOpt("help", LongOpt.NO_ARGUMENT, null, 'h', "Displays this text.")
+        };
+        final String[] origArgs = args.clone();
+        
+        Getopt getopt = new Getopt("yajhfc", args, "hAdc:r:T:l:", longOpts);
+        int opt;
+        while ((opt = getopt.getopt()) != -1) {
+            switch (opt) {
+            case 1: //stdin
+                useStdin = true;
+                break;
+            case 2: //background
+                forkNewInst = true;
+                break;
+            case 3: //noclose
+                closeAfterSubmit = false;
+                break;
+            case 4: // loadplugin
+                plugins.add(new PluginInfo(new File(getopt.getOptarg()),
+                        PluginType.PLUGIN, false));
+                break;
+            case 5: //loaddriver
+                plugins.add(new PluginInfo(new File(getopt.getOptarg()),
+                        PluginType.JDBCDRIVER, false));
+                break;
+            case 'l': //logfile
+                logFile = getopt.getOptarg();
+                appendToLog = false;
+                break;
+            case 6: //appendlogfile
+                logFile = getopt.getOptarg();
+                appendToLog = true;
+                break;
+            case 7: // no-plugins
+                noPlugins = true;
+                break;
+            case 8: // no-gui
+                noGUI = true;
+                break;
+            case 'h': // help
+                printHelp(System.out, longOpts);
+                System.exit(0);
+                break;
+            case 'A': // admin
+                adminMode = true;
+                break;
+            case 'd': // debug
+                debugMode = true;
+                break;
+            case 'c': // configdir
+                cmdLineConfDir = getopt.getOptarg();
+                break;
+            case 'r': // recipient
+                recipients.add(getopt.getOptarg());
+                break;
+            case 'T': // showtab
+                switch (getopt.getOptarg().charAt(0)) {
+                case '0':
+                case 'R':
+                case 'r':
+                    selectedTab = 0;
+                    break;
+                case '1':
+                case 'S':
+                case 's':
+                    selectedTab = 1;
+                    break;
+                case '2':
+                case 'T':
+                case 't':
+                    selectedTab = 2;
+                    break;
+                default:
+                    System.err.println("Unknown tab: " + getopt.getOptarg());
                 }
-            } else if (curArg.startsWith("-"))
-                System.err.println("Unknown command line argument: " + curArg);
-            else // treat argument as file name to send
-                fileNames.add(curArg);
+                break;
+            case '?':
+                break;
+            default:
+                System.err.println("Unknown option \'" + (char)opt + "\' in " + args[getopt.getOptind()]);
+                break;
+            }
         }
+        // Add non-option arguments:
+        for (int i=getopt.getOptind(); i<args.length; i++) {
+            fileNames.add(args[i]);
+        }
+        
+//        for (int i = 0; i < args.length; i++) {
+//            String curArg = args[i];
+//            if (curArg.startsWith("--")) { // command line argument
+//                if (curArg.equals("--help")) {
+//                    printHelp();
+//                    System.exit(0);
+//                } else if (curArg.equals("--stdin"))
+//                    useStdin = true;
+//                else if (curArg.equals("--admin"))
+//                    adminMode = true;
+//                else if (curArg.equals("--debug"))
+//                    debugMode = true;
+//                else if (curArg.equals("--background"))
+//                    forkNewInst = true;
+//                else if (curArg.equals("--noclose")) 
+//                    closeAfterSubmit = false;
+//                else if (curArg.startsWith("--configdir="))
+//                    cmdLineConfDir = stripQuotes(curArg.substring(12)); // 12 == "--configdir=".length()
+//                else if (curArg.startsWith("--recipient="))
+//                    recipients.add(stripQuotes(curArg.substring(12))); // 12 == "--recipient=".length()
+//                else if (curArg.startsWith("--showtab=") && curArg.length() > 10) { // 10 == ""--showtab="".length()
+//                    switch (curArg.charAt(10)) {
+//                    case '0':
+//                    case 'R':
+//                    case 'r':
+//                        selectedTab = 0;
+//                        break;
+//                    case '1':
+//                    case 'S':
+//                    case 's':
+//                        selectedTab = 1;
+//                        break;
+//                    case '2':
+//                    case 'T':
+//                    case 't':
+//                        selectedTab = 2;
+//                        break;
+//                    default:
+//                        System.err.println("Unknown tab: " + curArg.substring(10));
+//                    }
+//                } else if (curArg.startsWith("--loadplugin=")) {
+//                    plugins.add(new PluginInfo(new File(stripQuotes(curArg.substring("--loadplugin=".length()))),
+//                            PluginType.PLUGIN, false));
+//                } else if (curArg.startsWith("--loaddriver=")) {
+//                    plugins.add(new PluginInfo(new File(stripQuotes(curArg.substring("--loaddriver=".length()))), 
+//                            PluginType.JDBCDRIVER, false));
+//                } else if (curArg.startsWith("--logfile=")) {
+//                    logFile = stripQuotes(curArg.substring("--logfile=".length()));
+//                    appendToLog = false;
+//                } else if (curArg.startsWith("--appendlogfile=")) {
+//                    logFile = stripQuotes(curArg.substring("--appendlogfile=".length()));
+//                    appendToLog = true;
+//                } else if (curArg.equals("--no-plugins")) {
+//                    noPlugins = true;
+//                } else if (curArg.equals("--no-gui")) {
+//                    noGUI = true;
+//                } else {
+//                    System.err.println("Unknown command line argument: " + curArg);
+//                }
+//            } else if (curArg.startsWith("-"))
+//                System.err.println("Unknown command line argument: " + curArg);
+//            else // treat argument as file name to send
+//                fileNames.add(curArg);
+//        }
         
         if (debugMode && ":prompt:".equals(logFile)) {
             logFile = (new LogFilePrompter()).promptForLogfile();
@@ -338,8 +519,8 @@ public final class Launcher2 {
             launchLog.config("---- BEGIN System.getProperties() dump");
             Utils.dumpProperties(System.getProperties(), launchLog);
             launchLog.config("---- END System.getProperties() dump");
-            launchLog.config("" + args.length + " command line arguments:");
-            for (String arg : args) {
+            launchLog.config("" + origArgs.length + " command line arguments:");
+            for (String arg : origArgs) {
                 launchLog.config(arg);
             }
         }

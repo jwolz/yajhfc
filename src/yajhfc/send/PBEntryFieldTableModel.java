@@ -23,9 +23,11 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 import yajhfc.phonebook.PBEntryField;
+import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
+import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 
-public class NumberTFLItemTableModel extends AbstractTableModel {
-    protected List<NumberTFLItem> list;
+public class PBEntryFieldTableModel extends AbstractTableModel {
+    protected List<PBEntryFieldContainer> list;
     
     protected static final PBEntryField[] columns;
     static {
@@ -40,7 +42,7 @@ public class NumberTFLItemTableModel extends AbstractTableModel {
         }
     }
     
-    public NumberTFLItemTableModel(List<NumberTFLItem> backingList) {
+    public PBEntryFieldTableModel(List<PBEntryFieldContainer> backingList) {
         this.list = backingList;
     }
 
@@ -53,8 +55,8 @@ public class NumberTFLItemTableModel extends AbstractTableModel {
     }
 
     public Object getValueAt(int rowIndex, int columnIndex) {
-        NumberTFLItem item = list.get(rowIndex);
-        return item.fields.get(columns[columnIndex]);
+        PBEntryFieldContainer item = list.get(rowIndex);
+        return item.getField(columns[columnIndex]);
     }
     
     @Override
@@ -64,8 +66,8 @@ public class NumberTFLItemTableModel extends AbstractTableModel {
     
     @Override
     public void setValueAt(Object value, int rowIndex, int columnIndex) {
-        NumberTFLItem item = list.get(rowIndex);
-        item.fields.put(columns[columnIndex], (String)value);
+        PBEntryFieldContainer item = list.get(rowIndex);
+        item.setField(columns[columnIndex], (String)value);
         fireTableCellUpdated(rowIndex, columnIndex);
     }
 
@@ -79,16 +81,16 @@ public class NumberTFLItemTableModel extends AbstractTableModel {
         return String.class;
     }
     
-    public void addRow(NumberTFLItem item) {
+    public void addRow(PBEntryFieldContainer item) {
         list.add(item);
         fireTableRowsInserted(list.size()-1, list.size()-1);
     }
     
     public void addRow() {
-        addRow(new NumberTFLItem(""));
+        addRow(new DefaultPBEntryFieldContainer(""));
     }
     
-    public void addRows(Collection<NumberTFLItem> newItems) {
+    public void addRows(Collection<PBEntryFieldContainer> newItems) {
         list.addAll(newItems);
         fireTableRowsInserted(list.size()-newItems.size(), list.size()-1);
     }

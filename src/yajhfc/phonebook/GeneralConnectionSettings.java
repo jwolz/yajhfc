@@ -43,7 +43,7 @@ public class GeneralConnectionSettings extends AbstractConnectionSettings {
         }
     }
     
-    private String[] pbFields = new String[PBEntryField.values().length];
+    private String[] pbFields = new String[entryFields.length];
     
     public String getMappingFor(PBEntryField field) {
         return pbFields[field.ordinal()];
