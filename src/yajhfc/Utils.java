@@ -18,6 +18,8 @@ package yajhfc;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dialog;
 import java.awt.Frame;
@@ -51,9 +53,10 @@ public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2008 by Jonas Wolz";
-    public static final String AppVersion = "0.3.9d";
+    public static final String AppVersion = "0.3.9g";
     public static final String AuthorEMail = "Jonas Wolz &lt;jwolz@freenet.de&gt;";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
+    
     
     public static boolean debugMode = false;
     //public static PrintStream debugOut = System.out;
@@ -405,6 +408,20 @@ public final class Utils {
             dlgToSet.setCursor(defCursor);
         for (Frame f : Frame.getFrames()) {
             f.setCursor(defCursor);
+        }
+    }
+    
+    /**
+     * Sets the enabled state for all children of the given Container (but not the container itself)
+     * @param container
+     * @param enable
+     */
+    public static void enableChildren(Container container, boolean enable) {
+        for (Component comp : container.getComponents()) {
+            comp.setEnabled(enable);
+            if (comp instanceof Container) {
+                enableChildren((Container)comp, enable);
+            }
         }
     }
     

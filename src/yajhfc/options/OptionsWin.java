@@ -137,10 +137,11 @@ public class OptionsWin extends JDialog {
     JPanel panelServer, panelSend, panelPaths, panelUI;
     
     JPanel panelServerRetrieval, panelNewFaxAction;
-    JCheckBox checkNewFax_Beep, checkNewFax_ToFront, checkNewFax_Open, checkNewFax_MarkAsRead;
+    JCheckBox checkNewFax_Beep, checkNewFax_ToFront, checkNewFax_Open, checkNewFax_MarkAsRead, checkNewFax_BlinkTrayIcon;
     JSpinner spinStatusInterval, spinTableInterval;
     
-    JCheckBox checkPreferTIFF, checkUseDisconnected, checkShowTrayIcon, checkMinimizeToTray;
+    //JCheckBox checkPreferTIFF;
+    JCheckBox checkUseDisconnected, checkShowTrayIcon, checkMinimizeToTray;
     
     JPanel panelPersistence;
     JComboBox comboPersistenceMethods;
@@ -233,7 +234,7 @@ public class OptionsWin extends JDialog {
         checkAskPassword.setSelected(foEdit.askPassword);
         checkAskAdminPassword.setSelected(foEdit.askAdminPassword);
         checkAskUsername.setSelected(foEdit.askUsername);
-        checkPreferTIFF.setSelected(foEdit.preferRenderedTIFF);
+        //checkPreferTIFF.setSelected(foEdit.preferRenderedTIFF);
         checkUseDisconnected.setSelected(foEdit.useDisconnectedMode);
         checkShowTrayIcon.setSelected(foEdit.showTrayIcon);
         checkMinimizeToTray.setSelected(foEdit.minimizeToTray);
@@ -242,6 +243,7 @@ public class OptionsWin extends JDialog {
         checkNewFax_ToFront.setSelected((foEdit.newFaxAction & FaxOptions.NEWFAX_TOFRONT) != 0);
         checkNewFax_Open.setSelected((foEdit.newFaxAction & FaxOptions.NEWFAX_VIEWER) != 0);
         checkNewFax_MarkAsRead.setSelected((foEdit.newFaxAction & FaxOptions.NEWFAX_MARKASREAD) != 0);
+        checkNewFax_BlinkTrayIcon.setSelected((foEdit.newFaxAction & FaxOptions.NEWFAX_BLINKTRAYICON) != 0);
         
         spinMaxDial.setValue(Integer.valueOf(foEdit.maxDial));
         spinMaxTry.setValue(Integer.valueOf(foEdit.maxTry));
@@ -315,10 +317,10 @@ public class OptionsWin extends JDialog {
             ButtonOK = new JButton(_("OK"));
             ButtonOK.addActionListener(new ActionListener() {
                public void actionPerformed(ActionEvent e) {
-                   saveSettings(foEdit);
-                   
-                   modalResult = true;
-                   dispose();
+                   if (saveSettings(foEdit)) {
+                       modalResult = true;
+                       dispose();
+                   }
                 } 
             });
             ButtonOK.setPreferredSize(buttonSize);
@@ -366,23 +368,22 @@ public class OptionsWin extends JDialog {
 //        return TabMain;
 //    }
     
+    /**
+     * Creates the tree node structure
+     */
     private void createRootNode() {
         rootNode = new PanelTreeNode(null, null, "root", null);
         List<PanelTreeNode> rootChilds = new ArrayList<PanelTreeNode>();
 
         rootChilds.add(new PanelTreeNode(rootNode, getPanelCommon(), _("General"), Utils.loadIcon("general/Preferences")));
         
-        PathAndViewPanel pathPanel = new PathAndViewPanel();
-        optionsPages.add(pathPanel);
-        rootChilds.add(new PanelTreeNode(rootNode, pathPanel, _("Paths and viewers"), Utils.loadIcon("development/Host")));
+        rootChilds.add(new PanelTreeNode(rootNode, new PathAndViewPanel(), _("Paths and viewers"), Utils.loadIcon("development/Host")));
 
         rootChilds.add(serverSettingsNode = new PanelTreeNode(rootNode, getPanelServerSettings(), _("Server"), Utils.loadIcon("development/Server")));
         
         PanelTreeNode deliveryNode = new PanelTreeNode(rootNode, getPanelSend(), _("Delivery"), Utils.loadIcon("general/SendMail"));
-        CoverPanel coverPanel = new CoverPanel();
-        optionsPages.add(coverPanel);
         deliveryNode.setChildren(new PanelTreeNode[] {
-                new PanelTreeNode(deliveryNode, coverPanel, _("Cover page"), Utils.loadIcon("general/ComposeMail"))
+                new PanelTreeNode(deliveryNode, new CoverPanel(), _("Cover page"), Utils.loadIcon("general/ComposeMail"))
         });
         rootChilds.add(deliveryNode);
         
@@ -402,6 +403,7 @@ public class OptionsWin extends JDialog {
                 new PanelTreeNode(tables,  getPanelRecvFmt(), _("Received"), Utils.loadCustomIcon("received.gif"), tableFormat.format(new Object[] {_("Received")})),
                 new PanelTreeNode(tables, getPanelSentFmt(), _("Sent"), Utils.loadCustomIcon("sent.gif"), tableFormat.format(new Object[] {_("Sent")})),
                 new PanelTreeNode(tables, getPanelSendingFmt(), _("Transmitting"), Utils.loadCustomIcon("sending.gif"), tableFormat.format(new Object[] {_("Transmitting")})),
+                new PanelTreeNode(tables, new ArchivePanel(), _("Archive"), Utils.loadCustomIcon("archive.gif"), tableFormat.format(new Object[] {_("Archive")}))
         });
         rootChilds.add(tables);
 
@@ -468,11 +470,22 @@ public class OptionsWin extends JDialog {
         return mainPanel;
     }
 
+    /**
+     * Adds the node and it children to the tabPanel and to optionsPages (if instanceof OptionsPage)
+     * @param tabPanel
+     * @param node
+     * @param pathToParent
+     */
     private void addTreeToPanel(JPanel tabPanel, PanelTreeNode node, TreePath pathToParent) {
         JComponent comp = node.getPanel();
         if (comp != null) {
             tabPanel.add(comp);
             comp.setVisible(false);
+            comp.setOpaque(true);
+            comp.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+            if (comp instanceof OptionsPage) {
+                optionsPages.add((OptionsPage)comp);
+            }
         }
         if (node.getChildren() != null) {
             TreePath pathToMe = (pathToParent == null) ? new TreePath(node) :
@@ -638,15 +651,16 @@ public class OptionsWin extends JDialog {
     
     private JPanel getPanelNewFaxAction() {
         if (panelNewFaxAction == null) {
+            final int rowCount = 7;
             double[][] tablelay = {
                     {border, 4*border, TableLayout.FILL, border},
-                    new double[6]
+                    new double[rowCount]
             };
-            double rowh = 1 / (double)(tablelay[1].length - 2);
+            double rowh = 1 / (double)(rowCount - 2);
             tablelay[1][0] = border;
-            tablelay[1][tablelay[1].length - 1] = border;
-            Arrays.fill(tablelay[1], 1, tablelay[1].length - 1, rowh);
-            tablelay[1][tablelay[1].length - 2] = TableLayout.FILL;
+            tablelay[1][rowCount - 1] = border;
+            Arrays.fill(tablelay[1], 1, rowCount - 1, rowh);
+            tablelay[1][rowCount - 2] = TableLayout.FILL;
             
             panelNewFaxAction = new JPanel(new TableLayout(tablelay), false);
             panelNewFaxAction.setBorder(BorderFactory.createTitledBorder(_("Actions after receiving a new fax:")));
@@ -661,28 +675,31 @@ public class OptionsWin extends JDialog {
             });
             checkNewFax_MarkAsRead = new JCheckBox(_("And mark as read"));
             checkNewFax_MarkAsRead.setEnabled(false);
+            checkNewFax_BlinkTrayIcon = new JCheckBox(_("Show flashing tray icon"));
             
             panelNewFaxAction.add(checkNewFax_Beep, "1,1,2,1");
             panelNewFaxAction.add(checkNewFax_ToFront, "1,2,2,2");
             panelNewFaxAction.add(checkNewFax_Open, "1,3,2,3");
             panelNewFaxAction.add(checkNewFax_MarkAsRead, "2,4");
+            panelNewFaxAction.add(checkNewFax_BlinkTrayIcon, "1,5,2,5");
         }
         return panelNewFaxAction;
     }
     
     private JPanel getPanelServerRetrieval() {
         if (panelServerRetrieval == null) {
+            final int rowCount = 13;
             double[][] tablelay = {
                     {border, TableLayout.FILL, border},
-                    new double[15]
+                    new double[rowCount]
             };
-            double rowh = 1 / (double)(tablelay[1].length - 1);
+            double rowh = 1 / (double)(rowCount - 1);
             //tablelay[1][0] = border;
-            tablelay[1][tablelay[1].length - 1] = border;
-            Arrays.fill(tablelay[1], 0, tablelay[1].length - 1, rowh);
-            tablelay[1][3] = tablelay[1][5] = tablelay[1][7] = rowh*0.5;
-            tablelay[1][8] = tablelay[1][10] = tablelay[1][12] = rowh*1.5;
-            tablelay[1][tablelay[1].length - 2] = TableLayout.FILL;
+            tablelay[1][rowCount - 1] = border;
+            Arrays.fill(tablelay[1], 0, rowCount - 1, rowh);
+            tablelay[1][3] = tablelay[1][5]  = rowh*0.5;
+            tablelay[1][8] = tablelay[1][10] = rowh*1.3333333333;
+            tablelay[1][rowCount - 2] = TableLayout.FILL;
             
             panelServerRetrieval = new JPanel(new TableLayout(tablelay), false);
             panelServerRetrieval.setBorder(BorderFactory.createTitledBorder(_("General settings:")));
@@ -695,8 +712,8 @@ public class OptionsWin extends JDialog {
             spinSocketTimeout = new JSpinner(new SpinnerNumberModel((double)90, 0, 86400, 1));
             spinSocketTimeout.setToolTipText(_("The maximum time to wait for a interaction with the server to complete. Values below 5 are not recommended; 0 disables this timeout."));
             
-            checkPreferTIFF = new JCheckBox("<html>" + _("Prefer rendered TIFF (experimental)") + "</html>");
-            checkPreferTIFF.setToolTipText(_("Try to fetch the rendered TIFF from the HylaFAX server instead of the source file."));
+            //checkPreferTIFF = new JCheckBox("<html>" + _("Prefer rendered TIFF (experimental)") + "</html>");
+            //checkPreferTIFF.setToolTipText(_("Try to fetch the rendered TIFF from the HylaFAX server instead of the source file."));
             
             checkUseDisconnected = new JCheckBox("<html>" + _("Create new session for every action") + "</html>");
             checkUseDisconnected.setToolTipText(_("Connect to the server and log in for every action (e.g. view a fax, update tables, ...) and disconnect afterwards. This impairs performance but might work around some bugs."));
@@ -705,11 +722,11 @@ public class OptionsWin extends JDialog {
             spinOffset.setToolTipText(_("Offset to be added to dates received from the HylaFAX server before displaying them."));
             panelServerRetrieval.add(checkPCLBug, "1, 2, 1, 3");
             panelServerRetrieval.add(checkUseDisconnected, "1, 4, 1, 5");
-            panelServerRetrieval.add(checkPreferTIFF, "1, 6, 1, 7");
+            //panelServerRetrieval.add(checkPreferTIFF, "1, 6, 1, 7");
             
-            addWithLabel(panelServerRetrieval, spinTableInterval, "<html>" + _("Table refresh interval (secs.):") + "</html>", "1, 9, 1, 9, f, c");
-            addWithLabel(panelServerRetrieval, spinStatusInterval, "<html>" + _("Server status refresh interval (secs.):") + "</html>", "1, 11, 1, 11, f, c");
-            addWithLabel(panelServerRetrieval, spinSocketTimeout, "<html>" + _("Server socket timeout (secs):") + "</html>", "1, 13, 1, 13, f, c"); 
+            addWithLabel(panelServerRetrieval, spinTableInterval, "<html>" + _("Table refresh interval (secs.):") + "</html>", "1, 7, 1, 7, f, c");
+            addWithLabel(panelServerRetrieval, spinStatusInterval, "<html>" + _("Server status refresh interval (secs.):") + "</html>", "1, 9, 1, 9, f, c");
+            addWithLabel(panelServerRetrieval, spinSocketTimeout, "<html>" + _("Server socket timeout (secs):") + "</html>", "1, 11, 1, 11, f, c"); 
         }
         return panelServerRetrieval;
     }
@@ -781,26 +798,23 @@ public class OptionsWin extends JDialog {
         return lbl;
     }
     
-    @SuppressWarnings("unchecked")
-    private fmtEditor getPanelRecvFmt() {
+    private fmtEditor<RecvFormat> getPanelRecvFmt() {
         if (PanelRecvFmt == null) {
-            PanelRecvFmt = new fmtEditor(RecvFormat.values(), recvfmt, Collections.EMPTY_LIST, new FmtItemRenderer(), FmtItemDescComparator.globalInstance, null, _("Selected columns:"), _("Available columns:")); //Arrays.asList(Utils.requiredRecvFmts));
+            PanelRecvFmt = new fmtEditor<RecvFormat>(RecvFormat.values(), recvfmt, Collections.<RecvFormat>emptyList(), new FmtItemRenderer(), FmtItemDescComparator.<RecvFormat>getInstance(), null, _("Selected columns:"), _("Available columns:")); //Arrays.asList(Utils.requiredRecvFmts));
         }
         return PanelRecvFmt;
     }
     
-    @SuppressWarnings("unchecked")
-    private fmtEditor getPanelSendingFmt() {
+    private fmtEditor<JobFormat> getPanelSendingFmt() {
         if (PanelSendingFmt == null) {
-            PanelSendingFmt = new fmtEditor(JobFormat.values(), sendingfmt, Collections.EMPTY_LIST, new FmtItemRenderer(), FmtItemDescComparator.globalInstance, null, _("Selected columns:"), _("Available columns:")); // Arrays.asList(Utils.requiredSendingFmts));
+            PanelSendingFmt = new fmtEditor<JobFormat>(JobFormat.values(), sendingfmt, Collections.<JobFormat>emptyList(), new FmtItemRenderer(), FmtItemDescComparator.<JobFormat>getInstance(), null, _("Selected columns:"), _("Available columns:")); // Arrays.asList(Utils.requiredSendingFmts));
         }
         return PanelSendingFmt;
     }
     
-    @SuppressWarnings("unchecked")
-    private fmtEditor getPanelSentFmt() {
+    private fmtEditor<JobFormat>  getPanelSentFmt() {
         if (PanelSentFmt == null) {
-            PanelSentFmt = new fmtEditor(JobFormat.values(), sentfmt, Collections.EMPTY_LIST, new FmtItemRenderer(), FmtItemDescComparator.globalInstance, null, _("Selected columns:"), _("Available columns:")); //Arrays.asList(Utils.requiredSentFmts));
+            PanelSentFmt = new fmtEditor<JobFormat>(JobFormat.values(), sentfmt, Collections.<JobFormat>emptyList(), new FmtItemRenderer(), FmtItemDescComparator.<JobFormat>getInstance(), null, _("Selected columns:"), _("Available columns:")); //Arrays.asList(Utils.requiredSentFmts));
         }
         return PanelSentFmt;
     }
@@ -887,10 +901,15 @@ public class OptionsWin extends JDialog {
         }
     }
     
-    public void saveSettings(FaxOptions foEdit) {
+    /**
+     * Saves the settings. Returns true if they were saved successfully
+     * @param foEdit
+     * @return
+     */
+    public boolean saveSettings(FaxOptions foEdit) {
         
         if (!validateInput()) {
-            return;
+            return false;
         }
         
         try {
@@ -937,7 +956,7 @@ public class OptionsWin extends JDialog {
             foEdit.askPassword = checkAskPassword.isSelected();
             foEdit.askAdminPassword = checkAskAdminPassword.isSelected();
             foEdit.askUsername = checkAskUsername.isSelected();
-            foEdit.preferRenderedTIFF = checkPreferTIFF.isSelected();
+            //foEdit.preferRenderedTIFF = checkPreferTIFF.isSelected();
             foEdit.useDisconnectedMode = checkUseDisconnected.isSelected();
             foEdit.showTrayIcon = checkShowTrayIcon.isSelected();
             foEdit.minimizeToTray = checkMinimizeToTray.isSelected();
@@ -951,6 +970,8 @@ public class OptionsWin extends JDialog {
                 val |= FaxOptions.NEWFAX_VIEWER;
             if (checkNewFax_MarkAsRead.isSelected())
                 val |= FaxOptions.NEWFAX_MARKASREAD;
+            if (checkNewFax_BlinkTrayIcon.isSelected())
+                val |= FaxOptions.NEWFAX_BLINKTRAYICON;
             foEdit.newFaxAction = val;
             
             foEdit.recvfmt.clear();
@@ -962,11 +983,16 @@ public class OptionsWin extends JDialog {
             
             foEdit.defaultModem = getModem();
             
+            for (OptionsPage page : optionsPages) {
+                page.saveSettings(foEdit);
+            }
+            
             // Save persistence settings:
             String persistenceMethod = ((AvailablePersistenceMethod)comboPersistenceMethods.getSelectedItem()).getKey();
             String config = persistenceConfigs.get(persistenceMethod);
             if (config == null) config = "";
-            if (!(persistenceMethod.equals(foEdit.persistenceMethod) && config.equals(foEdit.persistenceConfig))) {
+            if (!(persistenceMethod.equals(foEdit.persistenceMethod) && 
+                    ((foEdit.persistenceConfig == null) || config.equals(foEdit.persistenceConfig)))) {
                 PersistentReadState.getCurrent().persistReadState();
                 PersistentReadState.resetCurrent();
             }
@@ -977,15 +1003,12 @@ public class OptionsWin extends JDialog {
                 JOptionPane.showMessageDialog(OptionsWin.this, Utils._("You will need to restart the program for the changes to the list of plugins and JDBC drivers to take full effect."), Utils._("Plugins & JDBC"), JOptionPane.INFORMATION_MESSAGE);
             }
             
-            for (OptionsPage page : optionsPages) {
-                page.saveSettings(foEdit);
-            }
             
         } catch (Exception e1) {
             ExceptionDialog.showExceptionDialog(OptionsWin.this, Utils._("Error saving the settings:"), e1);
-            return;
+            return false;
         }
-        
+        return true;
     }
     
     /**

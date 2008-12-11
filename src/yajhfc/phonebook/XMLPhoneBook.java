@@ -18,14 +18,23 @@ package yajhfc.phonebook;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dialog;
+import java.awt.HeadlessException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -41,17 +50,22 @@ import org.w3c.dom.NodeList;
 import yajhfc.Utils;
 import yajhfc.util.ExampleFileFilter;
 import yajhfc.util.ExceptionDialog;
+import yajhfc.util.SafeJFileChooser;
 
 public class XMLPhoneBook extends PhoneBook {
 
+    private static final Logger log = Logger.getLogger(XMLPhoneBook.class.getName());
+    
     public static final String PB_Prefix = "XML";      // The prefix of this Phonebook type's descriptor
     public static final String PB_DisplayName = Utils._("XML Phonebook"); // A user-readable name for this Phonebook type
     public static final String PB_Description = Utils._("A Phonebook saving its entries as a XML file."); // A user-readable description of this Phonebook type
     
     private ArrayList<XMLPhoneBookEntry> list;
-    private File file;
+    private XMLSettings settings;
     private boolean isOpened = false;
     private boolean wasChanged = false;
+    
+    protected final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     
     public void resort() {
         Collections.sort(list);
@@ -101,17 +115,7 @@ public class XMLPhoneBook extends PhoneBook {
 
     @Override
     public String browseForPhoneBook() {
-        JFileChooser jfc = new yajhfc.util.SafeJFileChooser(file);
-        jfc.removeChoosableFileFilter(jfc.getAcceptAllFileFilter());
-        ExampleFileFilter ff = new ExampleFileFilter("phonebook", Utils._("Phonebook files"));
-        jfc.addChoosableFileFilter(ff);
-        jfc.addChoosableFileFilter(jfc.getAcceptAllFileFilter());
-        jfc.setFileFilter(ff);
-        
-        if (jfc.showOpenDialog(parentDialog) == JFileChooser.APPROVE_OPTION)
-            return PB_Prefix + ":" + jfc.getSelectedFile().getPath();
-        else
-            return null;
+        return new PBBrowser(settings).browseForPhoneBook(parentDialog).saveToString();
     }
 
     @Override
@@ -120,7 +124,6 @@ public class XMLPhoneBook extends PhoneBook {
             return;
         if (wasChanged) {
             try {
-                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder builder = factory.newDocumentBuilder();
 
                 Document doc = builder.newDocument();
@@ -135,7 +138,7 @@ public class XMLPhoneBook extends PhoneBook {
                 Transformer transformer = tFactory.newTransformer();
 
                 DOMSource source = new DOMSource(doc);
-                StreamResult result = new StreamResult(new FileOutputStream(file));
+                StreamResult result = new StreamResult(new FileOutputStream(settings.fileName));
                 transformer.transform(source, result);
                 wasChanged = false;
             } catch (Exception e) {
@@ -163,10 +166,15 @@ public class XMLPhoneBook extends PhoneBook {
         
         for (int i = 0; i < nl.getLength(); i++) {
             Node item = nl.item(i);
-            if ((item.getNodeType() == Node.ELEMENT_NODE) && (item.getNodeName().equals("entry"))) {
-                XMLPhoneBookEntry entry = new XMLPhoneBookEntry(this);
-                entry.loadFromXML((Element)item);
-                list.add(entry);
+            if ((item.getNodeType() == Node.ELEMENT_NODE)) {
+                String nodeName = item.getNodeName();
+                if (nodeName.equals("entry")) {
+                    XMLPhoneBookEntry entry = new XMLPhoneBookEntry(this);
+                    entry.loadFromXML((Element)item);
+                    list.add(entry);
+                } else {
+                    log.warning("Unknown node: " + nodeName);
+                }
             }
         }
         
@@ -188,7 +196,9 @@ public class XMLPhoneBook extends PhoneBook {
             list.add(pb);
         } */
 
-        file = new File(descriptor);
+        settings = new XMLSettings();
+        settings.loadFromString(descriptor);
+        
         reloadEntries();
         isOpened = true;
     }
@@ -196,13 +206,13 @@ public class XMLPhoneBook extends PhoneBook {
     private void reloadEntries() throws PhoneBookException {
         list.clear();
         
+        File file = new File(settings.fileName);
         if (!file.exists()) {
             isOpened = true;
             return;
         }
         
         try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             
             Document doc = builder.parse(file);
@@ -224,7 +234,12 @@ public class XMLPhoneBook extends PhoneBook {
     
     @Override
     public String getDisplayCaption() {
-        return PB_Prefix + ":" + Utils.shortenFileNameForDisplay(file, CAPTION_LENGTH - PB_Prefix.length() - 1);
+        String caption = settings.caption;
+        if (caption != null && caption.length() > 0) {
+            return caption;
+        } else {
+            return Utils.shortenFileNameForDisplay(settings.fileName, CAPTION_LENGTH);
+        }
     }
     
     public XMLPhoneBook(Dialog parent) {
@@ -234,5 +249,69 @@ public class XMLPhoneBook extends PhoneBook {
         itemsView = Collections.<PhoneBookEntry>unmodifiableList(list);
     }
 
+    static class PBBrowser extends SafeJFileChooser {
+        
+        private JTextField textCaption;
+        private JPanel bottomPanel;
+        
+        public PBBrowser(XMLSettings settings) {
+            super();
+            
+            removeChoosableFileFilter(getAcceptAllFileFilter());
+            ExampleFileFilter ff = new ExampleFileFilter("phonebook", Utils._("Phonebook files"));
+            addChoosableFileFilter(ff);
+            addChoosableFileFilter(getAcceptAllFileFilter());
+            setFileFilter(ff);
+            
+            
+            bottomPanel = new JPanel(false);
+            bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
+            bottomPanel.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createTitledBorder(Utils._("Phonebook name to display:")),
+                    BorderFactory.createEmptyBorder(5, 10, 5, 10)));
+            
+//            JLabel captionLabel = new JLabel(Utils._("Phonebook name to display:"));
+//            captionLabel.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+            
+            textCaption = new JTextField();
+            
+            //bottomPanel.add(captionLabel);
+            bottomPanel.add(textCaption);
+            
+            if (settings != null) {
+                setSelectedFile(new File(settings.fileName));
+                textCaption.setText(settings.caption);
+            }
+        }
+        
+        @Override
+        protected JDialog createDialog(Component parent)
+                throws HeadlessException {
+            JDialog dialog = super.createDialog(parent);
+            JPanel newContentPane = new JPanel(new BorderLayout(), false);
+            newContentPane.add(dialog.getContentPane(), BorderLayout.CENTER);
+            newContentPane.add(bottomPanel, BorderLayout.SOUTH);
+            dialog.setContentPane(newContentPane);
+            return dialog;
+        }
+        
+        /**
+         * Browse for phonebook.
+         * Returns true if 
+         * @return
+         */
+        public XMLSettings browseForPhoneBook(Component parentDialog) {
+            if (showOpenDialog(parentDialog) == JFileChooser.APPROVE_OPTION) {
+                XMLSettings settings = new XMLSettings();
+                settings.fileName = getSelectedFile().getAbsolutePath();
+                
+                settings.caption = textCaption.getText().trim();
+                
+                return settings;
+            } else {
+                return null;
+            }
+        }
+    }
 }
 

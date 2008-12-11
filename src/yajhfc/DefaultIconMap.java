@@ -24,6 +24,8 @@ import java.util.Map;
 import javax.swing.Icon;
 
 import yajhfc.model.SentYajJob;
+import yajhfc.model.archive.QueueFileFormat;
+import yajhfc.model.archive.ArchiveYajJob;
 
 /**
  * A default implementation for the IconMap interface
@@ -64,27 +66,38 @@ public class DefaultIconMap implements IconMap {
     protected static final Map<String,IconMap> instanceCache = new HashMap<String,IconMap>();
     
     public static IconMap getInstance(FmtItem fmtItem, String textData) {
-        String cacheKey = fmtItem.getHylaFmt() + "|" + textData;
+        final String cacheKey = fmtItem.name() + "|" + textData;
         IconMap res = instanceCache.get(cacheKey);
         if (res != null) {
             return res;
         }
         
-        if (fmtItem == JobFormat.a) { // Mapping for job state
+        if (fmtItem == JobFormat.a || fmtItem == JobFormat.a_desc ||
+                fmtItem == QueueFileFormat.state || fmtItem == QueueFileFormat.state_desc ) { // Mapping for job state
             String filename;
             char state;
             if (textData.length() == 0) {
                 state = '?';
             } else {
-                state = textData.charAt(0);
+                if (fmtItem instanceof JobFormat) {
+                    state = textData.charAt(0);
+                } else {
+                    state = ArchiveYajJob.mapArchiveStatusToOneCharCode(textData.charAt(0) - '0');
+                }
             }
             if (state == '?') {
                 filename = "jobstate_questionmark.gif";
             } else {
                 filename = "jobstate_" + state + ".gif";
             }
-            res = new DefaultIconMap(textData, Utils.loadCustomIcon(filename), SentYajJob.getDescriptionForJobState(state));
-        } else if (fmtItem == JobFormat.n) { // Mapping for notification state
+            
+            final String description = SentYajJob.getDescriptionForJobState(state);
+            if (fmtItem == JobFormat.a_desc || fmtItem == QueueFileFormat.state_desc) {
+                res = new DefaultIconMap(description, Utils.loadCustomIcon(filename), description);
+            } else {
+                res = new DefaultIconMap(textData, Utils.loadCustomIcon(filename), description);
+            }
+        } else if (fmtItem == JobFormat.n || fmtItem == JobFormat.n_desc) { // Mapping for notification state
             IconMap original;
             
             char c;
@@ -112,7 +125,34 @@ public class DefaultIconMap implements IconMap {
             if (original == null) {
                 res = new DefaultIconMap(textData, null, null);
             } else {
-                res = new DefaultIconMap(textData, original.getDisplayIcon(), original.getText());   
+                if (fmtItem == JobFormat.n_desc) {
+                    res = new DefaultIconMap(original.getText(), original.getDisplayIcon(), original.getText());
+                } else {
+                    res = new DefaultIconMap(textData, original.getDisplayIcon(), original.getText());
+                }
+            }
+        } else if (fmtItem == QueueFileFormat.notify || fmtItem == QueueFileFormat.notify_desc){
+            IconMap original;
+            
+            if (textData.equals("none")) {
+                original = FaxNotification.NEVER;
+            } else if (textData.equals("when requeued")) {
+                original = FaxNotification.REQUEUE;
+            } else if (textData.equals("when done")) {
+                original = FaxNotification.DONE;
+            } else if (textData.equals("when done+requeued")) {
+                original = FaxNotification.DONE_AND_REQUEUE;
+            } else {
+                original = null;
+            }
+            if (original == null) {
+                res = new DefaultIconMap(textData, null, null);
+            } else {
+                if (fmtItem == QueueFileFormat.notify_desc) {
+                    res = new DefaultIconMap(original.getText(), original.getDisplayIcon(), original.getText());
+                } else {
+                    res = new DefaultIconMap(textData, original.getDisplayIcon(), original.getText());
+                }
             }
         } else {
             res = new DefaultIconMap(textData, null, null);

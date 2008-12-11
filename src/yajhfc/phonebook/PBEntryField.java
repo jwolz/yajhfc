@@ -18,6 +18,9 @@
  */
 package yajhfc.phonebook;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import yajhfc.Utils;
 import yajhfc.filters.FilterKey;
 import yajhfc.filters.FilterKeyList;
@@ -27,22 +30,28 @@ public enum PBEntryField implements FilterKey {
     Name(Utils._("Name"), "surname", true),
     Title(Utils._("Title"), "title", true),
     Company(Utils._("Company"), "company", true),
-    Position(Utils._("Position"), "jobtitle", true),
-    Department(Utils._("Department"), "jobtitle", true),
+    Position(Utils._("Position"), "position", true),
+    Department(Utils._("Department"), "department", true),
     Street(Utils._("Street"), "street", false),
     Location(Utils._("Location"), "location", true),
     Country(Utils._("Country"), "country", true),
     ZIPCode(Utils._("ZIP code"), "zipcode", true),
-    State(Utils._("State"), "zipcode", true),
-    EMailAddress(Utils._("e-mail address"), "emailaddress", true),
+    State(Utils._("State/Region"), "state", true),
+    EMailAddress(Utils._("e-mail address"), "email", true),
+    WebSite(Utils._("Website"), "website", true),
+    FaxNumber(Utils._("Fax number"), "faxnumber", true),
     VoiceNumber(Utils._("Voice number"), "voicenumber", true),
-    FaxNumber(Utils._("Fax number"), "faxnumber", false),
     Comment(Utils._("Comments"), "comment", false)
     ;
+    // Classes to adapt when a field is added/removed:
+    // - MarkupFaxcover
+    // - FaxOptions
+    // - LDAPSettings
     
     private final String desc;
     private final String key;
     private final boolean shortLength;
+    
     private PBEntryField(String desc, String key, boolean shortLength) {
         this.desc = desc;
         this.key = key;
@@ -88,4 +97,15 @@ public enum PBEntryField implements FilterKey {
         }
         
     };
+
+    private static Map<String,PBEntryField> keyToFieldMap;
+    public static Map<String,PBEntryField> getKeyToFieldMap() {
+        if (keyToFieldMap == null) {
+            keyToFieldMap = new HashMap<String,PBEntryField>();
+            for (PBEntryField field : PBEntryField.values()) {
+                PBEntryField.keyToFieldMap.put(field.getKey(), field);
+            }
+        }
+        return keyToFieldMap;
+    }
 }

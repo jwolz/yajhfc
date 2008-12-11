@@ -668,6 +668,11 @@ final class SendWin extends JDialog implements SendWinControl  {
         tflNumbers.addListItem(tfl);
     }
     
+    public void addRecipient(PBEntryFieldContainer recipient) {
+        NumberTFLItem tfl = new NumberTFLItem(recipient);
+        tflNumbers.addListItem(tfl);
+    }
+    
     public void setSubject(String subject) {
         textSubject.setText(subject);
     }
@@ -698,6 +703,16 @@ final class SendWin extends JDialog implements SendWinControl  {
 
     public Window getWindow() {
         return this;
+    }
+
+
+    public void setComment(String comment) {
+        textToComments.setText(comment);
+    }
+
+
+    public void setUseCover(boolean useCover) {
+        checkUseCover.setSelected(useCover);
     }
 }  
 

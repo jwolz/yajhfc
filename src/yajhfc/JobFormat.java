@@ -55,7 +55,7 @@ public enum JobFormat implements FmtItem {
     /**
      * Desired min-scanline time
      */
-    G("G", _("Desired min-scanline time")), 
+    G("G", _("Desired min-scanline time"), Utils._("Desired minimum scanline time"), Integer.class), 
     /**
      * Desired data format
      */
@@ -115,7 +115,7 @@ public enum JobFormat implements FmtItem {
     /**
      * Job done operation
      */
-    V("V", _("Job done operation")), 
+    V("V", _("Job done operation"), Utils._("Operation to perform when job is done")), 
     /**
      * Communication identifier
      */
@@ -139,7 +139,7 @@ public enum JobFormat implements FmtItem {
     /**
      * # consecutive failed tries
      */
-    b("b", _("# consecutive failed tries"), Integer.class), 
+    b("b", _("# consecutive failed tries"), Utils._("Number of consecutive failed attempts to place call"), Integer.class), 
     /**
      * Client machine name
      */
@@ -147,7 +147,7 @@ public enum JobFormat implements FmtItem {
     /**
      * Total # dials
      */
-    d("d", _("Total # dials"), Integer.class), 
+    d("d", _("Total # dials"), Utils._("Total number of phone calls"), Integer.class), 
     /**
      * Number
      */
@@ -163,7 +163,7 @@ public enum JobFormat implements FmtItem {
     /**
      * Page chop handling
      */
-    h("h", _("Page chop handling"), _("Page chop handling (one-character symbol)")), 
+    h("h", _("Page chop handling"), _("Whitespace truncation handling")), 
     /**
      * Scheduling priority
      */
@@ -175,7 +175,7 @@ public enum JobFormat implements FmtItem {
     /**
      * Job kill time
      */
-    k("k", _("Job kill time")), 
+    k("k", _("Job kill time"), _("Time to give up trying to send job")), 
     /**
      * Page length
      */
@@ -195,7 +195,7 @@ public enum JobFormat implements FmtItem {
     /**
      * # pages
      */
-    p("p", _("# pages"), _("# pages transmitted"), Integer.class), 
+    p("p", _("# pages"), _("Number of pages transmitted"), Integer.class), 
     /**
      * Retry time
      */
@@ -211,11 +211,11 @@ public enum JobFormat implements FmtItem {
     /**
      * Tries
      */
-    t("t", _("Tries"), _("Total # tries attempted"), Integer.class), 
+    t("t", _("Tries"), _("Total number of attempts to send job"), Integer.class), 
     /**
      * Max. tries
      */
-    u("u", _("Max. tries"), _("Maximum # tries"), Integer.class), 
+    u("u", _("Max. tries"), _("Maximum number of attempts to send job"), Integer.class), 
     /**
      * Specified number
      */
@@ -227,7 +227,7 @@ public enum JobFormat implements FmtItem {
     /**
      * Maximum # dials
      */
-    x("x", _("Maximum # dials"), Integer.class), 
+    x("x", _("Maximum # dials"), _("Maximum number of times to dial"), Integer.class), 
     /**
      * Pages
      */
@@ -235,7 +235,16 @@ public enum JobFormat implements FmtItem {
     /**
      * Time to send job
      */
-    z("z", _("Time to send job"));
+    z("z", _("Time to send job")),
+    /**
+     * Job state (icon only)
+     */
+    a_desc("a", _("State"), _("Job state (long description)"), IconMap.class),
+    /**
+     * Notification (icon only)
+     */
+    n_desc("n", _("Notification when"), _("E-mail notification handling (long description)"), IconMap.class),
+    ;
     
     private final String description;
     private final String hylaFmt;

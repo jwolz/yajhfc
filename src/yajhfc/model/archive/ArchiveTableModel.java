@@ -16,19 +16,35 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package yajhfc;
+package yajhfc.model.archive;
 
-import java.util.Comparator;
+import java.util.List;
 
-public class FmtItemDescComparator implements Comparator<FmtItem> {
-    public int compare(FmtItem o1, FmtItem o2) {
-        return o1.getDescription().compareTo(o2.getDescription());
-    }        
+import yajhfc.model.MyTableModel;
+import yajhfc.model.YajJob;
+
+public class ArchiveTableModel extends MyTableModel<QueueFileFormat> {
+    @Override
+    public void setData(String[][] newData) {
+        if (newData == null) {
+            setData((List<ArchiveYajJob>)null);
+        } else {
+            throw new UnsupportedOperationException("Not supported.");
+        }
+    }
     
-    public static final FmtItemDescComparator globalInstance = new FmtItemDescComparator();
+    @Override
+    protected YajJob<QueueFileFormat> createYajJob(String[] data) {
+        throw new UnsupportedOperationException("Not supported.");
+    }
     
     @SuppressWarnings("unchecked")
-    public static <T extends FmtItem> Comparator<T> getInstance() {
-        return (Comparator<T>)globalInstance;
+    public void setData(List<ArchiveYajJob> jobList) {
+        if (jobList == null) {
+            this.jobs = null;
+        } else {
+            this.jobs = jobList.toArray(new YajJob[jobList.size()]);
+        }
+        refreshVisibleJobs();
     }
 }

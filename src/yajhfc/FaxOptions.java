@@ -32,6 +32,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import yajhfc.file.FormattedFile.FileFormat;
+import yajhfc.model.archive.QueueFileFormat;
 import yajhfc.options.MultiFileMode;
 import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.convrules.CompanyRule;
@@ -42,7 +43,7 @@ import yajhfc.phonebook.convrules.ZIPCodeRule;
 import yajhfc.send.SendWinStyle;
 
 public class FaxOptions {
-    private static final Logger log = Logger.getLogger(FaxOptions.class.getName());
+    static final Logger log = Logger.getLogger(FaxOptions.class.getName());
     
     public FaxTimezone tzone;
     public String host;
@@ -94,6 +95,7 @@ public class FaxOptions {
     public String FromStreet= "";
     public String FromTitle= "";
     public String FromZIPCode= "";
+    public String FromWebsite= "";
     public boolean useCover, useCustomCover;
     
     // Basic actions when a new fax is detected.
@@ -103,8 +105,9 @@ public class FaxOptions {
     public static final int NEWFAX_TOFRONT = 2;
     public static final int NEWFAX_VIEWER = 4;
     public static final int NEWFAX_MARKASREAD = 8;
+    public static final int NEWFAX_BLINKTRAYICON = 16;
     
-    public int newFaxAction = FaxOptions.NEWFAX_BEEP | FaxOptions.NEWFAX_TOFRONT;
+    public int newFaxAction = FaxOptions.NEWFAX_BEEP | FaxOptions.NEWFAX_TOFRONT | FaxOptions.NEWFAX_BLINKTRAYICON;
     public boolean pclBug = false;
     public boolean askPassword = false, askAdminPassword = true, askUsername = false;
     public String AdminPassword = "";
@@ -119,7 +122,7 @@ public class FaxOptions {
     // Offset for displayed date values in seconds:
     public int dateOffsetSecs = 0;
     
-    public boolean preferRenderedTIFF = false;
+    //public boolean preferRenderedTIFF = false;
     public boolean markFailedJobs = true;
     public boolean showRowNumbers = false;
     public boolean adjustColumnWidths = true;
@@ -164,9 +167,10 @@ public class FaxOptions {
     
     
     // Uncomment for archive support.
-//    public boolean showArchive = true;
-//    public FmtItemList archiveFmt;
-//    public String archiveColState = "";
+    public boolean showArchive = false;
+    public final FmtItemList<QueueFileFormat> archiveFmt;
+    public String archiveColState = "";
+    public String archiveLocation = "";
     
     public FaxOptions() {
         this.host = "";
@@ -192,17 +196,22 @@ public class FaxOptions {
         this.sentfmt.add(JobFormat.s);       
         this.sentfmt.add(JobFormat.t);
         this.sentfmt.add(JobFormat.j);
-        this.sentfmt.add(JobFormat.s);
+        this.sentfmt.add(JobFormat.a_desc);
         this.sentfmt.add(JobFormat.z);
         
         this.sendingfmt = new FmtItemList<JobFormat>(JobFormat.values(), JobFormat.getRequiredFormats());
         this.sendingfmt.addAll(this.sentfmt);
         
-        // Uncomment for archive support.
-//        this.archiveFmt = new FmtItemList(ArchiveYajJob.availableFields, new FmtItem[0]);
-//        this.archiveFmt.addAll(Arrays.asList(ArchiveYajJob.availableFields)); //TODO: More sane default
-        
         this.sentColState = this.sendingColState = "";
+        
+        // Uncomment for archive support.
+        this.archiveFmt = new FmtItemList<QueueFileFormat>(QueueFileFormat.values(), QueueFileFormat.getRequiredFormats());
+        this.archiveFmt.add(QueueFileFormat.owner);
+        this.archiveFmt.add(QueueFileFormat.number);
+        this.archiveFmt.add(QueueFileFormat.tottries);
+        this.archiveFmt.add(QueueFileFormat.jobid);
+        this.archiveFmt.add(QueueFileFormat.state);
+        this.archiveFmt.add(QueueFileFormat.status);
         
         String sysname = System.getProperty("os.name");
         if (sysname.startsWith("Windows")) {
@@ -356,6 +365,8 @@ public class FaxOptions {
                 return FromVoiceNumber;
             case ZIPCode:
                 return FromZIPCode;
+            case WebSite:
+                return FromWebsite;
             default:
                 log.warning("Unknown PBEntryField: " + field.name());
                 // Fall through intended
@@ -407,6 +418,9 @@ public class FaxOptions {
                 break;
             case ZIPCode:
                 FromZIPCode = value;
+                break;
+            case WebSite:
+                FromWebsite = value;
                 break;
             default:
                 log.warning("Unknown PBEntryField: " + field.name());

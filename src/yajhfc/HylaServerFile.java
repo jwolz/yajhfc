@@ -64,6 +64,14 @@ public class HylaServerFile {
             return type.getDefaultExtension();
     }
     
+    /**
+     * Returns a (temporary) file with the contents of this server file.
+     * The default implementation calls download() to copy the contents into a new temporary file
+     * @param hyfc
+     * @return
+     * @throws IOException
+     * @throws ServerResponseException
+     */
     public FormattedFile getPreviewFile(HylaFAXClient hyfc) throws IOException, ServerResponseException {
         if (previewFile == null) {
             File tmpFile = File.createTempFile("fax", "." + getDefaultExtension());

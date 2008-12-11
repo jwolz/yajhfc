@@ -83,7 +83,7 @@ public class FmtItemList<T extends FmtItem> extends ArrayList<T> implements Filt
     public String saveToString() {
         StringBuilder saveval = new StringBuilder();
         for (T fi : this) {
-            saveval.append(fi.getHylaFmt()).append(sep);
+            saveval.append(fi.name()).append(sep);
         }
         return saveval.toString();
     }
@@ -98,7 +98,7 @@ public class FmtItemList<T extends FmtItem> extends ArrayList<T> implements Filt
         this.clear();
         
         for (int i=0; i < fields.length; i++) {
-            T res = itemFromHylaFmt(fields[i]);
+            T res = itemFromName(fields[i]);
             if (res == null) {
                 log.log(Level.WARNING, "FmtItem for " + fields[i] + "not found.");
             } else {
@@ -109,13 +109,27 @@ public class FmtItemList<T extends FmtItem> extends ArrayList<T> implements Filt
         }
     }
     
-    private T itemFromHylaFmt(String hylaFmt) {
-        for (T item : availableItems) {
-            if (item.getHylaFmt().equals(hylaFmt)) {
-                return item;
+    /**
+     * Returns the item with the given name or null if it is not found
+     */
+    @SuppressWarnings("unchecked")
+    public T itemFromName(String name) {
+        Class<?> actualT = availableItems.getClass().getComponentType();
+        if (Enum.class.isAssignableFrom(actualT)) {
+            try {
+                return (T)Enum.valueOf((Class<Enum>)actualT, name);
+            } catch (Exception e) {
+                log.log(Level.INFO, "Enum constant not found: ", e);
+                return null;
             }
+        } else {
+            for (T item : availableItems) {
+                if (item.name().equals(name)) {
+                    return item;
+                }
+            }
+            return null;
         }
-        return null;
     }
     
     // Override methods modifying the list to reset the complete view

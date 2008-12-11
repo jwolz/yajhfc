@@ -31,8 +31,8 @@ Luckily, all recent Windows versions come with program that does this correctly:
       This file usually resides either in the Windows directory (Win 98/ME) \emph{or} \\
       in \verb.Program Files\Windows NT\Accessories\ImageVue. (Win 2k).
        
-\item[Windows XP:]
-You can use the integrated ``fax and picture viewer''.
+\item[Windows XP/Vista:]
+You can use the integrated ``picture and fax viewer''.
       To use it, enter the following text into the \texttt{Command line for fax viewer} box:\\
       \verb#rundll32.exe shimgvw.dll,ImageView_Fullscreen %s#
  \end{description}
@@ -136,7 +136,8 @@ Starting with version 0.4.0 the following additional fields are available (note 
 \ttfamily\itshape @@ZIPCode@@ & The recipient's ZIP Code \\\hline
 \ttfamily\itshape @@State@@ & The recipient's state\\\hline
 \ttfamily\itshape @@Country@@ & The recipient's country\\\hline
-\ttfamily\itshape @@EMail@@ & The recipient's e-mail address\\\hline\hline
+\ttfamily\itshape @@EMail@@ & The recipient's e-mail address\\\hline
+\ttfamily\itshape @@WebSite@@ & The recipient's website\\\hline\hline
 \ttfamily @@FromSurname@@ & The sender's  surname \\\hline
 \ttfamily @@FromGivenName@@ & The sender's  given name \\\hline
 \ttfamily @@FromTitle@@ & The sender's  title \\\hline
@@ -149,6 +150,7 @@ Starting with version 0.4.0 the following additional fields are available (note 
 \ttfamily @@FromState@@ & The sender's  state\\\hline
 \ttfamily @@FromCountry@@ & The sender's  country\\\hline
 \ttfamily @@FromEMail@@ & The sender's  e-mail address\\\hline
+\ttfamily @@FromWebSite@@ & The sender's website\\\hline
 \end{tabular}
 \end{center}
 
@@ -178,30 +180,72 @@ for the effect of the wildcard \verb#?# use \verb#.#.
 
 \subsection{Which command line arguments does YajHFC understand?}
 
+Output from \verb#java -jar yajhfc.jar --help#:
 \begin{verbatim}
-General usage:
-java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose]
-         [--configdir=directory] [--loadplugin=filename] [--logfile=filename]
-         [--showtab=0|R|1|S|2|T] [--recipient=...] [--stdin | filename ...]
+Usage:
+java -jar yajhfc.jar [OPTIONS]... [FILES TO SEND]...
+
 Argument description:
-filename     One or more file names of PostScript files to send.
---stdin      Read the file to send from standard input
---recipient  Specifies the phone number of a recipient to send the fax to.
-             You may specify multiple arguments for multiple recipients.
---admin      Start up in admin mode
---debug      Output some debugging information
---logfile    The logfile to log debug information to (if not specified, use stdout)
---background If there is no already running instance, launch a new instance
-             and terminate (after submitting the file to send)
---noclose    Do not close YajHFC after submitting the fax
---showtab    Sets the tab to display on startup. Specify 0 or R for the "Received",
-             1 or S for the "Sent" or 2 or T for the "Transmitting" tab.
---loadplugin Specifies the jar file of a YajHFC plugin to load.
---no-plugins Disables loading plugins from the plugin.lst file.
---configdir  Sets a configuration directory to use instead of ~/.yajhfc
---help       Displays this text
+-r, --recipient=RECIPIENT   Specifies a recipient to send the fax to. You may
+                            specify either a fax number or detailed cover page
+                            information (see the FAQ for the format in the
+                            latter case). You may specify --recipient multiple
+                            times for multiple recipients.
+-C, --use-cover[=yes|no]    Use a cover page for sending a fax?
+-s, --subject=SUBJECT       The fax subject for the cover page.
+    --comment=COMMENT       The comment for the cover page.
+    --stdin                 Read the file to send from standard input.
+-A, --admin                 Start up in admin mode.
+-d, --debug                 Output some debugging information.
+-l, --logfile=LOGFILE       The logfile to log debug information to (if not
+                            specified, use stdout).
+    --appendlogfile=LOGFILE Append debug information to the given log file.
+    --background            If there is no already running instance, launch a
+                            new instance and terminate (after submitting the
+                            file to send).
+    --noclose               Do not close YajHFC after submitting the fax.
+-T, --showtab=0|R|1|S|2|T   Sets the tab to display on startup. Specify 0 or R
+                            for the "Received", 1 or S for the "Sent" or 2 or T
+                            for the "Transmitting" tab.
+    --loadplugin=JARFILE    Specifies the jar file of a YajHFC plugin to load.
+    --loaddriver=JARFILE    Specifies the location of a JDBC driver JAR file to
+                            load.
+    --no-plugins            Disables loading plugins from the plugin.lst file.
+    --no-gui                Sends a fax with a minimal GUI.
+-c, --configdir=DIRECTORY   Sets a configuration directory to use instead of
+                            ~/.yajhfc
+-h, --help                  Displays this text.
 \end{verbatim}
 
+\subsection{How can I give cover page information using the \texttt{{-}-recipient} switch?}
+
+You can give that information using \texttt{name:value} pairs, separated by semicolons. For example, to send a fax to ``John Doe'' in ``Example town'' with the fax number 0123456, use the following command line:
+
+\texttt{java -jar yajhfc.jar \textit{[...]} {-}-recipient="givenname:John;surname:Doe;location:Example Town;faxnumber:0123456" \textit{[...]}}
+
+The following field names are recognized:
+\begin{center}
+\begin{tabular}{|l|p{.7\textwidth}|}
+\hline
+\bfseries Field name & \bfseries Meaning \\
+\hline\hline
+\ttfamily surname & The recipient's surname\\\hline
+\ttfamily givenname & The recipient's given name \\\hline
+\ttfamily title & The recipient's title \\\hline
+\ttfamily position & The recipient's position \\\hline
+\ttfamily department & The recipient's department\\\hline
+\ttfamily company & The recipient's company name\\\hline
+\ttfamily street & The recipient's street name \\\hline
+\ttfamily location & The recipient's location\\\hline
+\ttfamily zipcode & The recipient's ZIP Code \\\hline
+\ttfamily state & The recipient's state\\\hline
+\ttfamily country & The recipient's country\\\hline
+\ttfamily email & The recipient's e-mail address\\\hline
+\ttfamily faxnumber & The recipient's fax number \\\hline
+\ttfamily voicenumber & The recipient's voice number \\\hline
+\ttfamily website & The recipient's website\\\hline
+\end{tabular}
+\end{center}
 
 \subsection{When trying to view sent faxes I always get an error message saying 
    \texttt{File format PCL not supported}, although all the documents are PostScript/PDF.}

@@ -26,7 +26,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -65,7 +64,7 @@ public class SentYajJob extends YajJob<JobFormat> {
     }
     
     @Override
-    public List<HylaServerFile> getServerFilenames(HylaFAXClient hyfc) throws IOException, ServerResponseException {
+    public List<HylaServerFile> getServerFilenames(HylaFAXClient hyfc, List<String> inaccessibleFiles) throws IOException, ServerResponseException {
         String[] files;
         ArrayList<HylaServerFile> availFiles = new ArrayList<HylaServerFile>();
         synchronized (hyfc) {
@@ -99,22 +98,25 @@ public class SentYajJob extends YajJob<JobFormat> {
                         fileFormat = FileFormat.Unknown;
                 }
                 
-                if (Utils.getFaxOptions().preferRenderedTIFF) {
-                    // Use a hack to get the rendered TIFF instead of the
-                    // original file (if available)
-                    String tiff = findRenderedTIFF(hyfc, fileName);
-                    if (tiff != null) {
-                        fileName = tiff;
-                        fileFormat = FileFormat.TIFF;
-                    }
-                }
+//                if (Utils.getFaxOptions().preferRenderedTIFF) {
+//                    // Use a hack to get the rendered TIFF instead of the
+//                    // original file (if available)
+//                    String tiff = findRenderedTIFF(hyfc, fileName);
+//                    if (tiff != null) {
+//                        fileName = tiff;
+//                        fileFormat = FileFormat.TIFF;
+//                    }
+//                }
                 
                 availFiles.add(new HylaServerFile(fileName, fileFormat));
             } catch (FileNotFoundException e) {
                 // do nothing
                 //System.err.println(e.toString());
                 if (Utils.debugMode) {
-                    log.throwing(SentYajJob.class.getName(), "getServerFilenames", e);
+                    log.log(Level.FINER, "Could not access " + files[i], e);
+                }
+                if (inaccessibleFiles != null) {
+                    inaccessibleFiles.add(fileName + ": \"" + e.getMessage() + '\"');
                 }
             }
         }
@@ -122,46 +124,46 @@ public class SentYajJob extends YajJob<JobFormat> {
         return availFiles;
     }
     
-    /**
-     * Tries to find a rendered TIFF on the server for the file "serverName".
-     */
-    @SuppressWarnings("unchecked")
-    private String findRenderedTIFF(HylaFAXClient hyfc, String serverName) {
-        if (Utils.debugMode)
-            log.info("Trying to find the rendered TIFF for " + serverName);
-            
-        int pos = serverName.indexOf('/');
-        if (pos < 0)
-            return null;
-        
-        try {
-            String dir = serverName.substring(0, pos+1);
-            Vector fileList = hyfc.getNameList(dir);
-            
-            // Simple assumption:
-            // The rendered TIFF can be found by appending ";" plus a number to the document's filename
-            String searchPrefix = serverName.substring(pos+1) + ";";
-            for (Object fobj : fileList) {
-                String file = (String)fobj;
-                if (file.startsWith(searchPrefix)) {
-                    file = dir + file;
-                    if (Utils.debugMode)
-                        log.info("Found a TIFF: " + file);
-                    
-                    hyfc.stat(file); //Throws an exception if the TIFF is not accessible...
-                    
-                    return file;
-                }
-            }
-            return null; //Nothing found;
-        } catch (Exception ex) {
-            if (Utils.debugMode) {
-                log.log(Level.INFO, "Got an exception:", ex);
-                //ex.printStackTrace(Utils.debugOut);
-            }
-            return null;
-        }
-    }
+//    /**
+//     * Tries to find a rendered TIFF on the server for the file "serverName".
+//     */
+//    @SuppressWarnings("unchecked")
+//    private String findRenderedTIFF(HylaFAXClient hyfc, String serverName) {
+//        if (Utils.debugMode)
+//            log.info("Trying to find the rendered TIFF for " + serverName);
+//            
+//        int pos = serverName.indexOf('/');
+//        if (pos < 0)
+//            return null;
+//        
+//        try {
+//            String dir = serverName.substring(0, pos+1);
+//            Vector fileList = hyfc.getNameList(dir);
+//            
+//            // Simple assumption:
+//            // The rendered TIFF can be found by appending ";" plus a number to the document's filename
+//            String searchPrefix = serverName.substring(pos+1) + ";";
+//            for (Object fobj : fileList) {
+//                String file = (String)fobj;
+//                if (file.startsWith(searchPrefix)) {
+//                    file = dir + file;
+//                    if (Utils.debugMode)
+//                        log.info("Found a TIFF: " + file);
+//                    
+//                    hyfc.stat(file); //Throws an exception if the TIFF is not accessible...
+//                    
+//                    return file;
+//                }
+//            }
+//            return null; //Nothing found;
+//        } catch (Exception ex) {
+//            if (Utils.debugMode) {
+//                log.log(Level.INFO, "Got an exception:", ex);
+//                //ex.printStackTrace(Utils.debugOut);
+//            }
+//            return null;
+//        }
+//    }
     
     @Override
     public void delete(HylaFAXClient hyfc) throws IOException,

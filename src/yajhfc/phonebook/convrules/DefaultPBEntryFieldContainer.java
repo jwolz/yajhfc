@@ -19,7 +19,9 @@
 package yajhfc.phonebook.convrules;
 
 import java.util.EnumMap;
+import java.util.logging.Logger;
 
+import yajhfc.Utils;
 import yajhfc.phonebook.PBEntryField;
 
 /**
@@ -29,6 +31,8 @@ import yajhfc.phonebook.PBEntryField;
 public class DefaultPBEntryFieldContainer extends EnumMap<PBEntryField, String>
         implements PBEntryFieldContainer {
 
+    private static final Logger log = Logger.getLogger(DefaultPBEntryFieldContainer.class.getName());
+    
     /* (non-Javadoc)
      * @see yajhfc.phonebook.convrules.PBEntryFieldContainer#getField(yajhfc.phonebook.PBEntryField)
      */
@@ -44,6 +48,38 @@ public class DefaultPBEntryFieldContainer extends EnumMap<PBEntryField, String>
         for (PBEntryField field : PBEntryField.values()) {
             put(field, other.getField(field));
         }
+    }    
+    
+    public DefaultPBEntryFieldContainer parseFromString(String numberOrFullFields) {
+        setAllFieldsTo("");
+        // If it contains no : or ;, assume it's a fax number
+        if (numberOrFullFields.indexOf(':') < 0 || numberOrFullFields.indexOf(';') < 0) {
+            put(PBEntryField.FaxNumber, numberOrFullFields);
+        } else {
+            String[] fields = Utils.fastSplit(numberOrFullFields, ';');
+            for (String field : fields) {
+                int pos = field.indexOf(':');
+                if (pos < 0) {
+                    log.info("Ignoring invalid name:value pair: " + field);
+                } else {
+                    String fieldName = field.substring(0, pos).trim();
+                    String fieldValue = field.substring(pos+1).trim();
+                    PBEntryField pbField = PBEntryField.getKeyToFieldMap().get(fieldName.toLowerCase());
+                    if (pbField != null) {
+                        put(pbField, fieldValue);
+                    } else {
+                        log.info("Unknown field \"" + fieldName + "\" in '" + field + "'");
+                    }
+                }
+            }
+        }
+        return this;
+    }
+    
+    public void setAllFieldsTo(String value) {
+        for (PBEntryField field : PBEntryField.values()) {
+            put(field, value);
+        }
     }
     
     public DefaultPBEntryFieldContainer() {
@@ -52,9 +88,7 @@ public class DefaultPBEntryFieldContainer extends EnumMap<PBEntryField, String>
 
     public DefaultPBEntryFieldContainer(String defValue) {
         this();
-        for (PBEntryField field : PBEntryField.values()) {
-            put(field, defValue);
-        }
+        setAllFieldsTo(defValue);
     }
     
     public DefaultPBEntryFieldContainer(PBEntryFieldContainer other) {

@@ -54,9 +54,9 @@ public abstract class AbstractStringFilter<V extends FilterableObject, K extends
         }
         switch (operator) {
         case EQUAL:
-            return value.equals((String)compareValue);
+            return value.equals(compareValue);
         case NOTEQUAL:
-            return !value.equals((String)compareValue);
+            return !value.equals(compareValue);
         case CONTAINS:
             return value.contains((String)compareValue);
         case STARTSWITH:

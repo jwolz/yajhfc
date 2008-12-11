@@ -138,7 +138,7 @@ public class TooltipJTable<T extends FmtItem> extends JTable {
     @Override
     public void columnAdded(TableColumnModelEvent e) {
         // Set identifier 
-        getColumnModel().getColumn(e.getToIndex()).setIdentifier(getRealModel().columns.get(e.getToIndex()).getHylaFmt());
+        getColumnModel().getColumn(e.getToIndex()).setIdentifier(getRealModel().columns.get(e.getToIndex()).name());
         super.columnAdded(e);
     }
     

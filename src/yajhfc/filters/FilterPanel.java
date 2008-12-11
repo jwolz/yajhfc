@@ -75,6 +75,9 @@ public class FilterPanel<V extends FilterableObject,K extends FmtItem> extends J
             return Void.class;
         }
         
+        public String name() {
+            return "void";
+        }
     }; 
     private static final String[] comboOperatorDummy = { "                         " };
     

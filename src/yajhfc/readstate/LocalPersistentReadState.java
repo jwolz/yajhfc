@@ -169,6 +169,7 @@ public class LocalPersistentReadState extends PersistentReadState {
 
     @Override
     public void prepareReadStates() {
-        loadReadFaxes();
+        if (readStateMap == null)
+            loadReadFaxes();
     }
 }

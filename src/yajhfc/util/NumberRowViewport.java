@@ -40,7 +40,7 @@ import javax.swing.table.TableModel;
  *
  */
 public class NumberRowViewport extends JViewport {
-    private static final Logger log = Logger.getLogger(NumberRowViewport.class.getName());
+    static final Logger log = Logger.getLogger(NumberRowViewport.class.getName());
     
     protected JTable rowNumberTable;
     protected JTable realTable;

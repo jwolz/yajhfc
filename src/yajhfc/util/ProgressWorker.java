@@ -31,7 +31,7 @@ import javax.swing.SwingUtilities;
 import yajhfc.Utils;
 
 public abstract class ProgressWorker extends Thread{
-    private static final Logger log = Logger.getLogger(ProgressWorker.class.getName());
+    static final Logger log = Logger.getLogger(ProgressWorker.class.getName());
     
     protected ProgressUI progressMonitor;
     protected int progress;

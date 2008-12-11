@@ -41,7 +41,6 @@ public class DefaultTrayManager implements TrayManager {
         try {
             DefaultTrayIcon icon = new DefaultTrayIcon(image, tooltip, popup);
             icon.addActionListener(clickListener);
-            icon.setImageAutoSize(true);
             SystemTray.getSystemTray().add(icon);
             
             return icon;

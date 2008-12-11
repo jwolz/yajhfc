@@ -80,7 +80,7 @@ public final class NewSearchWin extends JDialog implements ActionListener {
             } else {
                 pbStartIdx = availPBs.indexOf(selPath.getPathComponent(1));
                 if (selPath.getPathCount() == 3) {
-                    startIdx = ((PhoneBook)selPath.getPathComponent(1)).getEntries().indexOf((PhoneBookEntry)selPath.getPathComponent(2));
+                    startIdx = ((PhoneBook)selPath.getPathComponent(1)).getEntries().indexOf(selPath.getPathComponent(2));
                 } else {
                     startIdx = 0;
                 }

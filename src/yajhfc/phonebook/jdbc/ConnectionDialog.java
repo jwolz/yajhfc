@@ -77,8 +77,8 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
     private ArrayList<JComboBox> fieldCombos = new ArrayList<JComboBox>();
     private JTextField textDriverClass, textURL, textUserName/*, textQuery*/;
     private JComboBox comboTable;
-    private JCheckBox checkAskForPassword;
-    private JPasswordField textPassword;
+    JCheckBox checkAskForPassword;
+    JPasswordField textPassword;
     private JButton buttonOK, buttonCancel, buttonTest;
     private boolean noFieldOK;
     
@@ -348,7 +348,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         return loadFieldNames();
     }
     
-    private void closeConnection() {
+    void closeConnection() {
         try {
 //            if (stmt != null) {
 //                stmt.close();

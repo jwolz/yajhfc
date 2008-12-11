@@ -163,7 +163,19 @@ public abstract class YajJob<T extends FmtItem> implements FilterableObject {
      * @param hyfc
      * HylaFAXClient to use as connection.
      */
-    public abstract List<HylaServerFile> getServerFilenames(HylaFAXClient hyfc) throws IOException, ServerResponseException;
+    public List<HylaServerFile> getServerFilenames(HylaFAXClient hyfc) throws IOException, ServerResponseException {
+        return getServerFilenames(hyfc, null);
+    }
+    
+    /**
+     * Returns the associated Files for this Job and returns information
+     * about inaccessible files
+     * @param hyfc
+     * HylaFAXClient to use as connection.
+     * @param inaccessibleFiles
+     * Inaccessible files are added to this list. May be null if this information is not needed
+     */
+    public abstract List<HylaServerFile> getServerFilenames(HylaFAXClient hyfc, List<String> inaccessibleFiles) throws IOException, ServerResponseException;
     
     public abstract void delete(HylaFAXClient hyfc) throws IOException, ServerResponseException;
     

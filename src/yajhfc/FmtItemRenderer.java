@@ -26,7 +26,9 @@ import javax.swing.JList;
 public class FmtItemRenderer extends DefaultListCellRenderer {
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        return super.getListCellRendererComponent(list, ((FmtItem)value).getDescription(), index, isSelected,
+        super.getListCellRendererComponent(list, ((FmtItem)value).getDescription(), index, isSelected,
                 cellHasFocus);
+        setToolTipText(((FmtItem)value).getLongDescription());
+        return this;
     }
 }

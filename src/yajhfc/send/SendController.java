@@ -96,7 +96,7 @@ public class SendController {
         this.progressMonitor = progressMonitor;
     }
 
-    private void setPaperSizes() {
+    void setPaperSizes() {
         //PaperSize desiredSize = (PaperSize)comboPaperSize.getSelectedItem();
         for (HylaTFLItem item : files) {
             item.setDesiredPaperSize(paperSize);

@@ -1,4 +1,4 @@
-﻿README für YajHFC
+README für YajHFC
 =================
 
 ÜBER

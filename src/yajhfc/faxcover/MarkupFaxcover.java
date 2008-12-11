@@ -133,7 +133,8 @@ public abstract class MarkupFaxcover extends Faxcover {
 
         availableTags.put("faxnumber", new PBFieldTag(PBEntryField.FaxNumber, false));
         availableTags.put("voicenumber", new PBFieldTag(PBEntryField.VoiceNumber, false));
-        availableTags.put("email", new PBFieldTag(PBEntryField.EMailAddress, false));    
+        availableTags.put("email", new PBFieldTag(PBEntryField.EMailAddress, false)); 
+        availableTags.put("website", new PBFieldTag(PBEntryField.WebSite, false));
 
         // Recipient:
         availableTags.put("fromname", new RuleTag("nameRule", true));
@@ -155,7 +156,8 @@ public abstract class MarkupFaxcover extends Faxcover {
 
         availableTags.put("fromfaxnumber", new PBFieldTag(PBEntryField.FaxNumber, true));
         availableTags.put("fromvoicenumber", new PBFieldTag(PBEntryField.VoiceNumber, true));
-        availableTags.put("fromemail", new PBFieldTag(PBEntryField.EMailAddress, true));  
+        availableTags.put("fromemail", new PBFieldTag(PBEntryField.EMailAddress, true));
+        availableTags.put("fromwebsite", new PBFieldTag(PBEntryField.WebSite, true));
         
         // Misc. tags:
         availableTags.put("subject", new ReflectionTag("regarding"));

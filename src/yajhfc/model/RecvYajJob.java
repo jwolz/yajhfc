@@ -22,7 +22,7 @@ import gnu.hylafax.HylaFAXClient;
 import gnu.inet.ftp.ServerResponseException;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import yajhfc.FmtItemList;
@@ -77,10 +77,8 @@ public class RecvYajJob extends YajJob<RecvFormat> {
     }
     
     @Override
-    public List<HylaServerFile> getServerFilenames(HylaFAXClient hyfc) {
-        HylaServerFile[] result = new HylaServerFile[1];
-        result[0] = new HylaServerFile("recvq/" + getServerTIF(), FileFormat.TIFF);
-        return Arrays.asList(result);
+    public List<HylaServerFile> getServerFilenames(HylaFAXClient hyfc, List<String> inaccessibleFiles) {
+        return Collections.singletonList(new HylaServerFile("recvq/" + getServerTIF(), FileFormat.TIFF));
     }
 
     @Override
