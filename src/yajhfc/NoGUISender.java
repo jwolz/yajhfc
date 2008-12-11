@@ -30,9 +30,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
 import yajhfc.PluginManager.PluginInfo;
-import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
-import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 import yajhfc.send.LocalFileTFLItem;
 import yajhfc.send.SendController;
 import yajhfc.send.StreamTFLItem;
@@ -118,7 +116,7 @@ public class NoGUISender extends JFrame implements ProgressUI {
         setNote(noteText);
     }
     
-    public static void startUpWithoutUI(List<String> recipients, List<String> files, List<PluginInfo> plugins, boolean noPlugins, boolean useStdIn) {
+    public static void startUpWithoutUI(List<String> recipients, List<String> files, List<PluginInfo> plugins, boolean noPlugins, boolean useStdIn, boolean useCover, String subject, String comment) {
         if (recipients.size() == 0) {
             System.err.println("In no GUI mode you have to specify at least one recipient.");
             System.exit(1);
@@ -146,18 +144,23 @@ public class NoGUISender extends JFrame implements ProgressUI {
             SendController sendController = new SendController(clientManager, progressFrame, false, progressFrame);
             
             for (String number : recipients) {
-                PBEntryFieldContainer pbe = new DefaultPBEntryFieldContainer("");
-                pbe.setField(PBEntryField.FaxNumber, number);
-                sendController.getNumbers().add(pbe);
+                sendController.getNumbers().add(new DefaultPBEntryFieldContainer().parseFromString(number));
             }
+            sendController.setUseCover(useCover);
+            if (subject != null)
+                sendController.setSubject(subject);
+            if (comment != null)
+                sendController.setComments(comment);
             if (useStdIn) {
                 sendController.getFiles().add(new StreamTFLItem(System.in));
             }
             for (String file : files) {
                 sendController.getFiles().add(new LocalFileTFLItem(file));
             }
-
-            sendController.sendFax();
+            
+            if (sendController.validateEntries()) {
+                sendController.sendFax();
+            }
         } catch (Exception ex) {
             ExceptionDialog.showExceptionDialog(progressFrame, Utils._("Error sending the fax:"), ex);
             System.exit(2);

@@ -56,4 +56,11 @@ public interface FmtItem extends FilterKey {
      */
     public DateFormat getDisplayDateFormat();
     
+    /**
+     * Returns a internal name for this format (will often be the same as HylaFmt).
+     * In contrast to the HylaFmt, this name is guaranteed to be unique between
+     * different instances of the same kind of FmtItem.
+     * @return
+     */
+    public String name();
 }

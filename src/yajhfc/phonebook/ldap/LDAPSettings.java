@@ -76,6 +76,7 @@ public class LDAPSettings extends GeneralConnectionSettings {
         setMappingFor(PBEntryField.State, "st");
         setMappingFor(PBEntryField.ZIPCode, "postalCode");
         setMappingFor(PBEntryField.Country, "c");
+        setMappingFor(PBEntryField.WebSite, "URL");
     }
     
     public LDAPSettings(String serialized) {

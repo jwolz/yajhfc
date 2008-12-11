@@ -37,10 +37,14 @@ import yajhfc.Launcher2;
 import yajhfc.Utils;
 
 /**
+ * This class synchronizes multiple button groups.
  * @author jonas
  *
  */
 public abstract class MultiButtonGroup implements ActionListener {
+    /**
+     * The label for this button group
+     */
     public String label;
     
     protected List<Item> items = new ArrayList<Item>();

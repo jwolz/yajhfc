@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-04 12:31+0100\n"
+"POT-Creation-Date: 2008-12-11 14:18+0100\n"
 "PO-Revision-Date: 2008-11-12 17:46+0200\n"
 "Last-Translator: Mesut GÜLER <maxut@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -39,13 +39,13 @@ msgid "$LANGUAGE$ translation by {0}"
 msgstr "Türkçe çeviri: {0}"
 
 #: ../AboutDialog.java:223 ../filters/CustomFilterDialog.java:79
-#: ../options/OptionsWin.java:315 ../phonebook/ldap/ConnectionDialog.java:175
+#: ../options/OptionsWin.java:317 ../phonebook/ldap/ConnectionDialog.java:175
 #: ../phonebook/jdbc/ConnectionDialog.java:213 ../util/ExceptionDialog.java:78
 #: ../util/ToolbarEditorDialog.java:122 ../util/PasswordDialog.java:68
 msgid "OK"
 msgstr "Tamam"
 
-#: ../AboutDialog.java:267 ../MainWin.java:808
+#: ../AboutDialog.java:267 ../MainWin.java:851
 msgid "About"
 msgstr "Hakkında"
 
@@ -62,7 +62,7 @@ msgstr "Sistem özellikleri"
 msgid "About {0}"
 msgstr "{0} Hakkında"
 
-#: ../AboutDialog.java:284 ../MainWin.java:836
+#: ../AboutDialog.java:284 ../MainWin.java:879
 msgid "Documentation"
 msgstr "Belgelendirme"
 
@@ -70,25 +70,25 @@ msgstr "Belgelendirme"
 msgid "Any modem"
 msgstr "Herhangi bir modem"
 
-#: ../tray/YajHFCTrayIcon.java:78
+#: ../tray/YajHFCTrayIcon.java:91
 msgid "Restore"
 msgstr ""
 
-#: ../tray/YajHFCTrayIcon.java:120
+#: ../tray/YajHFCTrayIcon.java:138
 #, java-format
 msgid "{0} fax(es) received ({1} unread fax(es)):"
 msgstr ""
 
-#: ../tray/YajHFCTrayIcon.java:129
+#: ../tray/YajHFCTrayIcon.java:147
 msgid "New fax received"
 msgstr ""
 
-#: ../tray/YajHFCTrayIcon.java:142
+#: ../tray/YajHFCTrayIcon.java:164
 #, java-format
 msgid "{0} unread fax(es)"
 msgstr ""
 
-#: ../tray/YajHFCTrayIcon.java:145
+#: ../tray/YajHFCTrayIcon.java:167
 msgid "Disconnected"
 msgstr ""
 
@@ -176,87 +176,95 @@ msgstr ""
 msgid "An error occured while converting the document to PostScript."
 msgstr "Belge PostScript'e dönüştürülürken hata oluştu."
 
-#: ../MainWin.java:225
+#: ../MainWin.java:231
 #, java-format
 msgid "Deleting fax {0}"
 msgstr "Faks {0} siliniyor"
 
-#: ../MainWin.java:233
+#: ../MainWin.java:239
 msgid "Error deleting a fax:\n"
 msgstr "Faks silerken hata:\n"
 
-#: ../MainWin.java:235
+#: ../MainWin.java:241
 #, java-format
 msgid "Error deleting the fax \"{0}\":\n"
 msgstr "\"{0}\" faksını silerken hata:\n"
 
-#: ../MainWin.java:283 ../MainWin.java:382
+#: ../MainWin.java:291 ../MainWin.java:403
 #, java-format
-msgid "No document files available for the fax \"{0}\"."
-msgstr "\"{0}\" faksı için hiç bir belge dosyası mevcut değil."
+msgid "No accessible document files are available for the fax \"{0}\"."
+msgstr ""
 
-#: ../MainWin.java:283 ../MainWin.java:382
-msgid "Display fax"
-msgstr "Faksı göster"
+#: ../MainWin.java:294 ../MainWin.java:406
+msgid "The following files were inaccessible:"
+msgstr ""
 
-#: ../MainWin.java:286 ../MainWin.java:570
+#: ../MainWin.java:300
+msgid "Save fax"
+msgstr ""
+
+#: ../MainWin.java:303 ../MainWin.java:600
 #, java-format
 msgid "Saving fax {0}"
 msgstr "{0} faksı kaydediliyor"
 
-#: ../MainWin.java:299
+#: ../MainWin.java:316
 #, java-format
 msgid "Save {0} to"
 msgstr "{0} kaydet"
 
-#: ../MainWin.java:311 ../MainWin.java:577
+#: ../MainWin.java:328 ../MainWin.java:607
 #, java-format
 msgid "An error occured saving the file {0} (job {1}):"
 msgstr "{0} dosyasını kaydederken hata (işlem {1}):"
 
-#: ../MainWin.java:319 ../MainWin.java:596
+#: ../MainWin.java:336 ../MainWin.java:637
 msgid "An error occured saving the fax:"
 msgstr "Faks kaydederken bir hata oldu:"
 
-#: ../MainWin.java:341 ../MainWin.java:624
+#: ../MainWin.java:358 ../MainWin.java:665
 #, java-format
 msgid "{0} files saved to directory {1}."
 msgstr "{0} dosyaları, {1} dizinine kaydedildi."
 
-#: ../MainWin.java:341 ../MainWin.java:624
+#: ../MainWin.java:358 ../MainWin.java:665
 msgid "Faxes saved"
 msgstr "Fakslar kaydedildi"
 
-#: ../MainWin.java:374
+#: ../MainWin.java:393
 #, java-format
 msgid "Displaying fax {0}"
 msgstr "{0} faksı görüntüleniyor"
 
-#: ../MainWin.java:387
+#: ../MainWin.java:412
+msgid "Display fax"
+msgstr "Faksı göster"
+
+#: ../MainWin.java:417
 #, java-format
 msgid "Downloading {0}"
 msgstr ""
 
-#: ../MainWin.java:394
+#: ../MainWin.java:424
 #, java-format
 msgid "An error occured displaying the file {0} (job {1}):\n"
 msgstr "{0} dosyasını görüntülerken bir hata oldu (işlem {1}):\n"
 
-#: ../MainWin.java:398 ../send/SendController.java:220
+#: ../MainWin.java:428 ../send/SendController.java:221
 msgid "Launching viewer"
 msgstr ""
 
-#: ../MainWin.java:411
+#: ../MainWin.java:441
 #, java-format
 msgid "An error occured displaying the fax \"{0}\":"
 msgstr " \"{0}\" faksını görüntülerken bir hata oluştu:"
 
-#: ../MainWin.java:452
+#: ../MainWin.java:482
 #, java-format
 msgid "Suspending job {0}"
 msgstr "işlem {0} askıya alınıyor"
 
-#: ../MainWin.java:456
+#: ../MainWin.java:486
 #, java-format
 msgid ""
 "Suspending the currently running job {0} may block until it is done (or "
@@ -266,25 +274,25 @@ msgstr ""
 "engellenebilir (veya başka bir \"çalışma hariç duruma\" geçebilir). Askıya "
 "alma denensin mi?"
 
-#: ../MainWin.java:457
+#: ../MainWin.java:487
 msgid "Suspend fax job"
 msgstr "Faks işlemini askıya al"
 
-#: ../MainWin.java:468
+#: ../MainWin.java:498
 msgid "Error suspending a fax job:\n"
 msgstr "Faks işlemini askıya almada hata:\n"
 
-#: ../MainWin.java:470
+#: ../MainWin.java:500
 #, java-format
 msgid "Error suspending the fax job \"{0}\":\n"
 msgstr "Faks işlemi \"{0}\" askıya alınırken hata:\n"
 
-#: ../MainWin.java:508
+#: ../MainWin.java:538
 #, java-format
 msgid "Resuming job {0}"
 msgstr "İşlem {0} devam ettiriliyor"
 
-#: ../MainWin.java:511
+#: ../MainWin.java:541
 #, java-format
 msgid ""
 "Job {0} is not in state \"Suspended\" so resuming it probably will not work. "
@@ -293,25 +301,25 @@ msgstr ""
 "İşlem {0} durumu \"Askıda\" değil, yani devam ettirmek muhtemelen işe "
 "yaramayacak. Yine de devam ettirmeyi denemek istiyor musuz?"
 
-#: ../MainWin.java:512
+#: ../MainWin.java:542
 msgid "Resume fax job"
 msgstr "Faks işlemine devam et"
 
-#: ../MainWin.java:523
+#: ../MainWin.java:553
 msgid "Error resuming a fax job:\n"
 msgstr "Faks işlemine decam etmede hata:\n"
 
-#: ../MainWin.java:525
+#: ../MainWin.java:555
 #, java-format
 msgid "Error resuming the fax job \"{0}\":\n"
 msgstr "\"{0}\" faks işlemine devam ederken hata:\n"
 
-#: ../MainWin.java:583
+#: ../MainWin.java:624
 #, java-format
 msgid "File name to save fax {0}"
 msgstr ""
 
-#: ../MainWin.java:647
+#: ../MainWin.java:688
 #, java-format
 msgid ""
 "Save to {0} needs GhostScript and tiff2pdf.\n"
@@ -319,9 +327,9 @@ msgid ""
 "FAQ for download locations)."
 msgstr ""
 
-#: ../MainWin.java:647 ../filters/CustomFilterDialog.java:210
-#: ../filters/CustomFilterDialog.java:214 ../options/OptionsWin.java:999
-#: ../options/OptionsWin.java:1005 ../options/OptionsWin.java:1023
+#: ../MainWin.java:688 ../filters/CustomFilterDialog.java:210
+#: ../filters/CustomFilterDialog.java:214 ../options/OptionsWin.java:1022
+#: ../options/OptionsWin.java:1028 ../options/OptionsWin.java:1046
 #: ../options/CoverPanel.java:239 ../options/PathAndViewPanel.java:236
 #: ../options/PathAndViewPanel.java:242 ../options/PathAndViewPanel.java:248
 #: ../options/PathAndViewPanel.java:256 ../options/PathAndViewPanel.java:262
@@ -334,341 +342,345 @@ msgstr ""
 #: ../phonebook/jdbc/ConnectionDialog.java:293
 #: ../phonebook/jdbc/ConnectionDialog.java:405
 #: ../util/ExceptionDialog.java:232 ../util/ExceptionDialog.java:241
-#: ../util/ExceptionDialog.java:293 ../send/SendController.java:122
-#: ../send/SendController.java:127
+#: ../util/ExceptionDialog.java:293 ../send/SendController.java:123
+#: ../send/SendController.java:128
 msgid "Error"
 msgstr "Hata"
 
-#: ../MainWin.java:653 ../MainWin.java:880
+#: ../MainWin.java:694 ../MainWin.java:923
 msgid "Select a directory to save the faxes in"
 msgstr "Faksları kaydetmek için dizin seç"
 
-#: ../MainWin.java:654 ../MainWin.java:881
+#: ../MainWin.java:695 ../MainWin.java:924
 #: ../phonebook/NewPhoneBookWin.java:873
 msgid "Select"
 msgstr "Seç"
 
-#: ../MainWin.java:661 ../MainWin.java:666 ../MainWin.java:888
-#: ../MainWin.java:893
+#: ../MainWin.java:702 ../MainWin.java:707 ../MainWin.java:931
+#: ../MainWin.java:936
 msgid "Saving faxes"
 msgstr "Faks(lar) kaydediliyor"
 
-#: ../MainWin.java:674
+#: ../MainWin.java:715
 #, java-format
 msgid "Save fax as {0}..."
 msgstr ""
 
-#: ../MainWin.java:675
+#: ../MainWin.java:716
 #, java-format
 msgid "Saves the selected fax(es) as single {0} file"
 msgstr ""
 
-#: ../MainWin.java:716 ../options/OptionsWin.java:180
-#: ../options/OptionsWin.java:932
+#: ../MainWin.java:759 ../options/OptionsWin.java:181
+#: ../options/OptionsWin.java:951
 msgid "Options"
 msgstr "Seçenekler"
 
-#: ../MainWin.java:717
+#: ../MainWin.java:760
 msgid "Shows the Options dialog"
 msgstr "Seçenekler iletişimini göster"
 
-#: ../MainWin.java:733 ../send/SendWin.java:533
-#: ../send/SimplifiedSendDialog.java:197
+#: ../MainWin.java:776 ../send/SendWin.java:540
+#: ../send/SimplifiedSendDialog.java:199
 msgid "Send"
 msgstr "Gönder"
 
-#: ../MainWin.java:734
+#: ../MainWin.java:777
 msgid "Shows the send fax dialog"
 msgstr "Faks gönder iletişimini göster"
 
-#: ../MainWin.java:746 ../send/SendWin.java:530
+#: ../MainWin.java:789 ../send/SendWin.java:537
 msgid "Poll"
 msgstr "Tercihli faks"
 
-#: ../MainWin.java:747
+#: ../MainWin.java:790
 msgid "Shows the poll fax dialog"
 msgstr "Tercihli faks iletişimini göster"
 
-#: ../MainWin.java:758
+#: ../MainWin.java:801
 msgid "Do you really want to cancel the selected fax jobs?"
 msgstr "Gerçekten seçili faks işlemlerini iptal etmek istiyor musunuz?"
 
-#: ../MainWin.java:760
+#: ../MainWin.java:803
 msgid "Do you really want to delete the selected faxes?"
 msgstr "Gerçekten seçili faksları silmek istiyor musunuz?"
 
-#: ../MainWin.java:762
+#: ../MainWin.java:805
 msgid "Delete faxes"
 msgstr "Faksları sil"
 
-#: ../MainWin.java:764
+#: ../MainWin.java:807
 msgid "Deleting faxes"
 msgstr "Fakslar siliniyor"
 
-#: ../MainWin.java:769 ../phonebook/NewPhoneBookWin.java:758
+#: ../MainWin.java:812 ../phonebook/NewPhoneBookWin.java:758
 #: ../util/ClipboardPopup.java:58
 msgid "Delete"
 msgstr "Sil"
 
-#: ../MainWin.java:770
+#: ../MainWin.java:813
 msgid "Deletes the selected fax"
 msgstr "Seçili faksı sil"
 
-#: ../MainWin.java:779
+#: ../MainWin.java:822
 msgid "Viewing faxes"
 msgstr "Faks görüntüleniyor..."
 
-#: ../MainWin.java:782
+#: ../MainWin.java:825
 msgid "Show"
 msgstr "Göster"
 
-#: ../MainWin.java:783
+#: ../MainWin.java:826
 msgid "Displays the selected fax"
 msgstr "Seçili faksı göster"
 
-#: ../MainWin.java:793
+#: ../MainWin.java:836
 msgid "Exit"
 msgstr "Çık"
 
-#: ../MainWin.java:794
+#: ../MainWin.java:837
 msgid "Exits the application"
 msgstr "Uygulamdan çık"
 
-#: ../MainWin.java:809
+#: ../MainWin.java:852
 msgid "Shows the about dialog"
 msgstr "hakkında iletişimini göster"
 
-#: ../MainWin.java:822 ../phonebook/NewPhoneBookWin.java:809
+#: ../MainWin.java:865 ../phonebook/NewPhoneBookWin.java:809
 msgid "Phone book"
 msgstr "Telefon defteri"
 
-#: ../MainWin.java:823
+#: ../MainWin.java:866
 msgid "Display/edit the phone book"
 msgstr "Telefon defterini göster/düzenle"
 
-#: ../MainWin.java:837
+#: ../MainWin.java:880
 msgid "Shows the README files"
 msgstr "README dosyasını göster"
 
-#: ../MainWin.java:865
+#: ../MainWin.java:908
 msgid "Marked as read"
 msgstr "Okundu olarak işaretlenmiş"
 
-#: ../MainWin.java:866
+#: ../MainWin.java:909
 msgid "Marks the selected fax as read/unread"
 msgstr "Seçili faksı okundu/okunmadı olarak işaretle"
 
-#: ../MainWin.java:897
+#: ../MainWin.java:940
 msgid "Save fax..."
 msgstr "Faks kaydet..."
 
-#: ../MainWin.java:898
+#: ../MainWin.java:941
 msgid "Saves the selected fax on disk"
 msgstr "Seçili faksı diske kaydet."
 
-#: ../MainWin.java:913
+#: ../MainWin.java:956
 msgid "Couldn't get a filename for the fax:"
 msgstr "Faks iiçin dosya alınamıyor:"
 
-#: ../MainWin.java:926
+#: ../MainWin.java:969
 msgid "Forward fax..."
 msgstr "Faks ilet..."
 
-#: ../MainWin.java:927
+#: ../MainWin.java:970
 msgid "Forwards the fax"
 msgstr "Faksları ilet"
 
-#: ../MainWin.java:947
+#: ../MainWin.java:990
 msgid "Admin mode"
 msgstr "Yönetici kipi"
 
-#: ../MainWin.java:948
+#: ../MainWin.java:991
 msgid "Connect to the server in admin mode (e.g. to delete faxes)"
 msgstr "Sunucuya yönetici kipinde bağlan (örn. faksları silmek için)"
 
-#: ../MainWin.java:960
+#: ../MainWin.java:1003
 msgid "Refresh"
 msgstr "Yenile"
 
-#: ../MainWin.java:961
+#: ../MainWin.java:1004
 msgid "Refresh tables and server status"
 msgstr "Tablo ve sunucu durumunu yenile"
 
-#: ../MainWin.java:994
+#: ../MainWin.java:1037
 msgid "Could not get all of the job information necessary to resend the fax:"
 msgstr "Faksı tekrar göndermek için gerekli tüm işlem bilgileri alınamıyor:"
 
-#: ../MainWin.java:1013
+#: ../MainWin.java:1056
 msgid "Resend fax..."
 msgstr "Faksı tekrar gönder..."
 
-#: ../MainWin.java:1014
+#: ../MainWin.java:1057
 msgid "Resend the fax"
 msgstr "Faksı tekrar gönder"
 
-#: ../MainWin.java:1024
+#: ../MainWin.java:1067
 #, java-format
 msgid "page {0}"
 msgstr "sayfa {0}"
 
-#: ../MainWin.java:1028
+#: ../MainWin.java:1071
 msgid "Error printing the table:"
 msgstr "Tabloyu yazarken hata:"
 
-#: ../MainWin.java:1032
+#: ../MainWin.java:1075
 msgid "Print table..."
 msgstr "Tabloyu yazdır..."
 
-#: ../MainWin.java:1033
+#: ../MainWin.java:1076
 msgid "Prints the currently displayed table"
 msgstr "Şu anki tabloyu yazdır"
 
-#: ../MainWin.java:1041
+#: ../MainWin.java:1084
 msgid "Suspending jobs"
 msgstr "İşlemler askıya alınıyor"
 
-#: ../MainWin.java:1044
+#: ../MainWin.java:1087
 msgid "Suspend"
 msgstr "Askıya al"
 
-#: ../MainWin.java:1045
+#: ../MainWin.java:1088
 msgid "Suspends the transfer of the selected fax"
 msgstr "Seçilen faksın aktarımını askıya al"
 
-#: ../MainWin.java:1053
+#: ../MainWin.java:1096
 msgid "Resuming jobs"
 msgstr "Devam edilen işlemler"
 
-#: ../MainWin.java:1056
+#: ../MainWin.java:1099
 msgid "Resume"
 msgstr "Devam et"
 
-#: ../MainWin.java:1057
+#: ../MainWin.java:1100
 msgid "Resumes the transfer of the selected fax"
 msgstr "Seçilen faksın aktarımına devam et"
 
-#: ../MainWin.java:1067 ../util/ExceptionDialog.java:82
+#: ../MainWin.java:1110 ../util/ExceptionDialog.java:82
 #: ../util/ClipboardPopup.java:54
 msgid "Copy"
 msgstr "Kopyala"
 
-#: ../MainWin.java:1068
+#: ../MainWin.java:1111
 msgid "Copies the selected table items to the clipboard"
 msgstr "Seçilen tablo öğelerini panoya kopyala"
 
-#: ../MainWin.java:1088 ../MainWin.java:1089
+#: ../MainWin.java:1131 ../MainWin.java:1132
 msgid "Show row numbers"
 msgstr "Sıra numarasını göster"
 
-#: ../MainWin.java:1112
+#: ../MainWin.java:1156
 msgid "Adjust column widths"
 msgstr "Sütun genişliği ayarı"
 
-#: ../MainWin.java:1113
+#: ../MainWin.java:1157
 msgid "Adjust column widths to fit the window size"
 msgstr "Pencere boyunu doldurmak için sütun genişliğini ayarla"
 
-#: ../MainWin.java:1129
+#: ../MainWin.java:1173
 msgid "Connect or disconnect to the HylaFAX server"
 msgstr "HylaFAX sunucuya bağlan yada bağlantıyı kes"
 
-#: ../MainWin.java:1139 ../util/ToolbarEditorDialog.java:100
+#: ../MainWin.java:1183 ../util/ToolbarEditorDialog.java:100
 msgid "Customize toolbar"
 msgstr ""
 
-#: ../MainWin.java:1140
+#: ../MainWin.java:1184
 msgid "Customize the toolbar"
 msgstr ""
 
-#: ../MainWin.java:1170
+#: ../MainWin.java:1214
 msgid "Connect"
 msgstr "Bağlan"
 
-#: ../MainWin.java:1170
+#: ../MainWin.java:1214
 msgid "Disconnect"
 msgstr "Bağlantıyı kes"
 
-#: ../MainWin.java:1176 ../MainWin.java:1827
+#: ../MainWin.java:1221 ../MainWin.java:1889
 msgid "Fax"
 msgstr "Faks"
 
-#: ../MainWin.java:1197 ../MainWin.java:2461
+#: ../MainWin.java:1242 ../MainWin.java:2525
 msgid "Fetching fax list..."
 msgstr "Faks listesi alınıyor..."
 
-#: ../MainWin.java:1318
+#: ../MainWin.java:1363
 msgid "View"
 msgstr "Görünüm"
 
-#: ../MainWin.java:1322
+#: ../MainWin.java:1367
 msgid "All faxes"
 msgstr "Tüm fakslar"
 
-#: ../MainWin.java:1327
+#: ../MainWin.java:1372
 msgid "Only own faxes"
 msgstr "Sadece sahibi olunan fakslar"
 
-#: ../MainWin.java:1331
+#: ../MainWin.java:1376
 msgid "Custom filter..."
 msgstr "Özel filtre..."
 
-#: ../MainWin.java:1335
+#: ../MainWin.java:1380
 msgid "Mark failed jobs"
 msgstr "Başarısız olanları işaretle"
 
-#: ../MainWin.java:1460
+#: ../MainWin.java:1505
 msgid "Logging out..."
 msgstr "Çıkış işlemi yapılıyor..."
 
-#: ../MainWin.java:1490
+#: ../MainWin.java:1538
 msgid "Disconnected."
 msgstr "Bağlantı kesildi."
 
-#: ../MainWin.java:1545 ../NoGUISender.java:137
+#: ../MainWin.java:1596 ../NoGUISender.java:137
 msgid "Logging in..."
 msgstr "Giriş yapılıyor..."
 
-#: ../MainWin.java:1596
+#: ../MainWin.java:1647
 msgid "Help"
 msgstr "Yardım"
 
-#: ../MainWin.java:1607 ../options/OptionsWin.java:402
+#: ../MainWin.java:1658 ../options/OptionsWin.java:403
 msgid "Received"
 msgstr "Gelen"
 
-#: ../MainWin.java:1607
+#: ../MainWin.java:1658
 msgid "Received faxes"
 msgstr "Alınan fakslar"
 
-#: ../MainWin.java:1608 ../options/OptionsWin.java:403
+#: ../MainWin.java:1659 ../options/OptionsWin.java:404
 msgid "Sent"
 msgstr "Giden"
 
-#: ../MainWin.java:1608
+#: ../MainWin.java:1659
 msgid "Sent faxes"
 msgstr "Gönderilen fakslar"
 
-#: ../MainWin.java:1609 ../options/OptionsWin.java:404
+#: ../MainWin.java:1660 ../options/OptionsWin.java:405
 msgid "Transmitting"
 msgstr "İletiliyor"
 
-#: ../MainWin.java:1609
+#: ../MainWin.java:1660
 msgid "Faxes in the output queue"
 msgstr "Çıkış kuyruğundaki fakslar"
 
-#: ../MainWin.java:1851
+#: ../MainWin.java:1673 ../options/OptionsWin.java:406
+msgid "Archive"
+msgstr ""
+
+#: ../MainWin.java:1913
 msgid "Extras"
 msgstr "Araçlar"
 
-#: ../MainWin.java:2094
+#: ../MainWin.java:2158
 msgid "Could not log in"
 msgstr "Giriş yapılamıyor"
 
-#: ../MainWin.java:2113
+#: ../MainWin.java:2177
 msgid "Error refreshing the status:"
 msgstr "Durumu yenileme sırasında hata:"
 
-#: ../MainWin.java:2490 ../HylaClientManager.java:186
+#: ../MainWin.java:2554 ../HylaClientManager.java:186
 msgid "An error occured connecting to the server:"
 msgstr "Sunucuya bağlanırken hata oldu:"
 
@@ -759,7 +771,7 @@ msgid "Cancel"
 msgstr "İptal"
 
 #: ../filters/CustomFilterDialog.java:107
-#: ../phonebook/NewPhoneBookWin.java:737 ../send/SimplifiedSendDialog.java:370
+#: ../phonebook/NewPhoneBookWin.java:737 ../send/SimplifiedSendDialog.java:374
 #: ../send/TextFieldList.java:127
 msgid "Add"
 msgstr "Ekle"
@@ -797,8 +809,8 @@ msgstr "Lütfen geçerli bir numara girin!"
 msgid "Please enter at least one filtering condition."
 msgstr "Lütfen en az bir tane filtre koşulu girin."
 
-#: ../filters/CustomFilterDialog.java:221 ../send/SendController.java:410
-#: ../send/SendController.java:417 ../send/SendController.java:427
+#: ../filters/CustomFilterDialog.java:221 ../send/SendController.java:411
+#: ../send/SendController.java:418 ../send/SendController.java:428
 msgid "Warning"
 msgstr "Uyarı"
 
@@ -806,7 +818,7 @@ msgstr "Uyarı"
 msgid "(none)"
 msgstr "(hiç biri)"
 
-#: ../filters/FilterPanel.java:180
+#: ../filters/FilterPanel.java:183
 msgid "Remove this condition"
 msgstr "Bu koşulu kaldır"
 
@@ -826,27 +838,29 @@ msgstr "İle biter"
 msgid "matches"
 msgstr "Eşleşir"
 
-#: ../JobFormat.java:34 ../RecvFormat.java:39
+#: ../JobFormat.java:34 ../model/archive/QueueFileFormat.java:84
+#: ../RecvFormat.java:39
 msgid "SubAddress"
 msgstr "Alt adres"
 
-#: ../JobFormat.java:34
+#: ../JobFormat.java:34 ../model/archive/QueueFileFormat.java:84
 msgid "Destination SubAddress"
 msgstr "Hedef alt adres"
 
-#: ../JobFormat.java:38
+#: ../JobFormat.java:38 ../model/archive/QueueFileFormat.java:72
 msgid "Password"
 msgstr "Parola"
 
-#: ../JobFormat.java:38
+#: ../JobFormat.java:38 ../model/archive/QueueFileFormat.java:72
 msgid "Destination Password"
 msgstr "Hedef Parolası"
 
-#: ../JobFormat.java:42 ../phonebook/PBEntryField.java:29
+#: ../JobFormat.java:42 ../phonebook/PBEntryField.java:32
+#: ../model/archive/QueueFileFormat.java:38
 msgid "Company"
 msgstr "Şirket"
 
-#: ../JobFormat.java:42
+#: ../JobFormat.java:42 ../model/archive/QueueFileFormat.java:38
 msgid "Destination company name"
 msgstr "Hedef şirket adı"
 
@@ -858,7 +872,8 @@ msgstr ""
 msgid "Total # dials/maximum # dials"
 msgstr "Toplam # arama/en fazla # arama"
 
-#: ../JobFormat.java:50 ../RecvFormat.java:43
+#: ../JobFormat.java:50 ../model/archive/QueueFileFormat.java:81
+#: ../RecvFormat.java:43
 msgid "Speed"
 msgstr "Hız"
 
@@ -866,35 +881,39 @@ msgstr "Hız"
 msgid "Desired signalling rate"
 msgstr "İstenilen iletim hızı"
 
-#: ../JobFormat.java:54
+#: ../JobFormat.java:54 ../model/archive/QueueFileFormat.java:85
 msgid "Tagline format"
 msgstr "Etiket satır formatı"
 
-#: ../JobFormat.java:54
+#: ../JobFormat.java:54 ../model/archive/QueueFileFormat.java:85
 msgid "Client-specific tagline format string"
 msgstr "İstemci-tabanlı etiket satır biçim dizgisi"
 
-#: ../JobFormat.java:58
+#: ../JobFormat.java:58 ../model/archive/QueueFileFormat.java:45
 msgid "Desired min-scanline time"
 msgstr "İstenen en az tarama hattı süresi"
 
-#: ../JobFormat.java:62
+#: ../JobFormat.java:58 ../model/archive/QueueFileFormat.java:45
+msgid "Desired minimum scanline time"
+msgstr ""
+
+#: ../JobFormat.java:62 ../model/archive/QueueFileFormat.java:43
 msgid "Desired data format"
 msgstr "İstenilen veri biçimi"
 
-#: ../JobFormat.java:66
+#: ../JobFormat.java:66 ../model/archive/QueueFileFormat.java:74
 msgid "Priority"
 msgstr "Öncelik"
 
-#: ../JobFormat.java:66
+#: ../JobFormat.java:66 ../model/archive/QueueFileFormat.java:74
 msgid "Client-specified scheduling priority"
 msgstr "İstemci-tanımlı programlı öncelik"
 
-#: ../JobFormat.java:70
+#: ../JobFormat.java:70 ../model/archive/QueueFileFormat.java:52
 msgid "Tag string"
 msgstr "Etiket dizesi"
 
-#: ../JobFormat.java:70
+#: ../JobFormat.java:70 ../model/archive/QueueFileFormat.java:52
 msgid "Client-specified job tag string"
 msgstr "İstemci-tanımlı işlem etiket dizesi"
 
@@ -906,15 +925,16 @@ msgstr "ECM kullanılsın?"
 msgid "Desired use of ECM (one-character symbol)"
 msgstr "İstenen ECM kullanımı (tek-karakter simge)"
 
-#: ../JobFormat.java:78 ../phonebook/PBEntryField.java:33
+#: ../JobFormat.java:78 ../phonebook/PBEntryField.java:36
+#: ../model/archive/QueueFileFormat.java:55
 msgid "Location"
 msgstr "Yer"
 
-#: ../JobFormat.java:78
+#: ../JobFormat.java:78 ../model/archive/QueueFileFormat.java:55
 msgid "Destination geographic location"
 msgstr "Hedef coğrafik yer"
 
-#: ../JobFormat.java:82
+#: ../JobFormat.java:82 ../model/archive/QueueFileFormat.java:56
 msgid "Sender e-mail"
 msgstr "Gönderen e-mail adresi"
 
@@ -930,7 +950,7 @@ msgstr "Özel etiket satırı"
 msgid "Desired use of private tagline (one-character symbol)"
 msgstr "İstenen özel etiket satırı kullanımı (tek-karakter simge)"
 
-#: ../JobFormat.java:90
+#: ../JobFormat.java:90 ../model/archive/QueueFileFormat.java:90
 msgid "Use continuation cover"
 msgstr "Sürekli kapak kullan"
 
@@ -954,19 +974,20 @@ msgstr "En düşük iletim hızı"
 msgid "Client-specified minimum acceptable signalling rate"
 msgstr "İstemci-tanımlı en düşük kabul edilebilir iletim hızı"
 
-#: ../JobFormat.java:102
+#: ../JobFormat.java:102 ../model/archive/QueueFileFormat.java:75
 msgid "Receiver"
 msgstr "Alıcı"
 
-#: ../JobFormat.java:102
+#: ../JobFormat.java:102 ../model/archive/QueueFileFormat.java:75
 msgid "Destination person (receiver)"
 msgstr "Hedef kişi (alıcı)"
 
-#: ../JobFormat.java:106 ../RecvFormat.java:99
+#: ../JobFormat.java:106 ../model/archive/QueueFileFormat.java:80
+#: ../RecvFormat.java:99
 msgid "Sender"
 msgstr "Gönderen"
 
-#: ../JobFormat.java:106
+#: ../JobFormat.java:106 ../model/archive/QueueFileFormat.java:80
 msgid "Sender's identity"
 msgstr "Gönderenin kimliği"
 
@@ -978,19 +999,23 @@ msgstr "Denemeler: bitmiş/en fazla"
 msgid "Total # tries/maximum # tries"
 msgstr "Toplam # deneme/en çok # deneme"
 
-#: ../JobFormat.java:114
+#: ../JobFormat.java:114 ../model/archive/QueueFileFormat.java:36
 msgid "Page chopping threshold (inches)"
 msgstr "Sayfa kesim eşiği (inç)"
 
-#: ../JobFormat.java:118
+#: ../JobFormat.java:118 ../model/archive/QueueFileFormat.java:47
 msgid "Job done operation"
 msgstr "Tamamlanmış işlem "
+
+#: ../JobFormat.java:118 ../model/archive/QueueFileFormat.java:47
+msgid "Operation to perform when job is done"
+msgstr ""
 
 #: ../JobFormat.java:122
 msgid "Communication identifier"
 msgstr "İletişim tanımlayıcısı"
 
-#: ../JobFormat.java:126
+#: ../JobFormat.java:126 ../model/archive/QueueFileFormat.java:53
 msgid "Job type"
 msgstr "İşlem tipi"
 
@@ -1006,7 +1031,8 @@ msgstr "Programlandığı zaman"
 msgid "Scheduled date and time"
 msgstr "Programlandığı tarih ve zaman"
 
-#: ../JobFormat.java:130 ../RecvFormat.java:35
+#: ../JobFormat.java:130 ../model/archive/QueueFileFormat.java:54
+#: ../model/archive/QueueFileFormat.java:89 ../RecvFormat.java:35
 msgid "dd/MM/yyyy HH:mm:ss"
 msgstr "dd/MM/yyyy HH:mm:ss"
 
@@ -1016,7 +1042,7 @@ msgstr ""
 "UNIX döneminden (01.01.1970 - 00:00) itibaren saniye cinsinden "
 "programlandığı zaman"
 
-#: ../JobFormat.java:138
+#: ../JobFormat.java:138 ../model/archive/QueueFileFormat.java:82
 msgid "Job state"
 msgstr "İşlem durumu"
 
@@ -1024,23 +1050,31 @@ msgstr "İşlem durumu"
 msgid "Job state (one-character symbol)"
 msgstr "İşlem durumu (tek-karakter simge şeklinde)"
 
-#: ../JobFormat.java:142
+#: ../JobFormat.java:142 ../model/archive/QueueFileFormat.java:61
 msgid "# consecutive failed tries"
 msgstr "# ardışık başarısız denemeler"
+
+#: ../JobFormat.java:142 ../model/archive/QueueFileFormat.java:61
+msgid "Number of consecutive failed attempts to place call"
+msgstr ""
 
 #: ../JobFormat.java:146
 msgid "Client machine name"
 msgstr "İstemci bilgisayar adı"
 
-#: ../JobFormat.java:150
+#: ../JobFormat.java:150 ../model/archive/QueueFileFormat.java:86
 msgid "Total # dials"
 msgstr "Toplam # arama"
 
-#: ../JobFormat.java:154
+#: ../JobFormat.java:150 ../model/archive/QueueFileFormat.java:86
+msgid "Total number of phone calls"
+msgstr ""
+
+#: ../JobFormat.java:154 ../model/archive/QueueFileFormat.java:48
 msgid "Number"
 msgstr "Numara"
 
-#: ../JobFormat.java:154
+#: ../JobFormat.java:154 ../model/archive/QueueFileFormat.java:48
 msgid "Public (external) format of dialstring"
 msgstr "Arama dizesi genel (harici) biçimi"
 
@@ -1048,27 +1082,27 @@ msgstr "Arama dizesi genel (harici) biçimi"
 msgid "# consecutive failed dials"
 msgstr "# ardışık başarısız arama"
 
-#: ../JobFormat.java:162
+#: ../JobFormat.java:162 ../model/archive/QueueFileFormat.java:50
 msgid "Group identifier"
 msgstr "Grup kimiliği"
 
-#: ../JobFormat.java:166
+#: ../JobFormat.java:166 ../model/archive/QueueFileFormat.java:68
 msgid "Page chop handling"
 msgstr "Sayfa kesme"
 
-#: ../JobFormat.java:166
-msgid "Page chop handling (one-character symbol)"
-msgstr "Sayfa kesme (tek-karakter simge)"
+#: ../JobFormat.java:166 ../model/archive/QueueFileFormat.java:68
+msgid "Whitespace truncation handling"
+msgstr ""
 
-#: ../JobFormat.java:170
+#: ../JobFormat.java:170 ../model/archive/QueueFileFormat.java:79
 msgid "Scheduling priority"
 msgstr "Öncelik çizelgesi"
 
-#: ../JobFormat.java:170
+#: ../JobFormat.java:170 ../model/archive/QueueFileFormat.java:79
 msgid "Current scheduling priority"
 msgstr "Şu anki planlı öncelik"
 
-#: ../JobFormat.java:174
+#: ../JobFormat.java:174 ../model/archive/QueueFileFormat.java:51
 msgid "ID"
 msgstr "Kimlik"
 
@@ -1076,19 +1110,25 @@ msgstr "Kimlik"
 msgid "Job identifier"
 msgstr "İşlem kimliği"
 
-#: ../JobFormat.java:178
+#: ../JobFormat.java:178 ../model/archive/QueueFileFormat.java:54
 msgid "Job kill time"
 msgstr "İşlem sonlandırma süresi"
 
-#: ../JobFormat.java:182 ../RecvFormat.java:71
+#: ../JobFormat.java:178 ../model/archive/QueueFileFormat.java:54
+msgid "Time to give up trying to send job"
+msgstr ""
+
+#: ../JobFormat.java:182 ../model/archive/QueueFileFormat.java:70
+#: ../RecvFormat.java:71
 msgid "Page length"
 msgstr "Sayfa uzunluğu"
 
-#: ../JobFormat.java:182 ../RecvFormat.java:71
+#: ../JobFormat.java:182 ../model/archive/QueueFileFormat.java:70
+#: ../RecvFormat.java:71
 msgid "Page length in mm"
 msgstr "Sayfa uzunluğu mm olarak"
 
-#: ../JobFormat.java:186
+#: ../JobFormat.java:186 ../model/archive/QueueFileFormat.java:60
 msgid "Modem"
 msgstr "Modem"
 
@@ -1096,7 +1136,7 @@ msgstr "Modem"
 msgid "Assigned modem"
 msgstr "Atanmış modem"
 
-#: ../JobFormat.java:190
+#: ../JobFormat.java:190 ../model/archive/QueueFileFormat.java:62
 msgid "Notification"
 msgstr "Bilgilendirme"
 
@@ -1104,23 +1144,24 @@ msgstr "Bilgilendirme"
 msgid "E-mail notification handling (one-character symbol)"
 msgstr "E-mail bilgilendirme işlem tarzı (tek-karakter simge)"
 
-#: ../JobFormat.java:194 ../RecvFormat.java:83
+#: ../JobFormat.java:194 ../model/archive/QueueFileFormat.java:66
+#: ../RecvFormat.java:83
 msgid "Owner"
 msgstr "Sahibi"
 
-#: ../JobFormat.java:194
+#: ../JobFormat.java:194 ../model/archive/QueueFileFormat.java:66
 msgid "Job owner"
 msgstr "İşlem sahibi"
 
-#: ../JobFormat.java:198
+#: ../JobFormat.java:198 ../model/archive/QueueFileFormat.java:63
 msgid "# pages"
 msgstr "# sayfalar"
 
-#: ../JobFormat.java:198
-msgid "# pages transmitted"
-msgstr "Gönderilen # sayfa"
+#: ../JobFormat.java:198 ../model/archive/QueueFileFormat.java:63
+msgid "Number of pages transmitted"
+msgstr ""
 
-#: ../JobFormat.java:202
+#: ../JobFormat.java:202 ../model/archive/QueueFileFormat.java:77
 msgid "Retry time"
 msgstr "Deneme zamanı"
 
@@ -1128,69 +1169,93 @@ msgstr "Deneme zamanı"
 msgid "Job retry time (MM::SS)"
 msgstr "İşlem yeniden deneme süresi (MM::SS)"
 
-#: ../JobFormat.java:206 ../RecvFormat.java:95
+#: ../JobFormat.java:206 ../model/archive/QueueFileFormat.java:76
+#: ../RecvFormat.java:95
 msgid "Resolution"
 msgstr "Çözünürlük"
 
-#: ../JobFormat.java:206
+#: ../JobFormat.java:206 ../model/archive/QueueFileFormat.java:76
 msgid "Document resolution in lines/inch"
 msgstr "Belge çözünürlüğü satır/inç olarak"
 
-#: ../JobFormat.java:210
+#: ../JobFormat.java:210 ../model/archive/QueueFileFormat.java:83
 msgid "Status"
 msgstr "Durum"
 
-#: ../JobFormat.java:210
+#: ../JobFormat.java:210 ../model/archive/QueueFileFormat.java:83
 msgid "Job status information from last failure"
 msgstr "Son başarısız girişim durum bilgisi"
 
-#: ../JobFormat.java:214
+#: ../JobFormat.java:214 ../model/archive/QueueFileFormat.java:88
 msgid "Tries"
 msgstr "Deneme"
 
-#: ../JobFormat.java:214
-msgid "Total # tries attempted"
-msgstr "Toplam # deneme gerçekleştirldi"
+#: ../JobFormat.java:214 ../model/archive/QueueFileFormat.java:88
+msgid "Total number of attempts to send job"
+msgstr ""
 
-#: ../JobFormat.java:218
+#: ../JobFormat.java:218 ../model/archive/QueueFileFormat.java:58
 msgid "Max. tries"
 msgstr "En fazla deneme"
 
-#: ../JobFormat.java:218
-msgid "Maximum # tries"
-msgstr "En fazla # deneme"
+#: ../JobFormat.java:218 ../model/archive/QueueFileFormat.java:58
+msgid "Maximum number of attempts to send job"
+msgstr ""
 
-#: ../JobFormat.java:222
+#: ../JobFormat.java:222 ../model/archive/QueueFileFormat.java:65
 msgid "Specified number"
 msgstr "Tanımlı numara"
 
-#: ../JobFormat.java:222
+#: ../JobFormat.java:222 ../model/archive/QueueFileFormat.java:65
 msgid "Client-specified dialstring"
 msgstr "İstemci-tanımlı arama dizesi"
 
-#: ../JobFormat.java:226 ../RecvFormat.java:107
+#: ../JobFormat.java:226 ../model/archive/QueueFileFormat.java:71
+#: ../RecvFormat.java:107
 msgid "Page width"
 msgstr "Sayfa genişliği"
 
-#: ../JobFormat.java:226 ../RecvFormat.java:107
+#: ../JobFormat.java:226 ../model/archive/QueueFileFormat.java:71
+#: ../RecvFormat.java:107
 msgid "Page width in mm"
 msgstr "Sayfa genişliği mm olarak"
 
-#: ../JobFormat.java:230
+#: ../JobFormat.java:230 ../model/archive/QueueFileFormat.java:57
 msgid "Maximum # dials"
 msgstr "En fazla # arama"
 
-#: ../JobFormat.java:234 ../RecvFormat.java:87
+#: ../JobFormat.java:230 ../model/archive/QueueFileFormat.java:57
+msgid "Maximum number of times to dial"
+msgstr ""
+
+#: ../JobFormat.java:234 ../model/archive/QueueFileFormat.java:87
+#: ../RecvFormat.java:87
 msgid "Pages"
 msgstr "Sayfalar"
 
-#: ../JobFormat.java:234
+#: ../JobFormat.java:234 ../model/archive/QueueFileFormat.java:87
 msgid "Total # pages to transmit"
 msgstr "gönderilecek toplam # sayfa"
 
-#: ../JobFormat.java:238
+#: ../JobFormat.java:238 ../model/archive/QueueFileFormat.java:89
 msgid "Time to send job"
 msgstr "İşlem gönderme zamanı"
+
+#: ../JobFormat.java:242 ../model/archive/QueueFileFormat.java:92
+msgid "State"
+msgstr ""
+
+#: ../JobFormat.java:242 ../model/archive/QueueFileFormat.java:92
+msgid "Job state (long description)"
+msgstr ""
+
+#: ../JobFormat.java:246 ../model/archive/QueueFileFormat.java:93
+msgid "Notification when"
+msgstr ""
+
+#: ../JobFormat.java:246 ../model/archive/QueueFileFormat.java:93
+msgid "E-mail notification handling (long description)"
+msgstr ""
 
 #: ../HylaClientManager.java:111
 msgid "Log in"
@@ -1220,11 +1285,11 @@ msgstr "Yönetici parolası"
 msgid "Please enter the administrative password:"
 msgstr ""
 
-#: ../Launcher2.java:413
+#: ../Launcher2.java:632
 msgid "The new instance did not start after 20 seconds."
 msgstr "Yeni kopya 20 saniyeden sonra başlamadı"
 
-#: ../Launcher2.java:427
+#: ../Launcher2.java:646
 msgid ""
 "Cannot launch new program instance, continuing with the existing one!\n"
 "Reason: "
@@ -1232,140 +1297,145 @@ msgstr ""
 "Yeni program kopyası başlatılamıyor, varolan ile devam ediliyor!\n"
 "Nedeni:"
 
-#: ../Launcher2.java:499
+#: ../Launcher2.java:724
 msgid "There already is a running instance!"
 msgstr "Zaten çalışan bir kopya var!"
 
-#: ../options/OptionsWin.java:373 ../options/CoverPanel.java:81
-#: ../send/SendWin.java:472
+#: ../options/OptionsWin.java:378 ../options/CoverPanel.java:81
+#: ../send/SendWin.java:479
 msgid "General"
 msgstr "Ortak"
 
-#: ../options/OptionsWin.java:377
+#: ../options/OptionsWin.java:380
 msgid "Paths and viewers"
 msgstr ""
 
-#: ../options/OptionsWin.java:379
+#: ../options/OptionsWin.java:382
 msgid "Server"
 msgstr "Sunucu"
 
-#: ../options/OptionsWin.java:381
+#: ../options/OptionsWin.java:384
 msgid "Delivery"
 msgstr "Gönderme"
 
-#: ../options/OptionsWin.java:385 ../send/SendWin.java:473
+#: ../options/OptionsWin.java:386 ../send/SendWin.java:480
 msgid "Cover page"
 msgstr "Kapak Sayfası"
 
-#: ../options/OptionsWin.java:389 ../options/OptionsWin.java:977
+#: ../options/OptionsWin.java:390 ../options/OptionsWin.java:1003
 msgid "Plugins & JDBC"
 msgstr "Eklenti ve JDBC"
 
-#: ../options/OptionsWin.java:391
+#: ../options/OptionsWin.java:392
 msgid "Please select on the left which table you want to edit."
 msgstr ""
 
-#: ../options/OptionsWin.java:399
+#: ../options/OptionsWin.java:400
 msgid "Tables"
 msgstr ""
 
-#: ../options/OptionsWin.java:400
+#: ../options/OptionsWin.java:401
 #, java-format
 msgid "Table \"{0}\""
 msgstr "Tablo \"{0}\""
 
-#: ../options/OptionsWin.java:518
+#: ../options/OptionsWin.java:531
 msgid "Connection settings:"
 msgstr "Bağlantı Ayarları:"
 
-#: ../options/OptionsWin.java:529 ../options/OptionsWin.java:535
-#: ../options/OptionsWin.java:541 ../phonebook/ldap/ConnectionDialog.java:144
+#: ../options/OptionsWin.java:542 ../options/OptionsWin.java:548
+#: ../options/OptionsWin.java:554 ../phonebook/ldap/ConnectionDialog.java:144
 #: ../phonebook/jdbc/ConnectionDialog.java:203
 msgid "Always ask"
 msgstr "Her zaman Sor"
 
-#: ../options/OptionsWin.java:556
+#: ../options/OptionsWin.java:569
 msgid "Use passive mode to fetch faxes"
 msgstr "Faksları almak için edilgen kip kullan"
 
-#: ../options/OptionsWin.java:558
+#: ../options/OptionsWin.java:571
 msgid "Host name:"
 msgstr "Sunucu:"
 
-#: ../options/OptionsWin.java:559 ../phonebook/ldap/ConnectionDialog.java:183
+#: ../options/OptionsWin.java:572 ../phonebook/ldap/ConnectionDialog.java:183
 msgid "Port:"
 msgstr "Bağlantı noktası:"
 
-#: ../options/OptionsWin.java:560 ../phonebook/jdbc/ConnectionDialog.java:224
+#: ../options/OptionsWin.java:573 ../phonebook/jdbc/ConnectionDialog.java:224
+#: ../util/PasswordDialog.java:80
 msgid "Username:"
 msgstr "Kullanıcı adı:"
 
-#: ../options/OptionsWin.java:563 ../phonebook/ldap/ConnectionDialog.java:188
+#: ../options/OptionsWin.java:576 ../phonebook/ldap/ConnectionDialog.java:188
 #: ../phonebook/jdbc/ConnectionDialog.java:227 ../util/PasswordDialog.java:83
 msgid "Password:"
 msgstr "Parola:"
 
-#: ../options/OptionsWin.java:565
+#: ../options/OptionsWin.java:578
 msgid "Admin Password:"
 msgstr "Yönetici Parolası:"
 
-#: ../options/OptionsWin.java:593
+#: ../options/OptionsWin.java:606
 msgid "User interface"
 msgstr "Kullanıcı arabirimi"
 
-#: ../options/OptionsWin.java:615
+#: ../options/OptionsWin.java:628
 msgid "Show tray icon"
 msgstr ""
 
-#: ../options/OptionsWin.java:616
+#: ../options/OptionsWin.java:629
 msgid "Show a system tray icon (works only with Java 6 or higher)"
 msgstr ""
 
-#: ../options/OptionsWin.java:624
+#: ../options/OptionsWin.java:637
 msgid "Minimize to tray"
 msgstr ""
 
-#: ../options/OptionsWin.java:628
+#: ../options/OptionsWin.java:641
 msgid "Language:"
 msgstr "Dil:"
 
-#: ../options/OptionsWin.java:629
+#: ../options/OptionsWin.java:642
 msgid "Look and Feel:"
 msgstr "Görünüm:"
 
-#: ../options/OptionsWin.java:630
+#: ../options/OptionsWin.java:643
 msgid "Style of send dialog:"
 msgstr "Gönderme iletişim tipi:"
 
-#: ../options/OptionsWin.java:652
+#: ../options/OptionsWin.java:666
 msgid "Actions after receiving a new fax:"
 msgstr "Yeni faks aldıktan sonra yapılacak işlem:"
 
-#: ../options/OptionsWin.java:654
+#: ../options/OptionsWin.java:668
 msgid "Beep"
 msgstr "Bip"
 
-#: ../options/OptionsWin.java:655
+#: ../options/OptionsWin.java:669
 msgid "Bring to front"
 msgstr "Öne getir"
 
-#: ../options/OptionsWin.java:656
+#: ../options/OptionsWin.java:670
 msgid "Open in viewer"
 msgstr "Görüntüleyicide aç"
 
-#: ../options/OptionsWin.java:662
+#: ../options/OptionsWin.java:676
 msgid "And mark as read"
 msgstr "Ve okunmuş olarak işaretle"
 
-#: ../options/OptionsWin.java:688
+#: ../options/OptionsWin.java:678
+msgid "Show flashing tray icon"
+msgstr ""
+
+#: ../options/OptionsWin.java:705
 msgid "General settings:"
 msgstr "Genel Ayarlar:"
 
-#: ../options/OptionsWin.java:690
+#: ../options/OptionsWin.java:707
 msgid "Use PCL file type bugfix"
 msgstr "PCL dosya türü hata düzeltme kullan"
 
-#: ../options/OptionsWin.java:696
+#: ../options/OptionsWin.java:713
 msgid ""
 "The maximum time to wait for a interaction with the server to complete. "
 "Values below 5 are not recommended; 0 disables this timeout."
@@ -1373,21 +1443,11 @@ msgstr ""
 "Sunucu ile etkileşimin tamamlanması için beklenecek en fazla süre. Aşağıdaki "
 "5 değeri tavsiye edilmez; 0 zaman aşımını devre dışı bırakır."
 
-#: ../options/OptionsWin.java:698
-msgid "Prefer rendered TIFF (experimental)"
-msgstr "TIFF tercih et (deneysel)"
-
-#: ../options/OptionsWin.java:699
-msgid ""
-"Try to fetch the rendered TIFF from the HylaFAX server instead of the source "
-"file."
-msgstr "TIFF dosyalarını, kaynak dosya yerine HylaFAX sunucudan almaya çalış."
-
-#: ../options/OptionsWin.java:701
+#: ../options/OptionsWin.java:718
 msgid "Create new session for every action"
 msgstr "Tüm işlemler için yeni bir oturum aç"
 
-#: ../options/OptionsWin.java:702
+#: ../options/OptionsWin.java:719
 msgid ""
 "Connect to the server and log in for every action (e.g. view a fax, update "
 "tables, ...) and disconnect afterwards. This impairs performance but might "
@@ -1397,99 +1457,99 @@ msgstr ""
 "tabloları güncellemek, ...) ve ondan sonra çıkış yap. Bu başarımı düşürür "
 "ancak hataları düzeltebilir."
 
-#: ../options/OptionsWin.java:704
+#: ../options/OptionsWin.java:721
 msgid "Date/Time offset:"
 msgstr "Zaman dilimi:"
 
-#: ../options/OptionsWin.java:705
+#: ../options/OptionsWin.java:722
 msgid ""
 "Offset to be added to dates received from the HylaFAX server before "
 "displaying them."
 msgstr ""
 "Gösterilmeden önce HylaFAX sunucudan alınan tarih için eklenecek zaman farkı:"
 
-#: ../options/OptionsWin.java:710
+#: ../options/OptionsWin.java:727
 msgid "Table refresh interval (secs.):"
 msgstr "Tablo tazeleme sıklığı (saniye):"
 
-#: ../options/OptionsWin.java:711
+#: ../options/OptionsWin.java:728
 msgid "Server status refresh interval (secs.):"
 msgstr "Sunucu durumu tazeleme sıklığı (saniye):"
 
-#: ../options/OptionsWin.java:712
+#: ../options/OptionsWin.java:729
 msgid "Server socket timeout (secs):"
 msgstr "Sunucu bağlantı noktası zaman aşımı (sn.):"
 
-#: ../options/OptionsWin.java:731
+#: ../options/OptionsWin.java:748
 msgid "Delivery settings"
 msgstr "Gönderme ayarları"
 
-#: ../options/OptionsWin.java:751
+#: ../options/OptionsWin.java:768
 msgid "E-mail address for notifications:"
 msgstr "Bilgilendirme e-mail adresi:"
 
-#: ../options/OptionsWin.java:752 ../send/SendWin.java:458
-#: ../send/SimplifiedSendDialog.java:496
+#: ../options/OptionsWin.java:769 ../send/SendWin.java:465
+#: ../send/SimplifiedSendDialog.java:500
 msgid "Notify when:"
 msgstr "Bilgilendirme zamanı:"
 
-#: ../options/OptionsWin.java:753 ../send/SendWin.java:459
-#: ../send/SimplifiedSendDialog.java:497
+#: ../options/OptionsWin.java:770 ../send/SendWin.java:466
+#: ../send/SimplifiedSendDialog.java:501
 msgid "Modem:"
 msgstr "Modem:"
 
-#: ../options/OptionsWin.java:754
+#: ../options/OptionsWin.java:771
 msgid "Time zone:"
 msgstr "Zaman Dilimi:"
 
-#: ../options/OptionsWin.java:755 ../send/SendWin.java:460
-#: ../send/SimplifiedSendDialog.java:498
+#: ../options/OptionsWin.java:772 ../send/SendWin.java:467
+#: ../send/SimplifiedSendDialog.java:502
 msgid "Resolution:"
 msgstr "Çözünürlük:"
 
-#: ../options/OptionsWin.java:756 ../send/SendWin.java:461
-#: ../send/SimplifiedSendDialog.java:499
+#: ../options/OptionsWin.java:773 ../send/SendWin.java:468
+#: ../send/SimplifiedSendDialog.java:503
 msgid "Paper size:"
 msgstr "Kağıt boyutu:"
 
-#: ../options/OptionsWin.java:757 ../send/SendWin.java:462
-#: ../send/SimplifiedSendDialog.java:500
+#: ../options/OptionsWin.java:774 ../send/SendWin.java:469
+#: ../send/SimplifiedSendDialog.java:504
 msgid "Cancel job after (minutes):"
 msgstr "İşlemden (dakika) sonra vazgeç:"
 
-#: ../options/OptionsWin.java:758
+#: ../options/OptionsWin.java:775
 msgid "Maximum dials:"
 msgstr "En fazla arama:"
 
-#: ../options/OptionsWin.java:759 ../send/SendWin.java:463
-#: ../send/SimplifiedSendDialog.java:501
+#: ../options/OptionsWin.java:776 ../send/SendWin.java:470
+#: ../send/SimplifiedSendDialog.java:505
 msgid "Maximum tries:"
 msgstr "En fazla deneme:"
 
-#: ../options/OptionsWin.java:787 ../options/OptionsWin.java:795
-#: ../options/OptionsWin.java:803
+#: ../options/OptionsWin.java:803 ../options/OptionsWin.java:810
+#: ../options/OptionsWin.java:817 ../options/ArchivePanel.java:77
 msgid "Selected columns:"
 msgstr "Seçili sütunlar"
 
-#: ../options/OptionsWin.java:787 ../options/OptionsWin.java:795
-#: ../options/OptionsWin.java:803
+#: ../options/OptionsWin.java:803 ../options/OptionsWin.java:810
+#: ../options/OptionsWin.java:817 ../options/ArchivePanel.java:77
 msgid "Available columns:"
 msgstr "Mevcut sütunlar"
 
-#: ../options/OptionsWin.java:851
+#: ../options/OptionsWin.java:865
 msgid "(System native)"
 msgstr "(Sistem varsayılanı)"
 
-#: ../options/OptionsWin.java:852
+#: ../options/OptionsWin.java:866
 msgid "(Crossplatform)"
 msgstr "(Çoklu platform)"
 
-#: ../options/OptionsWin.java:932
+#: ../options/OptionsWin.java:951
 msgid ""
 "You must restart the program for the change of the language to take effect."
 msgstr "Dil değişikliğinin etkin olması için programı yeniden başlatmalısınız."
 
-#: ../options/OptionsWin.java:977
+#: ../options/OptionsWin.java:1003
 msgid ""
 "You will need to restart the program for the changes to the list of plugins "
 "and JDBC drivers to take full effect."
@@ -1497,53 +1557,53 @@ msgstr ""
 "Eklenti listesi ve JDBC sürücülerindeki değişikliklerin tamamen etkin olması "
 "için programı yeniden başlatmanız gerekli."
 
-#: ../options/OptionsWin.java:985
+#: ../options/OptionsWin.java:1008
 msgid "Error saving the settings:"
 msgstr "Ayarları kaydetme hatası:"
 
-#: ../options/OptionsWin.java:999
+#: ../options/OptionsWin.java:1022
 msgid "Please enter a host name."
 msgstr "Lütfen bilgisayar adı girin."
 
-#: ../options/OptionsWin.java:1005
+#: ../options/OptionsWin.java:1028
 msgid "Please enter a user name."
 msgstr "Lütfen kullanıcı adı girin."
 
-#: ../options/OptionsWin.java:1023
+#: ../options/OptionsWin.java:1046
 msgid "Please enter a valid port number."
 msgstr "Lütfen geçerli bir bağlantı noktası numarası girin."
 
-#: ../options/OptionsWin.java:1071
+#: ../options/OptionsWin.java:1094
 msgid "Read/Unread state of faxes"
 msgstr "Faksların Okundu/Okunmadı durumu"
 
-#: ../options/OptionsWin.java:1105
+#: ../options/OptionsWin.java:1128
 msgid "Configure..."
 msgstr "Ayarla..."
 
-#: ../options/OptionsWin.java:1109
+#: ../options/OptionsWin.java:1132
 msgid "Save location:"
 msgstr "Kaydetme yeri:"
 
-#: ../options/OptionsWin.java:1164
+#: ../options/OptionsWin.java:1187
 msgid "JAR files"
 msgstr "JAR dosyaları"
 
-#: ../options/OptionsWin.java:1177 ../options/OptionsWin.java:1201
+#: ../options/OptionsWin.java:1200 ../options/OptionsWin.java:1224
 msgid "Add JDBC driver"
 msgstr "JDBC sürücüsü ekle"
 
-#: ../options/OptionsWin.java:1183 ../options/OptionsWin.java:1188
-#: ../options/OptionsWin.java:1204
+#: ../options/OptionsWin.java:1206 ../options/OptionsWin.java:1211
+#: ../options/OptionsWin.java:1227
 msgid "Add plugin"
 msgstr "Eklenti ilave et"
 
-#: ../options/OptionsWin.java:1188
+#: ../options/OptionsWin.java:1211
 #, java-format
 msgid "The file {0} is not a valid YajHFC plugin!"
 msgstr "{0} dosyası geçerli bir YajHFC eklentisi değil!"
 
-#: ../options/OptionsWin.java:1207
+#: ../options/OptionsWin.java:1230
 msgid "Remove item"
 msgstr "Öğeyi kaldır"
 
@@ -1585,6 +1645,14 @@ msgstr ""
 
 #: ../options/MultiFileMode.java:30
 msgid "Complete fax as single file (needs GhostScript+tiff2pdf)"
+msgstr ""
+
+#: ../options/ArchivePanel.java:65
+msgid "Location of archive directory:"
+msgstr ""
+
+#: ../options/ArchivePanel.java:67
+msgid "Show archive table"
 msgstr ""
 
 #: ../options/PathAndViewPanel.java:76
@@ -1667,8 +1735,8 @@ msgstr ""
 msgid "Current phone book:"
 msgstr "Şu anki telefon listesi"
 
-#: ../phonebook/NewPhoneBookWin.java:276 ../send/SendWin.java:324
-#: ../send/SimplifiedSendDialog.java:283
+#: ../phonebook/NewPhoneBookWin.java:276 ../send/SendWin.java:328
+#: ../send/SimplifiedSendDialog.java:285
 msgid "Comments:"
 msgstr "Yorumlar:"
 
@@ -1776,6 +1844,10 @@ msgstr ""
 msgid "Error executing the desired action:"
 msgstr "İstenilen eylemi uygulamada hata:"
 
+#: ../phonebook/PhoneBookFactory.java:60
+msgid "Personal phonebook"
+msgstr ""
+
 #: ../phonebook/ldap/LDAPPhoneBook.java:54
 msgid "LDAP Phonebook (read only)"
 msgstr "LDAP telefon defteri (salt okunur)"
@@ -1846,7 +1918,7 @@ msgid "User name (Bind DN):"
 msgstr "Kullanıcı adı (Bind DN):"
 
 #: ../phonebook/ldap/ConnectionDialog.java:192
-#: ../phonebook/jdbc/JDBCPhoneBook.java:78
+#: ../phonebook/XMLPhoneBook.java:270 ../phonebook/jdbc/JDBCPhoneBook.java:78
 msgid "Phonebook name to display:"
 msgstr "Görüntülenecek telefon defteri adı:"
 
@@ -1891,73 +1963,77 @@ msgstr ""
 msgid "All phone books"
 msgstr "Tüm adres defterleri"
 
-#: ../phonebook/PBEntryField.java:26
+#: ../phonebook/PBEntryField.java:29
 msgid "Given name"
 msgstr "Verilen ad"
 
-#: ../phonebook/PBEntryField.java:27
+#: ../phonebook/PBEntryField.java:30
 msgid "Name"
 msgstr "Ad"
 
-#: ../phonebook/PBEntryField.java:28
+#: ../phonebook/PBEntryField.java:31
 msgid "Title"
 msgstr "Başlık"
 
-#: ../phonebook/PBEntryField.java:30
+#: ../phonebook/PBEntryField.java:33
 msgid "Position"
 msgstr ""
 
-#: ../phonebook/PBEntryField.java:31
+#: ../phonebook/PBEntryField.java:34
 msgid "Department"
 msgstr ""
 
-#: ../phonebook/PBEntryField.java:32
+#: ../phonebook/PBEntryField.java:35
 msgid "Street"
 msgstr ""
 
-#: ../phonebook/PBEntryField.java:34
+#: ../phonebook/PBEntryField.java:37
 msgid "Country"
 msgstr ""
 
-#: ../phonebook/PBEntryField.java:35
+#: ../phonebook/PBEntryField.java:38
 msgid "ZIP code"
 msgstr ""
 
-#: ../phonebook/PBEntryField.java:36
-msgid "State"
+#: ../phonebook/PBEntryField.java:39
+msgid "State/Region"
 msgstr ""
 
-#: ../phonebook/PBEntryField.java:37
+#: ../phonebook/PBEntryField.java:40
 msgid "e-mail address"
 msgstr ""
 
-#: ../phonebook/PBEntryField.java:38
-msgid "Voice number"
-msgstr "Telefon numarası"
+#: ../phonebook/PBEntryField.java:41
+msgid "Website"
+msgstr ""
 
-#: ../phonebook/PBEntryField.java:39
+#: ../phonebook/PBEntryField.java:42
 msgid "Fax number"
 msgstr "Faks numarası"
 
-#: ../phonebook/PBEntryField.java:40
+#: ../phonebook/PBEntryField.java:43
+msgid "Voice number"
+msgstr "Telefon numarası"
+
+#: ../phonebook/PBEntryField.java:44
 msgid "Comments"
 msgstr "Yorumlar"
 
-#: ../phonebook/XMLPhoneBook.java:48
+#: ../phonebook/XMLPhoneBook.java:60
 msgid "XML Phonebook"
 msgstr "XML telefon defteri"
 
-#: ../phonebook/XMLPhoneBook.java:49
+#: ../phonebook/XMLPhoneBook.java:61
 msgid "A Phonebook saving its entries as a XML file."
 msgstr "Girdileri XML dosyasına kaydeden telefon defteri."
 
-#: ../phonebook/XMLPhoneBook.java:106
-msgid "Phonebook files"
-msgstr "Telefon defteri dosyaları"
-
-#: ../phonebook/XMLPhoneBook.java:142
+#: ../phonebook/XMLPhoneBook.java:145
 msgid "Error saving the phone book: "
 msgstr "Telefon defteri kaydetme hatası:"
+
+#: ../phonebook/XMLPhoneBook.java:261
+msgid "Phonebook files"
+msgstr "Telefon defteri dosyaları"
 
 #: ../phonebook/NewSearchWin.java:125
 msgid "No matching phone book entry found."
@@ -2033,6 +2109,7 @@ msgstr "Veritabanı parolası"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:221
 #: ../phonebook/jdbc/ConnectionDialog.java:317
+#: ../readstate/JDBCPersistentReadState.java:85
 #, java-format
 msgid "Please enter the database password (database: {0}):"
 msgstr ""
@@ -2100,7 +2177,7 @@ msgstr "Veritabanı tablosu belirtmek zorundasınız."
 msgid "Connection to the database succeeded."
 msgstr "Veritabanına bağlantı başarılı oldu."
 
-#: ../phonebook/AbstractConnectionSettings.java:42 ../send/SendWin.java:213
+#: ../phonebook/AbstractConnectionSettings.java:42 ../send/SendWin.java:217
 msgid "<none>"
 msgstr "<yok>"
 
@@ -2123,11 +2200,6 @@ msgstr "Faks Dosya adı:"
 #: ../readstate/JDBCPersistentReadState.java:73
 msgid "Read/Unread State:"
 msgstr "Okundu/Okunmadı Durumu:"
-
-#: ../readstate/JDBCPersistentReadState.java:85
-#, java-format
-msgid "Please enter the database password (database: {0})."
-msgstr ""
 
 #: ../readstate/JDBCPersistentReadState.java:142
 msgid ""
@@ -2159,31 +2231,31 @@ msgstr ""
 msgid "Local file"
 msgstr "Yerel dosya"
 
-#: ../NoGUISender.java:158
+#: ../NoGUISender.java:165
 msgid "Error sending the fax:"
 msgstr ""
 
-#: ../model/SentYajJob.java:209
+#: ../model/SentYajJob.java:211
 msgid "Blocked (by concurrent activity to the same destination)"
 msgstr "Engellendi (aynı hedefe eşzamanlı etkinlik sebebi ile)"
 
-#: ../model/SentYajJob.java:211
+#: ../model/SentYajJob.java:213
 msgid "Done"
 msgstr "Tamam"
 
-#: ../model/SentYajJob.java:213
+#: ../model/SentYajJob.java:215
 msgid "Failed"
 msgstr "Başarısız"
 
-#: ../model/SentYajJob.java:215
+#: ../model/SentYajJob.java:217
 msgid "Pending (waiting for the time to send to arrive)"
 msgstr "Beklemede (gönderme zamanının gelmesi bekleniyor)"
 
-#: ../model/SentYajJob.java:217
+#: ../model/SentYajJob.java:219
 msgid "Running"
 msgstr "Çalışıyor"
 
-#: ../model/SentYajJob.java:219
+#: ../model/SentYajJob.java:221
 msgid ""
 "Sleeping (waiting for a scheduled timeout such as a delay between attempts "
 "to send)"
@@ -2191,17 +2263,149 @@ msgstr ""
 "Uykuda (planlanmış zaman aşımı bekleniyor, iki gönderme girişimi arasındaki "
 "ertleme süresini beklemek gibi)"
 
-#: ../model/SentYajJob.java:221
+#: ../model/SentYajJob.java:223
 msgid "Suspended (not being scheduled)"
 msgstr "Beklemede (planlanmamış)"
 
-#: ../model/SentYajJob.java:223
+#: ../model/SentYajJob.java:225
 msgid "Undefined"
 msgstr "Tanımlanmamış"
 
-#: ../model/SentYajJob.java:225
+#: ../model/SentYajJob.java:227
 msgid "Waiting (for resources such as a free modem)"
 msgstr "Kaynak bekleniyor (örn. modemin boş olmaması)"
+
+#: ../model/archive/QueueFileFormat.java:37
+msgid "Communication identifier for last call"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:39
+msgid "Host that submitted the job"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:40
+msgid "Continuation coverpage file"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:41
+msgid "Data format used to transmit a facsimile"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:42
+msgid "Desired transmit speed"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:44
+msgid "ECM"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:44
+msgid "Desired use of Error Correction Mode (ECM)"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:46
+msgid "Tagline"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:46
+msgid "Whether or not to use tagline parameter"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:49
+msgid "Ready"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:49
+msgid "Document ready for transmission"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:50
+msgid "HylaFAX job group identifier"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:51
+msgid "HylaFAX job identifier"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:53
+msgid "Job type identification string"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:56
+msgid "Email address of sender"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:59
+msgid "Minimum speed"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:59
+msgid "Minimum required transmit speed"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:60
+msgid "Outgoing modem to use"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:62
+msgid "Email notification specification"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:64
+msgid "Tries (current page)"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:64
+msgid "Number of attempts to send current page"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:67
+msgid "Page PIN"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:67
+msgid "PIN in a page operation"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:69
+msgid "Page handling"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:69
+msgid "Page analysis information"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:73
+msgid "Polling request"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:77
+msgid "Time to use between job retries"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:78
+msgid "Returned status"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:78
+msgid "Indicates status return value for the job"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:81
+msgid "Signalling rate at which a facsimile was sent"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:90
+msgid "Whether or not to use a continuation cover page"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:91
+msgid "Use max. vertical resolution"
+msgstr ""
+
+#: ../model/archive/QueueFileFormat.java:91
+msgid "Whether or not to use highest vertical resolution"
+msgstr ""
 
 #: ../RecvFormat.java:35
 msgid "Time/Date"
@@ -2351,16 +2555,12 @@ msgstr ""
 msgid "Available toolbar buttons:"
 msgstr ""
 
-#: ../util/MultiButtonGroup.java:73 ../util/MultiButtonGroup.java:75
-#: ../util/MultiButtonGroup.java:77 ../util/ExcDialogAbstractAction.java:86
+#: ../util/MultiButtonGroup.java:77 ../util/MultiButtonGroup.java:79
+#: ../util/MultiButtonGroup.java:81 ../util/ExcDialogAbstractAction.java:86
 #: ../util/ExcDialogAbstractAction.java:88
 #: ../util/ExcDialogAbstractAction.java:90
 msgid "An Error occurred executing the desired action:"
 msgstr "İstenen işlemi uygulama sırasında bir hata oldu:"
-
-#: ../util/PasswordDialog.java:80
-msgid "User name:"
-msgstr ""
 
 #: ../util/ClipboardPopup.java:52
 msgid "Cut"
@@ -2374,27 +2574,27 @@ msgstr "Yapıştır"
 msgid "Select All"
 msgstr "Hepsini seç"
 
-#: ../util/fmtEditor.java:109 ../send/TextFieldList.java:83
+#: ../util/fmtEditor.java:110 ../send/TextFieldList.java:83
 msgid "Up"
 msgstr "Yukarı"
 
-#: ../util/fmtEditor.java:110
+#: ../util/fmtEditor.java:111
 msgid "Moves the selected item up"
 msgstr ""
 
-#: ../util/fmtEditor.java:117
+#: ../util/fmtEditor.java:118
 msgid "Adds the selected item"
 msgstr ""
 
-#: ../util/fmtEditor.java:124
+#: ../util/fmtEditor.java:125
 msgid "Removes the selected item"
 msgstr ""
 
-#: ../util/fmtEditor.java:130 ../send/TextFieldList.java:108
+#: ../util/fmtEditor.java:131 ../send/TextFieldList.java:108
 msgid "Down"
 msgstr "Aşağı"
 
-#: ../util/fmtEditor.java:131
+#: ../util/fmtEditor.java:132
 msgid "Moves the selected item down"
 msgstr ""
 
@@ -2406,56 +2606,56 @@ msgstr "Geleneksel"
 msgid "Simplified"
 msgstr "Sadeleştirilmiş"
 
-#: ../send/SendWin.java:176
+#: ../send/SendWin.java:180
 msgid "Send Fax"
 msgstr "Faks gönder"
 
-#: ../send/SendWin.java:216
+#: ../send/SendWin.java:220
 msgid "Poll fax"
 msgstr "Tercihli faks"
 
-#: ../send/SendWin.java:271 ../send/SimplifiedSendDialog.java:260
+#: ../send/SendWin.java:275 ../send/SimplifiedSendDialog.java:262
 msgid "Use cover page"
 msgstr "Kapak sayfası kullan"
 
-#: ../send/SendWin.java:279 ../send/SimplifiedSendDialog.java:460
+#: ../send/SendWin.java:283 ../send/SimplifiedSendDialog.java:464
 msgid "Use custom cover page:"
 msgstr "Özel kapak sayfası kullan:"
 
-#: ../send/SendWin.java:319
+#: ../send/SendWin.java:323
 msgid "Recipient Name:"
 msgstr "Alıcı Adı:"
 
-#: ../send/SendWin.java:320
+#: ../send/SendWin.java:324
 msgid "Company:"
 msgstr "Şirket:"
 
-#: ../send/SendWin.java:321
+#: ../send/SendWin.java:325
 msgid "Location:"
 msgstr "Yer:"
 
-#: ../send/SendWin.java:322
+#: ../send/SendWin.java:326
 msgid "Voice number:"
 msgstr "Telefon numarası:"
 
-#: ../send/SendWin.java:323 ../send/SimplifiedSendDialog.java:282
+#: ../send/SendWin.java:327 ../send/SimplifiedSendDialog.java:284
 msgid "Subject:"
 msgstr "Konu:"
 
-#: ../send/SendWin.java:363
+#: ../send/SendWin.java:367
 msgid "File(s):"
 msgstr "Dosya(lar):"
 
-#: ../send/SendWin.java:455
+#: ../send/SendWin.java:462
 msgid "Fax number(s):"
 msgstr "Faks numarası:"
 
-#: ../send/SendWin.java:560 ../send/SendWin.java:565
-#: ../send/SimplifiedSendDialog.java:210 ../send/SimplifiedSendDialog.java:229
+#: ../send/SendWin.java:567 ../send/SendWin.java:572
+#: ../send/SimplifiedSendDialog.java:212 ../send/SimplifiedSendDialog.java:231
 msgid "Preview"
 msgstr "Önizleme"
 
-#: ../send/SendWin.java:565 ../send/SimplifiedSendDialog.java:210
+#: ../send/SendWin.java:572 ../send/SimplifiedSendDialog.java:212
 msgid ""
 "Nothing to preview! (Neither a cover page nor a file to send has been "
 "selected.)"
@@ -2463,51 +2663,51 @@ msgstr ""
 "Görüntülenecek nesne yok! (Ne bir kapak sayfası ne de gönderilecek bir dosya "
 "seçildi.)"
 
-#: ../send/SendWin.java:627 ../send/SimplifiedSendDialog.java:358
+#: ../send/SendWin.java:634 ../send/SimplifiedSendDialog.java:360
 msgid "Choose number from phone book"
 msgstr "Adres defterinden numara seç"
 
-#: ../send/SendWin.java:651 ../send/SimplifiedSendDialog.java:592
+#: ../send/SendWin.java:658 ../send/SimplifiedSendDialog.java:596
 msgid "An error occured reading the input: "
 msgstr "Girişten okurken hata oluştu:"
 
-#: ../send/SimplifiedSendDialog.java:126
+#: ../send/SimplifiedSendDialog.java:128
 msgid ">> Advanced"
 msgstr ">>Gelişmiş"
 
-#: ../send/SimplifiedSendDialog.java:127
+#: ../send/SimplifiedSendDialog.java:129
 msgid "<< Simplified"
 msgstr "<<Basit"
 
-#: ../send/SimplifiedSendDialog.java:134
+#: ../send/SimplifiedSendDialog.java:136
 msgid "Send fax"
 msgstr "Faks gönder"
 
-#: ../send/SimplifiedSendDialog.java:321
+#: ../send/SimplifiedSendDialog.java:323
 msgid "File(s) to send:"
 msgstr "gönderilecek dosya(lar):"
 
-#: ../send/SimplifiedSendDialog.java:357
+#: ../send/SimplifiedSendDialog.java:359
 msgid "Add from phonebook..."
 msgstr "Telefon defterinden ekle..."
 
-#: ../send/SimplifiedSendDialog.java:372
+#: ../send/SimplifiedSendDialog.java:376
 msgid "Add a new recipient"
 msgstr "Yeni alıcı ekle"
 
-#: ../send/SimplifiedSendDialog.java:387 ../send/TextFieldList.java:149
+#: ../send/SimplifiedSendDialog.java:391 ../send/TextFieldList.java:149
 msgid "Remove"
 msgstr "Kaldır"
 
-#: ../send/SimplifiedSendDialog.java:389
+#: ../send/SimplifiedSendDialog.java:393
 msgid "Remove selected recipient"
 msgstr "Seçili alıcıyı sil"
 
-#: ../send/SimplifiedSendDialog.java:431
+#: ../send/SimplifiedSendDialog.java:435
 msgid "Fax number:"
 msgstr "Faks numarası:"
 
-#: ../send/SimplifiedSendDialog.java:433
+#: ../send/SimplifiedSendDialog.java:437
 msgid "Recipients:"
 msgstr "Alıcılar:"
 
@@ -2540,35 +2740,35 @@ msgstr ""
 msgid "Creating {0} from documents to send"
 msgstr ""
 
-#: ../send/SendController.java:122
+#: ../send/SendController.java:123
 #, java-format
 msgid "Can not read file \"{0}\"!"
 msgstr "Dosya \"{0}\" okunamıyor! "
 
-#: ../send/SendController.java:127
+#: ../send/SendController.java:128
 #, java-format
 msgid "Can not read default cover page file \"{0}\"!"
 msgstr "Öntanımlı kapak sayfası dosyası \"{0}\" okunamıyor!"
 
-#: ../send/SendController.java:194
+#: ../send/SendController.java:195
 msgid "Creating cover page"
 msgstr "Kapak sayfası oluşturuluyor"
 
-#: ../send/SendController.java:212
+#: ../send/SendController.java:213
 #, java-format
 msgid "Formatting {0}"
 msgstr "Biçimleniyor {0}"
 
-#: ../send/SendController.java:223
+#: ../send/SendController.java:224
 msgid "Error previewing the documents:"
 msgstr "Belge önizlemede hata"
 
-#: ../send/SendController.java:297
+#: ../send/SendController.java:298
 #, java-format
 msgid "Creating job to {0}"
 msgstr "İş {0} için oluşturuluyor"
 
-#: ../send/SendController.java:368
+#: ../send/SendController.java:369
 #, java-format
 msgid ""
 "An error occured while submitting the fax job for phone number \"{0}\" (will "
@@ -2577,24 +2777,24 @@ msgstr ""
 "\"{0}\" telefon numarasına faks gönderilirken bir hata oluştu. (faks, diğer "
 "telefon numaralara gönderilmeye çalışılacak)"
 
-#: ../send/SendController.java:372
+#: ../send/SendController.java:373
 msgid "Cleaning up"
 msgstr "Temizle"
 
-#: ../send/SendController.java:376
+#: ../send/SendController.java:377
 msgid "An error occured while submitting the fax: "
 msgstr "Faks gönderirken bir hata oluştu:"
 
-#: ../send/SendController.java:410
+#: ../send/SendController.java:411
 msgid "To send a fax you have to enter at least one phone number!"
 msgstr "Faks göndermek için en az bir tane telefon numarası girmeniz gerekli!"
 
-#: ../send/SendController.java:417
+#: ../send/SendController.java:418
 #, java-format
 msgid "For recipient {0} (\"{1}\") no fax number has been entered."
 msgstr "Alıcı {0} (\"{1}\") için faks numarası girilmedi."
 
-#: ../send/SendController.java:424
+#: ../send/SendController.java:425
 msgid ""
 "You haven't selected a file to transmit, so your fax will ONLY contain the "
 "cover page.\n"
@@ -2604,19 +2804,19 @@ msgstr ""
 "içerecek:\n"
 "Yine de devam edecek misiniz?"
 
-#: ../send/SendController.java:424
+#: ../send/SendController.java:425
 msgid "Continue?"
 msgstr "Devam?"
 
-#: ../send/SendController.java:427
+#: ../send/SendController.java:428
 msgid "To send a fax you must select at least one file!"
 msgstr "Faks göndermek için en az bir tane dosya seçmek zorundasınız!"
 
-#: ../send/SendController.java:437
+#: ../send/SendController.java:438
 msgid "Sending fax"
 msgstr "Faks gönderme"
 
-#: ../send/SendController.java:442
+#: ../send/SendController.java:443
 msgid "Previewing fax"
 msgstr "Faks önizleme"
 
@@ -2643,6 +2843,30 @@ msgstr "Güncelle"
 #: ../send/TextFieldList.java:170
 msgid "Updates the selected list item"
 msgstr "Seçilen liste öğelerini güncelle"
+
+#~ msgid "No document files available for the fax \"{0}\"."
+#~ msgstr "\"{0}\" faksı için hiç bir belge dosyası mevcut değil."
+
+#~ msgid "Page chop handling (one-character symbol)"
+#~ msgstr "Sayfa kesme (tek-karakter simge)"
+
+#~ msgid "# pages transmitted"
+#~ msgstr "Gönderilen # sayfa"
+
+#~ msgid "Total # tries attempted"
+#~ msgstr "Toplam # deneme gerçekleştirldi"
+
+#~ msgid "Maximum # tries"
+#~ msgstr "En fazla # deneme"
+
+#~ msgid "Prefer rendered TIFF (experimental)"
+#~ msgstr "TIFF tercih et (deneysel)"
+
+#~ msgid ""
+#~ "Try to fetch the rendered TIFF from the HylaFAX server instead of the "
+#~ "source file."
+#~ msgstr ""
+#~ "TIFF dosyalarını, kaynak dosya yerine HylaFAX sunucudan almaya çalış."
 
 #~ msgid "Please enter the password for user \"{0}\"."
 #~ msgstr "Lütfen \"{0}\" kullanıcısı için parola girin."

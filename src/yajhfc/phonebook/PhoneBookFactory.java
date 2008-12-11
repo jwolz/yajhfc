@@ -55,6 +55,9 @@ public class PhoneBookFactory {
     }
     
     public static String getDefaultPhonebookDescriptor() {
-        return XMLPhoneBook.PB_Prefix + ":" + (new File(Utils.getConfigDir(), "default.phonebook")).getAbsolutePath();
+        XMLSettings settings = new XMLSettings();
+        settings.fileName = (new File(Utils.getConfigDir(), "default.phonebook")).getAbsolutePath();
+        settings.caption = Utils._("Personal phonebook");
+        return XMLPhoneBook.PB_Prefix + ":" + settings.saveToString();
     }
 }

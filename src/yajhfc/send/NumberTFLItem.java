@@ -19,7 +19,6 @@
 package yajhfc.send;
 
 import yajhfc.phonebook.PBEntryField;
-import yajhfc.phonebook.PhoneBookEntry;
 import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
 import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 
@@ -36,7 +35,7 @@ public class NumberTFLItem extends TFLItem implements PBEntryFieldContainer {
         fields.put(PBEntryField.FaxNumber, newText);
     }
     
-    public void loadFromPBE(PhoneBookEntry pbe) {
+    public void loadFromPBE(PBEntryFieldContainer pbe) {
         fields.copyFrom(pbe);
     }
     
@@ -44,7 +43,7 @@ public class NumberTFLItem extends TFLItem implements PBEntryFieldContainer {
         setText(number);
     }
     
-    public NumberTFLItem(PhoneBookEntry pbe) {
+    public NumberTFLItem(PBEntryFieldContainer pbe) {
         loadFromPBE(pbe);
     }
 

@@ -61,9 +61,9 @@ import yajhfc.util.IntVerifier;
 import yajhfc.util.PasswordDialog;
 
 public final class ConnectionDialog extends JDialog implements ActionListener {
-    private JTextField textServerName, textPort, textBaseDN, textBindDN, textFilter, textDisplayCaption, textCountLimit;
-    private JCheckBox checkAskForPassword, checkDoAuth, checkSearchSubtree, checkInitiallyShowAll;
-    private JPasswordField textPassword;
+    JTextField textServerName, textPort, textBaseDN, textBindDN, textFilter, textDisplayCaption, textCountLimit;
+    JCheckBox checkAskForPassword, checkDoAuth, checkSearchSubtree, checkInitiallyShowAll;
+    JPasswordField textPassword;
     private JButton buttonOK, buttonCancel, buttonTest;
     
     private EnumMap<PBEntryField,JTextField> mappingFields = new EnumMap<PBEntryField, JTextField>(PBEntryField.class);
@@ -218,7 +218,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         Box buttonBox = new Box(BoxLayout.LINE_AXIS);
         buttonBox.add(Box.createHorizontalGlue());
         buttonBox.add(buttonOK);
-        buttonBox.add(Box.createHorizontalStrut((int)border));
+        buttonBox.add(Box.createHorizontalStrut(border));
         buttonBox.add(buttonCancel);
         buttonBox.add(Box.createHorizontalGlue());
         

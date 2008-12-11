@@ -18,11 +18,16 @@
  */
 package yajhfc.tray;
 
+import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.ref.WeakReference;
@@ -31,7 +36,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.Action;
+import javax.swing.Timer;
 
+import yajhfc.FaxOptions;
 import yajhfc.Launcher2;
 import yajhfc.MainWin;
 import yajhfc.RecvFormat;
@@ -49,12 +56,18 @@ import yajhfc.util.ExcDialogAbstractAction;
  */
 public class YajHFCTrayIcon implements UnreadItemListener, WindowListener {
 
-    private ITrayIcon trayIcon = null;
+    private static final int BLINK_INTERVAL = 500;
+    
+    ITrayIcon trayIcon = null;
     MainWin mainw;
-    private Action showAction;
-    private boolean connected = false;
-    private boolean minimizeToTray = false;
-    private UnReadMyTableModel recvModel;
+    Action showAction;
+    boolean connected = false;
+    boolean minimizeToTray = false;
+    UnReadMyTableModel recvModel;
+    
+    Image faxIcon, emptyImage;
+    Timer blinkTimer;
+    long blinkStartTime = -1;
     
     /**
      * Creates a new tray icon if it is available and configures the main window
@@ -87,7 +100,12 @@ public class YajHFCTrayIcon implements UnreadItemListener, WindowListener {
                         popup.add(createMenuItemForAction(act));
                     }
                 }
-                trayIcon = TrayFactory.getTrayManager().installTrayIcon(mainw.getIconImage(), Utils.AppShortName, popup, showAction);
+                TrayManager manager = TrayFactory.getTrayManager();
+                Dimension traySize = manager.getTrayIconSize();
+                faxIcon = Toolkit.getDefaultToolkit().getImage(YajHFCTrayIcon.class.getResource("/yajhfc/logo-large.png")).getScaledInstance(traySize.width, traySize.height, Image.SCALE_SMOOTH);
+                emptyImage = new BufferedImage(traySize.width, traySize.height, BufferedImage.TRANSLUCENT);
+                
+                trayIcon = manager.installTrayIcon(faxIcon, Utils.AppShortName, popup, showAction);
 
                 recvModel.addUnreadItemListener(this);
                 mainw.addWindowListener(this);
@@ -128,6 +146,9 @@ public class YajHFCTrayIcon implements UnreadItemListener, WindowListener {
 
             trayIcon.displayMessage(Utils._("New fax received"), msg.toString(), ITrayIcon.MSGTYPE_INFO);
             updateTooltip();
+            if ((Utils.getFaxOptions().newFaxAction & FaxOptions.NEWFAX_BLINKTRAYICON) != 0) {
+                startBlinking();
+            }
         }
     }
     
@@ -147,6 +168,35 @@ public class YajHFCTrayIcon implements UnreadItemListener, WindowListener {
             }           
 
             trayIcon.setToolTip(text);
+        }
+    }
+    
+    private void startBlinking() {
+        if (trayIcon != null) {
+            if (blinkTimer == null) {
+                blinkTimer = new Timer(BLINK_INTERVAL, new ActionListener() {
+                    private boolean blinkState = false;
+
+                    public void actionPerformed(ActionEvent e) {
+                        trayIcon.setImage(blinkState ? faxIcon : emptyImage);
+                        blinkState = !blinkState;
+                    }
+
+                });
+                blinkTimer.start();
+            }
+            blinkStartTime = System.currentTimeMillis();
+        }
+    }
+    
+    private void stopBlinking() {
+        if (trayIcon != null) {
+            if (blinkTimer != null && (blinkStartTime > 0) && (System.currentTimeMillis() - blinkStartTime) > BLINK_INTERVAL) {
+                blinkTimer.stop();
+                blinkTimer = null;
+                trayIcon.setImage(faxIcon);
+                blinkStartTime = -1;
+            }
         }
     }
 
@@ -177,7 +227,7 @@ public class YajHFCTrayIcon implements UnreadItemListener, WindowListener {
     }
 
     public void windowDeiconified(WindowEvent e) {
-        // stub 
+        stopBlinking();
     }
 
     public void windowOpened(WindowEvent e) {
@@ -185,7 +235,7 @@ public class YajHFCTrayIcon implements UnreadItemListener, WindowListener {
     }
     
     public void windowActivated(WindowEvent e) {
-        // stub 
+        stopBlinking();
     }
 
     public void readStateChanged() {

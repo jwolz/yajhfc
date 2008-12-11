@@ -33,7 +33,7 @@ import yajhfc.Utils;
  *
  */
 public abstract class AbstractConnectionSettings {
-    private static final Logger log = Logger.getLogger(AbstractConnectionSettings.class.getName());
+    static final Logger log = Logger.getLogger(AbstractConnectionSettings.class.getName());
     
     private static final String separator = ";";
     private static final char escapeChar = '~';

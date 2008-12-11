@@ -33,10 +33,10 @@ package yajhfc;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -44,9 +44,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -71,6 +68,7 @@ import javax.swing.filechooser.FileFilter;
 
 import yajhfc.PluginManager.PluginInfo;
 import yajhfc.PluginManager.PluginType;
+import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
 import yajhfc.send.SendController;
 import yajhfc.send.SendWinControl;
 import yajhfc.util.ExampleFileFilter;
@@ -92,6 +90,9 @@ public final class Launcher2 {
     final static int codeMultiSubmitFile = 4;
     final static int codeToForeground = 3;
     final static int codeAddRecipients = 5;
+    final static int codeUseCover = 6;
+    final static int codeSetSubject = 7;
+    final static int codeSetComment = 8;
     final static int codeQuit = 255;
     
     final static int responseOK = 0;
@@ -184,8 +185,10 @@ public final class Launcher2 {
         
         int optionwidth = 0;
         for (LongOpt option : options) {
-            if (option instanceof ExtLongOpt)
-                optionwidth = Math.max(optionwidth, option.getName().length());
+            if (option instanceof ExtLongOpt) {
+                String argDesc = ((ExtLongOpt)option).getArgDesc();
+                optionwidth = Math.max(optionwidth, option.getName().length() + ((argDesc == null) ? 0 : argDesc.length() + 1) + ((option.getHasArg() == LongOpt.OPTIONAL_ARGUMENT) ? 2 : 0) );
+            }
         }
         optionwidth += 1;
         out.append("Usage:\n");
@@ -210,7 +213,19 @@ public final class Launcher2 {
                      out.append(", --");
                  }
                  out.append(option.getName());
-                 appendSpaces(out, optionwidth-option.getName().length());
+                 String argDesc = ((ExtLongOpt)option).getArgDesc();
+                 if (argDesc != null) {
+                     if (option.getHasArg() == LongOpt.OPTIONAL_ARGUMENT) {
+                         out.append('[');
+                     }
+                     out.append('=').append(argDesc);
+                     if (option.getHasArg() == LongOpt.OPTIONAL_ARGUMENT) {
+                         out.append(']');
+                     }
+                     appendSpaces(out, optionwidth-option.getName().length()-argDesc.length()-((option.getHasArg() == LongOpt.OPTIONAL_ARGUMENT) ? 3 : 1));
+                 } else {
+                     appendSpaces(out, optionwidth-option.getName().length());
+                 }
              }
              printWrapped(out, optionwidth + 6, ((ExtLongOpt)option).getDescription());
              out.append('\n');
@@ -239,7 +254,10 @@ public final class Launcher2 {
                 pos = indent + word.length();
             }
             out.append(word);
-            out.append(' ');
+            if (pos < SCREEN_WIDTH-1) {
+                out.append(' ');
+                pos+=1;
+            }
         }
     }
     
@@ -308,27 +326,33 @@ public final class Launcher2 {
         int selectedTab = -1;
         String logFile = null;
         boolean appendToLog = false;
+        Boolean useCover = null; // Use cover? null: Don't change, else use booleanValue()
+        String subject = null;
+        String comment = null;
         
         final LongOpt[] longOpts = new LongOpt[] {
-                new ExtLongOpt("recipient", LongOpt.REQUIRED_ARGUMENT, null, 'r', "Read the file to send from standard input."),
-                new ExtLongOpt("stdin", LongOpt.NO_ARGUMENT, null, 1, "Specifies the phone number of a recipient to send the fax to. You may specify multiple arguments for multiple recipients."),
-                new ExtLongOpt("admin", LongOpt.NO_ARGUMENT, null, 'A', "Start up in admin mode."),
-                new ExtLongOpt("debug", LongOpt.NO_ARGUMENT, null, 'd', "Output some debugging information."),
-                new ExtLongOpt("logfile", LongOpt.REQUIRED_ARGUMENT, null, 'l', "The logfile to log debug information to (if not specified, use stdout)."),
-                new LongOpt("appendlogfile", LongOpt.REQUIRED_ARGUMENT, null, 6),
-                new ExtLongOpt("background", LongOpt.NO_ARGUMENT, null, 2, "If there is no already running instance, launch a new instance and terminate (after submitting the file to send)."),
-                new ExtLongOpt("noclose", LongOpt.NO_ARGUMENT, null, 3, "Do not close YajHFC after submitting the fax."),
-                new ExtLongOpt("showtab", LongOpt.REQUIRED_ARGUMENT, null, 'T', "Sets the tab to display on startup. Specify 0 or R for the \"Received\", 1 or S for the \"Sent\" or 2 or T for the \"Transmitting\" tab."),
-                new ExtLongOpt("loadplugin", LongOpt.REQUIRED_ARGUMENT, null, 4, "Specifies the jar file of a YajHFC plugin to load."),
-                new ExtLongOpt("loaddriver", LongOpt.REQUIRED_ARGUMENT, null, 5, "Specifies the location of a JDBC driver JAR file to load."),
-                new ExtLongOpt("no-plugins", LongOpt.NO_ARGUMENT, null, 7, "Disables loading plugins from the plugin.lst file."),
-                new ExtLongOpt("no-gui", LongOpt.NO_ARGUMENT, null, 8, "Sends a fax with a minimal GUI."),
-                new ExtLongOpt("configdir", LongOpt.REQUIRED_ARGUMENT, null, 'c', "Sets a configuration directory to use instead of ~/.yajhfc"),
-                new ExtLongOpt("help", LongOpt.NO_ARGUMENT, null, 'h', "Displays this text.")
+                new ExtLongOpt("recipient", LongOpt.REQUIRED_ARGUMENT, null, 'r', "RECIPIENT", "Specifies a recipient to send the fax to. You may specify either a fax number or detailed cover page information (see the FAQ for the format in the latter case). You may specify --recipient multiple times for multiple recipients."),
+                new ExtLongOpt("use-cover", LongOpt.OPTIONAL_ARGUMENT, null, 'C', "yes|no", "Use a cover page for sending a fax?"),
+                new ExtLongOpt("subject", LongOpt.REQUIRED_ARGUMENT, null, 's', "SUBJECT", "The fax subject for the cover page."),
+                new ExtLongOpt("comment", LongOpt.REQUIRED_ARGUMENT, null, 9, "COMMENT", "The comment for the cover page."),
+                new ExtLongOpt("stdin", LongOpt.NO_ARGUMENT, null, 1, null, "Read the file to send from standard input."),
+                new ExtLongOpt("admin", LongOpt.NO_ARGUMENT, null, 'A', null, "Start up in admin mode."),
+                new ExtLongOpt("debug", LongOpt.NO_ARGUMENT, null, 'd', null, "Output some debugging information."),
+                new ExtLongOpt("logfile", LongOpt.REQUIRED_ARGUMENT, null, 'l', "LOGFILE", "The logfile to log debug information to (if not specified, use stdout)."),
+                new ExtLongOpt("appendlogfile", LongOpt.REQUIRED_ARGUMENT, null, 6, "LOGFILE", "Append debug information to the given log file."),
+                new ExtLongOpt("background", LongOpt.NO_ARGUMENT, null, 2, null, "If there is no already running instance, launch a new instance and terminate (after submitting the file to send)."),
+                new ExtLongOpt("noclose", LongOpt.NO_ARGUMENT, null, 3, null, "Do not close YajHFC after submitting the fax."),
+                new ExtLongOpt("showtab", LongOpt.REQUIRED_ARGUMENT, null, 'T', "0|R|1|S|2|T", "Sets the tab to display on startup. Specify 0 or R for the \"Received\", 1 or S for the \"Sent\" or 2 or T for the \"Transmitting\" tab."),
+                new ExtLongOpt("loadplugin", LongOpt.REQUIRED_ARGUMENT, null, 4, "JARFILE", "Specifies a jar file of a YajHFC plugin to load."),
+                new ExtLongOpt("loaddriver", LongOpt.REQUIRED_ARGUMENT, null, 5, "JARFILE", "Specifies the location of a JDBC driver JAR file to load."),
+                new ExtLongOpt("no-plugins", LongOpt.NO_ARGUMENT, null, 7, null, "Disables loading plugins from the plugin.lst file."),
+                new ExtLongOpt("no-gui", LongOpt.NO_ARGUMENT, null, 8,  null, "Sends a fax with only a minimal GUI."),
+                new ExtLongOpt("configdir", LongOpt.REQUIRED_ARGUMENT, null, 'c', "DIRECTORY", "Sets the configuration directory to use instead of ~/.yajhfc"),
+                new ExtLongOpt("help", LongOpt.NO_ARGUMENT, null, 'h', null, "Displays this text.")
         };
         final String[] origArgs = args.clone();
         
-        Getopt getopt = new Getopt("yajhfc", args, "hAdc:r:T:l:", longOpts);
+        Getopt getopt = new Getopt("yajhfc", args, "hAdc:r:T:l:C::s:", longOpts);
         int opt;
         while ((opt = getopt.getopt()) != -1) {
             switch (opt) {
@@ -362,6 +386,20 @@ public final class Launcher2 {
                 break;
             case 8: // no-gui
                 noGUI = true;
+                break;
+            case 9: // comment
+                comment = getopt.getOptarg();
+                break;
+            case 'C': // use-cover
+                String optarg = getopt.getOptarg();
+                if (optarg == null || optarg.equals("") || optarg.startsWith("y") || optarg.equals("true")) {
+                    useCover = Boolean.TRUE;
+                } else {
+                    useCover = Boolean.FALSE;
+                }
+                break;
+            case 's': // subject
+                subject = getopt.getOptarg();
                 break;
             case 'h': // help
                 printHelp(System.out, longOpts);
@@ -527,7 +565,7 @@ public final class Launcher2 {
         
         if (noGUI) {
             launchLog.fine("Starting up without GUI...");
-            NoGUISender.startUpWithoutUI(recipients, fileNames, plugins, noPlugins, useStdin);
+            NoGUISender.startUpWithoutUI(recipients, fileNames, plugins, noPlugins, useStdin, (useCover == null) ? false : useCover, subject, comment);
             return;
         }
         
@@ -622,7 +660,9 @@ public final class Launcher2 {
             PluginManager.addPlugins(plugins);
             PluginManager.loadAllKnownPlugins();
             
-            SwingUtilities.invokeLater(new NewInstRunner(fileNames, useStdin, recipients, adminMode, closeAfterSubmit, selectedTab));
+            SwingUtilities.invokeLater(new NewInstRunner(
+                    SubmitRunner.createWhenNecessary(fileNames, useStdin, recipients, closeAfterSubmit, comment, subject, useCover), 
+                    adminMode, selectedTab));
             blockThread = new SockBlockAcceptor();
             blockThread.start();
             if (Utils.debugMode) {
@@ -633,45 +673,49 @@ public final class Launcher2 {
                 if (Utils.debugMode) {
                     launchLog.info("Found old instance at: " + oldinst);
                 }
-                OutputStream outStream = oldinst.getOutputStream();
-                InputStream inStream = oldinst.getInputStream();
+                DataOutputStream outStream = new DataOutputStream(new BufferedOutputStream(oldinst.getOutputStream()));
+                DataInputStream inStream = new DataInputStream(oldinst.getInputStream());
                 
                 if (recipients.size() > 0)
                 {
                     outStream.write(codeAddRecipients);
-                    BufferedWriter bufOut = new BufferedWriter(new OutputStreamWriter(outStream));
                     for (String number : recipients) {
-                        bufOut.write(number + "\n");
+                        outStream.writeUTF(number);
                     }
-                    bufOut.write(multiFileEOF + "\n");
-                    bufOut.flush();
+                    outStream.writeUTF(multiFileEOF);
                     
-                    int response = inStream.read();
-                    if (response != 0) {
-                        if (response > 0) {
-                            System.exit(response);
-                        } else {
-                            System.exit(responseGeneralError);
-                        }
-                    }
+                    outStream.flush();
+                    checkResponse(inStream);
+                }
+                if (useCover != null) {
+                    outStream.write(codeUseCover);
+                    outStream.writeBoolean(useCover.booleanValue());
+                    outStream.flush();
+                    checkResponse(inStream);
+                }
+                if (subject != null) {
+                    outStream.write(codeSetSubject);
+                    outStream.writeUTF(subject);
+                    outStream.flush();
+                    checkResponse(inStream);
+                }
+                if (comment != null) {
+                    outStream.write(codeSetComment);
+                    outStream.writeUTF(comment);
+                    outStream.flush();
+                    checkResponse(inStream);
                 }
                 
                 if (useStdin) { 
-                    BufferedOutputStream bufOut = new BufferedOutputStream(outStream);
-                    BufferedInputStream bufIn = new BufferedInputStream(System.in);
-                    bufOut.write(codeSubmitStream);
-                    Utils.copyStream(bufIn, bufOut);
-                    bufIn.close();
-                    bufOut.flush();              
+                    outStream.write(codeSubmitStream);
+                    Utils.copyStream(System.in, outStream);
                 } else if ( fileNames != null && fileNames.size() > 0) {
                     outStream.write(codeMultiSubmitFile);
-                    BufferedWriter bufOut = new BufferedWriter(new OutputStreamWriter(outStream));
                     for (String fileName : fileNames) {
                         File f = new File(fileName);
-                        bufOut.write(f.getAbsolutePath() + "\n");
+                        outStream.writeUTF(f.getAbsolutePath());
                     }
-                    bufOut.write(multiFileEOF + "\n");
-                    bufOut.flush();
+                    outStream.writeUTF(multiFileEOF);
                 } else if (forkNewInst) {
                     outStream.write(codeToForeground);
                 } else {
@@ -704,8 +748,18 @@ public final class Launcher2 {
         }
     }
     
+    private static void checkResponse(InputStream inStream) throws IOException {
+        int response = inStream.read();
+        if (response != 0) {
+            if (response > 0) {
+                System.exit(response);
+            } else {
+                System.exit(responseGeneralError);
+            }
+        }
+    }
     
-    private static class LogFilePrompter implements Runnable {
+    static class LogFilePrompter implements Runnable {
         protected String selection = null;
         
         public void run() {
@@ -736,37 +790,26 @@ public final class Launcher2 {
     }
     
     static class NewInstRunner implements Runnable{
-        protected boolean adminMode;
-        protected boolean closeAfterSubmit;
-        protected int selectedTab;
-        protected InputStream inStream;
-        protected List<String> fileNames;
-        protected List<String> recipients;
+        protected final boolean adminMode;
+        protected final int selectedTab;
+        protected final SubmitRunner loginRunner;
         
         public void run() {
             Utils.setLookAndFeel(Utils.getFaxOptions().lookAndFeel);
             
             application = new MainWin(adminMode);
             application.setVisible(true);
-            Runnable loginAction = null;
-            if ((fileNames != null && fileNames.size() > 0) || this.inStream != null) {
-                loginAction = new SubmitRunner(fileNames, inStream, recipients, closeAfterSubmit);
-            }
             
-            application.reconnectToServer(loginAction);
+            application.reconnectToServer(loginRunner);
             if (selectedTab >= 0) {
                 application.setSelectedTab(selectedTab);
             }
         }   
         
-        public NewInstRunner(List<String> fileNames, boolean useStdin, List<String> recipients, boolean adminMode, boolean closeAfterSubmit, int selectedTab) {
-            //super(fileNames, useStdin ? System.in : null, recipients);
-            this.fileNames = fileNames;
-            this.inStream = useStdin ? System.in : null;
-            this.recipients = recipients;
+        public NewInstRunner(SubmitRunner loginRunner, boolean adminMode, int selectedTab) {
+            this.loginRunner = loginRunner;
             
             this.adminMode = adminMode;
-            this.closeAfterSubmit = closeAfterSubmit;
             this.selectedTab = selectedTab;
         }
     }
@@ -793,14 +836,17 @@ public final class Launcher2 {
             Logger log = Logger.getLogger(SockBlockAcceptor.class.getName());
             while (isLocking) {
                 Socket srv = null;
-                InputStream strIn = null;
-                OutputStream strOut = null;
+                DataInputStream strIn = null;
+                DataOutputStream strOut = null;
                 List<String> recipients = null;
+                Boolean useCover = null;
+                String subject = null;
+                String comment = null;
                 
                 try {
                     srv = sockBlock.accept();
-                    strIn = srv.getInputStream();
-                    strOut = srv.getOutputStream();
+                    strIn = new DataInputStream(srv.getInputStream());
+                    strOut = new DataOutputStream(srv.getOutputStream());
                     boolean doLoop = true;
 
                     do {
@@ -811,8 +857,11 @@ public final class Launcher2 {
                             }
                             int ok = waitSubmitOK();
                             if (ok == responseOK) {
-                                SwingUtilities.invokeAndWait(new SubmitRunner(strIn, recipients)); // Accept new faxes only sequentially
+                                SwingUtilities.invokeAndWait(new SubmitRunner(null, strIn, recipients, false, comment, subject, useCover)); // Accept new faxes only sequentially
                                 recipients = null;
+                                useCover = null;
+                                subject = null;
+                                comment = null;
                             }
                             strOut.write(ok);
                             if (Utils.debugMode) {
@@ -822,12 +871,13 @@ public final class Launcher2 {
                         case codeSubmitFile:
                             ok = waitSubmitOK();
                             if (ok == responseOK) {
-                                BufferedReader bufR = new BufferedReader(new InputStreamReader(strIn));
-                                String[] fileNames = { bufR.readLine() };
+                                String[] fileNames = { strIn.readUTF() };
 
-                                SwingUtilities.invokeAndWait(new SubmitRunner(Arrays.asList(fileNames), recipients)); // Accept new faxes only sequentially
+                                SwingUtilities.invokeAndWait(new SubmitRunner(Arrays.asList(fileNames), null, recipients, false, comment, subject, useCover)); // Accept new faxes only sequentially
                                 recipients = null;
-                                //bufR.close();
+                                useCover = null;
+                                subject = null;
+                                comment = null;
                             }
                             strOut.write(ok);
                             break;
@@ -837,21 +887,22 @@ public final class Launcher2 {
                             }
                             ok = waitSubmitOK();
                             if (ok == responseOK) {
-                                BufferedReader bufR = new BufferedReader(new InputStreamReader(strIn));
                                 ArrayList<String> fileNames = new ArrayList<String>();
-                                String line = bufR.readLine();
+                                String line = strIn.readUTF();
 
                                 while (line != null && !line.equals(multiFileEOF)) {
                                     if (Utils.debugMode) {
                                         log.finer(line);
                                     }
                                     fileNames.add(line);
-                                    line = bufR.readLine();
+                                    line = strIn.readUTF();
                                 }
 
-                                SwingUtilities.invokeAndWait(new SubmitRunner(fileNames, recipients)); // Accept new faxes only sequentially
+                                SwingUtilities.invokeAndWait(new SubmitRunner(fileNames, null, recipients, false , comment, subject, useCover)); // Accept new faxes only sequentially
                                 recipients = null;
-                                //bufR.close();
+                                useCover = null;
+                                subject = null;
+                                comment = null;
                             }
                             strOut.write(ok);
                             if (Utils.debugMode) {
@@ -864,20 +915,30 @@ public final class Launcher2 {
                                 log.info("Received codeAddRecipients:");
                             }
                             recipients = new ArrayList<String>();
-                            BufferedReader bufR = new BufferedReader(new InputStreamReader(strIn));
-                            String line = bufR.readLine();
-
+                            String line = strIn.readUTF();
                             while (line != null && !line.equals(multiFileEOF)) {
                                 if (Utils.debugMode) {
                                     log.finer(line);
                                 }
                                 recipients.add(line);
-                                line = bufR.readLine();
+                                line = strIn.readUTF();
                             }
                             
                             strOut.write(responseOK);
                         }    
                         break;
+                        case codeUseCover:
+                            useCover = Boolean.valueOf(strIn.readBoolean());
+                            strOut.write(responseOK);
+                            break;
+                        case codeSetComment:
+                            comment = strIn.readUTF();
+                            strOut.write(responseOK);
+                            break;
+                        case codeSetSubject:
+                            subject = strIn.readUTF();
+                            strOut.write(responseOK);
+                            break;
                         case codeToForeground:
                         case -1: // Connection closed without sending any data
                             SwingUtilities.invokeLater(new Runnable() {
@@ -911,15 +972,21 @@ public final class Launcher2 {
                     }
                 } finally {
                     try {
-                        if (srv != null && !srv.isClosed()) {                        
-                            srv.close();
-                        }
-                        srv = null;
-                        strIn = null;
-                        strOut = null;
+                        strIn.close();
+                        strOut.close();
                     } catch(Exception e) {
                         // NOP
                     }
+                    try {
+                        if (srv != null && !srv.isClosed()) {                        
+                            srv.close();
+                        }
+                    } catch(Exception e) {
+                        // NOP
+                    }
+                    srv = null;
+                    strIn = null;
+                    strOut = null;
                 }
             }
         }
@@ -930,10 +997,13 @@ public final class Launcher2 {
     }
     
     static class SubmitRunner implements Runnable {
-        protected InputStream inStream;
-        protected List<String> fileNames;
-        protected List<String> recipients;
-        protected boolean closeAfterSubmit;
+        protected final InputStream inStream;
+        protected final List<String> fileNames;
+        protected final List<String> recipients;
+        protected final boolean closeAfterSubmit;
+        protected final Boolean useCover;
+        protected final String subject;
+        protected final String comment;
         
         public void run() {
             application.bringToFront();
@@ -953,27 +1023,58 @@ public final class Launcher2 {
             }
             if (recipients != null && recipients.size() > 0) {
                 for (String num : recipients) {
-                    sw.addRecipient(num, "", "", "", "");
+                    sw.addRecipient(new DefaultPBEntryFieldContainer().parseFromString(num));
                 }
+            }
+            if (useCover != null) {
+                sw.setUseCover(useCover);
+            }
+            if (subject != null) {
+                sw.setSubject(subject);
+            }
+            if (comment != null) {
+                sw.setComment(comment);
             }
             sw.setVisible(true);
         }
         
-        public SubmitRunner(List<String> fileNames, InputStream strIn, List<String> recipients, boolean closeAfterSubmit) {
+        
+        
+        public SubmitRunner(List<String> fileNames, InputStream inStream,
+                List<String> recipients, boolean closeAfterSubmit,
+                String comment, String subject, Boolean useCover) {
             super();
             this.fileNames = fileNames;
-            this.inStream = strIn;
+            this.inStream = inStream;
             this.recipients = recipients;
             this.closeAfterSubmit = closeAfterSubmit;
+            this.comment = comment;
+            this.subject = subject;
+            this.useCover = useCover;
         }
         
-        
-        public SubmitRunner(List<String> fileNames, List<String> recipients) {
-            this(fileNames, null, recipients, false);
+        /**
+         * Creates a SubmitRunner if one is necessary given the command line information.
+         * If no runner is necessary, returns null
+         * @param fileNames
+         * @param inStream
+         * @param recipients
+         * @param closeAfterSubmit
+         * @param comment
+         * @param subject
+         * @param useCover
+         * @return
+         */
+        public static SubmitRunner createWhenNecessary(List<String> fileNames, boolean useStdin,
+                List<String> recipients, boolean closeAfterSubmit,
+                String comment, String subject, Boolean useCover) {
+            
+            if ((fileNames != null && fileNames.size() > 0) || useStdin) {
+                return new SubmitRunner(fileNames, useStdin ? System.in : null, recipients, closeAfterSubmit, comment, subject, useCover);
+            } else {
+                return null;
+            }
         }
-        
-        public SubmitRunner(InputStream strIn, List<String> recipients) {
-            this(null, strIn, recipients, false);
-        }
+       
     }
 }

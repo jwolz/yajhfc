@@ -59,14 +59,14 @@ public class fmtEditor<T> extends JPanel
     /**
      * Separator, can be null
      */
-    private final T separator;
+    final T separator;
     
-    private JPanel buttonPane, availPane, selectedPane;
-    private JButton buttonAdd, buttonDelete, buttonUp, buttonDown;
-    private JList listAvail, listSelected;
-    private JScrollPane scrollAvail, scrollSelected;
+    JPanel buttonPane, availPane, selectedPane;
+    JButton buttonAdd, buttonDelete, buttonUp, buttonDown;
+    JList listAvail, listSelected;
+    JScrollPane scrollAvail, scrollSelected;
     
-    private boolean canDelete(Object[] items) {
+    boolean canDelete(Object[] items) {
         if (items.length == 0 || selectedFmtModel.getSize() <= 1) // Ensure at least one item is present
             return false;
         
@@ -86,10 +86,11 @@ public class fmtEditor<T> extends JPanel
     private void initialize(String selCaption, String deselCaption) {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         
+        Dimension spacer = new Dimension(5,0);
         add(getAvailPane(deselCaption));
-        add(Box.createHorizontalStrut(5));
+        add(Box.createRigidArea(spacer));
         add(getButtonPane());
-        add(Box.createHorizontalStrut(5));
+        add(Box.createRigidArea(spacer));
         add(getSelectedPane(selCaption));
         
         if (deselectedFmtModel.getSize() > 0)
@@ -263,6 +264,14 @@ public class fmtEditor<T> extends JPanel
         selectedFmtModel.clear();
         selectedFmtModel.addAll(newSelected);
     }
+    
+    @Override
+    public void setEnabled(boolean enabled) {
+        Utils.enableChildren(this, enabled);
+        super.setEnabled(enabled);
+    }
+    
+
     
     /**
      * Creates a new fmtEditor

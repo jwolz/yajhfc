@@ -138,7 +138,7 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
             List<PhoneBookEntry> childs = (showFilteredResults ? 
                     ((PhoneBook)parent).getLastFilterResult() :
                         ((PhoneBook)parent).getEntries());
-            return (childs == null) ? -1 : childs.indexOf((PhoneBookEntry)child);
+            return (childs == null) ? -1 : childs.indexOf(child);
         } else {
             return -1;
         }

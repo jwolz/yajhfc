@@ -43,6 +43,7 @@ import java.net.SocketException;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -103,6 +104,11 @@ import yajhfc.model.UnReadMyTableModel;
 import yajhfc.model.UnreadItemEvent;
 import yajhfc.model.UnreadItemListener;
 import yajhfc.model.YajJob;
+import yajhfc.model.archive.QueueFileFormat;
+import yajhfc.model.archive.ArchiveTableModel;
+import yajhfc.model.archive.ArchiveYajJob;
+import yajhfc.model.archive.FileHylaDirAccessor;
+import yajhfc.model.archive.HylaDirAccessor;
 import yajhfc.options.OptionsWin;
 import yajhfc.phonebook.NewPhoneBookWin;
 import yajhfc.readstate.PersistentReadState;
@@ -128,7 +134,7 @@ public final class MainWin extends JFrame {
     
     static final Logger log = Logger.getLogger(MainWin.class.getName());
     // Uncomment for archive support (change 3 -> 4)
-    private static final int TABLE_COUNT = 3;
+    private static final int TABLE_COUNT = 4;
     
     protected JPanel jContentPane = null;
     
@@ -181,10 +187,10 @@ public final class MainWin extends JFrame {
     protected MenuViewListener menuViewListener;
     
     // Uncomment for archive support.
-//    protected TooltipJTable tableArchive;
-//    protected JScrollPane scrollArchive;
-//    protected ArchiveTableModel archiveTableModel;
-//    protected NumberRowViewport archiveRowNumbers;
+    protected TooltipJTable<QueueFileFormat> tableArchive;
+    protected JScrollPane scrollArchive;
+    protected ArchiveTableModel archiveTableModel;
+    protected NumberRowViewport archiveRowNumbers;
     
     // Actions:
     protected Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward, actAdminMode;
@@ -272,15 +278,26 @@ public final class MainWin extends JFrame {
             }
             try {
                 int[] selRows =  selTable.getSelectedRows();
-
+                List<String> errorInfo = new ArrayList<String>();
                 for (int i : selRows) {
                     YajJob<? extends FmtItem> yj = null;
                     try {
                         yj = selTable.getJobForRow(i);
-                        List<HylaServerFile> hsfs = yj.getServerFilenames(hyfc);
+                        errorInfo.clear();
+                        List<HylaServerFile> hsfs = yj.getServerFilenames(hyfc, errorInfo);
                         if (hsfs.size() == 0) {
                             if (askForEveryFile) {
-                                showMessageDialog(MessageFormat.format(_("No document files available for the fax \"{0}\"."), yj.getIDValue()), _("Display fax"), JOptionPane.INFORMATION_MESSAGE);
+                                StringBuffer res = new StringBuffer();
+                                new MessageFormat(_("No accessible document files are available for the fax \"{0}\".")).format(new Object[] {yj.getIDValue()}, res, null);
+                                if (errorInfo.size() > 0) {
+                                    res.append("\n\n");
+                                    res.append(_("The following files were inaccessible:"));
+                                    res.append('\n');
+                                    for (String info : errorInfo) {
+                                        res.append(info).append('\n');
+                                    }
+                                }
+                                showMessageDialog(res.toString(), _("Save fax"), JOptionPane.INFORMATION_MESSAGE);
                             } 
                         } else {
                             updateNote(MessageFormat.format(_("Saving fax {0}"), yj.getIDValue()));
@@ -365,6 +382,8 @@ public final class MainWin extends JFrame {
             if (hyfc == null) {
                 return;
             }
+            List<FormattedFile> downloadedFiles = new ArrayList<FormattedFile>();
+            List<String> errorInfo = new ArrayList<String>();
             int[] selRows =  selTable.getSelectedRows();
             sMin = Integer.MAX_VALUE; sMax = Integer.MIN_VALUE;
             for (int i : selRows) {
@@ -372,16 +391,27 @@ public final class MainWin extends JFrame {
                 try {
                     yj = selTable.getJobForRow(i);
                     updateNote(MessageFormat.format(_("Displaying fax {0}"), yj.getIDValue()));
+                    downloadedFiles.clear();
+                    errorInfo.clear();
                     
                     //System.out.println("" + i + ": " + yj.getIDValue().toString());
-                    List<HylaServerFile> serverFiles = yj.getServerFilenames(hyfc);
-                    List<FormattedFile> downloadedFiles = new ArrayList<FormattedFile>();
-
+                    List<HylaServerFile> serverFiles = yj.getServerFilenames(hyfc, errorInfo);
+                    
                     stepProgressBar(100);
                     if (serverFiles.size() == 0) {
-                        showMessageDialog(MessageFormat.format(_("No document files available for the fax \"{0}\"."), yj.getIDValue()), _("Display fax"), JOptionPane.INFORMATION_MESSAGE);
+                        StringBuffer res = new StringBuffer();
+                        new MessageFormat(_("No accessible document files are available for the fax \"{0}\".")).format(new Object[] {yj.getIDValue()}, res, null);
+                        if (errorInfo.size() > 0) {
+                            res.append("\n\n");
+                            res.append(_("The following files were inaccessible:"));
+                            res.append('\n');
+                            for (String info : errorInfo) {
+                                res.append(info).append('\n');
+                            }
+                        }
+                        showMessageDialog(res.toString(), _("Display fax"), JOptionPane.INFORMATION_MESSAGE);
 
-                       stepProgressBar(1000);
+                        stepProgressBar(1000);
                     } else {
                         int step = 1000 / serverFiles.size();
                         MessageFormat format = new MessageFormat(Utils._("Downloading {0}"));
@@ -578,7 +608,18 @@ public final class MainWin extends JFrame {
                             }
                         }
                         if (ffs.size() > 0) {
-                            File target = new File(targetDir, "fax" + yj.getIDValue() + '.' + desiredFormat.getDefaultExtension());
+                            Object idVal = yj.getIDValue();
+                            String filePrefix;
+                            if (idVal instanceof Integer) {
+                                filePrefix = "fax" + ((Integer)idVal).intValue();
+                            } else {
+                                filePrefix = idVal.toString();
+                                int pos = filePrefix.lastIndexOf('.');
+                                if (pos >= 0)
+                                    filePrefix = filePrefix.substring(0, pos);
+                            }
+                            
+                            File target = new File(targetDir, filePrefix + '.' + desiredFormat.getDefaultExtension());
                             if (askForEveryFile) {
                                 FileChooserRunnable runner = new FileChooserRunnable(MainWin.this, fileChooser, MessageFormat.format(_("File name to save fax {0}"), yj.getIDValue()), null, target, false);
                                 SwingUtilities.invokeAndWait(runner);
@@ -707,9 +748,11 @@ public final class MainWin extends JFrame {
                 ow.setVisible(true);
                 if (ow.getModalResult()) {
                     showOrHideTrayIcon();
+                    addOrRemoveArchiveTab();
                     reconnectToServer(null);
-                } else
+                } else {
                     sendReady = oldState;
+                }
                     
             }
         };
@@ -1104,7 +1147,8 @@ public final class MainWin extends JFrame {
                 tableSent.setAutoResizeMode(newMode);
                 tableSending.setAutoResizeMode(newMode);
                 // Uncomment for archive support.
-//                tableArchive.setAutoResizeMode(newMode);
+                if (tableArchive != null)
+                    tableArchive.setAutoResizeMode(newMode);
                 
                 putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, newState);
             };
@@ -1171,7 +1215,8 @@ public final class MainWin extends JFrame {
         actReconnect.putValue(Action.SMALL_ICON, Utils.loadCustomIcon(showConnect ? "disconnected.png" : "connected.png"));
     }
     
-    private JPopupMenu getTblPopup() {
+    
+    JPopupMenu getTblPopup() {
         if (tblPopup == null) {
             tblPopup = new JPopupMenu(_("Fax"));
             tblPopup.add(new JMenuItem(actShow));
@@ -1485,6 +1530,9 @@ public final class MainWin extends JFrame {
             getRecvTableModel().setData(null);
             getSentTableModel().setData(null);
             getSendingTableModel().setData(null);
+            if (myopts.showArchive) {
+                getArchiveTableModel().setData((List<ArchiveYajJob>)null);
+            }
             
             getTextStatus().setBackground(getDefStatusBackground());
             getTextStatus().setText(_("Disconnected."));
@@ -1506,7 +1554,7 @@ public final class MainWin extends JFrame {
         tablePanel.hideProgress();
     }
     
-    private void reloadTableColumnSettings() {
+    void reloadTableColumnSettings() {
         UnReadMyTableModel tm = getRecvTableModel();
         tm.columns = myopts.recvfmt;
         tm.fireTableStructureChanged();
@@ -1520,15 +1568,18 @@ public final class MainWin extends JFrame {
         tm2.fireTableStructureChanged();
         
         // Uncomment for archive support.
-//        tm = getArchiveTableModel();
-//        tm.columns = myopts.archiveFmt;
-//        tm.fireTableStructureChanged();
+        if (myopts.showArchive) {
+            ArchiveTableModel tm3 = getArchiveTableModel();
+            tm3.columns = myopts.archiveFmt;
+            tm3.fireTableStructureChanged();
+        }
         
         tableRecv.setColumnCfgString(myopts.recvColState);
         tableSent.setColumnCfgString(myopts.sentColState);
         tableSending.setColumnCfgString(myopts.sendingColState);
         // Uncomment for archive support.
-//        tableArchive.setColumnCfgString(myopts.archiveColState);
+        if (myopts.showArchive && tableArchive != null)
+            tableArchive.setColumnCfgString(myopts.archiveColState);
     }
     
     public void reconnectToServer(Runnable loginAction) {
@@ -1601,22 +1652,33 @@ public final class MainWin extends JFrame {
         return helpMenu;
     }
 
-    private JTabbedPane getTabMain() {
+    JTabbedPane getTabMain() {
         if (tabMain == null) {
             tabMain = new JTabbedPane();
             tabMain.addTab(_("Received"), Utils.loadCustomIcon("received.gif"), getScrollRecv(), _("Received faxes"));
             tabMain.addTab(_("Sent"), Utils.loadCustomIcon("sent.gif"), getScrollSent(), _("Sent faxes"));
             tabMain.addTab(_("Transmitting"), Utils.loadCustomIcon("sending.gif"), getScrollSending(), _("Faxes in the output queue"));
             // Uncomment for archive support.
-//            if (myopts.showArchive) {
-//                tabMain.addTab(_("Archive"), getScrollArchive());
-//            }
+            addOrRemoveArchiveTab();
             
             tabMain.addChangeListener(actChecker);
         }
         return tabMain;
     }
 
+    void addOrRemoveArchiveTab() {
+        // Uncomment for archive support.
+        if (myopts.showArchive) {
+            if ((scrollArchive == null || tabMain.indexOfComponent(scrollArchive) < 0 )) {
+                tabMain.addTab(_("Archive"), Utils.loadCustomIcon("archive.gif"), getScrollArchive());
+            }
+        } else {
+            if (scrollArchive != null) {
+                tabMain.remove(scrollArchive);
+            }
+        }
+    }
+    
     private JScrollPane getScrollRecv() {
         if (scrollRecv == null) {
             scrollRecv = new JScrollPane();
@@ -1638,7 +1700,7 @@ public final class MainWin extends JFrame {
         return tableRecv;
     }
 
-    private Color getDefStatusBackground() {
+    Color getDefStatusBackground() {
         Color rv;
         rv = UIManager.getColor("control");
         if (rv == null)
@@ -1701,7 +1763,7 @@ public final class MainWin extends JFrame {
                             return;
                         }
                         for (RecvYajJob j : evt.getItems()) {
-                            for (HylaServerFile hsf : j.getServerFilenames(hyfc)) {
+                            for (HylaServerFile hsf : j.getServerFilenames(hyfc, null)) {
                                 try {
                                     hsf.getPreviewFile(hyfc).view();
                                 } catch (Exception e) {
@@ -1803,23 +1865,23 @@ public final class MainWin extends JFrame {
     }
 
     // Uncomment for archive support.
-//    private ArchiveTableModel getArchiveTableModel() {
-//        if (archiveTableModel == null) {
-//            archiveTableModel = new ArchiveTableModel();
-//        }
-//        return archiveTableModel;
-//    }
-//    
-//    private JScrollPane getScrollArchive() {
-//        if (scrollArchive == null) {
-//            tableArchive = new TooltipJTable(getArchiveTableModel());
-//            doCommonTableSetup(tableArchive);
-//            scrollArchive = new JScrollPane(tableArchive);
-//            archiveRowNumbers = new NumberRowViewport(tableArchive, scrollArchive);
-//            archiveRowNumbers.setVisible(myopts.showRowNumbers);
-//        }
-//        return scrollArchive;
-//    }
+    private ArchiveTableModel getArchiveTableModel() {
+        if (archiveTableModel == null) {
+            archiveTableModel = new ArchiveTableModel();
+        }
+        return archiveTableModel;
+    }
+    
+    JScrollPane getScrollArchive() {
+        if (scrollArchive == null) {
+            tableArchive = new TooltipJTable<QueueFileFormat>(getArchiveTableModel());
+            doCommonTableSetup(tableArchive);
+            scrollArchive = new JScrollPane(tableArchive);
+            archiveRowNumbers = new NumberRowViewport(tableArchive, scrollArchive);
+            archiveRowNumbers.setVisible(myopts.showRowNumbers);
+        }
+        return scrollArchive;
+    }
     
     private JMenu getMenuFax() {
         if (menuFax == null) {
@@ -1935,8 +1997,11 @@ public final class MainWin extends JFrame {
                 return model.columns.getCompleteView().contains(JobFormat.a) || model.columns.getCompleteView().contains(JobFormat.s);
             } else if (model == recvTableModel) { 
                 return myopts.recvfmt.getCompleteView().contains(RecvFormat.e);
-            } else //TODO for archive support?
+            } else if (model == archiveTableModel) {
+                return myopts.archiveFmt.getCompleteView().contains(QueueFileFormat.state);
+            } else {
                 return false;
+            }
         }
         
         private boolean ownFilterOK(MyTableModel<? extends FmtItem> model) {
@@ -1945,8 +2010,8 @@ public final class MainWin extends JFrame {
             } else if (model == sentTableModel || model == sendingTableModel) { 
                 return model.columns.getCompleteView().contains(JobFormat.o);
                 // Uncomment for archive support.
-//            } else if (model == archiveTableModel) {
-//                return model.columns.getCompleteView().contains(ArchiveYajJob.ownerField);
+            } else if (model == archiveTableModel) {
+                return model.columns.getCompleteView().contains(QueueFileFormat.owner);
             } else
                 return false;
         }
@@ -1955,7 +2020,7 @@ public final class MainWin extends JFrame {
          */
         @SuppressWarnings("unchecked")
         public void reConnected() {
-            for (int i = 0; i < lastSel.length; i++) {
+            for (int i = 0; i < tabMain.getTabCount(); i++) {
                 MyTableModel model = getTableByIndex(i).getRealModel();
                 if (lastSel[i] == menuViewOwn) {
                     if (ownFilterOK(model)) 
@@ -2058,13 +2123,12 @@ public final class MainWin extends JFrame {
                     suspResumeState = true;
                 }
                 // Uncomment for archive support.
-//            } if (tabMain.getSelectedComponent() == scrollArchive) { // Sending Table
-//                if (tableArchive.getSelectedRow() >= 0) {
-//                    deleteState = true;
-//                    showState = true;
-//                    resendState = true;
-//                    suspResumeState = true;
-//                }
+            } if (tabMain.getSelectedComponent() == scrollArchive) { // Archive Table
+                if (tableArchive.getSelectedRow() >= 0) {
+                    deleteState = true;
+                    showState = true;
+                    resendState = false;
+                }
             } 
             
             actShow.setEnabled(showState);
@@ -2132,12 +2196,11 @@ public final class MainWin extends JFrame {
     };
     
     class TableRefresher extends TimerTask {
-        private String sentfmt, sendingfmt;
-        private Vector<?> lastRecvList = null, lastSentList = null, lastSendingList = null;
+        String sentfmt, sendingfmt;
+        Vector<?> lastRecvList = null, lastSentList = null, lastSendingList = null;
         // Uncomment for archive support.
-//        private Vector<?> lastArchiveList = null;
-        //public boolean didFirstRun = false;
-        private boolean cancelled = false;
+        String[] lastArchiveList = null;
+        boolean cancelled = false;
         
         @Override
         public boolean cancel() {
@@ -2267,24 +2330,25 @@ public final class MainWin extends JFrame {
                     return;
                 }
                 // Uncomment for archive support.
-                //            if (myopts.showArchive) {
-                //                try {
-                //                    synchronized (hyfc) {
-                //                        lst = hyfc.getNameList("archive");
-                //                    }
-                //                    if ((lastArchiveList == null) || !lst.equals(lastArchiveList)) {
-                //                        final List<ArchiveYajJob> archiveJobs = ArchiveYajJob.getArchiveFiles(hyfc, lst, archiveTableModel.columns);
-                //                        SwingUtilities.invokeLater(new Runnable() {
-                //                           public void run() {
-                //                               archiveTableModel.setData(archiveJobs);
-                //                            } 
-                //                        });
-                //                        lastArchiveList = lst;
-                //                    }
-                //                } catch (Exception e) {
-                //                    log.log(Level.WARNING, "An error occured refreshing the tables: ", e);
-                //                }
-                //            }
+                if (myopts.showArchive) {
+                    try {
+                        HylaDirAccessor hyda = new FileHylaDirAccessor(new File(myopts.archiveLocation));
+                        String[] fileList = hyda.listDirectory();
+                        
+                        if ((lastArchiveList == null) || !Arrays.equals(fileList, lastArchiveList)) {
+                            final List<ArchiveYajJob> archiveJobs = ArchiveYajJob.getArchiveFiles(hyda, fileList, archiveTableModel.columns);
+                            SwingUtilities.invokeLater(new Runnable() {
+                                public void run() {
+                                    archiveTableModel.setData(archiveJobs);
+                                } 
+                            });
+                            lastArchiveList = fileList;
+                        }
+                    } catch (Exception e) {
+                        log.log(Level.WARNING, "An error occured refreshing the tables: ", e);
+                    }
+                    log.fine("archive complete");
+                }
 
                 if (tablePanel.isShowingProgress()) {
                     log.fine("Hiding progress...");

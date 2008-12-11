@@ -1,4 +1,4 @@
-README for YajHFC 0.3.9
+README for YajHFC 0.4.0
 =======================
 
 ABOUT
@@ -23,14 +23,15 @@ INSTALLATION
 ------------
 
 Requirements:
-* JRE 5.0 or higher
+* JRE 5.0 or higher (Java 6 recommended)
 * A running HylaFAX server in your network (of course ;-) )
 * Some program to view TIFF files (also see the FAQ)
-* Optional: A PostScript viewer (e.g. Ghostview)
+* Optional: A PostScript viewer (e.g. Ghostview), GhostScript
+     and tiff2pdf (from libtiff-utils)
 
-To install YajHFC just download the yajhfc-0_3_9.jar file to some folder on your
+To install YajHFC just download the yajhfc-0_4_0.jar file to some folder on your
 file system.
-To execute it, use: "java -jar yajhfc-0_3_9.jar"
+To execute it, use: "java -jar yajhfc-0_4_0.jar"
 (In Windows you usually can just double click the jar file as well.)
 
 LICENSE
@@ -59,10 +60,21 @@ Copies of the required files from (2), (3) and (4) can also be found in the jar
 subdirectory in the source archive.
 
 YajHFC was originally written as a first more complicated
-(than advanced "Hello world" programs) Java project using the Eclipse IDE.
+(than advanced "Hello world" programs) Java project using the Eclipse IDE 
+(and has gone a long way since that... ;-) )
 
 CHANGES
 -------
+
+0.4.0:
+- Support for archive directory
+- Support to view and send faxes as a single file (in PDF, TIFF or PS format)
+- Phone book includes most common fields now
+- Support for a tray icon under Java 6 
+- Improved options dialog
+- Improved command line support (YajHFC can now be 
+   used to send faxes without user confirmation)
+- Lots of internal code clean up
 
 0.3.9:
 - Italian and Turkish translations added

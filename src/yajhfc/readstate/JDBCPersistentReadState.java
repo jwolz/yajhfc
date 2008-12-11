@@ -51,7 +51,7 @@ import yajhfc.util.PasswordDialog;
  *
  */
 public class JDBCPersistentReadState extends PersistentReadState {
-    private static final Logger log = Logger.getLogger(JDBCPersistentReadState.class.getName());
+    static final Logger log = Logger.getLogger(JDBCPersistentReadState.class.getName());
     
     protected ConnectionSettings settings;
     
@@ -82,7 +82,7 @@ public class JDBCPersistentReadState extends PersistentReadState {
 
         String password;
         if (settings.askForPWD) {
-            String[] pwd = PasswordDialog.showPasswordDialog(Launcher2.application, Utils._("Database password"), MessageFormat.format(Utils._("Please enter the database password (database: {0})."), settings.dbURL), settings.user, false);
+            String[] pwd = PasswordDialog.showPasswordDialog(Launcher2.application, Utils._("Database password"), MessageFormat.format(Utils._("Please enter the database password (database: {0}):"), settings.dbURL), settings.user, false);
             if (pwd == null)
                 return;
             else

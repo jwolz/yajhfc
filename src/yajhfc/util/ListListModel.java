@@ -64,7 +64,9 @@ public class ListListModel<T> extends AbstractListModel {
     public void clear() {
         int oldMax = list.size() - 1;
         list.clear();
-        fireIntervalRemoved(this, 0, oldMax);
+        if (oldMax >= 0) {
+            fireIntervalRemoved(this, 0, oldMax);
+        }
     }
     
     public void addAll(Collection<? extends T> elements) {

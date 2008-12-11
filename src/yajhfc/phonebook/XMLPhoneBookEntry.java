@@ -18,7 +18,6 @@ package yajhfc.phonebook;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,15 +29,7 @@ import org.w3c.dom.NodeList;
 
 public class XMLPhoneBookEntry extends SimplePhoneBookEntry {
     private static final Logger log = Logger.getLogger(XMLPhoneBookEntry.class.getName());
-    
-    protected static final Map<String,PBEntryField> keyToFieldMap;
-    static {
-        keyToFieldMap = new HashMap<String,PBEntryField>();
-        for (PBEntryField field : PBEntryField.values()) {
-            keyToFieldMap.put(field.getKey(), field);
-        }
-    }
-    
+        
     private XMLPhoneBook parent;
     
     public XMLPhoneBookEntry(XMLPhoneBook parent) {
@@ -76,6 +67,7 @@ public class XMLPhoneBookEntry extends SimplePhoneBookEntry {
     
     public void loadFromXML(Element el) {
         NodeList nl = el.getChildNodes();
+        Map<String,PBEntryField> keyToFieldMap = PBEntryField.getKeyToFieldMap();
         
         for (int i = 0; i < nl.getLength(); i++) {
             Node item = nl.item(i);

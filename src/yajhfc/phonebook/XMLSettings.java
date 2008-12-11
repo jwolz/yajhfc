@@ -16,31 +16,25 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package yajhfc.send;
+package yajhfc.phonebook;
 
-import java.awt.Window;
-import java.io.InputStream;
-
-import yajhfc.HylaServerFile;
-import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 
 /**
- * Control methods for the send dialog
  * @author jonas
  *
  */
-public interface SendWinControl {
-    public void setVisible(boolean visible);
-    public boolean getModalResult();
-    public Window getWindow();
+public class XMLSettings extends AbstractConnectionSettings {
+    public String fileName;
+    public String caption;
     
-    public void addServerFile(HylaServerFile serverFile);
-    public void addRecipient(PBEntryFieldContainer recipient);
-    public void addRecipient(String faxNumber, String name, String company, String location, String voiceNumber);
-    public void setSubject(String subject);
-    public void addInputStream(InputStream inStream);
-    public void addLocalFile(String fileName);
+    @Override
+    public void loadFromString(String input) {
+        if (!(input.contains("fileName=") && input.contains("caption="))) { //Compatibility
+            fileName = input;
+            caption = "";
+        } else {
+            super.loadFromString(input);
+        }
+    }
     
-    public void setUseCover(boolean useCover);
-    public void setComment(String comment);
 }

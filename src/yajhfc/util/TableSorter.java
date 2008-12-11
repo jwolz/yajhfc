@@ -108,7 +108,7 @@ public class TableSorter extends AbstractTableModel {
         setTableModel(tableModel);
     }
 
-    private void clearSortingState() {
+    void clearSortingState() {
         viewToModel = null;
         modelToView = null;
     }
@@ -196,7 +196,7 @@ public class TableSorter extends AbstractTableModel {
         return new Arrow(directive.direction == DESCENDING, size, sortingColumns.indexOf(directive));
     }
 
-    private void cancelSorting() {
+    void cancelSorting() {
         sortingColumns.clear();
         sortingStatusChanged();
     }
@@ -240,7 +240,7 @@ public class TableSorter extends AbstractTableModel {
         return getViewToModel()[viewIndex].modelIndex;
     }
 
-    private int[] getModelToView() {
+    int[] getModelToView() {
         if (modelToView == null) {
             int n = getViewToModel().length;
             modelToView = new int[n];
@@ -283,7 +283,7 @@ public class TableSorter extends AbstractTableModel {
     
     // Helper classes
     private class Row implements Comparable<Row> {
-        private int modelIndex;
+        int modelIndex;
 
         public Row(int index) {
             this.modelIndex = index;
@@ -371,6 +371,9 @@ public class TableSorter extends AbstractTableModel {
             fireTableDataChanged();
             return;
         }
+        
+        public TableModelHandler() {
+        }
     }
 
     private class MouseHandler extends MouseAdapter {
@@ -397,6 +400,10 @@ public class TableSorter extends AbstractTableModel {
                 status = (status + 4) % 3 - 1; // signed mod, returning {-1, 0, 1}
                 setSortingStatus(column, status);
             }
+        }
+        
+        public MouseHandler() {
+            super();
         }
     }
 
@@ -454,7 +461,7 @@ public class TableSorter extends AbstractTableModel {
     }
 
     private class SortableHeaderRenderer implements TableCellRenderer {
-        private TableCellRenderer tableCellRenderer;
+        TableCellRenderer tableCellRenderer;
 
         public SortableHeaderRenderer(TableCellRenderer tableCellRenderer) {
             this.tableCellRenderer = tableCellRenderer;
@@ -479,8 +486,8 @@ public class TableSorter extends AbstractTableModel {
     }
 
     private static class Directive {
-        private int column;
-        private int direction;
+        int column;
+        int direction;
 
         public Directive(int column, int direction) {
             this.column = column;

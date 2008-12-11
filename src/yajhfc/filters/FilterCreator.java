@@ -133,7 +133,7 @@ public class FilterCreator {
             if (yjf instanceof ComparableFilter) {
                 ComparableFilter<YajJob<T>,T> cf = (ComparableFilter<YajJob<T>,T>)yjf;
                 res.append("c$");
-                res.append(cf.getColumn().getHylaFmt()).append('$');
+                res.append(cf.getColumn().name()).append('$');
                 res.append(cf.getOperator().name()).append('$');
                 String val;
                 if (cf.getColumn().getDataType() == Date.class)
@@ -145,7 +145,7 @@ public class FilterCreator {
             } else if (yjf instanceof StringFilter) {
                 StringFilter<YajJob<T>,T> sf = (StringFilter<YajJob<T>,T>)yjf;
                 res.append("s$");
-                res.append(sf.getColumn().getHylaFmt()).append('$');
+                res.append(sf.getColumn().name()).append('$');
                 res.append(sf.getOperator().name()).append('$');
                 res.append(Utils.escapeChars(sf.getCompareValue().toString(), "$!", '~')).append('$');
                 res.append('!');
@@ -177,13 +177,7 @@ public class FilterCreator {
                 continue;
             }
             
-            T col = null;
-            for (T fi: columns.getCompleteView()) {
-                if (fi.getHylaFmt().equals(flt2[1])) {
-                    col = fi;
-                    break;
-                }
-            }
+            T col = columns.itemFromName(flt2[1]);
             if (col == null) {
                 log.log(Level.WARNING, "Unknown column in stringToFilter: " + flt1[i]);
                 continue;

@@ -41,11 +41,11 @@ import yajhfc.Utils;
 
 public class PasswordDialog extends JDialog {
 
-    private JPanel jContentFrame;
-    private JLabel labelPrompt;
-    private JTextField userField;
-    private JPasswordField passField;
-    private JButton btnOK, btnCancel;
+    JPanel jContentFrame;
+    JLabel labelPrompt;
+    JTextField userField;
+    JPasswordField passField;
+    JButton btnOK, btnCancel;
     
     public String returnedPassword = null;
     public String returnedUsername = null;
@@ -77,7 +77,7 @@ public class PasswordDialog extends JDialog {
         CancelAction actCancel = new CancelAction(this);
         btnCancel = actCancel.createCancelButton();
         
-        JLabel labelUserName = new JLabel(Utils._("User name:"));
+        JLabel labelUserName = new JLabel(Utils._("Username:"));
         labelUserName.setAlignmentX(JComponent.LEFT_ALIGNMENT);
         
         JLabel labelPassword = new JLabel(Utils._("Password:"));

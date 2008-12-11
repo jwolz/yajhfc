@@ -89,7 +89,7 @@ import yajhfc.util.MultiButtonGroup;
 
 public final class NewPhoneBookWin extends JDialog implements ActionListener {
 
-    private static final Logger log = Logger.getLogger(NewPhoneBookWin.class.getName());
+    static final Logger log = Logger.getLogger(NewPhoneBookWin.class.getName());
     
     private static final String PBFIELD_PROP = "YajHFC-PBEntryfield";
     

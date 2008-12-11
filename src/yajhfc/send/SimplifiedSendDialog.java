@@ -611,6 +611,10 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         tfl.setField(PBEntryField.VoiceNumber, voiceNumber);
         numberTableModel.addRow(tfl);
     }
+    
+    public void addRecipient(PBEntryFieldContainer recipient) {
+        numberTableModel.addRow(new DefaultPBEntryFieldContainer(recipient));
+    }
 
     public void addServerFile(HylaServerFile serverFile) {
         tflFiles.model.add(new ServerFileTFLItem(serverFile));        
@@ -645,6 +649,14 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
             this.boldFont = boldFont;
         }
         
+    }
+
+    public void setComment(String comment) {
+        textComments.setText(comment);
+    }
+
+    public void setUseCover(boolean useCover) {
+        checkUseCover.setSelected(useCover);
     }
     
 }

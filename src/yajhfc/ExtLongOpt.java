@@ -28,6 +28,7 @@ import gnu.getopt.LongOpt;
 public class ExtLongOpt extends LongOpt {
 
     private final String description;
+    private final String argDesc;
     
     /**
      * @param name
@@ -36,13 +37,18 @@ public class ExtLongOpt extends LongOpt {
      * @param val
      * @throws IllegalArgumentException
      */
-    public ExtLongOpt(String name, int has_arg, StringBuffer flag, int val, String description)
+    public ExtLongOpt(String name, int has_arg, StringBuffer flag, int val, String argDesc, String description)
             throws IllegalArgumentException {
         super(name, has_arg, flag, val);
+        this.argDesc = argDesc;
         this.description = description;
     }
 
     public String getDescription() {
         return description;
+    }
+    
+    public String getArgDesc() {
+        return argDesc;
     }
 }
