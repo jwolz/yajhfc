@@ -34,9 +34,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.DateFormatSymbols;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -48,19 +53,97 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
+import yajhfc.model.archive.QueueFileDateFormat;
+
 
 public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2008 by Jonas Wolz";
-    public static final String AppVersion = "0.3.9g";
+    public static final String AppVersion = "0.4.0alpha2";
     public static final String AuthorEMail = "Jonas Wolz &lt;jwolz@freenet.de&gt;";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
     
+    /**
+     * Input format for "long" HylaFax dates
+     */
+    public static final RegExDateFormat HYLA_LONG_DATE_FORMAT = new RegExDateFormat("(\\d{2,4})[\\.:/](\\d{1,2})[\\.:/](\\d{1,2})\\s+(\\d{1,2})[\\.:/](\\d{1,2})[\\.:/](\\d{1,2})",
+            Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH, Calendar.HOUR_OF_DAY, Calendar.MINUTE, Calendar.SECOND);
+    /**
+     * Input format for time only HylaFax dates
+     */
+    public static final RegExDateFormat HYLA_TIME_ONLY_FORMAT = new RegExDateFormat("(?:(\\d{1,2})[\\.:/])?(\\d{1,2})[\\.:/](\\d{1,2})",
+            Calendar.HOUR_OF_DAY, Calendar.MINUTE, Calendar.SECOND);  
+    /**
+     * Input format for short HylaFax dates
+     */
+    public static final DateFormat HYLA_SHORT_DATE_FORMAT = new SimpleDateFormat("ddMMMyy", Locale.US) {
+        private final String[] weekdays = new DateFormatSymbols(Locale.US).getShortWeekdays();
+        
+        public java.util.Date parse(String text, java.text.ParsePosition pos) {
+            Date result = super.parse(text, pos);
+            if (result == null) {
+                // Recognize Strings of the form "Mon03PM"
+                int startIndex = pos.getIndex();
+                if (text.length() < startIndex + 7)
+                    return null;
+                
+                Calendar cal = Calendar.getInstance(Locale.US);
+                String weekday = text.substring(startIndex, startIndex+3);
+                String hour = text.substring(startIndex+3, startIndex+5);
+                String am_pm = text.substring(startIndex+5, startIndex+7);
+                
+                int iWeekday = indexOfArray(weekdays, weekday);
+                if (iWeekday >= 0) {
+                    cal.set(Calendar.DAY_OF_WEEK, iWeekday);
+//                    int curWeekday = cal.get(Calendar.DAY_OF_WEEK);
+//                    int weekdayDiff = iWeekday - curWeekday;
+//                    if (weekdayDiff > 0) { // The weekdays meant are always in the past
+//                        weekdayDiff-=7;
+//                    }
+//                    cal.add(Calendar.DAY_OF_MONTH, weekdayDiff);
+                } else {
+                    return null;
+                }
+                
+                try {
+                    int iHour = Integer.parseInt(hour);
+                    cal.set(Calendar.HOUR, iHour-1);
+                } catch (NumberFormatException e) {
+                    log.log(Level.INFO, "Cannot parse hour: ", e);
+                    return null;
+                }
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                
+                if (am_pm.equalsIgnoreCase("AM")) {
+                    cal.set(Calendar.AM_PM, Calendar.AM);
+                } else if (am_pm.equalsIgnoreCase("PM")) {
+                    cal.set(Calendar.AM_PM, Calendar.PM);
+                }
+                
+                result = cal.getTime();
+                
+                pos.setIndex(startIndex + 7);
+            }
+            return result;
+        }
+    };
+    
+    /**
+     * Date format for "milliseconds since epoch"
+     */
+    public static final DateFormat HYLA_UNIX_DATE_FORMAT = new QueueFileDateFormat(false);
+    
+    /**
+     * Date format for "milliseconds since epoch" with client-side time zone correction
+     */
+    public static final DateFormat HYLA_UNIX_DATE_FORMAT_GMT = new QueueFileDateFormat(true);
     
     public static boolean debugMode = false;
     //public static PrintStream debugOut = System.out;
-    private static final Logger log = Logger.getLogger(Utils.class.getName());
+    static final Logger log = Logger.getLogger(Utils.class.getName());
     
     private static FaxOptions theoptions = null;
     private static ResourceBundle msgs = null;

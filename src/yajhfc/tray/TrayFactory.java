@@ -38,6 +38,7 @@ public class TrayFactory {
     private static boolean haveAWTSupport = true;
     
     private static TrayManager trayManager;
+    private static Method isSupported;
     
     private static final String trayManagerClassName = "yajhfc.tray.DefaultTrayManager";
     
@@ -48,8 +49,10 @@ public class TrayFactory {
     public static boolean trayIsAvailable() {
         if (haveAWTSupport) {
             try {
-                Class<?> tray = Class.forName("java.awt.SystemTray");
-                Method isSupported = tray.getMethod("isSupported");
+                if (isSupported == null) {
+                    Class<?> tray = Class.forName("java.awt.SystemTray");
+                    isSupported = tray.getMethod("isSupported");
+                }
                 Boolean result = (Boolean)isSupported.invoke(null);
                 if (Utils.debugMode) {
                     log.fine("Tray is available: " + result);

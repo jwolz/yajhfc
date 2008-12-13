@@ -45,4 +45,12 @@ public interface FilterKeyList<K extends FilterKey> {
      * @return
      */
     public boolean containsKey(K key);
+    
+    /**
+     * Returns the filter key matching the given name or null if no such key
+     * can be found.
+     * @param name
+     * @return
+     */
+    public K getKeyForName(String name);
 }

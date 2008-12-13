@@ -21,7 +21,6 @@ package yajhfc;
 import static yajhfc.Utils._;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -32,7 +31,7 @@ public enum RecvFormat implements FmtItem {
     /**
      * Time/Date
      */
-    Y("Y", _("Time/Date"),  _("Extended representation of the time when the receive happened"), new SimpleDateFormat("yyyy:MM:dd HH:mm:ss"), new SimpleDateFormat(_("dd/MM/yyyy HH:mm:ss"))), 
+    Y("Y", _("Time/Date"),  _("Extended representation of the time when the receive happened"), Utils.HYLA_LONG_DATE_FORMAT, DateKind.DATE_AND_TIME), 
     /**
      * SubAddress
      */
@@ -56,7 +55,7 @@ public enum RecvFormat implements FmtItem {
     /**
      * Time to receive
      */
-    h("h", _("Time to receive"), _("Time spent receiving document (HH:MM:SS)"), new SimpleDateFormat("m:ss"), new SimpleDateFormat(_("mm:ss"))), 
+    h("h", _("Time to receive"), _("Time spent receiving document (HH:MM:SS)"), Utils.HYLA_TIME_ONLY_FORMAT, DateKind.DURATION), 
     /**
      * CIDName
      */
@@ -100,7 +99,7 @@ public enum RecvFormat implements FmtItem {
     /**
      * Date
      */
-    t("t", _("Date"), _("Compact representation of the time when the receive happened"), new SimpleDateFormat("ddMMMyy"), new SimpleDateFormat(_("dd/MM/yyyy"))), 
+    t("t", _("Date"), _("Compact representation of the time when the receive happened"), Utils.HYLA_SHORT_DATE_FORMAT, DateKind.DATE_ONLY), 
     /**
      * Page width
      */
@@ -108,14 +107,18 @@ public enum RecvFormat implements FmtItem {
     /**
      * In progress
      */
-    z("z", _("In progress"), _("A ``*'' if receive is going on; otherwise `` '' (space)"), Boolean.class)
+    z("z", _("In progress"), _("A ``*'' if receive is going on; otherwise `` '' (space)"), Boolean.class),
+    /**
+     * Scheduled time in seconds since the UNIX epoch (undocumented)
+     */
+    Z("Z", _("Scheduled time (UNIX)"), _("Scheduled time in seconds since the UNIX epoch"), Utils.HYLA_UNIX_DATE_FORMAT, DateKind.DATE_AND_TIME),
     ;
     private final String description;
     private final String hylaFmt;
     private final String longDescription;
     private final Class<?> dataType;
     private final DateFormat hylaDateFormat;
-    private final DateFormat displayDateFormat;
+    private final DateKind displayDateFormat;
     
     public String getDescription() {
         return description;
@@ -133,7 +136,7 @@ public enum RecvFormat implements FmtItem {
         return hylaDateFormat;
     }
     public DateFormat getDisplayDateFormat() {
-        return displayDateFormat;
+        return DateKind.getInstanceFromKind(displayDateFormat);
     }
     
     private RecvFormat(String hylaFmt, String description) {
@@ -146,7 +149,7 @@ public enum RecvFormat implements FmtItem {
     }
     
     private RecvFormat(String hylaFmt, String description,
-            String longDescription, DateFormat hylaDateFormat, DateFormat displayDateFormat) {
+            String longDescription, DateFormat hylaDateFormat, DateKind displayDateFormat) {
         this(hylaFmt, description, longDescription, Date.class, hylaDateFormat, displayDateFormat);
     }
     
@@ -161,7 +164,7 @@ public enum RecvFormat implements FmtItem {
     
     private RecvFormat(String hylaFmt, String description,
             String longDescription, Class<?> dataType,
-            DateFormat hylaDateFormat, DateFormat displayDateFormat) {
+            DateFormat hylaDateFormat, DateKind displayDateFormat) {
         this.hylaFmt = hylaFmt;
         this.description = description;
         this.longDescription = longDescription;

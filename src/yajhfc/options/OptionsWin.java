@@ -83,6 +83,7 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import yajhfc.DateStyle;
 import yajhfc.FaxNotification;
 import yajhfc.FaxOptions;
 import yajhfc.FaxResolution;
@@ -132,9 +133,9 @@ public class OptionsWin extends JDialog {
     JComboBox comboLang, comboLookAndFeel, comboModem, comboSendWinStyle;
     JCheckBox checkPasv, checkPCLBug, checkAskPassword, checkAskAdminPassword, checkAskUsername;
     JSpinner spinMaxTry, spinMaxDial, spinOffset, spinKillTime, spinSocketTimeout;
-    //JButton buttonBrowseViewer;
+    JComboBox comboDateFormat, comboTimeFormat;
     
-    JPanel panelServer, panelSend, panelPaths, panelUI;
+    JPanel panelServer, panelSend, panelPaths, panelUI, panelDateFormat;
     
     JPanel panelServerRetrieval, panelNewFaxAction;
     JCheckBox checkNewFax_Beep, checkNewFax_ToFront, checkNewFax_Open, checkNewFax_MarkAsRead, checkNewFax_BlinkTrayIcon;
@@ -199,7 +200,7 @@ public class OptionsWin extends JDialog {
         //comboNewFaxAction.setSelectedItem(foEdit.newFaxAction);
         comboLang.setSelectedItem(foEdit.locale);
         comboSendWinStyle.setSelectedItem(foEdit.sendWinStyle);
-        
+
         int pos = 0; 
         for (int i=0; i<lookAndFeels.size(); i++) {
             if (lookAndFeels.get(i).className.equals(foEdit.lookAndFeel)) {
@@ -222,12 +223,29 @@ public class OptionsWin extends JDialog {
         
         Object selModem = foEdit.defaultModem;
         for (HylaModem modem : availableModems) {
-            if (modem.getInternalName().equals(foEdit.defaultModem)) {
+            if (modem.getInternalName().equals(selModem)) {
                 selModem = modem;
                 break;
             }
         }
         comboModem.setSelectedItem(selModem);
+        
+        Object selStyle = foEdit.dateStyle;
+        for (DateStyle style : DateStyle.getAvailableDateStyles()) {
+            if (style.getSaveString().equals(selStyle)) {
+                selStyle = style;
+                break;
+            }
+        }
+        comboDateFormat.setSelectedItem(selStyle);
+        selStyle = foEdit.timeStyle;
+        for (DateStyle style : DateStyle.getAvailableTimeStyles()) {
+            if (style.getSaveString().equals(selStyle)) {
+                selStyle = style;
+                break;
+            }
+        }
+        comboTimeFormat.setSelectedItem(selStyle);
         
         checkPasv.setSelected(foEdit.pasv);
         checkPCLBug.setSelected(foEdit.pclBug);
@@ -502,14 +520,14 @@ public class OptionsWin extends JDialog {
         if (PanelCommon == null) {
             double[][] tablelay = {
                     {border, 0.4, border, TableLayout.FILL, border},
-                    { border, 0.7, border, TableLayout.FILL, border }
+                    {border, TableLayout.PREFERRED, border, TableLayout.PREFERRED, TableLayout.FILL, border }
             };
             PanelCommon = new JPanel(new TableLayout(tablelay), false);
             
             //PanelCommon.add(getPanelServer(), "1,1");
             PanelCommon.add(getPanelUI(), "1,1");
             PanelCommon.add(getPanelNewFaxAction(), "3,1");
-            //PanelCommon.add(getPanelPaths(), "1,3,3,3");
+            PanelCommon.add(getPanelDateFormat(), "1,3");
         }
         return PanelCommon;
     }
@@ -684,6 +702,26 @@ public class OptionsWin extends JDialog {
             panelNewFaxAction.add(checkNewFax_BlinkTrayIcon, "1,5,2,5");
         }
         return panelNewFaxAction;
+    }
+    
+    private JPanel getPanelDateFormat() {
+        if (panelDateFormat == null) {
+            double[][] tablelay = {
+                    {border, 0.5, border, TableLayout.FILL, border},
+                    {border, TableLayout.FILL, TableLayout.PREFERRED, border}
+            };
+            panelDateFormat = new JPanel(new TableLayout(tablelay),false);
+            panelDateFormat.setBorder(BorderFactory.createTitledBorder(_("Date and Time Format:")));
+            
+            comboDateFormat = new JComboBox(DateStyle.getAvailableDateStyles());
+            comboDateFormat.setEditable(true);
+            comboTimeFormat = new JComboBox(DateStyle.getAvailableTimeStyles());
+            comboTimeFormat.setEditable(true);
+            
+            addWithLabel(panelDateFormat, comboDateFormat, _("Date format:"), "1,2");
+            addWithLabel(panelDateFormat, comboTimeFormat, _("Time format:"), "3,2");
+        }
+        return panelDateFormat;
     }
     
     private JPanel getPanelServerRetrieval() {
@@ -901,6 +939,26 @@ public class OptionsWin extends JDialog {
         }
     }
     
+    private String getDateStyle() {
+        Object sel = comboDateFormat.getSelectedItem();
+
+        if (sel instanceof DateStyle) {
+            return ((DateStyle)sel).getSaveString();
+        } else {
+            return sel.toString();
+        }
+    }
+    
+    private String getTimeStyle() {
+        Object sel = comboTimeFormat.getSelectedItem();
+
+        if (sel instanceof DateStyle) {
+            return ((DateStyle)sel).getSaveString();
+        } else {
+            return sel.toString();
+        }
+    }
+    
     /**
      * Saves the settings. Returns true if they were saved successfully
      * @param foEdit
@@ -982,6 +1040,8 @@ public class OptionsWin extends JDialog {
             foEdit.sendingfmt.addAll(sendingfmt);
             
             foEdit.defaultModem = getModem();
+            foEdit.dateStyle = getDateStyle();
+            foEdit.timeStyle = getTimeStyle();
             
             for (OptionsPage page : optionsPages) {
                 page.saveSettings(foEdit);
@@ -1046,6 +1106,22 @@ public class OptionsWin extends JDialog {
             JOptionPane.showMessageDialog(OptionsWin.this, _("Please enter a valid port number."), _("Error"), JOptionPane.ERROR_MESSAGE);
             return false;
         }
+
+        try {
+            DateStyle.getDateFormatFromString(getDateStyle());
+        } catch (Exception e) {
+            focusComponent(comboDateFormat);
+            JOptionPane.showMessageDialog(OptionsWin.this, _("Please enter a valid date format:") + '\n' + e.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        try {
+            DateStyle.getTimeFormatFromString(getTimeStyle());
+        } catch (Exception e) {
+            focusComponent(comboTimeFormat);
+            JOptionPane.showMessageDialog(OptionsWin.this, _("Please enter a valid time format.") + '\n' + e.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        
         
         for (OptionsPage page : optionsPages) {
             if (!page.validateSettings(OptionsWin.this)) {

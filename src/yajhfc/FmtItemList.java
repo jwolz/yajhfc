@@ -98,7 +98,7 @@ public class FmtItemList<T extends FmtItem> extends ArrayList<T> implements Filt
         this.clear();
         
         for (int i=0; i < fields.length; i++) {
-            T res = itemFromName(fields[i]);
+            T res = getKeyForName(fields[i]);
             if (res == null) {
                 log.log(Level.WARNING, "FmtItem for " + fields[i] + "not found.");
             } else {
@@ -113,7 +113,7 @@ public class FmtItemList<T extends FmtItem> extends ArrayList<T> implements Filt
      * Returns the item with the given name or null if it is not found
      */
     @SuppressWarnings("unchecked")
-    public T itemFromName(String name) {
+    public T getKeyForName(String name) {
         Class<?> actualT = availableItems.getClass().getComponentType();
         if (Enum.class.isAssignableFrom(actualT)) {
             try {
