@@ -95,6 +95,14 @@ public enum PBEntryField implements FilterKey {
         public Object translateKey(PBEntryField key) {
             return key;
         }
+
+        public PBEntryField getKeyForName(String name) {
+            try {
+                return Enum.valueOf(PBEntryField.class, name);
+            } catch (Exception e) {
+                return null;
+            }
+        }
         
     };
 

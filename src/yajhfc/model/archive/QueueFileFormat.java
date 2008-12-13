@@ -21,9 +21,9 @@ package yajhfc.model.archive;
 import static yajhfc.Utils._;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import yajhfc.DateKind;
 import yajhfc.FmtItem;
 import yajhfc.IconMap;
 import yajhfc.Utils;
@@ -51,7 +51,7 @@ public enum QueueFileFormat implements FmtItem {
         jobid("jobid", _("ID"), Utils._("HylaFAX job identifier"), Integer.class), 
         jobtag("jobtag", _("Tag string"), Utils._("Client-specified job tag string"), String.class), 
         jobtype("jobtype",  _("Job type"), Utils._("Job type identification string"), String.class), 
-        killtime("killtime", _("Job kill time"), Utils._("Time to give up trying to send job"), new QueueFileDateFormat(), new SimpleDateFormat(Utils._("dd/MM/yyyy HH:mm:ss"))), 
+        killtime("killtime", _("Job kill time"), Utils._("Time to give up trying to send job"), Utils.HYLA_UNIX_DATE_FORMAT_GMT, DateKind.DATE_AND_TIME), 
         location("location", _("Location"), Utils._("Destination geographic location"), String.class), 
         mailaddr("mailaddr",  _("Sender e-mail"), Utils._("Email address of sender"), String.class), 
         maxdials("maxdials", _("Maximum # dials"), Utils._("Maximum number of times to dial"), Integer.class), 
@@ -86,7 +86,7 @@ public enum QueueFileFormat implements FmtItem {
         totdials("totdials", _("Total # dials"), Utils._("Total number of phone calls"), Integer.class), 
         totpages("totpages", _("Pages"), Utils._("Total # pages to transmit"), Integer.class), 
         tottries("tottries", _("Tries"), Utils._("Total number of attempts to send job"), Integer.class), 
-        tts("tts", Utils._("Time to send job"), new QueueFileDateFormat(), new SimpleDateFormat(Utils._("dd/MM/yyyy HH:mm:ss"))), 
+        tts("tts", Utils._("Time to send job"), Utils.HYLA_UNIX_DATE_FORMAT_GMT, DateKind.DATE_AND_TIME), 
         useccover("useccover", _("Use continuation cover"), Utils._("Whether or not to use a continuation cover page"), Boolean.class), 
         usexvres("usexvres", _("Use max. vertical resolution"), Utils._("Whether or not to use highest vertical resolution"), Boolean.class),
         state_desc("state", _("State"), _("Job state (long description)"), IconMap.class),
@@ -98,7 +98,7 @@ public enum QueueFileFormat implements FmtItem {
         private final String longDescription;
         private final Class<?> dataType;
         private final DateFormat hylaDateFormat;
-        private final DateFormat displayDateFormat;
+        private final DateKind displayDateFormat;
         
         public String getDescription() {
             return description;
@@ -116,16 +116,16 @@ public enum QueueFileFormat implements FmtItem {
             return hylaDateFormat;
         }
         public DateFormat getDisplayDateFormat() {
-            return displayDateFormat;
+            return DateKind.getInstanceFromKind(displayDateFormat);
         }
         
         private QueueFileFormat(String hylaFmt, String description,
-                DateFormat hylaDateFormat, DateFormat displayDateFormat) {
+                DateFormat hylaDateFormat, DateKind displayDateFormat) {
             this(hylaFmt, description, description, Date.class, hylaDateFormat, displayDateFormat);
         }
         
         private QueueFileFormat(String hylaFmt, String description, String longDesc,
-                DateFormat hylaDateFormat, DateFormat displayDateFormat) {
+                DateFormat hylaDateFormat, DateKind displayDateFormat) {
             this(hylaFmt, description, longDesc, Date.class, hylaDateFormat, displayDateFormat);
         }
         
@@ -140,7 +140,7 @@ public enum QueueFileFormat implements FmtItem {
         
         private QueueFileFormat(String hylaFmt, String description,
                 String longDescription, Class<?> dataType,
-                DateFormat hylaDateFormat, DateFormat displayDateFormat) {
+                DateFormat hylaDateFormat, DateKind displayDateFormat) {
             this.hylaFmt = hylaFmt;
             this.description = description;
             this.longDescription = longDescription;

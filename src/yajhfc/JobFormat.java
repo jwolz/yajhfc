@@ -18,10 +18,10 @@
  */
 package yajhfc;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import static yajhfc.Utils._;
+
+import java.text.DateFormat;
+import java.util.Date;
 
 /**
  * @author jonas
@@ -127,11 +127,11 @@ public enum JobFormat implements FmtItem {
     /**
      * Scheduled time
      */
-    Y("Y", _("Scheduled time"), _("Scheduled date and time"), new SimpleDateFormat("yyyy/MM/dd HH.mm.ss"), new SimpleDateFormat(_("dd/MM/yyyy HH:mm:ss"))), 
+    Y("Y", _("Scheduled time"), _("Scheduled date and time"), Utils.HYLA_LONG_DATE_FORMAT, DateKind.DATE_AND_TIME), 
     /**
      * Scheduled time in seconds since the UNIX epoch
      */
-    Z("Z", _("Scheduled time in seconds since the UNIX epoch")), 
+    Z("Z", _("Scheduled time (UNIX)"), _("Scheduled time in seconds since the UNIX epoch"), Utils.HYLA_UNIX_DATE_FORMAT, DateKind.DATE_AND_TIME), 
     /**
      * Job state
      */
@@ -199,7 +199,7 @@ public enum JobFormat implements FmtItem {
     /**
      * Retry time
      */
-    q("q", _("Retry time"), _("Job retry time (MM::SS)")/*, new HylaDateField("mm:ss", _("mm:ss"))*/), 
+    q("q", _("Retry time"), _("Job retry time"), Utils.HYLA_TIME_ONLY_FORMAT, DateKind.DURATION), 
     /**
      * Resolution
      */
@@ -251,7 +251,7 @@ public enum JobFormat implements FmtItem {
     private final String longDescription;
     private final Class<?> dataType;
     private final DateFormat hylaDateFormat;
-    private final DateFormat displayDateFormat;
+    private final DateKind displayDateFormat;
     
     public String getDescription() {
         return description;
@@ -269,7 +269,7 @@ public enum JobFormat implements FmtItem {
         return hylaDateFormat;
     }
     public DateFormat getDisplayDateFormat() {
-        return displayDateFormat;
+        return DateKind.getInstanceFromKind(displayDateFormat);
     }
     
     private JobFormat(String hylaFmt, String description) {
@@ -282,7 +282,7 @@ public enum JobFormat implements FmtItem {
     }
     
     private JobFormat(String hylaFmt, String description,
-            String longDescription, DateFormat hylaDateFormat, DateFormat displayDateFormat) {
+            String longDescription, DateFormat hylaDateFormat, DateKind displayDateFormat) {
         this(hylaFmt, description, longDescription, Date.class, hylaDateFormat, displayDateFormat);
     }
     
@@ -297,7 +297,7 @@ public enum JobFormat implements FmtItem {
     
     private JobFormat(String hylaFmt, String description,
             String longDescription, Class<?> dataType,
-            DateFormat hylaDateFormat, DateFormat displayDateFormat) {
+            DateFormat hylaDateFormat, DateKind displayDateFormat) {
         this.hylaFmt = hylaFmt;
         this.description = description;
         this.longDescription = longDescription;

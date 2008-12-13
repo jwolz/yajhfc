@@ -23,13 +23,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import yajhfc.FmtItem;
-import yajhfc.FmtItemList;
 import yajhfc.IconMap;
 import yajhfc.Utils;
-import yajhfc.model.YajJob;
 
 public class FilterCreator {
-    //TODO: Try to generalize more...
     private static final Logger log = Logger.getLogger(FilterCreator.class.getName());
     
     private static String[] booleanOperators = {
@@ -118,7 +115,7 @@ public class FilterCreator {
      * @param filter
      * @return
      */
-    public static <T extends FmtItem> String filterToString(Filter<YajJob<T>,T> filter) {
+    public static <V extends FilterableObject,T extends FilterKey> String filterToString(Filter<V,T> filter) {
         if (filter == null || !(filter instanceof AndFilter))
             return null;
         
@@ -129,21 +126,21 @@ public class FilterCreator {
             res.append('&');
         }
         res.append('!');
-        for (Filter<YajJob<T>,T> yjf: ((AndFilter<YajJob<T>,T>)filter).getChildList()) {
+        for (Filter<V,T> yjf: ((AndFilter<V,T>)filter).getChildList()) {
             if (yjf instanceof ComparableFilter) {
-                ComparableFilter<YajJob<T>,T> cf = (ComparableFilter<YajJob<T>,T>)yjf;
+                ComparableFilter<V,T> cf = (ComparableFilter<V,T>)yjf;
                 res.append("c$");
                 res.append(cf.getColumn().name()).append('$');
                 res.append(cf.getOperator().name()).append('$');
                 String val;
                 if (cf.getColumn().getDataType() == Date.class)
-                    val = cf.getColumn().getHylaDateFormat().format((Date)cf.getCompareValue());
+                    val = String.valueOf(((Date)cf.getCompareValue()).getTime());
                 else
                     val = cf.getCompareValue().toString();
                 res.append(Utils.escapeChars(val, "$!", '~')).append('$');
                 res.append('!');
             } else if (yjf instanceof StringFilter) {
-                StringFilter<YajJob<T>,T> sf = (StringFilter<YajJob<T>,T>)yjf;
+                StringFilter<V,T> sf = (StringFilter<V,T>)yjf;
                 res.append("s$");
                 res.append(sf.getColumn().name()).append('$');
                 res.append(sf.getOperator().name()).append('$');
@@ -156,15 +153,14 @@ public class FilterCreator {
         return res.toString();
     }
     
-    @SuppressWarnings("unchecked")
-    public static  <T extends FmtItem> Filter<YajJob<T>,T> stringToFilter(String spec, FmtItemList<T> columns) {
+    public static  <V extends FilterableObject,T extends FilterKey> Filter<V,T> stringToFilter(String spec, FilterKeyList<T> columns) {
         String [] flt1 = Utils.fastSplit(spec, '!'); //spec.split("!");
         
-        AndFilter af;
+        AndFilter<V,T> af;
         if (flt1[0].equals("|")) {
-            af = new OrFilter<YajJob<T>,T>();
+            af = new OrFilter<V,T>();
         } else if (flt1[0].equals("&")) {
-            af = new AndFilter<YajJob<T>,T>();
+            af = new AndFilter<V,T>();
         } else {
             log.log(Level.WARNING, "Unknown And/Or specification in stringToFilter: " + flt1[0]);
             return null;
@@ -177,7 +173,7 @@ public class FilterCreator {
                 continue;
             }
             
-            T col = columns.itemFromName(flt2[1]);
+            T col = columns.getKeyForName(flt2[1]);
             if (col == null) {
                 log.log(Level.WARNING, "Unknown column in stringToFilter: " + flt1[i]);
                 continue;
@@ -185,7 +181,7 @@ public class FilterCreator {
             
             if (flt2[0].equals("c")) {
                 String strData = Utils.unEscapeChars(flt2[3], "$!", '~');
-                Comparable compVal;
+                Comparable<?> compVal;
                 Class<?> dataClass = col.getDataType();
                 if (dataClass == Integer.class) 
                     compVal = Integer.valueOf(strData);
@@ -197,10 +193,20 @@ public class FilterCreator {
                     compVal = Boolean.valueOf(strData);
                 else if (dataClass == Date.class) {
                     try {
-                        compVal = col.getHylaDateFormat().parse(strData);
-                    } catch (ParseException e) {
-                        log.log(Level.WARNING, "Unknown date format in stringToFilter: " + strData);
-                        continue;
+                        compVal = new Date(Long.parseLong(strData));
+                    } catch (NumberFormatException ex) {
+                        // Compatibility with pre-0.4.0 versions
+                        if (col instanceof FmtItem) {
+                            try {
+                                compVal = ((FmtItem)col).getHylaDateFormat().parse(strData);
+                            } catch (ParseException e) {
+                                log.log(Level.WARNING, "Unknown date format in stringToFilter: " + strData);
+                                continue;
+                            }
+                        } else {
+                            log.log(Level.WARNING, "Unknown date format in stringToFilter: " + strData);
+                            continue;
+                        }
                     }
                 } else {
                     log.log(Level.WARNING, "Unknown data class in stringToFilter: " + dataClass.getName());
@@ -208,14 +214,14 @@ public class FilterCreator {
                 }                        
                 
                 try {
-                    af.addChild(new ComparableFilter<YajJob<T>,T>(col, ComparableFilterOperator.valueOf(ComparableFilterOperator.class, flt2[2]), compVal));
+                    af.addChild(new ComparableFilter<V,T>(col, ComparableFilterOperator.valueOf(ComparableFilterOperator.class, flt2[2]), compVal));
                 } catch (RuntimeException e) {
                     log.log(Level.WARNING, "Exception in stringToFilter: ", e);
                     continue;
                 }
             } else if (flt2[0].equals("s")) {
                 try {
-                    af.addChild(new StringFilter<YajJob<T>,T>(col, StringFilterOperator.valueOf(StringFilterOperator.class, flt2[2]), Utils.unEscapeChars(flt2[3], "$!", '~'), true));
+                    af.addChild(new StringFilter<V,T>(col, StringFilterOperator.valueOf(StringFilterOperator.class, flt2[2]), Utils.unEscapeChars(flt2[3], "$!", '~'), true));
                 } catch (RuntimeException e) {
                     log.log(Level.WARNING, "Exception in stringToFilter: ",  e);
                     continue;

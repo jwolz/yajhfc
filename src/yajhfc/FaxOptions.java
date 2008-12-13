@@ -172,6 +172,9 @@ public class FaxOptions {
     public String archiveColState = "";
     public String archiveLocation = "";
     
+    public String dateStyle = DateStyle.FROM_LOCALE;
+    public String timeStyle = DateStyle.FROM_LOCALE;
+    
     public FaxOptions() {
         this.host = "";
         this.port = 4559;

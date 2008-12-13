@@ -180,7 +180,7 @@ for the effect of the wildcard \verb#?# use \verb#.#.
 
 \subsection{Which command line arguments does YajHFC understand?}
 
-Output from \verb#java -jar yajhfc.jar --help#:
+Output from \verb#java -jar yajhfc.jar --help# (version 0.4.0):
 \begin{verbatim}
 Usage:
 java -jar yajhfc.jar [OPTIONS]... [FILES TO SEND]...
@@ -305,6 +305,16 @@ Overrides can be specified in a similar fashion. In this case, you are encourage
 
 Note, however that the user can still set these settings to a different value for a running YajHFC instance. They are reset to the override values only when YajHFC is started again (i.e. the user can set these settings, but they are not saved between different runs of YajHFC).
 
+
+\subsection{How can I display the HylaFAX \texttt{archive} folder in YajHFC?}
+
+Starting with version 0.4.0 support for the HylaFAX \texttt{archive} folder has been implemented.
+
+This directory cannot be accessed using the "`normal"' HylaFAX connection like the other folders, however, because HylaFAX does only allow to get the list of folders in the \texttt{archive} directory, but not to get any information (except the ID) about the archived jobs or the attached documents (if you know a HylaFAX version where this is different, please let me know).
+
+So the directory has to be accessed by other methods. Currently (0.4.0) YajHFC only supports access using the file system. This means you have to export the  \texttt{archive} directory on the server using Samba, NFS or any other network file system, mount it on the client (if you use Unix; on Windows, you can just use UNC paths) and tell YajHFC in the options under which path the \texttt{archive} directory can be found.
+
+When you have done that, the archive table should work basically just like the other tables do.
 
 \section{Miscellaneous}
 

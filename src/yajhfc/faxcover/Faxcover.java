@@ -35,14 +35,15 @@ import java.util.regex.Pattern;
 
 import javax.swing.filechooser.FileFilter;
 
+import yajhfc.DateKind;
 import yajhfc.Utils;
 import yajhfc.file.FormattedFile;
 import yajhfc.file.FormattedFile.FileFormat;
 import yajhfc.phonebook.convrules.CompanyRule;
 import yajhfc.phonebook.convrules.EntryToStringRule;
-import yajhfc.phonebook.convrules.ZIPCodeRule;
 import yajhfc.phonebook.convrules.NameRule;
 import yajhfc.phonebook.convrules.PBEntryFieldContainer;
+import yajhfc.phonebook.convrules.ZIPCodeRule;
 
 // This (and FaxCoverHyla) is a port of "faxcover.c++" from the hylafax source code distribution to java
 /**
@@ -186,7 +187,7 @@ public abstract class Faxcover {
     
     protected Faxcover(URL coverTemplate) {
         //dateFmt("%a %b %d %Y, %H:%M %Z")
-        dateFmt = DateFormat.getDateInstance(DateFormat.FULL, Utils.getLocale());
+        dateFmt = DateKind.getInstanceFromKind(DateKind.DATE_AND_TIME);
         this.coverTemplate = coverTemplate;
     }
     

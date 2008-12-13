@@ -18,6 +18,8 @@
  */
 package yajhfc.phonebook;
 
+import java.io.File;
+
 
 /**
  * @author jonas
@@ -31,7 +33,11 @@ public class XMLSettings extends AbstractConnectionSettings {
     public void loadFromString(String input) {
         if (!(input.contains("fileName=") && input.contains("caption="))) { //Compatibility
             fileName = input;
-            caption = "";
+            if (PhoneBookFactory.getDefaultPhonebook().equals(new File(fileName))) {
+                caption = PhoneBookFactory.DEFAULT_PHONEBOOK_NAME;
+            } else {
+                caption = "";
+            }
         } else {
             super.loadFromString(input);
         }

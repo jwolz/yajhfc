@@ -28,4 +28,10 @@ public interface FilterKey {
      * @return
      */
     public Class<?> getDataType();
+    
+    /**
+     * A unique name for this filter key which can be used for serializing it to a String
+     * @return
+     */
+    public String name();
 }
