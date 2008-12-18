@@ -78,7 +78,7 @@ public class PDFMultiFileConverter extends MultiFileConverter {
         listIndex += defaultGSParams.length;
         cmdList[listIndex++] = "-sDEVICE=" + getGSDevice();
         cmdList[listIndex++] = "-sOutputFile=" + targetFile.getAbsolutePath();
-        cmdList[listIndex++] = "-sPaperSize=" + paperSize.name().toLowerCase();
+        cmdList[listIndex++] = "-sPAPERSIZE=" + paperSize.name().toLowerCase();
         cmdList[listIndex++] = calcResolution(paperSize);
         System.arraycopy(additionalParams, 0, cmdList, listIndex, additionalParams.length);
         listIndex += additionalParams.length;

@@ -298,9 +298,9 @@ public class FormattedFile {
         if (execCmd.indexOf("%s") >= 0)
             execCmd = execCmd.replace("%s", fileName);
         else
-            execCmd += " " + fileName;
+            execCmd += " \"" + fileName + "\"";
 
-        Runtime.getRuntime().exec(execCmd);
+        new ProcessBuilder(Utils.splitCommandLine(execCmd)).start();
     }
 
 //  protected static final FileFormat[] acceptedFormats = {

@@ -183,46 +183,46 @@ public class FilterCreator {
                 String strData = Utils.unEscapeChars(flt2[3], "$!", '~');
                 Comparable<?> compVal;
                 Class<?> dataClass = col.getDataType();
-                if (dataClass == Integer.class) 
-                    compVal = Integer.valueOf(strData);
-                else if (dataClass == Float.class)
-                    compVal = Float.valueOf(strData);
-                else if (dataClass == Double.class)
-                    compVal = Double.valueOf(strData);
-                else if (dataClass == Boolean.class)
-                    compVal = Boolean.valueOf(strData);
-                else if (dataClass == Date.class) {
-                    try {
-                        compVal = new Date(Long.parseLong(strData));
-                    } catch (NumberFormatException ex) {
-                        // Compatibility with pre-0.4.0 versions
-                        if (col instanceof FmtItem) {
-                            try {
-                                compVal = ((FmtItem)col).getHylaDateFormat().parse(strData);
-                            } catch (ParseException e) {
+                try {
+                    if (dataClass == Integer.class) 
+                        compVal = Integer.valueOf(strData);
+                    else if (dataClass == Float.class)
+                        compVal = Float.valueOf(strData);
+                    else if (dataClass == Double.class)
+                        compVal = Double.valueOf(strData);
+                    else if (dataClass == Boolean.class)
+                        compVal = Boolean.valueOf(strData);
+                    else if (dataClass == Date.class) {
+                        try {
+                            compVal = new Date(Long.parseLong(strData));
+                        } catch (NumberFormatException ex) {
+                            // Compatibility with pre-0.4.0 versions
+                            if (col instanceof FmtItem) {
+                                try {
+                                    compVal = ((FmtItem)col).getHylaDateFormat().parse(strData);
+                                } catch (ParseException e) {
+                                    log.log(Level.WARNING, "Unknown date format in stringToFilter: " + strData);
+                                    continue;
+                                }
+                            } else {
                                 log.log(Level.WARNING, "Unknown date format in stringToFilter: " + strData);
                                 continue;
                             }
-                        } else {
-                            log.log(Level.WARNING, "Unknown date format in stringToFilter: " + strData);
-                            continue;
                         }
-                    }
-                } else {
-                    log.log(Level.WARNING, "Unknown data class in stringToFilter: " + dataClass.getName());
-                    continue;
-                }                        
-                
-                try {
+                    } else {
+                        log.log(Level.WARNING, "Unknown data class in stringToFilter: " + dataClass.getName());
+                        continue;
+                    } 
+
                     af.addChild(new ComparableFilter<V,T>(col, ComparableFilterOperator.valueOf(ComparableFilterOperator.class, flt2[2]), compVal));
-                } catch (RuntimeException e) {
+                } catch (Exception e) {
                     log.log(Level.WARNING, "Exception in stringToFilter: ", e);
                     continue;
                 }
             } else if (flt2[0].equals("s")) {
                 try {
                     af.addChild(new StringFilter<V,T>(col, StringFilterOperator.valueOf(StringFilterOperator.class, flt2[2]), Utils.unEscapeChars(flt2[3], "$!", '~'), true));
-                } catch (RuntimeException e) {
+                } catch (Exception e) {
                     log.log(Level.WARNING, "Exception in stringToFilter: ",  e);
                     continue;
                 }

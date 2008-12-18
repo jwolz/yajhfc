@@ -54,7 +54,7 @@ public class PhoneBookFactory {
         return null;
     }
     
-    public static final String DEFAULT_PHONEBOOK_NAME = Utils._("Personal phonebook");
+    public static final String DEFAULT_PHONEBOOK_NAME = Utils._("Personal phone book");
     
     public static File getDefaultPhonebook() {
         return new File(Utils.getConfigDir(), "default.phonebook");

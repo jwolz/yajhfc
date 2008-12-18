@@ -35,13 +35,10 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
-import java.text.DateFormatSymbols;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -60,7 +57,7 @@ public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2008 by Jonas Wolz";
-    public static final String AppVersion = "0.4.0alpha2";
+    public static final String AppVersion = "0.4.0alpha6";
     public static final String AuthorEMail = "Jonas Wolz &lt;jwolz@freenet.de&gt;";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
     
@@ -70,69 +67,79 @@ public final class Utils {
     public static final RegExDateFormat HYLA_LONG_DATE_FORMAT = new RegExDateFormat("(\\d{2,4})[\\.:/](\\d{1,2})[\\.:/](\\d{1,2})\\s+(\\d{1,2})[\\.:/](\\d{1,2})[\\.:/](\\d{1,2})",
             Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH, Calendar.HOUR_OF_DAY, Calendar.MINUTE, Calendar.SECOND);
     /**
-     * Input format for time only HylaFax dates
+     * Input format for HylaFax duration values (i.e. hour is optional)
      */
-    public static final RegExDateFormat HYLA_TIME_ONLY_FORMAT = new RegExDateFormat("(?:(\\d{1,2})[\\.:/])?(\\d{1,2})[\\.:/](\\d{1,2})",
-            Calendar.HOUR_OF_DAY, Calendar.MINUTE, Calendar.SECOND);  
-    /**
-     * Input format for short HylaFax dates
-     */
-    public static final DateFormat HYLA_SHORT_DATE_FORMAT = new SimpleDateFormat("ddMMMyy", Locale.US) {
-        private final String[] weekdays = new DateFormatSymbols(Locale.US).getShortWeekdays();
-        
-        public java.util.Date parse(String text, java.text.ParsePosition pos) {
-            Date result = super.parse(text, pos);
-            if (result == null) {
-                // Recognize Strings of the form "Mon03PM"
-                int startIndex = pos.getIndex();
-                if (text.length() < startIndex + 7)
-                    return null;
-                
-                Calendar cal = Calendar.getInstance(Locale.US);
-                String weekday = text.substring(startIndex, startIndex+3);
-                String hour = text.substring(startIndex+3, startIndex+5);
-                String am_pm = text.substring(startIndex+5, startIndex+7);
-                
-                int iWeekday = indexOfArray(weekdays, weekday);
-                if (iWeekday >= 0) {
-                    cal.set(Calendar.DAY_OF_WEEK, iWeekday);
-//                    int curWeekday = cal.get(Calendar.DAY_OF_WEEK);
-//                    int weekdayDiff = iWeekday - curWeekday;
-//                    if (weekdayDiff > 0) { // The weekdays meant are always in the past
-//                        weekdayDiff-=7;
-//                    }
-//                    cal.add(Calendar.DAY_OF_MONTH, weekdayDiff);
-                } else {
-                    return null;
-                }
-                
-                try {
-                    int iHour = Integer.parseInt(hour);
-                    cal.set(Calendar.HOUR, iHour-1);
-                } catch (NumberFormatException e) {
-                    log.log(Level.INFO, "Cannot parse hour: ", e);
-                    return null;
-                }
-                cal.set(Calendar.MINUTE, 0);
-                cal.set(Calendar.SECOND, 0);
-                cal.set(Calendar.MILLISECOND, 0);
-                
-                if (am_pm.equalsIgnoreCase("AM")) {
-                    cal.set(Calendar.AM_PM, Calendar.AM);
-                } else if (am_pm.equalsIgnoreCase("PM")) {
-                    cal.set(Calendar.AM_PM, Calendar.PM);
-                }
-                
-                result = cal.getTime();
-                
-                pos.setIndex(startIndex + 7);
-            }
-            return result;
-        }
-    };
+    public static final RegExDateFormat HYLA_DURATION_FORMAT = new RegExDateFormat("(?:(\\d{1,2})[\\.:/])?(\\d{1,2})[\\.:/](\\d{1,2})",
+            Calendar.HOUR_OF_DAY, Calendar.MINUTE, Calendar.SECOND);
     
     /**
-     * Date format for "milliseconds since epoch"
+     * Input format for time only HylaFax dates (i.e. second is optional)
+     */
+    public static final RegExDateFormat HYLA_TIME_ONLY_FORMAT = new RegExDateFormat("(\\d{1,2})[\\.:/](\\d{1,2})(?:[\\.:/](\\d{1,2}))?",
+            Calendar.HOUR_OF_DAY, Calendar.MINUTE, Calendar.SECOND);  
+//    /**
+//     * Input format for short HylaFax dates
+//     */
+//    public static final DateFormat HYLA_SHORT_DATE_FORMAT = new SimpleDateFormat("ddMMMyy", Locale.US) {
+//        private final String[] weekdays = new DateFormatSymbols(Locale.US).getShortWeekdays();
+//        
+//        public java.util.Date parse(String text, java.text.ParsePosition pos) {
+//            Date result = super.parse(text, pos);
+//            if (result == null) {
+//                // Recognize Strings of the form "Mon03PM"
+//                int startIndex = pos.getIndex();
+//                if (text.length() < startIndex + 7)
+//                    return null;
+//                
+//                String weekday = text.substring(startIndex, startIndex+3);
+//                String hour = text.substring(startIndex+3, startIndex+5);
+//                String am_pm = text.substring(startIndex+5, startIndex+7);
+//                
+//                calendar.setTimeInMillis(System.currentTimeMillis());
+//                int iWeekday = indexOfArray(weekdays, weekday);
+//                if (iWeekday >= 0) {
+//                    calendar.set(Calendar.DAY_OF_WEEK, iWeekday);
+////                    int curWeekday = calendar.get(Calendar.DAY_OF_WEEK);
+////                    int weekdayDiff = iWeekday - curWeekday;
+////                    if (weekdayDiff > 0) { // The weekdays meant are always in the past
+////                        weekdayDiff-=7;
+////                    }
+////                    calendar.add(Calendar.DAY_OF_MONTH, weekdayDiff);
+//                } else {
+//                    return null;
+//                }
+//                
+//                try {
+//                    int iHour = Integer.parseInt(hour);
+//                    calendar.set(Calendar.HOUR, iHour-1);
+//                } catch (NumberFormatException e) {
+//                    log.log(Level.INFO, "Cannot parse hour: ", e);
+//                    return null;
+//                }
+//                calendar.set(Calendar.MINUTE, 0);
+//                calendar.set(Calendar.SECOND, 0);
+//                calendar.set(Calendar.MILLISECOND, 0);
+//                
+//                if (am_pm.equalsIgnoreCase("AM")) {
+//                    calendar.set(Calendar.AM_PM, Calendar.AM);
+//                } else if (am_pm.equalsIgnoreCase("PM")) {
+//                    calendar.set(Calendar.AM_PM, Calendar.PM);
+//                }
+//                long resultMillis = calendar.getTimeInMillis();
+//                if (resultMillis >= System.currentTimeMillis()) {
+//                    resultMillis -= (7 * 24 * 3600 * 1000); // If the date is in the future, subtract one week
+//                }
+//                
+//                result = new Date(resultMillis);
+//                
+//                pos.setIndex(startIndex + 7);
+//            }
+//            return result;
+//        }
+//    };
+//    
+    /**
+     * Date format for "milliseconds since epoch" with server-side time zone correction
      */
     public static final DateFormat HYLA_UNIX_DATE_FORMAT = new QueueFileDateFormat(false);
     
@@ -142,7 +149,20 @@ public final class Utils {
     public static final DateFormat HYLA_UNIX_DATE_FORMAT_GMT = new QueueFileDateFormat(true);
     
     public static boolean debugMode = false;
-    //public static PrintStream debugOut = System.out;
+    
+    /**
+     * True if we run under the Windows platform
+     */
+    public static final boolean IS_WINDOWS;
+    private static final boolean buggyLocationByPlatform;
+    static {
+        final String osname = System.getProperty("os.name").toLowerCase();
+        IS_WINDOWS = osname.contains("windows");
+        
+        // Do we have a buggy Java/Windows combination?
+        buggyLocationByPlatform = (IS_WINDOWS && (osname.equals("windows 95") || osname.equals("windows 98") || osname.equals("windows me")));
+    }
+
     static final Logger log = Logger.getLogger(Utils.class.getName());
     
     private static FaxOptions theoptions = null;
@@ -387,12 +407,6 @@ public final class Utils {
         return sBuf.toString();
     }
     
-    private static boolean buggyLocationByPlatform;
-    static {
-        String osname = System.getProperty("os.name");
-        // Do we have a buggy Java/Windows combination?
-        buggyLocationByPlatform = ((osname.equalsIgnoreCase("Windows 95") || osname.equalsIgnoreCase("Windows 98") || osname.equalsIgnoreCase("Windows ME")));
-    }
     public static void setDefWinPos(Window win) {
         // Do we have a buggy Java/Windows combination?
         if (buggyLocationByPlatform)
@@ -459,21 +473,17 @@ public final class Utils {
             return null;
     }
     
-    private static class WaitCursorUnsetter extends WindowAdapter {
-        private Dialog dlgToSet;
-        
-        @Override
-        public void windowOpened(WindowEvent e) {
-           unsetWaitCursor(dlgToSet);
-           e.getWindow().removeWindowListener(this);
-        }
-        
-        public WaitCursorUnsetter(Dialog dlgToSet) {
-            this.dlgToSet = dlgToSet;
-        }
-    }
-    public static void unsetWaitCursorOnOpen(Dialog dlgToSet, Window target) {
-        target.addWindowListener(new WaitCursorUnsetter(dlgToSet));
+    public static void unsetWaitCursorOnOpen(final Dialog dlgToSet, final Window target) {
+        target.addWindowListener(new WindowAdapter() {
+            //private final long creationTime = System.currentTimeMillis();
+            
+            @Override
+            public void windowOpened(WindowEvent e) {
+                //System.out.println("Time for showing: " + (System.currentTimeMillis() - creationTime));
+                unsetWaitCursor(dlgToSet);
+                target.removeWindowListener(this);
+            }
+        });
     }
     
     public static void setWaitCursor(Dialog dlgToSet) {
@@ -531,6 +541,110 @@ public final class Utils {
         }
         
         return resList.toArray(new String[resList.size()]);
+    }
+    
+    
+    
+    private static final int STATE_NORMAL = 0;
+    private static final int STATE_DQUOTE = 1;
+    private static final int STATE_SQUOTE = 2;
+    private static final int STATE_WHITESPACE = 3;
+    /**
+     * Splits a command line string and returns a list of arguments suitable
+     * for a process builder
+     * @param str
+     * @return
+     */
+    public static List<String> splitCommandLine(String str) {
+        List<String> result = new ArrayList<String>();
+        int state = STATE_NORMAL;
+        int argStart = 0;
+        str = str.trim();
+        for (int i = 0; i < str.length(); i++) {
+            final char c = str.charAt(i);
+            switch (state) {
+            case STATE_NORMAL:
+                switch (c) {
+                case '\'':
+                    state = STATE_SQUOTE;
+                    break;
+                case '\"':
+                    state = STATE_DQUOTE;
+                    break;
+                case ' ':
+                    String res = str.substring(argStart, i);
+                    if (!IS_WINDOWS) {
+                        res = stripQuotes(res);
+                    }
+                    result.add(res);
+                    state = STATE_WHITESPACE;
+                    break;
+                default: // Do nothing
+                    break;
+                }
+                break;
+            case STATE_DQUOTE:
+                if (c == '\"') {
+                    state = STATE_NORMAL;
+                }
+                break;
+            case STATE_SQUOTE:
+                if (c == '\'') {
+                    state = STATE_NORMAL;
+                }
+                break;
+            case STATE_WHITESPACE:
+                switch (c) {
+                case ' ':
+                    break;
+                case '\'':
+                    argStart = i;
+                    state = STATE_SQUOTE;
+                    break;
+                case '\"':
+                    argStart = i;
+                    state = STATE_DQUOTE;
+                    break;
+                default:
+                    argStart = i;
+                    state = STATE_NORMAL;
+                    break;
+                }
+                break;
+            }
+        }
+        if (argStart < str.length() - 1) {
+            String res = str.substring(argStart);
+            if (!IS_WINDOWS) {
+                res = stripQuotes(res);
+            }
+            result.add(res);
+        }
+        
+        if (debugMode) {
+            log.fine("Result from parsing command line «" + str + "»:");
+            for (int i = 0; i < result.size(); i++) {
+                log.fine("" + i + ": «" + result.get(i) + '»');
+            }
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Strips quotes (" or ') at the beginning and end of the specified String
+     * @param str
+     * @return
+     */
+    public static String stripQuotes(String str)
+    {
+        final char f = str.charAt(0);
+        final char l = str.charAt(str.length()-1);
+        if (f == l && (f == '\"' || f == '\'')) {
+            return str.substring(1, str.length()-1);
+        } else {
+            return str;
+        }
     }
     
     /**
@@ -709,7 +823,7 @@ public final class Utils {
         }
         
         // For Windows, try to append .exe, .com, ...
-        if (System.getProperty("os.name").contains("Windows")) {
+        if (IS_WINDOWS) {
             String exts = System.getenv("PATHEXT");
             String[] appendExts;
             if (exts != null) {
@@ -741,6 +855,7 @@ public final class Utils {
         }
         return null;
     }
+   
 }
 
 

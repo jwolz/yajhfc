@@ -189,7 +189,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         jContentPane.add(checkAskForPassword, "7, 9, f, c");
         jContentPane.add(new JSeparator(JSeparator.HORIZONTAL), "0, 11, 8, 11");
         
-        addWithLabel(jContentPane, textDisplayCaption, _("Phonebook name to display:"), "3, 13, 7, 13, f, c");
+        addWithLabel(jContentPane, textDisplayCaption, _("Phone book name to display:"), "3, 13, 7, 13, f, c");
         
         jContentPane.add(new JSeparator(JSeparator.HORIZONTAL), "0, 15, 8, 15");
         
@@ -201,7 +201,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         
         jContentPane.add(new JSeparator(JSeparator.HORIZONTAL), "0, 21, 8, 21");
         
-        jContentPane.add(new JLabel("<html>" + _("Please enter which LDAP attributes correspond to the Phonebook entry fields of YajHFC (default should usually work):") + "</html>"), "1, 23, 7, 23, f, c");
+        jContentPane.add(new JLabel("<html>" + _("Please enter which LDAP attributes correspond to the phone book entry fields of YajHFC (default should usually work):") + "</html>"), "1, 23, 7, 23, f, c");
         
         int row = 25;
         int col = 3;
@@ -378,12 +378,12 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
     }
     
     public ConnectionDialog(Frame owner) {
-        super(owner, _("New LDAP phonebook"));
+        super(owner, _("New LDAP phone book"));
      
         initialize();
     }
     public ConnectionDialog(Dialog owner) {
-        super(owner, _("New LDAP phonebook"));
+        super(owner, _("New LDAP phone book"));
      
         initialize();
     }

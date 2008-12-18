@@ -4,6 +4,7 @@
 \usepackage[left=3cm,right=3cm,top=2cm,bottom=2cm,nohead]{geometry}
 \usepackage[colorlinks=false,pdfborder=0 0 0]{hyperref}
 \usepackage[T1]{fontenc}
+\usepackage{textcomp}
 
 %opening
 \title{YajHFC FAQ}
@@ -80,18 +81,6 @@ such files: \\
 
 Alternatively, starting with YajHFC 0.3.7, you can use Cover pages in HTML or, with a plugin, in XSL:FO or ODT (OpenDocument Text) format.
 
-\subsection{I created a HTML document/cover page but the formatting in YajHFC looks wrong!}
-
-YajHFC uses the HTML support integrated in Java (\texttt{HTMLEditorKit} / \texttt{HTMLDocument}) to convert HTML to PostScript. This support is quite limited, however, especially it only supports HTML 3.2.\\
-This means that complex layouts often won't render correctly in YajHFC.
-To achieve the layout you want, you will basically have the following alternatives:
-
-\begin{itemize}
- \item Do some ``trial \& error'' until the layout looks right (the preview button in the send dialog will show the layout of the converted HTML).
- \item Use a HTML editor like Ekit (\url{http://www.hexidec.com/ekit.php}) that also uses the Java HTML support, so it will render similarily in YajHFC.
- \item Use another format for the cover page (such as XSL:FO or ODT with the FOP Plugin).
-\end{itemize}
-
 \subsection{Which fields are recognized in a HTML cover page?}
 
 The following ``words'' are replaced (case insensitively) with the corresponding values when a HTML file is used as a cover page:
@@ -154,7 +143,7 @@ Starting with version 0.4.0 the following additional fields are available (note 
 \end{tabular}
 \end{center}
 
-This replacement is done at the source code level, so those words probably won't be recognized if the formatting changes inside one of it (e.g. \texttt{@@sub\textit{ject@@}}).
+This replacement is done at the source code level, so those words will not be recognized if the formatting changes inside one of it (e.g. \texttt{@@sub\textit{ject@@}}).
 
 \subsection{I liked the old send dialog better. Can I have it back?}
 
@@ -217,11 +206,11 @@ Argument description:
 -h, --help                  Displays this text.
 \end{verbatim}
 
-\subsection{How can I give cover page information using the \texttt{{-}-recipient} switch?}
+\subsection{How can I give cover page information using the \texttt{-{-}recipient} switch?}
 
-You can give that information using \texttt{name:value} pairs, separated by semicolons. For example, to send a fax to ``John Doe'' in ``Example town'' with the fax number 0123456, use the following command line:
+Starting with version 0.4.0, you can give that information using \texttt{name:value} pairs, separated by semicolons. For example, to send a fax to ``John Doe'' in ``Example town'' with the fax number 0123456, use the following command line:
 
-\texttt{java -jar yajhfc.jar \textit{[...]} {-}-recipient="givenname:John;surname:Doe;location:Example Town;faxnumber:0123456" \textit{[...]}}
+\texttt{java -jar yajhfc.jar \textit{[...]} -{-}recipient="givenname:John;surname:Doe;location:Example Town;faxnumber:0123456" \textit{[...]}}
 
 The following field names are recognized:
 \begin{center}
@@ -246,6 +235,110 @@ The following field names are recognized:
 \ttfamily website & The recipient's website\\\hline
 \end{tabular}
 \end{center}
+
+\subsection{What does the column XYZ mean?}
+
+Most likely, I don't know exactly either, because the column descriptions
+are simply copied from the \verb.faxstat(1). man page (JobFmt/RcvFmt) and 
+abbreviated/translated.
+
+\subsection{How can I set some default settings?}
+
+Starting with version 0.4.0 the following files (if they exist) are loaded in order to retrieve the saved settings:
+\begin{enumerate}
+ \item \texttt{[Directory where yajhfc.jar resides]/settings.default}
+ \item the user settings from \texttt{\{user.home\}\footnote{In Windows \texttt{user.home} usually is \texttt{C:\textbackslash Documents and Settings\textbackslash USERNAME}.}/.yajhfc/settings} (if you specified \texttt{-{-}configdir=DIR}, \texttt{DIR/settings} is used instead)
+ \item \texttt{[Directory where yajhfc.jar resides]/settings.override}
+\end{enumerate}
+
+Settings from files loaded later override the settings specified in the files loaded earlier, i.e. the settings from \texttt{settings.override} take precedence over those in the user settings and \texttt{settings.default}.
+\medskip
+
+This mechanism can be used to specify default settings (e.g. in a networked environment): \\
+Simply configure one YajHFC installation as you like, then copy \texttt{\{user.home\}/.yajhfc/settings} to the directory where \texttt{yajhfc.jar} is and rename it to \texttt{settings.default}.
+\medskip
+
+Overrides can be specified in a similar fashion. In this case, you are encouraged to edit the settings file (it is a plain text file), and remove any lines that specify settings you wish not to override (usually you will want to remove at least \texttt{user} and \texttt{pass} (user name and password used to connect to the HylaFAX server), \texttt{FromName}, \texttt{*ColState} (the widths of the table columns), \texttt{*Bounds} (the position of the different windows) and \texttt{mainwinLastTab}).
+
+Note, however that the user can still set these settings to a different value for a running YajHFC instance. They are reset to the override values only when YajHFC is started again (in other words: the user can set these settings, but they are not saved between different runs of YajHFC).
+
+
+\subsection{How can I display the HylaFAX \texttt{archive} folder in YajHFC?}
+
+Starting with version 0.4.0 support for the HylaFAX \texttt{archive} folder has been implemented.
+
+This directory cannot be accessed using the "`normal"' HylaFAX connection like the other folders, however, because HylaFAX does only allow to get the list of folders in the \texttt{archive} directory, but not to get any information (except the ID) about the archived jobs or the attached documents (if you know a HylaFAX version where this is different, please let me know).
+
+So the directory has to be accessed by other methods. Currently (0.4.0) YajHFC only supports access using the file system. This means you have to export the  \texttt{archive} directory on the server using Samba, NFS or any other network file system, mount it on the client (if you use Unix; on Windows, you can just use UNC paths) and tell YajHFC in the options under which path the \texttt{archive} directory can be found.
+
+When you have done that, the archive table should work basically just like the other tables do.
+
+\subsection{What do the different options under \texttt{Paths \& Viewers -> View and send settings} do (0.4 and up)?}
+
+For the impatient: The recommended settings are (they are not the default, because they require \texttt{gs} and \texttt{tiff2pdf}):
+\begin{itemize}
+ \item \textbf{Format:} PDF or TIFF
+ \item \textbf{Send fax as:} Single file except cover
+ \item \textbf{View as single file:} Yes
+ \item \textbf{Always view in this format:} Yes
+\end{itemize}
+
+\subsubsection{Format for viewing/sending}
+
+The format to which the files should be converted if necessary. Generally PDF and TIFF work much better than PostScript here.
+
+Technically, the following GhostScript devices are used:
+\begin{description}
+ \item[PDF:] \texttt{pdfwrite}
+ \item[PostScript:] \texttt{pswrite}
+ \item[TIFF:] \texttt{tiff4g}
+ \end{description}
+
+\subsubsection{Send multiple files as:}
+
+{\parindent0pt
+\textbf{Multiple files:}\\
+Same behaviour as pre-0.4.0 versions. If you send multiple documents in a single fax job, these documents are converted to PS or PDF, but kept as separate files (e.g. if you send a fax with files \texttt{doc.ps} and \textbf{picture.jpg}, two separate files are uploaded)
+\medskip
+
+\textbf{Single file except for cover:}\\
+One file is created for the whole fax, but the cover page is kept as a separate file (e.g. if you send a fax with \texttt{doc.ps} and \texttt{picture.jpg}, a single PDF/PS/TIFF file is created and uploaded).\\
+\textit{Advantage:} The resolution is reduced to 196dpi (\textrightarrow smaller files/upload) and a single document file can be used when sending a fax to multiple destinations.
+\medskip
+
+\textbf{Complete fax as single file:}\\
+One file is created for the whole fax including the cover page. If the fax has no cover this behaves (almost) identical to the above case.\\
+\textit{Advantage:} No conversions on the client are necessary when viewing the sent fax.\\
+\textit{Disadvantage:} When sending a fax to multiple recipients one file per recipient has to be created and uploaded.
+
+\subsubsection{View faxes as single file:}
+If this option is checked and a fax on the server consists of multiple files, a single file is created (on the client) for viewing.
+}
+
+\subsubsection{View/send faxes always in this format:}
+This option modifies the behaviour of ``Send multiple files as'' and ``View faxes as single file''.\\
+When this option is \textit{unchecked}, a fax is only converted if it consists of multiple files. If it consists of only a single file, the format is left as it is.\\
+When this option is \textit{checked}, a fax consisting of a single file is also converted when that single file has a different format than the one selected at ``Format for sending/viewing''.\\
+\textit{Advantage:} A single viewer is used for both sent and received faxes (e.g. to view received faxes as PDF).\\
+\textit{Disadvantage:} Usually more format conversions are necessary on the client.
+
+\subsection{What characters are recognized as date/time format?}
+
+The date formatter used is a Java \texttt{SimpleDateFormat}. A description of the characters recognized can be found at \url{http://java.sun.com/j2se/1.5.0/docs/api/java/text/SimpleDateFormat.html}.
+
+\section{Problems/Known bugs}
+
+\subsection{I created a HTML document/cover page, but the formatting in YajHFC looks wrong!}
+
+YajHFC uses the HTML support integrated in Java (\texttt{HTMLEditorKit} / \texttt{HTMLDocument}) to convert HTML to PostScript. This support is quite limited, however; it only supports HTML 3.2.\\
+This means that complex layouts often won't render correctly in YajHFC.
+To achieve the layout you want, you will basically have the following alternatives:
+
+\begin{itemize}
+ \item Do some ``trial \& error'' until the layout looks right (the preview button in the send dialog will show the layout of the converted HTML).
+ \item Use a HTML editor like Ekit (\url{http://www.hexidec.com/ekit.php}) that also uses the Java HTML support, so it will render similarily in YajHFC.
+ \item Use another format for the cover page (such as XSL:FO or ODT with the FOP Plugin).
+\end{itemize}
 
 \subsection{When trying to view sent faxes I always get an error message saying 
    \texttt{File format PCL not supported}, although all the documents are PostScript/PDF.}
@@ -272,49 +365,14 @@ Sometimes some Java versions seem to not set this property correctly leading to 
 As a workaround, you can set this property explicitely when starting YajHFC by using java's \texttt{-D} command line switch, for example: \\
 \texttt{java -Duser.home=\%USERPROFILE\% -jar "C:\textbackslash Program Files\textbackslash yajhfc.jar"}
 
-\subsection{What does the column XYZ mean?}
-
-Most likely, I don't know exactly either, because the column descriptions
-are simply copied from the \verb.faxstat(1). man page (JobFmt/RcvFmt) and 
-abbreviated/translated.
-
 \subsection{The tray icon is not shown!}
 
-The tray icon will only be shown when you run YajHFC under Java 1.6 (``Java 6'').
+Starting with version 0.4.0 YajHFC supports a tray icon which will be shown when you run YajHFC under Java 1.6 (``Java 6'').
 If you use Java 1.5 (``Java 5''), a tray icon is not supported.
 
 So, please make sure you have Java 1.6 installed. If you are absolutely sure you have Java 1.6 installed and the tray icon is still not shown, please mail me a bug report.
 
-\subsection{How can I set some default settings?}
 
-Starting with version 0.4.0 the following files (if they exist) are loaded in order to retrieved the saved settings:
-\begin{enumerate}
- \item \texttt{[Directory where yajhfc.jar resides]/settings.default}
- \item the user settings from \texttt{\{user.home\}\footnote{In Windows \texttt{user.home} usually is \texttt{C:\textbackslash Documents and Settings\textbackslash USERNAME}.}/.yajhfc/settings} (if you specified \texttt{--configdir=DIR}, \texttt{DIR/settings} is used instead)
- \item \texttt{[Directory where yajhfc.jar resides]/settings.override}
-\end{enumerate}
-
-Settings from files loaded later override the settings specified in the files loaded earlier, i.e. the settings from \texttt{settings.override} take precedence over those in the user settings and \texttt{settings.default}.
-\medskip
-
-This mechanism can be used to specify default settings (e.g. in a networked environment): \\
-Simply configure one YajHFC installation as you like, then copy \texttt{\{user.home\}/.yajhfc/settings} to the directory where \texttt{yajhfc.jar} is and rename it to \texttt{settings.default}.
-\medskip
-
-Overrides can be specified in a similar fashion. In this case, you are encouraged to edit the settings file (it is a plain text file), and remove any lines that specify settings you wish not to override (usually you will want to remove at least \texttt{user} and \texttt{pass} (user name and password used to connect to the HylaFAX server), \texttt{FromName}, \texttt{*ColState} (the widths of the table columns), \texttt{*Bounds} (the position of the different windows) and \texttt{mainwinLastTab}).
-
-Note, however that the user can still set these settings to a different value for a running YajHFC instance. They are reset to the override values only when YajHFC is started again (i.e. the user can set these settings, but they are not saved between different runs of YajHFC).
-
-
-\subsection{How can I display the HylaFAX \texttt{archive} folder in YajHFC?}
-
-Starting with version 0.4.0 support for the HylaFAX \texttt{archive} folder has been implemented.
-
-This directory cannot be accessed using the "`normal"' HylaFAX connection like the other folders, however, because HylaFAX does only allow to get the list of folders in the \texttt{archive} directory, but not to get any information (except the ID) about the archived jobs or the attached documents (if you know a HylaFAX version where this is different, please let me know).
-
-So the directory has to be accessed by other methods. Currently (0.4.0) YajHFC only supports access using the file system. This means you have to export the  \texttt{archive} directory on the server using Samba, NFS or any other network file system, mount it on the client (if you use Unix; on Windows, you can just use UNC paths) and tell YajHFC in the options under which path the \texttt{archive} directory can be found.
-
-When you have done that, the archive table should work basically just like the other tables do.
 
 \section{Miscellaneous}
 

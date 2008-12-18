@@ -10,14 +10,20 @@ buildtex() {
 	fi
 	pdflatex $1
 
+	# Some fixes for latex2html:
         TEXNAME=$1
-	if grep -c '[[]utf8x]{inputenc}' $1; then
+	if [ $PREFIX == faq_tr ]; then
+		FILEENC=latin5
+		TEXNAME="$1.orig"
+		mv $1 $TEXNAME
+		iconv -f utf-8 -t iso8859-9 $TEXNAME | sed 's/[[]utf8x]{inputenc}/[latin5]{inputenc}/' > $1 ;
+	elif grep -c '[[]utf8x]{inputenc}' $1; then
 		FILEENC=unicode ;
 	elif grep -c '[[]cp1251]{inputenc}' $1; then
 		FILEENC=koi8-r
 		TEXNAME="$1.orig"
 		mv $1 $TEXNAME
-		iconv -f cp1251 -t koi8-r $TEXNAME | sed s/[[]cp1251]{inputenc}/[koi8-r]{inputenc}/ > $1 ;
+		iconv -f cp1251 -t koi8-r $TEXNAME | sed 's/[[]cp1251]{inputenc}/[koi8-r]{inputenc}/' > $1 ;
 	else
 		FILEENC=latin1,unicode,utf8 ;
 	fi
@@ -30,13 +36,15 @@ buildtex() {
 		
 
 	if grep -c '\usepackage{ngerman}' $1; then # Fix for German quotes
-		mv $HTMLNAME $HTMLNAME.orig
-		sed -e 's/"`/„/g' -e "s/\"'/“/g" $HTMLNAME.orig > $HTMLNAME
+		mv $PREFIX.html $PREFIX.html.orig
+		sed -e 's/"`/„/g' -e "s/\"'/“/g" $PREFIX.html.orig > $PREFIX.html
 	fi
 
+#	Does not work as desired...
 #	htlatex $1 "html,fn-in,unicode,3.2" 'unicode/!' '-p' 
-
-	cp $PREFIX.pdf $PREFIX.html $PREFIX.css ..	
+	
+	sed 's-/usr/share/latex2html/icons/footnote.png-footnote.png-' $PREFIX.html  > ../$PREFIX.html
+	cp $PREFIX.pdf $PREFIX.css ..	
 }
 
 if [ -z $1 ]; then

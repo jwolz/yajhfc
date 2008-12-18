@@ -51,8 +51,8 @@ import yajhfc.util.PasswordDialog;
 public class LDAPPhoneBook extends PhoneBook {
 
     public static final String PB_Prefix = "LDAP";      // The prefix of this Phonebook type's descriptor
-    public static final String PB_DisplayName = Utils._("LDAP Phonebook (read only)"); // A user-readable name for this Phonebook type
-    public static final String PB_Description = Utils._("A Phonebook reading its entries from an LDAP directory."); // A user-readable description of this Phonebook type
+    public static final String PB_DisplayName = Utils._("LDAP phone book (read only)"); // A user-readable name for this Phonebook type
+    public static final String PB_Description = Utils._("A phone book reading its entries from an LDAP directory."); // A user-readable description of this Phonebook type
 
     private static final Logger log = Logger.getLogger(LDAPPhoneBook.class.getName());
     

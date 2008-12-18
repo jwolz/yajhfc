@@ -273,15 +273,15 @@ public class PathAndViewPanel extends JPanel implements OptionsPage {
     
     static class ExeFileTextField extends FileTextField {
         protected String readTextFieldFileName() {
-            return this.getText().replaceAll("\"|%s", "").trim();
+            return this.getText().replaceAll("(\")?%s(\")?", "").trim();
         };
         
         @Override
         protected void writeTextFieldFileName(String fName) {
             if (fName.contains(" ")) 
-                this.setText("\"" + fName + "\" %s");
+                this.setText("\"" + fName + "\" \"%s\"");
             else
-                this.setText(fName + " %s");
+                this.setText(fName + " \"%s\"");
         }
         
         public ExeFileTextField() {

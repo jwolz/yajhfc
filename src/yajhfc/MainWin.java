@@ -742,7 +742,9 @@ public final class MainWin extends JFrame {
                     modems = HylaModem.defaultModems;
                 }
                 
+                //PROFILE: long time = System.currentTimeMillis();
                 OptionsWin ow = new OptionsWin(myopts, MainWin.this, modems);
+                //PROFILE: System.out.println("After OptionsWin constructor: " + (-time + (time = System.currentTimeMillis())));
                 ow.setModal(true);
                 Utils.unsetWaitCursorOnOpen(null, ow);
                 ow.setVisible(true);
@@ -1952,9 +1954,14 @@ public final class MainWin extends JFrame {
                 CustomFilterDialog cfd = new CustomFilterDialog(MainWin.this, tabMain.getTitleAt(selTab), 
                         model.columns, (lastSel[selTab] == menuViewCustom) ? model.getJobFilter() : null);
                 cfd.setVisible(true);
-                if (cfd.returnValue != null) {
-                    model.setJobFilter(cfd.returnValue);
-                    lastSel[selTab] = menuViewCustom;
+                if (cfd.okClicked) {
+                    if (cfd.returnValue == null) {
+                        menuViewAll.doClick();
+                        return;
+                    } else {
+                        model.setJobFilter(cfd.returnValue);
+                        lastSel[selTab] = menuViewCustom;
+                    }
                 } else {
                     if (lastSel[selTab] != menuViewCustom)
                             resetLastSel(selTab);

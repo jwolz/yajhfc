@@ -23,6 +23,7 @@ import java.text.FieldPosition;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * @author jonas
@@ -49,7 +50,9 @@ public class DateStyle {
     }
 
     public DateStyle(String format) {
-        this(format, format);
+        super();
+        this.saveString = format;
+        this.displayName = format; //new SimpleDateFormat(format, Utils.getLocale()).toLocalizedPattern();
     }
 
 
@@ -74,7 +77,8 @@ public class DateStyle {
                 localeStyle,
                 systemStyle,
                 new DateStyle("HH:mm:ss"),
-                new DateStyle("HH.mm.ss")
+                new DateStyle("HH.mm.ss"),
+                new DateStyle("hh:mm:ss aa")
         };
     }
     
@@ -110,7 +114,6 @@ public class DateStyle {
         final DateFormat dFormat = getDateFormatFromString(dateFormat);
         final DateFormat tFormat = getTimeFormatFromString(timeFormat);
         return new DateFormat() {
-
             @Override
             public StringBuffer format(Date date, StringBuffer toAppendTo,
                     FieldPosition fieldPosition) {
@@ -124,21 +127,24 @@ public class DateStyle {
                 Date date = dFormat.parse(source, pos);
                 if (date != null) {
                     int parseIdx = pos.getIndex();
-                    while (source.charAt(parseIdx) == ' ') {
+                    while (parseIdx < source.length() && source.charAt(parseIdx) == ' ') {
                         parseIdx++;
                     }
                     pos.setIndex(parseIdx);
+                    
+                    Date time = tFormat.parse(source, pos);
+                    long timeMillis;
+                    if (time != null) {
+                        timeMillis = time.getTime();
+                        timeMillis += TimeZone.getDefault().getOffset(timeMillis);
+                    } else {
+                        timeMillis = 0;
+                    }
+                    return new Date(date.getTime() + timeMillis);
                 } else {
                     return null;
                 }
-                Date time = tFormat.parse(source, pos);
-                if (time != null) {
-                    return new Date(date.getTime() + time.getTime());
-                } else {
-                    return null;
-                }
-            }
-            
+            }     
         };
     }
 }

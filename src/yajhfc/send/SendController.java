@@ -149,7 +149,9 @@ public class SendController {
         cov.regarding = subject;
 
         cov.pageSize = paperSize;
-
+        if (sendTime != null)
+            cov.coverDate = sendTime;
+        
         return cov;
     }
     protected File makeCoverFile(Faxcover cov, PBEntryFieldContainer to) throws IOException, FileNotFoundException {
@@ -340,8 +342,8 @@ public class SendController {
                             j.setNotifyType(notificationType);
                             j.setPageDimension(paperSize.getSize());
                             j.setVerticalResolution(resolution);
-                            if (sendTime == null) {
-                                j.setSendTime("NOW"); // bug fix
+                            if (sendTime == null || (sendTime.getTime() - 10000) < System.currentTimeMillis()) {
+                                j.setSendTime("NOW"); // If send time has not been specified or is not at least 10 secs. in the future, send now
                             } else {
                                 j.setSendTime(sendTime);
                             }

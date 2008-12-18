@@ -72,6 +72,10 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
                     new int[] { idx }, new Object[] { pb }));
     }
     
+    public void refreshPhoneBook(PhoneBook pb) {
+        fireTreeStructureChanged(new TreeModelEvent(this, new Object[] {rootNode, pb}));
+    }
+    
     public List<PhoneBook> getPhoneBooks() {
         return phoneBooks;
     }

@@ -229,4 +229,35 @@ public class SentYajJob extends YajJob<JobFormat> {
             return null;
         }
     }
+    
+    /**
+     * Returns a label for the given job state or state
+     * if the state is unknown.
+     * @param state
+     * @return
+     */
+    public static String getLabelForJobState(char state) {
+        switch (state) {
+        case JOBSTATE_BLOCKED:
+            return Utils._("Blocked");
+        case JOBSTATE_DONE:
+            return Utils._("Done");
+        case JOBSTATE_FAILED:
+            return Utils._("Failed");
+        case JOBSTATE_PENDING:
+            return Utils._("Pending");
+        case JOBSTATE_RUNNING:
+            return Utils._("Running");
+        case JOBSTATE_SLEEPING:
+            return Utils._("Sleeping");
+        case JOBSTATE_SUSPENDED:
+            return Utils._("Suspended");
+        case JOBSTATE_UNDEFINED:
+            return Utils._("Undefined");
+        case JOBSTATE_WAITING:
+            return Utils._("Waiting");
+        default:
+            return String.valueOf(state);
+        }
+    }
 }

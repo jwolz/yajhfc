@@ -22,7 +22,6 @@ import static yajhfc.Utils._;
 import info.clearthought.layout.TableLayout;
 import info.clearthought.layout.TableLayoutConstraints;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -177,14 +176,15 @@ public class OptionsWin extends JDialog {
     }
     
     private void initialize() {
+        //PROFILE: long time = System.currentTimeMillis();
         //this.setSize(630, 460);
         this.setResizable(true);
         this.setTitle(_("Options"));
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         this.setContentPane(getJContentPane());
-        
+        //PROFILE: System.out.println("  After getJContentPane: " + (-time + (time = System.currentTimeMillis())));
         modalResult = false;
-        
+
         // Load values
         textNotifyAddress.setText(foEdit.notifyAddress);
         textHost.setText(foEdit.host);
@@ -192,7 +192,7 @@ public class OptionsWin extends JDialog {
         textUser.setText(foEdit.user);
         textPassword.setText(foEdit.pass);
         textAdminPassword.setText(foEdit.AdminPassword);
-        
+
         comboNotify.setSelectedItem(foEdit.notifyWhen);
         comboPaperSize.setSelectedItem(foEdit.paperSize);
         comboResolution.setSelectedItem(foEdit.resolution);
@@ -210,7 +210,7 @@ public class OptionsWin extends JDialog {
         }
         comboLookAndFeel.setSelectedIndex(pos);
         //changedLF = false;
-        
+
         persistenceConfigs.put(foEdit.persistenceMethod, foEdit.persistenceConfig);
         pos = 0; 
         for (int i=0; i<PersistentReadState.persistenceMethods.size(); i++) {
@@ -220,7 +220,7 @@ public class OptionsWin extends JDialog {
             }
         }
         comboPersistenceMethods.setSelectedIndex(pos);
-        
+
         Object selModem = foEdit.defaultModem;
         for (HylaModem modem : availableModems) {
             if (modem.getInternalName().equals(selModem)) {
@@ -229,24 +229,11 @@ public class OptionsWin extends JDialog {
             }
         }
         comboModem.setSelectedItem(selModem);
+
         
-        Object selStyle = foEdit.dateStyle;
-        for (DateStyle style : DateStyle.getAvailableDateStyles()) {
-            if (style.getSaveString().equals(selStyle)) {
-                selStyle = style;
-                break;
-            }
-        }
-        comboDateFormat.setSelectedItem(selStyle);
-        selStyle = foEdit.timeStyle;
-        for (DateStyle style : DateStyle.getAvailableTimeStyles()) {
-            if (style.getSaveString().equals(selStyle)) {
-                selStyle = style;
-                break;
-            }
-        }
-        comboTimeFormat.setSelectedItem(selStyle);
-        
+        setDateStyle(comboDateFormat, foEdit.dateStyle, DateStyle.getAvailableDateStyles());
+        setDateStyle(comboTimeFormat, foEdit.timeStyle, DateStyle.getAvailableTimeStyles());
+
         checkPasv.setSelected(foEdit.pasv);
         checkPCLBug.setSelected(foEdit.pclBug);
         checkAskPassword.setSelected(foEdit.askPassword);
@@ -256,13 +243,13 @@ public class OptionsWin extends JDialog {
         checkUseDisconnected.setSelected(foEdit.useDisconnectedMode);
         checkShowTrayIcon.setSelected(foEdit.showTrayIcon);
         checkMinimizeToTray.setSelected(foEdit.minimizeToTray);
-        
+
         checkNewFax_Beep.setSelected((foEdit.newFaxAction & FaxOptions.NEWFAX_BEEP) != 0);
         checkNewFax_ToFront.setSelected((foEdit.newFaxAction & FaxOptions.NEWFAX_TOFRONT) != 0);
         checkNewFax_Open.setSelected((foEdit.newFaxAction & FaxOptions.NEWFAX_VIEWER) != 0);
         checkNewFax_MarkAsRead.setSelected((foEdit.newFaxAction & FaxOptions.NEWFAX_MARKASREAD) != 0);
         checkNewFax_BlinkTrayIcon.setSelected((foEdit.newFaxAction & FaxOptions.NEWFAX_BLINKTRAYICON) != 0);
-        
+
         spinMaxDial.setValue(Integer.valueOf(foEdit.maxDial));
         spinMaxTry.setValue(Integer.valueOf(foEdit.maxTry));
         spinOffset.setValue(foEdit.dateOffsetSecs);
@@ -270,30 +257,30 @@ public class OptionsWin extends JDialog {
         spinStatusInterval.setValue(foEdit.statusUpdateInterval / 1000.0);
         spinKillTime.setValue(foEdit.killTime);
         spinSocketTimeout.setValue(foEdit.socketTimeout / 1000.0);
-        
+
         pluginTableModel.addAllItems(PluginManager.getKnownPlugins());
-        
+
         for (OptionsPage page : optionsPages) {
             page.loadSettings(foEdit);
         }
-        
+
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
-               foEdit.optWinBounds = getBounds();
-               
-               if (changedLF && !modalResult) {
-                   Utils.setLookAndFeel(foEdit.lookAndFeel);
-               }
+                foEdit.optWinBounds = getBounds();
+
+                if (changedLF && !modalResult) {
+                    Utils.setLookAndFeel(foEdit.lookAndFeel);
+                }
             }
         });
-        
+
         if (foEdit.optWinBounds != null)
             this.setBounds(foEdit.optWinBounds);
         else
             //this.setLocationByPlatform(true);
-            Utils.setDefWinPos(this);
-        
+        Utils.setDefWinPos(this);
+
         // Small special handling for new users
         if (foEdit.host.length() == 0) {
             //TabMain.setSelectedIndex(1);
@@ -301,13 +288,14 @@ public class OptionsWin extends JDialog {
         } else {
             mainTree.setSelectionRow(0);
         }
-        
+        //PROFILE: System.out.println("  After load settings: " + (-time + (time = System.currentTimeMillis())));
         this.pack();
+        //PROFILE: System.out.println("  After pack: " + (-time + (time = System.currentTimeMillis())));
     }
     
     private JPanel getJContentPane() {
         if (jContentPane == null) {
-            jContentPane = new JPanel(new BorderLayout());
+            jContentPane = new JPanel();
             jContentPane.setLayout(new BoxLayout(jContentPane, BoxLayout.Y_AXIS));
             JComponent comp = getMainPanel();
             comp.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -390,23 +378,30 @@ public class OptionsWin extends JDialog {
      * Creates the tree node structure
      */
     private void createRootNode() {
+        //PROFILE: long time = System.currentTimeMillis();
         rootNode = new PanelTreeNode(null, null, "root", null);
         List<PanelTreeNode> rootChilds = new ArrayList<PanelTreeNode>();
 
         rootChilds.add(new PanelTreeNode(rootNode, getPanelCommon(), _("General"), Utils.loadIcon("general/Preferences")));
+        //PROFILE: System.out.println("    After panel common: " + (-time + (time = System.currentTimeMillis())));
         
         rootChilds.add(new PanelTreeNode(rootNode, new PathAndViewPanel(), _("Paths and viewers"), Utils.loadIcon("development/Host")));
-
+        //PROFILE: System.out.println("    After path and view panel: " + (-time + (time = System.currentTimeMillis())));
+        
         rootChilds.add(serverSettingsNode = new PanelTreeNode(rootNode, getPanelServerSettings(), _("Server"), Utils.loadIcon("development/Server")));
+        //PROFILE: System.out.println("    After server settings panel: " + (-time + (time = System.currentTimeMillis())));
         
         PanelTreeNode deliveryNode = new PanelTreeNode(rootNode, getPanelSend(), _("Delivery"), Utils.loadIcon("general/SendMail"));
+        //PROFILE: System.out.println("    After send panel: " + (-time + (time = System.currentTimeMillis())));
         deliveryNode.setChildren(new PanelTreeNode[] {
                 new PanelTreeNode(deliveryNode, new CoverPanel(), _("Cover page"), Utils.loadIcon("general/ComposeMail"))
         });
         rootChilds.add(deliveryNode);
+        //PROFILE: System.out.println("    After cover panel: " + (-time + (time = System.currentTimeMillis())));
         
         rootChilds.add(new PanelTreeNode(rootNode, getPanelPlugins(), _("Plugins & JDBC"), Utils.loadIcon("development/Jar")));
-
+        //PROFILE: System.out.println("    After plugins panel: " + (-time + (time = System.currentTimeMillis())));
+        
         JLabel tableLabel = new JLabel(_("Please select on the left which table you want to edit."));
         tableLabel.setHorizontalAlignment(JLabel.CENTER);
         tableLabel.setVerticalAlignment(JLabel.CENTER);
@@ -418,7 +413,7 @@ public class OptionsWin extends JDialog {
         PanelTreeNode tables = new PanelTreeNode(rootNode, tableLabel, _("Tables"), null);
         MessageFormat tableFormat = new MessageFormat(_("Table \"{0}\""));
         tables.setChildren(new PanelTreeNode[] {
-                new PanelTreeNode(tables,  getPanelRecvFmt(), _("Received"), Utils.loadCustomIcon("received.gif"), tableFormat.format(new Object[] {_("Received")})),
+                new PanelTreeNode(tables, getPanelRecvFmt(), _("Received"), Utils.loadCustomIcon("received.gif"), tableFormat.format(new Object[] {_("Received")})),
                 new PanelTreeNode(tables, getPanelSentFmt(), _("Sent"), Utils.loadCustomIcon("sent.gif"), tableFormat.format(new Object[] {_("Sent")})),
                 new PanelTreeNode(tables, getPanelSendingFmt(), _("Transmitting"), Utils.loadCustomIcon("sending.gif"), tableFormat.format(new Object[] {_("Transmitting")})),
                 new PanelTreeNode(tables, new ArchivePanel(), _("Archive"), Utils.loadCustomIcon("archive.gif"), tableFormat.format(new Object[] {_("Archive")}))
@@ -426,11 +421,13 @@ public class OptionsWin extends JDialog {
         rootChilds.add(tables);
 
         rootNode.setChildren(rootChilds);
+        //PROFILE: System.out.println("    After table panels: " + (-time + (time = System.currentTimeMillis())));
     }
     
     private JComponent getMainPanel() {
+        //PROFILE: long time = System.currentTimeMillis();
         createRootNode();
-
+        //PROFILE: System.out.println("   After createRootNode: " + (-time + (time = System.currentTimeMillis())));
         mainTree = new JTree(new DefaultTreeModel(rootNode));
         mainTree.setRootVisible(false);
         mainTree.addTreeSelectionListener(new TreeSelectionListener() {
@@ -464,11 +461,13 @@ public class OptionsWin extends JDialog {
         mainTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         mainTree.setRowHeight(20);
         mainTree.setAlignmentX(Component.LEFT_ALIGNMENT);
+        //PROFILE: System.out.println("   After create main tree: " + (-time + (time = System.currentTimeMillis())));
         
         tabPanel = new JPanel(false);
         tabPanel.setLayout(new OverlayLayout(tabPanel));
         addTreeToPanel(tabPanel, rootNode, null);
         tabPanel.setMinimumSize(new Dimension(0,0));
+        //PROFILE: System.out.println("   After create tab panel: " + (-time + (time = System.currentTimeMillis())));
         
         treeSelLabel = new JLabel("Current selection");
         treeSelLabel.setFont(treeSelLabel.getFont().deriveFont(Font.BOLD, 16));
@@ -485,6 +484,7 @@ public class OptionsWin extends JDialog {
         
         JSplitPane mainPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(mainTree), rightPanel);
         mainPanel.setDividerLocation(130);
+        //PROFILE: System.out.println("   After create main panel: " + (-time + (time = System.currentTimeMillis())));
         return mainPanel;
     }
 
@@ -500,7 +500,6 @@ public class OptionsWin extends JDialog {
             tabPanel.add(comp);
             comp.setVisible(false);
             comp.setOpaque(true);
-            comp.setAlignmentX(JComponent.LEFT_ALIGNMENT);
             if (comp instanceof OptionsPage) {
                 optionsPages.add((OptionsPage)comp);
             }
@@ -939,25 +938,33 @@ public class OptionsWin extends JDialog {
         }
     }
     
-    private String getDateStyle() {
-        Object sel = comboDateFormat.getSelectedItem();
+    private void setDateStyle(JComboBox combo, String optsField, DateStyle[] availableVals) {
+        Object selStyle = optsField;
+        for (DateStyle style : availableVals) {
+            if (style.getSaveString().equals(selStyle)) {
+                selStyle = style;
+                break;
+            }
+        }
+//        if (selStyle instanceof String) {
+//            selStyle = new SimpleDateFormat((String)selStyle, Utils.getLocale()).toLocalizedPattern();
+//        }
+        combo.setSelectedItem(selStyle);
+    }
+    
+    private String getDateStyle(JComboBox combo) {
+        Object sel = combo.getSelectedItem();
 
         if (sel instanceof DateStyle) {
             return ((DateStyle)sel).getSaveString();
         } else {
+            //SimpleDateFormat fmt = new SimpleDateFormat("", Utils.getLocale());
+            //fmt.applyLocalizedPattern(sel.toString());
+            //return fmt.toPattern();
             return sel.toString();
         }
     }
     
-    private String getTimeStyle() {
-        Object sel = comboTimeFormat.getSelectedItem();
-
-        if (sel instanceof DateStyle) {
-            return ((DateStyle)sel).getSaveString();
-        } else {
-            return sel.toString();
-        }
-    }
     
     /**
      * Saves the settings. Returns true if they were saved successfully
@@ -1040,8 +1047,8 @@ public class OptionsWin extends JDialog {
             foEdit.sendingfmt.addAll(sendingfmt);
             
             foEdit.defaultModem = getModem();
-            foEdit.dateStyle = getDateStyle();
-            foEdit.timeStyle = getTimeStyle();
+            foEdit.dateStyle = getDateStyle(comboDateFormat);
+            foEdit.timeStyle = getDateStyle(comboTimeFormat);
             
             for (OptionsPage page : optionsPages) {
                 page.saveSettings(foEdit);
@@ -1108,14 +1115,14 @@ public class OptionsWin extends JDialog {
         }
 
         try {
-            DateStyle.getDateFormatFromString(getDateStyle());
+            getDateStyle(comboDateFormat);
         } catch (Exception e) {
             focusComponent(comboDateFormat);
             JOptionPane.showMessageDialog(OptionsWin.this, _("Please enter a valid date format:") + '\n' + e.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
             return false;
         }
         try {
-            DateStyle.getTimeFormatFromString(getTimeStyle());
+            getDateStyle(comboTimeFormat);
         } catch (Exception e) {
             focusComponent(comboTimeFormat);
             JOptionPane.showMessageDialog(OptionsWin.this, _("Please enter a valid time format.") + '\n' + e.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);

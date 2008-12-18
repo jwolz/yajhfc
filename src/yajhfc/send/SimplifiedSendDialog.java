@@ -116,6 +116,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
     protected JCheckBox checkUseCover;
     protected JCheckBox checkCustomCover;
     protected FileTextField ftfCustomCover;
+    protected TimeToSendEntry ttsEntry;
     
     protected Action actAddNumber, actRemoveNumber;
     
@@ -298,12 +299,12 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
             protected void writeTextFieldFileName(String fName) {
                 super.writeTextFieldFileName(fName);
                 tflFiles.addListItem(fName);
-                Utils.getFaxOptions().lastSendWinPath = getJFileChooser().getCurrentDirectory().getPath();
+                Utils.getFaxOptions().lastSendWinPath = getCurrentDirectory().getPath();
             }
         };
         ftfFileName.setFileFilters(FormattedFile.getConvertableFileFilters()); 
         if (Utils.getFaxOptions().lastSendWinPath.length() > 0) {
-            ftfFileName.getJFileChooser().setCurrentDirectory(new File(Utils.getFaxOptions().lastSendWinPath));
+            ftfFileName.setCurrentDirectory(new File(Utils.getFaxOptions().lastSendWinPath));
         }
         
         tflFiles = new TextFieldList<HylaTFLItem>(ftfFileName.getJTextField(), true, sendController.getFiles()) {
@@ -356,7 +357,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
                 }
             }
         };
-        actPhonebook.putValue(Action.NAME, Utils._("Add from phonebook..."));
+        actPhonebook.putValue(Action.NAME, Utils._("Add from phone book..."));
         actPhonebook.putValue(Action.SHORT_DESCRIPTION, Utils._("Choose number from phone book"));
         actPhonebook.putValue(Action.SMALL_ICON, Utils.loadIcon("general/Bookmarks"));
         JButton buttonPhonebook = new JButton(actPhonebook);
@@ -444,7 +445,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
     }
 
     protected JPanel createAdvancedPane() {
-        final int rowCount = 13;
+        final int rowCount = 16;
         double[] rows = new double[rowCount];
         rows[0] = initiallyHideFiles ? TableLayout.PREFERRED : 0;
         for (int i = 1; i < rowCount; i++) {
@@ -492,6 +493,8 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         comboModem = new JComboBox(clientManager.getModems().toArray());
         comboModem.setEditable(true);
 
+        ttsEntry = new TimeToSendEntry();
+
         if (initiallyHideFiles) {
             advancedPane.add(createFileEntryList(), "0,0,2,0,f,f");
         }
@@ -503,7 +506,8 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         addWithLabel(advancedPane, comboPaperSize, Utils._("Paper size:"), "2,9, F, C");
         addWithLabel(advancedPane, spinKillTime, Utils._("Cancel job after (minutes):"), "0,12, F, C");
         addWithLabel(advancedPane, spinMaxTries, Utils._("Maximum tries:"), "2,12, F, C");
-
+        addWithLabel(advancedPane, ttsEntry, Utils._("Time to send:"), "0,15,2,15");
+        
         comboResolution.setSelectedItem(fo.resolution);
         comboPaperSize.setSelectedItem(fo.paperSize);
         comboNotification.setSelectedItem(fo.notifyWhen);
@@ -516,7 +520,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
             }
         }
         comboModem.setSelectedItem(selModem);
-
+        
         spinMaxTries.setValue(Integer.valueOf(fo.maxTry));
         spinKillTime.setValue(fo.killTime);
 
@@ -555,6 +559,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         sendController.setPaperSize((PaperSize)comboPaperSize.getSelectedItem());
         sendController.setResolution(((FaxResolution)comboResolution.getSelectedItem()).getResolution());
         sendController.setSelectedModem(comboModem.getSelectedItem());
+        sendController.setSendTime(ttsEntry.getSelection());
         
         sendController.setSubject(textSubject.getText());
         if (checkUseCover != null && checkUseCover.isSelected()) {
@@ -650,7 +655,8 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         }
         
     }
-
+    
+    
     public void setComment(String comment) {
         textComments.setText(comment);
     }

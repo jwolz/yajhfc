@@ -34,11 +34,11 @@ import java.util.regex.Pattern;
  *
  */
 public class RegExDateFormat extends DateFormat {
-
     private static final Logger log = Logger.getLogger(RegExDateFormat.class.getName());
     
     protected Pattern pattern;
     protected int[] calendarFields;
+    protected Calendar calendar = Calendar.getInstance(Locale.US);
     
     /**
      * Constructs a new RegExDateFormat.
@@ -76,8 +76,7 @@ public class RegExDateFormat extends DateFormat {
             pos.setIndex(m.end());
             
             try {
-                Calendar cal = Calendar.getInstance(Locale.US);
-                cal.clear();
+                calendar.clear();
                 for (int i = 1; i <= m.groupCount(); i++) {
                     int calendarField = calendarFields[i-1];
                     String sValue = m.group(i);
@@ -86,13 +85,13 @@ public class RegExDateFormat extends DateFormat {
                         int value = Integer.parseInt(sValue);
                         if (calendarField == Calendar.MONTH) {
                             value--; // Java months are zero based
-                        }
+                        } 
                         if (value >= 0) {
-                            cal.set(calendarField, value);
+                            calendar.set(calendarField, value);
                         }
                     }
                 }
-                return cal.getTime();
+                return calendar.getTime();
             } catch (Exception ex) {
                 log.log(Level.INFO, "Error parsing the date \"" + source + "\"", ex);
                 return null;

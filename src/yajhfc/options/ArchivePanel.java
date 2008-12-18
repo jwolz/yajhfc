@@ -71,7 +71,7 @@ public class ArchivePanel extends JPanel implements OptionsPage {
             }
         });
         ftfArchiveLocation = new FileTextField();
-        ftfArchiveLocation.getJFileChooser().setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        ftfArchiveLocation.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         ftfArchiveLocation.getJTextField().addMouseListener(ClipboardPopup.DEFAULT_POPUP);
         
         columnEditor = new fmtEditor<QueueFileFormat>(QueueFileFormat.values(), selection, Collections.<QueueFileFormat>emptyList(), new FmtItemRenderer(), FmtItemDescComparator.<QueueFileFormat>getInstance(), null, Utils._("Selected columns:"), Utils._("Available columns:"));
@@ -91,6 +91,9 @@ public class ArchivePanel extends JPanel implements OptionsPage {
         add(ftfArchiveLocation);
         add(Box.createRigidArea(spacer));
         add(columnEditor);
+        
+        //setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+        setAlignmentX(JComponent.CENTER_ALIGNMENT);
     }
 
     void checkEnable() {

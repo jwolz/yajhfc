@@ -29,6 +29,7 @@ import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.text.DateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.EnumMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -52,6 +53,7 @@ import yajhfc.phonebook.convrules.ZIPCodeRule;
  */
 public abstract class Faxcover {
     public DateFormat dateFmt;    // date format for Output
+    public Date coverDate = new Date();
     
 //    public float    pageWidth;  // page width (mm)
 //    public float    pageLength; // page length (mm)
