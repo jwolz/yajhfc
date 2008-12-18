@@ -93,7 +93,7 @@ public class DefaultIconMap implements IconMap {
             
             final String description = SentYajJob.getDescriptionForJobState(state);
             if (fmtItem == JobFormat.a_desc || fmtItem == QueueFileFormat.state_desc) {
-                res = new DefaultIconMap(description, Utils.loadCustomIcon(filename), description);
+                res = new DefaultIconMap(SentYajJob.getLabelForJobState(state), Utils.loadCustomIcon(filename), description);
             } else {
                 res = new DefaultIconMap(textData, Utils.loadCustomIcon(filename), description);
             }

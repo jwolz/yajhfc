@@ -56,7 +56,7 @@ public class HylaClientManager {
             userName = null;
     }
     
-    public HylaFAXClient beginServerTransaction(Window owner) {
+    public synchronized HylaFAXClient beginServerTransaction(Window owner) {
         transactionCounter++;
         
         if (Utils.debugMode) {
@@ -89,7 +89,7 @@ public class HylaClientManager {
         }
     }
     
-    public void endServerTransaction() {
+    public synchronized void endServerTransaction() {
         if (Utils.debugMode) {
             log.fine("HylaClientManager -> endServerTransaction: " + transactionCounter);
         }
@@ -102,7 +102,7 @@ public class HylaClientManager {
     /**
      * Logs in. Returns null if an error occurred.
      */
-    public HylaFAXClient forceLogin(Window owner) {
+    public synchronized HylaFAXClient forceLogin(Window owner) {
         if (Utils.debugMode) {
             log.fine("HylaClientManager -> forceLogin");
         }
@@ -192,7 +192,7 @@ public class HylaClientManager {
         }
     }
     
-    public void forceLogout() {
+    public synchronized void forceLogout() {
         if (Utils.debugMode) {
             log.fine("HylaClientManager -> forceLogout");
         }
@@ -218,7 +218,7 @@ public class HylaClientManager {
         return adminMode;
     }
 
-    public void setAdminMode(boolean adminMode) {
+    public synchronized void setAdminMode(boolean adminMode) {
         if (adminMode != this.adminMode) 
         {
             this.adminMode = adminMode;
@@ -226,7 +226,7 @@ public class HylaClientManager {
         }
     }
     
-    public List<HylaModem> getModems() {
+    public synchronized List<HylaModem> getModems() {
         if (modems == null) {
             HylaFAXClient hyfc = beginServerTransaction(null);
             if (hyfc == null) {

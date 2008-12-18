@@ -75,12 +75,12 @@ public class JDBCPhoneBook extends PhoneBook {
 //        fieldNameMap.put("comment", new ConnectionDialog.FieldMapEntry(Utils._("Comments:"),7));
         
         fieldNameMap.put("readOnly", new ConnectionDialog.FieldMapEntry(Utils._("Open as read only"),1,false,Boolean.class));
-        fieldNameMap.put("displayCaption", new ConnectionDialog.FieldMapEntry(Utils._("Phonebook name to display:"),0,false,String.class));
+        fieldNameMap.put("displayCaption", new ConnectionDialog.FieldMapEntry(Utils._("Phone book name to display:"),0,false,String.class));
     }
     
     public static final String PB_Prefix = "JDBC";      // The prefix of this Phonebook type's descriptor
-    public static final String PB_DisplayName = Utils._("JDBC Phonebook"); // A user-readable name for this Phonebook type
-    public static final String PB_Description = Utils._("A Phonebook saving its entries in a relational database using JDBC."); // A user-readable description of this Phonebook type
+    public static final String PB_DisplayName = Utils._("JDBC phone book"); // A user-readable name for this Phonebook type
+    public static final String PB_Description = Utils._("A phone book saving its entries in a relational database using JDBC."); // A user-readable description of this Phonebook type
     
     public JDBCPhoneBook(Dialog parent) {
         super(parent);
@@ -99,8 +99,8 @@ public class JDBCPhoneBook extends PhoneBook {
     @Override
     public String browseForPhoneBook() {
         ConnectionSettings cs = new ConnectionSettings(settings);
-        ConnectionDialog cDlg = new ConnectionDialog(parentDialog, Utils._("New JDBC phonebook"),
-                Utils._("Please select which database fields correspond to the Phonebook entry fields of YajHFC:"),
+        ConnectionDialog cDlg = new ConnectionDialog(parentDialog, Utils._("New JDBC phone book"),
+                Utils._("Please select which database fields correspond to the phone book entry fields of YajHFC:"),
                 fieldNameMap, true);
         if (cDlg.promptForNewSettings(cs))
             return PB_Prefix + ":" + cs.saveToString();
@@ -289,7 +289,7 @@ public class JDBCPhoneBook extends PhoneBook {
             log.fine("JDBC phone book: SELECT query: " + query);
         }
         if (query == null) {
-            JOptionPane.showMessageDialog(parentDialog, Utils._("Cannot open phonebook since no database fields were selected!"));
+            JOptionPane.showMessageDialog(parentDialog, Utils._("Cannot open phone book since no database fields were selected!"));
             return;
         }
         Statement stmt = connection.createStatement();

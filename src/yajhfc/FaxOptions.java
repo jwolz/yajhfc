@@ -131,7 +131,7 @@ public class FaxOptions {
     public static final String LOOKANDFEEL_SYSTEM = "!system!";
     public static final String LOOKANDFEEL_CROSSPLATFORM = "!crossplatform!"; 
     
-    public List<String> phoneBooks = new ArrayList<String>();
+    public final List<String> phoneBooks = new ArrayList<String>();
     //public int lastSelectedPhonebook = 0;
     
     public boolean useDisconnectedMode = false;
@@ -216,14 +216,15 @@ public class FaxOptions {
         this.archiveFmt.add(QueueFileFormat.state);
         this.archiveFmt.add(QueueFileFormat.status);
         
-        String sysname = System.getProperty("os.name");
-        if (sysname.startsWith("Windows")) {
+        if (Utils.IS_WINDOWS) {
             String startCmd = System.getenv("COMSPEC");
             if (startCmd == null) startCmd = "COMMAND";
             startCmd += " /C start \"Viewer\" \"%s\"";
             
             this.psViewer = startCmd;  //"rundll32.exe URL.DLL,FileProtocolHandler \"%s\"";//"gsview32.exe";
             this.pdfViewer = startCmd;
+            
+            String sysname = System.getProperty("os.name");
             if (sysname.indexOf("XP") >= 0 || sysname.indexOf("Vista") >= 0) 
                 this.faxViewer = "rundll32.exe shimgvw.dll,ImageView_Fullscreen %s";
             else

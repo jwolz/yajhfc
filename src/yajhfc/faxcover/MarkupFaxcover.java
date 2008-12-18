@@ -30,7 +30,6 @@ import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Field;
 import java.net.URL;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -165,7 +164,7 @@ public abstract class MarkupFaxcover extends Faxcover {
         availableTags.put("date", new Tag() {
             @Override
             public String getValue(Faxcover arg0) {
-                return arg0.dateFmt.format(new Date());
+                return arg0.dateFmt.format(arg0.coverDate);
             }
         });
         availableTags.put("pagecount", new ReflectionTag("pageCount"));

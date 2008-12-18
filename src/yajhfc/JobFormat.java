@@ -175,7 +175,7 @@ public enum JobFormat implements FmtItem {
     /**
      * Job kill time
      */
-    k("k", _("Job kill time"), _("Time to give up trying to send job")), 
+    k("k", _("Job kill time"), _("Time to give up trying to send job"), Utils.HYLA_TIME_ONLY_FORMAT, DateKind.TIME_ONLY), 
     /**
      * Page length
      */
@@ -235,7 +235,7 @@ public enum JobFormat implements FmtItem {
     /**
      * Time to send job
      */
-    z("z", _("Time to send job")),
+    z("z", _("Time to send job"), Utils.HYLA_TIME_ONLY_FORMAT, DateKind.TIME_ONLY),
     /**
      * Job state (icon only)
      */
@@ -279,6 +279,10 @@ public enum JobFormat implements FmtItem {
     private JobFormat(String hylaFmt, String description,
             String longDescription) {
         this(hylaFmt, description, longDescription, String.class, null, null);
+    }
+    
+    private JobFormat(String hylaFmt, String description, DateFormat hylaDateFormat, DateKind displayDateFormat) {
+        this(hylaFmt, description, description, Date.class, hylaDateFormat, displayDateFormat);
     }
     
     private JobFormat(String hylaFmt, String description,

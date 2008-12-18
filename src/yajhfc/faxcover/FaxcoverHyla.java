@@ -182,7 +182,7 @@ class FaxcoverHyla extends Faxcover {
 
     private void emitDateDefs() 
     throws IOException {
-        coverDef("todays-date", dateFmt.format(new Date()));
+        coverDef("todays-date", dateFmt.format(coverDate));
     }
 
     private void coverDef(String tag, String value) 

@@ -709,7 +709,7 @@ public final class Launcher2 {
                 if (useStdin) { 
                     outStream.write(codeSubmitStream);
                     Utils.copyStream(System.in, outStream);
-                } else if ( fileNames != null && fileNames.size() > 0) {
+                } else if ( (fileNames != null && fileNames.size() > 0) || recipients.size() > 0) {
                     outStream.write(codeMultiSubmitFile);
                     for (String fileName : fileNames) {
                         File f = new File(fileName);
@@ -1069,7 +1069,7 @@ public final class Launcher2 {
                 List<String> recipients, boolean closeAfterSubmit,
                 String comment, String subject, Boolean useCover) {
             
-            if ((fileNames != null && fileNames.size() > 0) || useStdin) {
+            if ((fileNames != null && fileNames.size() > 0) || useStdin || (recipients != null && recipients.size() > 0)) {
                 return new SubmitRunner(fileNames, useStdin ? System.in : null, recipients, closeAfterSubmit, comment, subject, useCover);
             } else {
                 return null;

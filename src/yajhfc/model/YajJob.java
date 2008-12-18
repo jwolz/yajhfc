@@ -130,7 +130,7 @@ public abstract class YajJob<T extends FmtItem> implements FilterableObject {
                         //return  Float.NaN;
                         return  nullObject;
                     } catch (ParseException e) {
-                        log.log(Level.WARNING, "Not a parseable date: " + data + ": ", e);
+                        log.log(Level.WARNING, "Not a parseable date for column '" + fmtItem + "': " + data + ": ", e);
                         return  nullObject;
                     }    
                 } else {

@@ -64,7 +64,7 @@ public enum DateKind {
                 format = new SimpleDateFormat("HH:mm:ss");
                 break;
             default:
-                throw new UnsupportedOperationException("Unkown kind!");
+                throw new UnsupportedOperationException("Unknown kind!");
             }
             lastInstances.put(kind, format);
         }

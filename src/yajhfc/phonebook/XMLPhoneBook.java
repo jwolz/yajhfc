@@ -57,8 +57,8 @@ public class XMLPhoneBook extends PhoneBook {
     private static final Logger log = Logger.getLogger(XMLPhoneBook.class.getName());
     
     public static final String PB_Prefix = "XML";      // The prefix of this Phonebook type's descriptor
-    public static final String PB_DisplayName = Utils._("XML Phonebook"); // A user-readable name for this Phonebook type
-    public static final String PB_Description = Utils._("A Phonebook saving its entries as a XML file."); // A user-readable description of this Phonebook type
+    public static final String PB_DisplayName = Utils._("XML phone book"); // A user-readable name for this Phonebook type
+    public static final String PB_Description = Utils._("A phone book saving its entries as a XML file."); // A user-readable description of this Phonebook type
     
     private ArrayList<XMLPhoneBookEntry> list;
     private XMLSettings settings;
@@ -115,7 +115,7 @@ public class XMLPhoneBook extends PhoneBook {
 
     @Override
     public String browseForPhoneBook() {
-        return new PBBrowser(settings).browseForPhoneBook(parentDialog).saveToString();
+        return PB_Prefix + ":" + new PBBrowser(settings).browseForPhoneBook(parentDialog).saveToString();
     }
 
     @Override
@@ -258,7 +258,7 @@ public class XMLPhoneBook extends PhoneBook {
             super();
             
             removeChoosableFileFilter(getAcceptAllFileFilter());
-            ExampleFileFilter ff = new ExampleFileFilter("phonebook", Utils._("Phonebook files"));
+            ExampleFileFilter ff = new ExampleFileFilter("phonebook", Utils._("Phone book files"));
             addChoosableFileFilter(ff);
             addChoosableFileFilter(getAcceptAllFileFilter());
             setFileFilter(ff);
@@ -267,7 +267,7 @@ public class XMLPhoneBook extends PhoneBook {
             bottomPanel = new JPanel(false);
             bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
             bottomPanel.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createTitledBorder(Utils._("Phonebook name to display:")),
+                    BorderFactory.createTitledBorder(Utils._("Phone book name to display:")),
                     BorderFactory.createEmptyBorder(5, 10, 5, 10)));
             
 //            JLabel captionLabel = new JLabel(Utils._("Phonebook name to display:"));
@@ -297,7 +297,7 @@ public class XMLPhoneBook extends PhoneBook {
         
         /**
          * Browse for phonebook.
-         * Returns true if 
+         * Returns setting if the user selected "Open" or null otherwise
          * @return
          */
         public XMLSettings browseForPhoneBook(Component parentDialog) {

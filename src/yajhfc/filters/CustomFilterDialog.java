@@ -64,6 +64,7 @@ public class CustomFilterDialog extends JDialog
     
     private FmtItemList<? extends FmtItem> columns;
     
+    public boolean okClicked = false;
     public Filter<YajJob<FmtItem>,FmtItem> returnValue = null;
     
     private void initialize(String tableName, FmtItemList<? extends FmtItem> columns, Filter<YajJob<FmtItem>,FmtItem> init) {
@@ -85,6 +86,7 @@ public class CustomFilterDialog extends JDialog
         Action actCancel = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
                 returnValue = null;
+                okClicked = false;
                 dispose();
             };
         };
@@ -165,6 +167,7 @@ public class CustomFilterDialog extends JDialog
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
                 returnValue = null;
+                okClicked = false;
             };
             
             public void windowClosed(java.awt.event.WindowEvent e) {
@@ -218,10 +221,14 @@ public class CustomFilterDialog extends JDialog
                 }
             }
             if (af.childCount() == 0) {
-                JOptionPane.showMessageDialog(this, Utils._("Please enter at least one filtering condition."), Utils._("Warning"), JOptionPane.WARNING_MESSAGE);
-                return;
+                if (JOptionPane.showConfirmDialog(this, Utils._("You have entered no filtering conditions. Do you want to show all faxes instead?"), Utils._("Question"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    af = null;
+                } else {
+                    return;
+                }
             }
             returnValue = af;
+            okClicked = true;
             dispose();
         } /*else if (cmd.equals("cancel")) {
             returnValue = null;

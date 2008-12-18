@@ -31,17 +31,51 @@ import javax.swing.JFileChooser;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
 
+import yajhfc.util.SafeJFileChooser;
+
 //Text field with Button and FileChooser
 public class FileTextField extends JComponent implements ActionListener {
     
     private JTextField jTextField;
     private JButton jButton;
-    private JFileChooser jFileChooser;
+    private JFileChooser fileChooser;
+    private FileFilter[] fileFilters;
+    private int fileSelectionMode = JFileChooser.FILES_ONLY;
+    private File currentDirectory = null;
+    
+    private JFileChooser getFileChooser() {
+        if (fileChooser == null) {
+            fileChooser = new SafeJFileChooser();
+        }
+        return fileChooser;
+    }
     
     public void actionPerformed(ActionEvent e) {
+        JFileChooser jFileChooser = getFileChooser();
+
+        if (fileFilters != null && fileFilters.length > 0) {
+            // Apply file filters:
+            jFileChooser.resetChoosableFileFilters();
+
+            for (FileFilter ff : fileFilters)
+                jFileChooser.addChoosableFileFilter(ff);
+
+            FileFilter allf = jFileChooser.getAcceptAllFileFilter();
+            jFileChooser.removeChoosableFileFilter(allf);
+            jFileChooser.addChoosableFileFilter(allf);
+            jFileChooser.setFileFilter(fileFilters[0]);
+        }
+        
+        jFileChooser.setFileSelectionMode(fileSelectionMode);
+        if (currentDirectory != null) {
+            jFileChooser.setCurrentDirectory(currentDirectory);
+        }
+        
         jFileChooser.setSelectedFile(new File(readTextFieldFileName()));
-        if (jFileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
+        if (jFileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            currentDirectory = jFileChooser.getCurrentDirectory();
             writeTextFieldFileName(jFileChooser.getSelectedFile().getPath());
+        }
     }
     
     protected String readTextFieldFileName() {
@@ -68,10 +102,27 @@ public class FileTextField extends JComponent implements ActionListener {
         return jButton;
     }
     
-    public JFileChooser getJFileChooser() {
-        return jFileChooser;
-    }
     
+    public int getFileSelectionMode() {
+        return fileSelectionMode;
+    }
+
+    public void setFileSelectionMode(int fileSelectionMode) {
+        this.fileSelectionMode = fileSelectionMode;
+    }
+
+    public File getCurrentDirectory() {
+        return currentDirectory;
+    }
+
+    public void setCurrentDirectory(File currentDirectory) {
+        this.currentDirectory = currentDirectory;
+    }
+
+    public FileFilter[] getFileFilters() {
+        return fileFilters;
+    }
+
     @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
@@ -84,24 +135,12 @@ public class FileTextField extends JComponent implements ActionListener {
      * The first one is used as a default.
      */
     public void setFileFilters(FileFilter... filters) {
-        jFileChooser.resetChoosableFileFilters();
-        
-        if (filters.length <= 0)
-            return;
-        
-        for (int i=0; i < filters.length; i++)
-            jFileChooser.addChoosableFileFilter(filters[i]);
-        
-        FileFilter allf = jFileChooser.getAcceptAllFileFilter();
-        jFileChooser.removeChoosableFileFilter(allf);
-        jFileChooser.addChoosableFileFilter(allf);
-        
-        jFileChooser.setFileFilter(filters[0]);
+        fileFilters = filters;
     }
     
     public FileTextField() {
         super();
-        this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+        this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         
         jTextField = new JTextField();
         
@@ -119,8 +158,6 @@ public class FileTextField extends JComponent implements ActionListener {
         
         jButton.setMaximumSize(d);
         jTextField.setMaximumSize(d2);
-        
-        jFileChooser = new yajhfc.util.SafeJFileChooser();
         
         add(jTextField);
         add(jButton);

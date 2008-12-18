@@ -313,7 +313,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         try {
             phoneBook = PhoneBookFactory.instanceForDescriptor(descriptor, this);
             if (phoneBook == null) {
-                JOptionPane.showMessageDialog(this, Utils._("Unknown Phonebook type selected."), Utils._("Error"), JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, Utils._("Unknown phone book type selected."), Utils._("Error"), JOptionPane.ERROR_MESSAGE);
                 return;
             } else {
                 phoneBook.open(descriptor);
@@ -345,8 +345,18 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         if (currentPhonebook != null) {
             String newPB = currentPhonebook.browseForPhoneBook();
             if (newPB != null) {
-                closeCurrentPhoneBook();
-                addPhoneBook(newPB);
+                //                closeCurrentPhoneBook();
+                //                addPhoneBook(newPB);
+                try {
+                    currentPhonebook.close();
+                    selectedItems.clear();
+                    currentPhonebook.open(newPB);
+                    treeModel.refreshPhoneBook(currentPhonebook);
+                } catch (PhoneBookException e) {
+                    if (!e.messageAlreadyDisplayed())
+                        ExceptionDialog.showExceptionDialog(this, Utils._("Error loading the phone book: "), e);
+                    closeCurrentPhoneBook();
+                }
             }
         }
     }
@@ -806,7 +816,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         setContentPane(createJContentPane());
         setJMenuBar(getMenu());
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        setTitle(Utils._("Phone book"));
+        setTitle(Utils._("Phonebook"));
         
         addWindowListener(new WindowAdapter() {
             @Override

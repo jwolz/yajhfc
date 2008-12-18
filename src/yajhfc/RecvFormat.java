@@ -55,7 +55,7 @@ public enum RecvFormat implements FmtItem {
     /**
      * Time to receive
      */
-    h("h", _("Time to receive"), _("Time spent receiving document (HH:MM:SS)"), Utils.HYLA_TIME_ONLY_FORMAT, DateKind.DURATION), 
+    h("h", _("Time to receive"), _("Time spent receiving document (HH:MM:SS)"), Utils.HYLA_DURATION_FORMAT, DateKind.DURATION), 
     /**
      * CIDName
      */
@@ -99,7 +99,7 @@ public enum RecvFormat implements FmtItem {
     /**
      * Date
      */
-    t("t", _("Date"), _("Compact representation of the time when the receive happened"), Utils.HYLA_SHORT_DATE_FORMAT, DateKind.DATE_ONLY), 
+    t("t", _("Date"), _("Compact representation of the time when the receive happened")), 
     /**
      * Page width
      */
@@ -109,9 +109,9 @@ public enum RecvFormat implements FmtItem {
      */
     z("z", _("In progress"), _("A ``*'' if receive is going on; otherwise `` '' (space)"), Boolean.class),
     /**
-     * Scheduled time in seconds since the UNIX epoch (undocumented)
+     * Time in seconds since the UNIX epoch (undocumented)
      */
-    Z("Z", _("Scheduled time (UNIX)"), _("Scheduled time in seconds since the UNIX epoch"), Utils.HYLA_UNIX_DATE_FORMAT, DateKind.DATE_AND_TIME),
+    Z("Z", _("Time/Date (UNIX)"), _("Time in seconds since the UNIX epoch"), Utils.HYLA_UNIX_DATE_FORMAT, DateKind.DATE_AND_TIME),
     ;
     private final String description;
     private final String hylaFmt;

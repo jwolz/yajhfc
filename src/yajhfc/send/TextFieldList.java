@@ -142,7 +142,7 @@ public abstract class TextFieldList<T extends TFLItem> extends JPanel implements
                     if (list.getSelectedIndex() >= 0) {
                         lastSelection = null;
                         model.removeAll(list.getSelectedIndices());
-                        //textField.setText("");
+                        textField.setText(""); //XXX: OK?
                     }
                 };
             };
