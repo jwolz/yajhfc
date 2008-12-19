@@ -52,6 +52,9 @@ import yajhfc.phonebook.convrules.ZIPCodeRule;
  * Constructor(URL coverTemplate)
  */
 public abstract class Faxcover {
+    private static final String DEFAULT_FAXCOVER_NAME = "faxcover/faxcover.ps";
+    
+    
     public DateFormat dateFmt;    // date format for Output
     public Date coverDate = new Date();
     
@@ -214,7 +217,7 @@ public abstract class Faxcover {
         URL coverURL;
         
         if (coverTemplate == null) {
-            coverURL = Utils.getLocalizedFile("faxcover/faxcover.ps");
+            coverURL = Utils.getLocalizedFile(DEFAULT_FAXCOVER_NAME);
             if (coverURL == null) {
                 throw new IOException("Default cover page not found!");
             }

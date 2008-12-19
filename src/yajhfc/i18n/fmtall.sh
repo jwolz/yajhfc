@@ -14,6 +14,55 @@ if [ -z `which msgfmt` ]; then
 	exit 1 ;
 fi
 
+# Usage compile FILE CLASSNAME
+compile() {
+	PO=$1
+  	LANG=${PO##*_}
+  	LANG=${LANG%.po}
+	if [ $LANG != ${PO%.po} ]; then
+		CLASSOUT="$2_$LANG.class"
+		CLASSOUT1="$2_$LANG\$1.class"
+		LOCALEARG="--locale=$LANG" 
+  		echo -n "Using $PO for language $LANG: "
+	else
+		CLASSOUT="$2.class"
+		CLASSOUT1="$2\$1.class"
+		LOCALEARG="" 
+  		echo -n "Using $PO for default language: "
+	fi
+	
+	# Check if recompilation is necessary
+	if [ $CLASSOUT -nt $PO -a $CLASSOUT1 -nt $PO ]; then
+		echo "Output is up to date." ;
+	else
+		echo "Compiling..."
+	  	msgfmt --java2 -d../.. --resource=yajhfc.i18n.$2 $LOCALEARG $PO ;
+	fi ;
+}
+
+# Usage compile FILE PROPERTYNAME
+catprops() {
+	PO=$1
+  	LANG=${PO##*_}
+  	LANG=${LANG%.po}
+	if [ $LANG != ${PO%.po} ]; then
+		PROPOUT="$2_$LANG.properties"
+  		echo -n "Using $PO for language $LANG: "
+	else
+		PROPOUT="$2.properties"
+  		echo -n "Using $PO for default language: "
+	fi
+	
+	# Check if recompilation is necessary
+	if [ $PROPOUT -nt $PO ]; then
+		echo "Output is up to date." ;
+	else
+		echo "Creating .properties..."
+		# Convert to properties and strip comments
+		msgcat --properties-output $PO | ( echo '# This file is auto-generated. Do not edit' ; grep -v '^#\|^$' ) > $PROPOUT
+	fi ;
+}
+
 # Make sure we compile for JDK 1.5
 export JAVAC="javac -target 1.5"
 
@@ -21,21 +70,14 @@ if [ -z "$1" ]; then
   echo 'Compiling language files ...'
   
   for PO in messages_*.po ; do
-  	LANG=${PO##*messages_}
-  	LANG=${LANG%.po}
-	CLASSOUT="Messages_$LANG.class"
-	CLASSOUT1="Messages_$LANG\$1.class"
+	compile $PO Messages
+  done ;
 
-  	echo -n "Using $PO for language $LANG: "
-	
-	# Check if recompilation is necessary
-	if [ $CLASSOUT -nt $PO -a $CLASSOUT1 -nt $PO ]; then
-		echo "Output is up to date." ;
-	else
-		echo "Compiling..."
-	  	msgfmt --java2 -d../.. --resource=yajhfc.i18n.Messages --locale=$LANG $PO ;
-	fi ;
-  done ; 
+  # Create .properties as this gives smaller files here
+  for PO in CommandLineOpts*.po ; do
+	catprops $PO CommandLineOpts
+  done ;
+
 else 
   LANGFILE="messages_$1.po"
   if [ -f $LANGFILE ]; then

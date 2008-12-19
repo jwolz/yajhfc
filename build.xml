@@ -51,10 +51,13 @@
 		
 		<!-- Find out if we have valid, precompiled translations -->
 		<uptodate property="i18n.havePrecompiled">
-			<srcfiles dir="${src}/src/yajhfc/i18n/" includes="*_*.po"/>
+			<srcfiles dir="${src}/src/yajhfc/i18n/" includes="*_*.po,CommandLineOpts.po"/>
 			<compositemapper>
 				<mapper type="glob" from="m*.po" to="M*.class" />
 				<mapper type="glob" from="m*.po" to="M*$1.class" />
+				<mapper type="glob" from="CommandLine*.po" to="CommandLine*.properties" />
+<!--				<mapper type="glob" from="C*.po" to="C*.class" />
+				<mapper type="glob" from="C*.po" to="C*$1.class" /> -->
 			</compositemapper>
 		</uptodate>
 
@@ -134,7 +137,7 @@
 	<target name="dist" depends="compile,i18n,doc" description="generate the distribution" >
 		<jar jarfile="${jar-output}" manifest="${jar-extra}/manifest.txt">
 			<fileset dir="${build}" includes="yajhfc/**,gnu/**"/>
-			<fileset dir="${src}/src" includes="yajhfc/i18n/*.class,gnu/**/*.properties"/>
+			<fileset dir="${src}/src" includes="yajhfc/i18n/*.class,**/*.properties"/>
 			<fileset dir="${jar-extra}" includes="info/**/*.class,toolbarButtonGraphics/**/*.gif,org/**/*.class"/>
 			<fileset dir="${gnu.hylafax.classFileLocation}" includes="**/*.class"/>
 			<fileset dir="${src}" includes="COPYING,README*.txt,doc/*.html,doc/*.css,doc/*.png"/>

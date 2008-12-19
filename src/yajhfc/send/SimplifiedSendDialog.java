@@ -81,6 +81,7 @@ import yajhfc.util.ClipboardPopup;
 import yajhfc.util.ExcDialogAbstractAction;
 import yajhfc.util.ExceptionDialog;
 import yajhfc.util.JTableTABAction;
+import yajhfc.util.LimitedPlainDocument;
 import yajhfc.util.ProgressPanel;
 
 /**
@@ -270,6 +271,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         
         textSubject = new JTextField();
         textSubject.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
+        textSubject.setDocument(new LimitedPlainDocument(60));
         
         textComments = new JTextArea();
         textComments.setWrapStyleWord(true);
