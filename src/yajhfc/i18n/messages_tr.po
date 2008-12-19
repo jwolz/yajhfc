@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-15 15:26+0100\n"
+"POT-Creation-Date: 2008-12-19 15:28+0100\n"
 "PO-Revision-Date: 2008-11-12 17:46+0200\n"
 "Last-Translator: Mesut GÜLER <maxut@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -382,7 +382,7 @@ msgid "Shows the Options dialog"
 msgstr "Seçenekler iletişimini göster"
 
 #: ../MainWin.java:778 ../send/SendWin.java:540
-#: ../send/SimplifiedSendDialog.java:200
+#: ../send/SimplifiedSendDialog.java:201
 msgid "Send"
 msgstr "Gönder"
 
@@ -772,7 +772,7 @@ msgid "Cancel"
 msgstr "İptal"
 
 #: ../filters/CustomFilterDialog.java:109
-#: ../phonebook/NewPhoneBookWin.java:747 ../send/SimplifiedSendDialog.java:375
+#: ../phonebook/NewPhoneBookWin.java:747 ../send/SimplifiedSendDialog.java:377
 #: ../send/TextFieldList.java:127
 msgid "Add"
 msgstr "Ekle"
@@ -1286,11 +1286,11 @@ msgstr "Yönetici parolası"
 msgid "Please enter the administrative password:"
 msgstr ""
 
-#: ../Launcher2.java:632
+#: ../Launcher2.java:547
 msgid "The new instance did not start after 20 seconds."
 msgstr "Yeni kopya 20 saniyeden sonra başlamadı"
 
-#: ../Launcher2.java:646
+#: ../Launcher2.java:561
 msgid ""
 "Cannot launch new program instance, continuing with the existing one!\n"
 "Reason: "
@@ -1298,7 +1298,7 @@ msgstr ""
 "Yeni program kopyası başlatılamıyor, varolan ile devam ediliyor!\n"
 "Nedeni:"
 
-#: ../Launcher2.java:724
+#: ../Launcher2.java:639
 msgid "There already is a running instance!"
 msgstr "Zaten çalışan bir kopya var!"
 
@@ -1502,12 +1502,12 @@ msgid "E-mail address for notifications:"
 msgstr "Bilgilendirme e-mail adresi:"
 
 #: ../options/OptionsWin.java:806 ../send/SendWin.java:465
-#: ../send/SimplifiedSendDialog.java:500
+#: ../send/SimplifiedSendDialog.java:505
 msgid "Notify when:"
 msgstr "Bilgilendirme zamanı:"
 
 #: ../options/OptionsWin.java:807 ../send/SendWin.java:466
-#: ../send/SimplifiedSendDialog.java:501
+#: ../send/SimplifiedSendDialog.java:506
 msgid "Modem:"
 msgstr "Modem:"
 
@@ -1516,17 +1516,17 @@ msgid "Time zone:"
 msgstr "Zaman Dilimi:"
 
 #: ../options/OptionsWin.java:809 ../send/SendWin.java:467
-#: ../send/SimplifiedSendDialog.java:502
+#: ../send/SimplifiedSendDialog.java:507
 msgid "Resolution:"
 msgstr "Çözünürlük:"
 
 #: ../options/OptionsWin.java:810 ../send/SendWin.java:468
-#: ../send/SimplifiedSendDialog.java:503
+#: ../send/SimplifiedSendDialog.java:508
 msgid "Paper size:"
 msgstr "Kağıt boyutu:"
 
 #: ../options/OptionsWin.java:811 ../send/SendWin.java:469
-#: ../send/SimplifiedSendDialog.java:504
+#: ../send/SimplifiedSendDialog.java:509
 msgid "Cancel job after (minutes):"
 msgstr "İşlemden (dakika) sonra vazgeç:"
 
@@ -1535,7 +1535,7 @@ msgid "Maximum dials:"
 msgstr "En fazla arama:"
 
 #: ../options/OptionsWin.java:813 ../send/SendWin.java:470
-#: ../send/SimplifiedSendDialog.java:505
+#: ../send/SimplifiedSendDialog.java:510
 msgid "Maximum tries:"
 msgstr "En fazla deneme:"
 
@@ -1757,7 +1757,7 @@ msgid "Current phone book:"
 msgstr "Şu anki telefon listesi"
 
 #: ../phonebook/NewPhoneBookWin.java:276 ../send/SendWin.java:328
-#: ../send/SimplifiedSendDialog.java:286
+#: ../send/SimplifiedSendDialog.java:288
 msgid "Comments:"
 msgstr "Yorumlar:"
 
@@ -2668,11 +2668,11 @@ msgstr "Faks gönder"
 msgid "Poll fax"
 msgstr "Tercihli faks"
 
-#: ../send/SendWin.java:275 ../send/SimplifiedSendDialog.java:263
+#: ../send/SendWin.java:275 ../send/SimplifiedSendDialog.java:264
 msgid "Use cover page"
 msgstr "Kapak sayfası kullan"
 
-#: ../send/SendWin.java:283 ../send/SimplifiedSendDialog.java:465
+#: ../send/SendWin.java:283 ../send/SimplifiedSendDialog.java:467
 msgid "Use custom cover page:"
 msgstr "Özel kapak sayfası kullan:"
 
@@ -2692,7 +2692,7 @@ msgstr "Yer:"
 msgid "Voice number:"
 msgstr "Telefon numarası:"
 
-#: ../send/SendWin.java:327 ../send/SimplifiedSendDialog.java:285
+#: ../send/SendWin.java:327 ../send/SimplifiedSendDialog.java:287
 msgid "Subject:"
 msgstr "Konu:"
 
@@ -2705,11 +2705,11 @@ msgid "Fax number(s):"
 msgstr "Faks numarası:"
 
 #: ../send/SendWin.java:567 ../send/SendWin.java:572
-#: ../send/SimplifiedSendDialog.java:213 ../send/SimplifiedSendDialog.java:232
+#: ../send/SimplifiedSendDialog.java:214 ../send/SimplifiedSendDialog.java:233
 msgid "Preview"
 msgstr "Önizleme"
 
-#: ../send/SendWin.java:572 ../send/SimplifiedSendDialog.java:213
+#: ../send/SendWin.java:572 ../send/SimplifiedSendDialog.java:214
 msgid ""
 "Nothing to preview! (Neither a cover page nor a file to send has been "
 "selected.)"
@@ -2717,55 +2717,55 @@ msgstr ""
 "Görüntülenecek nesne yok! (Ne bir kapak sayfası ne de gönderilecek bir dosya "
 "seçildi.)"
 
-#: ../send/SendWin.java:634 ../send/SimplifiedSendDialog.java:361
+#: ../send/SendWin.java:634 ../send/SimplifiedSendDialog.java:363
 msgid "Choose number from phone book"
 msgstr "Adres defterinden numara seç"
 
-#: ../send/SendWin.java:658 ../send/SimplifiedSendDialog.java:598
+#: ../send/SendWin.java:658 ../send/SimplifiedSendDialog.java:603
 msgid "An error occured reading the input: "
 msgstr "Girişten okurken hata oluştu:"
 
-#: ../send/SimplifiedSendDialog.java:129
+#: ../send/SimplifiedSendDialog.java:130
 msgid ">> Advanced"
 msgstr ">>Gelişmiş"
 
-#: ../send/SimplifiedSendDialog.java:130
+#: ../send/SimplifiedSendDialog.java:131
 msgid "<< Simplified"
 msgstr "<<Basit"
 
-#: ../send/SimplifiedSendDialog.java:137
+#: ../send/SimplifiedSendDialog.java:138
 msgid "Send fax"
 msgstr "Faks gönder"
 
-#: ../send/SimplifiedSendDialog.java:324
+#: ../send/SimplifiedSendDialog.java:326
 msgid "File(s) to send:"
 msgstr "gönderilecek dosya(lar):"
 
-#: ../send/SimplifiedSendDialog.java:360
+#: ../send/SimplifiedSendDialog.java:362
 msgid "Add from phone book..."
 msgstr "Telefon defterinden ekle..."
 
-#: ../send/SimplifiedSendDialog.java:377
+#: ../send/SimplifiedSendDialog.java:379
 msgid "Add a new recipient"
 msgstr "Yeni alıcı ekle"
 
-#: ../send/SimplifiedSendDialog.java:392 ../send/TextFieldList.java:149
+#: ../send/SimplifiedSendDialog.java:394 ../send/TextFieldList.java:149
 msgid "Remove"
 msgstr "Kaldır"
 
-#: ../send/SimplifiedSendDialog.java:394
+#: ../send/SimplifiedSendDialog.java:396
 msgid "Remove selected recipient"
 msgstr "Seçili alıcıyı sil"
 
-#: ../send/SimplifiedSendDialog.java:436
+#: ../send/SimplifiedSendDialog.java:438
 msgid "Fax number:"
 msgstr "Faks numarası:"
 
-#: ../send/SimplifiedSendDialog.java:438
+#: ../send/SimplifiedSendDialog.java:440
 msgid "Recipients:"
 msgstr "Alıcılar:"
 
-#: ../send/SimplifiedSendDialog.java:506
+#: ../send/SimplifiedSendDialog.java:511
 msgid "Time to send:"
 msgstr ""
 

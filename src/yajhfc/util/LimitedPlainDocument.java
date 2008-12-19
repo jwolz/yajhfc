@@ -16,39 +16,32 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package yajhfc;
+package yajhfc.util;
 
-import gnu.getopt.LongOpt;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 
 /**
- * A long option with description (to auto-generate a help text)
  * @author jonas
  *
  */
-public class ExtLongOpt extends LongOpt {
+public class LimitedPlainDocument extends PlainDocument {
 
-    private final String description;
-    private final String argDesc;
-    
-    /**
-     * @param name
-     * @param has_arg
-     * @param flag
-     * @param val
-     * @throws IllegalArgumentException
-     */
-    public ExtLongOpt(String name, int has_arg, StringBuffer flag, int val, String argDesc, String description)
-            throws IllegalArgumentException {
-        super(name, has_arg, flag, val);
-        this.argDesc = argDesc;
-        this.description = description;
+    private final int limit;
+
+    public LimitedPlainDocument(int limit) {
+        this.limit = limit;
     }
 
-    public String getDescription() {
-        return description;
-    }
-    
-    public String getArgDesc() {
-        return argDesc;
+    @Override
+    public void insertString(int offs, String str, AttributeSet a)
+            throws BadLocationException {
+        if (str == null)
+            return;
+        
+        if (getLength() + str.length() <= limit) {
+            super.insertString(offs, str, a);
+        }
     }
 }

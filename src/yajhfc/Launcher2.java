@@ -44,7 +44,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -59,7 +58,6 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import java.util.logging.StreamHandler;
-import java.util.regex.Pattern;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -172,94 +170,7 @@ public final class Launcher2 {
     
     
     
-    /**
-     * The minimum value of a "real" short option
-     */
-    private static final int MIN_OPT_VAL = 'A';
-    /**
-     * Prints usage information
-     * @param out
-     */
-    public static void printHelp(PrintStream outStream, LongOpt[] options) {
-        StringBuilder out = new StringBuilder();
-        
-        int optionwidth = 0;
-        for (LongOpt option : options) {
-            if (option instanceof ExtLongOpt) {
-                String argDesc = ((ExtLongOpt)option).getArgDesc();
-                optionwidth = Math.max(optionwidth, option.getName().length() + ((argDesc == null) ? 0 : argDesc.length() + 1) + ((option.getHasArg() == LongOpt.OPTIONAL_ARGUMENT) ? 2 : 0) );
-            }
-        }
-        optionwidth += 1;
-        out.append("Usage:\n");
-        out.append("java -jar yajhfc.jar [OPTIONS]... [FILES TO SEND]...\n\n");
-        out.append("Argument description:\n");
-        for (LongOpt option : options) {
-            if (!(option instanceof ExtLongOpt))
-                continue;
-            
-             if (option.getVal() < MIN_OPT_VAL) {
-                 out.append("  ");
-             } else {
-                 out.append('-');
-                 out.append((char)option.getVal());
-             }
-             if (option.getName() == null) {
-                 appendSpaces(out, optionwidth + 4);
-             } else {
-                 if (option.getVal() < MIN_OPT_VAL) {
-                     out.append("  --");
-                 } else {
-                     out.append(", --");
-                 }
-                 out.append(option.getName());
-                 String argDesc = ((ExtLongOpt)option).getArgDesc();
-                 if (argDesc != null) {
-                     if (option.getHasArg() == LongOpt.OPTIONAL_ARGUMENT) {
-                         out.append('[');
-                     }
-                     out.append('=').append(argDesc);
-                     if (option.getHasArg() == LongOpt.OPTIONAL_ARGUMENT) {
-                         out.append(']');
-                     }
-                     appendSpaces(out, optionwidth-option.getName().length()-argDesc.length()-((option.getHasArg() == LongOpt.OPTIONAL_ARGUMENT) ? 3 : 1));
-                 } else {
-                     appendSpaces(out, optionwidth-option.getName().length());
-                 }
-             }
-             printWrapped(out, optionwidth + 6, ((ExtLongOpt)option).getDescription());
-             out.append('\n');
-        }
-        
-        outStream.print(out);
-    }
-    
-    private static void appendSpaces(StringBuilder out, int numspaces) {
-        for (int i=0; i<numspaces; i++) {
-            out.append(' ');
-        }
-    }
-    
-    private static final int SCREEN_WIDTH = 80;
-    private static Pattern wordSplitter;
-    private static void printWrapped(StringBuilder out, int indent, String text) {
-        int pos = indent;
-        if (wordSplitter == null)
-            wordSplitter = Pattern.compile("(\\s|\n)+");
-        for (String word: wordSplitter.split(text)) {
-            pos += word.length();
-            if (pos > SCREEN_WIDTH) {
-                out.append('\n');
-                appendSpaces(out, indent);
-                pos = indent + word.length();
-            }
-            out.append(word);
-            if (pos < SCREEN_WIDTH-1) {
-                out.append(' ');
-                pos+=1;
-            }
-        }
-    }
+
     
 //    private static void printHelp() {
 //        System.out.print(
@@ -330,32 +241,36 @@ public final class Launcher2 {
         String subject = null;
         String comment = null;
         
+        // Also modify CommandLineOpts.properties if new options are added
         final LongOpt[] longOpts = new LongOpt[] {
-                new ExtLongOpt("recipient", LongOpt.REQUIRED_ARGUMENT, null, 'r', "RECIPIENT", "Specifies a recipient to send the fax to. You may specify either a fax number or detailed cover page information (see the FAQ for the format in the latter case). You may specify --recipient multiple times for multiple recipients."),
-                new ExtLongOpt("use-cover", LongOpt.OPTIONAL_ARGUMENT, null, 'C', "yes|no", "Use a cover page for sending a fax?"),
-                new ExtLongOpt("subject", LongOpt.REQUIRED_ARGUMENT, null, 's', "SUBJECT", "The fax subject for the cover page."),
-                new ExtLongOpt("comment", LongOpt.REQUIRED_ARGUMENT, null, 9, "COMMENT", "The comment for the cover page."),
-                new ExtLongOpt("stdin", LongOpt.NO_ARGUMENT, null, 1, null, "Read the file to send from standard input."),
-                new ExtLongOpt("admin", LongOpt.NO_ARGUMENT, null, 'A', null, "Start up in admin mode."),
-                new ExtLongOpt("debug", LongOpt.NO_ARGUMENT, null, 'd', null, "Output some debugging information."),
-                new ExtLongOpt("logfile", LongOpt.REQUIRED_ARGUMENT, null, 'l', "LOGFILE", "The logfile to log debug information to (if not specified, use stdout)."),
-                new ExtLongOpt("appendlogfile", LongOpt.REQUIRED_ARGUMENT, null, 6, "LOGFILE", "Append debug information to the given log file."),
-                new ExtLongOpt("background", LongOpt.NO_ARGUMENT, null, 2, null, "If there is no already running instance, launch a new instance and terminate (after submitting the file to send)."),
-                new ExtLongOpt("noclose", LongOpt.NO_ARGUMENT, null, 3, null, "Do not close YajHFC after submitting the fax."),
-                new ExtLongOpt("showtab", LongOpt.REQUIRED_ARGUMENT, null, 'T', "0|R|1|S|2|T", "Sets the tab to display on startup. Specify 0 or R for the \"Received\", 1 or S for the \"Sent\" or 2 or T for the \"Transmitting\" tab."),
-                new ExtLongOpt("loadplugin", LongOpt.REQUIRED_ARGUMENT, null, 4, "JARFILE", "Specifies a jar file of a YajHFC plugin to load."),
-                new ExtLongOpt("loaddriver", LongOpt.REQUIRED_ARGUMENT, null, 5, "JARFILE", "Specifies the location of a JDBC driver JAR file to load."),
-                new ExtLongOpt("no-plugins", LongOpt.NO_ARGUMENT, null, 7, null, "Disables loading plugins from the plugin.lst file."),
-                new ExtLongOpt("no-gui", LongOpt.NO_ARGUMENT, null, 8,  null, "Sends a fax with only a minimal GUI."),
-                new ExtLongOpt("configdir", LongOpt.REQUIRED_ARGUMENT, null, 'c', "DIRECTORY", "Sets the configuration directory to use instead of ~/.yajhfc"),
-                new ExtLongOpt("help", LongOpt.NO_ARGUMENT, null, 'h', null, "Displays this text.")
+                new LongOpt("recipient", LongOpt.REQUIRED_ARGUMENT, null, 'r'),
+                new LongOpt("use-cover", LongOpt.OPTIONAL_ARGUMENT, null, 'C'),
+                new LongOpt("subject", LongOpt.REQUIRED_ARGUMENT, null, 's'),
+                new LongOpt("comment", LongOpt.REQUIRED_ARGUMENT, null, 9),
+                new LongOpt("stdin", LongOpt.NO_ARGUMENT, null, 1),
+                new LongOpt("admin", LongOpt.NO_ARGUMENT, null, 'A'),
+                new LongOpt("debug", LongOpt.NO_ARGUMENT, null, 'd'),
+                new LongOpt("logfile", LongOpt.REQUIRED_ARGUMENT, null, 'l'),
+                new LongOpt("appendlogfile", LongOpt.REQUIRED_ARGUMENT, null, 6),
+                new LongOpt("background", LongOpt.NO_ARGUMENT, null, 2),
+                new LongOpt("noclose", LongOpt.NO_ARGUMENT, null, 3),
+                new LongOpt("showtab", LongOpt.REQUIRED_ARGUMENT, null, 'T'),
+                new LongOpt("loadplugin", LongOpt.REQUIRED_ARGUMENT, null, 4),
+                new LongOpt("loaddriver", LongOpt.REQUIRED_ARGUMENT, null, 5),
+                new LongOpt("no-plugins", LongOpt.NO_ARGUMENT, null, 7),
+                new LongOpt("no-gui", LongOpt.NO_ARGUMENT, null, 8),
+                new LongOpt("no-check", LongOpt.NO_ARGUMENT, null, -2),
+                new LongOpt("configdir", LongOpt.REQUIRED_ARGUMENT, null, 'c'),
+                new LongOpt("help", LongOpt.OPTIONAL_ARGUMENT, null, 'h')
         };
         final String[] origArgs = args.clone();
         
-        Getopt getopt = new Getopt("yajhfc", args, "hAdc:r:T:l:C::s:", longOpts);
+        Getopt getopt = new Getopt("yajhfc", args, "h::Adc:r:T:l:C::s:", longOpts);
         int opt;
         while ((opt = getopt.getopt()) != -1) {
             switch (opt) {
+            case -2: // no-check (in general: ignore)
+                break;
             case 1: //stdin
                 useStdin = true;
                 break;
@@ -402,7 +317,7 @@ public final class Launcher2 {
                 subject = getopt.getOptarg();
                 break;
             case 'h': // help
-                printHelp(System.out, longOpts);
+                HelpPrinter.printHelp(System.out, longOpts, getopt.getOptarg());
                 System.exit(0);
                 break;
             case 'A': // admin

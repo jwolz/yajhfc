@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: messages_es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-15 15:26+0100\n"
+"POT-Creation-Date: 2008-12-19 15:28+0100\n"
 "PO-Revision-Date: 2008-11-09 18:27+0100\n"
 "Last-Translator: Elsa Andrés <e.andres@ist-sci.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -383,7 +383,7 @@ msgid "Shows the Options dialog"
 msgstr "Muestra el cuadro de diálogo de opciones"
 
 #: ../MainWin.java:778 ../send/SendWin.java:540
-#: ../send/SimplifiedSendDialog.java:200
+#: ../send/SimplifiedSendDialog.java:201
 msgid "Send"
 msgstr "Enviar"
 
@@ -775,7 +775,7 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #: ../filters/CustomFilterDialog.java:109
-#: ../phonebook/NewPhoneBookWin.java:747 ../send/SimplifiedSendDialog.java:375
+#: ../phonebook/NewPhoneBookWin.java:747 ../send/SimplifiedSendDialog.java:377
 #: ../send/TextFieldList.java:127
 msgid "Add"
 msgstr "Añadir"
@@ -1288,11 +1288,11 @@ msgstr "Contraseña de administrador"
 msgid "Please enter the administrative password:"
 msgstr ""
 
-#: ../Launcher2.java:632
+#: ../Launcher2.java:547
 msgid "The new instance did not start after 20 seconds."
 msgstr "La nueva instancia no se inició tras 20 segundos."
 
-#: ../Launcher2.java:646
+#: ../Launcher2.java:561
 msgid ""
 "Cannot launch new program instance, continuing with the existing one!\n"
 "Reason: "
@@ -1301,7 +1301,7 @@ msgstr ""
 "existente!\n"
 "Motivo: "
 
-#: ../Launcher2.java:724
+#: ../Launcher2.java:639
 msgid "There already is a running instance!"
 msgstr "¡Ya existe una instancia en ejecución!"
 
@@ -1507,12 +1507,12 @@ msgid "E-mail address for notifications:"
 msgstr "Dirección de correo electrónico para notificaciones:"
 
 #: ../options/OptionsWin.java:806 ../send/SendWin.java:465
-#: ../send/SimplifiedSendDialog.java:500
+#: ../send/SimplifiedSendDialog.java:505
 msgid "Notify when:"
 msgstr "Notificar cuando:"
 
 #: ../options/OptionsWin.java:807 ../send/SendWin.java:466
-#: ../send/SimplifiedSendDialog.java:501
+#: ../send/SimplifiedSendDialog.java:506
 msgid "Modem:"
 msgstr "Módem:"
 
@@ -1521,17 +1521,17 @@ msgid "Time zone:"
 msgstr "Zona horaria:"
 
 #: ../options/OptionsWin.java:809 ../send/SendWin.java:467
-#: ../send/SimplifiedSendDialog.java:502
+#: ../send/SimplifiedSendDialog.java:507
 msgid "Resolution:"
 msgstr "Resolución:"
 
 #: ../options/OptionsWin.java:810 ../send/SendWin.java:468
-#: ../send/SimplifiedSendDialog.java:503
+#: ../send/SimplifiedSendDialog.java:508
 msgid "Paper size:"
 msgstr "Tamaño de papel:"
 
 #: ../options/OptionsWin.java:811 ../send/SendWin.java:469
-#: ../send/SimplifiedSendDialog.java:504
+#: ../send/SimplifiedSendDialog.java:509
 msgid "Cancel job after (minutes):"
 msgstr "Cancelar trabajo después de (minutos):"
 
@@ -1540,7 +1540,7 @@ msgid "Maximum dials:"
 msgstr "Número máximo de llamadas:"
 
 #: ../options/OptionsWin.java:813 ../send/SendWin.java:470
-#: ../send/SimplifiedSendDialog.java:505
+#: ../send/SimplifiedSendDialog.java:510
 msgid "Maximum tries:"
 msgstr "Número máximo de intentos:"
 
@@ -1763,7 +1763,7 @@ msgid "Current phone book:"
 msgstr "Agenda telefónica actual:"
 
 #: ../phonebook/NewPhoneBookWin.java:276 ../send/SendWin.java:328
-#: ../send/SimplifiedSendDialog.java:286
+#: ../send/SimplifiedSendDialog.java:288
 msgid "Comments:"
 msgstr "Comentarios:"
 
@@ -2686,11 +2686,11 @@ msgstr "Enviar fax"
 msgid "Poll fax"
 msgstr "Transmisión de fax bajo demanda"
 
-#: ../send/SendWin.java:275 ../send/SimplifiedSendDialog.java:263
+#: ../send/SendWin.java:275 ../send/SimplifiedSendDialog.java:264
 msgid "Use cover page"
 msgstr "Utilizar página de portada"
 
-#: ../send/SendWin.java:283 ../send/SimplifiedSendDialog.java:465
+#: ../send/SendWin.java:283 ../send/SimplifiedSendDialog.java:467
 msgid "Use custom cover page:"
 msgstr "Utilizar página de portada personalizada:"
 
@@ -2710,7 +2710,7 @@ msgstr "Dirección:"
 msgid "Voice number:"
 msgstr "Número de teléfono:"
 
-#: ../send/SendWin.java:327 ../send/SimplifiedSendDialog.java:285
+#: ../send/SendWin.java:327 ../send/SimplifiedSendDialog.java:287
 msgid "Subject:"
 msgstr "Asunto:"
 
@@ -2723,11 +2723,11 @@ msgid "Fax number(s):"
 msgstr "Número(s) de fax(es):"
 
 #: ../send/SendWin.java:567 ../send/SendWin.java:572
-#: ../send/SimplifiedSendDialog.java:213 ../send/SimplifiedSendDialog.java:232
+#: ../send/SimplifiedSendDialog.java:214 ../send/SimplifiedSendDialog.java:233
 msgid "Preview"
 msgstr "Previsualizar"
 
-#: ../send/SendWin.java:572 ../send/SimplifiedSendDialog.java:213
+#: ../send/SendWin.java:572 ../send/SimplifiedSendDialog.java:214
 msgid ""
 "Nothing to preview! (Neither a cover page nor a file to send has been "
 "selected.)"
@@ -2735,55 +2735,55 @@ msgstr ""
 "¡No hay nada para previsualizar! (No se ha seleccionado ninguna portada ni "
 "archivo para enviar.)"
 
-#: ../send/SendWin.java:634 ../send/SimplifiedSendDialog.java:361
+#: ../send/SendWin.java:634 ../send/SimplifiedSendDialog.java:363
 msgid "Choose number from phone book"
 msgstr "Seleccionar número desde la agenda telefónica"
 
-#: ../send/SendWin.java:658 ../send/SimplifiedSendDialog.java:598
+#: ../send/SendWin.java:658 ../send/SimplifiedSendDialog.java:603
 msgid "An error occured reading the input: "
 msgstr "Ha ocurrido un error al leer la entrada: "
 
-#: ../send/SimplifiedSendDialog.java:129
+#: ../send/SimplifiedSendDialog.java:130
 msgid ">> Advanced"
 msgstr ">> Avanzado"
 
-#: ../send/SimplifiedSendDialog.java:130
+#: ../send/SimplifiedSendDialog.java:131
 msgid "<< Simplified"
 msgstr "<< Simplificado"
 
-#: ../send/SimplifiedSendDialog.java:137
+#: ../send/SimplifiedSendDialog.java:138
 msgid "Send fax"
 msgstr "Enviar fax"
 
-#: ../send/SimplifiedSendDialog.java:324
+#: ../send/SimplifiedSendDialog.java:326
 msgid "File(s) to send:"
 msgstr "Archivo(s) para enviar:"
 
-#: ../send/SimplifiedSendDialog.java:360
+#: ../send/SimplifiedSendDialog.java:362
 msgid "Add from phone book..."
 msgstr "Añadir desde la agenda telefónica..."
 
-#: ../send/SimplifiedSendDialog.java:377
+#: ../send/SimplifiedSendDialog.java:379
 msgid "Add a new recipient"
 msgstr "Añadir un nuevo destinatario"
 
-#: ../send/SimplifiedSendDialog.java:392 ../send/TextFieldList.java:149
+#: ../send/SimplifiedSendDialog.java:394 ../send/TextFieldList.java:149
 msgid "Remove"
 msgstr "Eliminar"
 
-#: ../send/SimplifiedSendDialog.java:394
+#: ../send/SimplifiedSendDialog.java:396
 msgid "Remove selected recipient"
 msgstr "Eliminar el destinatario seleccionado"
 
-#: ../send/SimplifiedSendDialog.java:436
+#: ../send/SimplifiedSendDialog.java:438
 msgid "Fax number:"
 msgstr "Número de fax:"
 
-#: ../send/SimplifiedSendDialog.java:438
+#: ../send/SimplifiedSendDialog.java:440
 msgid "Recipients:"
 msgstr "Destinatarios:"
 
-#: ../send/SimplifiedSendDialog.java:506
+#: ../send/SimplifiedSendDialog.java:511
 msgid "Time to send:"
 msgstr ""
 

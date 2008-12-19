@@ -23,6 +23,7 @@ import java.awt.Button;
 import java.awt.Dialog;
 import java.awt.FlowLayout;
 import java.awt.Frame;
+import java.awt.GridLayout;
 import java.awt.HeadlessException;
 import java.awt.Label;
 import java.awt.Panel;
@@ -30,6 +31,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.Vector;
 
 /**
  * A simple message box in pure AWT
@@ -40,7 +42,7 @@ import java.awt.event.WindowListener;
 public class AWTMessageBox extends Dialog implements WindowListener,
         ActionListener {
 
-    private Label msgLabel;
+    private Panel msgPanel;
     
     /**
      * @param title
@@ -49,14 +51,14 @@ public class AWTMessageBox extends Dialog implements WindowListener,
     public AWTMessageBox(Frame owner, String title) throws HeadlessException {
         super(owner, title, true);
         setLayout(new BorderLayout());
-        msgLabel = new Label();
+        msgPanel = new Panel();
         
         Button ok = new Button("OK");
         ok.addActionListener(this);
         Panel okPanel = new Panel(new FlowLayout(FlowLayout.CENTER));
         okPanel.add(ok);
         
-        add(msgLabel, BorderLayout.CENTER);
+        add(msgPanel, BorderLayout.CENTER);
         add(okPanel, BorderLayout.SOUTH);
         
         addWindowListener(this);
@@ -71,7 +73,13 @@ public class AWTMessageBox extends Dialog implements WindowListener,
     }
     
     public void showMsgBox(String message) {
-        msgLabel.setText(message);
+        Vector lines = fastSplit(message, '\n');
+        msgPanel.removeAll();
+        msgPanel.setLayout(new GridLayout(lines.size(), 1, 0, 0));
+        for (int i=0; i < lines.size(); i++) {
+            Label label = new Label((String)lines.elementAt(i));
+            msgPanel.add(label);
+        }
         pack();
         show();
     }
@@ -87,4 +95,29 @@ public class AWTMessageBox extends Dialog implements WindowListener,
     public void windowActivated(WindowEvent e) {}
 
     public void windowClosed(WindowEvent e) {}
+    
+    /**
+     * Splits the String at the locations of splitChar (just like String.split()).
+     * This should be much faster than String.split(), however.
+     * @param str
+     * @param splitChar
+     * @return
+     */
+    public static Vector fastSplit(String str, char splitChar) {
+        Vector resList = new Vector();
+        
+        int pos = 0;
+        int charPos = str.indexOf(splitChar);        
+        while (charPos > -1) {
+            resList.addElement(str.substring(pos, charPos));
+            pos = charPos + 1;
+            charPos = str.indexOf(splitChar, pos);
+        }
+        // Do not include a trailing empty String
+        if (pos < str.length()) {
+            resList.addElement(str.substring(pos));
+        }
+        
+        return resList;
+    }
 }

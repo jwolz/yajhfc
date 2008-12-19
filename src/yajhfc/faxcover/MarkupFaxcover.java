@@ -168,6 +168,12 @@ public abstract class MarkupFaxcover extends Faxcover {
             }
         });
         availableTags.put("pagecount", new ReflectionTag("pageCount"));
+        availableTags.put("totalpagecount", new Tag() {
+            @Override
+            public String getValue(Faxcover arg0) {
+                return String.valueOf(arg0.pageCount+1);
+            }
+        });
     }
     public static final int MAXTAGLENGTH = 16;
     public static final char TAGCHAR = '@';

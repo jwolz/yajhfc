@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: messages_de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-15 15:26+0100\n"
+"POT-Creation-Date: 2008-12-19 15:28+0100\n"
 "PO-Revision-Date: 2008-12-17 15:51GMT\n"
 "Last-Translator: Jonas Wolz <jwolz@freenet.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
@@ -176,7 +176,8 @@ msgstr ""
 
 #: ../file/PrintServiceFileConverter.java:130
 msgid "An error occured while converting the document to PostScript."
-msgstr "Beim Konvertieren des Dokuments in PostScript ist ein Fehler aufgetreten."
+msgstr ""
+"Beim Konvertieren des Dokuments in PostScript ist ein Fehler aufgetreten."
 
 #: ../MainWin.java:231
 #, java-format
@@ -250,7 +251,8 @@ msgstr "Lade {0} herunter"
 #: ../MainWin.java:424
 #, java-format
 msgid "An error occured displaying the file {0} (job {1}):\n"
-msgstr "Beim Anzeigen der Datei {0} (für Auftrag {1}) ist ein Fehler aufgetreten:\n"
+msgstr ""
+"Beim Anzeigen der Datei {0} (für Auftrag {1}) ist ein Fehler aufgetreten:\n"
 
 #: ../MainWin.java:428 ../send/SendController.java:223
 msgid "Launching viewer"
@@ -388,7 +390,7 @@ msgid "Shows the Options dialog"
 msgstr "Zeigt den Optionen-Dialog an"
 
 #: ../MainWin.java:778 ../send/SendWin.java:540
-#: ../send/SimplifiedSendDialog.java:200
+#: ../send/SimplifiedSendDialog.java:201
 msgid "Send"
 msgstr "Senden"
 
@@ -780,7 +782,7 @@ msgid "Cancel"
 msgstr "Abbrechen"
 
 #: ../filters/CustomFilterDialog.java:109
-#: ../phonebook/NewPhoneBookWin.java:747 ../send/SimplifiedSendDialog.java:375
+#: ../phonebook/NewPhoneBookWin.java:747 ../send/SimplifiedSendDialog.java:377
 #: ../send/TextFieldList.java:127
 msgid "Add"
 msgstr "Hinzufügen"
@@ -818,7 +820,9 @@ msgstr "Bitte geben Sie eine Zahl ein!"
 msgid ""
 "You have entered no filtering conditions. Do you want to show all faxes "
 "instead?"
-msgstr "Sie haben keine Filterbedingung eingegeben. Möchten Sie stattdessen alle Faxe anzeigen?"
+msgstr ""
+"Sie haben keine Filterbedingung eingegeben. Möchten Sie stattdessen alle "
+"Faxe anzeigen?"
 
 #: ../filters/CustomFilterDialog.java:224
 msgid "Question"
@@ -1294,11 +1298,11 @@ msgstr "Admin-Passwort"
 msgid "Please enter the administrative password:"
 msgstr "Bitte geben Sie das administrative Passwort ein:"
 
-#: ../Launcher2.java:632
+#: ../Launcher2.java:547
 msgid "The new instance did not start after 20 seconds."
 msgstr "Die neue Instanz ist nach 20 Sekunden immer noch nicht gestartet."
 
-#: ../Launcher2.java:646
+#: ../Launcher2.java:561
 msgid ""
 "Cannot launch new program instance, continuing with the existing one!\n"
 "Reason: "
@@ -1306,7 +1310,7 @@ msgstr ""
 "Kann keine neue Programminstanz starten, verwende die bestehende weiter.\n"
 "Grund: "
 
-#: ../Launcher2.java:724
+#: ../Launcher2.java:639
 msgid "There already is a running instance!"
 msgstr "Es läuft bereits eine Programminstanz!"
 
@@ -1394,7 +1398,8 @@ msgstr "Tray-Icon anzeigen"
 
 #: ../options/OptionsWin.java:646
 msgid "Show a system tray icon (works only with Java 6 or higher)"
-msgstr "Zeige ein Icon in der System-Tray an (funktioniert nur mit Java 6 oder höher)"
+msgstr ""
+"Zeige ein Icon in der System-Tray an (funktioniert nur mit Java 6 oder höher)"
 
 #: ../options/OptionsWin.java:654
 msgid "Minimize to tray"
@@ -1512,12 +1517,12 @@ msgid "E-mail address for notifications:"
 msgstr "E-Mail-Adresse für Benachrichtigungen:"
 
 #: ../options/OptionsWin.java:806 ../send/SendWin.java:465
-#: ../send/SimplifiedSendDialog.java:500
+#: ../send/SimplifiedSendDialog.java:505
 msgid "Notify when:"
 msgstr "Benachrichtigen, wenn:"
 
 #: ../options/OptionsWin.java:807 ../send/SendWin.java:466
-#: ../send/SimplifiedSendDialog.java:501
+#: ../send/SimplifiedSendDialog.java:506
 msgid "Modem:"
 msgstr "Modem:"
 
@@ -1526,17 +1531,17 @@ msgid "Time zone:"
 msgstr "Zeitzone:"
 
 #: ../options/OptionsWin.java:809 ../send/SendWin.java:467
-#: ../send/SimplifiedSendDialog.java:502
+#: ../send/SimplifiedSendDialog.java:507
 msgid "Resolution:"
 msgstr "Auflösung:"
 
 #: ../options/OptionsWin.java:810 ../send/SendWin.java:468
-#: ../send/SimplifiedSendDialog.java:503
+#: ../send/SimplifiedSendDialog.java:508
 msgid "Paper size:"
 msgstr "Papierformat:"
 
 #: ../options/OptionsWin.java:811 ../send/SendWin.java:469
-#: ../send/SimplifiedSendDialog.java:504
+#: ../send/SimplifiedSendDialog.java:509
 msgid "Cancel job after (minutes):"
 msgstr "Abbrechen nach (Minuten):"
 
@@ -1545,7 +1550,7 @@ msgid "Maximum dials:"
 msgstr "Max. Anz. Wählversuche:"
 
 #: ../options/OptionsWin.java:813 ../send/SendWin.java:470
-#: ../send/SimplifiedSendDialog.java:505
+#: ../send/SimplifiedSendDialog.java:510
 msgid "Maximum tries:"
 msgstr "Max. Anzahl Versuche:"
 
@@ -1568,7 +1573,8 @@ msgid "(Crossplatform)"
 msgstr "(Systemunabhängig)"
 
 #: ../options/OptionsWin.java:1016
-msgid "You must restart the program for the change of the language to take effect."
+msgid ""
+"You must restart the program for the change of the language to take effect."
 msgstr ""
 "Sie müssen das Programm neu starten, damit sich eine Änderung der Sprache "
 "auswirkt."
@@ -1696,8 +1702,10 @@ msgid "Same as PostScript viewer"
 msgstr "Gleich wie PostScript-Betrachter"
 
 #: ../options/PathAndViewPanel.java:101
-msgid "Command line for fax viewer: (insert %s as a placeholder for the filename)"
-msgstr "Befehlszeile für Fax-Betrachter: (%s als Platzhalter für Dateinamen einfügen)"
+msgid ""
+"Command line for fax viewer: (insert %s as a placeholder for the filename)"
+msgstr ""
+"Befehlszeile für Fax-Betrachter: (%s als Platzhalter für Dateinamen einfügen)"
 
 #: ../options/PathAndViewPanel.java:103
 msgid ""
@@ -1708,7 +1716,8 @@ msgstr ""
 "einfügen)"
 
 #: ../options/PathAndViewPanel.java:105
-msgid "Command line for PDF viewer: (insert %s as a placeholder for the filename)"
+msgid ""
+"Command line for PDF viewer: (insert %s as a placeholder for the filename)"
 msgstr ""
 "Kommandozeile für PDF-Betrachter: (%s als Platzhalter für Dateinamen "
 "einfügen)"
@@ -1766,7 +1775,7 @@ msgid "Current phone book:"
 msgstr "Aktuelles Telefonbuch:"
 
 #: ../phonebook/NewPhoneBookWin.java:276 ../send/SendWin.java:328
-#: ../send/SimplifiedSendDialog.java:286
+#: ../send/SimplifiedSendDialog.java:288
 msgid "Comments:"
 msgstr "Kommentare:"
 
@@ -1885,7 +1894,8 @@ msgstr "LDAP-Telefonbuch (nur lesen)"
 
 #: ../phonebook/ldap/LDAPPhoneBook.java:55
 msgid "A phone book reading its entries from an LDAP directory."
-msgstr "Ein Telefonbuch, das seine Einträge aus einem LDAP-Verzeichnis bezieht."
+msgstr ""
+"Ein Telefonbuch, das seine Einträge aus einem LDAP-Verzeichnis bezieht."
 
 #: ../phonebook/ldap/LDAPPhoneBook.java:119
 #: ../phonebook/ldap/ConnectionDialog.java:279
@@ -2463,7 +2473,8 @@ msgstr "Benutze max. Vertikalauflösung"
 
 #: ../model/archive/QueueFileFormat.java:91
 msgid "Whether or not to use highest vertical resolution"
-msgstr "Ob die höchstmögliche Vertikalauflösung verwendet werden soll oder nicht"
+msgstr ""
+"Ob die höchstmögliche Vertikalauflösung verwendet werden soll oder nicht"
 
 #: ../DateStyle.java:66
 msgid "(Language default)"
@@ -2684,11 +2695,11 @@ msgstr "Fax senden"
 msgid "Poll fax"
 msgstr "Fax abrufen"
 
-#: ../send/SendWin.java:275 ../send/SimplifiedSendDialog.java:263
+#: ../send/SendWin.java:275 ../send/SimplifiedSendDialog.java:264
 msgid "Use cover page"
 msgstr "Deckblatt verwenden"
 
-#: ../send/SendWin.java:283 ../send/SimplifiedSendDialog.java:465
+#: ../send/SendWin.java:283 ../send/SimplifiedSendDialog.java:467
 msgid "Use custom cover page:"
 msgstr "Eigenes Deckblatt benutzen"
 
@@ -2708,7 +2719,7 @@ msgstr "Ort:"
 msgid "Voice number:"
 msgstr "Telefonnummer:"
 
-#: ../send/SendWin.java:327 ../send/SimplifiedSendDialog.java:285
+#: ../send/SendWin.java:327 ../send/SimplifiedSendDialog.java:287
 msgid "Subject:"
 msgstr "Betreff:"
 
@@ -2721,11 +2732,11 @@ msgid "Fax number(s):"
 msgstr "Faxnummern:"
 
 #: ../send/SendWin.java:567 ../send/SendWin.java:572
-#: ../send/SimplifiedSendDialog.java:213 ../send/SimplifiedSendDialog.java:232
+#: ../send/SimplifiedSendDialog.java:214 ../send/SimplifiedSendDialog.java:233
 msgid "Preview"
 msgstr "Vorschau"
 
-#: ../send/SendWin.java:572 ../send/SimplifiedSendDialog.java:213
+#: ../send/SendWin.java:572 ../send/SimplifiedSendDialog.java:214
 msgid ""
 "Nothing to preview! (Neither a cover page nor a file to send has been "
 "selected.)"
@@ -2733,55 +2744,55 @@ msgstr ""
 "Keine Dokumente für die Vorschau verfügbar! (Es wurden weder ein Deckblatt "
 "noch eine zu versendende Datei ausgewählt.)"
 
-#: ../send/SendWin.java:634 ../send/SimplifiedSendDialog.java:361
+#: ../send/SendWin.java:634 ../send/SimplifiedSendDialog.java:363
 msgid "Choose number from phone book"
 msgstr "Nummer aus dem Telefonbuch auswählen"
 
-#: ../send/SendWin.java:658 ../send/SimplifiedSendDialog.java:598
+#: ../send/SendWin.java:658 ../send/SimplifiedSendDialog.java:603
 msgid "An error occured reading the input: "
 msgstr "Beim Lesen der Eingabe ist ein Fehler aufgetreten:"
 
-#: ../send/SimplifiedSendDialog.java:129
+#: ../send/SimplifiedSendDialog.java:130
 msgid ">> Advanced"
 msgstr ">> Erweitert"
 
-#: ../send/SimplifiedSendDialog.java:130
+#: ../send/SimplifiedSendDialog.java:131
 msgid "<< Simplified"
 msgstr "<< Vereinfacht"
 
-#: ../send/SimplifiedSendDialog.java:137
+#: ../send/SimplifiedSendDialog.java:138
 msgid "Send fax"
 msgstr "Sende Fax"
 
-#: ../send/SimplifiedSendDialog.java:324
+#: ../send/SimplifiedSendDialog.java:326
 msgid "File(s) to send:"
 msgstr "Zu sendende Datei(en):"
 
-#: ../send/SimplifiedSendDialog.java:360
+#: ../send/SimplifiedSendDialog.java:362
 msgid "Add from phone book..."
 msgstr "Aus Telefonbuch hinzufügen..."
 
-#: ../send/SimplifiedSendDialog.java:377
+#: ../send/SimplifiedSendDialog.java:379
 msgid "Add a new recipient"
 msgstr "Neuen Empfänger hinzufügen"
 
-#: ../send/SimplifiedSendDialog.java:392 ../send/TextFieldList.java:149
+#: ../send/SimplifiedSendDialog.java:394 ../send/TextFieldList.java:149
 msgid "Remove"
 msgstr "Löschen"
 
-#: ../send/SimplifiedSendDialog.java:394
+#: ../send/SimplifiedSendDialog.java:396
 msgid "Remove selected recipient"
 msgstr "Ausgewählten Empfänger entfernen"
 
-#: ../send/SimplifiedSendDialog.java:436
+#: ../send/SimplifiedSendDialog.java:438
 msgid "Fax number:"
 msgstr "Faxnummer:"
 
-#: ../send/SimplifiedSendDialog.java:438
+#: ../send/SimplifiedSendDialog.java:440
 msgid "Recipients:"
 msgstr "Empfänger:"
 
-#: ../send/SimplifiedSendDialog.java:506
+#: ../send/SimplifiedSendDialog.java:511
 msgid "Time to send:"
 msgstr "Absendezeitpunkt:"
 
@@ -2791,7 +2802,8 @@ msgstr "<stdin>"
 
 #: ../send/LocalFileTFLItem.java:60
 #, java-format
-msgid "The document {0} could not be converted to PostScript, PDF or TIFF. Reason:"
+msgid ""
+"The document {0} could not be converted to PostScript, PDF or TIFF. Reason:"
 msgstr ""
 "Das Dokument {0} konnte nicht nach PostScript, PDF oder TIFF konvertiert "
 "werden. Grund:"
@@ -2875,7 +2887,8 @@ msgstr "Beim Abschicken des Faxes ist ein Fehler aufgetreten:"
 
 #: ../send/SendController.java:413
 msgid "To send a fax you have to enter at least one phone number!"
-msgstr "Sie müssen mindestens eine Telefonnummer angeben, um ein Fax zu verschicken!"
+msgstr ""
+"Sie müssen mindestens eine Telefonnummer angeben, um ein Fax zu verschicken!"
 
 #: ../send/SendController.java:413 ../send/SendController.java:420
 #: ../send/SendController.java:430
@@ -2940,4 +2953,3 @@ msgstr "Aktualisiert den ausgewählten Eintrag"
 #: ../send/MinutesFormatter.java:62
 msgid "minutes"
 msgstr "Minuten"
-
