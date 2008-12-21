@@ -341,7 +341,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         textBaseDN.setText(src.baseDN);
         textBindDN.setText(src.bindDN);
         textFilter.setText(src.objectFilter);
-        textPassword.setText(src.credential);
+        textPassword.setText(src.credential.getPassword());
         textPort.setText(Integer.toString(src.port));
         textServerName.setText(src.serverName);
         textDisplayCaption.setText(src.displayCaption);
@@ -361,7 +361,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         dst.baseDN = textBaseDN.getText();
         dst.bindDN = textBindDN.getText();
         dst.objectFilter = textFilter.getText();
-        dst.credential = new String(textPassword.getPassword());
+        dst.credential.setPassword(new String(textPassword.getPassword()));
         dst.port = Integer.parseInt(textPort.getText());
         dst.serverName = textServerName.getText();
         dst.displayCaption = textDisplayCaption.getText();

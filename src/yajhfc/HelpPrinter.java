@@ -20,7 +20,8 @@ package yajhfc;
 
 import gnu.getopt.LongOpt;
 
-import java.io.PrintStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
@@ -57,8 +58,9 @@ public class HelpPrinter {
     /**
      * Prints usage information
      * @param out
+     * @throws IOException 
      */
-    public static void printHelp(PrintStream outStream, LongOpt[] options, String cols) {
+    public static void printHelp(PrintWriter out, LongOpt[] options, String cols) throws IOException {
         int screenWidth = 80;
         if (cols != null) {
             try {
@@ -67,11 +69,10 @@ public class HelpPrinter {
                     screenWidth = 40;
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Invalid number of columns: " + cols);
+                System.err.println("Invalid number of columns: " + cols);
             }
         }
         
-        StringBuilder out = new StringBuilder();
         String[] argDescs = new String[options.length]; // Cache for argument descriptions (we need them twice)
         
         int optionwidth = 0;
@@ -135,22 +136,22 @@ public class HelpPrinter {
             out.append('\n');
         }
         
-        outStream.print(out);
+        out.flush();
     }
     
-    private static void appendSpaces(StringBuilder out, int numspaces) {
+    private static void appendSpaces(Appendable out, int numspaces) throws IOException {
         for (int i=0; i<numspaces; i++) {
             out.append(' ');
         }
     }
     
     private static final Pattern wordSplitter = Pattern.compile("(\\s|\n)+");
-    private static void printWrapped(StringBuilder out, int indent, String text, int screenWidth) {
+    private static void printWrapped(Appendable out, int indent, String text, int screenWidth) throws IOException {
         int pos = indent;
 
         for (String word: wordSplitter.split(text)) {
             pos += word.length();
-            if (pos > screenWidth) {
+            if (pos >= screenWidth) {
                 out.append('\n');
                 appendSpaces(out, indent);
                 pos = indent + word.length();

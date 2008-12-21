@@ -44,16 +44,14 @@ public class TIFFLibConverter implements FileConverter {
     protected static final String[] tiff2psParams = {
         "-a1",
     };
-
-    protected final FileFormat targetFormat;
     
     /* (non-Javadoc)
      * @see yajhfc.file.FileConverter#convertToHylaFormat(java.io.File, java.io.OutputStream, yajhfc.PaperSize)
      */
     public void convertToHylaFormat(File inFile, OutputStream destination,
-            PaperSize paperSize) throws ConversionException, IOException {
+            PaperSize paperSize, FileFormat desiredFormat) throws ConversionException, IOException {
         
-        List<String> commandLine = getCommandLine(targetFormat, inFile);
+        List<String> commandLine = getCommandLine(desiredFormat, inFile);
         if (Utils.debugMode) {
             log.fine("Invoking tiff2pdf with the following command line:");
             for (String item : commandLine) {
@@ -63,7 +61,7 @@ public class TIFFLibConverter implements FileConverter {
         Process tiff2PDF = new ProcessBuilder(commandLine).start();
         //tiff2PDF.getOutputStream().close();
 
-        if (targetFormat == FileFormat.PDF) {
+        if (desiredFormat == FileFormat.PDF) {
             // Work around a strange bug which results in garbage (a TIFF signature followed by NULs)
             // at the beginning of the stream
             final byte[] buf = new byte[1000];
@@ -139,12 +137,4 @@ public class TIFFLibConverter implements FileConverter {
         return commandLine;
     }
 
-    public TIFFLibConverter(FileFormat targetFormat) {
-        super();
-        this.targetFormat = targetFormat;
-    }
-    
-    
-    public static final TIFFLibConverter PDF_CONVERTER = new TIFFLibConverter(FileFormat.PDF);
-    public static final TIFFLibConverter POSTSCRIPT_CONVERTER = new TIFFLibConverter(FileFormat.PostScript);
 }

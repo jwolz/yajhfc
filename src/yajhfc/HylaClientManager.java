@@ -41,12 +41,12 @@ public class HylaClientManager {
         modems = null;
         
         if (!myopts.askPassword)
-            password = myopts.pass;
+            password = myopts.pass.getPassword();
         else
             password = null;
         
         if (!myopts.askAdminPassword)
-            adminPassword = myopts.AdminPassword;
+            adminPassword = myopts.AdminPassword.getPassword();
         else
             adminPassword = null;
         

@@ -20,6 +20,7 @@ import javax.print.event.PrintJobListener;
 
 import yajhfc.PaperSize;
 import yajhfc.Utils;
+import yajhfc.file.FormattedFile.FileFormat;
 import yajhfc.util.ReplacerOutputStream;
 
 /*
@@ -53,7 +54,7 @@ public class PrintServiceFileConverter implements PrintJobListener, FileConverte
         this.flavor = flavor;
     }
       
-    public void convertToHylaFormat(File inFile, OutputStream destination, PaperSize paperSize) throws ConversionException {
+    public void convertToHylaFormat(File inFile, OutputStream destination, PaperSize paperSize, FileFormat desiredFormat) throws ConversionException {
         try {
             convertUsingPrintService(inFile.toURI().toURL(), destination, paperSize);
         } catch (MalformedURLException e) {

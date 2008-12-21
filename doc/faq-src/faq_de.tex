@@ -1,16 +1,18 @@
-\documentclass[a4paper,10pt]{scrartcl}
+\documentclass[a4paper,10pt,halfparskip,noparindent]{scrartcl}
 \usepackage[latin1]{inputenc}
 \usepackage{url}
 \usepackage[left=3cm,right=3cm,top=2cm,bottom=2cm,nohead]{geometry}
 \usepackage{ngerman}
 \usepackage[colorlinks=false,pdfborder=0 0 0]{hyperref}
 \usepackage[T1]{fontenc}
+\usepackage{textcomp}
 
 %opening
 \title{YajHFC FAQ}
 \author{}
 \date{}
 \begin{document}
+\sloppy
 
 \maketitle
 
@@ -54,14 +56,29 @@ Geben Sie einfach \verb.open %s. in das \texttt{Befehlszeile für Faxviewer}-Eing
 Die Faxe sollten nun mit der eingestellten Standardanwendung geöffnet werden.
 Danke an Scott Harris für diese Info.
 
-
 \subsection{Woher bekomme ich einen PostScript-Viewer?}
 \begin{description}
 \item[Windows:] Verwenden Sie am besten Ghostview von \url{http://www.cs.wisc.edu/~ghost/}
 \item[Linux/*BSD/...:] Installieren Sie am besten irgendeines der PostScript-Viewer-Pakete
                 (z.B. \texttt{gv, kghostview, gnome-gv, ...})
 \end{description}
-		
+
+\subsection{Woher bekomme ich GhostScript?}
+\begin{description}
+\item[Windows:] Laden Sie es von \url{http://www.cs.wisc.edu/~ghost/} herunter
+\item[Linux/*BSD/...:] 
+Installieren Sie das GhostScript-Paket für Ihre Distribution (meistens wird es schon installiert sein; wenn nicht: der Paketname beginnt üblicherweise mit  \texttt{ghostscript} oder \texttt{gs})
+\end{description}
+
+\subsection{Woher bekomme ich TIFF2PDF?}
+\begin{description}
+\item[Windows:] 
+Laden Sie es von \url{http://gnuwin32.sourceforge.net/downlinks/tiff.php} herunter.\\
+Falls dieser Link nicht funktionert, sehen Sie bitte unter \url{http://gnuwin32.sourceforge.net/packages/tiff.htm} oder \url{http://www.libtiff.org/} nach.
+\item[Linux/*BSD/...:] 
+Installieren Sie das "`libtiff tools"'-Paket für Ihre Distribution. Normalerweise hat dieses Paket das Wort \texttt{tiff} in seinem Namen (unter Debian/Ubuntu heißt es \texttt{libtiff-tools} und unter SUSE \texttt{tiff}).
+\end{description}
+
 \section{Benutzung des Programms}	
 
 \subsection{Wie kann ich PostScript-Deckblattvorlagen bearbeiten?}
@@ -73,17 +90,6 @@ man solche Dateien anlegen bzw. bearbeiten kann (auf Englisch):\\
 \url{http://www.hylafax.org/howto/tweaking.html}\\
 
 Alternativ können Sie ab YajHFC 0.3.7 auch Deckblätter im HTML-Format benutzen, oder mit Hilfe eines Plugins im XSL:FO- und ODT-Format.
-
-\subsection{Ich habe ein HTML-Dokument/Deckblatt erstellt, aber die Formatierung in YajHFC ist nicht korrekt!}
-
-YajHFC verwendet die in Java integrierte HTML-Unterstützung (\texttt{HTMLEditorKit} / \texttt{HTMLDocument}), um HTML in PostScript zu konvertieren. Allerdings ist diese Unterstützung relativ eingeschränkt, insbesondere unterstützt sie nur HTML 3.2.\\
-Dies bedeutet, dass komplexe Layouts in YajHFC vermutlich häufig nicht korrekt dargestellt werden. Um das gewünschte Layout zu erreichen, gibt es im Grunde die folgenden Möglichkeiten:
-
-\begin{itemize}
- \item Probieren Sie solange herum ("`trial \& error"'), bis das Layout richtig aussieht (der Vorschau-Knopf im Sendedialog zeigt das Layout der konvertierten HTML-Datei an).
- \item Verwenden Sie einen HTML-Editor wie Ekit (\url{http://www.hexidec.com/ekit.php}), der ebenfalls die Java-HTML-Unterstützung verwendet, so dass die Darstellung ähnlich zu der in YajHFC ist.
- \item Verwenden Sie ein anderes Format für das Deckblatt (z.B. XSL:FO oder ODT mit dem FOP Plugin).
-\end{itemize}
 
 \subsection{Welche Felder werden in einem HTML-Deckblatt erkannt?}
 
@@ -107,8 +113,44 @@ Die folgenden "`Wörter"' werden (ohne Berücksichtigung der Groß-/""Kleinschreibu
 \ttfamily @@FromEMail@@ &  Die E-Mail-Adresse des Senders \\\hline
 \ttfamily @@Subject@@ & Der Betreff des Faxes \\\hline
 \ttfamily @@Date@@ & Das heutige Datum \\\hline
-\ttfamily @@PageCount@@ & Die Seitenanzahl ohne das Deckblatt selbst \\\hline
+\ttfamily @@PageCount@@ & Die Seitenanzahl \textit{ohne} das Deckblatt selbst \\\hline
 \ttfamily @@Comments@@ & Die für dieses Fax eingegebenen Kommentare \\\hline
+\end{tabular}
+\end{center}
+
+Beginnend mit Version 0.4.0, sind die folgenden zusätzlichen Felder verfügbar (beachten Sie, dass die kursiven Felder leer sind, wenn Sie "`Fax erneut senden"' verwenden):
+\begin{center}
+\begin{tabular}{|l|p{.7\textwidth}|}
+\hline
+\bfseries Wort & \bfseries Bedeutung \\
+\hline\hline
+\ttfamily @@Surname@@ & Der Nachname des Empfängers (erneut gesendete Faxe: gleich wie \texttt{@@Name@@}) \\\hline
+\ttfamily\itshape @@GivenName@@ & Der Vorname des Empfängers \\\hline
+\ttfamily\itshape @@Title@@ & Der Titel des Empfängers \\\hline
+\ttfamily\itshape @@Position@@ & Die Position des Empfängers \\\hline
+\ttfamily\itshape @@Department@@ & Die Abteilung des Empfängers\\\hline
+\ttfamily @@CompanyName@@ & Der Firmenname des Empfängers (ohne Abteilung) (erneut gesendete Faxe: gleich wie  \texttt{@@Company@@})\\\hline
+\ttfamily\itshape @@Street@@ & Die Straße des Empfängers \\\hline
+\ttfamily @@Place@@ & Der Ort des Empfängers (ohne PLZ oder Straße) (erneut gesendete Faxe: gleich wie \texttt{@@Location@@})\\\hline
+\ttfamily\itshape @@ZIPCode@@ & Die Postleitzahl des Empfängers \\\hline
+\ttfamily\itshape @@State@@ & Die Region bzw. der Bundesstaat des Empfängers\\\hline
+\ttfamily\itshape @@Country@@ & Das Land des Empfängers\\\hline
+\ttfamily\itshape @@EMail@@ & Die E-Mail-Adresse des Empfängers\\\hline
+\ttfamily\itshape @@WebSite@@ & Die Website des Empfängers\\\hline\hline
+\ttfamily @@FromSurname@@ & Der Nachname des Senders \\\hline
+\ttfamily @@FromGivenName@@ & Der Vorname des Senders \\\hline
+\ttfamily @@FromTitle@@ & Der Titel des Senders \\\hline
+\ttfamily @@FromPosition@@ & Die Position des Senders \\\hline
+\ttfamily @@FromDepartment@@ & Die Abteilung des Senders\\\hline
+\ttfamily @@FromCompanyName@@ & Der Firmenname (ohne Abteilung) des Senders\\\hline
+\ttfamily @@FromStreet@@ & Die Straße des Senders \\\hline
+\ttfamily @@FromPlace@@ & Der Ort des Senders (ohne PLZ oder Straße)\\\hline
+\ttfamily @@FromZIPCode@@ & Die Postleitzahl des Senders \\\hline
+\ttfamily @@FromState@@ & Die Region bzw. der Bundesstaat des Senders\\\hline
+\ttfamily @@FromCountry@@ & Das Land des Senders\\\hline
+\ttfamily @@FromEMail@@ & Die E-Mail-Adresse des Senders\\\hline
+\ttfamily @@FromWebSite@@ & Die Website des Senders\\\hline
+\ttfamily @@TotalPageCount@@ & Die Seitenanzahl \textit{inklusive} des Deckblatts \\\hline
 \end{tabular}
 \end{center}
 
@@ -142,29 +184,181 @@ für den Effekt des \verb#?#-Wildcards \verb#.#.
 \subsection{Welche Kommandozeilenargumente werden von YajHFC unterstützt?}
 
 \begin{verbatim}
-Allgemeine Syntax:
-java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose]
-         [--configdir=directory] [--loadplugin=filename] [--logfile=filename]
-         [--showtab=0|R|1|S|2|T] [--recipient=...] [--stdin | filename ...]
-Beschreibung der Argumente:
-Dateiname    Ein oder mehrere Dateinamen der zu sendenden Dokumente.
---stdin      Das zu sendende Dokument von der Standardeingabe lesen.
---recipient  Gibt die Telefonnummer des Faxempfängers an.
-             Sie können mehrere Argumente für mehrere Empfänger angeben.
---admin      Im "Admin-Modus" starten.
---debug      Debugging-Informationen ausgeben.
---logfile    Die Logdatei, in die die Debugging-Informationen geschrieben werden
-             (falls nicht angegeben, benutze die Standardausgabe (stdout))
---background Falls es noch keine laufende Instanz gibt, starte eine neue
-             und terminiere (nach Absenden des zu sendenden Dokuments)
---noclose    YajHFC nach Absenden des Dokuments nicht schließen
---showtab    Setzt den beim Start anzuzeigenden Tab. Geben Sie 0 oder R für den Tab "Empfangen",
-             1 oder S für "Gesendet" oder 2 oder T für "Sendend" an.
---loadplugin Gibt die JAR-Datei eines zu ladenden YajHFC-Plugins an.
---no-plugins Deaktiviert das Laden von Plugins aus der plugin.lst-Datei.
---configdir  Setzt ein anstatt von ~/.yajhfc zu verwendendes Konfigurationsverzeichnis.
---help       Zeigt diesen Text an.
+Aufruf:
+java -jar yajhfc.jar [OPTIONEN]... [ZU SENDENDE DATEIEN]...
+
+Argumentbeschreibung:
+-r, --recipient=EMPFÄNGER    Gibt einen Faxempfänger an. Sie können entweder
+                             eine Faxnummer oder detaillierte
+                             Deckblattinformationen angeben (siehe die FAQ für
+                             das Format im letzteren Fall). Sie können
+                             --recipient mehrmals angeben für mehrere Empfänger.
+-C, --use-cover[=yes|no]     Benutze ein Deckblatt beim Versendes des Faxes.
+-s, --subject=BETREFF        Der Betreff des Faxes für das Deckblatt.
+    --comment=KOMMENTAR      Der Kommentar für das Deckblatt.
+    --stdin                  Lese die zu sendende Datei von der Standardeingabe.
+-A, --admin                  Starte im Admin-Modus.
+-d, --debug                  Gib einige Debugging-Informationen aus.
+-l, --logfile=LOGDATEI       Die Logdatei, in die die Debugginginformationen
+                             ausgeben (falls nicht angegeben, benutze die
+                             Standardausgabe).
+    --appendlogfile=LOGDATEI Hänge die Debugginginformationen an die angegebene
+                             Logdatei an.
+    --background             Falls noch keine Instanz von YajHFC läuft, erstelle
+                             eine neue Instanz und beende diese Instanz (nachdem
+                             das zu sendende Fax abgeschickt wurde)
+    --noclose                YajHFC nach Absenden des Faxes nicht schließen.
+-T, --showtab=0|R|1|S|2|T    Setzt den beim Start anzuzeigenden Tab. Geben Sie 0
+                             oder R für den Tab "Empfangen", 1 oder S für
+                             "Gesendet" oder 2 oder T für "Sendend" an.
+    --loadplugin=JARDATEI    Gibt die JAR-Datei eines zu ladenden YajHFC-Plugins
+                             an.
+    --loaddriver=JARDATEI    Gibt die JAR-Datei eines zu ladenden JDBC-Treibers
+                             an.
+    --no-plugins             Deaktiviert das Laden von Plugins aus der
+                             plugin.lst-Datei.
+    --no-gui                 Sende ein Fax mit einer nur minimalen graphischen
+                             Oberfläche.
+    --no-check               Unterdrückt die Prüfung der Javaversion beim Start.
+-c, --configdir=VERZEICHNIS  Setzt ein anstatt von ~/.yajhfc zu verwendendes
+                             Konfigurationsverzeichnis.
+-h, --help[=SPALTEN]         Zeigt diesen Text (ggf. formatiert für SPALTEN
+                             Spalten) an.
 \end{verbatim}
+
+
+\subsection{Wie kann ich mittels des \texttt{-{-}recipient}-Parameters Informationen für das Deckblatt übergeben?}
+
+Beginnend mit Version 0.4.0 können Sie solche Informationen über \texttt{Name:Wert}-Paate, getrennt durch Semikolons, übergeben.
+Zum Beispiel, um ein Fax zu "`Max Mustermann"' in "`Bad Musterstadt"' mit der Faxnummer 0123456 zu senden, benutzen Sie bitte die folgende Kommandozeile:
+
+\texttt{java -jar yajhfc.jar \textit{[...]} -{-}recipient=\dq givenname:Max;surname:Mustermann;location:Bad Musterstadt;faxnumber:0123456\dq \textit{[...]}}
+
+Die folgenden Feldnamen werden erkannt:
+\begin{center}
+\begin{tabular}{|l|p{.7\textwidth}|}
+\hline
+\bfseries Field name & \bfseries Meaning \\
+\hline\hline
+\ttfamily surname & Der Nachname des Empfängers \\\hline
+\ttfamily givenname & Der Vorname des Empfängers \\\hline
+\ttfamily title & Der Titel des Empfängers \\\hline
+\ttfamily position & Die Position des Empfängers \\\hline
+\ttfamily department & Die Abteilung des Empfängers\\\hline
+\ttfamily company & Der Firmenname des Empfängers\\\hline
+\ttfamily street & Die Straße des Empfängers \\\hline
+\ttfamily location & Der Ort des Empfängers\\\hline
+\ttfamily zipcode & Die PLZ des Empfängers \\\hline
+\ttfamily state & Der Bundesstaat bzw. die Region des Empfängers\\\hline
+\ttfamily country & Das Land des Empfängers\\\hline
+\ttfamily email & Die E-Mail-Adresse des Empfängers\\\hline
+\ttfamily faxnumber & Die Faxnummer des Empfängers \\\hline
+\ttfamily voicenumber & Die Telefonnummer des Empfängers \\\hline
+\ttfamily website & Die Website des Empfängers\\\hline
+\end{tabular}
+\end{center}
+
+\subsection{Was bedeutet die Tabellenspalte XYZ?}
+
+Höchstwahrscheinlich weiß ich das auch nicht so genau, da ich die
+Spaltenbeschreibungen einfach aus der \verb.faxstat(1).-man page (JobFmt/RcvFmt)
+herauskopiert und nach bestem Wissen ggf. abgekürzt und übersetzt habe.
+
+\subsection{Wie kann ich Standardeinstellungen festlegen?}
+
+Beginnend mit Version 0.4.0 werden die folgenden Dateien (falls sie existieren) geladen, um die gespeicherten Einstellungen wiederherzustellen:
+\begin{enumerate}
+ \item \texttt{[Verzeichnis, in dem sich yajhfc.jar befindet]/settings.default}
+ \item die Benutzereinstellungen aus \texttt{\{user.home\}\footnote{Unter Windows ist \texttt{user.home} üblicherweise \texttt{C:\textbackslash Dokumente und Einstellungen\textbackslash BENUTZERNAME}.}/.yajhfc/settings} (falls \texttt{-{-}configdir=DIR} angegeben wurde, wird stattdessen \texttt{DIR/settings} verwendet)
+ \item \texttt{[Verzeichnis, in dem sich yajhfc.jar befindet]/settings.override}
+\end{enumerate}
+
+Die Einstellungen aus später geladenenen Dateien überschreiben dabei die Einstellungen aus den früher geladenen Dateien, d.h. die Einstellungen aus \texttt{settings.override} haben Priorität vor den Benutzereinstellungen und vor \texttt{settings.default}.
+\medskip
+
+Diese Logik kann dazu verwendet werden, Standardeinstellungen festzulegen (z.B. innerhalb eines Netzwerks):\\
+Konfigurieren Sie einfach eine YajHFC"=Installation nach Wunsch, kopieren Sie dann \texttt{\{user.home\}/.yajhfc/settings} in das Verzeichnis, in dem \texttt{yajhfc.jar} ist und bennenen Sie diese Datei in \texttt{settings.default} um.
+\medskip
+
+Auf ähnliche Weise können "`Overrides"' (Einstellungen, die die Benutzereinstellungen immer überschreiben) festgelegt werden. In diesem Fall ist es allerdings zu empfehlen, die \texttt{settings}"=Datei zu editieren (sie ist eine einfache Textdatei) und alle Zeilen für Einstellungen, die sie nicht überschreiben möchten, zu entfernen (üblicherweise betrifft dies zumindest \texttt{user} und \texttt{pass-obfuscated} (Benutzername und Passwort für die Verbindung zum HylaFAX"=Server), \texttt{FromName}, \texttt{*ColState} (die Breiten der Tabellenspalten), \texttt{*Bounds} (die Größe und Position der verschiedenen Fenster) und \texttt{mainwinLastTab}).
+
+Beachten Sie allerdings, dass der Benutzer diese Einstellungen in einer laufenden YajHFC"=Instanz immer noch auf einen anderen Wert setzen kann. Sie werden erst wieder auf die "`Override"=Werte"' gesetzt, wenn YajHFC neu gestartet wird (in anderen Worten: der Benutzer kann diese Einstellungen setzen, aber Sie werden zwischen zwei Starts von YajHFC nicht gespeichert).
+
+
+\subsection{Wie kann ich das HylaFAX \texttt{archive}"=Verzeichnis in YajHFC anzeigen?}
+
+Mit Version 0.4.0 wurde eine Unterstützung für das HylaFAX \texttt{archive}"=Verzeichnis hinzugefügt.
+
+Auf dieses Verzeichnis kann allerdings nicht wie bei den anderen Verzeichnisse über die "`normale"' HylaFAX"=Verbindung zugegriffen werden, da mit HylaFAX nur eine Liste der Unterverzeichnisse unterhalb des \texttt{archive}"=Verzeichnisses geholt werden kann, aber keine weiteren Information (außer der ID) über die archivierten Aufträge oder die zugehörigen Dokumente abgerufen werden können (falls Sie eine HylaFAX"=Version kennen, die dies ermöglicht, lassen Sie es mich bitte wissen).
+
+Aus diesem Grund muss auf dieses Verzeichnis auf einem anderen Weg zugegriffen werden.
+Im Moment (0.4.0) unterstützt YajHFC nur den Zugriff über das Dateisystem. Das heißt, dass Sie das \texttt{archive}"=Verzeichnis auf dem Server mittels Samba, NFS oder irgendeinem anderen Netzwerkdateisystem freigeben müssen, es auf dem Klienten einbinden (falls Sie Unix verwenden; unter Windows können Sie auch einfach UNC"=Pfade verwenden) und in den Optionen von YajHFC einstellen, unter welchem Pfad das \texttt{archive}"=Verzeichnis gefunden werden kann.
+
+Sobald dies erledigt wurde, sollte die Archiv"=Tabelle genau wie die anderen Tabellen funktionieren.
+
+
+\subsection{Was bewirken die verschiedenen Optionen unter \texttt{Pfade \& Betrachter -> Einstellungen für Betrachten und Senden} (0.4 aufwärts)?}
+
+Für Ungeduldige: Die empfohlenen Einstellungen sind (da diese \texttt{gs} und \texttt{tiff2pdf} benötigen, sind sie allerdings nicht voreingestellt):
+\begin{itemize}
+ \item \textbf{Format:} PDF oder TIFF
+ \item \textbf{Sende mehrere Dateien als:} Einzelne Datei ohne Deckblatt
+ \item \textbf{Zeige als einzelne Datei an:} Ja
+ \item \textbf{Zeige/sende immer in diesem Format:} Ja
+\end{itemize}
+
+\subsubsection{Format zum Betrachten/Senden}
+
+Das Format, in das die Dokumente falls nötig konvertiert werden sollen. Im Allgemeinen funktionieren PDF und TIFF hier deutlich besser als PostScript (da für das letztere GhostScripts \texttt{pswrite}"=Device verwendet wird).
+
+\subsubsection{Sende mehrere Dateien als}
+
+{\parindent0pt
+\textbf{Mehrere Dateien:}\\
+Das selbe Verhalten wie Versionen vor 0.4.0. Wenn Sie mehrere Dateien an einen einzelnen Faxauftrag anhängen, werden diese Dokumente in PS oder PDF konvertiert, aber weiterhin als separate Dateien gehalten (z.B. wenn Sie ein Fax mit den Dateien \texttt{doc.ps} und \textbf{picture.jpg} senden, werden zwei Dateien hochgeladen).
+\medskip
+
+\textbf{Einzelne Datei ohne Deckblatt:}\\
+Für das gesamte Fax wird eine einzelne Datei erstellt, das Deckblatt aber als separate Datei gehalten (z.B. wenn Sie ein Fax mit den Dateien \texttt{doc.ps} und \textbf{picture.jpg} senden, wird eine einzelne PDF/PS/TIFF"=Datei erstellt und hochgeladen).
+\textit{Vorteil:} Die Auflösung wird auf 196dpi reduziert (\textrightarrow kleinere Dateien/kleinerer Upload) und eine einzige Dokumentendatei kann bei einem Fax an mehrere Empfänger verwendet werden.
+\medskip
+
+\textbf{Komplettes Fax als einzelne Datei:}\\
+Für das gesamte Fax wird eine einzige Datei einschließlich des Deckblatts erstellt. Falls das Fax kein Deckblatt hat, verhält sich diese Einstellung gleich wie oben.\\
+\textit{Vorteil:} Beim Betrachten des Faxes sind keine Konvertierungen auf den Klienten nötig.\\
+\textit{Nachteil:} Wenn ein Fax an mehrere Empfänger gesendet wird, muss für jeden Empfänger eine Datei erzeugt und hochgeladen werden.
+}
+
+\subsubsection{Zeige Fax als einzelne Datei an}
+
+Falls diese Einstellung aktiviert ist und das Fax aus mehreren Dateien besteht, wird zum Betrachten eine einzige Datei erzeugt (auf dem Klienten).
+
+
+\subsubsection{Betrachte/Sende Faxe immer in diesem Format}
+
+Diese Option modifiziert das Verhalten von "`Sende mehrere Dateien als"' und "`Zeige Fax als einzelne Datei an"'.\\
+Wenn diese Option \textit{deaktiviert} ist, wird ein Fax nur konvertiert, wenn es aus mehreren Dateien besteht. Wenn es aus einer einzelnen Datei besteht, wird das Format beibehalten.\\
+Wenn diese Option \textit{aktiviert} ist, wird ein aus einer einzelnen Datei bestehendes Fax auch dann konvertiert, wenn sich das Format dieser Datei von dem bei "`Format zum Betrachten/Senden"' ausgewählten unterscheidet.\\
+\textit{Vorteil:} Sowohl für gesendete als auch für empfangene Faxe wird der selbe Betrachter benutzt (z.B. um auch empfangene Faxe als PDF anzuzeigen).\\
+\textit{Nachteil:} Üblicherweise sind auf dem Klienten mehr Konvertierungen nötig.
+
+
+\subsection{Welche Zeichen werden beim Datums- und Uhrzeitformat erkannt?}
+
+Die Datumsformatierung erfolgt durch ein Java"=\texttt{SimpleDateFormat}. Eine Beschreibung der erkannten Buchstaben kann unter \url{http://java.sun.com/j2se/1.5.0/docs/api/java/text/SimpleDateFormat.html} (Englisch) gefunden werden.
+
+\section{Problems/Known bugs}
+
+\subsection{Ich habe ein HTML-Dokument/Deckblatt erstellt, aber die Formatierung in YajHFC ist nicht korrekt!}
+
+YajHFC verwendet die in Java integrierte HTML-Unterstützung (\texttt{HTMLEditorKit} / \texttt{HTMLDocument}), um HTML in PostScript zu konvertieren. Allerdings ist diese Unterstützung relativ eingeschränkt, insbesondere unterstützt sie nur HTML 3.2.\\
+Dies bedeutet, dass komplexe Layouts in YajHFC vermutlich häufig nicht korrekt dargestellt werden. Um das gewünschte Layout zu erreichen, gibt es im Grunde die folgenden Möglichkeiten:
+
+\begin{itemize}
+ \item Probieren Sie solange herum ("`trial \& error"'), bis das Layout richtig aussieht (der Vorschau-Knopf im Sendedialog zeigt das Layout der konvertierten HTML-Datei an).
+ \item Verwenden Sie einen HTML-Editor wie Ekit (\url{http://www.hexidec.com/ekit.php}), der ebenfalls die Java-HTML-Unterstützung verwendet, so dass die Darstellung ähnlich zu der in YajHFC ist.
+ \item Verwenden Sie ein anderes Format für das Deckblatt (z.B. XSL:FO oder ODT mit dem FOP Plugin).
+\end{itemize}
 
 
 \subsection{Wenn ich Versandte Faxe anzeigen möchte, erhalte ich immer die Fehlermeldung 
@@ -178,12 +372,14 @@ mit einem Faxauftrag verbundenen Dokumenten zurück.
 Wenn Sie dieses Kontrollfeld aktivieren, versucht YajHFC den Dateityp selbst herauszufinden,
 wenn als Typ PCL zurückgegeben wird (was üblicherweise recht gut funktioniert).
 
+
 \subsection{Ich bekomme häufig eine Fehlermeldung, wenn ich zwei oder mehr Faxe hintereinander sende.}
 
 Manche Versionen des HylaFAX"=Servers haben scheinbar Probleme, wenn mehr als ein Fax innerhalb einer Sitzung gesendet wird.
 
 Um dieses Problem zu umgehen, öffnen Sie bitte den Tab "`Server"' im Optionendialogfeld, aktivieren das Kontrollkästchen "`Erstelle neue Sitzung für jede Aktion"' und probieren aus, ob das Problem weiterhin besteht.
 Falls dies auch nichts hilft, schreiben Sie mir bitte einen Bug Report.
+
 
 \subsection{Unter Windows speichert YajHFC seine Konfiguration manchmal unter \texttt{C:\textbackslash .yajhfc} und nicht unter \texttt{C:\textbackslash Dokumente und Einstellungen\textbackslash BENUTZERNAME\textbackslash .yajhfc}}
 
@@ -193,20 +389,21 @@ Einige Javaversionen scheinen diese Eigenschaft manchmal nicht korrekt zu setzen
 Um diesen Fehler zu umgehen, können Sie diese Eigenschaft mittels des \texttt{-D}-Kommandozeilenarguments von Java explizit setzen, z.B.: \\
 \texttt{java -Duser.home=\%USERPROFILE\% -jar \dq C:\textbackslash Programme\textbackslash yajhfc.jar\dq}
 
-\subsection{Was bedeutet die Tabellenspalte XYZ?}
+\subsection{Das Tray"=Icon wird nicht angezeigt!}
 
-Höchstwahrscheinlich weiß ich das auch nicht so genau, da ich die
-Spaltenbeschreibungen einfach aus der \verb.faxstat(1).-man page (JobFmt/RcvFmt)
-herauskopiert und nach bestem Wissen ggf. abgekürzt und übersetzt habe.
+Ab version 0.4.0 unterstützt YajHFC ein Tray"=Icon, das angezeigt wird, wenn YajHFC unter Java 1.6 ("`Java 6"') ausgeführt wird. Wenn Sie Java 1.5 ("`Java 5"') verwenden, wird ein Tray"=Icon leider nicht unterstützt.
+
+Stellen Sie also bitte sicher, dass Java 1.6 installiert ist. Wenn Sie sich absolut sicher sind, dass Java 1.6 installiert ist und das Tray"=Icon immer noch nicht angezeigt wird, senden Sie mir bitte einen Bug"=Report.
+
 
 \section{Verschiedenes}
 
-\subsection{Warum werden Passwörter im Klartext gespeichert?}
+\subsection{Warum werden Passwörter im Klartext gespeichert? (vor 0.4)}
 
 Kurz gesagt: Weil es keine Möglichkeit gibt, die wirklich besser wäre.
 
 YajHFC könnte die Passwörter natürlich irgendwie verschleiern/kodieren/"`verschlüsseln"',
-bevor sie gespeichert werden, aber wenn es das täte, könnte man immer in den Quellcode schauen,
+bevor sie gespeichert werden, aber wenn es das täte, könnte man immer in den Quelltext schauen,
 um herauszufinden, wie man diese wieder entschlüsselt (selbst wenn YajHFC Closed Source-Software wäre,
 könnte man es immer noch disassemblieren oder einfach etwas herumexperimentieren, um das
 herauszufinden).
@@ -214,6 +411,9 @@ herauszufinden).
 Die einzig wirklich sichere Methode würde es erfordern, beim Start von YajHFC immer ein "`Master-Passwort"'
 einzugeben, was meiner Meinung auch nicht einfacher/besser wäre, als jedesmal gleich das "`echte"' Passwort
 einzugeben.
+
+Aufgrund vieler Nachfragen werden Passwörter ab Version 0.4.0 mittels eines einfachen Algorithmus verschleiert.
+Dies bedeutet allerdings nicht, dass das oben geschriebene nicht mehr stimmt, d.h. nach Anschauen des Quelltexts lassen sich die Passwörter auf einfache Weise entschlüsseln.
 
 
 \subsection{Warum wurde dieser seltsame Name gewählt?}

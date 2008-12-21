@@ -44,6 +44,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -317,7 +319,12 @@ public final class Launcher2 {
                 subject = getopt.getOptarg();
                 break;
             case 'h': // help
-                HelpPrinter.printHelp(System.out, longOpts, getopt.getOptarg());
+                try {
+                    HelpPrinter.printHelp(getConsoleWriter(), longOpts, getopt.getOptarg());
+                } catch (IOException e) {
+                    // Should NEVER happen...
+                    e.printStackTrace();
+                }
                 System.exit(0);
                 break;
             case 'A': // admin
@@ -672,6 +679,26 @@ public final class Launcher2 {
                 System.exit(responseGeneralError);
             }
         }
+    }
+    
+    private static PrintWriter consoleWriter;
+    public static PrintWriter getConsoleWriter() {
+        if (consoleWriter == null) {
+            try {
+                // Call System.console().writer() using reflection 
+                //  to avoid problems with Java 5 (we get a MethodNotFoundException which we can catch then)
+                Method consoleMethod = System.class.getMethod("console");
+                Class<?> consoleClass = Class.forName("java.io.Console");
+                Method writerMethod = consoleClass.getMethod("writer");
+                consoleWriter = (PrintWriter)writerMethod.invoke(consoleMethod.invoke(null));
+                if (consoleWriter == null) {
+                    consoleWriter = new PrintWriter(System.out);
+                }
+            } catch (Exception ex) {
+                consoleWriter = new PrintWriter(System.out);
+            }
+        }
+        return consoleWriter;
     }
     
     static class LogFilePrompter implements Runnable {

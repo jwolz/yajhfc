@@ -47,6 +47,7 @@ import javax.swing.text.html.HTMLEditorKit.HTMLFactory;
 
 import yajhfc.PaperSize;
 import yajhfc.Utils;
+import yajhfc.file.FormattedFile.FileFormat;
 
 /**
  * @author jonas
@@ -65,7 +66,7 @@ public class EditorPaneFileConverter extends PrintServiceFileConverter {
     
     @Override
     public void convertToHylaFormat(File inFile, OutputStream destination,
-            PaperSize paperSize) throws ConversionException {
+            PaperSize paperSize, FileFormat desiredFormat) throws ConversionException {
         try {
             URL inURL = inFile.toURI().toURL();
             convertToHylaFormat(inURL, destination, paperSize, inURL);

@@ -38,6 +38,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import yajhfc.Launcher2;
+import yajhfc.Password;
 import yajhfc.PluginManager;
 import yajhfc.Utils;
 import yajhfc.phonebook.AbstractConnectionSettings;
@@ -88,7 +89,7 @@ public class JDBCPersistentReadState extends PersistentReadState {
             else
                 password = pwd[1];
         } else {
-            password = settings.pwd;
+            password = settings.pwd.getPassword();
         }
         connection = DriverManager.getConnection(settings.dbURL, settings.user, password);
         connection.setAutoCommit(true);
@@ -337,7 +338,7 @@ public class JDBCPersistentReadState extends PersistentReadState {
         public String driver = ""; //"org.postgresql.Driver";
         public String dbURL = "jdbc:"; //"jdbc:postgresql://hylafax-test/yajhfc";
         public String user = ""; //"fax";
-        public String pwd = ""; //"fax";
+        public final Password pwd = new Password(); //"fax";
         public boolean askForPWD = false;
         public String table = ""; //"ReadState";
         

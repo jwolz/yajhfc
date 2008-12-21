@@ -26,6 +26,7 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import yajhfc.Password;
 import yajhfc.Utils;
 
 /**
@@ -61,10 +62,18 @@ public abstract class AbstractConnectionSettings {
         for (Field f : getClass().getFields()) {
             if (Modifier.isStatic(f.getModifiers()))
                 continue;
-            if (Modifier.isFinal(f.getModifiers()))
-                continue;
             
-            availableFields.put(f.getName(), new ReflectionField(f));
+            if (Password.class.isAssignableFrom(f.getType())) {
+                SettingField sf1 = new PasswordField(f, true);
+                SettingField sf2 = new PasswordField(f, false);
+                availableFields.put(sf1.getName(), sf1);
+                availableFields.put(sf2.getName(), sf2);
+            } else {
+                if (Modifier.isFinal(f.getModifiers()))
+                    continue;
+
+                availableFields.put(f.getName(), new ReflectionField(f));
+            }
         }     
     }
 
@@ -92,30 +101,33 @@ public abstract class AbstractConnectionSettings {
     public void copyFrom(AbstractConnectionSettings other) {
         if (other == null)
             return;
-        
 
         for (SettingField f : availableFields.values()) {
-            try {
-                f.set(this, f.get(other));
-            } catch (Exception e) {
-                //NOP
+            if (f.isFieldSaved()) {
+                try {
+                    f.set(this, f.get(other));
+                } catch (Exception e) {
+                    //NOP
+                }
             }
         }
     }
     
     public String saveToString() {
         StringBuilder builder = new StringBuilder();
-        for (SettingField f : availableFields.values()) {            
-            try {
-                String val;
-                val = f.get(this).toString();
-                val = Utils.escapeChars(val, separator, escapeChar) ;
-                builder.append(f.getName());
-                builder.append('=');
-                builder.append(val);
-                builder.append(separator);
-            } catch (Exception e) {
-                //NOP
+        for (SettingField f : availableFields.values()) {    
+            if (f.isFieldSaved()) {
+                try {
+                    String val;
+                    val = f.get(this).toString();
+                    val = Utils.escapeChars(val, separator, escapeChar) ;
+                    builder.append(f.getName());
+                    builder.append('=');
+                    builder.append(val);
+                    builder.append(separator);
+                } catch (Exception e) {
+                    //NOP
+                }
             }
         }
         
@@ -141,7 +153,7 @@ public abstract class AbstractConnectionSettings {
                     continue;
                 }
                 Class<?> f_class = f.getType();
-                if (f_class == String.class) {
+                if (f_class == String.class || f_class == Password.class) {
                     f.set(this, value);
                 } else if (f_class == Boolean.TYPE || f_class == Boolean.class) {
                     f.set(this, Boolean.valueOf(value));
@@ -161,6 +173,11 @@ public abstract class AbstractConnectionSettings {
         public abstract Object get(AbstractConnectionSettings instance);
         public abstract void set(AbstractConnectionSettings instance, Object value);
         public abstract Class<?> getType();
+        /**
+         * True if the field should be saved, false if it is only loaded (for compatibility fields)
+         * @return
+         */
+        public abstract boolean isFieldSaved();
     }
     
     protected static class ReflectionField implements SettingField {
@@ -196,10 +213,72 @@ public abstract class AbstractConnectionSettings {
             }
         }
 
+        public boolean isFieldSaved() {
+            return true;
+        }
+        
         public ReflectionField(Field field) {
             super();
             this.field = field;
         }
+    }
+    
+    protected static class PasswordField implements SettingField {
+        protected final Field field;
+        protected final boolean save;
+        protected final String name;
 
+        public String getName() {
+            return name;
+        }
+
+        public Class<?> getType() {
+            return field.getType();
+        }
+
+        private Password getPassword(AbstractConnectionSettings instance) throws IllegalArgumentException, IllegalAccessException {
+            return (Password)field.get(instance);
+        }
+        
+        public Object get(AbstractConnectionSettings instance) {
+            try {
+                if (save) {
+                    return getPassword(instance).getObfuscatedPassword();
+                } else {
+                    return getPassword(instance).getPassword();
+                }
+            } catch (IllegalArgumentException e) {
+                log.log(Level.WARNING, "Could not read value:", e);
+                return null;
+            } catch (IllegalAccessException e) {
+                log.log(Level.WARNING, "Could not read value:", e);
+                return null;
+            }
+        }
+
+        public void set(AbstractConnectionSettings instance, Object value) {
+            try {
+                if (save) {
+                    getPassword(instance).setObfuscatedPassword((String)value);
+                } else {
+                    getPassword(instance).setPassword((String)value);
+                }
+            } catch (IllegalArgumentException e) {
+                log.log(Level.WARNING, "Could not write value:", e);
+            } catch (IllegalAccessException e) {
+                log.log(Level.WARNING, "Could not write value:", e);
+            }
+        }
+
+        public boolean isFieldSaved() {
+            return save;
+        }
+        
+        public PasswordField(Field field, boolean save) {
+            super();
+            this.field = field;
+            this.save = save;
+            this.name = save ? (field.getName() + "-obfuscated") : field.getName();
+        }        
     }
 }

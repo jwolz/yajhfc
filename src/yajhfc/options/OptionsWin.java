@@ -190,8 +190,8 @@ public class OptionsWin extends JDialog {
         textHost.setText(foEdit.host);
         textPort.setText(String.valueOf(foEdit.port));
         textUser.setText(foEdit.user);
-        textPassword.setText(foEdit.pass);
-        textAdminPassword.setText(foEdit.AdminPassword);
+        textPassword.setText(foEdit.pass.getPassword());
+        textAdminPassword.setText(foEdit.AdminPassword.getPassword());
 
         comboNotify.setSelectedItem(foEdit.notifyWhen);
         comboPaperSize.setSelectedItem(foEdit.paperSize);
@@ -991,8 +991,8 @@ public class OptionsWin extends JDialog {
             foEdit.notifyAddress = textNotifyAddress.getText();
             foEdit.host = textHost.getText();
             foEdit.user = textUser.getText();
-            foEdit.pass = new String(textPassword.getPassword());
-            foEdit.AdminPassword = new String(textAdminPassword.getPassword());
+            foEdit.pass.setPassword(new String(textPassword.getPassword()));
+            foEdit.AdminPassword.setPassword(new String(textAdminPassword.getPassword()));
             
             foEdit.notifyWhen = (FaxNotification)comboNotify.getSelectedItem();
             foEdit.paperSize = (PaperSize)comboPaperSize.getSelectedItem();

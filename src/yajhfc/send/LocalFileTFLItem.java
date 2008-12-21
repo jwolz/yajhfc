@@ -52,7 +52,7 @@ public class LocalFileTFLItem extends HylaTFLItem {
             tempFile.deleteOnExit();
             
             FileOutputStream outStream = new FileOutputStream(tempFile);
-            fconv.convertToHylaFormat(new File(fileName), outStream, desiredPaperSize);
+            fconv.convertToHylaFormat(new File(fileName), outStream, desiredPaperSize, FileFormat.PDF);
             outStream.close();
             
             preparedFile = new FormattedFile(tempFile);
@@ -74,17 +74,19 @@ public class LocalFileTFLItem extends HylaTFLItem {
             return;
         
         FileFormat format = FormattedFile.detectFileFormat(fileName);
-        FileConverter fconv = FormattedFile.fileConverters.get(format);
-        if (Utils.debugMode) {
-            log.info("prepareFile: fileName='" + fileName + "' format: " + format);
-        }
-        if (fconv == null) {
-            log.warning("Unconvertable file: " + fileName + ", format: " + format);
-            preparedFile = new FormattedFile(fileName, format);
-        } else if (fconv == FileConverter.IDENTITY_CONVERTER) {
+        if (FormattedFile.canViewFormat(format)) {
             preparedFile = new FormattedFile(fileName, format);
         } else {
-            convertFile(fconv);
+            FileConverter fconv = FormattedFile.fileConverters.get(format);
+            if (Utils.debugMode) {
+                log.info("prepareFile: fileName='" + fileName + "' format: " + format);
+            }
+            if (fconv == null) {
+                log.warning("Unconvertable file: " + fileName + ", format: " + format);
+                preparedFile = new FormattedFile(fileName, format);
+            } else {
+                convertFile(fconv);
+            }    
         }
         prepared = true;
     }

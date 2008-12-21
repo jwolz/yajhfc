@@ -50,6 +50,11 @@ import yajhfc.util.ClipboardPopup;
  */
 public class PathAndViewPanel extends JPanel implements OptionsPage {
 
+    /**
+     * Set this to false to disable the "tiff2pdf location" entry field
+     */
+    public static boolean allowTIFF2PDF = true;
+    
     FileTextField ftfFaxViewer, ftfPSViewer;
     FileTextField ftfPDFViewer, ftfGSLocation, ftfTIFF2PDFLocation;
     JCheckBox checkPDFSameAsPS, checkCreateSingleFile, checkCreateAlwaysAsTargetFormat;
@@ -108,6 +113,9 @@ public class PathAndViewPanel extends JPanel implements OptionsPage {
         labelGS.setAlignmentX(JComponent.LEFT_ALIGNMENT);
         JLabel labelTIFF2PDF = new JLabel(_("Location of tiff2pdf executable (optional):"));
         labelTIFF2PDF.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+        
+        ftfTIFF2PDFLocation.setEnabled(allowTIFF2PDF);
+        labelTIFF2PDF.setEnabled(allowTIFF2PDF);
         
         panelPaths.add(labelTIFF);
         panelPaths.add(ftfFaxViewer);
@@ -257,7 +265,7 @@ public class PathAndViewPanel extends JPanel implements OptionsPage {
             return false;
         }
         
-        if (needsGS && !commandLineOK(ftfTIFF2PDFLocation.getText())) {
+        if (allowTIFF2PDF && needsGS && !commandLineOK(ftfTIFF2PDFLocation.getText())) {
             optionsWin.focusComponent(ftfTIFF2PDFLocation.getJTextField());
             JOptionPane.showMessageDialog(optionsWin, _("Please enter the location of the tiff2pdf executable."), _("Error"), JOptionPane.ERROR_MESSAGE);
             return false;

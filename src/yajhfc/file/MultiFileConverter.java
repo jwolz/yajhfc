@@ -54,17 +54,7 @@ public abstract class MultiFileConverter {
                 target[i] = ff.file;
                 break;
             default:
-                FileConverter conv;
-                if (ff.format  == FileFormat.TIFF) { 
-                    //Special case since we can view TIFFs without conversion, but need to convert here
-                    if (getTargetFormat() == FileFormat.PostScript) {
-                        conv = TIFFLibConverter.POSTSCRIPT_CONVERTER;
-                    } else {
-                        conv = TIFFLibConverter.PDF_CONVERTER;
-                    }
-                } else {
-                    conv = FormattedFile.fileConverters.get(ff.format);
-                }
+                FileConverter conv = FormattedFile.fileConverters.get(ff.format);
                 if (conv == null || conv == FileConverter.IDENTITY_CONVERTER) {
                     throw new UnknownFormatException("Unsupported file format: " + ff.format);
                 } else {
@@ -72,7 +62,7 @@ public abstract class MultiFileConverter {
                     tmpFile.deleteOnExit();
                     
                     FileOutputStream out = new FileOutputStream(tmpFile);
-                    conv.convertToHylaFormat(ff.file, out, paperSize);
+                    conv.convertToHylaFormat(ff.file, out, paperSize, getTargetFormat());
                     out.close();
                     target[i] = tmpFile;
                 }

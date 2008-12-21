@@ -14,7 +14,7 @@ done
 
 # Create a template without translations:
 CLO_TMP=CommandLineOpts.po.tmp
-msgfilter sh -c 'cat >/dev/null' < CommandLineOpts.po > $CLO_TMP
+perl maketemplate.pl < CommandLineOpts.po > $CLO_TMP
 for PO in CommandLineOpts_*.po ; do
 	echo $PO
 	msgmerge -N -U $PO $CLO_TMP

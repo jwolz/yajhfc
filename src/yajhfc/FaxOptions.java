@@ -50,7 +50,7 @@ public class FaxOptions {
     public int port;
     public boolean pasv;
     public String user;
-    public String pass;
+    public final Password pass = new Password();
     
     public final FmtItemList<RecvFormat> recvfmt;
     public final FmtItemList<JobFormat> sentfmt;
@@ -110,7 +110,7 @@ public class FaxOptions {
     public int newFaxAction = FaxOptions.NEWFAX_BEEP | FaxOptions.NEWFAX_TOFRONT | FaxOptions.NEWFAX_BLINKTRAYICON;
     public boolean pclBug = false;
     public boolean askPassword = false, askAdminPassword = true, askUsername = false;
-    public String AdminPassword = "";
+    public final Password AdminPassword = new Password();
     
     public String recvFilter = null, sentFilter = null, sendingFilter = null;
     
@@ -179,7 +179,6 @@ public class FaxOptions {
         this.host = "";
         this.port = 4559;
         this.user = System.getProperty("user.name");
-        this.pass = "";
         this.pasv = true;
         this.tzone = FaxTimezone.LOCAL;
         
@@ -321,6 +320,8 @@ public class FaxOptions {
                     }
                 } else if (val instanceof Enum) {
                     p.setProperty(name, ((Enum)val).name());
+                } else if (val instanceof Password) {
+                    p.setProperty(name + "-obfuscated", ((Password)val).getObfuscatedPassword());
                 } else {
                     log.log(Level.WARNING, "Unknown field type " + val.getClass().getName());
                 }
@@ -449,7 +450,7 @@ public class FaxOptions {
         
         if (Utils.debugMode) {
             log.config("---- BEGIN preferences dump");
-            Utils.dumpProperties(p, log, "pass", "AdminPassword");
+            Utils.dumpProperties(p, log, "pass", "AdminPassword", "pass-obfuscated", "AdminPassword-obfuscated");
             log.config("---- END preferences dump");
         }
 
@@ -470,6 +471,17 @@ public class FaxOptions {
                     while ((val = p.getProperty(fieldName + '.' + i)) != null) {
                         list.add(val);
                         i++;
+                    }
+                } else if (Password.class.isAssignableFrom(fcls)) {
+                    Password pwd = (Password)f.get(this);
+                    String val = p.getProperty(f.getName());
+                    if (val != null) {
+                        pwd.setPassword(val);
+                    } else {
+                        val = p.getProperty(f.getName() + "-obfuscated");
+                        if (val != null) {
+                            pwd.setObfuscatedPassword(val);
+                        }
                     }
                 } else {
                     String val = p.getProperty(f.getName());

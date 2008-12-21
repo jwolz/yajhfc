@@ -59,4 +59,20 @@ public interface HylaDirAccessor {
      * @throws IOException
      */
     public void deleteTree(String dirName) throws IOException;
+    
+    /**
+     * Gets the last modification time of the root directory.
+     * Note: This may be a logical time, too
+     * @return
+     * @throws IOException
+     */
+    public long getLastModified() throws IOException;
+    
+    /**
+     * Gets the last modification time of the given file or directory.
+     * Note: This may be a logical time, too
+     * @return
+     * @throws IOException
+     */
+    public long getLastModified(String fileName) throws IOException;
 }
