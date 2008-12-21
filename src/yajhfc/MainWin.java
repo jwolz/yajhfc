@@ -43,7 +43,6 @@ import java.net.SocketException;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -104,11 +103,11 @@ import yajhfc.model.UnReadMyTableModel;
 import yajhfc.model.UnreadItemEvent;
 import yajhfc.model.UnreadItemListener;
 import yajhfc.model.YajJob;
-import yajhfc.model.archive.QueueFileFormat;
 import yajhfc.model.archive.ArchiveTableModel;
 import yajhfc.model.archive.ArchiveYajJob;
 import yajhfc.model.archive.FileHylaDirAccessor;
 import yajhfc.model.archive.HylaDirAccessor;
+import yajhfc.model.archive.QueueFileFormat;
 import yajhfc.options.OptionsWin;
 import yajhfc.phonebook.NewPhoneBookWin;
 import yajhfc.readstate.PersistentReadState;
@@ -2206,7 +2205,8 @@ public final class MainWin extends JFrame {
         String sentfmt, sendingfmt;
         Vector<?> lastRecvList = null, lastSentList = null, lastSendingList = null;
         // Uncomment for archive support.
-        String[] lastArchiveList = null;
+        long lastArchiveModification = -1;
+        HylaDirAccessor hyda;
         boolean cancelled = false;
         
         @Override
@@ -2338,18 +2338,16 @@ public final class MainWin extends JFrame {
                 }
                 // Uncomment for archive support.
                 if (myopts.showArchive) {
-                    try {
-                        HylaDirAccessor hyda = new FileHylaDirAccessor(new File(myopts.archiveLocation));
-                        String[] fileList = hyda.listDirectory();
-                        
-                        if ((lastArchiveList == null) || !Arrays.equals(fileList, lastArchiveList)) {
-                            final List<ArchiveYajJob> archiveJobs = ArchiveYajJob.getArchiveFiles(hyda, fileList, archiveTableModel.columns);
+                    try {                        
+                        long modificationTime = hyda.getLastModified();
+                        if (lastArchiveModification == -1 || lastArchiveModification != modificationTime) {
+                            final List<ArchiveYajJob> archiveJobs = ArchiveYajJob.getArchiveFiles(hyda, archiveTableModel.columns);
                             SwingUtilities.invokeLater(new Runnable() {
                                 public void run() {
                                     archiveTableModel.setData(archiveJobs);
                                 } 
                             });
-                            lastArchiveList = fileList;
+                            lastArchiveModification = modificationTime;
                         }
                     } catch (Exception e) {
                         log.log(Level.WARNING, "An error occured refreshing the tables: ", e);
@@ -2381,6 +2379,10 @@ public final class MainWin extends JFrame {
         public TableRefresher(String sentfmt, String sendingfmt) {
             this.sentfmt = sentfmt;
             this.sendingfmt = sendingfmt; 
+            
+            if (myopts.showArchive) {
+                    hyda = new FileHylaDirAccessor(new File(myopts.archiveLocation));
+            }
         }
         
         class TableDataRunner implements Runnable {

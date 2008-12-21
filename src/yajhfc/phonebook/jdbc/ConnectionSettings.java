@@ -18,13 +18,14 @@ package yajhfc.phonebook.jdbc;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+import yajhfc.Password;
 import yajhfc.phonebook.GeneralConnectionSettings;
 
 public class ConnectionSettings extends GeneralConnectionSettings {
     public String driver = "";
     public String dbURL = "jdbc:";
     public String user = "";
-    public String pwd = "";
+    public final Password pwd = new Password();
     public boolean askForPWD = false;
     public String table = "";
     public boolean readOnly = false;

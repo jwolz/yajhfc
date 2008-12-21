@@ -63,4 +63,12 @@ public class FileHylaDirAccessor implements HylaDirAccessor {
         return new FileReader(new File(baseDir, fileName));
     }
 
+    public long getLastModified() throws IOException {
+        return baseDir.lastModified();
+    }
+
+    public long getLastModified(String fileName) throws IOException {
+        return new File(baseDir, fileName).lastModified();
+    }
+
 }

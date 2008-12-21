@@ -122,7 +122,7 @@ public class FormattedFile {
     static {
         fileConverters.put(FileFormat.PostScript, FileConverter.IDENTITY_CONVERTER);
         fileConverters.put(FileFormat.PDF, FileConverter.IDENTITY_CONVERTER);
-        fileConverters.put(FileFormat.TIFF, FileConverter.IDENTITY_CONVERTER);
+        fileConverters.put(FileFormat.TIFF, new TIFFLibConverter());
         
         fileConverters.put(FileFormat.PNG, new PrintServiceFileConverter(DocFlavor.URL.PNG));
         fileConverters.put(FileFormat.GIF, new PrintServiceFileConverter(DocFlavor.URL.GIF));
@@ -273,6 +273,22 @@ public class FormattedFile {
         return true;
     }
 
+    /**
+     * Returns true if the given format can be viewed without conversion.
+     * @param format
+     * @return
+     */
+    public static boolean canViewFormat(FileFormat format) {
+        switch (format) {
+        case TIFF:
+        case PostScript:
+        case PDF:
+            return true;
+        default:
+            return false;
+        }
+    }
+    
     public static void viewFile(String fileName, FileFormat format) throws UnknownFormatException, IOException {
         String execCmd;
 

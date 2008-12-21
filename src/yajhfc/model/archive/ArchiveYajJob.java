@@ -252,15 +252,15 @@ public class ArchiveYajJob extends YajJob<QueueFileFormat> {
     /**
      * Returns a list of archive YajJobs for the given directory accessor and format
      * @param hyda
-     * @param files
      * @param cols
      * @return
      * @throws FileNotFoundException
      * @throws IOException
      * @throws ServerResponseException
      */
-    public static List<ArchiveYajJob> getArchiveFiles(HylaDirAccessor hyda, String[] files, FmtItemList<QueueFileFormat> cols) throws FileNotFoundException, IOException, ServerResponseException {
-        if (files == null)
+    public static List<ArchiveYajJob> getArchiveFiles(HylaDirAccessor hyda, FmtItemList<QueueFileFormat> cols) throws FileNotFoundException, IOException, ServerResponseException {
+        final String[] files = hyda.listDirectory();
+        if (files == null || files.length == 0)
             return Collections.emptyList();
         
         List<ArchiveYajJob> resultList = new ArrayList<ArchiveYajJob>(files.length);

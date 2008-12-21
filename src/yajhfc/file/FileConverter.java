@@ -26,6 +26,7 @@ import java.io.OutputStream;
 
 import yajhfc.PaperSize;
 import yajhfc.Utils;
+import yajhfc.file.FormattedFile.FileFormat;
 
 /**
  * Interface for File Converters
@@ -35,21 +36,22 @@ import yajhfc.Utils;
 public interface FileConverter {
     
     /**
-     * Converts the input from inStream to a format HylaFAX understands.
-     * This means PostScript, PDF or TIFF G4.
-     * @param inFile
-     * @param destination
+     * Converts the input from inStream to a format HylaFAX and GhostScript understand.
+     * This means PostScript or PDF.
+     * @param inFile the input file
+     * @param destination the stream the converted data shall be written to
+     * @param desiredFormat the desired format (PS or PDF). This is only a hint, i.e. this method may convert to any of these formats.
      * @throws ConversionException
      * @throws IOException
      */
-    public void convertToHylaFormat(File inFile, OutputStream destination, PaperSize paperSize) throws ConversionException, IOException;
+    public void convertToHylaFormat(File inFile, OutputStream destination, PaperSize paperSize, FileFormat desiredFormat) throws ConversionException, IOException;
     
     /**
      * A dummy file converter that just copies the input to the output
      */
     public static final FileConverter IDENTITY_CONVERTER = new FileConverter() {
       public void convertToHylaFormat(File inFile,
-                OutputStream destination, PaperSize paperSize) throws ConversionException, IOException {
+                OutputStream destination, PaperSize paperSize, FileFormat desiredFormat) throws ConversionException, IOException {
             InputStream in = new FileInputStream(inFile);
             Utils.copyStream(in, destination);
             in.close();

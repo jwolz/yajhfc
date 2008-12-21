@@ -122,7 +122,7 @@ public class LDAPPhoneBook extends PhoneBook {
                     else
                         password = pwd[1];
                 } else {
-                    password = settings.credential;
+                    password = settings.credential.getPassword();
                 }
                 env.put(Context.SECURITY_CREDENTIALS, password);
             } else {

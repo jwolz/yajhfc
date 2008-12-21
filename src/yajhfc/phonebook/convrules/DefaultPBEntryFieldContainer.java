@@ -21,7 +21,6 @@ package yajhfc.phonebook.convrules;
 import java.util.EnumMap;
 import java.util.logging.Logger;
 
-import yajhfc.Utils;
 import yajhfc.phonebook.PBEntryField;
 
 /**
@@ -50,27 +49,52 @@ public class DefaultPBEntryFieldContainer extends EnumMap<PBEntryField, String>
         }
     }    
     
-    public DefaultPBEntryFieldContainer parseFromString(String numberOrFullFields) {
+    public DefaultPBEntryFieldContainer parseFromString(final String numberOrFullFields) {
         setAllFieldsTo("");
         // If it contains no : or ;, assume it's a fax number
         if (numberOrFullFields.indexOf(':') < 0 || numberOrFullFields.indexOf(';') < 0) {
             put(PBEntryField.FaxNumber, numberOrFullFields);
         } else {
-            String[] fields = Utils.fastSplit(numberOrFullFields, ';');
-            for (String field : fields) {
-                int pos = field.indexOf(':');
-                if (pos < 0) {
-                    log.info("Ignoring invalid name:value pair: " + field);
-                } else {
-                    String fieldName = field.substring(0, pos).trim();
-                    String fieldValue = field.substring(pos+1).trim();
-                    PBEntryField pbField = PBEntryField.getKeyToFieldMap().get(fieldName.toLowerCase());
-                    if (pbField != null) {
-                        put(pbField, fieldValue);
+            int pos;
+            int oldPos = 0;
+            StringBuilder value = new StringBuilder();
+            while ((pos = numberOrFullFields.indexOf(':', oldPos)) >= 0) {
+                String key = numberOrFullFields.substring(oldPos, pos).trim().toLowerCase();
+                value.setLength(0);
+
+                boolean afterBackSlash = false;
+                parseLoop: while (pos < numberOrFullFields.length()-1) {
+                    final char c = numberOrFullFields.charAt(++pos);
+                    if (afterBackSlash) {
+                        switch (c) {
+                        default:
+                            value.append('\\'); // Fall through intended
+                        case ';':
+                        case '\\':
+                            value.append(c);
+                        }
+                        afterBackSlash = false;
                     } else {
-                        log.info("Unknown field \"" + fieldName + "\" in '" + field + "'");
+                        switch (c) {
+                        case '\\':
+                            afterBackSlash = true;
+                            break;
+                        case ';':
+                            break parseLoop;
+                        default:
+                            value.append(c);
+                        break;
+                        }
                     }
                 }
+
+                PBEntryField pbField = PBEntryField.getKeyToFieldMap().get(key);
+                if (pbField != null) {
+                    put(pbField, value.toString().trim());
+                } else {
+                    log.info("Unknown field:value \"" + key + ':' + value + '"');
+                }
+                oldPos = pos+1;
             }
         }
         return this;

@@ -4,12 +4,15 @@
 \usepackage[left=3cm,right=3cm,top=2cm,bottom=2cm,nohead]{geometry}
 \usepackage[colorlinks=false,pdfborder=0 0 0]{hyperref}
 \usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage[french]{babel}
 
 %opening
 \title{YajHFC FAQ}
 \author{}
 \date{}
 \begin{document}
+\sloppy
 
 \maketitle
 
@@ -58,6 +61,18 @@ Merci à Scott Harris pour cette information.
                 (i.e. \texttt{gv, kghostview, gnome-gv, ...})
 \end{description}
 
+\subsection{Where can I get GhostScript from?}
+\begin{description}
+\item[Windows:] Download it from \url{http://www.cs.wisc.edu/~ghost/}
+\item[Linux/*BSD/...:] Install the GhostScript package for your distribution (on most installations this package will already be installed; if not: the package name usually begins with \texttt{ghostscript} or \texttt{gs})
+\end{description}
+
+\subsection{Where can I get TIFF2PDF from?}
+\begin{description}
+\item[Windows:] Download it from \url{http://gnuwin32.sourceforge.net/downlinks/tiff.php}\\ If this link does not work, please see \url{http://gnuwin32.sourceforge.net/packages/tiff.htm} or \url{http://www.libtiff.org/}.
+\item[Linux/*BSD/...:] Install the libtiff tools package for your distribution. Usually this package will have the word \texttt{tiff} in its name (on Debian/Ubuntu it is called \texttt{libtiff-tools} and on SUSE \texttt{tiff}).
+\end{description}
+
 \section{Utilisation du programme}
 
 \subsection{Comment éditer les modèles de page de garde?}
@@ -69,23 +84,10 @@ de tels fichiers: \\
 
 Sinon, Depuis la version 0.3.7, vous pouvez utiliser des page de garde en HTML ou, avec un module (plugin), en XSL:FO ou format ODT (texte Open Document).
 
-\subsection{J'ai cree un document/page de couverture HTMLI created a HTML mais la mise en forme dans YajHFC parait mauvaise!}
-
-
-YajHFC utilise le support HTML intégré de Java (\texttt{HTMLEditorKit} / \texttt{HTMLDocument}) pour convertir le HTML en PostScript. Ce support est limite, aussi, surtout il ne supporte que la version HTML 3.2.\\
-Cela signifie que les mises en forme complexes seront souvent mal affichées dans YajHFC.
-Pour créer la mise en page que vous désirez, vous aurez de base les alternatives suivantes:
-
-
-\begin{itemize}
- \item Faire ``des essais \& erreurs'' jusqu'a ce que la mise en page apparaisse correctement (Le bouton Prévisualiser dans la boite de dialogue d'envoi affichera la mise en forme de la page HTML convertie).
- \item Utilisez un éditeur HTML comme Ekit (\url{http://www.hexidec.com/ekit.php}) Qui utilise aussi un support Java, Aussi il affichera la page comme YajHFC.
- \item Utilisez un autre format pour la page de garde (comme XSL:FO ou ODT avec le module FOP).
-\end{itemize}
 
 \subsection{Quels champs sont reconnus dans une page de couverture HTML?}
 
-les mot suivants``words'' sont remplacés (sans distinction de casse) par les valeurs correspondantes quand une page HTML est utilisée comme page de couverture:
+les mot suivants ``words'' sont remplacés (sans distinction de casse) par les valeurs correspondantes quand une page HTML est utilisée comme page de couverture:
 
 \begin{center}
 \begin{tabular}{|l|l|}
@@ -107,6 +109,42 @@ les mot suivants``words'' sont remplacés (sans distinction de casse) par les val
 \ttfamily @@Date@@ & Date du jour \\\hline
 \ttfamily @@PageCount@@ & Le nombre de pages en excluant la page de garde \\\hline
 \ttfamily @@Comments@@ & Les commentaires pour ce Fax \\\hline
+\end{tabular}
+\end{center}
+
+Starting with version 0.4.0 the following additional fields are available (note that the \textit{italic} fields will be empty when you use resend fax):
+\begin{center}
+\begin{tabular}{|l|p{.7\textwidth}|}
+\hline
+\bfseries Word & \bfseries Meaning \\
+\hline\hline
+\ttfamily @@Surname@@ & The recipient's surname (resent faxes: the same as \texttt{@@Name@@}) \\\hline
+\ttfamily\itshape @@GivenName@@ & The recipient's given name \\\hline
+\ttfamily\itshape @@Title@@ & The recipient's title \\\hline
+\ttfamily\itshape @@Position@@ & The recipient's position \\\hline
+\ttfamily\itshape @@Department@@ & The recipient's department\\\hline
+\ttfamily @@CompanyName@@ & The recipient's company name (without department) (resent faxes: the same as \texttt{@@Company@@})\\\hline
+\ttfamily\itshape @@Street@@ & The recipient's street name \\\hline
+\ttfamily @@Place@@ & The recipient's location (without street or ZIP code) (resent faxes: the same as \texttt{@@Location@@})\\\hline
+\ttfamily\itshape @@ZIPCode@@ & The recipient's ZIP Code \\\hline
+\ttfamily\itshape @@State@@ & The recipient's state\\\hline
+\ttfamily\itshape @@Country@@ & The recipient's country\\\hline
+\ttfamily\itshape @@EMail@@ & The recipient's e-mail address\\\hline
+\ttfamily\itshape @@WebSite@@ & The recipient's website\\\hline\hline
+\ttfamily @@FromSurname@@ & The sender's  surname \\\hline
+\ttfamily @@FromGivenName@@ & The sender's  given name \\\hline
+\ttfamily @@FromTitle@@ & The sender's  title \\\hline
+\ttfamily @@FromPosition@@ & The sender's position \\\hline
+\ttfamily @@FromDepartment@@ & The sender's  department\\\hline
+\ttfamily @@FromCompanyName@@ & The sender's  company name (without department)\\\hline
+\ttfamily @@FromStreet@@ & The sender's  street name \\\hline
+\ttfamily @@FromPlace@@ & The sender's  location (without street or ZIP code)\\\hline
+\ttfamily @@FromZIPCode@@ & The sender's  ZIP Code \\\hline
+\ttfamily @@FromState@@ & The sender's  state\\\hline
+\ttfamily @@FromCountry@@ & The sender's  country\\\hline
+\ttfamily @@FromEMail@@ & The sender's  e-mail address\\\hline
+\ttfamily @@FromWebSite@@ & The sender's website\\\hline
+\ttfamily @@TotalPageCount@@ & The number of pages \textit{including} the cover page \\\hline
 \end{tabular}
 \end{center}
 
@@ -161,6 +199,135 @@ filename     Un ou plusieurs nom de fichier à envoyer.
 --help       Affiche ce texte
 \end{verbatim}
 
+\subsection{How can I give cover page information using the \texttt{-{-}recipient} switch?}
+
+Starting with version 0.4.0, you can give that information using \texttt{name:value} pairs, separated by semicolons. For example, to send a fax to ``John Doe'' in ``Example town'' with the fax number 0123456, use the following command line:
+
+\texttt{java -jar yajhfc.jar \textit{[...]} -{-}recipient="givenname:John;surname:Doe;location:Example Town;faxnumber:0123456" \textit{[...]}}
+
+The following field names are recognized:
+\begin{center}
+\begin{tabular}{|l|p{.7\textwidth}|}
+\hline
+\bfseries Field name & \bfseries Meaning \\
+\hline\hline
+\ttfamily surname & The recipient's surname\\\hline
+\ttfamily givenname & The recipient's given name \\\hline
+\ttfamily title & The recipient's title \\\hline
+\ttfamily position & The recipient's position \\\hline
+\ttfamily department & The recipient's department\\\hline
+\ttfamily company & The recipient's company name\\\hline
+\ttfamily street & The recipient's street name \\\hline
+\ttfamily location & The recipient's location\\\hline
+\ttfamily zipcode & The recipient's ZIP Code \\\hline
+\ttfamily state & The recipient's state\\\hline
+\ttfamily country & The recipient's country\\\hline
+\ttfamily email & The recipient's e-mail address\\\hline
+\ttfamily faxnumber & The recipient's fax number \\\hline
+\ttfamily voicenumber & The recipient's voice number \\\hline
+\ttfamily website & The recipient's website\\\hline
+\end{tabular}
+\end{center}
+
+\subsection{Que veux dire la colonne XYZ ?}
+
+Très probablement, je ne sais pas exactement car la description des colonnes sont
+simplement copiées de la page de manuel \verb.faxstat(1). (JobFmt/RcvFmt) et
+abrégées/traduites.
+
+\subsection{How can I specify some default settings?}
+
+Starting with version 0.4.0 the following files (if they exist) are loaded in order to retrieve the saved settings:
+\begin{enumerate}
+ \item \texttt{[Directory where yajhfc.jar resides]/settings.default}
+ \item the user settings from \texttt{\{user.home\}\footnote{In Windows \texttt{user.home} usually is \texttt{C:\textbackslash Documents and Settings\textbackslash USERNAME}.}/.yajhfc/settings} (if you specified \texttt{-{-}configdir=DIR}, \texttt{DIR/settings} is used instead)
+ \item \texttt{[Directory where yajhfc.jar resides]/settings.override}
+\end{enumerate}
+
+Settings from files loaded later override the settings specified in the files loaded earlier, i.e. the settings from \texttt{settings.override} take precedence over those in the user settings and \texttt{settings.default}.
+\medskip
+
+This logic can be used to specify default settings (e.g. in a networked environment): \\
+Simply configure one YajHFC installation as you like, then copy \texttt{\{user.home\}/.yajhfc/settings} to the directory where \texttt{yajhfc.jar} is and rename it to \texttt{settings.default}.
+\medskip
+
+Overrides can be specified in a similar fashion. In this case, you are encouraged to edit the settings file (it is a plain text file), and remove any lines that specify settings you wish not to override (usually you will want to remove at least \texttt{user} and \texttt{pass-obfuscated} (user name and password used to connect to the HylaFAX server), \texttt{FromName}, \texttt{*ColState} (the widths of the table columns), \texttt{*Bounds} (the position of the different windows) and \texttt{mainwinLastTab}).
+
+Note, however that the user can still set these settings to a different value for a running YajHFC instance. They are reset to the override values only when YajHFC is started again (in other words: the user can set these settings, but they are not saved between different runs of YajHFC).
+
+
+\subsection{How can I display the HylaFAX \texttt{archive} folder in YajHFC?}
+
+With version 0.4.0 support for the HylaFAX \texttt{archive} folder has been implemented.
+
+This directory cannot be accessed using the "`normal"' HylaFAX connection like the other folders, however, because HylaFAX does only allow to get the list of subfolders in the \texttt{archive} directory, but not to get any information (except the ID) about the archived jobs or the attached documents (if you know a HylaFAX version where this is different, please let me know).
+
+For this reason the directory has to be accessed by other methods. Currently (0.4.0) YajHFC only supports access using the file system. This means you have to export the  \texttt{archive} directory on the server using Samba, NFS or any other network file system, mount it on the client (if you use Unix; on Windows, you can just use UNC paths) and tell YajHFC in the options under which path the \texttt{archive} directory can be found.
+
+When you have done that, the archive table should work just like the other tables do.
+
+\subsection{What do the different options under \texttt{Paths \& Viewers -> View and send settings} do (0.4 and up)?}
+
+For the impatient: The recommended settings are (they are not the default, because they require \texttt{gs} and \texttt{tiff2pdf}):
+\begin{itemize}
+ \item \textbf{Format:} PDF or TIFF
+ \item \textbf{Send multiple files as:} Single file except cover
+ \item \textbf{View as single file:} Yes
+ \item \textbf{Always view/send in this format:} Yes
+\end{itemize}
+
+\subsubsection{Format for viewing/sending}
+
+The format to which the documents should be converted if necessary. Generally PDF and TIFF give better results than PostScript here (as the latter uses GhostScript's \texttt{pswrite} device).
+
+\subsubsection{Send multiple files as}
+
+{\parindent0pt
+\textbf{Multiple files:}\\
+Same behaviour as pre-0.4.0 versions. If you attach multiple documents to a single fax job, these documents are converted to PS or PDF, but kept as separate files (e.g. if you send a fax with files \texttt{doc.ps} and \texttt{picture.jpg}, two separate files are uploaded)
+\medskip
+
+\textbf{Single file except for cover:}\\
+One file is created for the whole fax, but the cover page is kept as a separate file (e.g. if you send a fax with \texttt{doc.ps} and \texttt{picture.jpg}, a single PDF/PS/TIFF file is created and uploaded).\\
+\textit{Advantage:} The resolution is reduced to 196dpi (\textrightarrow smaller files/upload) and a single document file can be used when sending a fax to multiple destinations.
+\medskip
+
+\textbf{Complete fax as single file:}\\
+One file is created for the whole fax including the cover page. If the fax has no cover this behaves identical to the above case.\\
+\textit{Advantage:} No conversions on the client are necessary when viewing the sent fax.\\
+\textit{Disadvantage:} When sending a fax to multiple recipients one file per recipient has to be created and uploaded.
+}
+
+\subsubsection{View faxes as single file}
+If this option is checked and a fax on the server consists of multiple files, a single file is created (on the client) for viewing.
+
+
+\subsubsection{View/send faxes always in this format}
+This option modifies the behaviour of ``Send multiple files as'' and ``View faxes as single file''.\\
+When this option is \textit{unchecked}, a fax is only converted if it consists of multiple files. If it consists of only a single file, the format is left as it is.\\
+When this option is \textit{checked}, a fax consisting of a single file is also converted when that single file has a different format than the one selected at ``Format for sending/viewing''.\\
+\textit{Advantage:} A single viewer is used for both sent and received faxes (e.g. to view received faxes as PDF).\\
+\textit{Disadvantage:} Usually more format conversions are necessary on the client.
+
+\subsection{Which characters are recognized as date/time format?}
+
+The date is formatted using is a Java \texttt{SimpleDateFormat}. A description of the characters recognized can be found at \url{http://java.sun.com/j2se/1.5.0/docs/api/java/text/SimpleDateFormat.html}.
+
+\section{Problems/Known bugs}
+
+\subsection{J'ai cree un document/page de couverture HTMLI created a HTML mais la mise en forme dans YajHFC parait mauvaise!}
+
+
+YajHFC utilise le support HTML intégré de Java (\texttt{HTMLEditorKit} / \texttt{HTMLDocument}) pour convertir le HTML en PostScript. Ce support est limite, aussi, surtout il ne supporte que la version HTML 3.2.\\
+Cela signifie que les mises en forme complexes seront souvent mal affichées dans YajHFC.
+Pour créer la mise en page que vous désirez, vous aurez de base les alternatives suivantes:
+
+
+\begin{itemize}
+ \item Faire ``des essais \& erreurs'' jusqu'a ce que la mise en page apparaisse correctement (Le bouton Prévisualiser dans la boite de dialogue d'envoi affichera la mise en forme de la page HTML convertie).
+ \item Utilisez un éditeur HTML comme Ekit (\url{http://www.hexidec.com/ekit.php}) Qui utilise aussi un support Java, Aussi il affichera la page comme YajHFC.
+ \item Utilisez un autre format pour la page de garde (comme XSL:FO ou ODT avec le module FOP).
+\end{itemize}
 
 \subsection{Quand j'essaie de visualiser les fax envoyés, j'ai toujours un message d'erreur disant
    \texttt{Format de fichier PCL non supporté}, bien que tous les documents soient en PostScript/PDF.}
@@ -188,11 +355,14 @@ Quelquefois des versions de java semblent ne pas affecter correctement cette var
 Comme contournement, vous pouvez affecter cette variable explicitement au lancement de YajHFC en utilisant l'option java \texttt{-D} en ligne de commande, par exemple: \\
 \texttt{java -Duser.home=\%USERPROFILE\% -jar "C:\textbackslash Program Files\textbackslash yajhfc.jar"}
 
-\subsection{Que veux dire la colonne XYZ ?}
 
-Très probablement, je ne sais pas exactement car la description des colonnes sont
-simplement copiées de la page de manuel \verb.faxstat(1). (JobFmt/RcvFmt) et
-abrégées/traduites.
+\subsection{The tray icon is not shown!}
+
+Starting with version 0.4.0 YajHFC supports a tray icon which will be shown when you run YajHFC under Java 1.6 (``Java 6'').
+If you use Java 1.5 (``Java 5''), a tray icon is not supported.
+
+So, please make sure you have Java 1.6 installed. If you are absolutely sure you have Java 1.6 installed and the tray icon is still not shown, please mail me a bug report.
+
 
 \section{Divers}
 
@@ -209,6 +379,8 @@ La seule méthode sure vous demanderait d'entrer le mot de passe a chaque
 exécutions de YajHFC, mais à mon avis cela n'apporterait pas de plus pour
 entrer le  ``vrai'' mot de passe.
 
+Because of many requests passwords are obfuscated using a simple algorithm in version 0.4.0 and up.
+The statement above still holds true, however, i.e. once you read the source code, the password can be decrypted easily.
 
 \subsection{Pourquoi avez vous choisi ce nom stupide ?}
 

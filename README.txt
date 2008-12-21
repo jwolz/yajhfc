@@ -74,6 +74,7 @@ CHANGES
 - Improved options dialog
 - Improved command line support (YajHFC can now be 
    used to send faxes without user confirmation)
+- Some simple obfuscation for passwords
 - Lots of internal code clean up
 
 0.3.9:

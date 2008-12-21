@@ -11,6 +11,7 @@
 \author{}
 \date{}
 \begin{document}
+\sloppy
 
 \maketitle
 
@@ -67,7 +68,7 @@ Thanks to Scott Harris for figuring this out.
 \subsection{Where can I get TIFF2PDF from?}
 \begin{description}
 \item[Windows:] Download it from \url{http://gnuwin32.sourceforge.net/downlinks/tiff.php}\\ If this link does not work, please see \url{http://gnuwin32.sourceforge.net/packages/tiff.htm} or \url{http://www.libtiff.org/}.
-\item[Linux/*BSD/...:] Install the libtiff tools package for your distribution. Usually this package will have the word \texttt{tiff} in its name (on Debian/Ubuntu it is called \texttt{libtiff-tools} and on SUSE \texttt{tiff}).
+\item[Linux/*BSD/...:] Install the ``libtiff tools'' package for your distribution. Usually this package will have the word \texttt{tiff} in its name (on Debian/Ubuntu it is called \texttt{libtiff-tools} and on SUSE \texttt{tiff}).
 \end{description}
 
 \section{Usage of the program}	
@@ -108,7 +109,7 @@ The following ``words'' are replaced (case insensitively) with the corresponding
 \end{tabular}
 \end{center}
 
-Starting with version 0.4.0 the following additional fields are available (note that the \textit{italic} fields will be empty when you use resend fax):
+Starting with version 0.4.0 the following additional fields are available (note that the \textit{italic} fields will be empty when you use ``Resend fax''):
 \begin{center}
 \begin{tabular}{|l|p{.7\textwidth}|}
 \hline
@@ -181,30 +182,33 @@ Argument description:
                             information (see the FAQ for the format in the
                             latter case). You may specify --recipient multiple
                             times for multiple recipients.
--C, --use-cover[=yes|no]    Use a cover page for sending a fax?
+-C, --use-cover[=yes|no]    Use a cover page for sending a fax.
 -s, --subject=SUBJECT       The fax subject for the cover page.
     --comment=COMMENT       The comment for the cover page.
     --stdin                 Read the file to send from standard input.
 -A, --admin                 Start up in admin mode.
 -d, --debug                 Output some debugging information.
--l, --logfile=LOGFILE       The logfile to log debug information to (if not
+-l, --logfile=LOGFILE       The log file to log debug information to (if not
                             specified, use stdout).
     --appendlogfile=LOGFILE Append debug information to the given log file.
-    --background            If there is no already running instance, launch a
-                            new instance and terminate (after submitting the
-                            file to send).
+    --background            If there is no already running instance of YajHFC,
+                            launch a new instance and terminate this instance
+                            (after submitting the fax to send).
     --noclose               Do not close YajHFC after submitting the fax.
 -T, --showtab=0|R|1|S|2|T   Sets the tab to display on startup. Specify 0 or R
                             for the "Received", 1 or S for the "Sent" or 2 or T
                             for the "Transmitting" tab.
-    --loadplugin=JARFILE    Specifies the jar file of a YajHFC plugin to load.
+    --loadplugin=JARFILE    Specifies a jar file of a YajHFC plugin to load.
     --loaddriver=JARFILE    Specifies the location of a JDBC driver JAR file to
                             load.
     --no-plugins            Disables loading plugins from the plugin.lst file.
-    --no-gui                Sends a fax with a minimal GUI.
--c, --configdir=DIRECTORY   Sets a configuration directory to use instead of
+    --no-gui                Sends a fax with only a minimal GUI.
+    --no-check              Suppresses the check for the Java version at
+                            startup.
+-c, --configdir=DIRECTORY   Sets the configuration directory to use instead of
                             ~/.yajhfc
--h, --help                  Displays this text.
+-h, --help[=COLUMNS]        Displays this text (formatted for COLUMNS columns if
+                            given).
 \end{verbatim}
 
 \subsection{How can I give cover page information using the \texttt{-{-}recipient} switch?}
@@ -243,7 +247,7 @@ Most likely, I don't know exactly either, because the column descriptions
 are simply copied from the \verb.faxstat(1). man page (JobFmt/RcvFmt) and 
 abbreviated/translated.
 
-\subsection{How can I set some default settings?}
+\subsection{How can I specify some default settings?}
 
 Starting with version 0.4.0 the following files (if they exist) are loaded in order to retrieve the saved settings:
 \begin{enumerate}
@@ -255,51 +259,44 @@ Starting with version 0.4.0 the following files (if they exist) are loaded in or
 Settings from files loaded later override the settings specified in the files loaded earlier, i.e. the settings from \texttt{settings.override} take precedence over those in the user settings and \texttt{settings.default}.
 \medskip
 
-This mechanism can be used to specify default settings (e.g. in a networked environment): \\
+This logic can be used to specify default settings (e.g. in a networked environment): \\
 Simply configure one YajHFC installation as you like, then copy \texttt{\{user.home\}/.yajhfc/settings} to the directory where \texttt{yajhfc.jar} is and rename it to \texttt{settings.default}.
 \medskip
 
-Overrides can be specified in a similar fashion. In this case, you are encouraged to edit the settings file (it is a plain text file), and remove any lines that specify settings you wish not to override (usually you will want to remove at least \texttt{user} and \texttt{pass} (user name and password used to connect to the HylaFAX server), \texttt{FromName}, \texttt{*ColState} (the widths of the table columns), \texttt{*Bounds} (the position of the different windows) and \texttt{mainwinLastTab}).
+Overrides can be specified in a similar fashion. In this case, you are encouraged to edit the settings file (it is a plain text file), and remove any lines that specify settings you wish not to override (usually you will want to remove at least \texttt{user} and \texttt{pass-obfuscated} (user name and password used to connect to the HylaFAX server), \texttt{FromName}, \texttt{*ColState} (the widths of the table columns), \texttt{*Bounds} (the position of the different windows) and \texttt{mainwinLastTab}).
 
 Note, however that the user can still set these settings to a different value for a running YajHFC instance. They are reset to the override values only when YajHFC is started again (in other words: the user can set these settings, but they are not saved between different runs of YajHFC).
 
 
 \subsection{How can I display the HylaFAX \texttt{archive} folder in YajHFC?}
 
-Starting with version 0.4.0 support for the HylaFAX \texttt{archive} folder has been implemented.
+With version 0.4.0 support for the HylaFAX \texttt{archive} folder has been implemented.
 
-This directory cannot be accessed using the "`normal"' HylaFAX connection like the other folders, however, because HylaFAX does only allow to get the list of folders in the \texttt{archive} directory, but not to get any information (except the ID) about the archived jobs or the attached documents (if you know a HylaFAX version where this is different, please let me know).
+This directory cannot be accessed using the "`normal"' HylaFAX connection like the other folders, however, because HylaFAX does only allow to get the list of subfolders in the \texttt{archive} directory, but not to get any information (except the ID) about the archived jobs or the attached documents (if you know a HylaFAX version where this is different, please let me know).
 
-So the directory has to be accessed by other methods. Currently (0.4.0) YajHFC only supports access using the file system. This means you have to export the  \texttt{archive} directory on the server using Samba, NFS or any other network file system, mount it on the client (if you use Unix; on Windows, you can just use UNC paths) and tell YajHFC in the options under which path the \texttt{archive} directory can be found.
+For this reason the directory has to be accessed by other methods. Currently (0.4.0) YajHFC only supports access using the file system. This means you have to export the  \texttt{archive} directory on the server using Samba, NFS or any other network file system, mount it on the client (if you use Unix; on Windows, you can just use UNC paths) and tell YajHFC in the options under which path the \texttt{archive} directory can be found.
 
-When you have done that, the archive table should work basically just like the other tables do.
+When you have done that, the archive table should work just like the other tables do.
 
 \subsection{What do the different options under \texttt{Paths \& Viewers -> View and send settings} do (0.4 and up)?}
 
 For the impatient: The recommended settings are (they are not the default, because they require \texttt{gs} and \texttt{tiff2pdf}):
 \begin{itemize}
  \item \textbf{Format:} PDF or TIFF
- \item \textbf{Send fax as:} Single file except cover
+ \item \textbf{Send multiple files as:} Single file except cover
  \item \textbf{View as single file:} Yes
- \item \textbf{Always view in this format:} Yes
+ \item \textbf{Always view/send in this format:} Yes
 \end{itemize}
 
 \subsubsection{Format for viewing/sending}
 
-The format to which the files should be converted if necessary. Generally PDF and TIFF work much better than PostScript here.
+The format to which the documents should be converted if necessary. Generally PDF and TIFF give better results than PostScript here (as the latter uses GhostScript's \texttt{pswrite} device).
 
-Technically, the following GhostScript devices are used:
-\begin{description}
- \item[PDF:] \texttt{pdfwrite}
- \item[PostScript:] \texttt{pswrite}
- \item[TIFF:] \texttt{tiff4g}
- \end{description}
-
-\subsubsection{Send multiple files as:}
+\subsubsection{Send multiple files as}
 
 {\parindent0pt
 \textbf{Multiple files:}\\
-Same behaviour as pre-0.4.0 versions. If you send multiple documents in a single fax job, these documents are converted to PS or PDF, but kept as separate files (e.g. if you send a fax with files \texttt{doc.ps} and \textbf{picture.jpg}, two separate files are uploaded)
+Same behaviour as pre-0.4.0 versions. If you attach multiple documents to a single fax job, these documents are converted to PS or PDF, but kept as separate files (e.g. if you send a fax with files \texttt{doc.ps} and \texttt{picture.jpg}, two separate files are uploaded)
 \medskip
 
 \textbf{Single file except for cover:}\\
@@ -308,24 +305,25 @@ One file is created for the whole fax, but the cover page is kept as a separate 
 \medskip
 
 \textbf{Complete fax as single file:}\\
-One file is created for the whole fax including the cover page. If the fax has no cover this behaves (almost) identical to the above case.\\
+One file is created for the whole fax including the cover page. If the fax has no cover this behaves identical to the above case.\\
 \textit{Advantage:} No conversions on the client are necessary when viewing the sent fax.\\
 \textit{Disadvantage:} When sending a fax to multiple recipients one file per recipient has to be created and uploaded.
-
-\subsubsection{View faxes as single file:}
-If this option is checked and a fax on the server consists of multiple files, a single file is created (on the client) for viewing.
 }
 
-\subsubsection{View/send faxes always in this format:}
+\subsubsection{View faxes as single file}
+If this option is checked and a fax on the server consists of multiple files, a single file is created (on the client) for viewing.
+
+
+\subsubsection{View/send faxes always in this format}
 This option modifies the behaviour of ``Send multiple files as'' and ``View faxes as single file''.\\
 When this option is \textit{unchecked}, a fax is only converted if it consists of multiple files. If it consists of only a single file, the format is left as it is.\\
 When this option is \textit{checked}, a fax consisting of a single file is also converted when that single file has a different format than the one selected at ``Format for sending/viewing''.\\
 \textit{Advantage:} A single viewer is used for both sent and received faxes (e.g. to view received faxes as PDF).\\
 \textit{Disadvantage:} Usually more format conversions are necessary on the client.
 
-\subsection{What characters are recognized as date/time format?}
+\subsection{Which characters are recognized as date/time format?}
 
-The date formatter used is a Java \texttt{SimpleDateFormat}. A description of the characters recognized can be found at \url{http://java.sun.com/j2se/1.5.0/docs/api/java/text/SimpleDateFormat.html}.
+The date is formatted using a Java \texttt{SimpleDateFormat}. A description of the characters recognized can be found at \url{http://java.sun.com/j2se/1.5.0/docs/api/java/text/SimpleDateFormat.html}.
 
 \section{Problems/Known bugs}
 
@@ -374,10 +372,9 @@ If you use Java 1.5 (``Java 5''), a tray icon is not supported.
 So, please make sure you have Java 1.6 installed. If you are absolutely sure you have Java 1.6 installed and the tray icon is still not shown, please mail me a bug report.
 
 
-
 \section{Miscellaneous}
 
-\subsection{Why are passwords stored in clear text?}
+\subsection{Why are passwords stored in clear text? (before 0.4)}
 
 Simply put: Because there isn't any method that is much better.
 
@@ -390,6 +387,8 @@ The only secure method would require you to enter a master password every time
 you start YajHFC, but in my opinion that would not provide an improvement over
 entering the ``real'' password.
 
+Because of many requests passwords are obfuscated using a simple algorithm in version 0.4.0 and up.
+The statement above still holds true, however, i.e. once you read the source code, the password can be decrypted easily.
 
 \subsection{Why did you choose that stupid name?}
 

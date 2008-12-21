@@ -5,6 +5,7 @@
 \usepackage[left=3cm,right=3cm,top=2cm,bottom=2cm,nohead]{geometry}
 \usepackage[unicode, breaklinks=true, colorlinks=false,pdfborder=0 0 0]{hyperref}
 \usepackage[T2A]{fontenc}
+\usepackage{textcomp}
 
 \hyphenpenalty=10000
 \exhyphenpenalty=10000
@@ -79,18 +80,6 @@
 \url{http://www.hylafax.org/howto/tweaking.html}\\
 
 Кроме того, начиная с YajHFC 0.3.7, Вы можете использовать титульные листы в формате HTML или, при помощи плагина, в формате XSL:FO или ODT (OpenDocument Text).
-
-\subsection{Я создал документ/титульный лист в HTML, но форматирование в YajHFC выглядит неправильно!}
-
-YajHFC использует поддержку HTML встроенную в Java (\texttt{HTMLEditorKit} / \texttt{HTMLDocument}) для преобразования HTML в PostScript. Эта поддержка весьма ограничена, тем более что поддерживается только HTML 3.2.\\
-Это значит, что во многих случаях сложное форматирование в YajHFC не будет рендериться корректно.
-Чтобы сделать желаемое форматирование, у Вас есть следующие возможности:
-
-\begin{itemize}
- \item С помощью ``метода проб и ошибок'' добейтесь, чтобы форматирование выглядело правильно (кнопка предпросмотра в диалоге отправки показывает форматирование уже преобразованного документа HTML).
- \item Используйте редактор HTML, такой как Ekit (\url{http://www.hexidec.com/ekit.php}), который так же использует поддержку HTML Java, то есть рендерит подобно YajHFC.
- \item Используйте другой формат для титульного листа (такой как XSL:FO или ODT с плагином FOP).
-\end{itemize}
 
 \subsection{Какие поля распознаются в титульных листах HTML?}
 
@@ -205,6 +194,155 @@ filename     Одно или более имён файлов PostScript для отправки
 --help       Выводит этот текст
 \end{verbatim}
 
+\subsection{How can I give cover page information using the \texttt{-{-}recipient} switch?}
+
+Starting with version 0.4.0, you can give that information using \texttt{name:value} pairs, separated by semicolons. For example, to send a fax to ``John Doe'' in ``Example town'' with the fax number 0123456, use the following command line:
+
+\texttt{java -jar yajhfc.jar \textit{[...]} -{-}recipient="givenname:John;surname:Doe;location:Example Town;faxnumber:0123456" \textit{[...]}}
+
+The following field names are recognized:
+\begin{center}
+\begin{tabular}{|l|p{.7\textwidth}|}
+\hline
+\bfseries Field name & \bfseries Meaning \\
+\hline\hline
+\ttfamily surname & The recipient's surname\\\hline
+\ttfamily givenname & The recipient's given name \\\hline
+\ttfamily title & The recipient's title \\\hline
+\ttfamily position & The recipient's position \\\hline
+\ttfamily department & The recipient's department\\\hline
+\ttfamily company & The recipient's company name\\\hline
+\ttfamily street & The recipient's street name \\\hline
+\ttfamily location & The recipient's location\\\hline
+\ttfamily zipcode & The recipient's ZIP Code \\\hline
+\ttfamily state & The recipient's state\\\hline
+\ttfamily country & The recipient's country\\\hline
+\ttfamily email & The recipient's e-mail address\\\hline
+\ttfamily faxnumber & The recipient's fax number \\\hline
+\ttfamily voicenumber & The recipient's voice number \\\hline
+\ttfamily website & The recipient's website\\\hline
+\end{tabular}
+\end{center}
+
+\subsection{Что означает колонка XYZ?}
+
+Скорее всего, мне это тоже не известно точно, так как заголовки колонок
+просто скопированы из man страницы \verb.faxstat(1). (JobFmt/RcvFmt) и 
+сокращены/переведены.
+
+\subsection{Как можно установить некоторые настройки по умолчанию?}
+
+Начиная с версии 0.4.0 для того, чтобы восстановить сохранённые настройки, загружаются следующие файлы (если они есть):
+\begin{enumerate}
+ \item \texttt{[Каталог, в котором находится yajhfc.jar]/settings.default}
+ \item пользовательские настройки из \texttt{\{user.home\}\footnote{В Windows \texttt{user.home} обычно \texttt{C:\textbackslash Documents and Settings\textbackslash USERNAME}.}/.yajhfc/settings} \\
+(если Вы указали \texttt{--configdir=DIR}, будет использоваться \texttt{DIR/settings})
+ \item \texttt{[Каталог, в котором находится yajhfc.jar]/settings.override}
+\end{enumerate}
+
+Настройки из файлов, загруженных позже, отменяют настройки определённые в файлах, загруженных ранее, т.е. настройки из \texttt{settings.override} имеют преимущественное значение по сравнению с пользовательскими настройками и \texttt{settings.default}.
+\medskip
+
+Этот механизм может быть использован для указания настроек по умолчанию (например в сетевой среде): \\
+Просто настройте одну установку YajHFC так как Вам нравится, скопируйте файл \\
+\texttt{\{user.home\}/.yajhfc/settings} в каталог с \texttt{yajhfc.jar} и переименуйте его в \texttt{settings.default}.
+\medskip
+
+Подобным образом можно отменять настройки. В этом случае, Вы можете отредактировать файл настроек (это обычный текстовый файл), и удалить любые строки с настройками, которые Вы не хотите отменять (конечно же Вы захотите удалить по меньшей мере \texttt{user} и \texttt{pass} (имя пользователя и пароль, используемые для соединения с сервером HylaFAX), \texttt{FromName}, \texttt{*ColState} (ширина колонок таблиц), \texttt{*Bounds} (положение различных окон) и \texttt{mainwinLastTab}).
+
+Однако, имейте в виду, что пользователь все ещё может установить другие значения этих настроек для выполняемого экземпляра YajHFC. Они сбросятся к отменяющим значениям только тогда, когда YajHFC запустится снова (т.е. пользователь может установить эти настройки, но они не сохраняться между перезапусками YajHFC).
+
+\subsection{How can I specify some default settings?}
+
+Starting with version 0.4.0 the following files (if they exist) are loaded in order to retrieve the saved settings:
+\begin{enumerate}
+ \item \texttt{[Directory where yajhfc.jar resides]/settings.default}
+ \item the user settings from \texttt{\{user.home\}\footnote{In Windows \texttt{user.home} usually is \texttt{C:\textbackslash Documents and Settings\textbackslash USERNAME}.}/.yajhfc/settings} (if you specified \texttt{-{-}configdir=DIR}, \texttt{DIR/settings} is used instead)
+ \item \texttt{[Directory where yajhfc.jar resides]/settings.override}
+\end{enumerate}
+
+Settings from files loaded later override the settings specified in the files loaded earlier, i.e. the settings from \texttt{settings.override} take precedence over those in the user settings and \texttt{settings.default}.
+\medskip
+
+This logic can be used to specify default settings (e.g. in a networked environment): \\
+Simply configure one YajHFC installation as you like, then copy \texttt{\{user.home\}/.yajhfc/settings} to the directory where \texttt{yajhfc.jar} is and rename it to \texttt{settings.default}.
+\medskip
+
+Overrides can be specified in a similar fashion. In this case, you are encouraged to edit the settings file (it is a plain text file), and remove any lines that specify settings you wish not to override (usually you will want to remove at least \texttt{user} and \texttt{pass-obfuscated} (user name and password used to connect to the HylaFAX server), \texttt{FromName}, \texttt{*ColState} (the widths of the table columns), \texttt{*Bounds} (the position of the different windows) and \texttt{mainwinLastTab}).
+
+Note, however that the user can still set these settings to a different value for a running YajHFC instance. They are reset to the override values only when YajHFC is started again (in other words: the user can set these settings, but they are not saved between different runs of YajHFC).
+
+
+\subsection{How can I display the HylaFAX \texttt{archive} folder in YajHFC?}
+
+With version 0.4.0 support for the HylaFAX \texttt{archive} folder has been implemented.
+
+This directory cannot be accessed using the "`normal"' HylaFAX connection like the other folders, however, because HylaFAX does only allow to get the list of subfolders in the \texttt{archive} directory, but not to get any information (except the ID) about the archived jobs or the attached documents (if you know a HylaFAX version where this is different, please let me know).
+
+For this reason the directory has to be accessed by other methods. Currently (0.4.0) YajHFC only supports access using the file system. This means you have to export the  \texttt{archive} directory on the server using Samba, NFS or any other network file system, mount it on the client (if you use Unix; on Windows, you can just use UNC paths) and tell YajHFC in the options under which path the \texttt{archive} directory can be found.
+
+When you have done that, the archive table should work just like the other tables do.
+
+\subsection{What do the different options under \texttt{Paths \& Viewers -> View and send settings} do (0.4 and up)?}
+
+For the impatient: The recommended settings are (they are not the default, because they require \texttt{gs} and \texttt{tiff2pdf}):
+\begin{itemize}
+ \item \textbf{Format:} PDF or TIFF
+ \item \textbf{Send multiple files as:} Single file except cover
+ \item \textbf{View as single file:} Yes
+ \item \textbf{Always view/send in this format:} Yes
+\end{itemize}
+
+\subsubsection{Format for viewing/sending}
+
+The format to which the documents should be converted if necessary. Generally PDF and TIFF give better results than PostScript here (as the latter uses GhostScript's \texttt{pswrite} device).
+
+\subsubsection{Send multiple files as}
+
+{\parindent0pt
+\textbf{Multiple files:}\\
+Same behaviour as pre-0.4.0 versions. If you attach multiple documents to a single fax job, these documents are converted to PS or PDF, but kept as separate files (e.g. if you send a fax with files \texttt{doc.ps} and \texttt{picture.jpg}, two separate files are uploaded)
+\medskip
+
+\textbf{Single file except for cover:}\\
+One file is created for the whole fax, but the cover page is kept as a separate file (e.g. if you send a fax with \texttt{doc.ps} and \texttt{picture.jpg}, a single PDF/PS/TIFF file is created and uploaded).\\
+\textit{Advantage:} The resolution is reduced to 196dpi (\textrightarrow smaller files/upload) and a single document file can be used when sending a fax to multiple destinations.
+\medskip
+
+\textbf{Complete fax as single file:}\\
+One file is created for the whole fax including the cover page. If the fax has no cover this behaves identical to the above case.\\
+\textit{Advantage:} No conversions on the client are necessary when viewing the sent fax.\\
+\textit{Disadvantage:} When sending a fax to multiple recipients one file per recipient has to be created and uploaded.
+}
+
+\subsubsection{View faxes as single file}
+If this option is checked and a fax on the server consists of multiple files, a single file is created (on the client) for viewing.
+
+
+\subsubsection{View/send faxes always in this format}
+This option modifies the behaviour of ``Send multiple files as'' and ``View faxes as single file''.\\
+When this option is \textit{unchecked}, a fax is only converted if it consists of multiple files. If it consists of only a single file, the format is left as it is.\\
+When this option is \textit{checked}, a fax consisting of a single file is also converted when that single file has a different format than the one selected at ``Format for sending/viewing''.\\
+\textit{Advantage:} A single viewer is used for both sent and received faxes (e.g. to view received faxes as PDF).\\
+\textit{Disadvantage:} Usually more format conversions are necessary on the client.
+
+\subsection{Which characters are recognized as date/time format?}
+
+The date is formatted using a Java \texttt{SimpleDateFormat}. A description of the characters recognized can be found at \url{http://java.sun.com/j2se/1.5.0/docs/api/java/text/SimpleDateFormat.html}.
+
+\section{Problems/Known bugs}
+
+\subsection{Я создал документ/титульный лист в HTML, но форматирование в YajHFC выглядит неправильно!}
+
+YajHFC использует поддержку HTML встроенную в Java (\texttt{HTMLEditorKit} / \texttt{HTMLDocument}) для преобразования HTML в PostScript. Эта поддержка весьма ограничена, тем более что поддерживается только HTML 3.2.\\
+Это значит, что во многих случаях сложное форматирование в YajHFC не будет рендериться корректно.
+Чтобы сделать желаемое форматирование, у Вас есть следующие возможности:
+
+\begin{itemize}
+ \item С помощью ``метода проб и ошибок'' добейтесь, чтобы форматирование выглядело правильно (кнопка предпросмотра в диалоге отправки показывает форматирование уже преобразованного документа HTML).
+ \item Используйте редактор HTML, такой как Ekit (\url{http://www.hexidec.com/ekit.php}), который так же использует поддержку HTML Java, то есть рендерит подобно YajHFC.
+ \item Используйте другой формат для титульного листа (такой как XSL:FO или ODT с плагином FOP).
+\end{itemize}
 
 \subsection{При попытке просмотреть отправленные факсы я всегда получаю сообщение об ошибке:
    \texttt{File format PCL not supported}, хотя все документы PostScript/PDF.}
@@ -230,41 +368,12 @@ filename     Одно или более имён файлов PostScript для отправки
 Для устранения проблемы, Вы можете явно установить эту переменную при запуске YajHFC с помощью ключа \texttt{-D} командной строки java, например: \\
 \texttt{java -Duser.home=\%USERPROFILE\% -jar "C:\textbackslash Program Files\textbackslash yajhfc.jar"}
 
-\subsection{Что означает колонка XYZ?}
-
-Скорее всего, мне это тоже не известно точно, так как заголовки колонок
-просто скопированы из man страницы \verb.faxstat(1). (JobFmt/RcvFmt) и 
-сокращены/переведены.
-
 \subsection{Не показывается иконка в трее!}
 
 Иконка в трее будет показываться, только если Вы запускаете YajHFC под Java 1.6 (``Java 6'').
 Если Вы используете Java 1.5 (``Java 5''), иконка в трее не поддерживается.
 
 Пожалуйста убедитесь, что у Вас установлена Java 1.6. Если Вы абсолютно уверены, что у Вас установлена Java 1.6 и иконка в трее всё равно не показывается, пожалуйста, пришлите мне a извещение об ошибке.
-
-\subsection{Как можно установить некоторые настройки по умолчанию?}
-
-Начиная с версии 0.4.0 для того, чтобы восстановить сохранённые настройки, загружаются следующие файлы (если они есть):
-\begin{enumerate}
- \item \texttt{[Каталог, в котором находится yajhfc.jar]/settings.default}
- \item пользовательские настройки из \texttt{\{user.home\}\footnote{В Windows \texttt{user.home} обычно \texttt{C:\textbackslash Documents and Settings\textbackslash USERNAME}.}/.yajhfc/settings} \\
-(если Вы указали \texttt{--configdir=DIR}, будет использоваться \texttt{DIR/settings})
- \item \texttt{[Каталог, в котором находится yajhfc.jar]/settings.override}
-\end{enumerate}
-
-Настройки из файлов, загруженных позже, отменяют настройки определённые в файлах, загруженных ранее, т.е. настройки из \texttt{settings.override} имеют преимущественное значение по сравнению с пользовательскими настройками и \texttt{settings.default}.
-\medskip
-
-Этот механизм может быть использован для указания настроек по умолчанию (например в сетевой среде): \\
-Просто настройте одну установку YajHFC так как Вам нравится, скопируйте файл \\
-\texttt{\{user.home\}/.yajhfc/settings} в каталог с \texttt{yajhfc.jar} и переименуйте его в \texttt{settings.default}.
-\medskip
-
-Подобным образом можно отменять настройки. В этом случае, Вы можете отредактировать файл настроек (это обычный текстовый файл), и удалить любые строки с настройками, которые Вы не хотите отменять (конечно же Вы захотите удалить по меньшей мере \texttt{user} и \texttt{pass} (имя пользователя и пароль, используемые для соединения с сервером HylaFAX), \texttt{FromName}, \texttt{*ColState} (ширина колонок таблиц), \texttt{*Bounds} (положение различных окон) и \texttt{mainwinLastTab}).
-
-Однако, имейте в виду, что пользователь все ещё может установить другие значения этих настроек для выполняемого экземпляра YajHFC. Они сбросятся к отменяющим значениям только тогда, когда YajHFC запустится снова (т.е. пользователь может установить эти настройки, но они не сохраняться между перезапусками YajHFC).
-
 
 \section{Прочее}
 
@@ -281,6 +390,8 @@ YajHFC мог бы как-нибудь кодировать/``шифровать'' пароли перед сохранением, но е
 при запуске YajHFC, но по моему мнению это не было бы лучше по сравнению
 с вводом ``настоящего'' пароля.
 
+Because of many requests passwords are obfuscated using a simple algorithm in version 0.4.0 and up.
+The statement above still holds true, however, i.e. once you read the source code, the password can be decrypted easily.
 
 \subsection{Почему Вы выбрали такое дурацкое название?}
 

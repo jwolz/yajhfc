@@ -93,6 +93,10 @@ public class GeneralConnectionSettings extends AbstractConnectionSettings {
             return field;
         }
         
+        public boolean isFieldSaved() {
+            return true;
+        }
+        
         PBEntrySettingsField(PBEntryField field, String name) {
             super();
             this.field = field;

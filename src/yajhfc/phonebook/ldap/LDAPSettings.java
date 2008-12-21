@@ -20,6 +20,7 @@ package yajhfc.phonebook.ldap;
 
 import java.util.logging.Logger;
 
+import yajhfc.Password;
 import yajhfc.Utils;
 import yajhfc.phonebook.GeneralConnectionSettings;
 import yajhfc.phonebook.PBEntryField;
@@ -31,7 +32,7 @@ public class LDAPSettings extends GeneralConnectionSettings {
     public String baseDN = ""; //"o=Scalix";
     public boolean useAuth = false;
     public String bindDN = "";
-    public String credential = "";
+    public final Password credential = new Password();
     public boolean askForCredential = false;
     public boolean initiallyLoadAll = true;
     public int countLimit = 1000;

@@ -224,7 +224,7 @@ public class JDBCPhoneBook extends PhoneBook {
             else
                 password = pwd[1];
         } else {
-            password = settings.pwd;
+            password = settings.pwd.getPassword();
         }
         
         try {
