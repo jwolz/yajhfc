@@ -115,7 +115,12 @@ public class XMLPhoneBook extends PhoneBook {
 
     @Override
     public String browseForPhoneBook() {
-        return PB_Prefix + ":" + new PBBrowser(settings).browseForPhoneBook(parentDialog).saveToString();
+        XMLSettings newSettings = new PBBrowser(settings).browseForPhoneBook(parentDialog);
+        if (newSettings == null) {
+            return null;
+        } else {
+            return PB_Prefix + ":" + newSettings.saveToString();
+        }
     }
 
     @Override

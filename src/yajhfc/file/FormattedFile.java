@@ -105,7 +105,27 @@ public class FormattedFile {
     }
     
     public void view() throws IOException, UnknownFormatException {
-        viewFile(file.getPath(), format);
+        String execCmd;
+
+        switch (format) {
+        case TIFF:
+            execCmd = Utils.getFaxOptions().faxViewer;
+            break;
+        case PostScript:
+            execCmd = Utils.getFaxOptions().psViewer;
+            break;
+        case PDF:
+            if (Utils.getFaxOptions().viewPDFAsPS) {
+                execCmd = Utils.getFaxOptions().psViewer;
+            } else {
+                execCmd = Utils.getFaxOptions().pdfViewer;
+            }
+            break;
+        default:
+            throw new UnknownFormatException(MessageFormat.format(Utils._("File format {0} not supported."), format.toString()));
+        }
+
+        Utils.startViewer(execCmd, file);
     }
     
     public void detectFormat() throws FileNotFoundException, IOException {
@@ -289,35 +309,6 @@ public class FormattedFile {
         }
     }
     
-    public static void viewFile(String fileName, FileFormat format) throws UnknownFormatException, IOException {
-        String execCmd;
-
-        switch (format) {
-        case TIFF:
-            execCmd = Utils.getFaxOptions().faxViewer;
-            break;
-        case PostScript:
-            execCmd = Utils.getFaxOptions().psViewer;
-            break;
-        case PDF:
-            if (Utils.getFaxOptions().viewPDFAsPS) {
-                execCmd = Utils.getFaxOptions().psViewer;
-            } else {
-                execCmd = Utils.getFaxOptions().pdfViewer;
-            }
-            break;
-        default:
-            throw new UnknownFormatException(MessageFormat.format(Utils._("File format {0} not supported."), format.toString()));
-        }
-
-
-        if (execCmd.indexOf("%s") >= 0)
-            execCmd = execCmd.replace("%s", fileName);
-        else
-            execCmd += " \"" + fileName + "\"";
-
-        new ProcessBuilder(Utils.splitCommandLine(execCmd)).start();
-    }
 
 //  protected static final FileFormat[] acceptedFormats = {
 //  FileFormat.PostScript, FileFormat.PDF, FileFormat.JPEG, FileFormat.GIF, FileFormat.PNG, FileFormat.TIFF

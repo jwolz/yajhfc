@@ -21,10 +21,9 @@
 
 package gnu.getopt;
 
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.PropertyResourceBundle;
 import java.text.MessageFormat;
+import java.util.Locale;
+import java.util.PropertyResourceBundle;
 
 /**************************************************************************/
 
@@ -97,12 +96,6 @@ protected StringBuffer flag;
   */
 protected int val;
 
-/**
-  * Localized strings for error messages
-  */
-private ResourceBundle _messages = PropertyResourceBundle.getBundle(
-                            "gnu/getopt/MessagesBundle", Locale.getDefault());
-
 /**************************************************************************/
 
 /*
@@ -130,7 +123,8 @@ LongOpt(String name, int has_arg,
     {
       Object[] msgArgs = { new Integer(has_arg).toString() };
       throw new IllegalArgumentException(MessageFormat.format(
-                    _messages.getString("getopt.invalidValue"), msgArgs));
+              PropertyResourceBundle.getBundle("gnu/getopt/MessagesBundle", Locale.getDefault())
+              .getString("getopt.invalidValue"), msgArgs));
     }
 
   // Store off values

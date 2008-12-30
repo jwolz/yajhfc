@@ -540,8 +540,7 @@ protected String progname;
 /**
   * The localized strings are kept in a separate file
   */
-private ResourceBundle _messages = PropertyResourceBundle.getBundle(
-                           "gnu/getopt/MessagesBundle", Locale.getDefault());
+private ResourceBundle _messages;
 
 /**************************************************************************/
 
@@ -619,8 +618,6 @@ Getopt(String progname, String[] argv, String optstring,
   else
     {
       posixly_correct = true;
-      _messages = PropertyResourceBundle.getBundle("gnu/getopt/MessagesBundle",
-                                                   Locale.US);
     }
 
   // Determine how to handle the ordering of options and non-options
@@ -898,7 +895,7 @@ checkLongOption()
         {
           Object[] msgArgs = { progname, argv[optind] };
           System.err.println(MessageFormat.format(
-                             _messages.getString("getopt.ambigious"), 
+                             getString("getopt.ambigious"), 
                              msgArgs));
         }
 
@@ -931,7 +928,7 @@ checkLongOption()
                     {
                       Object[] msgArgs = { progname, pfound.name };
                       System.err.println(MessageFormat.format(
-                                  _messages.getString("getopt.arguments1"), 
+                                  getString("getopt.arguments1"), 
                                   msgArgs));
                     }
                   // +option or -option
@@ -941,7 +938,7 @@ checkLongOption()
                                Character(argv[optind-1].charAt(0)).toString(),
                                pfound.name };
                       System.err.println(MessageFormat.format(
-                               _messages.getString("getopt.arguments2"), 
+                               getString("getopt.arguments2"), 
                                msgArgs));
                     }
                  }
@@ -965,7 +962,7 @@ checkLongOption()
                 {
                   Object[] msgArgs = { progname, argv[optind-1] };
                   System.err.println(MessageFormat.format(
-                                     _messages.getString("getopt.requires"), 
+                                     getString("getopt.requires"), 
                                      msgArgs));
                 }
    
@@ -1135,7 +1132,7 @@ getopt()
                 {
                   Object[] msgArgs = { progname, nextchar };
                   System.err.println(MessageFormat.format(
-                                   _messages.getString("getopt.unrecognized"), 
+                                   getString("getopt.unrecognized"), 
                                    msgArgs));
                 }
               else
@@ -1144,7 +1141,7 @@ getopt()
                                  Character(argv[optind].charAt(0)).toString(), 
                                  nextchar };
                   System.err.println(MessageFormat.format(
-                                 _messages.getString("getopt.unrecognized2"), 
+                                 getString("getopt.unrecognized2"), 
                                  msgArgs));
                 }
             }
@@ -1182,14 +1179,14 @@ if (cIndex != -1)
               Object[] msgArgs = { progname, new 
                                    Character((char)c).toString() };
               System.err.println(MessageFormat.format(
-                            _messages.getString("getopt.illegal"), msgArgs));
+                            getString("getopt.illegal"), msgArgs));
             }
           else
             {
               Object[] msgArgs = { progname, new 
                                    Character((char)c).toString() };
               System.err.println(MessageFormat.format(
-                            _messages.getString("getopt.invalid"), msgArgs));
+                            getString("getopt.invalid"), msgArgs));
             }
         }
 
@@ -1214,7 +1211,7 @@ if (cIndex != -1)
               Object[] msgArgs = { progname, new 
                                    Character((char)c).toString() };
               System.err.println(MessageFormat.format(
-                            _messages.getString("getopt.requires2"), msgArgs));
+                            getString("getopt.requires2"), msgArgs));
             }
 
           optopt = c;
@@ -1276,7 +1273,7 @@ if (cIndex != -1)
                   Object[] msgArgs = { progname, new 
                                        Character((char)c).toString() };
                   System.err.println(MessageFormat.format(
-                            _messages.getString("getopt.requires2"), msgArgs));
+                            getString("getopt.requires2"), msgArgs));
                 }
 
               optopt = c;
@@ -1306,7 +1303,7 @@ if (cIndex != -1)
                           Object[] msgArgs = { progname, new 
                                                Character((char)c).toString() };
                           System.err.println(MessageFormat.format(
-                             _messages.getString("getopt.requires2"), msgArgs));
+                             getString("getopt.requires2"), msgArgs));
                         }
 
                       optopt = c;
@@ -1333,6 +1330,22 @@ if (cIndex != -1)
     }
 
   return(c);
+}
+
+/**
+ * @return the message string
+ */
+protected String getString(String key) {
+    if (_messages == null) {
+        if (posixly_correct) {
+            _messages = PropertyResourceBundle.getBundle("gnu/getopt/MessagesBundle",
+                    Locale.US);
+        } else {
+            _messages = PropertyResourceBundle.getBundle(
+                    "gnu/getopt/MessagesBundle", Locale.getDefault());
+        }
+    }
+    return _messages.getString(key);
 }
 
 } // Class Getopt

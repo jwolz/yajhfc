@@ -18,13 +18,9 @@
  */
 package yajhfc.util;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-
-import yajhfc.Utils;
 
 /**
  * @author jonas
@@ -177,27 +173,27 @@ public class ReplacerOutputStream extends FilterOutputStream {
     }
     
     
-    public static void main(String[] args) throws IOException {
-        OutputStream outStream = new FileOutputStream("/tmp/p2.ps");
-
-        long time = System.currentTimeMillis();
-        Utils.copyStream(new FileInputStream("/tmp/p.ps"), outStream);
-        outStream.close();
-        System.out.println("Copy 1: " +  (System.currentTimeMillis()-time) + "ms");
-        
-        outStream = new ReplacerOutputStream(new FileOutputStream("/tmp/p3.ps"), 
-                "% MozillaCharsetName: iso-8859-1".getBytes(),
-                "% MozillaCharsetName: iso-8859-15".getBytes());
-        time = System.currentTimeMillis();
-        Utils.copyStream(new FileInputStream("/tmp/p.ps"), outStream);
-        outStream.close();
-        System.out.println("Copy 2: " +  (System.currentTimeMillis()-time) + "ms");
-        
-        outStream = new FileOutputStream("/tmp/p4.ps");
-        time = System.currentTimeMillis();
-        Utils.copyStream(new FileInputStream("/tmp/p.ps"), outStream);
-        outStream.close();
-        System.out.println("Copy 3: " +  (System.currentTimeMillis()-time) + "ms");
-
-    }
+//    public static void main(String[] args) throws IOException {
+//        OutputStream outStream = new FileOutputStream("/tmp/p2.ps");
+//
+//        long time = System.currentTimeMillis();
+//        Utils.copyStream(new FileInputStream("/tmp/p.ps"), outStream);
+//        outStream.close();
+//        System.out.println("Copy 1: " +  (System.currentTimeMillis()-time) + "ms");
+//        
+//        outStream = new ReplacerOutputStream(new FileOutputStream("/tmp/p3.ps"), 
+//                "% MozillaCharsetName: iso-8859-1".getBytes(),
+//                "% MozillaCharsetName: iso-8859-15".getBytes());
+//        time = System.currentTimeMillis();
+//        Utils.copyStream(new FileInputStream("/tmp/p.ps"), outStream);
+//        outStream.close();
+//        System.out.println("Copy 2: " +  (System.currentTimeMillis()-time) + "ms");
+//        
+//        outStream = new FileOutputStream("/tmp/p4.ps");
+//        time = System.currentTimeMillis();
+//        Utils.copyStream(new FileInputStream("/tmp/p.ps"), outStream);
+//        outStream.close();
+//        System.out.println("Copy 3: " +  (System.currentTimeMillis()-time) + "ms");
+//
+//    }
 }

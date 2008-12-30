@@ -1258,7 +1258,7 @@ public final class MainWin extends JFrame {
     
     public void setSelectedTab(int index)
     {
-        if (index >= 0 && index < TABLE_COUNT) {
+        if (index >= 0 && index < getTabMain().getTabCount()) {
             getTabMain().setSelectedIndex(index);
         }
     }
@@ -1369,19 +1369,22 @@ public final class MainWin extends JFrame {
             menuViewAll.setActionCommand("view_all");
             menuViewAll.setSelected(true);
             menuViewAll.addActionListener(menuViewListener);
+            menuViewAll.setEnabled(myopts.allowChangeFilter);
             
             menuViewOwn = new JRadioButtonMenuItem(_("Only own faxes"));
             menuViewOwn.setActionCommand("view_own");
             menuViewOwn.addActionListener(menuViewListener);
+            menuViewOwn.setEnabled(myopts.allowChangeFilter);
             
             menuViewCustom = new JRadioButtonMenuItem(_("Custom filter..."));
             menuViewCustom.setActionCommand("view_custom");
             menuViewCustom.addActionListener(menuViewListener);
+            menuViewCustom.setEnabled(myopts.allowChangeFilter);
             
             menuMarkError = new JCheckBoxMenuItem(_("Mark failed jobs"));
             menuMarkError.setActionCommand("mark_failed");
             menuMarkError.addActionListener(menuViewListener);
-            menuMarkError.setSelected(Utils.getFaxOptions().markFailedJobs);
+            menuMarkError.setSelected(myopts.markFailedJobs);
             
             viewGroup = new ButtonGroup();
             viewGroup.add(menuViewAll);
@@ -1985,7 +1988,7 @@ public final class MainWin extends JFrame {
             boolean markErrorState = canMarkError(model);
             
             resetLastSel(tabMain.getSelectedIndex());
-            menuViewOwn.setEnabled(viewOwnState);
+            menuViewOwn.setEnabled(myopts.allowChangeFilter && viewOwnState);
             menuMarkError.setEnabled(markErrorState);
             if ((!viewOwnState && menuViewOwn.isSelected())) {
                 menuViewAll.setSelected(true);
@@ -2063,6 +2066,10 @@ public final class MainWin extends JFrame {
                     lastSel[idx] = menuViewCustom;
                     model.setJobFilter(yjf);
                 }
+            } else {
+                // Fall back to view all faxes
+                log.warning("Unknown filter for index " + idx + ":" + data);
+                lastSel[idx] = menuViewAll;
             }
         }
         
@@ -2070,6 +2077,7 @@ public final class MainWin extends JFrame {
             loadSaveString(0, myopts.recvFilter);
             loadSaveString(1, myopts.sentFilter);
             loadSaveString(2, myopts.sendingFilter);
+            loadSaveString(3, myopts.archiveFilter);
             reConnected();
         }
         
@@ -2089,6 +2097,7 @@ public final class MainWin extends JFrame {
             myopts.recvFilter = getSaveString(0);
             myopts.sentFilter = getSaveString(1);
             myopts.sendingFilter = getSaveString(2);
+            myopts.archiveFilter = getSaveString(3);
         }
     }
 

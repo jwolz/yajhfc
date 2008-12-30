@@ -19,15 +19,10 @@
 package yajhfc.util;
 
 import java.awt.Component;
-import java.awt.Dialog;
-import java.awt.Frame;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 import yajhfc.Launcher2;
 import yajhfc.Utils;
@@ -75,20 +70,9 @@ public abstract class ExcDialogAbstractAction extends AbstractAction {
             }
             if (src == null || !(src instanceof Component)) {
                 src = Launcher2.application;
-            } else if (!(src instanceof Window)) {
-                src = SwingUtilities.getWindowAncestor((Component)src);
-                if (src == null) {
-                    src = Launcher2.application;
-                }
             }
             
-            if (src instanceof Dialog) {
-                ExceptionDialog.showExceptionDialog((Dialog)src, Utils._("An Error occurred executing the desired action:"), ex);
-            } else if (src instanceof Frame) {
-                ExceptionDialog.showExceptionDialog((Frame)src, Utils._("An Error occurred executing the desired action:"), ex);
-            } else {
-                JOptionPane.showMessageDialog(null, Utils._("An Error occurred executing the desired action:") + "\n\n" + ex);
-            }
+           ExceptionDialog.showExceptionDialog((Component)src, Utils._("An Error occurred executing the desired action:"), ex);
         }
     }
 

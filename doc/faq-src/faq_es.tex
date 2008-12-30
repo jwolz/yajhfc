@@ -22,75 +22,65 @@
 \section{Instalación}
 \subsection{¿Dónde puedo conseguir un visor de faxes para Windows?}
 
-Generalmente puedes utilizar cualquier programa que permita mostrar archivos TIFF, aunque algunos de ellos muestran los faxes en una resolución baja con una anchura (a la mitad) incorrecta.
+Generalmente puede utilizar cualquier programa que permita mostrar archivos TIFF, aunque algunos de ellos muestran los faxes en una resolución baja con una anchura incorrecta (a la mitad).
 
 Afortunadamente, las versiones recientes de Windows vienen con un programa 
 que hace ésto correctamente:
 
 \begin{description}
 \item[Windows 95/98/ME/2000:]
-Puedes utilizar el programa que se encuentra en Accesorios / Imagen. 
-Para utilizarlo con YajHFC, utiliza el botón de exploración en \texttt{Línea de comandos 
-para el visor de faxes} y selecciona la ubicación de kodakimg.exe en tu disco duro.
+Puede utilizar el programa que se encuentra en Accesorios / Imagen. 
+Para utilizarlo con YajHFC, use el botón de exploración en \texttt{Línea de comandos 
+para el visor de faxes} y seleccione la ubicación de kodakimg.exe en su disco duro.
 
 \item[Windows XP:]
-Puedes utilizar el programa integrado "Visor de imágenes y faxes". 
-Para utilizarlo, introduce el siguiente texto en "Línea de comandos para el visor de faxes":\\
+Puede utilizar el programa integrado "Visor de imágenes y faxes". 
+Para utilizarlo, introduzca el siguiente texto en "Línea de comandos para el visor de faxes":\\
       \verb#rundll32.exe shimgvw.dll,ImageView_Fullscreen %s#
  \end{description}
 
       
 \subsection{¿Dónde puedo obtener un visor de faxes para Linux/*BSD/... ?}
-\texttt{kfax} funciona muy bien, pero al igual que en Windows, puedes utilizar cualquier programa que pueda mostrar archivos TIFF, tan sólo busca en la base de paquetes de tu distribución (xloadimage \emph{no} funciona).
+\texttt{kfax} funciona muy bien, pero al igual que en Windows, puede utilizar cualquier programa que pueda mostrar archivos TIFF, tan sólo busque en la base de paquetes de su distribución (xloadimage \emph{no} funciona).
 
 
 \subsection{¿Qué puedo utilizar como visor de faxes en Mac OS X?}
-Sólo tienes que introducir \verb#open %s# en \texttt{Línea de comandos para el visor de faxes".}
+Sólo tiene que introducir \verb#open %s# en \texttt{Línea de comandos para el visor de faxes".}
 Los faxes deberían abrirse con la aplicación predeterminada. 
 Gracias a Scott Harris por esta ayuda.
 
 
 \subsection{¿Dónde puedo obtener un visor PostScript?}
 \begin{description}
-\item[Windows:] Utiliza Ghostview disponible en
+\item[Windows:] Utilice Ghostview disponible en
 \url{http://www.cs.wisc.edu/~ghost/}\\
-\textbf{Nota:} también es posible utilizar el programa Acrobat Distiller
-(verificado sólo con la versión completa) que permite abrir los archivos PS
-y visualizarlo al instante. Para ello hay que introducir la ruta al programa
-en \texttt{Línea de comandos para el visor archivos PostScript},
-generalmente:
-\verb#"C:\Archivos de programa\Adobe\Acrobat 5.0\Distillr\Acrodist.exe" %s#
-
-\item[Linux/*BSD/...:] Simplemente instala uno de los paquetes de visores
-PostScript
-(por ejemplo: \texttt{gv, kghostview, gnome-gv, ...})
+\item[Linux/*BSD/...:] Simplemente instale uno de los paquetes de visores PostScript
+		(por ejemplo: \texttt{gv, kghostview, gnome-gv, ...})
 \end{description}
 
 
-\subsection{Where can I get GhostScript from?}
+\subsection{¿Dónde puedo obtener GhostScript?}
 \begin{description}
-\item[Windows:] Download it from \url{http://www.cs.wisc.edu/~ghost/}
-\item[Linux/*BSD/...:] Install the GhostScript package for your distribution (on most installations this package will already be installed; if not: the package name usually begins with \texttt{ghostscript} or \texttt{gs})
+\item[Windows:] Puede descargarlo desde \url{http://www.cs.wisc.edu/~ghost/}
+\item[Linux/*BSD/...:] Puede instalar el paquete GhostScript para su distribución (en la mayoría de las instalaciones este paquete ya estará instalado; si no lo está: el nombre del paquete comienza, normalmente, por \texttt{ghostscript} o \texttt{gs})
 \end{description}
 
-\subsection{Where can I get TIFF2PDF from?}
+\subsection{¿Dónde puedo obtener TIFF2PDF?}
 \begin{description}
-\item[Windows:] Download it from \url{http://gnuwin32.sourceforge.net/downlinks/tiff.php}\\ If this link does not work, please see \url{http://gnuwin32.sourceforge.net/packages/tiff.htm} or \url{http://www.libtiff.org/}.
-\item[Linux/*BSD/...:] Install the libtiff tools package for your distribution. Usually this package will have the word \texttt{tiff} in its name (on Debian/Ubuntu it is called \texttt{libtiff-tools} and on SUSE \texttt{tiff}).
+\item[Windows:] Puede descargarlo desde \url{http://gnuwin32.sourceforge.net/downlinks/tiff.php}\\ Si el enlace no funciona, consulte \url{http://gnuwin32.sourceforge.net/packages/tiff.htm} o \url{http://www.libtiff.org/}.
+\item[Linux/*BSD/...:] Puede instalar el paquete de herramientas libtiff para su distribución. Normalmente este paquete contiene el término \texttt{tiff} en su nombre (en Debian/Ubuntu se llama \texttt{libtiff-tools} y en openSUSE \texttt{tiff}).
 \end{description}
 
 \section{Utilización del programa}	
 
 \subsection{¿Cómo puedo editar las plantillas PostScript de las portadas?}
 Las plantillas tienen que estar en el mismo formato PostScript especial 
-que utiliza el programa \texttt{faxcover} de HylaFAX. Revisa la siguiente ayuda 
+que utiliza el programa \texttt{faxcover} de HylaFAX. Revise la siguiente ayuda 
 para saber cómo crear / modificar este tipo de archivos: \\
 \url{http://www.hylafax.org/HylaFAQ/Q202.html}\\
 \url{http://www.hylafax.org/howto/tweaking.html}\\
 
-Como alternativa, a partir de YajHFC 0.3.7, puedes utilizar páginas de portada en HTML o bien en formato XSL:FO u ODT (OpenDocument Text), mediante un complemento.
-
-
+Como alternativa, a partir de YajHFC 0.3.7, puede utilizar páginas de portada en HTML o bien en formato XSL:FO u ODT (OpenDocument Text), mediante un complemento.
 
 \subsection{¿Qué campos se reconocen en una página de portada HTML?}
 
@@ -119,39 +109,39 @@ Las siguientes ``palabras'' se reemplazan (sin tener en cuenta mayúsculas / min
 \end{tabular}
 \end{center}
 
-Starting with version 0.4.0 the following additional fields are available (note that the \textit{italic} fields will be empty when you use resend fax):
+Desde la versión 0.4.0 se encuentran disponibles los siguientes campos adicionales (tenga en cuenta que los campos en \textit{cursiva} estarán vacíos cuando reenvíe un fax):
 \begin{center}
 \begin{tabular}{|l|p{.7\textwidth}|}
 \hline
-\bfseries Word & \bfseries Meaning \\
+\bfseries Palabra & \bfseries Significado \\
 \hline\hline
-\ttfamily @@Surname@@ & The recipient's surname (resent faxes: the same as \texttt{@@Name@@}) \\\hline
-\ttfamily\itshape @@GivenName@@ & The recipient's given name \\\hline
-\ttfamily\itshape @@Title@@ & The recipient's title \\\hline
-\ttfamily\itshape @@Position@@ & The recipient's position \\\hline
-\ttfamily\itshape @@Department@@ & The recipient's department\\\hline
-\ttfamily @@CompanyName@@ & The recipient's company name (without department) (resent faxes: the same as \texttt{@@Company@@})\\\hline
-\ttfamily\itshape @@Street@@ & The recipient's street name \\\hline
-\ttfamily @@Place@@ & The recipient's location (without street or ZIP code) (resent faxes: the same as \texttt{@@Location@@})\\\hline
-\ttfamily\itshape @@ZIPCode@@ & The recipient's ZIP Code \\\hline
-\ttfamily\itshape @@State@@ & The recipient's state\\\hline
-\ttfamily\itshape @@Country@@ & The recipient's country\\\hline
-\ttfamily\itshape @@EMail@@ & The recipient's e-mail address\\\hline
-\ttfamily\itshape @@WebSite@@ & The recipient's website\\\hline\hline
-\ttfamily @@FromSurname@@ & The sender's  surname \\\hline
-\ttfamily @@FromGivenName@@ & The sender's  given name \\\hline
-\ttfamily @@FromTitle@@ & The sender's  title \\\hline
-\ttfamily @@FromPosition@@ & The sender's position \\\hline
-\ttfamily @@FromDepartment@@ & The sender's  department\\\hline
-\ttfamily @@FromCompanyName@@ & The sender's  company name (without department)\\\hline
-\ttfamily @@FromStreet@@ & The sender's  street name \\\hline
-\ttfamily @@FromPlace@@ & The sender's  location (without street or ZIP code)\\\hline
-\ttfamily @@FromZIPCode@@ & The sender's  ZIP Code \\\hline
-\ttfamily @@FromState@@ & The sender's  state\\\hline
-\ttfamily @@FromCountry@@ & The sender's  country\\\hline
-\ttfamily @@FromEMail@@ & The sender's  e-mail address\\\hline
-\ttfamily @@FromWebSite@@ & The sender's website\\\hline
-\ttfamily @@TotalPageCount@@ & The number of pages \textit{including} the cover page \\\hline
+\ttfamily @@Surname@@ & Apellido del destinatario (faxes reenviados: igual que \texttt{@@Name@@}) \\\hline
+\ttfamily\itshape @@GivenName@@ & Nombre de pila del destinatario \\\hline
+\ttfamily\itshape @@Title@@ & Tratamiento del destinatario \\\hline
+\ttfamily\itshape @@Position@@ & Cargo del destinatario \\\hline
+\ttfamily\itshape @@Department@@ & Departamento del destinatario\\\hline
+\ttfamily @@CompanyName@@ & Nombre de la empresa del destinatario (sin el departamento) (faxes reenviados: igual que \texttt{@@Company@@})\\\hline
+\ttfamily\itshape @@Street@@ & Nombre de la calle del destinatario \\\hline
+\ttfamily @@Place@@ & Ubicación del destinatario (sin la calle ni el código postal) (faxes reenviados: igual que \texttt{@@Location@@})\\\hline
+\ttfamily\itshape @@ZIPCode@@ & Código postal del destinatario \\\hline
+\ttfamily\itshape @@State@@ & Estado o provincia del destinatario\\\hline
+\ttfamily\itshape @@Country@@ & País del destinatario\\\hline
+\ttfamily\itshape @@EMail@@ & Dirección de correo electrónico del destinatario\\\hline
+\ttfamily\itshape @@WebSite@@ & Página web del destinatario\\\hline\hline
+\ttfamily @@FromSurname@@ & Apellido del remitente \\\hline
+\ttfamily @@FromGivenName@@ & Nombre de pila del remitente \\\hline
+\ttfamily @@FromTitle@@ & Tratamiento del remitente \\\hline
+\ttfamily @@FromPosition@@ & Cargo del remitente \\\hline
+\ttfamily @@FromDepartment@@ & Departamento del remitente\\\hline
+\ttfamily @@FromCompanyName@@ & Nombre de la empresa del remitente (sin el departamento)\\\hline
+\ttfamily @@FromStreet@@ & Nombre de la calle del remitente \\\hline
+\ttfamily @@FromPlace@@ & Ubicación del remitente (sin la calle ni el código postal)\\\hline
+\ttfamily @@FromZIPCode@@ & Código postal del remitente \\\hline
+\ttfamily @@FromState@@ & Estado o provincia del remitente\\\hline
+\ttfamily @@FromCountry@@ & País del remitente\\\hline
+\ttfamily @@FromEMail@@ & Dirección de correo electrónico del remitente\\\hline
+\ttfamily @@FromWebSite@@ & Página web del remitente\\\hline
+\ttfamily @@TotalPageCount@@ & Número de páginas \textit{incluyendo} la página de portada \\\hline
 \end{tabular}
 \end{center}
 
@@ -159,166 +149,198 @@ El reemplazo se realiza a nivel de código fuente, por lo que esas palabras no s
 
 \subsection{Me gustaba más el antiguo cuadro de diálogo. ¿Puedo volver a utilizarlo?}
 
-Simplemente abre el cuadro de diálogo de Opciones y selecciona \texttt{Tradicional} en ``Estilo para el cuadro de diálogo de envío''.
+Simplemente abra el cuadro de diálogo de Opciones y seleccione \texttt{Tradicional} en ``Estilo para el cuadro de diálogo de envío''.
 
 \subsection{Quiero acceder a la agenda telefónica por medio de JDBC pero YajHFC no encuentra el controlador aunque especifique la ruta correcta para llamar a Java.}
 
-Si utilizas el argumento \texttt{-jar}, Java ignora la ruta definida por el usuario.
-Por tanto inicia YajHFC utilizando el siguiente comando (reemplaza \texttt{/ruta/a/controladorbdd.jar} y \texttt{/ruta/a/yajhfc.jar} con sus respectivas rutas reales y nombre de archivo (por supuesto):
+Si utiliza el argumento \texttt{-jar}, Java ignora la ruta definida por el usuario.
+Por tanto inicie YajHFC utilizando el siguiente comando (reemplace \texttt{/ruta/a/controladorbdd.jar} y \texttt{/ruta/a/yajhfc.jar} con sus respectivas rutas reales y nombre de archivo (por supuesto):
 \begin{description}
 \item [Linux/Unix:] \verb#java -classpath /ruta/a/controaldorbdd.jar:/ruta/a/yajhfc.jar yajhfc.Launcher#
 \item [Windows:] \verb#java -classpath c:\ruta\a\controladorbdd.jar;c:\ruta\a\yajhfc.jar yajhfc.Launcher#
 \end{description}
 
-\subsection{¿Qué puedo poner como valor \texttt{igual a} en el cuadro de diálogo de filtrado personalizado? }
+\subsection{¿Qué puedo poner como valor \texttt{igual a} en el cuadro de diálogo de filtros personalizados? }
 
-Expresiones regulares. Puedes encontrar una breve referencia sobre la sintaxis permitida en
+Expresiones regulares. Puede encontrar una breve referencia sobre la sintaxis permitida en
 \url{http://java.sun.com/j2se/1.5.0/docs/api/java/util/regex/Pattern.html}
 
-Ten en cuenta que las expresiones regulares no son lo mismo que los caracteres comodín:
-Por ejemplo, para obtener el mismo efecto que el comodín \verb.*. tienes que utilizar \verb#.*#
+Tenga en cuenta que las expresiones regulares no son lo mismo que los caracteres comodín:
+Por ejemplo, para obtener el mismo efecto que el comodín \verb.*. tiene que utilizar \verb#.*#
 y para simular el efecto de \verb#?# hay que utilizar \verb#.#.
 
 \subsection{¿Qué argumentos de línea de comandos entiende YajHFC?}
 
 \begin{verbatim}
-Uso general:
-java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose]
-         [--configdir=directory] [--loadplugin=filename] [--logfile=filename]
-         [--showtab=0|R|1|S|2|T] [--recipient=...] [--stdin | filename ...]
+Forma de uso:
+java -jar yajhfc.jar [OPCIONES]... [ARCHIVOS PARA ENVIAR]...
+
 Descripción de los argumentos:
-filename     El nombre del archivo PostScript para enviar.
---stdin      Lee el archivo para enviar de una entrada estándar
---recipient  Especifica el número de teléfono del destinatario para enviar un fax.
-             Es posible especificar varios valores para múltiples destinatarios.
---admin      Inicia en modo administrador
---debug      Salida de información de errores
---logfile    Archivo de registro donde registrar la información de depuración (si no se especifica, usar la salida estándar "stdout")
---background Si no hay ninguna instancia en ejecución, iniciar una nueva instancia
-             y terminar (después de enviar el archivo)
---noclose    No cerrar YajHFC después de enviar el fax
---showtab    Establece la pestaña para mostrar al inicio. Especifica 
-             0 o R para la pestaña "Recibidos", 1 o S para "Enviados" o
-             2 o T para "Transmistiendo".
---loadplugin Especifica el archivo jar de un plugin de YajHFC para cargar
---no-plugins Descativa la carga de complementos desde el archivo plugin.lst.
---configdir  Establece un directorio de configuración para utilizar en lugar de ~/.yajhfc
---help       Muestra este texto
+-r, --recipient=DESTINATARIO            Especifica el destinatario al que se va
+                                        a enviar un fax. Puede especificar el
+                                        número de fax o bien información
+                                        detallada de la página de portada
+                                        (consulte la FAQ para obtener
+                                        información del formato si elige esta
+                                        última opción). Puede especificar
+                                        varios --recipient en el caso de que
+                                        haya múltiples destinatarios.
+-C, --use-cover[=yes|no]                Utilizar una página de portada para
+                                        enviar un fax.
+-s, --subject=ASUNTO                    El asunto del fax para la página de
+                                        portada.
+    --comment=COMENTARIO                Comentario para la página de portada.
+    --stdin                             Leer el archivo para enviar desde una
+                                        entrada estándar.
+-A, --admin                             Iniciar en modo administrador.
+-d, --debug                             Salida con información de depuración.
+-l, --logfile=ARCHIVO DE REGISTRO       El archivo de registro donde almacenar
+                                        la información de depuración (si no se
+                                        especifica, utilizar la salida estándar
+                                        "stdout").
+    --appendlogfile=ARCHIVO DE REGISTRO Añadir la información de depuración al
+                                        archivo de registro especificado.
+    --background                        Si no hay ninguna instancia en
+                                        ejecución de YajHFC, lanzar una nueva
+                                        instancia y finalizar esta instancia
+                                        (después de remitir el fax para
+                                        enviar).
+    --noclose                           No cerrar YajHFC después de enviar el
+                                        fax.
+-T, --showtab=0|R|1|S|2|T               Define la pestaña para mostrar al
+                                        inicio. Especifique 0 o R para la
+                                        pestaña de "Recibidos", 1 o S para la
+                                        pestaña de "Enviados" o 2 o T para la
+                                        pestaña de "Transmisión".
+    --loadplugin=ARCHIVO JAR            Especifica un archivo jar de un
+                                        complemento de YajHFC para cargar.
+    --loaddriver=ARCHIVO JAR            Especifica la ubicación de un archivo
+                                        jar para el controlador JDBC para
+                                        cargar.
+    --no-plugins                        Desactiva la carga de los complementos
+                                        desde el archivo plugins.lst.
+    --no-gui                            Envía un fax utilizando una interfaz de
+                                        usuario mínima.
+    --no-check                          Elimina la comprobación de la versión
+                                        de Java al inicio.
+-c, --configdir=DIRECTORIO              Define la configuración del directorio
+                                        para utilizar en lugar de ~/.yajhfc
+-h, --help[=COLUMNAS]                   Muestra este texto.
 \end{verbatim}
 
-\subsection{How can I give cover page information using the \texttt{-{-}recipient} switch?}
+\subsection{¿Cómo puedo pasar la información de la página de portada utilizando el parámetro \texttt{-{-}recipient}?}
 
-Starting with version 0.4.0, you can give that information using \texttt{name:value} pairs, separated by semicolons. For example, to send a fax to ``John Doe'' in ``Example town'' with the fax number 0123456, use the following command line:
+Desde la versión 0.4.0, es posible pasar esa información utilizando las parejas \texttt{nombre:valor}, separadas por punto y coma. Por ejemplo, para enviar un fax a ``John Doe'' en ``Ciudad de ejemplo'' con el número de fax 0123456, hay que utilizar la siguiente línea de comandos:
 
-\texttt{java -jar yajhfc.jar \textit{[...]} -{-}recipient="givenname:John;surname:Doe;location:Example Town;faxnumber:0123456" \textit{[...]}}
+\texttt{java -jar yajhfc.jar \textit{[...]} -{-}recipient="givenname:John;surname:Doe;location:Ciudad de ejemplo;faxnumber:0123456" \textit{[...]}}
 
-The following field names are recognized:
+Se reconocen los siguientes nombres de campo:
 \begin{center}
 \begin{tabular}{|l|p{.7\textwidth}|}
 \hline
-\bfseries Field name & \bfseries Meaning \\
+\bfseries Nombre del campo & \bfseries Significado \\
 \hline\hline
-\ttfamily surname & The recipient's surname\\\hline
-\ttfamily givenname & The recipient's given name \\\hline
-\ttfamily title & The recipient's title \\\hline
-\ttfamily position & The recipient's position \\\hline
+\ttfamily surname & Apellido del destinatario\\\hline
+\ttfamily givenname & Nombre de pila del destinatario \\\hline
+\ttfamily title & Tratamiento del destinatario \\\hline
+\ttfamily position & Cargo del destinatario \\\hline
 \ttfamily department & The recipient's department\\\hline
-\ttfamily company & The recipient's company name\\\hline
-\ttfamily street & The recipient's street name \\\hline
-\ttfamily location & The recipient's location\\\hline
-\ttfamily zipcode & The recipient's ZIP Code \\\hline
-\ttfamily state & The recipient's state\\\hline
-\ttfamily country & The recipient's country\\\hline
-\ttfamily email & The recipient's e-mail address\\\hline
-\ttfamily faxnumber & The recipient's fax number \\\hline
-\ttfamily voicenumber & The recipient's voice number \\\hline
-\ttfamily website & The recipient's website\\\hline
+\ttfamily company & Nombre de la empresa del destinatario\\\hline
+\ttfamily street & Nombre de la calle del destinatario \\\hline
+\ttfamily location & Ubicación del destinatario\\\hline
+\ttfamily zipcode & Código postal del destinatario \\\hline
+\ttfamily state & Estado o provincia del destinatario\\\hline
+\ttfamily country & País del destinatario\\\hline
+\ttfamily email & Dirección de correo electrónico del destinatario\\\hline
+\ttfamily faxnumber & Número de fax del destinatario \\\hline
+\ttfamily voicenumber & Número de teléfono del destinatario \\\hline
+\ttfamily website & Página web del destinatario\\\hline
 \end{tabular}
 \end{center}
 
 \subsection{¿Qué significa la columna XYZ?}
 
-Yo tampoco lo sé exactamente porque la descripción de las columnas ha sido copiada del manual de  \verb#faxstat(1)# (JobFmt/RcvFmt), abreviada y traducida
+Yo tampoco lo sé exactamente porque la descripción de las columnas ha sido copiada del manual de \verb#faxstat(1)# (JobFmt/RcvFmt), abreviada y traducida.
 
-\subsection{How can I specify some default settings?}
+\subsection{¿Cómo se pueden especificar algunos ajustes predeterminados?}
 
-Starting with version 0.4.0 the following files (if they exist) are loaded in order to retrieve the saved settings:
+Desde la versión 0.4.0, se cargan los siguientes archivos (en el caso de que existan) para obtener los ajustes que se han guardado:
 \begin{enumerate}
- \item \texttt{[Directory where yajhfc.jar resides]/settings.default}
- \item the user settings from \texttt{\{user.home\}\footnote{In Windows \texttt{user.home} usually is \texttt{C:\textbackslash Documents and Settings\textbackslash USERNAME}.}/.yajhfc/settings} (if you specified \texttt{-{-}configdir=DIR}, \texttt{DIR/settings} is used instead)
- \item \texttt{[Directory where yajhfc.jar resides]/settings.override}
+ \item \texttt{[Directorio donde se encuentra el archivo yajhfc.jar]/settings.default}
+ \item los ajustes de usuario desde \texttt{\{user.home\}\footnote{En Windows \texttt{user.home} normalmente está en \texttt{C:\textbackslash Documents and Settings\textbackslash USERNAME}.}/.yajhfc/settings} (si se especifica el parámetro \texttt{-{-}configdir=DIR}, se utiliza en su lugar \texttt{DIR/settings})
+ \item \texttt{[Directorio donde se encuentra el archivo yajhfc.jar]/settings.override}
 \end{enumerate}
 
-Settings from files loaded later override the settings specified in the files loaded earlier, i.e. the settings from \texttt{settings.override} take precedence over those in the user settings and \texttt{settings.default}.
+Los ajustes que se cargan posteriormente desde archivos sobreescriben los ajustes especificados en los archivos que se cargan al principio, es decir, los de \texttt{settings.override} tienen preferencia sobre los que se encuentran en los ajustes del usuario y \texttt{settings.default}.
 \medskip
 
-This logic can be used to specify default settings (e.g. in a networked environment): \\
-Simply configure one YajHFC installation as you like, then copy \texttt{\{user.home\}/.yajhfc/settings} to the directory where \texttt{yajhfc.jar} is and rename it to \texttt{settings.default}.
+Esta lógica se puede utilizar para especificar los ajustes predeterminados (por ejemplo, en un entorno de red): \\
+Sólo hay que configurar una instalación de YajHFC al gusto y luego copiar los archivos \texttt{\{user.home\}/.yajhfc/settings} en el directorio donde se encuentra \texttt{yajhfc.jar} y renombrar el archivo como \texttt{settings.default}.
 \medskip
 
-Overrides can be specified in a similar fashion. In this case, you are encouraged to edit the settings file (it is a plain text file), and remove any lines that specify settings you wish not to override (usually you will want to remove at least \texttt{user} and \texttt{pass-obfuscated} (user name and password used to connect to the HylaFAX server), \texttt{FromName}, \texttt{*ColState} (the widths of the table columns), \texttt{*Bounds} (the position of the different windows) and \texttt{mainwinLastTab}).
+Las redefiniciones se pueden especificar de forma similar. En este caso, se recomienda editar el archivo de ajustes (es un archivo de texto plano), y eliminar cualquier línea donde de especifiquen los ajustes que no se quieran sobreescribir (normalmente querrá eliminar al menos \texttt{user} y \texttt{pass-obfuscated} (el nombre del usuario y la contraseña que se utiliza para conectar al servidor HylaFAX), \texttt{FromName}, \texttt{*ColState} (el ancho de las columnas de las tablas), \texttt{*Bounds} (la posición de las diferentes ventanas) y \texttt{mainwinLastTab}).
 
-Note, however that the user can still set these settings to a different value for a running YajHFC instance. They are reset to the override values only when YajHFC is started again (in other words: the user can set these settings, but they are not saved between different runs of YajHFC).
+Tenga en cuenta que el usuario aún puede definir estos ajustes con un valor diferente para una instancia de YajHFC que ya se encuentra en ejecuión. Sólo se restablecen a los valores redefinidos cuando se inicia YajHFC de nuevo (en otras palabras: el usuario puede definir estos ajustes pero no se guardan entre diferentes ejecuciones de YajHFC).
 
 
-\subsection{How can I display the HylaFAX \texttt{archive} folder in YajHFC?}
+\subsection{¿Cómo se puede mostrar el directorio de HylaFAX \texttt{archive} en YajHFC?}
 
-With version 0.4.0 support for the HylaFAX \texttt{archive} folder has been implemented.
+Desde la versión 0.4.0 se ha implementado el soporte para el directorio de HylaFAX \texttt{archive}.
 
-This directory cannot be accessed using the "`normal"' HylaFAX connection like the other folders, however, because HylaFAX does only allow to get the list of subfolders in the \texttt{archive} directory, but not to get any information (except the ID) about the archived jobs or the attached documents (if you know a HylaFAX version where this is different, please let me know).
+No se puede acceder a este directorio utilizando la conexión "'normal"' de HylaFAX como en los otros directorios, ya que HylaFAX sólo permite obtener la lista de los subdirectorios que se encuentran bajo el directorio \texttt{archive}, pero no permite obtener ninguna información sobre los trabajos archivados (excepto el ID) o de los documentos adjuntados (si conoce alguna versión de HylaFAX donde se permita, por favor, hágamelo saber).
 
-For this reason the directory has to be accessed by other methods. Currently (0.4.0) YajHFC only supports access using the file system. This means you have to export the  \texttt{archive} directory on the server using Samba, NFS or any other network file system, mount it on the client (if you use Unix; on Windows, you can just use UNC paths) and tell YajHFC in the options under which path the \texttt{archive} directory can be found.
+Por este motivo, se tiene que acceder al directorio utilizando otros métodos. Actualmente (0.4.0) YajHFC sólo permite el acceso utilizando el sistema de archivos. Esto significa que tiene que exportar el directorio \texttt{archive} del servidor por medio de Samba, NFS o cualquier otro sistema de archivos de red, montarlo en el cliente (si usa Unix / Linux; en Windows puede usar las rutas UNC) e indicar a YajHFC donde puede encontrar el directorio \texttt{archive} desde el menú de Opciones.
 
-When you have done that, the archive table should work just like the other tables do.
+Una vez hecho eso, la tabla del archivador debería funcionar como el resto de tablas.
 
-\subsection{What do the different options under \texttt{Paths \& Viewers -> View and send settings} do (0.4 and up)?}
+\subsection{¿Qué hacen las diferentes opciones que se encuentran en \texttt{Rutas y Visores ->\ Ajustes para la visualización y el envío} (versiones 0.4 y superiores)?}
 
-For the impatient: The recommended settings are (they are not the default, because they require \texttt{gs} and \texttt{tiff2pdf}):
+Para los impacientes: Los ajustes recomendados son (no son los predeterminados porque necesitan \texttt{gs} y \texttt{tiff2pdf}):
 \begin{itemize}
- \item \textbf{Format:} PDF or TIFF
- \item \textbf{Send multiple files as:} Single file except cover
- \item \textbf{View as single file:} Yes
- \item \textbf{Always view/send in this format:} Yes
+ \item \textbf{Formato:} PDF o TIFF
+ \item \textbf{Enviar múltiples archivos como:} Archivo único excepto para la página de portada
+ \item \textbf{Mostrar como archivo único:} Sí
+ \item \textbf{Visualizar/enviar siempre con este formato:} Sí
 \end{itemize}
 
-\subsubsection{Format for viewing/sending}
+\subsubsection{Formato para visualizar/enviar}
 
-The format to which the documents should be converted if necessary. Generally PDF and TIFF give better results than PostScript here (as the latter uses GhostScript's \texttt{pswrite} device).
+El formato en el cual se convertirán los documentos en el caso de que sea necesario. Por lo general, PDF y TIFF proporcionan aquí mejores resultados que PostScript (ya que este último utiliza el dispositivo \texttt{pswrite} de GhostScript).
 
-\subsubsection{Send multiple files as}
+\subsubsection{Enviar múltiples archivos como}
 
 {\parindent0pt
-\textbf{Multiple files:}\\
-Same behaviour as pre-0.4.0 versions. If you attach multiple documents to a single fax job, these documents are converted to PS or PDF, but kept as separate files (e.g. if you send a fax with files \texttt{doc.ps} and \texttt{picture.jpg}, two separate files are uploaded)
+\textbf{Múltiples archivos:}\\
+El mismo comportamiento que las versiones anteriores a la 0.4.0. Si adjunta varios documentos en un sólo trabajo de fax, estos documentos se convierten a PS o PDF, pero se mantienen como archivos separados (por ejemplo, si se envía un fax con con los archivos \texttt{documento.ps} e \texttt{imagen.jpg}, se envían dos archivos por separado)
 \medskip
 
-\textbf{Single file except for cover:}\\
-One file is created for the whole fax, but the cover page is kept as a separate file (e.g. if you send a fax with \texttt{doc.ps} and \texttt{picture.jpg}, a single PDF/PS/TIFF file is created and uploaded).\\
-\textit{Advantage:} The resolution is reduced to 196dpi (\textrightarrow smaller files/upload) and a single document file can be used when sending a fax to multiple destinations.
+\textbf{Archivo único excepto para la página de portada:}\\
+Se crea un archivo único para el fax completo pero la página de portada se mantiene como un archivo separado (por ejemplo, si se envía un fax con \texttt{documento.ps} e \texttt{imagen.jpg}, se genera un archivo único en formato PDF/PS/TIFF y se envía).\\
+\textit{Ventaja:} Se reduce la resolución a 196ppp (\textrightarrow archivos más pequeños para subir) y se puede utilizar un archivo de documento único al enviar un fax a varios destinos.
 \medskip
 
-\textbf{Complete fax as single file:}\\
-One file is created for the whole fax including the cover page. If the fax has no cover this behaves identical to the above case.\\
-\textit{Advantage:} No conversions on the client are necessary when viewing the sent fax.\\
-\textit{Disadvantage:} When sending a fax to multiple recipients one file per recipient has to be created and uploaded.
+\textbf{Fax completo como archivo único:}\\
+Se crea un archivo para el fax completo incluyendo la página de la portada. Si el fax no tiene página de portada, el comportamiento es idéntico al caso anterior.\\
+\textit{Ventaja:} No es necesario relalizar conversiones en el cliente cuando se visualiza el fax enviado.\\
+\textit{Desventaja:} Cuando se envía un fax a varios destinatarios se tiene que crear un archivo para cada destinatario y se tiene que enviar.
 }
 
-\subsubsection{View faxes as single file}
-If this option is checked and a fax on the server consists of multiple files, a single file is created (on the client) for viewing.
+\subsubsection{Visualizar los faxes como un archivo único}
+Si esta opción está activada y un fax del servidor consiste en varios archivos, se crea un archivo único (en el cliente) para visualizarlo.
 
 
-\subsubsection{View/send faxes always in this format}
-This option modifies the behaviour of ``Send multiple files as'' and ``View faxes as single file''.\\
-When this option is \textit{unchecked}, a fax is only converted if it consists of multiple files. If it consists of only a single file, the format is left as it is.\\
-When this option is \textit{checked}, a fax consisting of a single file is also converted when that single file has a different format than the one selected at ``Format for sending/viewing''.\\
-\textit{Advantage:} A single viewer is used for both sent and received faxes (e.g. to view received faxes as PDF).\\
-\textit{Disadvantage:} Usually more format conversions are necessary on the client.
+\subsubsection{Visualizar/enviar faxes en este formato}
+Esta opción modifica el comportamiento de ``Enviar múltiples archivos como'' y ``Visualizar los faxes como un archivo único''.\\
+Cuando está opción se encuentra \textit{desactivada}, sólo se convierten los faxes cuando están formados por múltiples archivos. Si se trata solamente de un único archivo, el formato se mantiene como está.\\
+Cuando esta opción está \textit{activada}, un fax que consiste en un único archivo también se convierte cuando ese archivo único tiene un formato diferente del seleccionado en ``Formato para visualizar/enviar''.\\
+\textit{Ventaja:} Sólo se utiliza un visor para los faxes enviados y recibidos (por ejemplo, para ver los faxes recibidos en formato PDF).\\
+\textit{Desventaja:} Normalmente hacen falta más conversiones entre formatos en el cliente.
 
-\subsection{Which characters are recognized as date/time format?}
+\subsection{¿Qué caracteres se reconocen como formato para la fecha/hora?}
 
-The date is formatted using a Java \texttt{SimpleDateFormat}. A description of the characters recognized can be found at \url{http://java.sun.com/j2se/1.5.0/docs/api/java/text/SimpleDateFormat.html}.
+Para la fecha se utiliza el formato de Java \texttt{SimpleDateFormat}. Puede encontrar la descripción de los caracteres reconocidos en \url{http://java.sun.com/j2se/1.5.0/docs/api/java/text/SimpleDateFormat.html}.
 
-\section{Problems/Known bugs}
+\section{Problemas/Errores conocidos}
 
 \subsection{¡He creado un documento / página de portada en HTML pero el formato en YajHFC se ve mal!}
 
@@ -336,8 +358,8 @@ Para lograr el diseño que quieres, tienes básicamente las siguientes alternati
    que dice \texttt{Formato de archivo PCL no soportado}, aunque todos los documentos 
    están el formato PostScript/PDF.}
 
-Verifica que la opción \texttt{Utilizar archivo PCL para la corrección de error} en el 
-cuadro de Opciones está seleccionada e inténtalo de nuevo.
+Compruebe que la opción \texttt{Utilizar archivo PCL para la corrección de error} en el 
+cuadro de Opciones está seleccionada e inténtelo de nuevo.
  
 Algunas versiones de HylaFAX reportan 
 un tipo de archivo "PCL" para todos los documentos asociados con un trabajo. 
@@ -357,15 +379,15 @@ De manera predeterminada, YajHFC guarda su configuración en el subdirectorio \t
 la propiedad del sistema Java \texttt{user.home}.
 A veces, algunas versiones de Java parece que no establecen esta propiedad correctamente, lo que provoca dicho error.
 
-Para solucionar ésto, puedes establecer esta propiedad explícitamente cuando inicias YajHFC utilizando la línea de comandos de java \texttt{-D}, por ejemplo:\\
+Para solucionar ésto, se puede establecer esta propiedad explícitamente cuando se inicia YajHFC utilizando la línea de comandos de java \texttt{-D}, por ejemplo:\\
 \texttt{java -Duser.home=\%USERPROFILE\% -jar "C:\textbackslash Archivos de Programa\textbackslash yajhfc.jar"}
 
-\subsection{The tray icon is not shown!}
+\subsection{¡No se muestra el icono en la bandeja del sistema!}
 
-Starting with version 0.4.0 YajHFC supports a tray icon which will be shown when you run YajHFC under Java 1.6 (``Java 6'').
-If you use Java 1.5 (``Java 5''), a tray icon is not supported.
+Desde la versión 0.4.0 YajHFC admite la colocación de un icono en la bandeja del sistema que se mostrará cuando ejecute YajHFC bajo Java 1.6 (``Java 6'').
+Si utiliza Java 1.5 (``Java 5''), no se admite el icono en la bandeja del sistema.
 
-So, please make sure you have Java 1.6 installed. If you are absolutely sure you have Java 1.6 installed and the tray icon is still not shown, please mail me a bug report.
+Por tanto, asegúrese de que tiene instalada Java 1.6. Si está absolutamente seguro que de tiene instalado Java 1.6 y aún así no se muestra el icono en la bandeja del sistema, por favor, envíeme un correo electrónico con el informe del fallo.
 
 
 \section{Varios}
@@ -382,8 +404,8 @@ y descifrarlas (incluso aunque YajHFC fuera de código cerrado podrías reventar
 
 El único método seguro requeriría introducir una contraseña maestra cada vez que se inicia YajHFC, pero en mi opinión no es mejor que introducir la contraseña real.
 
-Because of many requests passwords are obfuscated using a simple algorithm in version 0.4.0 and up.
-The statement above still holds true, however, i.e. once you read the source code, the password can be decrypted easily.
+Debido a las diversas peticiones recibidas, a partir de la versión 0.4.0 (y superiores), las contraseñas están ofuscadas utilizando un algoritmo sencillo.
+Sin embargo, lo mencionado anteriormente sigue siendo cierto, es decir, una vez que se lee el código fuente, las contraseñas se pueden descifrar fácilmente.
 
 \subsection{¿Por qué escogiste ese nombre tan tonto?}
 
