@@ -1,4 +1,4 @@
-LÉEME (README) de YajHFC 0.3.7
+LÉEME (README) de YajHFC 0.4.0
 ==============================
 
 ACERCA DE
@@ -12,26 +12,27 @@ Características:
 * Transmisión bajo demanda (polling) de faxes
 * Soporte para generar páginas de portada a partir de plantillas
 * Visualización de faxes enviados y recibidos
-* Agenda telefónica
+* Agenda telefónica (los datos se pueden leer, de manera opcional, desde bases de datos SQL o directorios LDAP)
 * Selección de columnas visibles (seleccionable desde cuadro de diálogo)
-* Disponible en cuatro idiomas: Inglés, Francés, Alemán y Español
+* Disponible en siete idiomas: alemán, español, francés, inglés, italiano, ruso y turco.
 
-Página principal: http://www.yajhfc.de.vu/
-email:    Jonas Wolz <jwolz@freenet.de>
+Página principal: 	http://yajhfc.berlios.de/
+E-mail:			Jonas Wolz <jwolz@freenet.de>
 
 INSTALACIÓN
 -----------
 
 Requisitos:
-* JRE 5.0 (o superior) 
+* JRE 5.0 o superior (se recomienda Java 6.0)
 * Servidor HylaFAX funcionando en red (obviamente ;-) )
-* Algún programa para ver archivos TIFF (revisar el documento FAQ.txt)
-* Opcional: visor PostScript (por ejemplo, Ghostview)
+* Algún programa para ver archivos TIFF (revisar la FAQ)
+* Opcional: un visor PostScript (por ejemplo, Ghostview), GhostScript
+  y tiff2pdf (integrado en libtiff-utils)
 
-Para instalar YajHFC descarga el archivo yajhfc-0_3_7.jar en algún lugar 
-de tu disco.
-Para ejecutarlo, utiliza: "java -jar yajhfc-0_3_7.jar"
-(En Windows seguramente sólo te haga falta ejecutarlo pulsando dos veces sobre el archivo).
+Para instalar YajHFC hay que descargar el archivo yajhfc-0_4_0.jar en algún lugar 
+de su disco.
+Para ejecutarlo, utilizar: "java -jar yajhfc-0_4_0.jar"
+(En Windows seguramente sólo sea necesario ejecutarlo pulsando dos veces sobre el archivo).
 
 LICENCIA
 --------
@@ -46,7 +47,7 @@ Para obtener las instrucciones donde se describe cómo compilar YajHFC desde
 el código fuente, revisa el archivo BUILDING.txt que está en este directorio.
 
 YajHFC utiliza los siguientes paquetes:
-(1) La librería gnu.hylafax (núcleo y paquete inet-ftp)
+(1) La biblioteca gnu.hylafax (núcleo y paquete inet-ftp)
     de http://gnu-hylafax.sourceforge.net/
 (2) Tablelayout.jar
     de https://tablelayout.dev.java.net/
@@ -56,13 +57,25 @@ YajHFC utiliza los siguientes paquetes:
     como dependencia de (1)
 
 Las copias de los archivos requeridos en (2), (3) y (4) también se pueden encontrar
-en el subdirectorio jar en el archivo original.
+en el subdirectorio jar en el archivador original.
 
 YajHFC se escribió en un principio como un proyecto más complicado 
-de Java (más avanzado que los programas "Hola mundo") utilizando la IDE Eclipse.
+de Java (más avanzado que los programas "Hola mundo") utilizando la IDE Eclipse
+(y ha recorrido un largo camino desde entonces... ;-) ).
 
 CAMBIOS
 -------
+
+0.4.0:
+- Soporte del directorio para los faxes archivados
+- Soporte para visualizar y enviar faxes como un archivo único (en formato PDF, TIFF o PS)
+- La agenda telefónica incluye los campos más comunes
+- Soporte para poner un icono en la bandeja del sistema con Java 6 
+- Cuadro de diálogo de opciones mejorado
+- Soporte mejorado en línea de comandos (se puede utilizar YajHFC 
+  para enviar faxes sin confirmación por parte del usuario)
+- Incluye un método de ofuscación sencilla para las contraseñas
+- Limpieza del código interno
 
 0.3.9:
 - Se añaden las traducciones de italiano y turco
@@ -178,16 +191,16 @@ POR HACER
 
 Las siguientes características posiblemente se añadirán en el futuro:
 
-* Más traducciones (mirar abajo)
+* ¿Más traducciones? (mirar abajo)
 
 YajHFC utiliza GNU gettext para las traducciones por lo que resulta muy sencillo 
 integrarlas en el programa.
 Para el traductor que crea una nueva traducción (sin traducir la documentación)
 le llevará unas pocas horas el trabajo inicial y una media hora por cada nueva
-traducción. No necesitas un conocimiento "avanzado" para hacerlo (básicamente
-sólo necesitas saber trabajar con un editor de textos, y si instalas un programa
+traducción. No se necesita un conocimiento "avanzado" para hacerlo (básicamente
+sólo se necesita saber trabajar con un editor de textos, y si se instala un programa
 especializado resulta más sencillo aún).
 
-Así que, si te gustaría tener YajHFC traducido en tu idioma, los voluntarios
+Así que, si le gustaría tener YajHFC traducido en tu idioma, los voluntarios
 son siempre bienvenidos. ;-)
 

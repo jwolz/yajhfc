@@ -34,10 +34,12 @@ import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -1115,14 +1117,16 @@ public class OptionsWin extends JDialog {
         }
 
         try {
-            getDateStyle(comboDateFormat);
+            DateFormat fmt = DateStyle.getDateFormatFromString(getDateStyle(comboDateFormat));
+            fmt.format(new Date());
         } catch (Exception e) {
             focusComponent(comboDateFormat);
             JOptionPane.showMessageDialog(OptionsWin.this, _("Please enter a valid date format:") + '\n' + e.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
             return false;
         }
         try {
-            getDateStyle(comboTimeFormat);
+            DateFormat fmt = DateStyle.getTimeFormatFromString(getDateStyle(comboTimeFormat));
+            fmt.format(new Date());
         } catch (Exception e) {
             focusComponent(comboTimeFormat);
             JOptionPane.showMessageDialog(OptionsWin.this, _("Please enter a valid time format.") + '\n' + e.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);

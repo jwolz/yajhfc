@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -57,7 +58,7 @@ public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2008 by Jonas Wolz";
-    public static final String AppVersion = "0.4.0alpha9";
+    public static final String AppVersion = "0.4.0beta";
     public static final String AuthorEMail = "Jonas Wolz &lt;jwolz@freenet.de&gt;";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
     
@@ -855,7 +856,50 @@ public final class Utils {
         }
         return null;
     }
-   
+
+    /**
+     * Returns the command line of the default System file viewer or null
+     * if it cannot be determined.
+     * @return
+     */
+    public static String getSystemViewerCommandLine() {
+        String osName = System.getProperty("os.name");
+        if (Utils.IS_WINDOWS) {
+            String startCmd = System.getenv("COMSPEC");
+            if (startCmd == null) startCmd = "COMMAND";
+            startCmd += " /C start \"Viewer\" \"%s\"";
+
+            return startCmd;
+        } else if (osName.startsWith("Mac OS X")) {
+            return "open \"%s\"";
+        } else {
+            if ("true".equals(System.getenv("KDE_FULL_SESSION"))) {
+                return "kfmclient exec \"%s\"";
+            } else {
+                String gnome = System.getenv("GNOME_DESKTOP_SESSION_ID");
+                if (gnome != null && gnome.length() > 0) {
+                    return "gnome-open \"%s\"";
+                } else {
+                    return null;
+                }
+            }
+        }
+    }
+    
+    public static void startViewer(String viewerCommandLine, URI uri) throws IOException {
+        startViewer(viewerCommandLine, uri.toString());
+    }
+    public static void startViewer(String viewerCommandLine, File file) throws IOException {
+        startViewer(viewerCommandLine, file.getAbsolutePath());
+    }
+    private static void startViewer(String viewerCommandLine, String fileParam) throws IOException {
+        if (viewerCommandLine.indexOf("%s") >= 0)
+            viewerCommandLine = viewerCommandLine.replace("%s", fileParam);
+        else
+            viewerCommandLine += " \"" + fileParam + "\"";
+
+        new ProcessBuilder(Utils.splitCommandLine(viewerCommandLine)).start();
+    }
 }
 
 

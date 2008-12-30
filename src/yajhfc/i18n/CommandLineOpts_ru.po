@@ -6,131 +6,140 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Project-Id-Version: YajHFC 0.4.0\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Alexander Moisseev <moiseev@mezonplus.ru>\n"
+"Language-Team: RUSSIAN <moiseev@mezonplus.ru>\n"
+"X-Poedit-Language: Russian\n"
+"X-Poedit-Country: RUSSIAN FEDERATION\n"
+"X-Poedit-SourceCharset: utf-8\n"
 
 # Untranslated text: Usage
 msgid "usage"
-msgstr ""
+msgstr "Использование"
 
 # Untranslated text: Argument description
 msgid "argument-description"
-msgstr ""
+msgstr "Описание параметров"
 
 # Untranslated text: OPTIONS
 msgid "options"
-msgstr ""
+msgstr "ПАРАМЕТРЫ"
 
 # Untranslated text: FILES TO SEND
 msgid "files-to-send"
-msgstr ""
+msgstr "ФАЙЛЫ ДЛЯ ОТПРАВКИ"
 
 # Untranslated text: RECIPIENT
 msgid "recipient-arg"
-msgstr ""
+msgstr "ПОЛУЧАТЕЛЬ"
 
 # Untranslated text: Specifies a recipient to send the fax to. You may specify either a fax number or detailed cover page information (see the FAQ for the format in the latter case). You may specify --recipient multiple times for multiple recipients.
 msgid "recipient-desc"
-msgstr ""
+msgstr "Указывает получателя, которому отправляется факс. Вы можете указать или номер факса или подробную информацию для титульного листа (в последнем случае смотрите формат в FAQ). Вы можете указать параметр --recipient несколько раз для нескольких получателей."
 
 # Untranslated text: Use a cover page for sending a fax.
 msgid "use-cover-desc"
-msgstr ""
+msgstr "Использовать титульный лист при отправке факса."
 
 # Untranslated text: SUBJECT
 msgid "subject-arg"
-msgstr ""
+msgstr "ТЕМА"
 
 # Untranslated text: The fax subject for the cover page.
 msgid "subject-desc"
-msgstr ""
+msgstr "Тема факса (на титульном листе)."
 
 # Untranslated text: COMMENT
 msgid "comment-arg"
-msgstr ""
+msgstr "ПРИМЕЧАНИЕ"
 
 # Untranslated text: The comment for the cover page.
 msgid "comment-desc"
-msgstr ""
+msgstr "Примечание (на титульном листе)."
 
 # Untranslated text: Read the file to send from standard input.
 msgid "stdin-desc"
-msgstr ""
+msgstr "Читать файл для отправки со стандартного ввода."
 
 # Untranslated text: Start up in admin mode.
 msgid "admin-desc"
-msgstr ""
+msgstr "Запустить в режиме администрирования."
 
 # Untranslated text: Output some debugging information.
 msgid "debug-desc"
-msgstr ""
+msgstr "Выводить отладочную информацию."
 
 # Untranslated text: LOGFILE
 msgid "logfile-arg"
-msgstr ""
+msgstr "ЛОГФАЙЛ"
 
 # Untranslated text: The log file to log debug information to (if not specified, use stdout).
 msgid "logfile-desc"
-msgstr ""
+msgstr "Файл для записи отладочной информации (если не указан, используется stdout)."
 
 # Untranslated text: LOGFILE
 msgid "appendlogfile-arg"
-msgstr ""
+msgstr "ЛОГФАЙЛ"
 
 # Untranslated text: Append debug information to the given log file.
 msgid "appendlogfile-desc"
-msgstr ""
+msgstr "Добавлять отладочную информацию к данному лог-файлу."
 
 # Untranslated text: If there is no already running instance of YajHFC, launch a new instance and terminate this instance (after submitting the fax to send).
 msgid "background-desc"
-msgstr ""
+msgstr "Если нет уже запущенного процесса YajHFC, запустить новый процесс и завершить его (после передачи файла для отправки)."
 
 # Untranslated text: Do not close YajHFC after submitting the fax.
 msgid "noclose-desc"
-msgstr ""
+msgstr "Не закрывать YajHFC после отправки факса."
 
 # Untranslated text: Sets the tab to display on startup. Specify 0 or R for the "Received", 1 or S for the "Sent" or 2 or T for the "Transmitting" tab.
 msgid "showtab-desc"
-msgstr ""
+msgstr "Устанавливает вкладку, показываемую после запуска. Укажите 0 или R для вкладки \"Принятые\", 1 или S для \"Отправленные\", 2 или T для \"Передача\"."
 
 # Untranslated text: JARFILE
 msgid "loadplugin-arg"
-msgstr ""
+msgstr "JARФАЙЛ"
 
 # Untranslated text: Specifies a jar file of a YajHFC plugin to load.
 msgid "loadplugin-desc"
-msgstr ""
+msgstr "Указывает jar файл плагина YajHFC для загрузки."
 
 # Untranslated text: JARFILE
 msgid "loaddriver-arg"
-msgstr ""
+msgstr "JARФАЙЛ"
 
 # Untranslated text: Specifies the location of a JDBC driver JAR file to load.
 msgid "loaddriver-desc"
-msgstr ""
+msgstr "Указывает расположение JAR-файла драйвера JDBC для загрузки."
 
 # Untranslated text: Disables loading plugins from the plugin.lst file.
 msgid "no-plugins-desc"
-msgstr ""
+msgstr "Отключает загрузку плагинов из файла plugin.lst."
 
 # Untranslated text: Sends a fax with only a minimal GUI.
 msgid "no-gui-desc"
-msgstr ""
+msgstr "Отправляет факс с минимальным GUI."
 
 # Untranslated text: DIRECTORY
 msgid "configdir-arg"
-msgstr ""
+msgstr "КАТАЛОГ"
 
 # Untranslated text: Sets the configuration directory to use instead of ~/.yajhfc
 msgid "configdir-desc"
-msgstr ""
+msgstr "Устанавливает каталог конфигурации вместо ~/.yajhfc"
 
 # Untranslated text: COLUMNS
 msgid "help-arg"
-msgstr ""
+msgstr "СТОЛБЦОВ"
 
 # Untranslated text: Displays this text.
 msgid "help-desc"
-msgstr ""
+msgstr "Выводит этот текст (форматированный на СТОЛБЦОВ столбцов если задано)."
 
 # Untranslated text: Suppresses the check for the Java version at startup.
 msgid "no-check-desc"
-msgstr ""
+msgstr "Подавляет проверку версии Java при запуске."
+

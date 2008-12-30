@@ -26,6 +26,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -47,6 +48,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import yajhfc.Launcher2;
 import yajhfc.Utils;
 
 public class ExceptionDialog extends JDialog implements ActionListener {
@@ -223,22 +225,31 @@ public class ExceptionDialog extends JDialog implements ActionListener {
         this.setLocationRelativeTo(owner);
     }
 
-    public static void showExceptionDialog(Frame owner, String title, String message, Exception exc) {
-        ExceptionDialog eDlg = new ExceptionDialog(owner, title, message, exc);
-        eDlg.setVisible(true);
-    }
-
-    public static void showExceptionDialog(Frame owner, String message, Exception exc) {
+    public static void showExceptionDialog(Component owner, String message, Exception exc) {
         showExceptionDialog(owner, Utils._("Error"), message, exc);
     }
     
-    public static void showExceptionDialog(Dialog owner, String title, String message, Exception exc) {
-        ExceptionDialog eDlg = new ExceptionDialog(owner, title, message, exc);
+    public static void showExceptionDialog(Component owner, String title, String message, Exception exc) {
+        ExceptionDialog eDlg;
+        if (!(owner instanceof Window)) {
+            if (owner != null) {
+                owner = SwingUtilities.getWindowAncestor(owner);
+            }
+            if (owner == null) {
+                owner = Launcher2.application;
+            }
+        }
+        
+        
+        if (owner instanceof Dialog) {
+            eDlg = new ExceptionDialog((Dialog)owner, title, message, exc);
+        } else if (owner instanceof Frame) {
+            eDlg = new ExceptionDialog((Frame)owner, title, message, exc);
+        } else {
+            JOptionPane.showMessageDialog(owner, message + "\n" + exc.getMessage(), Utils._("Error"), JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         eDlg.setVisible(true);
-    }
-
-    public static void showExceptionDialog(Dialog owner, String message, Exception exc) {
-        showExceptionDialog(owner, Utils._("Error"), message, exc);
     }
 
     public static void showExceptionDialogThreaded(Component owner, String message, Exception exc) {
@@ -285,13 +296,7 @@ public class ExceptionDialog extends JDialog implements ActionListener {
         }
         
         public void run() {
-            if (parent instanceof Dialog) {
-                showExceptionDialog((Dialog)parent, msg, ex);
-            } else if (parent instanceof Frame) {
-                showExceptionDialog((Frame)parent, msg, ex);
-            } else {
-                JOptionPane.showMessageDialog(parent, msg + "\n" + ex.getMessage(), Utils._("Error"), JOptionPane.ERROR_MESSAGE);
-            }
+            showExceptionDialog(parent, msg, ex);
         }
     }
 }

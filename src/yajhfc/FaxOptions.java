@@ -26,7 +26,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -113,6 +112,7 @@ public class FaxOptions {
     public final Password AdminPassword = new Password();
     
     public String recvFilter = null, sentFilter = null, sendingFilter = null;
+    public boolean allowChangeFilter = true;
     
     public String defaultCover = null;
     public boolean useCustomDefaultCover = false;
@@ -171,6 +171,7 @@ public class FaxOptions {
     public final FmtItemList<QueueFileFormat> archiveFmt;
     public String archiveColState = "";
     public String archiveLocation = "";
+    public String archiveFilter = null;
     
     public String dateStyle = DateStyle.FROM_LOCALE;
     public String timeStyle = DateStyle.FROM_LOCALE;
@@ -215,39 +216,24 @@ public class FaxOptions {
         this.archiveFmt.add(QueueFileFormat.state);
         this.archiveFmt.add(QueueFileFormat.status);
         
+        final String defaultViewer = Utils.getSystemViewerCommandLine();
         if (Utils.IS_WINDOWS) {
-            String startCmd = System.getenv("COMSPEC");
-            if (startCmd == null) startCmd = "COMMAND";
-            startCmd += " /C start \"Viewer\" \"%s\"";
-            
-            this.psViewer = startCmd;  //"rundll32.exe URL.DLL,FileProtocolHandler \"%s\"";//"gsview32.exe";
-            this.pdfViewer = startCmd;
+            this.psViewer = defaultViewer;  //"rundll32.exe URL.DLL,FileProtocolHandler \"%s\"";//"gsview32.exe";
+            this.pdfViewer = defaultViewer;
             
             String sysname = System.getProperty("os.name");
             if (sysname.indexOf("XP") >= 0 || sysname.indexOf("Vista") >= 0) 
                 this.faxViewer = "rundll32.exe shimgvw.dll,ImageView_Fullscreen %s";
             else
-                this.faxViewer = startCmd; //"rundll32.exe URL.DLL,FileProtocolHandler \"%s\"";//"kodakimg.exe";
+                this.faxViewer = defaultViewer; //"rundll32.exe URL.DLL,FileProtocolHandler \"%s\"";//"kodakimg.exe";
             
             this.ghostScriptLocation = "gswin32c.exe";
             this.tiff2PDFLocation = "tiff2pdf.exe";
         } else {
-            Map<String,String> env = System.getenv();
-            if ("true".equals(env.get("KDE_FULL_SESSION"))) {
-                this.faxViewer = "kfmclient exec %s";
-                this.psViewer = "kfmclient exec %s";
-                this.pdfViewer = "kfmclient exec %s";
-            } else {
-                String gnome = env.get("GNOME_DESKTOP_SESSION_ID");
-                if (gnome != null && gnome.length() > 0) {
-                    this.faxViewer = "gnome-open %s";
-                    this.psViewer = "gnome-open %s";
-                    this.pdfViewer = "gnome-open %s";
-                } else {
-                    this.faxViewer = "kfax %s";
-                    this.psViewer = "gv %s";
-                    this.pdfViewer = "xpdf %s";
-                }
+            if (defaultViewer == null) {
+                this.faxViewer = "kfax %s";
+                this.psViewer = "gv %s";
+                this.pdfViewer = "xpdf %s";
             }
             this.ghostScriptLocation = "gs";
             this.tiff2PDFLocation = "tiff2pdf";

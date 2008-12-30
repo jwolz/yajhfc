@@ -61,6 +61,19 @@ YajHFC a ete originellement ecrit comme un premier projet Java
 
 MODIFICATIONS
 -------------
+0.4.0:
+- Support d'un repertoire d'archive
+- Support de lavisualisation et de l'envoi de fax comme un seul fichier (format PDF, TIFF ou PS)
+- Le carnet d'adresse inclus plus de champs classiques maintenant
+- Supprot d'un barre d'icones en Java 6
+- Boite de dialogue d'options amelioree 
+- Ameliration du support de ligne de commande (YajHFC peut maintenant etre 
+	utilise pour envoyer des fax sans confirmation utilisateur)
+- Quelques codages simple de mots de passe 
+- Beaucoup de nettoyage de code
+
+
+
 0.3.9:
 - Traduction italiennes et turques ajoutees
 - "Recherche rapide" Pour les carnets d'adresse

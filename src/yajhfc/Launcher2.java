@@ -319,12 +319,7 @@ public final class Launcher2 {
                 subject = getopt.getOptarg();
                 break;
             case 'h': // help
-                try {
-                    HelpPrinter.printHelp(getConsoleWriter(), longOpts, getopt.getOptarg());
-                } catch (IOException e) {
-                    // Should NEVER happen...
-                    e.printStackTrace();
-                }
+                HelpPrinter.printHelp(getConsoleWriter(), longOpts, getopt.getOptarg());
                 System.exit(0);
                 break;
             case 'A': // admin
@@ -340,26 +335,33 @@ public final class Launcher2 {
                 recipients.add(getopt.getOptarg());
                 break;
             case 'T': // showtab
-                switch (getopt.getOptarg().charAt(0)) {
-                case '0':
-                case 'R':
-                case 'r':
-                    selectedTab = 0;
+                if (getopt.getOptarg().length() >= 1) {
+                    switch (getopt.getOptarg().charAt(0)) {
+                    case '0':
+                    case 'R':
+                    case 'r':
+                        selectedTab = 0;
+                        break;
+                    case '1':
+                    case 'S':
+                    case 's':
+                        selectedTab = 1;
+                        break;
+                    case '2':
+                    case 'T':
+                    case 't':
+                        selectedTab = 2;
+                        break;
+                    case '3':
+                    case 'A':
+                    case 'a':
+                        selectedTab = 3;
+                        break;
+                    default:
+                        System.err.println("Unknown tab: " + getopt.getOptarg());
+                    }
                     break;
-                case '1':
-                case 'S':
-                case 's':
-                    selectedTab = 1;
-                    break;
-                case '2':
-                case 'T':
-                case 't':
-                    selectedTab = 2;
-                    break;
-                default:
-                    System.err.println("Unknown tab: " + getopt.getOptarg());
                 }
-                break;
             case '?':
                 break;
             default:
@@ -685,8 +687,7 @@ public final class Launcher2 {
     public static PrintWriter getConsoleWriter() {
         if (consoleWriter == null) {
             try {
-                // Call System.console().writer() using reflection 
-                //  to avoid problems with Java 5 (we get a MethodNotFoundException which we can catch then)
+                // Call System.console().writer() using reflection to avoid problems with Java 5 (we get a MethodNotFoundException which we can catch)
                 Method consoleMethod = System.class.getMethod("console");
                 Class<?> consoleClass = Class.forName("java.io.Console");
                 Method writerMethod = consoleClass.getMethod("writer");
@@ -695,6 +696,7 @@ public final class Launcher2 {
                     consoleWriter = new PrintWriter(System.out);
                 }
             } catch (Exception ex) {
+                // Java 5 or another problem -> fall back to System.out
                 consoleWriter = new PrintWriter(System.out);
             }
         }

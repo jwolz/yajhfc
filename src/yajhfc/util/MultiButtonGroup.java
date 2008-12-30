@@ -19,9 +19,6 @@
 package yajhfc.util;
 
 import java.awt.Component;
-import java.awt.Dialog;
-import java.awt.Frame;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -29,9 +26,7 @@ import java.util.List;
 
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
-import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
-import javax.swing.SwingUtilities;
 
 import yajhfc.Launcher2;
 import yajhfc.Utils;
@@ -66,20 +61,9 @@ public abstract class MultiButtonGroup implements ActionListener {
             }
             if (src == null || !(src instanceof Component)) {
                 src = Launcher2.application;
-            } else if (!(src instanceof Window)) {
-                src = SwingUtilities.getWindowAncestor((Component)src);
-                if (src == null) {
-                    src = Launcher2.application;
-                }
             }
             
-            if (src instanceof Dialog) {
-                ExceptionDialog.showExceptionDialog((Dialog)src, Utils._("An Error occurred executing the desired action:"), ex);
-            } else if (src instanceof Frame) {
-                ExceptionDialog.showExceptionDialog((Frame)src, Utils._("An Error occurred executing the desired action:"), ex);
-            } else {
-                JOptionPane.showMessageDialog(null, Utils._("An Error occurred executing the desired action:") + "\n\n" + ex);
-            }
+            ExceptionDialog.showExceptionDialog((Component)src, Utils._("An Error occurred executing the desired action:"), ex);
         }
     }
     
