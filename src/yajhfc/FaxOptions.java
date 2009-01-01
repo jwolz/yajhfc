@@ -44,58 +44,216 @@ import yajhfc.send.SendWinStyle;
 public class FaxOptions {
     static final Logger log = Logger.getLogger(FaxOptions.class.getName());
     
+    /**
+     * The time zone to use to display date or time
+     */
     public FaxTimezone tzone;
+    /**
+     * The HylaFAX server's host name
+     */
     public String host;
+    /**
+     * The TCP port to connect to 
+     */
     public int port;
+    /**
+     * Use passive mode for HylaFAX protocol operations
+     */
     public boolean pasv;
+    /**
+     * The user name used to connect to the HylaFAX server
+     */
     public String user;
+    /**
+     * The password used to connect to the HylaFAX server
+     */
     public final Password pass = new Password();
     
+    /**
+     * The columns displayed in the "Received" table
+     */
     public final FmtItemList<RecvFormat> recvfmt;
+    /**
+     * The columns displayed in the "Sent" table
+     */
     public final FmtItemList<JobFormat> sentfmt;
+    /**
+     * The columns displayed in the "Transmitting" table
+     */
     public final FmtItemList<JobFormat> sendingfmt;
     
+    /**
+     * Command line for the fax (TIFF) viewer
+     */
     public String faxViewer;
+    /**
+     * Command line for the PostScript viewer
+     */
     public String psViewer;
+    /**
+     * Command line for the PDF viewer
+     */
     public String pdfViewer;
+    /**
+     * true if PDF files shall be viewed using the psViewer instead of pdfViewer
+     */
     public boolean viewPDFAsPS = true;
     
+    /**
+     * The notification e-mail address sent to the HylaFAX server
+     */
     public String notifyAddress;
+    /**
+     * When to send a notification e-mail
+     */
     public FaxNotification notifyWhen = null;
+    /**
+     * The default resolution used to send faxes 
+     */
     public FaxResolution resolution = null;
+    /**
+     * The default paper size used to send faxes
+     */
     public PaperSize paperSize = null;
     
-    public int maxTry; 
+    /**
+     * The default maximum number of tries to send a fax
+     */
+    public int maxTry;
+    /**
+     * The default maximum number of dials sending a fax
+     */
     public int maxDial;
+    /**
+     * The default kill time in minutes
+     */
     public int killTime = 180;
     
-    public Rectangle mainWinBounds, phoneWinBounds, customFilterBounds;
-    public Rectangle sendWinBounds, optWinBounds;
-    public String recvColState, sentColState, sendingColState/*, recvReadState*/;
+    /**
+     * The screen position of the main window in pixels
+     */
+    public Rectangle mainWinBounds;
+    /**
+     * The screen position of the phone book window in pixels
+     */
+    public Rectangle phoneWinBounds;
+    /**
+     * The screen position of the custom filter dialog in pixels
+     */
+    public Rectangle customFilterBounds;
+    /**
+     * The screen position of the send dialog in pixels
+     */
+    public Rectangle sendWinBounds;
+    /**
+     * The screen position of the options dialog in pixels
+     */
+    public Rectangle optWinBounds;
+    
+    /**
+     * The state (sorting and widths) of the "Received" table's columns
+     */
+    public String recvColState;
+    /**
+     * The state (sorting and widths) of the "Sent" table's columns
+     */
+    public String sentColState;
+    /**
+     * The state (sorting and widths) of the "Transmitting" table's columns
+     */
+    public String sendingColState;
+    /**
+     * The last selected tab in the main window
+     */
     public int mainwinLastTab;
     
-    public int statusUpdateInterval, tableUpdateInterval;
+    /**
+     * The update interval of the server status in milliseconds
+     */
+    public int statusUpdateInterval;
+    /**
+     * The update interval of the tables in milliseconds
+     */
+    public int tableUpdateInterval;
+    /**
+     * The socket timeout in milliseconds
+     */
     public int socketTimeout = 90000;
     
     //public String lastPhonebook;
     
+    /**
+     * The sender's fax number for the cover page
+     */
     public String FromFaxNumber;
+    /**
+     * The sender's voice number for the cover page
+     */
     public String FromVoiceNumber;
+    /**
+     * The sender's name for the cover page
+     */
     public String FromName;
+    /**
+     * The sender's location for the cover page
+     */
     public String FromLocation;
+    /**
+     * The sender's company for the cover page
+     */
     public String FromCompany;
+    /**
+     * The custom cover page to use
+     */
     public String CustomCover;
+    /**
+     * The sender's e-mail address for the cover page
+     */
     public String FromEMail = "";
+    /**
+     * The sender's country for the cover page
+     */
     public String FromCountry= "";
+    /**
+     * The sender's department for the cover page
+     */
     public String FromDepartment= "";
+    /**
+     * The sender's given name for the cover page
+     */
     public String FromGivenName= "";
+    /**
+     * The sender's position for the cover page
+     */
     public String FromPosition= "";
+    /**
+     * The sender's state for the cover page
+     */
     public String FromState= "";
+    /**
+     * The sender's street for the cover page
+     */
     public String FromStreet= "";
+    /**
+     * The sender's title for the cover page
+     */
     public String FromTitle= "";
+    /**
+     * The sender's ZIP code for the cover page
+     */
     public String FromZIPCode= "";
+    /**
+     * The sender's website for the cover page
+     */
     public String FromWebsite= "";
-    public boolean useCover, useCustomCover;
+    /**
+     * Use a cover page by default?
+     */
+    public boolean useCover;
+    /**
+     * Use a custom cover page?
+     */
+    public boolean useCustomCover;
     
     // Basic actions when a new fax is detected.
     // The constants should be powers of 2 to make it possible to combine several of them
@@ -106,74 +264,226 @@ public class FaxOptions {
     public static final int NEWFAX_MARKASREAD = 8;
     public static final int NEWFAX_BLINKTRAYICON = 16;
     
+    /**
+     * The actions to perform when a new fax is received
+     */
     public int newFaxAction = FaxOptions.NEWFAX_BEEP | FaxOptions.NEWFAX_TOFRONT | FaxOptions.NEWFAX_BLINKTRAYICON;
+    /**
+     * Use the PCL file type bug fix?
+     */
     public boolean pclBug = false;
-    public boolean askPassword = false, askAdminPassword = true, askUsername = false;
+    /**
+     * Always ask for password?
+     */
+    public boolean askPassword = false;
+    /**
+     * Always ask for admin password?
+     */
+    public boolean askAdminPassword = true;
+    /**
+     * Always ask for user name?
+     */
+    public boolean askUsername = false;
+    /**
+     * The administrative password used to connect to the HylaFAX server in admin mode
+     */
     public final Password AdminPassword = new Password();
     
-    public String recvFilter = null, sentFilter = null, sendingFilter = null;
+    /**
+     * The filter for the "Received" table
+     */
+    public String recvFilter = null;
+    /**
+     * The filter for the "Sent" table
+     */
+    public String sentFilter = null;
+    /**
+     * The filter for the "Transmitting" table
+     */
+    public String sendingFilter = null;
+    /**
+     * Allow the user to change the filter?
+     */
     public boolean allowChangeFilter = true;
     
+    /**
+     * The default cover page to use
+     */
     public String defaultCover = null;
+    /**
+     * "true" if the cover page specified by defaultCover shall be used, "false" to use the internal default cover
+     */
     public boolean useCustomDefaultCover = false;
     
+    /**
+     * The UI language
+     */
     public YajLanguage locale = YajLanguage.SYSTEM_DEFAULT;
     
-    // Offset for displayed date values in seconds:
+    /**
+     *  Offset for displayed date values in seconds
+     */
     public int dateOffsetSecs = 0;
     
     //public boolean preferRenderedTIFF = false;
+    /**
+     * Mark failed jobs reddish?
+     */
     public boolean markFailedJobs = true;
+    /**
+     * Show row numbers?
+     */
     public boolean showRowNumbers = false;
+    /**
+     * Adjust column widths to fit the window size?
+     */
     public boolean adjustColumnWidths = true;
     
+    /**
+     * The look & feel to use
+     */
     public String lookAndFeel = LOOKANDFEEL_SYSTEM;
     public static final String LOOKANDFEEL_SYSTEM = "!system!";
     public static final String LOOKANDFEEL_CROSSPLATFORM = "!crossplatform!"; 
     
+    /**
+     * The list of phone books to load
+     */
     public final List<String> phoneBooks = new ArrayList<String>();
-    //public int lastSelectedPhonebook = 0;
     
+    /**
+     * Create a new session for every action?
+     */
     public boolean useDisconnectedMode = false;
+    /**
+     * The default modem to use
+     */
     public String defaultModem = "any";
+    /**
+     * Use the fax's subject as USRKEY HylaFAX property
+     */
     public boolean regardingAsUsrKey = true;
+    /**
+     * The last path faxes have been saved to
+     */
     public String lastSavePath = "";
     
+    /**
+     * Style of the send dialog
+     */
     public SendWinStyle sendWinStyle = SendWinStyle.SIMPLIFIED;
+    /**
+     * Is the simplified send dialog in advanced mode?
+     */
     public boolean sendWinIsAdvanced = false;
+    /**
+     * Last path from which fax documents have been added
+     */
     public String lastSendWinPath = "";
+    /**
+     * The method to save the read/unread state
+     */
     public String persistenceMethod = "local";
+    /**
+     * Configuration of the method to save the read/unread state
+     */
     public String persistenceConfig = "";
     
     public static final String DEF_TOOLBAR_CONFIG = "Send|---|Show|Delete|---|Refresh|---|Phonebook|---|Resume|Suspend";
+    /**
+     * Configuration of the main window toolbar
+     */
     public String toolbarConfig = DEF_TOOLBAR_CONFIG;
     
+    /**
+     * Show a tray icon?
+     */
     public boolean showTrayIcon = true;
+    /**
+     * Minimize to tray?
+     */
     public boolean minimizeToTray = true;
+    /**
+     * Display style of the phone book entries
+     */
     public NameRule phonebookDisplayStyle = NameRule.GIVENNAME_NAME;
+    /**
+     * Format of the name on the cover page 
+     */
     public NameRule coverNameRule = NameRule.TITLE_GIVENNAME_NAME_JOBTITLE;
+    /**
+     * Format of the ZIP code on the cover page 
+     */
     public ZIPCodeRule coverZIPCodeRule = ZIPCodeRule.ZIPCODE_LOCATION;
+    /**
+     * Format of the location on the cover page 
+     */
     public LocationRule coverLocationRule = LocationRule.STREET_LOCATION;
+    /**
+     * Format of the company on the cover page 
+     */
     public CompanyRule coverCompanyRule = CompanyRule.DEPARTMENT_COMPANY;
     
+    /**
+     * Use a bug fix for the PostScript generated by the PrintService classes of a 1.6 JRE
+     */
     public boolean useJDK16PSBugfix = true;
     
+    /**
+     * View faxes as single file? 
+     */
     public boolean createSingleFilesForViewing = false;
+    /**
+     * View/send faxes always in this format?
+     */
     public boolean alwaysCreateTargetFormat = false;
+    /**
+     * Send multiple files as
+     */
     public MultiFileMode multiFileSendMode = MultiFileMode.NONE;
+    /**
+     * Format for viewing/sending
+     */
     public FileFormat singleFileFormat = FileFormat.PDF;
+    /**
+     * Location of the GhostScript executable
+     */
     public String ghostScriptLocation;
+    /**
+     * Location of the tiff2pdf executable
+     */
     public String tiff2PDFLocation;
     
     
     // Uncomment for archive support.
+    /**
+     * Show the archive table?
+     */
     public boolean showArchive = false;
+    /**
+     * The columns displayed in the "Archive" table
+     */
     public final FmtItemList<QueueFileFormat> archiveFmt;
+    /**
+     * The state (sorting and widths) of the "Archive" table's columns
+     */
     public String archiveColState = "";
+    /**
+     * The path to the archive folder
+     */
     public String archiveLocation = "";
+    /**
+     * The filter for the "Archive" table
+     */
     public String archiveFilter = null;
     
+    /**
+     * The date format
+     */
     public String dateStyle = DateStyle.FROM_LOCALE;
+    /**
+     * The time format
+     */
     public String timeStyle = DateStyle.FROM_LOCALE;
     
     public FaxOptions() {
@@ -272,8 +582,7 @@ public class FaxOptions {
     //private static final String sepregex = "\\|";
     
     @SuppressWarnings("unchecked")
-    public void storeToFile(File file) {
-        Properties p = new Properties();
+    public void storeToProperties(Properties p) {
         java.lang.reflect.Field[] f = FaxOptions.class.getFields();
         
         for (int i = 0; i < f.length; i++) {
@@ -315,6 +624,11 @@ public class FaxOptions {
                 log.log(Level.WARNING, "Exception reading field: ", e);
             }
         }
+    }
+    
+    public void storeToFile(File file) {
+        Properties p = new Properties();
+        storeToProperties(p);
         
         try {
             FileOutputStream filout = new FileOutputStream(file);
