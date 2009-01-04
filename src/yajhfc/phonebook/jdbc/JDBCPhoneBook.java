@@ -24,6 +24,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.MessageFormat;
@@ -57,6 +58,7 @@ public class JDBCPhoneBook extends PhoneBook {
     ArrayList<JDBCPhoneBookEntry> items = new ArrayList<JDBCPhoneBookEntry>();
     ArrayList<JDBCPhoneBookEntry> deleted_items = new ArrayList<JDBCPhoneBookEntry>();
     ArrayList<DBKey> rowId = new ArrayList<DBKey>();
+    int[] maxLength = new int[PBEntryField.FIELD_COUNT];
     
     protected static final Map<String,ConnectionDialog.FieldMapEntry> fieldNameMap = new HashMap<String,ConnectionDialog.FieldMapEntry>(); 
     static {
@@ -266,7 +268,6 @@ public class JDBCPhoneBook extends PhoneBook {
                     }
                 }
             }
-
             
             loadItems(connection);
             
@@ -294,6 +295,19 @@ public class JDBCPhoneBook extends PhoneBook {
         }
         Statement stmt = connection.createStatement();
         ResultSet resultSet = stmt.executeQuery(query);
+        
+        final ResultSetMetaData rsmd = resultSet.getMetaData();
+        int colPtr = 1;
+        // This relies on the fact that appendFieldList() appends the fields
+        // in order with PBEntryFields.values() and that these fields come first
+        // in the SELECT query
+        for (PBEntryField field : PBEntryField.values()) {
+            if (!ConnectionSettings.isNoField(settings.getMappingFor(field))) {
+                maxLength[field.ordinal()] = rsmd.getColumnDisplaySize(colPtr++);
+            } else {
+                maxLength[field.ordinal()] = 0;
+            }
+        }
         
         deleted_items.clear();
         items.clear();
@@ -460,6 +474,11 @@ public class JDBCPhoneBook extends PhoneBook {
     @Override
     public boolean isFieldAvailable(PBEntryField field) {
         return (!ConnectionSettings.isNoField(settings.getMappingFor(field)));
+    }
+    
+    @Override
+    public int getMaxLength(PBEntryField field) {
+        return maxLength[field.ordinal()];
     }
     
     protected static class DBKey {

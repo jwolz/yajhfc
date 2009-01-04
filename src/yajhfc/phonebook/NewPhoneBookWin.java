@@ -85,6 +85,7 @@ import yajhfc.phonebook.convrules.NameRule;
 import yajhfc.util.ClipboardPopup;
 import yajhfc.util.ExcDialogAbstractAction;
 import yajhfc.util.ExceptionDialog;
+import yajhfc.util.LimitedPlainDocument;
 import yajhfc.util.MultiButtonGroup;
 
 public final class NewPhoneBookWin extends JDialog implements ActionListener {
@@ -144,6 +145,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                 comp.setText(pb.getField(field));
                 comp.setEnabled(phoneBook.isFieldAvailable(field));
                 comp.setEditable(editable);
+                ((LimitedPlainDocument)comp.getDocument()).setLimit(phoneBook.getMaxLength(field));
             }
             scrollComment.setEnabled(textComment.isEnabled());
         }
@@ -183,7 +185,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     
     
     private JTextField createEntryTextField(PBEntryField field) {
-        JTextField res = new JTextField();
+        JTextField res = new JTextField(new LimitedPlainDocument(0), "", 0);
         res.addFocusListener(entryListener);
         res.addActionListener(entryListener);
         res.addMouseListener(getDefClPop());
@@ -197,7 +199,8 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         if (rightPane == null) {
             int longFields = 0;
             int shortFields = 0;
-            for (PBEntryField field : PBEntryField.values()) {
+            final PBEntryField[] fields = PBEntryField.values();
+            for (PBEntryField field : fields) {
                 if (field.isShortLength()) {
                     shortFields++;
                 } else {
@@ -242,7 +245,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             
             int row = 5;
             int col = 1;
-            for (PBEntryField field : PBEntryField.values()) {
+            for (PBEntryField field : fields) {
                 if (field != PBEntryField.Comment) {
                     JTextField textField = createEntryTextField(field);
                     TableLayoutConstraints layout;
@@ -263,7 +266,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                 }
             }
             
-            textComment = new JTextArea();
+            textComment = new JTextArea(new LimitedPlainDocument(0));
             textComment.setWrapStyleWord(true);
             textComment.setLineWrap(true);
             textComment.addFocusListener(entryListener);

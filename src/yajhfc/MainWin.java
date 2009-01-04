@@ -194,7 +194,7 @@ public final class MainWin extends JFrame {
     // Actions:
     protected Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward, actAdminMode;
     protected Action actRefresh, actResend, actPrintTable, actSuspend, actResume, actClipCopy, actShowRowNumbers, actAdjustColumns, actReconnect, actEditToolbar;
-    protected Action actSaveAsPDF, actSaveAsTIFF;
+    protected Action actSaveAsPDF, actSaveAsTIFF, actUpdateCheck;
     protected ActionEnabler actChecker;
     protected Map<String,Action> availableActions = new HashMap<String,Action>();
     protected YajHFCTrayIcon trayIcon = null;
@@ -1186,6 +1186,16 @@ public final class MainWin extends JFrame {
         //actEditToolbar.putValue(Action.SMALL_ICON, Utils.loadIcon("media/Play"));
         putAvailableAction("EditToolbar", actEditToolbar);
         
+        actUpdateCheck = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(java.awt.event.ActionEvent e) {
+                UpdateChecker.doGUIUpdateCheck(MainWin.this, MainWin.this.tablePanel);
+            }
+        };
+        actUpdateCheck.putValue(Action.NAME, _("Check for update") + "...");
+        actUpdateCheck.putValue(Action.SHORT_DESCRIPTION, _("Checks if there is a newer version of YajHFC available"));
+        //actEditToolbar.putValue(Action.SMALL_ICON, Utils.loadIcon("media/Play"));
+        putAvailableAction("UpdateCheck", actUpdateCheck);
+        
         actSaveAsPDF = new SaveToFormatAction(FileFormat.PDF);
         putAvailableAction("SaveAsPDF", actSaveAsPDF);
         
@@ -1477,6 +1487,9 @@ public final class MainWin extends JFrame {
         actChecker.doEnableCheck();
         
         showOrHideTrayIcon();
+        if (myopts.automaticallyCheckForUpdate) {
+            UpdateChecker.startSilentUpdateCheck();
+        }
     }
     
     void showOrHideTrayIcon() {
@@ -1651,6 +1664,7 @@ public final class MainWin extends JFrame {
             helpMenu.setText(_("Help"));
             helpMenu.add(new JMenuItem(actReadme));
             helpMenu.addSeparator();
+            helpMenu.add(new JMenuItem(actUpdateCheck));
             helpMenu.add(new JMenuItem(actAbout));
         }
         return helpMenu;

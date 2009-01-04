@@ -145,7 +145,8 @@ public class CoverPanel extends JPanel implements OptionsPage {
         if (panelCover == null) {
             int longFields = 0;
             int shortFields = 0;
-            for (PBEntryField field : PBEntryField.values()) {
+            final PBEntryField[] values = PBEntryField.values();
+            for (PBEntryField field : values) {
                 if (field.isShortLength()) {
                     shortFields++;
                 } else {
@@ -167,7 +168,7 @@ public class CoverPanel extends JPanel implements OptionsPage {
             
             int row = 2;
             int col = 1;
-            for (PBEntryField field : PBEntryField.values()) {
+            for (PBEntryField field : values) {
                 if (field != PBEntryField.Comment) {
                     JTextField textField = createEntryTextField(field);
                     TableLayoutConstraints layout;

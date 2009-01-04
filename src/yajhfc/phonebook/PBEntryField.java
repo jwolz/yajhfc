@@ -82,6 +82,8 @@ public enum PBEntryField implements FilterKey {
         return String.class;
     }
     
+    public static final int FIELD_COUNT = values().length;
+    
     public static final FilterKeyList<PBEntryField> filterKeyList = new FilterKeyList<PBEntryField>() {
 
         public boolean containsKey(PBEntryField key) {
@@ -116,4 +118,5 @@ public enum PBEntryField implements FilterKey {
         }
         return keyToFieldMap;
     }
+    
 }
