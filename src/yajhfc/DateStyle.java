@@ -109,42 +109,46 @@ public class DateStyle {
             return new SimpleDateFormat(timeFormat);
         }
     }
-    
+
     public static DateFormat getDateTimeFormatFromString(String dateFormat, String timeFormat) {
         final DateFormat dFormat = getDateFormatFromString(dateFormat);
         final DateFormat tFormat = getTimeFormatFromString(timeFormat);
-        return new DateFormat() {
-            @Override
-            public StringBuffer format(Date date, StringBuffer toAppendTo,
-                    FieldPosition fieldPosition) {
-                dFormat.format(date, toAppendTo, fieldPosition);
-                toAppendTo.append(' ');
-                return tFormat.format(date, toAppendTo, fieldPosition);
-            }
-
-            @Override
-            public Date parse(String source, ParsePosition pos) {
-                Date date = dFormat.parse(source, pos);
-                if (date != null) {
-                    int parseIdx = pos.getIndex();
-                    while (parseIdx < source.length() && source.charAt(parseIdx) == ' ') {
-                        parseIdx++;
-                    }
-                    pos.setIndex(parseIdx);
-                    
-                    Date time = tFormat.parse(source, pos);
-                    long timeMillis;
-                    if (time != null) {
-                        timeMillis = time.getTime();
-                        timeMillis += TimeZone.getDefault().getOffset(timeMillis);
-                    } else {
-                        timeMillis = 0;
-                    }
-                    return new Date(date.getTime() + timeMillis);
-                } else {
-                    return null;
+        if (dFormat instanceof SimpleDateFormat && tFormat instanceof SimpleDateFormat) {
+            return new SimpleDateFormat(((SimpleDateFormat)dFormat).toPattern() + ' ' + ((SimpleDateFormat)tFormat).toPattern());
+        } else {
+            return new DateFormat() {
+                @Override
+                public StringBuffer format(Date date, StringBuffer toAppendTo,
+                        FieldPosition fieldPosition) {
+                    dFormat.format(date, toAppendTo, fieldPosition);
+                    toAppendTo.append(' ');
+                    return tFormat.format(date, toAppendTo, fieldPosition);
                 }
-            }     
-        };
+
+                @Override
+                public Date parse(String source, ParsePosition pos) {
+                    Date date = dFormat.parse(source, pos);
+                    if (date != null) {
+                        int parseIdx = pos.getIndex();
+                        while (parseIdx < source.length() && source.charAt(parseIdx) == ' ') {
+                            parseIdx++;
+                        }
+                        pos.setIndex(parseIdx);
+
+                        Date time = tFormat.parse(source, pos);
+                        long timeMillis;
+                        if (time != null) {
+                            timeMillis = time.getTime();
+                            timeMillis += TimeZone.getDefault().getOffset(timeMillis);
+                        } else {
+                            timeMillis = 0;
+                        }
+                        return new Date(date.getTime() + timeMillis);
+                    } else {
+                        return null;
+                    }
+                }     
+            };
+        }
     }
 }

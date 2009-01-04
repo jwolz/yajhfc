@@ -2,10 +2,11 @@
 \usepackage[latin1]{inputenc}
 \usepackage{url}
 \usepackage[left=3cm,right=3cm,top=2cm,bottom=2cm,nohead]{geometry}
+\usepackage[ngerman]{babel}
 \usepackage{ngerman}
 \usepackage[colorlinks=false,pdfborder=0 0 0]{hyperref}
 \usepackage[T1]{fontenc}
-\usepackage{textcomp}
+\usepackage{pslatex}
 
 %opening
 \title{YajHFC FAQ}
@@ -320,7 +321,7 @@ Das selbe Verhalten wie Versionen vor 0.4.0. Wenn Sie mehrere Dateien an einen e
 
 \textbf{Einzelne Datei ohne Deckblatt:}\\
 Für das gesamte Fax wird eine einzelne Datei erstellt, das Deckblatt aber als separate Datei gehalten (z.B. wenn Sie ein Fax mit den Dateien \texttt{doc.ps} und \textbf{picture.jpg} senden, wird eine einzelne PDF/PS/TIFF"=Datei erstellt und hochgeladen).
-\textit{Vorteil:} Die Auflösung wird auf 196dpi reduziert (\textrightarrow kleinere Dateien/kleinerer Upload) und eine einzige Dokumentendatei kann bei einem Fax an mehrere Empfänger verwendet werden.
+\textit{Vorteil:} Die Auflösung wird auf 196dpi reduziert (-> kleinere Dateien/kleinerer Upload) und eine einzige Dokumentendatei kann bei einem Fax an mehrere Empfänger verwendet werden.
 \medskip
 
 \textbf{Komplettes Fax als einzelne Datei:}\\
@@ -347,7 +348,7 @@ Wenn diese Option \textit{aktiviert} ist, wird ein aus einer einzelnen Datei bes
 
 Die Datumsformatierung erfolgt durch ein Java"=\texttt{SimpleDateFormat}. Eine Beschreibung der erkannten Buchstaben kann unter \url{http://java.sun.com/j2se/1.5.0/docs/api/java/text/SimpleDateFormat.html} (Englisch) gefunden werden.
 
-\section{Problems/Known bugs}
+\section{Probleme/Bekannte Fehler}
 
 \subsection{Ich habe ein HTML-Dokument/Deckblatt erstellt, aber die Formatierung in YajHFC ist nicht korrekt!}
 

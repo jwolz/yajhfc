@@ -28,9 +28,17 @@ import javax.swing.text.PlainDocument;
  */
 public class LimitedPlainDocument extends PlainDocument {
 
-    private final int limit;
+    protected int limit;
 
     public LimitedPlainDocument(int limit) {
+        this.limit = limit;
+    }
+
+    public int getLimit() {
+        return limit;
+    }
+
+    public void setLimit(int limit) {
         this.limit = limit;
     }
 
@@ -40,7 +48,7 @@ public class LimitedPlainDocument extends PlainDocument {
         if (str == null)
             return;
         
-        if (getLength() + str.length() <= limit) {
+        if (limit <= 0 || getLength() + str.length() <= limit) {
             super.insertString(offs, str, a);
         }
     }

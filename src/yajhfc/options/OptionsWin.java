@@ -22,6 +22,7 @@ import static yajhfc.Utils._;
 import info.clearthought.layout.TableLayout;
 import info.clearthought.layout.TableLayoutConstraints;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -143,14 +144,14 @@ public class OptionsWin extends JDialog {
     JSpinner spinStatusInterval, spinTableInterval;
     
     //JCheckBox checkPreferTIFF;
-    JCheckBox checkUseDisconnected, checkShowTrayIcon, checkMinimizeToTray;
+    JCheckBox checkUseDisconnected, checkShowTrayIcon, checkMinimizeToTray, checkAutoCheckForUpdate;
     
     JPanel panelPersistence;
     JComboBox comboPersistenceMethods;
     JButton buttonConfigPersistence;
     Map<String,String> persistenceConfigs = new HashMap<String,String>();
     
-    JPanel panelPlugins;
+    JPanel panelPlugins, panelUpdates;
     JTable tablePlugins;
     PluginTableModel pluginTableModel;
     JButton buttonAddJDBC, buttonAddPlugin, buttonRemovePlugin;
@@ -245,6 +246,7 @@ public class OptionsWin extends JDialog {
         checkUseDisconnected.setSelected(foEdit.useDisconnectedMode);
         checkShowTrayIcon.setSelected(foEdit.showTrayIcon);
         checkMinimizeToTray.setSelected(foEdit.minimizeToTray);
+        checkAutoCheckForUpdate.setSelected(foEdit.automaticallyCheckForUpdate);
 
         checkNewFax_Beep.setSelected((foEdit.newFaxAction & FaxOptions.NEWFAX_BEEP) != 0);
         checkNewFax_ToFront.setSelected((foEdit.newFaxAction & FaxOptions.NEWFAX_TOFRONT) != 0);
@@ -525,14 +527,28 @@ public class OptionsWin extends JDialog {
             };
             PanelCommon = new JPanel(new TableLayout(tablelay), false);
             
+
+            
             //PanelCommon.add(getPanelServer(), "1,1");
             PanelCommon.add(getPanelUI(), "1,1");
             PanelCommon.add(getPanelNewFaxAction(), "3,1");
             PanelCommon.add(getPanelDateFormat(), "1,3");
+            PanelCommon.add(getPanelUpdates(), "3,3");
         }
         return PanelCommon;
     }
 
+    private JPanel getPanelUpdates() {
+        if (panelUpdates == null) {
+            panelUpdates = new JPanel(new BorderLayout(), false);
+            panelUpdates.setBorder(BorderFactory.createTitledBorder(_("Update check")));
+            
+            checkAutoCheckForUpdate = new JCheckBox(_("Automatically check for updates"));
+            
+            panelUpdates.add(checkAutoCheckForUpdate, BorderLayout.CENTER);
+        }
+        return panelUpdates;
+    }
     
     private JPanel getPanelServer() {
         if (panelServer == null) {
@@ -1027,6 +1043,7 @@ public class OptionsWin extends JDialog {
             foEdit.useDisconnectedMode = checkUseDisconnected.isSelected();
             foEdit.showTrayIcon = checkShowTrayIcon.isSelected();
             foEdit.minimizeToTray = checkMinimizeToTray.isSelected();
+            foEdit.automaticallyCheckForUpdate = checkAutoCheckForUpdate.isSelected();
             
             int val = 0;
             if (checkNewFax_Beep.isSelected())

@@ -57,9 +57,10 @@ import yajhfc.model.archive.QueueFileDateFormat;
 public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
-    public static final String AppCopyright = "Copyright © 2005-2008 by Jonas Wolz";
-    public static final String AppVersion = "0.4.0beta";
-    public static final String AuthorEMail = "Jonas Wolz &lt;jwolz@freenet.de&gt;";
+    public static final String AppCopyright = "Copyright © 2005-2009 by Jonas Wolz";
+    public static final String AppVersion = "0.4.0beta2";
+    public static final String AuthorName = "Jonas Wolz";
+    public static final String AuthorEMail = "jwolz@freenet.de";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
     
     /**
@@ -863,14 +864,13 @@ public final class Utils {
      * @return
      */
     public static String getSystemViewerCommandLine() {
-        String osName = System.getProperty("os.name");
         if (Utils.IS_WINDOWS) {
             String startCmd = System.getenv("COMSPEC");
             if (startCmd == null) startCmd = "COMMAND";
             startCmd += " /C start \"Viewer\" \"%s\"";
 
             return startCmd;
-        } else if (osName.startsWith("Mac OS X")) {
+        } else if (System.getProperty("os.name").startsWith("Mac OS X")) {
             return "open \"%s\"";
         } else {
             if ("true".equals(System.getenv("KDE_FULL_SESSION"))) {

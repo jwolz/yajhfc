@@ -22,6 +22,8 @@ import static yajhfc.Utils._;
 import info.clearthought.layout.TableLayout;
 
 import java.awt.BorderLayout;
+import java.awt.Cursor;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Frame;
 import java.io.IOException;
@@ -50,6 +52,7 @@ import javax.swing.event.HyperlinkListener;
 
 import yajhfc.util.CancelAction;
 import yajhfc.util.ClipboardPopup;
+import yajhfc.util.URIClickListener;
 
 public class AboutDialog extends JDialog implements HyperlinkListener {
     private static final Logger log = Logger.getLogger(AboutDialog.class.getName());
@@ -83,8 +86,8 @@ public class AboutDialog extends JDialog implements HyperlinkListener {
                 if (proto.equals("file") || proto.equals("jar")) {
                     pane.setPage(u);
                 } else {
-                    // NOP
-                    getToolkit().beep();
+                    //getToolkit().beep();
+                    DesktopManager.getDefault().safeBrowse(u.toURI(), this);
                 }
             } catch (Exception ex) {
                 //t.printStackTrace();
@@ -177,7 +180,7 @@ public class AboutDialog extends JDialog implements HyperlinkListener {
             double border = 15;
             double[][] dLay = {
                     { border, TableLayout.PREFERRED, border, TableLayout.FILL, border },
-                    { border, TableLayout.PREFERRED, border, TableLayout.PREFERRED, border, 0.25, 0.3, border }
+                    { border, TableLayout.PREFERRED, border, TableLayout.PREFERRED, border, TableLayout.PREFERRED, TableLayout.PREFERRED, border, 0.25, 0.3, border }
             };
             
             aboutPane = new JPanel(new TableLayout(dLay));
@@ -197,7 +200,22 @@ public class AboutDialog extends JDialog implements HyperlinkListener {
             
             JLabel lblCopyright = new JLabel(Utils.AppCopyright);
             
-            JLabel lblInfo = new JLabel(MessageFormat.format(_("<html>YajHFC is a client for the hylafax fax server (http://www.hylafax.org).<br><br>Homepage: {1} <br>Author: {0} </html>"), Utils.AuthorEMail, Utils.HomepageURL));
+            JLabel lblInfo = new JLabel("<html>" + _("YajHFC is a client for the HylaFAX fax server.") + "</html>");
+            
+            JPanel panelHomepage = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0), false);
+            panelHomepage.add(new JLabel(Utils._("Homepage") + ": "));
+            JLabel homepageLabel = new JLabel("<html><a href=\"http://yajhfc.berlios.de\">" + Utils.HomepageURL + "</a></html>");
+            homepageLabel.addMouseListener(new URIClickListener(Utils.HomepageURL));
+            homepageLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            panelHomepage.add(homepageLabel);
+            
+            JPanel panelEMail = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0), false);
+            panelEMail.add(new JLabel(Utils._("Author") + ": " + Utils.AuthorName));
+            JLabel emailLabel = new JLabel("<html>&lt;<a href=\"mailto:"+Utils.AuthorEMail+"\">" + Utils.AuthorEMail + "</a>&gt;</html>");
+            emailLabel.addMouseListener(new URIClickListener("mailto:"+Utils.AuthorEMail));
+            emailLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            panelEMail.add(emailLabel);
+            
             JLabel lblTranslator = null;
             
             String translator = _("$TRANSLATOR$");
@@ -209,9 +227,11 @@ public class AboutDialog extends JDialog implements HyperlinkListener {
             aboutPane.add(boxApp, "3, 1, F, C");
             
             aboutPane.add(lblInfo, "1, 3, 3, 3, F, C");
+            aboutPane.add(panelHomepage, "1, 5, 3, 5, F, C");
+            aboutPane.add(panelEMail, "1, 6, 3, 6, F, C");
             if (lblTranslator != null)
-                aboutPane.add(lblTranslator, "1, 5, 3, 5, F, C");
-            aboutPane.add(lblCopyright, "1, 6, 3, 6, F, C");
+                aboutPane.add(lblTranslator, "1, 8, 3, 8, F, C");
+            aboutPane.add(lblCopyright, "1, 9, 3, 9, F, C");
         }
         return aboutPane;
     }

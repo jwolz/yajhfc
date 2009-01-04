@@ -100,7 +100,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
     }
     
     private void initialize() {
-        final int rowCount = 29 + ((PBEntryField.values().length + 1)/2)*2;
+        final int rowCount = 29 + ((PBEntryField.FIELD_COUNT + 1)/2)*2;
         double dLay[][] = {
                 {border, TableLayout.PREFERRED, border, 0.5, border, TableLayout.PREFERRED, border, TableLayout.FILL, border},      
                 new double[rowCount]

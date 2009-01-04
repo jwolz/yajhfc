@@ -302,7 +302,7 @@ public class FaxOptions {
      */
     public String sendingFilter = null;
     /**
-     * Allow the user to change the filter?
+     * Allow the user to change the fax job filter (all faxes/own faxes/custom filter)?
      */
     public boolean allowChangeFilter = true;
     
@@ -327,7 +327,7 @@ public class FaxOptions {
     
     //public boolean preferRenderedTIFF = false;
     /**
-     * Mark failed jobs reddish?
+     * Mark failed jobs with a light red background?
      */
     public boolean markFailedJobs = true;
     /**
@@ -486,6 +486,21 @@ public class FaxOptions {
      */
     public String timeStyle = DateStyle.FROM_LOCALE;
     
+    /**
+     * The point of time of the last update check 
+     */
+    public long lastUpdateCheck = 0;
+    
+    /**
+     * The last seen (newer) update version
+     */
+    public String lastSeenUpdateVersion = "";
+    
+    /**
+     * Automatically check for updates?
+     */
+    public boolean automaticallyCheckForUpdate = false;
+    
     public FaxOptions() {
         this.host = "";
         this.port = 4559;
@@ -579,11 +594,18 @@ public class FaxOptions {
     
     
     private static final char sep = '|';
-    //private static final String sepregex = "\\|";
     
-    @SuppressWarnings("unchecked")
     public void storeToProperties(Properties p) {
-        java.lang.reflect.Field[] f = FaxOptions.class.getFields();
+        storeToProperties(p, FaxOptions.class.getFields());
+    }
+    
+    /**
+     * Stores the fields given by f into p
+     * @param p
+     * @param f
+     */
+    @SuppressWarnings("unchecked")
+    public void storeToProperties(Properties p, java.lang.reflect.Field[] f) {
         
         for (int i = 0; i < f.length; i++) {
             try {
@@ -595,7 +617,7 @@ public class FaxOptions {
                     continue;
                 
                 String name = f[i].getName();
-                if ((val instanceof String) || (val instanceof Integer) || (val instanceof Boolean))
+                if ((val instanceof String) || (val instanceof Integer) || (val instanceof Boolean) || (val instanceof Long))
                     p.setProperty(name, val.toString());
                 else if (val instanceof YajLanguage) {
                     p.setProperty(name, ((YajLanguage)val).getLangCode());
@@ -790,6 +812,8 @@ public class FaxOptions {
                             f.set(this, val);
                         else if (Integer.TYPE.isAssignableFrom(fcls))
                             f.setInt(this, Integer.parseInt(val));
+                        else if (Long.TYPE.isAssignableFrom(fcls))
+                            f.setLong(this, Long.parseLong(val));
                         else if (Boolean.TYPE.isAssignableFrom(fcls))
                             f.setBoolean(this, Boolean.parseBoolean(val));
                         else if (YajLanguage.class.isAssignableFrom(fcls)) {

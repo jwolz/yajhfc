@@ -284,6 +284,16 @@ public abstract class PhoneBook {
     }
     
     /**
+     * Returns the maximum length of values for the given field or 0
+     * if the length is unlimited
+     * @param field
+     * @return
+     */
+    public int getMaxLength(PBEntryField field) {
+        return 0;
+    }
+    
+    /**
      * Return a caption for display to users.
      * Should be shortened to CAPTION_LENGTH chars or less.
      * @return

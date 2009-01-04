@@ -5,13 +5,13 @@
 # while those ending in -arg contain the description of parameter to the argument
 msgid ""
 msgstr ""
+"Project-Id-Version: CommandLineOpts_es\n"
+"PO-Revision-Date: 2008-12-21 19:25+0100\n"
+"Last-Translator: Elsa Andrés <e.andres@ist-sci.com>\n"
+"Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Last-Translator: Elsa Andrés <e.andres@ist-sci.com>\n"
-"PO-Revision-Date: 2008-12-21 19:25+0100\n"
-"Project-Id-Version: CommandLineOpts_es\n"
-"Language-Team: Spanish <es@li.org>\n"
 "X-Generator: KBabel 1.11.4\n"
 
 # Untranslated text: Usage
@@ -36,7 +36,12 @@ msgstr "DESTINATARIO"
 
 # Untranslated text: Specifies a recipient to send the fax to. You may specify either a fax number or detailed cover page information (see the FAQ for the format in the latter case). You may specify --recipient multiple times for multiple recipients.
 msgid "recipient-desc"
-msgstr "Especifica el destinatario al que se va a enviar un fax. Puede especificar el número de fax o bien información detallada de la página de portada (consulte la FAQ para obtener información del formato si elige esta última opción). Puede especificar varios --recipient en el caso de que haya múltiples destinatarios."
+msgstr ""
+"Especifica el destinatario al que se va a enviar un fax. Puede especificar "
+"el número de fax o bien información detallada de la página de portada "
+"(consulte la FAQ para obtener información del formato si elige esta última "
+"opción). Puede especificar varios --recipient en el caso de que haya "
+"múltiples destinatarios."
 
 # Untranslated text: Use a cover page for sending a fax.
 msgid "use-cover-desc"
@@ -76,7 +81,9 @@ msgstr "ARCHIVO DE REGISTRO"
 
 # Untranslated text: The log file to log debug information to (if not specified, use stdout).
 msgid "logfile-desc"
-msgstr "El archivo de registro donde almacenar la información de depuración (si no se especifica, utilizar la salida estándar \"stdout\")."
+msgstr ""
+"El archivo de registro donde almacenar la información de depuración (si no "
+"se especifica, utilizar la salida estándar \"stdout\")."
 
 # Untranslated text: LOGFILE
 msgid "appendlogfile-arg"
@@ -84,11 +91,14 @@ msgstr "ARCHIVO DE REGISTRO"
 
 # Untranslated text: Append debug information to the given log file.
 msgid "appendlogfile-desc"
-msgstr "Añadir la información de depuración al archivo de registro especificado."
+msgstr ""
+"Añadir la información de depuración al archivo de registro especificado."
 
 # Untranslated text: If there is no already running instance of YajHFC, launch a new instance and terminate this instance (after submitting the fax to send).
 msgid "background-desc"
-msgstr "Si no hay ninguna instancia en ejecución de YajHFC, lanzar una nueva instancia y finalizar esta instancia (después de remitir el fax para enviar)."
+msgstr ""
+"Si no hay ninguna instancia en ejecución de YajHFC, lanzar una nueva "
+"instancia y finalizar esta instancia (después de remitir el fax para enviar)."
 
 # Untranslated text: Do not close YajHFC after submitting the fax.
 msgid "noclose-desc"
@@ -96,7 +106,10 @@ msgstr "No cerrar YajHFC después de enviar el fax."
 
 # Untranslated text: Sets the tab to display on startup. Specify 0 or R for the "Received", 1 or S for the "Sent" or 2 or T for the "Transmitting" tab.
 msgid "showtab-desc"
-msgstr "Define la pestaña para mostrar al inicio. Especifique 0 o R para la pestaña de \"Recibidos\", 1 o S para la pestaña de \"Enviados\" o 2 o T para la pestaña de \"Transmisión\"."
+msgstr ""
+"Define la pestaña para mostrar al inicio. Especifique 0 o R para la pestaña "
+"de \"Recibidos\", 1 o S para la pestaña de \"Enviados\" o 2 o T para la "
+"pestaña de \"Transmisión\"."
 
 # Untranslated text: JARFILE
 msgid "loadplugin-arg"
@@ -112,7 +125,9 @@ msgstr "ARCHIVO JAR"
 
 # Untranslated text: Specifies the location of a JDBC driver JAR file to load.
 msgid "loaddriver-desc"
-msgstr "Especifica la ubicación de un archivo jar para el controlador JDBC para cargar."
+msgstr ""
+"Especifica la ubicación de un archivo jar para el controlador JDBC para "
+"cargar."
 
 # Untranslated text: Disables loading plugins from the plugin.lst file.
 msgid "no-plugins-desc"
@@ -128,7 +143,8 @@ msgstr "DIRECTORIO"
 
 # Untranslated text: Sets the configuration directory to use instead of ~/.yajhfc
 msgid "configdir-desc"
-msgstr "Define la configuración del directorio para utilizar en lugar de ~/.yajhfc"
+msgstr ""
+"Define la configuración del directorio para utilizar en lugar de ~/.yajhfc"
 
 # Untranslated text: COLUMNS
 msgid "help-arg"
@@ -141,4 +157,3 @@ msgstr "Muestra este texto."
 # Untranslated text: Suppresses the check for the Java version at startup.
 msgid "no-check-desc"
 msgstr "Elimina la comprobación de la versión de Java al inicio."
-
