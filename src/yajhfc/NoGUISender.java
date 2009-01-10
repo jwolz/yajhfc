@@ -29,8 +29,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
-import yajhfc.PluginManager.PluginInfo;
 import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
+import yajhfc.plugin.PluginManager;
+import yajhfc.plugin.PluginManager.PluginInfo;
 import yajhfc.send.LocalFileTFLItem;
 import yajhfc.send.SendController;
 import yajhfc.send.StreamTFLItem;

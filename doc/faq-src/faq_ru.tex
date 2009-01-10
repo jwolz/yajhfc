@@ -5,6 +5,7 @@
 \usepackage[left=3cm,right=3cm,top=2cm,bottom=2cm,nohead]{geometry}
 \usepackage[unicode, breaklinks=true, colorlinks=false,pdfborder=0 0 0]{hyperref}
 \usepackage[T2A]{fontenc}
+\usepackage{textcomp}
 
 \hyphenpenalty=10000
 \exhyphenpenalty=10000
@@ -32,7 +33,7 @@
  Вы можете использовать программу Accessories/Imaging.
       Чтобы использовать ее с YajHFC, воспользуйтесь кнопкой ``выбрать файл'' поля \texttt{Командная строка для программы просмотра факсов}
       для поиска \texttt{kodakimg.exe} на Вашем жёстком диске.\\
-      Этот файл обычно находится либо в каталоге Windows (Win 98/ME)\\
+      Этот файл обычно находится либо в каталоге Windows (Win 98/ME),\\
       \emph{либо} в \verb.Program Files\Windows NT\Accessories\ImageVue. (Win 2k).
        
 \item[Windows XP:]
@@ -55,7 +56,7 @@
 \begin{description}
 \item[Windows:] Используйте Ghostview с \url{http://www.cs.wisc.edu/~ghost/}
 \item[Linux/*BSD/...:] Просто установите один из пакетов Postscript viewer \\
-(например \texttt{gv, kghostview, gnome-gv, ...}).
+(например, \texttt{gv, kghostview, gnome-gv, ...}).
 \end{description}
 
 \subsection{Где взять GhostScript?}
@@ -67,14 +68,14 @@
 \subsection{Где взять TIFF2PDF?}
 \begin{description}
 \item[Windows:] Загрузите его с \url{http://gnuwin32.sourceforge.net/downlinks/tiff.php}\\ Если ссылка не работает, попробуйте \url{http://www.libtiff.org/} или \url{http://gnuwin32.sourceforge.net/packages/tiff.htm}
-\item[Linux/*BSD/...:] Установите пакет libtiff для Вашего дистрибутива. Обычно название этого пакета содержит слово \texttt{tiff} (в Debian/Ubuntu он называется \texttt{libtiff-tools} в SUSE \texttt{tiff}).
+\item[Linux/*BSD/...:] Установите пакет libtiff для Вашего дистрибутива. Обычно название этого пакета содержит слово \texttt{tiff} (в Debian/Ubuntu он называется \texttt{libtiff-tools}, в SUSE \texttt{tiff}).
 \end{description}
 
 \section{Использование программы}	
 
 \subsection{Как редактировать титульные листы PostScript?}
-Шаблоны титульных листов должны быть в специальном формате PostScript, который использует программа HylaFAX \texttt{faxcover}. Смотрите как создавать/редактировать
-такие файлы на страницах: \\
+Шаблоны титульных листов должны быть в специальном формате PostScript, который использует программа HylaFAX \texttt{faxcover}. Как создавать/редактировать
+такие файлы смотрите на страницах: \\
 \url{http://www.hylafax.org/HylaFAQ/Q202.html}\\
 \url{http://www.hylafax.org/howto/tweaking.html}\\
 
@@ -82,32 +83,32 @@
 
 \subsection{Какие поля распознаются в титульных листах HTML?}
 
-Следующие ``слова'' заменяются (независимо от регистра) соответствующими значениями при использовании в качестве титульного листа файла HTML:
+При использовании файла HTML в качестве титульного листа следующие ``слова'' (независимо от регистра) заменяются соответствующими значениями:
 
 \begin{center}
 \begin{tabular}{|l|l|}
 \hline
-\bfseries Слово & \bfseries Значение \\
+\bfseries Слово & \bfseries Значение\\
 \hline\hline
-\ttfamily @@Name@@ & Полное имя получателя \\\hline
-\ttfamily @@Company@@ & Компания получателя \\\hline
-\ttfamily @@Location@@ & Адрес получателя \\\hline
-\ttfamily @@Faxnumber@@ & Номер факса получателя \\\hline
-\ttfamily @@Voicenumber@@ & Номер телефона получателя \\\hline
-\ttfamily @@FromName@@ & Полное имя отправителя \\\hline
-\ttfamily @@FromCompany@@ & Компания отправителя \\\hline
-\ttfamily @@FromLocation@@ & Адрес отправителя \\\hline
-\ttfamily @@FromFaxnumber@@ & Номер факса отправителя \\\hline
-\ttfamily @@FromVoicenumber@@ & Номер телефона отправителя \\\hline
-\ttfamily @@FromEMail@@ & e-mail адрес отправителя \\\hline
-\ttfamily @@Subject@@ & Тема факса \\\hline
-\ttfamily @@Date@@ & Текущая дата \\\hline
-\ttfamily @@PageCount@@ & Количество страниц за исключением титульного листа \\\hline
-\ttfamily @@Comments@@ & Комментарии к факсу \\\hline
+\ttfamily @@Name@@ & Полное имя получателя\\\hline
+\ttfamily @@Company@@ & Компания получателя\\\hline
+\ttfamily @@Location@@ & Адрес получателя\\\hline
+\ttfamily @@Faxnumber@@ & Номер факса получателя\\\hline
+\ttfamily @@Voicenumber@@ & Номер телефона получателя\\\hline
+\ttfamily @@FromName@@ & Полное имя отправителя\\\hline
+\ttfamily @@FromCompany@@ & Компания отправителя\\\hline
+\ttfamily @@FromLocation@@ & Адрес отправителя\\\hline
+\ttfamily @@FromFaxnumber@@ & Номер факса отправителя\\\hline
+\ttfamily @@FromVoicenumber@@ & Номер телефона отправителя\\\hline
+\ttfamily @@FromEMail@@ & E-mail отправителя\\\hline
+\ttfamily @@Subject@@ & Тема факса\\\hline
+\ttfamily @@Date@@ & Текущая дата\\\hline
+\ttfamily @@PageCount@@ & Количество страниц (исключая титульный лист)\\\hline
+\ttfamily @@Comments@@ & Комментарии к факсу\\\hline
 \end{tabular}
 \end{center}
 
-Начиная с версии 0.4.0 доступны следующие дополнительные поля (имейте в виду, что \textit{курсивные} поля будут пустыми при повторной отправке факса):
+Начиная с версии 0.4.0 доступны следующие дополнительные поля (имейте в виду, что при повторной отправке факса \textit{курсивные} поля будут пустыми):
 \begin{center}
 \begin{tabular}{|l|p{.7\textwidth}|}
 \hline
@@ -119,15 +120,15 @@
 \ttfamily\itshape @@Position@@ & Должность получателя \\\hline
 \ttfamily\itshape @@Department@@ & Отдел получателя\\\hline
 \ttfamily @@CompanyName@@ & Название компании получателя (без отдела) (повторно отправленные факсы: такое же как \texttt{@@Company@@})\\\hline
-\ttfamily\itshape @@Street@@ & Название улицы получателя \\\hline
+\ttfamily\itshape @@Street@@ & Название улицы получателя\\\hline
 \ttfamily @@Place@@ & Адрес получателя (без улицы или индекса) (повторно отправленные факсы: такой же как \texttt{@@Location@@})\\\hline
-\ttfamily\itshape @@ZIPCode@@ & Почтовый индекс получателя \\\hline
+\ttfamily\itshape @@ZIPCode@@ & Почтовый индекс получателя\\\hline
 \ttfamily\itshape @@State@@ & Штат получателя\\\hline
 \ttfamily\itshape @@Country@@ & Страна получателя\\\hline
-\ttfamily\itshape @@EMail@@ & e-mail адрес получателя\\\hline\hline
-\ttfamily @@FromSurname@@ & Фамилия отправителя \\\hline
-\ttfamily @@FromGivenName@@ & Имя отправителя \\\hline
-\ttfamily @@FromTitle@@ & Звание отправителя \\\hline
+\ttfamily\itshape @@EMail@@ & E-mail получателя\\\hline\hline
+\ttfamily @@FromSurname@@ & Фамилия отправителя\\\hline
+\ttfamily @@FromGivenName@@ & Имя отправителя\\\hline
+\ttfamily @@FromTitle@@ & Звание отправителя\\\hline
 \ttfamily @@FromPosition@@ & Должность отправителя \\\hline
 \ttfamily @@FromDepartment@@ & Отдел отправителя\\\hline
 \ttfamily @@FromCompanyName@@ & Название компании отправителя (без отдела)\\\hline
@@ -136,17 +137,17 @@
 \ttfamily @@FromZIPCode@@ & Почтовый индекс отправителя \\\hline
 \ttfamily @@FromState@@ & Штат отправителя\\\hline
 \ttfamily @@FromCountry@@ & Страна отправителя\\\hline
-\ttfamily @@FromEMail@@ & e-mail адрес отправителя\\\hline
+\ttfamily @@FromEMail@@ & E-mail отправителя\\\hline
 \end{tabular}
 \end{center}
 
-Замена производится на уровне исходного кода, следовательно слова могут не распознаваться, если форматирование меняется внутри слова (например \texttt{@@sub\textit{ject@@}}).
+Замена производится на уровне исходного кода, следовательно, слова могут не распознаваться, если форматирование меняется внутри слова (например \texttt{@@sub\textit{ject@@}}).
 
 \subsection{Старое диалоговое окно отправки мне нравилось больше. Можно его вернуть?}
 
 Просто откройте окно Настройки и выберите \texttt{Традиционный} ``Стиль окна отправки''.
 
-\subsection{Я хочу получить доступ к телефонному справочнику через JDBC, но YajHFC не может найти драйвер, даже если я указываю правильный путь к классу при вызове java.}
+\subsection{Я хочу получить доступ к телефонному справочнику через JDBC, но YajHFC не может найти драйвер, даже если я указываю правильный путь к классу при вызове java}
 
 Если Вы используете аргумент командной строки \texttt{-jar}, java игнорирует путь к классу, определённый пользователем.
 Таким образом, используйте следующие команды для запуска YajHFC (конечно же заменив \texttt{/path/to/dbdriver.jar} и \texttt{/path/to/yajhfc.jar} реальными путями и именами файлов):
@@ -157,12 +158,12 @@
 \verb#java -classpath c:\path\to\dbdriver.jar;c:\path\to\yajhfc.jar yajhfc.Launcher#
 \end{description}
 
-\subsection{Что можно вводить в качестве значений оператора \texttt{совпадает} в окне настраиваемого фильтра?}
+\subsection{Что можно вводить  в окне настраиваемого фильтра в качестве значений оператора \texttt{совпадает}?}
 
 Регулярные выражения. Краткую справку по допустимому синтаксису Вы можете найти здесь:
 \url{http://java.sun.com/j2se/1.5.0/docs/api/java/util/regex/Pattern.html}
 
-Имейте в виду, что регулярные выражения не тоже самое, что шаблоны. 
+Имейте в виду, что регулярные выражения - не то же самое, что шаблоны. 
 Например, чтобы получить эффект шаблона \verb.*., Вы должны использовать \verb#.*#, а 
 для получения эффекта шаблона \verb#?# вводить \verb#.#
 
@@ -170,170 +171,165 @@
 
 \begin{verbatim}
 Использование:
-java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose]
-         [--configdir=directory] [--loadplugin=filename] [--logfile=filename]
-         [--showtab=0|R|1|S|2|T] [--recipient=...] [--stdin | filename ...]
-Описание аргументов:
-filename     Одно или более имён файлов PostScript для отправки
---stdin      Читать файл для отправки со стандартного ввода
---recipient  Задает номер телефона получателя факса
-             Вы можете указать несколько аргументов для нескольких получателей.
---admin      Запустить в режиме администрирования
---debug      Выводить отладочную информацию
---logfile    Файл для записи отладочной информации
-             (если не указан, используется stdout)
---background Если нет уже запущенного процесса, запустить новый процесс
-             и завершить (после передачи файла для отправки)
---noclose    Не закрывать YajHFC после отправки факса
---showtab    Устанавливает вкладку, показываемую после запуска. Укажите 0 или R для
-             вкладки "Принятые", 1 или S для "Отправленные", 2 или T для "Передача"
---loadplugin Задает jar файл плагина YajHFC для загрузки.
---no-plugins Отключает загрузку плагинов из файла plugin.lst
---configdir  Задает каталог с конфигурацией вместо ~/.yajhfc
---help       Выводит этот текст
+java -jar yajhfc.jar [ПАРАМЕТРЫ]... [ФАЙЛЫ ДЛЯ ОТПРАВКИ]...
+
+Описание параметров:
+-r, --recipient=ПОЛУЧАТЕЛЬ  Указывает получателя, которому отправляется факс.
+                            Вы можете указать или номер факса или подробную
+                            информацию для титульного листа (в последнем случае
+                            смотрите формат в FAQ). Вы можете указать параметр
+                            --recipient несколько раз для нескольких
+                            получателей.
+-C, --use-cover[=yes|no]    Использовать титульный лист при отправке факса.
+-s, --subject=ТЕМА          Тема факса (на титульном листе).
+    --comment=ПРИМЕЧАНИЕ    Примечание (на титульном листе).
+    --stdin                 Читать файл для отправки со стандартного ввода.
+-A, --admin                 Запустить в режиме администрирования.
+-d, --debug                 Выводить отладочную информацию.
+-l, --logfile=ЛОГФАЙЛ       Файл для записи отладочной информации (если не
+                            указан, используется stdout).
+    --appendlogfile=ЛОГФАЙЛ Добавлять отладочную информацию к данному
+                            лог-файлу.
+    --background            Если нет уже запущенного процесса YajHFC, запустить
+                            новый процесс и завершить его (после передачи файла
+                            для отправки).
+    --noclose               Не закрывать YajHFC после отправки факса.
+-T, --showtab=0|R|1|S|2|T   Устанавливает вкладку, показываемую после запуска.
+                            Укажите 0 или R для вкладки "Принятые", 1 или S для
+                            "Отправленные", 2 или T для "Передача".
+    --loadplugin=JARФАЙЛ    Указывает jar файл плагина YajHFC для загрузки.
+    --loaddriver=JARФАЙЛ    Указывает расположение JAR-файла драйвера JDBC для
+                            загрузки.
+    --no-plugins            Отключает загрузку плагинов из файла plugin.lst.
+    --no-gui                Отправляет факс с минимальным GUI.
+    --no-check              Подавляет проверку версии Java при запуске.
+-c, --configdir=КАТАЛОГ     Устанавливает каталог конфигурации вместо ~/.yajhfc
+-h, --help[=СТОЛБЦОВ]       Выводит этот текст (форматированный на СТОЛБЦОВ
+                            столбцов если задано).
 \end{verbatim}
 
-\subsection{How can I give cover page information using the \texttt{-{-}recipient} switch?}
+\subsection{Как с помощью ключа \texttt{-{-}recipient} задать информацию титульного листа?}
 
-Starting with version 0.4.0, you can give that information using \texttt{name:value} pairs, separated by semicolons. For example, to send a fax to ``John Doe'' in ``Example town'' with the fax number 0123456, use the following command line:
+Начиная с версии 0.4.0, Вы можете задать эту информацию используя пары \texttt{имя:значение}, разделённые точкой с запятой. Например, чтобы отправить факс ``Василию Пупкину'' из ``Энска'' на номер факса 0123456, используйте следующую командную строку:
 
-\texttt{java -jar yajhfc.jar \textit{[...]} -{-}recipient="givenname:John;surname:Doe;location:Example Town;faxnumber:0123456" \textit{[...]}}
+\texttt{java -jar yajhfc.jar \textit{[...]} -{-}recipient="givenname:Василию;surname:Пупкину;
+location:Энск;faxnumber:0123456" \textit{[...]}}
 
-The following field names are recognized:
+Распознаются следующие имена полей:
 \begin{center}
 \begin{tabular}{|l|p{.7\textwidth}|}
 \hline
-\bfseries Field name & \bfseries Meaning \\
+\bfseries Название поля & \bfseries Значение \\
 \hline\hline
-\ttfamily surname & The recipient's surname\\\hline
-\ttfamily givenname & The recipient's given name \\\hline
-\ttfamily title & The recipient's title \\\hline
-\ttfamily position & The recipient's position \\\hline
-\ttfamily department & The recipient's department\\\hline
-\ttfamily company & The recipient's company name\\\hline
-\ttfamily street & The recipient's street name \\\hline
-\ttfamily location & The recipient's location\\\hline
-\ttfamily zipcode & The recipient's ZIP Code \\\hline
-\ttfamily state & The recipient's state\\\hline
-\ttfamily country & The recipient's country\\\hline
-\ttfamily email & The recipient's e-mail address\\\hline
-\ttfamily faxnumber & The recipient's fax number \\\hline
-\ttfamily voicenumber & The recipient's voice number \\\hline
-\ttfamily website & The recipient's website\\\hline
+\ttfamily surname & Фамилия получателя\\\hline
+\ttfamily givenname & Имя получателя\\\hline
+\ttfamily title & Звание получателя\\\hline
+\ttfamily position & Должность получателя\\\hline
+\ttfamily department & Отдел получателя\\\hline
+\ttfamily company & Название компании получателя\\\hline
+\ttfamily street & Название улицы получателя\\\hline
+\ttfamily location & Адрес получателя\\\hline
+\ttfamily zipcode & Почтовый индекс получателя\\\hline
+\ttfamily state & Штат получателя\\\hline
+\ttfamily country & Страна получателя\\\hline
+\ttfamily email & E-mail получателя\\\hline
+\ttfamily faxnumber & Номер факса получателя\\\hline
+\ttfamily voicenumber & Номер телефона получателя\\\hline
+\ttfamily website & Веб-сайт получателя\\\hline
 \end{tabular}
 \end{center}
 
 \subsection{Что означает колонка XYZ?}
 
-Скорее всего, мне это тоже не известно точно, так как заголовки колонок
+Скорее всего, мне тоже это точно не известно, так как заголовки колонок
 просто скопированы из man страницы \verb.faxstat(1). (JobFmt/RcvFmt) и 
 сокращены/переведены.
 
 \subsection{Как можно установить некоторые настройки по умолчанию?}
 
-Начиная с версии 0.4.0 для того, чтобы восстановить сохранённые настройки, загружаются следующие файлы (если они есть):
+Начиная с версии 0.4.0, для того, чтобы восстановить сохранённые настройки, загружаются следующие файлы (если они есть):
 \begin{enumerate}
  \item \texttt{[Каталог, в котором находится yajhfc.jar]/settings.default}
  \item пользовательские настройки из \texttt{\{user.home\}\footnote{В Windows \texttt{user.home} обычно \texttt{C:\textbackslash Documents and Settings\textbackslash USERNAME}.}/.yajhfc/settings} \\
-(если Вы указали \texttt{--configdir=DIR}, будет использоваться \texttt{DIR/settings})
+(если Вы указали \texttt{-{-}configdir=DIR}, будет использоваться \texttt{DIR/settings})
  \item \texttt{[Каталог, в котором находится yajhfc.jar]/settings.override}
 \end{enumerate}
 
-Настройки из файлов, загруженных позже, отменяют настройки определённые в файлах, загруженных ранее, т.е. настройки из \texttt{settings.override} имеют преимущественное значение по сравнению с пользовательскими настройками и \texttt{settings.default}.
+Настройки из файлов, загруженных позже, отменяют настройки, определённые в файлах, загруженных ранее, т.е. настройки из \texttt{settings.override} имеют преимущественное значение по сравнению с пользовательскими настройками из \texttt{settings.default}.
 \medskip
 
-Этот механизм может быть использован для указания настроек по умолчанию (например в сетевой среде): \\
+Этот алгоритм может быть использован для указания настроек по умолчанию (например, в сетевой среде): \\
 Просто настройте одну установку YajHFC так как Вам нравится, скопируйте файл \\
 \texttt{\{user.home\}/.yajhfc/settings} в каталог с \texttt{yajhfc.jar} и переименуйте его в \texttt{settings.default}.
 \medskip
 
-Подобным образом можно отменять настройки. В этом случае, Вы можете отредактировать файл настроек (это обычный текстовый файл), и удалить любые строки с настройками, которые Вы не хотите отменять (конечно же Вы захотите удалить по меньшей мере \texttt{user} и \texttt{pass} (имя пользователя и пароль, используемые для соединения с сервером HylaFAX), \texttt{FromName}, \texttt{*ColState} (ширина колонок таблиц), \texttt{*Bounds} (положение различных окон) и \texttt{mainwinLastTab}).
+Подобным образом можно отменять настройки. В этом случае, Вы можете отредактировать файл настроек (это обычный текстовый файл), и удалить любые строки с настройками, которые Вы не хотите отменять (конечно же Вы захотите удалить по меньшей мере \texttt{user} и \texttt{pass-obfuscated} (имя пользователя и пароль, используемые для соединения с сервером HylaFAX), \texttt{FromName}, \texttt{*ColState} (ширина колонок таблиц), \texttt{*Bounds} (положение различных окон) и \texttt{mainwinLastTab}).
 
-Однако, имейте в виду, что пользователь все ещё может установить другие значения этих настроек для выполняемого экземпляра YajHFC. Они сбросятся к отменяющим значениям только тогда, когда YajHFC запустится снова (т.е. пользователь может установить эти настройки, но они не сохраняться между перезапусками YajHFC).
+Однако, имейте в виду, что пользователь все ещё может установить другие значения этих настроек для выполняемого экземпляра YajHFC. Они сбросятся к отменяющим значениям только тогда, когда YajHFC запустится снова (другими словами, пользователь может установить эти настройки, но они не сохранятся между перезапусками YajHFC).
 
-\subsection{How can I specify some default settings?}
+\subsection{Как в YajHFC отобразить папку HylaFAX \texttt{archive}?}
 
-Starting with version 0.4.0 the following files (if they exist) are loaded in order to retrieve the saved settings:
-\begin{enumerate}
- \item \texttt{[Directory where yajhfc.jar resides]/settings.default}
- \item the user settings from \texttt{\{user.home\}\footnote{In Windows \texttt{user.home} usually is \texttt{C:\textbackslash Documents and Settings\textbackslash USERNAME}.}/.yajhfc/settings} (if you specified \texttt{-{-}configdir=DIR}, \texttt{DIR/settings} is used instead)
- \item \texttt{[Directory where yajhfc.jar resides]/settings.override}
-\end{enumerate}
+В версии 0.4.0 введена поддержка папки HylaFAX \texttt{archive}.
 
-Settings from files loaded later override the settings specified in the files loaded earlier, i.e. the settings from \texttt{settings.override} take precedence over those in the user settings and \texttt{settings.default}.
-\medskip
+Однако, к этому каталогу невозможно получить доступ, как к другим папкам, через "`обычное"' соединение HylaFAX, потому что HylaFAX лишь позволяет получить список подкаталогов в каталоге \texttt{archive}, но не даёт никакую информацию (за исключением ID) об архивированных заданиях или документах (если Вы знаете версию HylaFAX в которой это не так, пожалуйста, сообщите мне).
 
-This logic can be used to specify default settings (e.g. in a networked environment): \\
-Simply configure one YajHFC installation as you like, then copy \texttt{\{user.home\}/.yajhfc/settings} to the directory where \texttt{yajhfc.jar} is and rename it to \texttt{settings.default}.
-\medskip
+Поэтому обращение к каталогу должно производиться другими способами. В настоящее время (0.4.0) YajHFC поддерживает доступ только через файловую систему. Это значит, что Вы должны экспортировать каталог \texttt{archive} на сервер, поддерживающий Samba, NFS или любую другую сетевую файловую систему, примонтировать её на клиенте (если Вы используете Unix; в Windows, Вы можете просто использовать пути UNC) и указать в настройках YajHFC путь, по которому может быть найден каталог \texttt{archive}.
 
-Overrides can be specified in a similar fashion. In this case, you are encouraged to edit the settings file (it is a plain text file), and remove any lines that specify settings you wish not to override (usually you will want to remove at least \texttt{user} and \texttt{pass-obfuscated} (user name and password used to connect to the HylaFAX server), \texttt{FromName}, \texttt{*ColState} (the widths of the table columns), \texttt{*Bounds} (the position of the different windows) and \texttt{mainwinLastTab}).
+Как только Вы это сделаете, таблица "`Архив"' должна заработать так же как другие таблицы.
 
-Note, however that the user can still set these settings to a different value for a running YajHFC instance. They are reset to the override values only when YajHFC is started again (in other words: the user can set these settings, but they are not saved between different runs of YajHFC).
+\subsection{Что делают разные настройки из раздела \texttt{Пути и просмотр -> Настройки просмотра и отправки} (0.4 и выше)?}
 
-
-\subsection{How can I display the HylaFAX \texttt{archive} folder in YajHFC?}
-
-With version 0.4.0 support for the HylaFAX \texttt{archive} folder has been implemented.
-
-This directory cannot be accessed using the "`normal"' HylaFAX connection like the other folders, however, because HylaFAX does only allow to get the list of subfolders in the \texttt{archive} directory, but not to get any information (except the ID) about the archived jobs or the attached documents (if you know a HylaFAX version where this is different, please let me know).
-
-For this reason the directory has to be accessed by other methods. Currently (0.4.0) YajHFC only supports access using the file system. This means you have to export the  \texttt{archive} directory on the server using Samba, NFS or any other network file system, mount it on the client (if you use Unix; on Windows, you can just use UNC paths) and tell YajHFC in the options under which path the \texttt{archive} directory can be found.
-
-When you have done that, the archive table should work just like the other tables do.
-
-\subsection{What do the different options under \texttt{Paths \& Viewers -> View and send settings} do (0.4 and up)?}
-
-For the impatient: The recommended settings are (they are not the default, because they require \texttt{gs} and \texttt{tiff2pdf}):
+Для нетерпеливых: рекомендуемые установки (не сделаны по умолчанию, потому что для них требуются \texttt{gs} и \texttt{tiff2pdf}):
 \begin{itemize}
- \item \textbf{Format:} PDF or TIFF
- \item \textbf{Send multiple files as:} Single file except cover
- \item \textbf{View as single file:} Yes
- \item \textbf{Always view/send in this format:} Yes
+ \item \textbf{Формат для просмотра/отправки:} PDF или TIFF
+ \item \textbf{Отправлять несколько файлов как:} Один файл, исключая титульный лист
+ \item \textbf{Просматривать факсы в одном файле:} Да
+ \item \textbf{Всегда просматривать/отправлять факсы в этом формате:} Да
 \end{itemize}
 
-\subsubsection{Format for viewing/sending}
+\subsubsection{Формат для просмотра/отправки}
 
-The format to which the documents should be converted if necessary. Generally PDF and TIFF give better results than PostScript here (as the latter uses GhostScript's \texttt{pswrite} device).
+Формат, в который (при необходимости) должны преобразовываться документы. Обычно здесь PDF и TIFF дают лучшие результаты, чем PostScript (так как последний использует устройство \texttt{pswrite} GhostScript).
 
-\subsubsection{Send multiple files as}
+\subsubsection{Отправлять несколько файлов как}
 
 {\parindent0pt
-\textbf{Multiple files:}\\
-Same behaviour as pre-0.4.0 versions. If you attach multiple documents to a single fax job, these documents are converted to PS or PDF, but kept as separate files (e.g. if you send a fax with files \texttt{doc.ps} and \texttt{picture.jpg}, two separate files are uploaded)
+\textbf{Несколько файлов:}\\
+Такое же поведение, как и у версий, предшествующих 0.4.0. Если Вы прикрепите несколько документов к одному заданию отправки, эти документы будут преобразованы в PS или PDF, но останутся отдельными файлами (например, если Вы отправите факс с файлами \texttt{doc.ps} и \texttt{picture.jpg}, будут загружены два отдельных файла).
 \medskip
 
-\textbf{Single file except for cover:}\\
-One file is created for the whole fax, but the cover page is kept as a separate file (e.g. if you send a fax with \texttt{doc.ps} and \texttt{picture.jpg}, a single PDF/PS/TIFF file is created and uploaded).\\
-\textit{Advantage:} The resolution is reduced to 196dpi (-> smaller files/upload) and a single document file can be used when sending a fax to multiple destinations.
+\textbf{Один файл, исключая титульный лист:}\\
+Создаётся один файл для всего факса, но титульный лист остаётся в отдельном файле (например, если Вы отправите факс с \texttt{doc.ps} и \texttt{picture.jpg}, будет сформирован и загружен единственный файл PDF/PS/TIFF).\\
+\textit{Преимущество:} Разрешение уменьшается до 196 dpi (\textrightarrow меньше файлы/трафик) и возможно использование одного и того же файла при отправке факса нескольким получателям.
 \medskip
 
-\textbf{Complete fax as single file:}\\
-One file is created for the whole fax including the cover page. If the fax has no cover this behaves identical to the above case.\\
-\textit{Advantage:} No conversions on the client are necessary when viewing the sent fax.\\
-\textit{Disadvantage:} When sending a fax to multiple recipients one file per recipient has to be created and uploaded.
+\textbf{Весь факс в одном файле:}\\
+Создаётся один файл для всего факса, включая титульный лист. Если факс без титульного листа, все происходит так же как и в предыдущем случае.\\
+\textit{Преимущество:} Не требуются преобразования на стороне клиента при просмотре отправленного факса.\\
+\textit{Недостаток:} При отправке факса нескольким получателям должно создаваться и загружаться по одному файлу на каждого получателя.
 }
 
-\subsubsection{View faxes as single file}
-If this option is checked and a fax on the server consists of multiple files, a single file is created (on the client) for viewing.
+\subsubsection{Просматривать факсы в одном файле}
+Если этот параметр включён, и факс на сервере состоит из нескольких файлов, создаётся одни файл (на стороне клиента) для просмотра.
 
 
-\subsubsection{View/send faxes always in this format}
-This option modifies the behaviour of ``Send multiple files as'' and ``View faxes as single file''.\\
-When this option is \textit{unchecked}, a fax is only converted if it consists of multiple files. If it consists of only a single file, the format is left as it is.\\
-When this option is \textit{checked}, a fax consisting of a single file is also converted when that single file has a different format than the one selected at ``Format for sending/viewing''.\\
-\textit{Advantage:} A single viewer is used for both sent and received faxes (e.g. to view received faxes as PDF).\\
-\textit{Disadvantage:} Usually more format conversions are necessary on the client.
+\subsubsection{Всегда просматривать/отправлять факсы в этом формате}
+Этот параметр изменяет проведение ``Отправлять несколько файлов как'' и ``Просматривать факсы в одном файле''.\\
+Если этот параметр \textit{отключён}, факс подвергается преобразованию, только если он состоит из нескольких файлов. Если он состоит только из одного файла, формат оставляется как есть.\\
+Если этот параметр \textit{включён}, факс, состоящий из одного файла, также подвергается преобразованию в случае, если формат этого файла отличается от выбранного в ``Формат для просмотра/отправки''.\\
+\textit{Преимущество:} Используется одна программа просмотра и для отправленных и для принятых факсов (например, для просмотра принятых факсов в PDF).\\
+\textit{Недостаток:} Как правило, требуется больше преобразований форматов на стороне клиента.
 
-\subsection{Which characters are recognized as date/time format?}
+\subsection{Какие символы распознаются в качестве формата даты/времени?}
 
-The date is formatted using a Java \texttt{SimpleDateFormat}. A description of the characters recognized can be found at \url{http://java.sun.com/j2se/1.5.0/docs/api/java/text/SimpleDateFormat.html}.
+Дата форматируется при помощи Java \texttt{SimpleDateFormat}. Описание распознаваемых символов смотрите по ссылке:\\
+\url{http://java.sun.com/j2se/1.5.0/docs/api/java/text/SimpleDateFormat.html}
 
-\section{Problems/Known bugs}
+\section{Проблемы/Известные ошибки}
 
 \subsection{Я создал документ/титульный лист в HTML, но форматирование в YajHFC выглядит неправильно!}
 
-YajHFC использует поддержку HTML встроенную в Java (\texttt{HTMLEditorKit} / \texttt{HTMLDocument}) для преобразования HTML в PostScript. Эта поддержка весьма ограничена, тем более что поддерживается только HTML 3.2.\\
+YajHFC использует поддержку HTML, встроенную в Java (\texttt{HTMLEditorKit} / \texttt{HTMLDocument}), для преобразования HTML в PostScript. Эта поддержка весьма ограничена, тем более что поддерживается только HTML 3.2.\\
 Это значит, что во многих случаях сложное форматирование в YajHFC не будет рендериться корректно.
 Чтобы сделать желаемое форматирование, у Вас есть следующие возможности:
 
@@ -344,20 +340,18 @@ YajHFC использует поддержку HTML встроенную в Java (\texttt{HTMLEditorKit} / \te
 \end{itemize}
 
 \subsection{При попытке просмотреть отправленные факсы я всегда получаю сообщение об ошибке:
-   \texttt{File format PCL not supported}, хотя все документы PostScript/PDF.}
+   \texttt{File format PCL not supported}, хотя все документы PostScript/PDF}
 
 Поставьте флажок \texttt{Исправлять ошибку распознавания PCL файлов} в диалоге Настройки и попробуйте снова.
 
-Некоторые версии HylaFAX неправильно сообщают тип файла ``PCL'' для всех документов, 
-ассоциированных с заданием. Если поставлен флажок, YajHFC пытается угадать
-тип файла если получен тип PCL (обычно это работает очень хорошо).
+Некоторые версии HylaFAX ошибочно сообщают тип файла ``PCL'' для всех документов, ассоциированных с заданием. При поставленном флажке, если получен тип PCL, YajHFC пытается угадать тип файла (обычно это работает очень хорошо).
 
 \subsection{Я часто получаю ошибку при отправке двух или более факсов подряд. Что мне делать?}
 
 Видимо у некоторых версий сервера HylaFAX возникают проблемы, когда в одном сеансе отправляется более одного факса.
 
 Чтобы обойти эту проблему, на вкладке \texttt{Сервер} диалога Настройки, поставьте флажок \texttt{Создавать новый сеанс для каждого действия}.
-Если это \emph{не} поможет, пожалуйста пришлите мне a извещение об ошибке.
+Если это \emph{не} поможет, пожалуйста, пришлите мне a извещение об ошибке.
 
 \subsection{YajHFC под Windows иногда сохраняет свою конфигурацию в \texttt{C:\textbackslash .yajhfc} вместо \texttt{C:\textbackslash Documents and Settings\textbackslash USERNAME\textbackslash .yajhfc}}
 
@@ -372,7 +366,7 @@ YajHFC использует поддержку HTML встроенную в Java (\texttt{HTMLEditorKit} / \te
 Иконка в трее будет показываться, только если Вы запускаете YajHFC под Java 1.6 (``Java 6'').
 Если Вы используете Java 1.5 (``Java 5''), иконка в трее не поддерживается.
 
-Пожалуйста убедитесь, что у Вас установлена Java 1.6. Если Вы абсолютно уверены, что у Вас установлена Java 1.6 и иконка в трее всё равно не показывается, пожалуйста, пришлите мне a извещение об ошибке.
+Пожалуйста убедитесь, что у Вас установлена Java 1.6. Если Вы абсолютно уверены, что у Вас установлена Java 1.6 и иконка в трее всё равно не показывается, пожалуйста, пришлите мне извещение об ошибке.
 
 \section{Прочее}
 
@@ -381,16 +375,16 @@ YajHFC использует поддержку HTML встроенную в Java (\texttt{HTMLEditorKit} / \te
 Скажу просто: потому что нет другого метода, который был бы существенно лучше.
 
 YajHFC мог бы как-нибудь кодировать/``шифровать'' пароли перед сохранением, но если это сделать, 
-Вы всегда сможете посмотреть исходный код, чтобы выяснить как их расшифровать 
+Вы всегда сможете посмотреть исходный код, чтобы выяснить, как их расшифровать 
 (даже если бы YajHFC был программным обеспечением с закрытым кодом, Вы могли бы дизассемблировать его 
 или немного поэкспериментировать чтобы обнаружить пароль).
 
 Единственный безопасный метод потребовал бы, чтобы Вы вводили мастер пароль каждый раз 
-при запуске YajHFC, но по моему мнению это не было бы лучше по сравнению
+при запуске YajHFC, но, по моему мнению, это было бы не лучше по сравнению
 с вводом ``настоящего'' пароля.
 
-Because of many requests passwords are obfuscated using a simple algorithm in version 0.4.0 and up.
-The statement above still holds true, however, i.e. once you read the source code, the password can be decrypted easily.
+По многочисленным просьбам в версиях 0.4.0 и выше пароли скрыты при помощи примитивного алгоритма.
+Однако, вышестоящее утверждение все же остаётся в силе, т.е. пароль может быть легко расшифрован, как только Вы прочитаете исходный код.
 
 \subsection{Почему Вы выбрали такое дурацкое название?}
 

@@ -1,4 +1,4 @@
-YajHFC 0.3.9 
+YajHFC 0.4.0 
 =======================
 
 HAKKINDA
@@ -9,7 +9,7 @@ YajHFC (Yet Another Java HylaFAX Client), HylaFAX faks sunucusu
 
 Özellikleri:
 * PostScript, PDF ve çeşitli diğer biçimlerde belgeleri fakslama
-* Faksları sorgulama
+* Yoklama çağrısı
 * Şablonlardan kapak sayfası oluşturmayı destekler
 * Alınan ve gönderilen faksları görüntüleme
 * Telefon Defteri (Girdiler isteğe bağlı olarak SQL veritabanı veya LDAP dizininden okunabilir)
@@ -17,20 +17,21 @@ YajHFC (Yet Another Java HylaFAX Client), HylaFAX faks sunucusu
 * Yedi Dil desteği: İngilizce, Fransızca, Almanca, İtalyanca, Rusça, İspanyolca ve Türkçe
 
 Web sitesi: http://yajhfc.berlios.de/
-email:    Jonas Wolz <jwolz@freenet.de>
+e-posta:    Jonas Wolz <jwolz@freenet.de>
 
 KURULUM
 ------------
 
 Gereksinimler:
-* JRE 5.0 yada üstü
-* Yerel ağınızda çalışır durumda bir HylaFAX sunucusu (elbette ;-) )
+* JRE 5.0 yada üstü (Java 6 tavsiye edilir)
+* Ağınızda çalışır durumda bir HylaFAX sunucusu (elbette ;-) )
 * TIFF dosyalarını görebilmek için yazılım ( SSS'ye bakaniz )
-* İsteğe bağlı: PostScript görüntüleyici (örn. Ghostview)
+* İsteğe bağlı: PostScript görüntüleyici (örn. Ghostview), GhostScript
+     ve tiff2pdf (libtiff-utils'den)
 
 Kurulum için sadece YajHFC'yi dosya sisteminizdeki herhangi bir dizine
 indirin.
-Çalıştırmak için "java -jar yajhfc-0_3_9.jar" kullanın.
+Çalıştırmak için "java -jar yajhfc-0_4_0.jar" kullanın.
 (Windows'da genellikle jar dosyasına iki kez tıklayabilirsiniz)
 
 LİSANS
@@ -63,6 +64,17 @@ Java projesi olarak Eclipse IDE kullanılarak özgün biçimde yazılmıştır.
 
 DEĞİŞİKLİKLER
 -------
+
+0.4.0:
+- Arşiv dizin desteği
+- Tek dosya olarak faksları görüntüleme ve gönderme (PDF, TIFF veya PS biçiminde)
+- Telefon defteri şimdi bir çok ortak alan içeriyor
+- Java 6 altında istem simgesi desteği
+- Geliştirilmiş seçenekler iletişimi
+- Geliştirilmiş komut satırı desteği (YajHFC şimdi
+   kullanıcı onayı olmadan faks göndermek için kullanılabilir)
+- Parolalar için bazı basit gizlemeler
+- Bir çok iç kod temizliği
 
 0.3.9:
 - İtalyanca ve Türkçe çeviri eklendi 
@@ -188,7 +200,7 @@ Aşağıdaki özellikler gelecekte eklenebilir:
 
 YajHFC, çeviri için GNU gettext kullanır yani programa bunları 
 eklemek çok kolaydır.
-Tercüman için (belgelendirmeyi çevirmeden) yeni çeviri oluşturmak için ön çalışmaya
+Çeviri yapan için (belgelendirmeyi çevirmeden) yeni çeviri oluşturmak için ön çalışmaya
 bir kaç saat ve her yeni sürüme yaklaşık bir saat ayırmak gerekir.
 Bunu yapmak için "İleri" seviye teknik bilgiye ihtiyacınız yok (sadece bir
 metin düzenleyici ile nasıl çalışacağınızı bilmeniz yeterli,

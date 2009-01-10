@@ -38,7 +38,6 @@ import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
-import yajhfc.PluginManager;
 import yajhfc.Utils;
 import yajhfc.phonebook.AbstractConnectionSettings;
 import yajhfc.phonebook.GeneralConnectionSettings;
@@ -47,6 +46,7 @@ import yajhfc.phonebook.PhoneBook;
 import yajhfc.phonebook.PhoneBookEntry;
 import yajhfc.phonebook.PhoneBookException;
 import yajhfc.phonebook.GeneralConnectionSettings.PBEntrySettingsField;
+import yajhfc.plugin.PluginManager;
 import yajhfc.util.ExceptionDialog;
 import yajhfc.util.PasswordDialog;
 

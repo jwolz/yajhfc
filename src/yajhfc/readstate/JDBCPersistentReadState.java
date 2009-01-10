@@ -39,11 +39,11 @@ import java.util.logging.Logger;
 
 import yajhfc.Launcher2;
 import yajhfc.Password;
-import yajhfc.PluginManager;
 import yajhfc.Utils;
 import yajhfc.phonebook.AbstractConnectionSettings;
 import yajhfc.phonebook.jdbc.ConnectionDialog;
 import yajhfc.phonebook.jdbc.ConnectionDialog.FieldMapEntry;
+import yajhfc.plugin.PluginManager;
 import yajhfc.util.ExceptionDialog;
 import yajhfc.util.PasswordDialog;
 

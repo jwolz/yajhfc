@@ -1,4 +1,4 @@
-package yajhfc;
+package yajhfc.plugin;
 /*
  * YAJHFC - Yet another Java Hylafax client
  * Copyright (C) 2007 Jonas Wolz
@@ -46,7 +46,8 @@ import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.JMenuItem;
+
+import yajhfc.Utils;
 
 /**
  * This class contains static method to load YajHFC plugins.
@@ -66,9 +67,9 @@ public class PluginManager {
     public static final String INITCLASS_KEY = "YajHFC-Plugin-InitClass";
     
     /**
-     * A list of menu entries for the plugins. Elements are added to the "Extras" menu in MainWin.
+     * A list of helper classes to create a user interface for the plugins. Elements are added to the "Extras" menu in MainWin.
      */
-    public static final List<PluginMenuCreator> pluginMenuEntries = new ArrayList<PluginMenuCreator>();
+    public static final List<PluginUI> pluginUIs = new ArrayList<PluginUI>();
     
     /**
      * The "Set" of known Plugins
@@ -387,17 +388,6 @@ public class PluginManager {
         }
     }
     
-    /**
-     * An enumeration of the possible plugin types
-     * @author jonas
-     *
-     */
-    public enum PluginType {
-        // This enum is accessed during command line parsing 
-        // => DO NOT access Utils here!
-        PLUGIN,
-        JDBCDRIVER;
-    }
     public static class PluginInfo {
         public final File file;
         public final PluginType type;
@@ -441,15 +431,6 @@ public class PluginManager {
         
         
     }
-    /**
-     * This interface is used to create menu items for plugins
-     * @author jonas
-     *
-     */
-    public interface PluginMenuCreator {
-        public JMenuItem[] createMenuItems();
-    }
-    
     protected static final Set<String> registeredDrivers = new HashSet<String>();
     /**
      * Registers an JDBC driver if necessary

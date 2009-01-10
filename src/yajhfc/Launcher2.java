@@ -66,9 +66,10 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
-import yajhfc.PluginManager.PluginInfo;
-import yajhfc.PluginManager.PluginType;
 import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
+import yajhfc.plugin.PluginManager;
+import yajhfc.plugin.PluginType;
+import yajhfc.plugin.PluginManager.PluginInfo;
 import yajhfc.send.SendController;
 import yajhfc.send.SendWinControl;
 import yajhfc.util.ExampleFileFilter;
@@ -309,7 +310,7 @@ public final class Launcher2 {
                 break;
             case 'C': // use-cover
                 String optarg = getopt.getOptarg();
-                if (optarg == null || optarg.equals("") || optarg.startsWith("y") || optarg.equals("true")) {
+                if (optarg == null || optarg.equals("") || Character.toLowerCase(optarg.charAt(0)) == 'y' || optarg.equals("true")) {
                     useCover = Boolean.TRUE;
                 } else {
                     useCover = Boolean.FALSE;

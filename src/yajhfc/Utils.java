@@ -29,6 +29,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -52,13 +53,15 @@ import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
 import yajhfc.model.archive.QueueFileDateFormat;
+import yajhfc.plugin.PluginManager;
+import yajhfc.plugin.PluginUI;
 
 
 public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2009 by Jonas Wolz";
-    public static final String AppVersion = "0.4.0beta2";
+    public static final String AppVersion = "0.4.0beta3";
     public static final String AuthorName = "Jonas Wolz";
     public static final String AuthorEMail = "jwolz@freenet.de";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
@@ -215,7 +218,7 @@ public final class Utils {
         if (theoptions == null) {
             theoptions = new FaxOptions();
             theoptions.loadFromProperties(getSettingsProperties());
-            settingsProperties = null; // Not needed any more
+            //settingsProperties = null;
         }
         return theoptions;
     }
@@ -241,7 +244,12 @@ public final class Utils {
     }
     
     private static Properties settingsProperties;
-    private static Properties getSettingsProperties() {
+    /**
+     * Returns the Properties from which the settings are loaded. This is primarily
+     * useful for plugins storing their own settings there. 
+     * @return
+     */
+    public static Properties getSettingsProperties() {
         if (settingsProperties == null) {
             /*
              * Load the settings properties from the specified files. The files are loaded in the specified
@@ -281,6 +289,28 @@ public final class Utils {
             settingsProperties = p;
         }
         return settingsProperties;
+    }
+    
+    public static void storeOptionsToFile() {
+        storeOptionsToFile(getDefaultConfigFile());
+    }
+    
+    public static void storeOptionsToFile(File file) {
+        if (theoptions != null) {
+            Properties p = new Properties();
+            for (PluginUI puc : PluginManager.pluginUIs) {
+                puc.saveOptions(p);
+            }
+            theoptions.storeToProperties(p);
+            
+            try {
+                FileOutputStream filout = new FileOutputStream(file);
+                p.store(filout, Utils.AppShortName + " " + Utils.AppVersion + " configuration file");
+                filout.close();
+            } catch (Exception e) {
+                log.log(Level.WARNING, "Couldn't save file '" + file + "': ", e);
+            }
+        }
     }
     
     public static String _(String key) {
@@ -575,7 +605,7 @@ public final class Utils {
                     break;
                 case ' ':
                     String res = str.substring(argStart, i);
-                    if (!IS_WINDOWS) {
+                    if (!IS_WINDOWS || res.indexOf(' ') < 0) {
                         res = stripQuotes(res);
                     }
                     result.add(res);
@@ -617,7 +647,7 @@ public final class Utils {
         }
         if (argStart < str.length() - 1) {
             String res = str.substring(argStart);
-            if (!IS_WINDOWS) {
+            if (!IS_WINDOWS || res.indexOf(' ') < 0) {
                 res = stripQuotes(res);
             }
             result.add(res);
