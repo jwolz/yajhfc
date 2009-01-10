@@ -41,7 +41,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +50,6 @@ import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -81,7 +79,6 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -96,12 +93,13 @@ import yajhfc.HylaModem;
 import yajhfc.IconMap;
 import yajhfc.JobFormat;
 import yajhfc.PaperSize;
-import yajhfc.PluginManager;
-import yajhfc.PluginTableModel;
 import yajhfc.RecvFormat;
 import yajhfc.Utils;
 import yajhfc.YajLanguage;
-import yajhfc.PluginManager.PluginType;
+import yajhfc.plugin.PluginManager;
+import yajhfc.plugin.PluginTableModel;
+import yajhfc.plugin.PluginType;
+import yajhfc.plugin.PluginUI;
 import yajhfc.readstate.AvailablePersistenceMethod;
 import yajhfc.readstate.PersistentReadState;
 import yajhfc.send.SendWinStyle;
@@ -424,6 +422,13 @@ public class OptionsWin extends JDialog {
         });
         rootChilds.add(tables);
 
+        for (PluginUI puc : PluginManager.pluginUIs) {
+            PanelTreeNode node = puc.createOptionsPanel(rootNode);
+            if (node != null) {
+                rootChilds.add(node);
+            }
+        }
+        
         rootNode.setChildren(rootChilds);
         //PROFILE: System.out.println("    After table panels: " + (-time + (time = System.currentTimeMillis())));
     }
@@ -1342,97 +1347,5 @@ public class OptionsWin extends JDialog {
             panelPlugins.add(buttonRemovePlugin, "3,5");
         }
         return panelPlugins;
-    }
-    
-    private static class PanelTreeNode implements TreeNode {
-
-        private List<PanelTreeNode> children;
-        private TreeNode parent;
-        private JComponent panel;
-        private String label;
-        private String longLabel;
-        private Icon icon;
-        
-        public Enumeration<PanelTreeNode> children() {
-            if (children == null)
-                return null;
-            
-            return Collections.enumeration(children);
-        }
-
-        public boolean getAllowsChildren() {
-            return !isLeaf();
-        }
-
-        public TreeNode getChildAt(int childIndex) {
-            if (children == null)
-                return null;
-            
-            return children.get(childIndex);
-        }
-
-        public int getChildCount() {
-            if (children == null)
-                return 0;
-            
-            return children.size();
-        }
-
-        public int getIndex(TreeNode node) {
-            if (children == null)
-                return -1;
-            
-            return children.indexOf(node);
-        }
-
-        public TreeNode getParent() {
-            return parent;
-        }
-
-        public boolean isLeaf() {
-            return (children == null);
-        }
-
-        public List<PanelTreeNode> getChildren() {
-            return children;
-        }
-
-        public void setChildren(List<PanelTreeNode> children) {
-            this.children = children;
-        }
-
-        public void setChildren(PanelTreeNode[] children) {
-            this.children = Arrays.asList(children);
-        }
-
-        public JComponent getPanel() {
-            return panel;
-        }
-        
-        public Icon getIcon() {
-            return icon;
-        }
-
-        public String getLongLabel() {
-            return longLabel;
-        }
-        
-        @Override
-        public String toString() {
-            return label;
-        }
-        
-        PanelTreeNode(TreeNode parent, JComponent panel, String label, Icon icon) {
-            this(parent,panel,label,icon,label);
-        }
-        
-        PanelTreeNode(TreeNode parent, JComponent panel, String label, Icon icon, String longLabel) {
-            super();
-            this.label = label;
-            this.panel = panel;
-            this.parent = parent;
-            this.icon = icon;
-            this.longLabel = longLabel;
-        }
     }
 }

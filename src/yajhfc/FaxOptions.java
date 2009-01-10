@@ -20,8 +20,6 @@ package yajhfc;
 
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -645,19 +643,6 @@ public class FaxOptions {
             } catch (Exception e) {
                 log.log(Level.WARNING, "Exception reading field: ", e);
             }
-        }
-    }
-    
-    public void storeToFile(File file) {
-        Properties p = new Properties();
-        storeToProperties(p);
-        
-        try {
-            FileOutputStream filout = new FileOutputStream(file);
-            p.store(filout, Utils.AppShortName + " " + Utils.AppVersion + " configuration file");
-            filout.close();
-        } catch (Exception e) {
-            log.log(Level.WARNING, "Couldn't save file '" + file + "': ", e);
         }
     }
     

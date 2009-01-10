@@ -62,9 +62,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.JTextComponent;
 
-import yajhfc.PluginManager;
 import yajhfc.Utils;
 import yajhfc.phonebook.AbstractConnectionSettings;
+import yajhfc.plugin.PluginManager;
 import yajhfc.util.CancelAction;
 import yajhfc.util.ClipboardPopup;
 import yajhfc.util.ExceptionDialog;

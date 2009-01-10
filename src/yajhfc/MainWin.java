@@ -85,7 +85,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import yajhfc.PluginManager.PluginMenuCreator;
 import yajhfc.file.FormattedFile;
 import yajhfc.file.MultiFileConverter;
 import yajhfc.file.FormattedFile.FileFormat;
@@ -110,6 +109,8 @@ import yajhfc.model.archive.HylaDirAccessor;
 import yajhfc.model.archive.QueueFileFormat;
 import yajhfc.options.OptionsWin;
 import yajhfc.phonebook.NewPhoneBookWin;
+import yajhfc.plugin.PluginManager;
+import yajhfc.plugin.PluginUI;
 import yajhfc.readstate.PersistentReadState;
 import yajhfc.send.SendController;
 import yajhfc.send.SendWinControl;
@@ -1458,7 +1459,7 @@ public final class MainWin extends JFrame {
                 myopts.adjustColumnWidths = (selVal != null && selVal.booleanValue());
                 myopts.toolbarConfig = ToolbarEditorDialog.saveConfigToString(toolbar);
                 
-                myopts.storeToFile(Utils.getDefaultConfigFile());
+                Utils.storeOptionsToFile();
                 saved = true;
                 Launcher2.releaseLock();
                 Thread.yield();
@@ -1939,11 +1940,14 @@ public final class MainWin extends JFrame {
             menuExtras.addSeparator();
             menuExtras.add(new JMenuItem(actReconnect));
             menuExtras.add(new ActionJCheckBoxMenuItem(actAdminMode));
-            if (PluginManager.pluginMenuEntries.size() > 0) {
+            if (PluginManager.pluginUIs.size() > 0) {
                 menuExtras.addSeparator();
-                for (PluginMenuCreator pmc : PluginManager.pluginMenuEntries) {
-                    for (JMenuItem item : pmc.createMenuItems()) {
-                        menuExtras.add(item);
+                for (PluginUI pmc : PluginManager.pluginUIs) {
+                    final JMenuItem[] menuItems = pmc.createMenuItems();
+                    if (menuItems != null) {
+                        for (JMenuItem item : menuItems) {
+                            menuExtras.add(item);
+                        }
                     }
                 }
             }
@@ -1956,36 +1960,48 @@ public final class MainWin extends JFrame {
         
         @SuppressWarnings("unchecked")
         public void actionPerformed(ActionEvent e) {
-            String cmd = e.getActionCommand();
-            MyTableModel model = getSelectedTable().getRealModel();
-            int selTab = tabMain.getSelectedIndex();
-            
-            if (cmd.equals("view_all")) {
-                model.setJobFilter(null);
-                lastSel[selTab] = menuViewAll;
-            } else if (cmd.equals("view_own")) {
-                model.setJobFilter(getOwnFilterFor(model));
-                lastSel[selTab] = menuViewOwn;
-            } else if (cmd.equals("view_custom")) {
-                CustomFilterDialog cfd = new CustomFilterDialog(MainWin.this, tabMain.getTitleAt(selTab), 
-                        model.columns, (lastSel[selTab] == menuViewCustom) ? model.getJobFilter() : null);
-                cfd.setVisible(true);
-                if (cfd.okClicked) {
-                    if (cfd.returnValue == null) {
-                        menuViewAll.doClick();
-                        return;
+            try {
+                String cmd = e.getActionCommand();
+                MyTableModel model = getSelectedTable().getRealModel();
+                int selTab = tabMain.getSelectedIndex();
+
+                if (cmd.equals("view_all")) {
+                    model.setJobFilter(null);
+                    lastSel[selTab] = menuViewAll;
+                } else if (cmd.equals("view_own")) {
+                    model.setJobFilter(getOwnFilterFor(model));
+                    lastSel[selTab] = menuViewOwn;
+                } else if (cmd.equals("view_custom")) {
+                    CustomFilterDialog cfd = new CustomFilterDialog(MainWin.this, tabMain.getTitleAt(selTab), 
+                            model.columns, (lastSel[selTab] == menuViewCustom) ? model.getJobFilter() : null);
+                    cfd.setVisible(true);
+                    if (cfd.okClicked) {
+                        if (cfd.returnValue == null) {
+                            menuViewAll.doClick();
+                            return;
+                        } else {
+                            model.setJobFilter(cfd.returnValue);
+                            lastSel[selTab] = menuViewCustom;
+                        }
                     } else {
-                        model.setJobFilter(cfd.returnValue);
-                        lastSel[selTab] = menuViewCustom;
-                    }
-                } else {
-                    if (lastSel[selTab] != menuViewCustom)
+                        if (lastSel[selTab] != menuViewCustom)
                             resetLastSel(selTab);
+                    }
+                } else if (cmd.equals("mark_failed")) {
+                    myopts.markFailedJobs = menuMarkError.isSelected();
+
+                    getSelectedTable().repaint();
                 }
-            } else if (cmd.equals("mark_failed")) {
-                myopts.markFailedJobs = menuMarkError.isSelected();
-                
-                getSelectedTable().repaint();
+            } catch (Exception ex) {
+                Object src = null;
+                if (e != null) {
+                    src = e.getSource();
+                }
+                if (src == null || !(src instanceof Component)) {
+                    src = Launcher2.application;
+                }
+
+                ExceptionDialog.showExceptionDialog((Component)src, Utils._("An Error occurred executing the desired action:"), ex);
             }
         }
         
@@ -2011,8 +2027,8 @@ public final class MainWin extends JFrame {
         }
         
         private Filter<YajJob<? extends FmtItem>,? extends FmtItem> getOwnFilterFor(MyTableModel<? extends FmtItem> model) {
-            String user = (clientManager != null) ? clientManager.getUser() : myopts.user;
-            return new StringFilter<YajJob<? extends FmtItem>,FmtItem>((model == recvTableModel ? RecvFormat.o : JobFormat.o), StringFilterOperator.EQUAL, user, true);
+            final String user = (clientManager != null) ? clientManager.getUser() : myopts.user;
+            return new StringFilter<YajJob<? extends FmtItem>,FmtItem>(getOwnerColumn(model), StringFilterOperator.EQUAL, user, true);
         }
         
         private boolean canMarkError(MyTableModel<? extends FmtItem> model) {
@@ -2027,16 +2043,22 @@ public final class MainWin extends JFrame {
             }
         }
         
-        private boolean ownFilterOK(MyTableModel<? extends FmtItem> model) {
+        private FmtItem getOwnerColumn(MyTableModel<? extends FmtItem> model) {
             if (model == recvTableModel) { 
-                return model.columns.getCompleteView().contains(RecvFormat.o);
+                return RecvFormat.o;
             } else if (model == sentTableModel || model == sendingTableModel) { 
-                return model.columns.getCompleteView().contains(JobFormat.o);
+                return JobFormat.o;
                 // Uncomment for archive support.
             } else if (model == archiveTableModel) {
-                return model.columns.getCompleteView().contains(QueueFileFormat.owner);
-            } else
-                return false;
+                return QueueFileFormat.owner;
+            } else {
+                return null;
+            }
+        }
+        
+        private boolean ownFilterOK(MyTableModel<? extends FmtItem> model) {
+            final FmtItem ownerItem = getOwnerColumn(model);
+            return (ownerItem != null && model.columns.getCompleteView().contains(ownerItem));
         }
         /**
          * Re-validates the filters on reconnection
