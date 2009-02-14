@@ -1,27 +1,19 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: YajHFC 0.4.0\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-02-08 11:35+0100\n"
-"PO-Revision-Date: 2008-12-29 18:57+0300\n"
-"Last-Translator: Alexander Moisseev <moiseev@mezonplus.ru>\n"
-"Language-Team: RUSSIAN <moiseev@mezonplus.ru>\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=cp1253\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Language: Russian\n"
-"X-Poedit-Country: RUSSIAN FEDERATION\n"
-"X-Poedit-SourceCharset: utf-8\n"
 
 #: ../AboutDialog.java:193
-#, java-format
+#, fuzzy, java-format
 msgid "Version {0}"
-msgstr "Π’ΠµΡ€ΡΠΈΡ {0}"
+msgstr "έκδοση"
 
 #: ../AboutDialog.java:203
 msgid "YajHFC is a client for the HylaFAX fax server."
@@ -37,12 +29,12 @@ msgstr ""
 
 #: ../AboutDialog.java:221
 msgid "$TRANSLATOR$"
-msgstr "ΠΠ»ΠµΠΊΡΠ°Π½Π΄Ρ€ ΠΠΎΠΈΡΠµΠµΠ² <moiseev@mezonplus.ru>"
+msgstr "μεταφραστής"
 
 #: ../AboutDialog.java:223
 #, java-format
 msgid "$LANGUAGE$ translation by {0}"
-msgstr "ΠΠ²Ρ‚ΠΎΡ€ Ρ€ΡƒΡΡΠΊΠΎΠ³ΠΎ ΠΏΠµΡ€ΠµΠ²ΠΎΠ΄Π°: {0}"
+msgstr "$LANGUAGE$ γλώσσας από {0}"
 
 #: ../AboutDialog.java:243 ../filters/CustomFilterDialog.java:80
 #: ../options/OptionsWin.java:325 ../phonebook/ldap/ConnectionDialog.java:175
@@ -53,24 +45,24 @@ msgstr ""
 
 #: ../AboutDialog.java:287 ../MainWin.java:853
 msgid "About"
-msgstr "Π ΠΏΡ€ΠΎΠ³Ρ€Π°ΠΌΠΌΠµ"
+msgstr "Σχετικά"
 
 #: ../AboutDialog.java:288
 msgid "License"
-msgstr "Π›ΠΈΡ†ΠµΠ½Π·ΠΈΡ"
+msgstr "Άδεια χρήσης"
 
 #: ../AboutDialog.java:289
 msgid "System properties"
-msgstr "Π ΡΠΈΡΡ‚ΠµΠΌΠµ"
+msgstr "Ιδιότητες συστήματος"
 
 #: ../AboutDialog.java:290
 #, java-format
 msgid "About {0}"
-msgstr "Π ΠΏΡ€ΠΎΠ³Ρ€Π°ΠΌΠΌΠµ {0}"
+msgstr "Σχετικά {0}"
 
 #: ../AboutDialog.java:304 ../MainWin.java:881
 msgid "Documentation"
-msgstr "Π”ΠΎΠΊΡƒΠΌΠµΠ½Ρ‚Π°Ρ†ΠΈΡ"
+msgstr "Τεκμηρίωση"
 
 #: ../UpdateChecker.java:77
 msgid "There is a new version of YajHFC available!"
@@ -99,7 +91,7 @@ msgstr ""
 #: ../UpdateChecker.java:96 ../phonebook/NewPhoneBookWin.java:699
 #: ../phonebook/NewSearchWin.java:155
 msgid "Close"
-msgstr "Π—Π°ΠΊΡ€Ρ‹Ρ‚Ρ"
+msgstr "Κλείσιμο"
 
 #: ../UpdateChecker.java:100 ../UpdateChecker.java:228 ../MainWin.java:1195
 msgid "Check for update"
@@ -123,29 +115,29 @@ msgstr ""
 
 #: ../HylaModem.java:35
 msgid "Any modem"
-msgstr "Π›ΡΠ±ΠΎΠΉ ΠΌΠΎΠ΄ΠµΠΌ"
+msgstr "Όλα τα modem"
 
 #: ../tray/YajHFCTrayIcon.java:91
 msgid "Restore"
-msgstr "Π’ΠΎΡΡΡ‚Π°Π½ΠΎΠ²ΠΈΡ‚Ρ"
+msgstr "Επαναφορά"
 
 #: ../tray/YajHFCTrayIcon.java:138
 #, java-format
 msgid "{0} fax(es) received ({1} unread fax(es)):"
-msgstr "{0} Ρ„Π°ΠΊΡΠΎΠ² ΠΏΡ€ΠΈΠ½ΡΡ‚ΠΎ ({1} Π½ΠµΠΏΡ€ΠΎΡ‡ΠΈΡ‚Π°Π½Π½Ρ‹Ρ… Ρ„Π°ΠΊΡΠΎΠ²):"
+msgstr ""
 
 #: ../tray/YajHFCTrayIcon.java:147
 msgid "New fax received"
-msgstr "ΠΡ€ΠΈΠ½ΡΡ‚ Π½ΠΎΠ²Ρ‹ΠΉ Ρ„Π°ΠΊΡ"
+msgstr "ΝΕΟ ΦΑΞ"
 
 #: ../tray/YajHFCTrayIcon.java:164
 #, java-format
 msgid "{0} unread fax(es)"
-msgstr "{0} Π½ΠµΠΏΡ€ΠΎΡ‡ΠΈΡ‚Π°Π½Π½Ρ‹Ρ… Ρ„Π°ΠΊΡΠΎΠ²"
+msgstr "{0} μη αναγνωσμένα φαξ"
 
 #: ../tray/YajHFCTrayIcon.java:167
 msgid "Disconnected"
-msgstr "ΠΡ‚ΡΠΎΠµΠ΄ΠΈΠ½ΠµΠ½ΠΎ"
+msgstr "Αποσυνδέθηκε"
 
 #: ../DesktopManager.java:56
 #, java-format
@@ -156,7 +148,7 @@ msgstr ""
 
 #: ../FaxTimezone.java:28
 msgid "Local timezone"
-msgstr "ΠΠµΡΡ‚Π½ΠΎΠµ Π²Ρ€ΠµΠΌΡ"
+msgstr "Τοπική αλλαγή (ζώνη) ώρας"
 
 #: ../FaxTimezone.java:29
 msgid "GMT"
@@ -164,167 +156,167 @@ msgstr ""
 
 #: ../file/FormattedFile.java:42
 msgid "Postscript documents"
-msgstr "Postscript Π΄ΠΎΠΊΡƒΠΌΠµΠ½Ρ‚Ρ‹"
+msgstr "Postscript έγγραφα"
 
 #: ../file/FormattedFile.java:43
 msgid "PDF documents"
-msgstr "PDF Π΄ΠΎΠΊΡƒΠΌΠµΠ½Ρ‚Ρ‹"
+msgstr "PDF έγγραφα"
 
 #: ../file/FormattedFile.java:44
 msgid "PCL files"
-msgstr "PCL Ρ„Π°ΠΉΠ»Ρ‹"
+msgstr "PCL αρχεία"
 
 #: ../file/FormattedFile.java:45
 msgid "JPEG pictures"
-msgstr "JPEG ΠΈΠ·ΠΎΠ±Ρ€Π°Π¶ΠµΠ½ΠΈΡ"
+msgstr ""
 
 #: ../file/FormattedFile.java:46
 msgid "PNG pictures"
-msgstr "PNG ΠΈΠ·ΠΎΠ±Ρ€Π°Π¶ΠµΠ½ΠΈΡ"
+msgstr "PNG εικόνες"
 
 #: ../file/FormattedFile.java:47
 msgid "GIF pictures"
-msgstr "GIF ΠΈΠ·ΠΎΠ±Ρ€Π°Π¶ΠµΠ½ΠΈΡ"
+msgstr "GIF εικόνες"
 
 #: ../file/FormattedFile.java:48
 msgid "TIFF pictures"
-msgstr "TIFF ΠΈΠ·ΠΎΠ±Ρ€Π°Π¶ΠµΠ½ΠΈΡ"
+msgstr "TIFF εικόνες"
 
 #: ../file/FormattedFile.java:49
 msgid "Plain text files"
-msgstr "ΠΆΠµΠΊΡΡ‚ΠΎΠ²Ρ‹Πµ Ρ„Π°ΠΉΠ»Ρ‹"
+msgstr "Αρχεία κειμένου"
 
 #: ../file/FormattedFile.java:50
 msgid "XML documents"
-msgstr "XML Π΄ΠΎΠΊΡƒΠΌΠµΠ½Ρ‚Ρ‹"
+msgstr "XML έγγραφα"
 
 #: ../file/FormattedFile.java:51
 msgid "XSL:FO documents"
-msgstr "XSL:FO Π΄ΠΎΠΊΡƒΠΌΠµΠ½Ρ‚Ρ‹"
+msgstr "XSL:FO έγγραφα"
 
 #: ../file/FormattedFile.java:52
 msgid "OpenDocument text documents"
-msgstr "OpenDocument Ρ‚ΠµΠΊΡΡ‚ΠΎΠ²Ρ‹Πµ Π΄ΠΎΠΊΡƒΠΌΠµΠ½Ρ‚Ρ‹"
+msgstr "OpenDocument αρχεία κειμένου"
 
 #: ../file/FormattedFile.java:53
 msgid "HTML documents"
-msgstr "HTML Π΄ΠΎΠΊΡƒΠΌΠµΠ½Ρ‚Ρ‹"
+msgstr "HTML έγγραφα"
 
 #: ../file/FormattedFile.java:54
 msgid "RTF documents"
-msgstr "RTF Π΄ΠΎΠΊΡƒΠΌΠµΠ½Ρ‚Ρ‹"
+msgstr "RTF έγγραφα"
 
 #: ../file/FormattedFile.java:55
 msgid "Unknown files"
-msgstr "ΠΠµΠΈΠ·Π²ΠµΡΡ‚Π½Ρ‹Πµ Ρ„Π°ΠΉΠ»Ρ‹"
+msgstr "Άγνωστο έγγραφο"
 
 #: ../file/FormattedFile.java:125
 #, java-format
 msgid "File format {0} not supported."
-msgstr "Π¤ΠΎΡ€ΠΌΠ°Ρ‚ Ρ„Π°ΠΉΠ»Π° {0} Π½Πµ ΠΏΠΎΠ΄Π΄ΠµΡ€Π¶ΠΈΠ²Π°ΠµΡ‚ΡΡ."
+msgstr "Δομή αρχείου {0} δεν υποστηρίζεται."
 
 #: ../file/FormattedFile.java:328
 msgid "All supported file formats"
-msgstr "Π’ΡΠµ ΠΏΠΎΠ΄Π΄ΠµΡ€Π¶ΠΈΠ²Π°ΠµΠΌΡ‹Πµ Ρ„ΠΎΡ€ΠΌΠ°Ρ‚Ρ‹ Ρ„Π°ΠΉΠ»ΠΎΠ²"
+msgstr "Όλες οι υποστηριζόμενες δομές αρχείων"
 
 #: ../file/PrintServiceFileConverter.java:87
 #, java-format
 msgid "Cannot find a PrintService to convert files of type {0} to Postscript!"
 msgstr ""
-"ΠΠµ ΡƒΠ΄Π°Π»ΠΎΡΡ Π½Π°ΠΉΡ‚ΠΈ a PrintService Π΄Π»Ρ ΠΏΡ€ΠµΠΎΠ±Ρ€Π°Π·ΠΎΠ²Π°Π½ΠΈΡ Ρ„Π°ΠΉΠ»ΠΎΠ² Ρ‚ΠΈΠΏΠ° {0} Π² "
+"Δεν μπορεί να βρεθεί μια υποστηριζόμενη υπηρεσία εκτύπωσης {0} γιά "
 "Postscript!"
 
 #: ../file/PrintServiceFileConverter.java:131
 msgid "An error occured while converting the document to PostScript."
-msgstr "ΠΡ€ΠΎΠΈΠ·ΠΎΡΠ»Π° ΠΎΡΠΈΠ±ΠΊΠ° ΠΏΡ€ΠΈ ΠΏΡ€ΠµΠΎΠ±Ρ€Π°Π·ΠΎΠ²Π°Π½ΠΈΠΈ Π΄ΠΎΠΊΡƒΠΌΠµΠ½Ρ‚Π° Π² PostScript."
+msgstr "Σφάλμα προέκυψε κατά την μετατροπή αρχείου σε PostScript."
 
 #: ../MainWin.java:231
 #, java-format
 msgid "Deleting fax {0}"
-msgstr "Π£Π΄Π°Π»ΠµΠ½ΠΈΠµ Ρ„Π°ΠΊΡΠ° {0}"
+msgstr "Διαγραφή ΦΑΞ {0}"
 
 #: ../MainWin.java:239
 msgid "Error deleting a fax:\n"
-msgstr "ΠΡΠΈΠ±ΠΊΠ° ΠΏΡ€ΠΈ ΡƒΠ΄Π°Π»ΠµΠ½ΠΈΠΈ Ρ„Π°ΠΊΡΠ°:\n"
+msgstr "Σφάλμα στην διαγραφή ΦΑΞ:\n"
 
 #: ../MainWin.java:241
 #, java-format
 msgid "Error deleting the fax \"{0}\":\n"
-msgstr "ΠΡΠΈΠ±ΠΊΠ° ΠΏΡ€ΠΈ ΡƒΠ΄Π°Π»ΠµΠ½ΠΈΠΈ Ρ„Π°ΠΊΡΠ° \"{0}\":\n"
+msgstr "Σφάλμα στην διαγραφή ΦΑΞ \"{0}\":\n"
 
 #: ../MainWin.java:291 ../MainWin.java:403
 #, java-format
 msgid "No accessible document files are available for the fax \"{0}\"."
-msgstr "ΠΠµΡ‚ Π΄ΠΎΡΡ‚ΡƒΠΏΠ½Ρ‹Ρ… Ρ„Π°ΠΉΠ»ΠΎΠ² Π΄ΠΎΠΊΡƒΠΌΠµΠ½Ρ‚ΠΎΠ² Π΄Π»Ρ Ρ„Π°ΠΊΡΠ° \"{0}\"."
+msgstr ""
 
 #: ../MainWin.java:294 ../MainWin.java:406
 msgid "The following files were inaccessible:"
-msgstr "ΠΠµΡ‚ Π΄ΠΎΡΡ‚ΡƒΠΏΠ° ΠΊ ΡΠ»ΠµΠ΄ΡƒΡΡ‰ΠΈΠΌ Ρ„Π°ΠΉΠ»Π°ΠΌ:"
+msgstr ""
 
 #: ../MainWin.java:300
 msgid "Save fax"
-msgstr "Π΅ΠΎΡ…Ρ€Π°Π½ΠµΠ½ΠΈΠµ Ρ„Π°ΠΊΡΠ°"
+msgstr ""
 
 #: ../MainWin.java:303 ../MainWin.java:600
 #, java-format
 msgid "Saving fax {0}"
-msgstr "Π΅ΠΎΡ…Ρ€Π°Π½ΠµΠ½ΠΈΠµ Ρ„Π°ΠΊΡΠ° {0}"
+msgstr "Αποθήκευση ΦΑΞ {0}"
 
 #: ../MainWin.java:316
 #, java-format
 msgid "Save {0} to"
-msgstr "Π΅ΠΎΡ…Ρ€Π°Π½ΠµΠ½ΠΈΠµ {0} Π²"
+msgstr "Αποθήκευσε {0} σε"
 
 #: ../MainWin.java:328 ../MainWin.java:607
 #, java-format
 msgid "An error occured saving the file {0} (job {1}):"
-msgstr "ΠΡ€ΠΎΠΈΠ·ΠΎΡΠ»Π° ΠΎΡΠΈΠ±ΠΊΠ° ΠΏΡ€ΠΈ ΡΠΎΡ…Ρ€Π°Π½ΠµΠ½ΠΈΠΈ Ρ„Π°ΠΉΠ»Π° {0} (job {1}):"
+msgstr "Προέκυψε σφάλμα κατά την αποθήκευση του αρχείου {0} (job {1}):"
 
 #: ../MainWin.java:336 ../MainWin.java:637
 msgid "An error occured saving the fax:"
-msgstr "ΠΡ€ΠΎΠΈΠ·ΠΎΡΠ»Π° ΠΎΡΠΈΠ±ΠΊΠ° ΠΏΡ€ΠΈ ΡΠΎΡ…Ρ€Π°Π½ΠµΠ½ΠΈΠΈ Ρ„Π°ΠΊΡΠ°:"
+msgstr "Σφάλμα προέκυψε κατά την αποθήκευση του ΦΑΞ:"
 
 #: ../MainWin.java:358 ../MainWin.java:665
 #, java-format
 msgid "{0} files saved to directory {1}."
-msgstr "{0} Ρ„Π°ΠΉΠ»Ρ‹ ΡΠΎΡ…Ρ€Π°Π½ΠµΠ½Ρ‹ Π² ΠΊΠ°Ρ‚Π°Π»ΠΎΠ³ {1}."
+msgstr "{0} αρχεία αποθηκεύτηκαν στον κατάλογο {1}."
 
 #: ../MainWin.java:358 ../MainWin.java:665
 msgid "Faxes saved"
-msgstr "Π¤Π°ΠΊΡΡ‹ ΡΠΎΡ…Ρ€Π°Π½ΠµΠ½Ρ‹"
+msgstr "ΦΑΞ αποθηκεύτηκαν"
 
 #: ../MainWin.java:393
 #, java-format
 msgid "Displaying fax {0}"
-msgstr "ΠΡ‚ΠΎΠ±Ρ€Π°Π¶ΠµΠ½ΠΈΠµ Ρ„Π°ΠΊΡΠ° {0}"
+msgstr "Προβολή ΦΑΞ {0}"
 
 #: ../MainWin.java:412
 msgid "Display fax"
-msgstr "ΠΡ‚ΠΎΠ±Ρ€Π°Π¶ΠµΠ½ΠΈΠµ Ρ„Π°ΠΊΡΠ°"
+msgstr "Προβολή ΦΑΞ"
 
 #: ../MainWin.java:417
 #, java-format
 msgid "Downloading {0}"
-msgstr "Π—Π°Π³Ρ€ΡƒΠ·ΠΊΠ° {0}"
+msgstr ""
 
 #: ../MainWin.java:424
 #, java-format
 msgid "An error occured displaying the file {0} (job {1}):\n"
-msgstr "ΠΡ€ΠΎΠΈΠ·ΠΎΡΠ»Π° ΠΎΡΠΈΠ±ΠΊΠ° ΠΏΡ€ΠΈ ΠΎΡ‚ΠΎΠ±Ρ€Π°Π¶ΠµΠ½ΠΈΠΈ Ρ„Π°ΠΉΠ»Π° {0} (job {1}):\n"
+msgstr "Προέκυψε σφάλμα κατά την προβολή του αρχείου {0} (εργασία {1}):\n"
 
 #: ../MainWin.java:428 ../send/SendController.java:228
 msgid "Launching viewer"
-msgstr "Π—Π°ΠΏΡƒΡΠΊ ΠΏΡ€ΠΎΠ³Ρ€Π°ΠΌΠΌΡ‹ ΠΏΡ€ΠΎΡΠΌΠΎΡ‚Ρ€Π°"
+msgstr ""
 
 #: ../MainWin.java:441
 #, java-format
 msgid "An error occured displaying the fax \"{0}\":"
-msgstr "ΠΡ€ΠΎΠΈΠ·ΠΎΡΠ»Π° ΠΎΡΠΈΠ±ΠΊΠ° ΠΏΡ€ΠΈ ΠΎΡ‚ΠΎΠ±Ρ€Π°Π¶ΠµΠ½ΠΈΠΈ Ρ„Π°ΠΊΡΠ° \"{0}\":"
+msgstr "Προέκυψε σφάλμα κατά την προβολή του ΦΑΞ \"{0}\":"
 
 #: ../MainWin.java:482
 #, java-format
 msgid "Suspending job {0}"
-msgstr "ΠΡΡ‚Π°Π½ΠΎΠ²ΠΊΠ° Π·Π°Π΄Π°Π½ΠΈΡ {0}"
+msgstr "Αδρανοποίηση της εργασίας {0}"
 
 #: ../MainWin.java:486
 #, java-format
@@ -332,27 +324,27 @@ msgid ""
 "Suspending the currently running job {0} may block until it is done (or "
 "switch to another \"non running state\"). Try to suspend it anyway?"
 msgstr ""
-"ΠΡΡ‚Π°Π½ΠΎΠ² Π²Ρ‹ΠΏΠΎΠ»Π½ΡΠµΠΌΠΎΠ³ΠΎ Π·Π°Π΄Π°Π½ΠΈΡ {0} ΠΌΠΎΠ¶ΠµΡ‚ Π±Ρ‹Ρ‚Ρ Π·Π°Π±Π»ΠΎΠΊΠΈΡ€ΠΎΠ²Π°Π½ Π΄ΠΎ Ρ‚ΠµΡ… ΠΏΠΎΡ€, ΠΏΠΎΠΊΠ° "
-"ΠΎΠ½ΠΎ Π½Πµ Π·Π°Π²ΠµΡ€ΡΠΈΡ‚ΡΡ (ΠΈΠ»ΠΈ ΠΏΠµΡ€ΠµΠΉΠ΄ΠµΡ‚ Π² ΠΈΠ½ΠΎΠµ \"Π½Πµ Π°ΠΊΡ‚ΠΈΠ²Π½ΠΎΠµ ΡΠΎΡΡ‚ΠΎΡΠ½ΠΈΠµ\"). "
-"ΠΠΎΠΏΡ‹Ρ‚Π°Ρ‚ΡΡΡ ΠΎΡΡ‚Π°Π½ΠΎΠ²ΠΈΡ‚Ρ?"
+"Αδρανοποίηση της εργασίας που εκτελείται τώρα {0} μπορεί να μπλοκάρει μέχρι "
+"να ολοκληρωθεί (ή να αλλάξει σε μια άλλη \"αδρανή κατάσταση\"). Προσπάθεια "
+"αναστολής ούτως ή άλλως΄;"
 
 #: ../MainWin.java:487
 msgid "Suspend fax job"
-msgstr "ΠΡΡ‚Π°Π½ΠΎΠ²ΠΈΡ‚Ρ Π·Π°Π΄Π°Π½ΠΈΠµ"
+msgstr "Αδρανοποίηση της εργασίας ΦΑΞ"
 
 #: ../MainWin.java:498
 msgid "Error suspending a fax job:\n"
-msgstr "ΠΡΠΈΠ±ΠΊΠ° ΠΎΡΡ‚Π°Π½ΠΎΠ²ΠΊΠΈ Π·Π°Π΄Π°Π½ΠΈΡ:\n"
+msgstr "Σφάλμα στην αδρανοποίηση της της εργασίας ΦΑΞ:\n"
 
 #: ../MainWin.java:500
 #, java-format
 msgid "Error suspending the fax job \"{0}\":\n"
-msgstr "ΠΡΠΈΠ±ΠΊΠ° ΠΎΡΡ‚Π°Π½ΠΎΠ²ΠΊΠΈ Π·Π°Π΄Π°Π½ΠΈΡ \"{0}\":\n"
+msgstr "Σφάλμα στην αδρανοποίηση της της εργασίας ΦΑΞ \"{0}\":\n"
 
 #: ../MainWin.java:538
 #, java-format
 msgid "Resuming job {0}"
-msgstr "Π’ΠΎΠ·ΠΎΠ±Π½ΠΎΠ²Π»ΠµΠ½ΠΈΠµ Π·Π°Π΄Π°Π½ΠΈΡ {0}"
+msgstr "Συνέχιση της εργασίας {0}"
 
 #: ../MainWin.java:541
 #, java-format
@@ -360,26 +352,26 @@ msgid ""
 "Job {0} is not in state \"Suspended\" so resuming it probably will not work. "
 "Try to resume it anyway?"
 msgstr ""
-"Π—Π°Π΄Π°Π½ΠΈΠµ {0} Π½Πµ Π² ΡΠΎΡΡ‚ΠΎΡΠ½ΠΈΠΈ \"ΠΡΡ‚Π°Π½ΠΎΠ²Π»ΠµΠ½ΠΎ\" ΠΏΠΎΡΡ‚ΠΎΠΌΡƒ ΠµΠ³ΠΎ Π²ΠΎΠ·ΠΌΠΎΠ¶Π½ΠΎ Π½Πµ ΠΏΠΎΠ»ΡƒΡ‡ΠΈΡ‚ΡΡ "
-"Π²ΠΎΠ·ΠΎΠ±Π½ΠΎΠ²ΠΈΡ‚Ρ. ΠΠΎΠΏΡ‹Ρ‚Π°Ρ‚ΡΡΡ ΠΏΡ€ΠΎΠ΄ΠΎΠ»Π¶ΠΈΡ‚Ρ?"
+"Εργασία {0} αδρανής \"ανεστάλη\" Άρα η συνέχιση της πιθανώς δε θα "
+"λειτουργήσει. Προσπάθεια να συνεχιστεί ούτως ή άλλως;"
 
 #: ../MainWin.java:542
 msgid "Resume fax job"
-msgstr "Π’ΠΎΠ·ΠΎΠ±Π½ΠΎΠ²Π»ΠµΠ½ΠΈΠµ Π·Π°Π΄Π°Π½ΠΈΡ"
+msgstr "Συνέχιση της εργασίας ΦΑΞ"
 
 #: ../MainWin.java:553
 msgid "Error resuming a fax job:\n"
-msgstr "ΠΡΠΈΠ±ΠΊΠ° Π²ΠΎΠ·ΠΎΠ±Π½ΠΎΠ²Π»ΠµΠ½ΠΈΡ Π·Π°Π΄Π°Π½ΠΈΡ:\n"
+msgstr "Σφάλμα στην συνέχιση της εργασίας:\n"
 
 #: ../MainWin.java:555
 #, java-format
 msgid "Error resuming the fax job \"{0}\":\n"
-msgstr "ΠΡΠΈΠ±ΠΊΠ° Π²ΠΎΠ·ΠΎΠ±Π½ΠΎΠ²Π»ΠµΠ½ΠΈΡ Π·Π°Π΄Π°Π½ΠΈΡ \"{0}\":\n"
+msgstr "Σφάλμα στην συνέχιση της εργασίας ΦΑΞ \"{0}\":\n"
 
 #: ../MainWin.java:624
 #, java-format
 msgid "File name to save fax {0}"
-msgstr "ΠΠΌΡ Ρ„Π°ΠΉΠ»Π° Π΄Π»Ρ ΡΠΎΡ…Ρ€Π°Π½ΠµΠ½ΠΈΡ Ρ„Π°ΠΊΡΠ° {0}"
+msgstr ""
 
 #: ../MainWin.java:688
 #, java-format
@@ -388,9 +380,6 @@ msgid ""
 "Please specify the location of these tools in the options dialog (see the "
 "FAQ for download locations)."
 msgstr ""
-"Π”Π»Ρ ΡΠΎΡ…Ρ€Π°Π½ΠµΠ½ΠΈΡ Π² {0} Ρ‚Ρ€ΠµΠ±ΡƒΠµΡ‚ΡΡ GhostScript ΠΈ tiff2pdf.\n"
-"ΠΠΎΠ¶Π°Π»ΡƒΠΉΡΡ‚Π°, ΡƒΠΊΠ°Π¶ΠΈΡ‚Πµ Ρ€Π°ΡΠΏΠΎΠ»ΠΎΠ¶ΠµΠ½ΠΈΠµ ΡΡ‚ΠΈΡ… ΡΡ€ΠµΠ΄ΡΡ‚Π² Π² ΠΌΠµΠ½Ρ Π½Π°ΡΡ‚Ρ€ΠΎΠµΠΊ (Π°Π΄Ρ€ΠµΡΠ° Π΄Π»Ρ "
-"Π·Π°Π³Ρ€ΡƒΠ·ΠΊΠΈ ΡΠΌΠΎΡ‚Ρ€ΠΈΡ‚Πµ Π² FAQ)."
 
 #: ../MainWin.java:688 ../filters/CustomFilterDialog.java:213
 #: ../filters/CustomFilterDialog.java:217 ../options/OptionsWin.java:1113
@@ -410,252 +399,249 @@ msgstr ""
 #: ../util/ExceptionDialog.java:229 ../util/ExceptionDialog.java:249
 #: ../send/SendController.java:128 ../send/SendController.java:133
 msgid "Error"
-msgstr "ΠΡΠΈΠ±ΠΊΠ°"
+msgstr "Σφάλμα"
 
 #: ../MainWin.java:694 ../MainWin.java:925
 msgid "Select a directory to save the faxes in"
-msgstr "Π’Ρ‹Π±ΠµΡ€ΠΈΡ‚Πµ ΠΊΠ°Ρ‚Π°Π»ΠΎΠ³ Π΄Π»Ρ ΡΠΎΡ…Ρ€Π°Π½ΠµΠ½ΠΈΡ Ρ„Π°ΠΊΡΠΎΠ²"
+msgstr "Διάλεξε έναν φάκελο για να αποθηκεύσεις τα ΦΑΞ"
 
 #: ../MainWin.java:695 ../MainWin.java:926
 #: ../phonebook/NewPhoneBookWin.java:886
 msgid "Select"
-msgstr "Π’Ρ‹Π±Ρ€Π°Ρ‚Ρ"
+msgstr "Επιλογή"
 
 #: ../MainWin.java:702 ../MainWin.java:707 ../MainWin.java:933
 #: ../MainWin.java:938
 msgid "Saving faxes"
-msgstr "Π΅ΠΎΡ…Ρ€Π°Π½ΠµΠ½ΠΈΠµ Ρ„Π°ΠΊΡΠΎΠ²"
+msgstr "Αποθήκευση των ΦΑΞ"
 
 #: ../MainWin.java:715
 #, java-format
 msgid "Save fax as {0}..."
-msgstr "Π΅ΠΎΡ…Ρ€Π°Π½ΠΈΡ‚Ρ Ρ„Π°ΠΊΡ ΠΊΠ°ΠΊ {0}..."
+msgstr ""
 
 #: ../MainWin.java:716
 #, java-format
 msgid "Saves the selected fax(es) as single {0} file"
-msgstr "Π΅ΠΎΡ…Ρ€Π°Π½ΠΈΡ‚Ρ Π²Ρ‹Π΄ΠµΠ»ΠµΠ½Π½Ρ‹Π½Ρ‹ΠΉ(Πµ) Ρ„Π°ΠΊΡ(Ρ‹) ΠΊΠ°ΠΊ ΠΎΠ΄ΠΈΠ½ {0} Ρ„Π°ΠΉΠ»"
+msgstr ""
 
 #: ../MainWin.java:761 ../options/OptionsWin.java:183
 #: ../options/OptionsWin.java:1039
 msgid "Options"
-msgstr "ΠΠ°ΡΡ‚Ρ€ΠΎΠΉΠΊΠΈ"
+msgstr "Επιλογές"
 
 #: ../MainWin.java:762
 msgid "Shows the Options dialog"
-msgstr "ΠΠΎΠΊΠ°Π·Π°Ρ‚Ρ Π΄ΠΈΠ°Π»ΠΎΠ³ΠΎΠ²ΠΎΠµ ΠΎΠΊΠ½ΠΎ Π½Π°ΡΡ‚Ρ€ΠΎΠµΠΊ"
+msgstr "Εμφανίζει το παράθυρο επιλογών"
 
 #: ../MainWin.java:778 ../send/SendWin.java:539
 #: ../send/SimplifiedSendDialog.java:209
 msgid "Send"
-msgstr "ΠΡ‚ΠΏΡ€Π°Π²ΠΈΡ‚Ρ"
+msgstr "Αποστολή"
 
 #: ../MainWin.java:779
 msgid "Shows the send fax dialog"
-msgstr "ΠΠΎΠΊΠ°Π·Π°Ρ‚Ρ Π΄ΠΈΠ°Π»ΠΎΠ³ΠΎΠ²ΠΎΠµ ΠΎΠΊΠ½ΠΎ ΠΎΡ‚ΠΏΡ€Π°Π²ΠΊΠΈ Ρ„Π°ΠΊΡΠ°"
+msgstr "Εμφανίζει τον φάκελο αποστολής ΦΑΞ"
 
 #: ../MainWin.java:791 ../send/SendWin.java:536
 msgid "Poll"
-msgstr "Π—Π°ΠΏΡ€ΠΎΡΠΈΡ‚Ρ"
+msgstr ""
 
 #: ../MainWin.java:792
 msgid "Shows the poll fax dialog"
-msgstr "ΠΠΎΠΊΠ°Π·Π°Ρ‚Ρ Π΄ΠΈΠ°Π»ΠΎΠ³ΠΎΠ²ΠΎΠµ ΠΎΠΊΠ½ΠΎ Π·Π°ΠΏΡ€ΠΎΡΠ° Ρ„Π°ΠΊΡΠ°"
+msgstr ""
 
 #: ../MainWin.java:803
 msgid "Do you really want to cancel the selected fax jobs?"
-msgstr "Π’Ρ‹ Π΄ΠµΠΉΡΡ‚Π²ΠΈΡ‚ΠµΠ»ΡΠ½ΠΎ Ρ…ΠΎΡ‚ΠΈΡ‚Πµ ΠΏΡ€ΠµΡ€Π²Π°Ρ‚Ρ Π²Ρ‹Π΄ΠµΠ»ΠµΠ½Π½Ρ‹Πµ Π·Π°Π΄Π°Π½ΠΈΡ?"
+msgstr "Θέλετε σίγουρα να ακυρώσετε τα επιλεγμένα φαξ;"
 
 #: ../MainWin.java:805
 msgid "Do you really want to delete the selected faxes?"
-msgstr "Π’Ρ‹ Π΄ΠµΠΉΡΡ‚Π²ΠΈΡ‚ΠµΠ»ΡΠ½ΠΎ Ρ…ΠΎΡ‚ΠΈΡ‚Πµ ΡƒΠ΄Π°Π»ΠΈΡ‚Ρ Π²Ρ‹Π΄ΠµΠ»ΠµΠ½Π½Ρ‹Πµ Ρ„Π°ΠΊΡΡ‹?"
+msgstr "Είστε σίγουρες οτι θέλετε να διαγράψετε τα επιλεγμένα ΦΑΞ;"
 
 #: ../MainWin.java:807
 msgid "Delete faxes"
-msgstr "Π£Π΄Π°Π»ΠΈΡ‚Ρ Ρ„Π°ΠΊΡΡ‹"
+msgstr "Διαγραφή ΦΑΞ"
 
 #: ../MainWin.java:809
 msgid "Deleting faxes"
-msgstr "Π£Π΄Π°Π»ΠµΠ½ΠΈΠµ Ρ„Π°ΠΊΡΠΎΠ²"
+msgstr "Τα ΦΑΞ διαγράφονται"
 
 #: ../MainWin.java:814 ../phonebook/NewPhoneBookWin.java:771
 #: ../util/ClipboardPopup.java:58
 msgid "Delete"
-msgstr "Π£Π΄Π°Π»ΠΈΡ‚Ρ"
+msgstr "Διαγραφή"
 
 #: ../MainWin.java:815
 msgid "Deletes the selected fax"
-msgstr "Π£Π΄Π°Π»ΠΈΡ‚Ρ Π²Ρ‹Π΄ΠµΠ»ΠµΠ½Π½Ρ‹ΠΉ Ρ„Π°ΠΊΡ"
+msgstr "Διαγράφει τα επιλεγμένα ΦΑΞ"
 
 #: ../MainWin.java:824
 msgid "Viewing faxes"
-msgstr "ΠΡ€ΠΎΡΠΌΠΎΡ‚Ρ€ Ρ„Π°ΠΊΡΠΎΠ²"
+msgstr "Προβάλει τα ΦΑΞ"
 
 #: ../MainWin.java:827
 msgid "Show"
-msgstr "ΠΠΎΠΊΠ°Π·Π°Ρ‚Ρ"
+msgstr "Εμφάνιση"
 
 #: ../MainWin.java:828
 msgid "Displays the selected fax"
-msgstr "ΠΠΎΠΊΠ°Π·Π°Ρ‚Ρ Π²Ρ‹Π΄ΠµΠ»ΠµΠ½Π½Ρ‹ΠΉ Ρ„Π°ΠΊΡ"
+msgstr "Εμφανίζει τα επιλεγμένα ΦΑΞ"
 
 #: ../MainWin.java:838
 msgid "Exit"
-msgstr "Π’Ρ‹Ρ…ΠΎΠ΄"
+msgstr "Έξοδος"
 
 #: ../MainWin.java:839
 msgid "Exits the application"
-msgstr "Π’Ρ‹ΠΉΡ‚ΠΈ ΠΈΠ· ΠΏΡ€ΠΈΠ»ΠΎΠ¶ΠµΠ½ΠΈΡ"
+msgstr "Έξοδος από την εφαρμογή"
 
 #: ../MainWin.java:854
 msgid "Shows the about dialog"
-msgstr "ΠΠΎΠΊΠ°Π·Π°Ρ‚Ρ ΠΈΠ½Ρ„ΠΎΡ€ΠΌΠ°Ρ†ΠΈΡ ΠΎ ΠΏΡ€ΠΎΠ³Ρ€Π°ΠΌΠΌΠµ"
+msgstr "Εμφανίζει το παράθυρο σχετικά"
 
 #: ../MainWin.java:867
 msgid "Phone book"
-msgstr "ΠΆΠµΠ»ΠµΡ„ΠΎΠ½Π½Ρ‹ΠΉ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊ"
+msgstr "Τηλεφωνικός Κατάλογος"
 
 #: ../MainWin.java:868
 msgid "Display/edit the phone book"
-msgstr "ΠΡ€ΠΎΡΠΌΠΎΡ‚Ρ€/Ρ€ΠµΠ΄Π°ΠΊΡ‚ΠΈΡ€ΠΎΠ²Π°Π½ΠΈΠµ Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½ΠΎΠ³ΠΎ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊΠ°"
+msgstr "Εμφάνισε/τροποποίησε τον τηλεφωνικό κατάλογο"
 
 #: ../MainWin.java:882
 msgid "Shows the README files"
-msgstr "ΠΠΎΠΊΠ°Π·Π°Ρ‚Ρ Ρ„Π°ΠΉΠ»Ρ‹ README"
+msgstr "Εμφανίζει τα README αρχεία"
 
 #: ../MainWin.java:910
 msgid "Marked as read"
-msgstr "ΠΠΎΠΌΠµΡ‡ΠµΠ½ ΠΊΠ°ΠΊ ΠΏΡ€ΠΎΡ‡ΠΈΡ‚Π°Π½Π½Ρ‹ΠΉ"
+msgstr "Μάρκαρε ως αναγνωσμένα"
 
 #: ../MainWin.java:911
 msgid "Marks the selected fax as read/unread"
-msgstr "ΠΠΎΠΌΠµΡ‚ΠΈΡ‚Ρ Π²Ρ‹Π΄ΠµΠ»ΠµΠ½Π½Ρ‹ΠΉ Ρ„Π°ΠΊΡ ΠΊΠ°ΠΊ ΠΏΡ€ΠΎΡ‡ΠΈΡ‚Π°Π½Π½Ρ‹ΠΉ/Π½Πµ ΠΏΡ€ΠΎΡ‡ΠΈΡ‚Π°Π½Π½Ρ‹ΠΉ"
+msgstr "Μάρκαρε τα επιλεγμένα ως ΦΑΞ αναγνωσμένα/μη αναγνωσμένα"
 
 #: ../MainWin.java:942
 msgid "Save fax..."
-msgstr "Π΅ΠΎΡ…Ρ€Π°Π½ΠΈΡ‚Ρ Ρ„Π°ΠΊΡ..."
+msgstr "Αποθήκευση ΦΑΞ..."
 
 #: ../MainWin.java:943
 msgid "Saves the selected fax on disk"
-msgstr "Π΅ΠΎΡ…Ρ€Π°Π½ΠΈΡ‚Ρ Π²Ρ‹Π΄ΠµΠ»ΠµΠ½Π½Ρ‹ΠΉ(Πµ) Ρ„Π°ΠΊΡ(Ρ‹) Π½Π° Π΄ΠΈΡΠΊ"
+msgstr "Αποθηκεύει τα επιλεγμένα ΦΑΞ στον δίσκο"
 
 #: ../MainWin.java:958
 msgid "Couldn't get a filename for the fax:"
-msgstr "ΠΠµΠ²ΠΎΠ·ΠΌΠΎΠ¶Π½ΠΎ ΠΏΠΎΠ»ΡƒΡ‡ΠΈΡ‚Ρ ΠΈΠΌΡ Ρ„Π°ΠΉΠ»Π° Π΄Π»Ρ Ρ„Π°ΠΊΡΠ°:"
+msgstr "Δεν μπορεί να βρεθεί ένα όνομα αρχείου για το ΦΑΞ:"
 
 #: ../MainWin.java:971
 msgid "Forward fax..."
-msgstr "ΠΠµΡ€ΠµΠ½Π°ΠΏΡ€Π°Π²ΠΈΡ‚Ρ Ρ„Π°ΠΊΡ..."
+msgstr "Προώθηση ΦΑΞ..."
 
 #: ../MainWin.java:972
 msgid "Forwards the fax"
-msgstr "ΠΠµΡ€ΠµΠ½Π°ΠΏΡ€Π°Π²ΠΈΡ‚Ρ Ρ„Π°ΠΊΡ"
+msgstr "Προώθησε το ΦΑΞ"
 
 #: ../MainWin.java:992
 msgid "Admin mode"
-msgstr "Π ΠµΠ¶ΠΈΠΌ Π°Π΄ΠΌΠΈΠ½ΠΈΡΡ‚Ρ€ΠΈΡ€ΠΎΠ²Π°Π½ΠΈΡ"
+msgstr "Εφαρμογή διαχειριστή"
 
 #: ../MainWin.java:993
 msgid "Connect to the server in admin mode (e.g. to delete faxes)"
-msgstr ""
-"ΠΠΎΠ΄ΠΊΠ»ΡΡ‡ΠΈΡ‚ΡΡΡ ΠΊ ΡΠµΡ€Π²ΠµΡ€Ρƒ Π² Ρ€ΠµΠ¶ΠΈΠΌΠµ Π°Π΄ΠΌΠΈΠ½ΠΈΡΡ‚Ρ€ΠΈΡ€ΠΎΠ²Π°Π½ΠΈΡ (Π½Π°ΠΏΡ€ΠΈΠΌΠµΡ€ Π΄Π»Ρ ΡƒΠ΄Π°Π»ΠµΠ½ΠΈΡ "
-"Ρ„Π°ΠΊΡΠΎΠ²)"
+msgstr "Συνδέσου στον σέρβερ ώς διαχειριστής (π.χ. για διαγραφή ΦΑΞ"
 
 #: ../MainWin.java:1005
 msgid "Refresh"
-msgstr "ΠΠ±Π½ΠΎΠ²ΠΈΡ‚Ρ"
+msgstr "Ανανέωση"
 
 #: ../MainWin.java:1006
 msgid "Refresh tables and server status"
-msgstr "ΠΠ±Π½ΠΎΠ²ΠΈΡ‚Ρ Ρ‚Π°Π±Π»ΠΈΡ†Ρ‹ ΠΈ ΡΠΎΡΡ‚ΠΎΡΠ½ΠΈΠµ ΡΠµΡ€Π²ΠµΡ€Π°"
+msgstr "Ανανέωση πινάκων και κατάστασης σερβερ"
 
 #: ../MainWin.java:1039
 msgid "Could not get all of the job information necessary to resend the fax:"
 msgstr ""
-"ΠΠµΠ²ΠΎΠ·ΠΌΠΎΠ¶Π½ΠΎ ΠΏΠΎΠ»ΡƒΡ‡ΠΈΡ‚Ρ Π²ΡΡ ΠΈΠ½Ρ„ΠΎΡ€ΠΌΠ°Ρ†ΠΈΡ ΠΎ Π·Π°Π΄Π°Π½ΠΈΠΈ Π½ΠµΠΎΠ±Ρ…ΠΎΠ΄ΠΈΠΌΡƒΡ Π΄Π»Ρ ΠΏΠΎΠ²Ρ‚ΠΎΡ€Π½ΠΎΠΉ "
-"ΠΎΡ‚ΠΏΡ€Π°Π²ΠΊΠΈ Ρ„Π°ΠΊΡΠ°:"
+"Αδυναμία λήψης όλων των απαραίτητων πληροφοριών για επαναποστολή του φαξ"
 
 #: ../MainWin.java:1058
 msgid "Resend fax..."
-msgstr "ΠΠΎΠ²Ρ‚ΠΎΡ€ΠΈΡ‚Ρ ΠΎΡ‚ΠΏΡ€Π°Π²ΠΊΡƒ..."
+msgstr "Επαναποστολή του ΦΑΞ..."
 
 #: ../MainWin.java:1059
 msgid "Resend the fax"
-msgstr "ΠΠΎΠ²Ρ‚ΠΎΡ€Π½ΠΎ ΠΎΡ‚ΠΏΡ€Π°Π²ΠΈΡ‚Ρ Ρ„Π°ΠΊΡ..."
+msgstr "Επαναποστολή του ΦΑΞ"
 
 #: ../MainWin.java:1069
 #, java-format
 msgid "page {0}"
-msgstr "ΡΡ‚Ρ€Π°Π½ΠΈΡ†Π° {0}"
+msgstr "Σελίδα {0}"
 
 #: ../MainWin.java:1073
 msgid "Error printing the table:"
-msgstr "ΠΡΠΈΠ±ΠΊΠ° ΠΏΠµΡ‡Π°Ρ‚ΠΈ Ρ‚Π°Π±Π»ΠΈΡ†Ρ‹:"
+msgstr "Σφάλμα στην εκτύπωση του πίνακα"
 
 #: ../MainWin.java:1077
 msgid "Print table..."
-msgstr "ΠΠµΡ‡Π°Ρ‚Ρ Ρ‚Π°Π±Π»ΠΈΡ†Ρ‹..."
+msgstr "Εκτύπωση πινάκων..."
 
 #: ../MainWin.java:1078
 msgid "Prints the currently displayed table"
-msgstr "ΠΠ°ΠΏΠµΡ‡Π°Ρ‚Π°Ρ‚Ρ Ρ‚ΠµΠΊΡƒΡ‰ΡƒΡ Ρ‚Π°Π±Π»ΠΈΡ†Ρƒ"
+msgstr "Εκτυπώνει τους πίνακες πού προβάλλονται"
 
 #: ../MainWin.java:1086
 msgid "Suspending jobs"
-msgstr "ΠΡΡ‚Π°Π½ΠΎΠ²ΠΊΠ° Π·Π°Π΄Π°Π½ΠΈΠΉ"
+msgstr "Αδρανοποιέι τις εργασίες"
 
 #: ../MainWin.java:1089
 msgid "Suspend"
-msgstr "ΠΡΡ‚Π°Π½ΠΎΠ²ΠΈΡ‚Ρ"
+msgstr "Αδρανοποίηση"
 
 #: ../MainWin.java:1090
 msgid "Suspends the transfer of the selected fax"
-msgstr "ΠΡΡ‚Π°Π½ΠΎΠ²ΠΈΡ‚Ρ ΠΏΠµΡ€ΠµΠ΄Π°Ρ‡Ρƒ Π²Ρ‹Π΄ΠµΠ»ΠµΠ½Π½ΠΎΠ³ΠΎ Ρ„Π°ΠΊΡΠ°"
+msgstr "Αδρανοποιεί την μεταφορά των επιλεγμένων ΦΑΞ"
 
 #: ../MainWin.java:1098
 msgid "Resuming jobs"
-msgstr "Π’ΠΎΠ·ΠΎΠ±Π½ΠΎΠ²Π»ΠµΠ½ΠΈΠµ Π·Π°Π΄Π°Π½ΠΈΠΉ"
+msgstr "Συνέχιση των εργασιών"
 
 #: ../MainWin.java:1101
 msgid "Resume"
-msgstr "ΠΡ€ΠΎΠ΄ΠΎΠ»Π¶ΠΈΡ‚Ρ"
+msgstr "Συνέχιση"
 
 #: ../MainWin.java:1102
 msgid "Resumes the transfer of the selected fax"
-msgstr "ΠΡ€ΠΎΠ΄ΠΎΠ»Π¶ΠΈΡ‚Ρ ΠΏΠµΡ€ΠµΠ΄Π°Ρ‡Ρƒ Π²Ρ‹Π΄ΠµΠ»ΠµΠ½Π½ΠΎΠ³ΠΎ Ρ„Π°ΠΊΡΠ°"
+msgstr "Συνεχίζει τη μεταφορά των επιλεγμένων φαξ"
 
 #: ../MainWin.java:1112 ../util/ExceptionDialog.java:84
 #: ../util/ClipboardPopup.java:54
 msgid "Copy"
-msgstr "ΠΠΎΠΏΠΈΡ€ΠΎΠ²Π°Ρ‚Ρ"
+msgstr "Αντιγραφή"
 
 #: ../MainWin.java:1113
 msgid "Copies the selected table items to the clipboard"
-msgstr "Π΅ΠΊΠΎΠΏΠΈΡ€ΠΎΠ²Π°Ρ‚Ρ Π²Ρ‹Π΄ΠµΠ»ΠµΠ½Π½Ρ‹Πµ ΡΠ»ΠµΠΌΠµΠ½Ρ‚Ρ‹ Ρ‚Π°Π±Π»ΠΈΡ†Ρ‹ Π² Π±ΡƒΡ„ΠµΡ€ ΠΎΠ±ΠΌΠµΠ½Π°."
+msgstr "Αντιγράφει τα επιλεγμένα στοιχεία του πίνακα στο σημειωματάριο"
 
 #: ../MainWin.java:1133 ../MainWin.java:1134
 msgid "Show row numbers"
-msgstr "ΠΠΎΠΊΠ°Π·Π°Ρ‚Ρ Π½ΠΎΠΌΠµΡ€Π° ΡΡ‚Ρ€ΠΎΠΊ"
+msgstr "Προβολή αλληλουχίας αριθμών"
 
 #: ../MainWin.java:1158
 msgid "Adjust column widths"
-msgstr "ΠΠΎΠ΄Π³ΠΎΠ½ΡΡ‚Ρ ΡΠΈΡ€ΠΈΠ½Ρƒ ΠΊΠΎΠ»ΠΎΠ½ΠΎΠΊ"
+msgstr "Προσαρμογή πλάτους στήλης"
 
 #: ../MainWin.java:1159
 msgid "Adjust column widths to fit the window size"
-msgstr "ΠΠΎΠ΄Π³ΠΎΠ½ΡΡ‚Ρ ΡΠΈΡ€ΠΈΠ½Ρƒ ΠΊΠΎΠ»ΠΎΠ½ΠΎΠΊ ΠΏΠΎΠ΄ Ρ€Π°Π·ΠΌΠµΡ€ ΠΎΠΊΠ½Π°"
+msgstr "Προσαρμογή πλάτους στήλης για να ταιριάζει στο μέγεθος του παραθύρου"
 
 #: ../MainWin.java:1175
 msgid "Connect or disconnect to the HylaFAX server"
-msgstr "Π΅ΠΎΠµΠ΄ΠΈΠ½ΠΈΡ‚ΡΡΡ Ρ ΡΠµΡ€Π²ΠµΡ€ΠΎΠΌ HylaFAX ΠΈΠ»ΠΈ ΠΎΡ‚ΠΊΠ»ΡΡ‡ΠΈΡ‚ΡΡΡ ΠΎΡ‚ ΡΠµΡ€Π²ΠµΡ€Π°"
+msgstr "Σύνδεση ή αποσύνδεση στο HylaFAX σέρβερ"
 
 #: ../MainWin.java:1185 ../util/ToolbarEditorDialog.java:100
 msgid "Customize toolbar"
-msgstr "ΠΠ°ΡΡ‚Ρ€ΠΎΠΈΡ‚Ρ ΠΏΠ°Π½ΠµΠ»Ρ ΠΈΠ½ΡΡ‚Ρ€ΡƒΠΌΠµΠ½Ρ‚ΠΎΠ²"
+msgstr "Προσαρμογή της γραμμής εργαλείων"
 
 #: ../MainWin.java:1186
 msgid "Customize the toolbar"
-msgstr "ΠΠ°ΡΡ‚Ρ€ΠΎΠΈΡ‚Ρ ΠΏΠ°Π½ΠµΠ»Ρ ΠΈΠ½ΡΡ‚Ρ€ΡƒΠΌΠµΠ½Ρ‚ΠΎΠ²"
+msgstr ""
 
 #: ../MainWin.java:1196
 msgid "Checks if there is a newer version of YajHFC available"
@@ -690,497 +676,496 @@ msgstr ""
 
 #: ../MainWin.java:1269
 msgid "Connect"
-msgstr "Π΅ΠΎΠµΠ΄ΠΈΠ½ΠΈΡ‚ΡΡΡ Ρ ΡΠµΡ€Π²ΠµΡ€ΠΎΠΌ"
+msgstr "Σύνδεση"
 
 #: ../MainWin.java:1269
 msgid "Disconnect"
-msgstr "ΠΡ‚ΠΊΠ»ΡΡ‡ΠΈΡ‚ΡΡΡ ΠΎΡ‚ ΡΠµΡ€Π²ΠµΡ€Π°"
+msgstr "Αποσύνδεση"
 
 #: ../MainWin.java:1276 ../MainWin.java:1958
 msgid "Fax"
-msgstr "Π¤Π°ΠΊΡ"
+msgstr ""
 
 #: ../MainWin.java:1297 ../MainWin.java:2574
 msgid "Fetching fax list..."
-msgstr "Π—Π°Π³Ρ€ΡƒΠ·ΠΊΠ° ΡΠΏΠΈΡΠΊΠ° Ρ„Π°ΠΊΡΠΎΠ²..."
+msgstr "Αναζήτηση της λίστας φαξ"
 
 #: ../MainWin.java:1418
 msgid "View"
-msgstr "Π’ΠΈΠ΄"
+msgstr "Προβολή"
 
 #: ../MainWin.java:1422
 msgid "All faxes"
-msgstr "Π’ΡΠµ Ρ„Π°ΠΊΡΡ‹"
+msgstr "Όλα τα φαξ"
 
 #: ../MainWin.java:1428
 msgid "Only own faxes"
-msgstr "ΠΆΠΎΠ»ΡΠΊΠΎ ΡΠ²ΠΎΠΈ Ρ„Π°ΠΊΡΡ‹"
+msgstr "Μόνο τα δικά σου φαξ"
 
 #: ../MainWin.java:1433
 msgid "Custom filter..."
-msgstr "ΠΠ°ΡΡ‚Ρ€Π°ΠΈΠ²Π°ΠµΠΌΡ‹ΠΉ Ρ„ΠΈΠ»ΡΡ‚Ρ€ ..."
+msgstr "παραμετροποιημένο φίλτρο"
 
 #: ../MainWin.java:1438
 msgid "Mark failed jobs"
-msgstr "Π’Ρ‹Π΄ΠµΠ»ΠΈΡ‚Ρ ΠΏΡ€ΠµΡ€Π²Π°Π½Π½Ρ‹Πµ Π·Π°Π΄Π°Π½ΠΈΡ"
+msgstr "Σημείωσε τις αποτυχημένες προσπάθειες"
 
 #: ../MainWin.java:1572
 msgid "Logging out..."
-msgstr "ΠΡ‚ΠΊΠ»ΡΡ‡ΠµΠ½ΠΈΠµ ΠΎΡ‚ ΡΠµΡ€Π²ΠµΡ€Π° ..."
+msgstr "Αποσύνδεση χρήστη.."
 
 #: ../MainWin.java:1607
 msgid "Disconnected."
-msgstr "ΠΡ‚ΡΠΎΠµΠ΄ΠΈΠ½ΠµΠ½ΠΎ."
+msgstr "Αποσυνδεδεμένο."
 
 #: ../MainWin.java:1664 ../NoGUISender.java:139
 msgid "Logging in..."
-msgstr "Π΅ΠΎΠµΠ΄ΠΈΠ½ΠµΠ½ΠΈΠµ Ρ ΡΠµΡ€Π²ΠµΡ€ΠΎΠΌ ..."
+msgstr "Σύνδεση..."
 
 #: ../MainWin.java:1715
 msgid "Help"
-msgstr "ΠΠΎΠΌΠΎΡ‰Ρ"
+msgstr "Βοήθεια"
 
 #: ../MainWin.java:1727 ../options/OptionsWin.java:418
 msgid "Received"
-msgstr "ΠΡ€ΠΈΠ½ΡΡ‚Ρ‹Πµ"
+msgstr "Ελήφθη"
 
 #: ../MainWin.java:1727
 msgid "Received faxes"
-msgstr "ΠΡ€ΠΈΠ½ΡΡ‚Ρ‹Πµ Ρ„Π°ΠΊΡΡ‹"
+msgstr "Φαξ που παρελήφθησαν"
 
 #: ../MainWin.java:1728 ../options/OptionsWin.java:419
 msgid "Sent"
-msgstr "ΠΡ‚ΠΏΡ€Π°Π²Π»ΠµΠ½Π½Ρ‹Πµ"
+msgstr "Εστάλη"
 
 #: ../MainWin.java:1728
 msgid "Sent faxes"
-msgstr "ΠΡ‚ΠΏΡ€Π°Π²Π»ΠµΠ½Π½Ρ‹Πµ Ρ„Π°ΠΊΡΡ‹"
+msgstr "Απεσταλμένα φαξ"
 
 #: ../MainWin.java:1729 ../options/OptionsWin.java:420
 msgid "Transmitting"
-msgstr "ΠΠµΡ€ΠµΠ΄Π°Ρ‡Π°"
+msgstr "Εκπομπή"
 
 #: ../MainWin.java:1729
 msgid "Faxes in the output queue"
-msgstr "Π¤Π°ΠΊΡΡ‹ Π² ΠΈΡΡ…ΠΎΠ΄ΡΡ‰ΠµΠΉ ΠΎΡ‡ΠµΡ€ΠµΠ΄ΠΈ"
+msgstr "Φαξ σε σειρά προτεραιότητας εξόδου"
 
 #: ../MainWin.java:1742 ../options/OptionsWin.java:421
 msgid "Archive"
-msgstr "ΠΡ€Ρ…ΠΈΠ²"
+msgstr ""
 
 #: ../MainWin.java:1982
 msgid "Extras"
-msgstr "Π”ΠΎΠΏΠΎΠ»Π½ΠΈΡ‚ΠµΠ»ΡΠ½ΠΎ"
+msgstr "Πρόσθετα"
 
 #: ../MainWin.java:2055 ../util/MultiButtonGroup.java:66
 #: ../util/ExcDialogAbstractAction.java:75
 msgid "An Error occurred executing the desired action:"
-msgstr "ΠΡ€ΠΈ Π²Ρ‹ΠΏΠΎΠ»Π½ΠµΠ½ΠΈΠΈ Ρ‚Ρ€ΠµΠ±ΡƒΠµΠΌΠΎΠ³ΠΎ Π΄ΠµΠΉΡΡ‚Π²ΠΈΡ ΠΏΡ€ΠΎΠΈΠ·ΠΎΡΠ»Π° ΠΎΡΠΈΠ±ΠΊΠ°:"
+msgstr "Σφάλμα προέκυψε κατά την εκτέλεση της επιθυμητής ενέργειας:"
 
 #: ../MainWin.java:2261
 msgid "Could not log in"
-msgstr "ΠΠµΠ²ΠΎΠ·ΠΌΠΎΠ¶Π½ΠΎ ΡΠΎΠµΠ΄ΠΈΠ½ΠΈΡ‚ΡΡΡ Ρ ΡΠµΡ€Π²ΠµΡ€ΠΎΠΌ"
+msgstr "Σύνδεση αδύνατη"
 
 #: ../MainWin.java:2280
 msgid "Error refreshing the status:"
-msgstr "ΠΡΠΈΠ±ΠΊΠ° ΠΎΠ±Π½ΠΎΠ²Π»ΠµΠ½ΠΈΡ ΡΠΎΡΡ‚ΠΎΡΠ½ΠΈΡ:"
+msgstr "Σφάλμα ανανέωσης της κατάστασης:"
 
 #: ../MainWin.java:2604 ../HylaClientManager.java:186
 msgid "An error occured connecting to the server:"
-msgstr "ΠΡ€ΠΎΠΈΠ·ΠΎΡΠ»Π° ΠΎΡΠΈΠ±ΠΊΠ° ΠΏΡ€ΠΈ ΡΠΎΠµΠ΄ΠΈΠ½ΠµΠ½ΠΈΠΈ Ρ ΡΠµΡ€Π²ΠµΡ€ΠΎΠΌ:"
+msgstr "Σφάλμα στην σύνδεση με τον σερβερ:"
 
 #: ../YajLanguage.java:38 ../DateStyle.java:67
 msgid "(System default)"
-msgstr "(Π΅ΠΈΡΡ‚ΠµΠΌΠ½Ρ‹ΠΉ)"
+msgstr "(Ορισμός συστήματος)"
 
 #: ../FileTextField.java:148
 msgid "Choose a file using a dialog"
-msgstr "Π’Ρ‹Π±Ρ€Π°Ρ‚Ρ Ρ„Π°ΠΉΠ»"
+msgstr "Επέλεξε ένα αρχείο χρησιμοποιώντας..."
 
 #: ../FaxNotification.java:30
 msgid "Never"
-msgstr "ΠΠΈΠΊΠΎΠ³Π΄Π°"
+msgstr "Ποτέ"
 
 #: ../FaxNotification.java:31
 msgid "Delivered"
-msgstr "Π”ΠΎΡΡ‚Π°Π²Π»ΠµΠ½"
+msgstr "Παραδόθηκε"
 
 #: ../FaxNotification.java:32
 msgid "Requeued"
-msgstr "ΠΠΎΠ²Ρ‚ΠΎΡ€Π½ΠΎ ΠΏΠΎΡΡ‚Π°Π²Π»ΠµΠ½ Π² ΠΎΡ‡ΠµΡ€ΠµΠ΄Ρ"
+msgstr "Επανατοποθέτηση σε σειρά προτεραιότητας"
 
 #: ../FaxNotification.java:33
 msgid "Delivered or requeued"
-msgstr "Π”ΠΎΡΡ‚Π°Π²Π»ΠµΠ½ ΠΈΠ»ΠΈ ΠΏΠΎΠ²Ρ‚ΠΎΡ€Π½ΠΎ ΠΏΠΎΡΡ‚Π°Π²Π»ΠµΠ½ Π² ΠΎΡ‡ΠµΡ€ΠµΠ΄Ρ"
+msgstr "Παραδόθηκε ή επανατοποθετήθηκε σε σειρά προτεραιότητας"
 
 #: ../filters/FilterCreator.java:33
 msgid "is set"
-msgstr "ΡƒΡΡ‚Π°Π½ΠΎΠ²Π»ΠµΠ½ΠΎ"
+msgstr "Διευθετήθηκε/Εγκαταστάθηκε"
 
 #: ../filters/FilterCreator.java:34
 msgid "is not set"
-msgstr "Π½Πµ ΡƒΡΡ‚Π°Π½ΠΎΠ²Π»ΠµΠ½ΠΎ"
+msgstr "Δε διευθετήθηκε/Δεν εγκαταστάθηκε"
 
 #: ../filters/ComparableFilterOperator.java:24
 #: ../filters/StringFilterOperator.java:24
 msgid "equals"
-msgstr "="
+msgstr "Ισοδύναμα"
 
 #: ../filters/ComparableFilterOperator.java:25
 #: ../filters/StringFilterOperator.java:25
 msgid "not equals"
-msgstr "<>"
+msgstr "Δεν υπάρχει αντιστοίχιση/Άνισα"
 
 #: ../filters/ComparableFilterOperator.java:26
 msgid "less than"
-msgstr "<"
+msgstr "Λιγότερο/Μικρότερο από"
 
 #: ../filters/ComparableFilterOperator.java:27
 msgid "greater than"
-msgstr ">"
+msgstr "Μεγαλύτερο από"
 
 #: ../filters/ComparableFilterOperator.java:28
 msgid "less or equal"
-msgstr "<="
+msgstr "Μικρότερο ή ίσο"
 
 #: ../filters/ComparableFilterOperator.java:29
 msgid "greater or equal"
-msgstr ">="
+msgstr "Μεγαλύτερο ή ίσο"
 
 #: ../filters/CustomFilterDialog.java:93 ../util/CancelAction.java:40
 msgid "Cancel"
-msgstr "ΠΡ‚ΠΌΠµΠ½Π°"
+msgstr "Άκυρο"
 
 #: ../filters/CustomFilterDialog.java:109
 #: ../phonebook/NewPhoneBookWin.java:750 ../send/SimplifiedSendDialog.java:385
 #: ../send/TextFieldList.java:127
 msgid "Add"
-msgstr "Π”ΠΎΠ±Π°Π²ΠΈΡ‚Ρ"
+msgstr "Πρόσθεσε"
 
 #: ../filters/CustomFilterDialog.java:124
 msgid "Only display fax jobs fulfilling:"
-msgstr "ΠΠΎΠΊΠ°Π·Ρ‹Π²Π°Ρ‚Ρ Ρ‚ΠΎΠ»ΡΠΊΠΎ Π·Π°Π΄Π°Ρ‡ΠΈ, ΡƒΠ΄ΠΎΠ²Π»ΠµΡ‚Π²ΠΎΡ€ΡΡΡ‰ΠΈΠµ:"
+msgstr "Δείξε μόνο τα φαξ που ανταποκρίνοντα/πληρούν τις προϋποθέσεις:"
 
 #: ../filters/CustomFilterDialog.java:126
 msgid "Any of the following conditions"
-msgstr "Π›ΡΠ±ΠΎΠΌΡƒ ΠΈΠ· ΡΠ»ΠµΠ΄ΡƒΡΡ‰ΠΈΡ… ΡƒΡΠ»ΠΎΠ²ΠΈΠΉ"
+msgstr "Οποιαδήποτε από τις παρακάτω προϋποθέσεις/συνθήκες"
 
 #: ../filters/CustomFilterDialog.java:128
 msgid "All of the following conditions"
-msgstr "Π’ΡΠµΠΌ ΡΠ»ΠµΠ΄ΡƒΡΡ‰ΠΈΠΌ ΡƒΡΠ»ΠΎΠ²ΠΈΡΠΌ"
+msgstr "Όλες οι παρακάτω προϋποθέσεις"
 
 #: ../filters/CustomFilterDialog.java:164
 #, java-format
 msgid "Custom filter for table {0}"
-msgstr "ΠΠ°ΡΡ‚Ρ€Π°ΠΈΠ²Π°ΠµΠΌΡ‹ΠΉ Ρ„ΠΈΠ»ΡΡ‚Ρ€ Π΄Π»Ρ Ρ‚Π°Π±Π»ΠΈΡ†Ρ‹ {0}"
+msgstr "Όρισε φίλτρο για τον πίνακα {0}"
 
 #: ../filters/CustomFilterDialog.java:213
 msgid ""
 "Please enter a valid date/time!\n"
 "(Hint: Exactly the same format as in the fax job table is expected)"
 msgstr ""
-"ΠΠΎΠ¶Π°Π»ΡƒΠΉΡΡ‚Π°, Π²Π²ΠµΠ΄ΠΈΡ‚Πµ Π”Π°Ρ‚Ρƒ/Π’Ρ€ΠµΠΌΡ!\n"
-"(ΠΠΎΠ΄ΡΠΊΠ°Π·ΠΊΠ°: ΠΆΠΎΡ‡Π½ΠΎ Π² Ρ‚Π°ΠΊΠΎΠΌ Π¶Πµ Ρ„ΠΎΡ€ΠΌΠ°Ρ‚Πµ, ΠΊΠ°ΠΊ Π² Ρ‚Π°Π±Π»ΠΈΡ†Πµ Π·Π°Π΄Π°Π½ΠΈΠΉ)"
+"(Υπόδειξη:Ακριβώς την ίδια προετοιμασία για χρήση/διαμόρφωση με αυτήν που "
+"αναμένεται στον πίνακα εργασιών του φαξ"
 
 #: ../filters/CustomFilterDialog.java:217
 msgid "Please enter a valid number!"
-msgstr "ΠΠΎΠ¶Π°Π»ΡƒΠΉΡΡ‚Π°, Π²Π²ΠµΠ΄ΠΈΡ‚Πµ Ρ‡ΠΈΡΠ»ΠΎ!"
+msgstr "Παρακαλώ εισάγετε έναν έγκυρο αριθμό!"
 
 #: ../filters/CustomFilterDialog.java:224
 msgid ""
 "You have entered no filtering conditions. Do you want to show all faxes "
 "instead?"
-msgstr "Π’Ρ‹ Π½Πµ Π²Π²ΠµΠ»ΠΈ ΡƒΡΠ»ΠΎΠ²ΠΈΡ Ρ„ΠΈΠ»ΡΡ‚Ρ€Π°Ρ†ΠΈΠΈ. ΠΠΎΠΊΠ°Π·Π°Ρ‚Ρ Π²ΡΠµ Ρ„Π°ΠΊΡΡ‹?"
+msgstr ""
 
 #: ../filters/CustomFilterDialog.java:224
 msgid "Question"
-msgstr "Π’ΠΎΠΏΡ€ΠΎΡ"
+msgstr ""
 
 #: ../filters/FilterPanel.java:52
 msgid "(none)"
-msgstr "(Π½ΠµΡ‚)"
+msgstr "(κανένα)"
 
 #: ../filters/FilterPanel.java:183
 msgid "Remove this condition"
-msgstr "Π£Π΄Π°Π»ΠΈΡ‚Ρ ΡΡ‚ΠΎ ΡƒΡΠ»ΠΎΠ²ΠΈΠµ"
+msgstr "Αφαίρεση αυτού του όρου"
 
 #: ../filters/StringFilterOperator.java:26
 msgid "contains"
-msgstr "ΡΠΎΠ΄ΠµΡ€Π¶ΠΈΡ‚"
+msgstr "περιέχει"
 
 #: ../filters/StringFilterOperator.java:27
 msgid "starts with"
-msgstr "Π½Π°Ρ‡ΠΈΠ½Π°ΠµΡ‚ΡΡ Ρ"
+msgstr "αρχίζει με"
 
 #: ../filters/StringFilterOperator.java:28
 msgid "ends with"
-msgstr "Π·Π°ΠΊΠ°Π½Ρ‡ΠΈΠ²Π°ΠµΡ‚ΡΡ Π½Π°"
+msgstr "τελειώνει με"
 
 #: ../filters/StringFilterOperator.java:29
 msgid "matches"
-msgstr "ΡΠΎΠ²ΠΏΠ°Π΄Π°ΠµΡ‚"
+msgstr "ταιριάζει"
 
 #: ../JobFormat.java:34 ../model/archive/QueueFileFormat.java:84
 #: ../RecvFormat.java:38
 msgid "SubAddress"
-msgstr ""
+msgstr "Διεύθυνση"
 
 #: ../JobFormat.java:34 ../model/archive/QueueFileFormat.java:84
 msgid "Destination SubAddress"
-msgstr "SubAddress ΡƒΡΡ‚Ρ€ΠΎΠΉΡΡ‚Π²Π° ΠΏΠΎΠ»ΡƒΡ‡Π°Ρ‚ΠµΠ»Ρ"
+msgstr "Διεύθυνση προορισμού"
 
 #: ../JobFormat.java:38 ../model/archive/QueueFileFormat.java:72
 msgid "Password"
-msgstr "ΠΠ°Ρ€ΠΎΠ»Ρ"
+msgstr "Κωδικός"
 
 #: ../JobFormat.java:38 ../model/archive/QueueFileFormat.java:72
 msgid "Destination Password"
-msgstr "ΠΠ°Ρ€ΠΎΠ»Ρ ΡƒΡΡ‚Ρ€ΠΎΠΉΡΡ‚Π²Π° ΠΏΠΎΠ»ΡƒΡ‡Π°Ρ‚ΠµΠ»Ρ"
+msgstr "Κωδικός προορισμού"
 
 #: ../JobFormat.java:42 ../phonebook/PBEntryField.java:32
 #: ../model/archive/QueueFileFormat.java:38
 msgid "Company"
-msgstr "ΠΠΎΠΌΠΏΠ°Π½ΠΈΡ"
+msgstr "Εταιρεία"
 
 #: ../JobFormat.java:42 ../model/archive/QueueFileFormat.java:38
 msgid "Destination company name"
-msgstr "ΠΠ°Π·Π²Π°Π½ΠΈΠµ ΠΊΠΎΠΌΠΏΠ°Π½ΠΈΠΈ ΠΏΠΎΠ»ΡƒΡ‡Π°Ρ‚ΠµΠ»Ρ"
+msgstr "Όνομα εταιρείας προορισμού"
 
 #: ../JobFormat.java:46
 msgid "Dials: total/max."
-msgstr "Π”ΠΎΠ·Π²ΠΎΠ½ΠΎΠ²: ΠΎΠ±Ρ‰./ΠΌΠ°ΠΊΡ."
+msgstr "Κλήσεις: σύνολο/μέγιστες."
 
 #: ../JobFormat.java:46
 msgid "Total # dials/maximum # dials"
-msgstr "ΠΠ±Ρ‰ΠµΠµ ΠΊΠΎΠ»ΠΈΡ‡ΠµΡΡ‚Π²ΠΎ Π΄ΠΎΠ·Π²ΠΎΠ½ΠΎΠ² / ΠΌΠ°ΠΊΡΠΈΠΌΠ°Π»ΡΠ½ΠΎΠµ ΠΊΠΎΠ»ΠΈΡ‡ΠµΡΡ‚Π²ΠΎ Π΄ΠΎΠ·Π²ΠΎΠ½ΠΎΠ²"
+msgstr "Σύνολο # κλήσεις/μέγιστες # κλήσεις"
 
 #: ../JobFormat.java:50 ../model/archive/QueueFileFormat.java:81
 #: ../RecvFormat.java:42
 msgid "Speed"
-msgstr "Π΅ΠΊΠΎΡ€ΠΎΡΡ‚Ρ"
+msgstr "Ταχύτητα"
 
 #: ../JobFormat.java:50
 msgid "Desired signalling rate"
-msgstr "Π–ΠµΠ»Π°ΠµΠΌΠ°Ρ ΡΠΊΠΎΡ€ΠΎΡΡ‚Ρ ΠΏΠµΡ€ΠµΠ΄Π°Ρ‡ΠΈ"
+msgstr "Επιθυμητή ισχύς σήματος"
 
 #: ../JobFormat.java:54 ../model/archive/QueueFileFormat.java:85
 msgid "Tagline format"
-msgstr "Π¤ΠΎΡ€ΠΌΠ°Ρ‚ ΠΌΠµΡ‚ΠΊΠΈ"
+msgstr "Tagline δομή"
 
 #: ../JobFormat.java:54 ../model/archive/QueueFileFormat.java:85
 msgid "Client-specific tagline format string"
-msgstr "Π¤ΠΎΡ€ΠΌΠ°Ρ‚ ΠΌΠµΡ‚ΠΊΠΈ, ΠΎΠΏΡ€ΠµΠ΄ΠµΠ»ΡΠµΠΌΠΎΠΉ ΠΊΠ»ΠΈΠµΠ½Ρ‚ΠΎΠΌ"
+msgstr ""
 
 #: ../JobFormat.java:58 ../model/archive/QueueFileFormat.java:45
 msgid "Desired min-scanline time"
-msgstr "Π–ΠµΠ»Π°ΠµΠΌΠΎΠµ ΠΌΠΈΠ½. Π²Ρ€ΠµΠΌΡ ΡΠΊΠ°Π½ΠΈΡ€ΠΎΠ²Π°Π½ΠΈΡ"
+msgstr ""
 
 #: ../JobFormat.java:58 ../model/archive/QueueFileFormat.java:45
 msgid "Desired minimum scanline time"
-msgstr "Π–ΠµΠ»Π°ΠµΠΌΠΎΠµ ΠΌΠΈΠ½ΠΈΠΌΠ°Π»ΡΠ½ΠΎΠµ Π²Ρ€ΠµΠΌΡ ΡΠΊΠ°Π½ΠΈΡ€ΠΎΠ²Π°Π½ΠΈΡ"
+msgstr ""
 
 #: ../JobFormat.java:62 ../model/archive/QueueFileFormat.java:43
 msgid "Desired data format"
-msgstr "Π–ΠµΠ»Π°ΠµΠΌΡ‹ΠΉ Ρ„ΠΎΡ€ΠΌΠ°Ρ‚ Π΄Π°Π½Π½Ρ‹Ρ…"
+msgstr "Επιθυμητή διαμόρφωση δεδομένων"
 
 #: ../JobFormat.java:66 ../model/archive/QueueFileFormat.java:74
 msgid "Priority"
-msgstr "ΠΡ€ΠΈΠΎΡ€ΠΈΡ‚ΠµΡ‚"
+msgstr "Προτεραιότητα"
 
 #: ../JobFormat.java:66 ../model/archive/QueueFileFormat.java:74
 msgid "Client-specified scheduling priority"
-msgstr "Π£ΡΡ‚Π°Π½ΠΎΠ²Π»ΠµΠ½Π½Ρ‹ΠΉ ΠΊΠ»ΠΈΠµΠ½Ρ‚ΠΎΠΌ ΠΏΡ€ΠΈΠΎΡ€ΠΈΡ‚ΠµΡ‚"
+msgstr "Προγραμματισμένη προτεραιότητα οριζόμενη απο τον πελάτη "
 
 #: ../JobFormat.java:70 ../model/archive/QueueFileFormat.java:52
 msgid "Tag string"
-msgstr "ΠΠµΡ‚ΠΊΠ°"
+msgstr ""
 
 #: ../JobFormat.java:70 ../model/archive/QueueFileFormat.java:52
 msgid "Client-specified job tag string"
-msgstr "ΠΠµΡ‚ΠΊΠ° Π·Π°Π΄Π°Π½ΠΈΡ, ΠΎΠΏΡ€ΠµΠ΄ΠµΠ»ΡΠµΠΌΠ°Ρ ΠΊΠ»ΠΈΠµΠ½Ρ‚ΠΎΠΌ"
+msgstr ""
 
 #: ../JobFormat.java:74
 msgid "Use ECM?"
-msgstr "ΠΡΠΏΠΎΠ»ΡΠ·ΠΎΠ²Π°Ρ‚Ρ ECM?"
+msgstr "Χρήση ECM?"
 
 #: ../JobFormat.java:74
 msgid "Desired use of ECM (one-character symbol)"
-msgstr "Π–ΠµΠ»Π°Ρ‚ΠµΠ»ΡΠ½ΠΎ Π»ΠΈ ΠΈΡΠΏΠΎΠ»ΡΠ·ΠΎΠ²Π°Ρ‚Ρ ECM (Π±ΡƒΠΊΠ²ΠµΠ½Π½ΠΎΠµ ΠΎΠ±ΠΎΠ·Π½Π°Ρ‡ΠµΠ½ΠΈΠµ)"
+msgstr "Επιθυμητή χρήση ECM (σύμβολο ενός χαρακτήρα)"
 
 #: ../JobFormat.java:78 ../phonebook/PBEntryField.java:36
 #: ../model/archive/QueueFileFormat.java:55
 msgid "Location"
-msgstr "ΠΠ΄Ρ€ΠµΡ"
+msgstr "Τοποθεσία"
 
 #: ../JobFormat.java:78 ../model/archive/QueueFileFormat.java:55
 msgid "Destination geographic location"
-msgstr "Π“ΠµΠΎΠ³Ρ€Π°Ρ„ΠΈΡ‡ΠµΡΠΊΠΎΠµ ΠΌΠµΡΡ‚ΠΎΠΏΠΎΠ»ΠΎΠ¶ΠµΠ½ΠΈΠµ ΠΏΠΎΠ»ΡƒΡ‡Π°Ρ‚ΠµΠ»Ρ"
+msgstr "Προορισμός γεωγραφικής τοποθεσίας"
 
 #: ../JobFormat.java:82 ../model/archive/QueueFileFormat.java:56
 msgid "Sender e-mail"
-msgstr "e-mail ΠΎΡ‚ΠΏΡ€Π°Π²ΠΈΡ‚ΠµΠ»Ρ"
+msgstr "Αποστολέας e-mail"
 
 #: ../JobFormat.java:82
 msgid "Notification e-mail address"
-msgstr "e-mail Π΄Π»Ρ ΡƒΠ²ΠµΠ΄ΠΎΠΌΠ»ΠµΠ½ΠΈΠΉ"
+msgstr "Γνωστοποίηση διεύθυνσης e-mail"
 
 #: ../JobFormat.java:86
 msgid "Private Tagline?"
-msgstr "Π›ΠΈΡ‡Π½Π°Ρ ΠΠµΡ‚ΠΊΠ°?"
+msgstr "Ιδιωτική/Ιδιαίτερη Tagline?"
 
 #: ../JobFormat.java:86
 msgid "Desired use of private tagline (one-character symbol)"
-msgstr "Π–ΠµΠ»Π°Ρ‚ΠµΠ»ΡΠ½ΠΎ Π»ΠΈ ΠΈΡΠΏΠΎΠ»ΡΠ·ΠΎΠ²Π°Ρ‚Ρ Π»ΠΈΡ‡Π½ΡƒΡ ΠΌΠµΡ‚ΠΊΡƒ (Π±ΡƒΠΊΠ²ΠµΠ½Π½ΠΎΠµ ΠΎΠ±ΠΎΠ·Π½Π°Ρ‡ΠµΠ½ΠΈΠµ)"
+msgstr "Επιθυμητή χρήση ιδιωτικής/ιδιαίτερης tagline (σύμβολο ενός χαρακτήρα)"
 
 #: ../JobFormat.java:90 ../model/archive/QueueFileFormat.java:90
 msgid "Use continuation cover"
-msgstr "ΠΡΠΏΠΎΠ»ΡΠ·ΠΎΠ²Π°Ρ‚Ρ Ρ‚ΠΈΡ‚ΡƒΠ»ΡΠ½Ρ‹ΠΉ Π»ΠΈΡΡ‚ ΠΏΡ€ΠΎΠ΄ΠΎΠ»Π¶ΠµΠ½ΠΈΡ"
+msgstr "Χρήση συνεχούς κάλυψης"
 
 #: ../JobFormat.java:90
 msgid "Whether to use continuation cover page (one-character symbol)"
-msgstr ""
-"ΠΡƒΠ¶Π½ΠΎ Π»ΠΈ ΠΈΡΠΏΠΎΠ»ΡΠ·ΠΎΠ²Π°Ρ‚Ρ Ρ‚ΠΈΡ‚ΡƒΠ»ΡΠ½Ρ‹ΠΉ Π»ΠΈΡΡ‚ ΠΏΡ€ΠΎΠ΄ΠΎΠ»Π¶ΠµΠ½ΠΈΡ (Π±ΡƒΠΊΠ²ΠµΠ½Π½ΠΎΠµ ΠΎΠ±ΠΎΠ·Π½Π°Ρ‡ΠµΠ½ΠΈΠµ)"
+msgstr "Να γίνει χρήση συνεχούς εξωφύλλου (σύμβολο ενός χαρακτήρα)"
 
 #: ../JobFormat.java:94
 msgid "Pages done/total"
-msgstr "Π΅Ρ‚Ρ€. ΠΏΠµΡ€ΠµΠ΄Π°Π½ΠΎ/Π²ΡΠµΠ³ΠΎ"
+msgstr "Σελίδες ολοκληρώθηκαν/πλήρεις"
 
 #: ../JobFormat.java:94
 msgid "# pages transmitted/total # pages to transmit"
-msgstr "# ΡΡ‚Ρ€Π°Π½ΠΈΡ† ΠΏΠµΡ€ΠµΠ΄Π°Π½ΠΎ / # Π²ΡΠµΠ³ΠΎ ΡΡ‚Ρ€Π°Π½ΠΈΡ†"
+msgstr "# Σελίδες μεταφέρθηκαν,εστάλησαν/πλήρως # σελίδες για μεταφορά"
 
 #: ../JobFormat.java:98
 msgid "Minimal signalling rate"
-msgstr "ΠΠΈΠ½ΠΈΠΌΠ°Π»ΡΠ½Π°Ρ ΡΠΊΠΎΡ€ΠΎΡΡ‚Ρ ΠΏΠµΡ€ΠµΠ΄Π°Ρ‡ΠΈ"
+msgstr "Ελάχιστος ρυθμός εκπομπής"
 
 #: ../JobFormat.java:98
 msgid "Client-specified minimum acceptable signalling rate"
-msgstr "ΠΠΈΠ½ΠΈΠΌΠ°Π»ΡΠ½ΠΎ ΠΏΡ€ΠΈΠµΠΌΠ»ΠµΠΌΠ°Ρ ΡΠΊΠΎΡ€ΠΎΡΡ‚Ρ ΠΏΠµΡ€ΠµΠ΄Π°Ρ‡ΠΈ ΡƒΡΡ‚Π°Π½ΠΎΠ²Π»ΠµΠ½Π½Π°Ρ ΠΊΠ»ΠΈΠµΠ½Ρ‚ΠΎΠΌ"
+msgstr "Ελάχιστος αποδεκτός ρυθμός εκπομπής οριζόμενος από τον πελάτη"
 
 #: ../JobFormat.java:102 ../model/archive/QueueFileFormat.java:75
 msgid "Receiver"
-msgstr "ΠΠΎΠ»ΡƒΡ‡Π°Ρ‚ΠµΠ»Ρ"
+msgstr "Παραλήπτης"
 
 #: ../JobFormat.java:102 ../model/archive/QueueFileFormat.java:75
 msgid "Destination person (receiver)"
-msgstr "Π›ΠΈΡ†ΠΎ, ΠΊΠΎΡ‚ΠΎΡ€ΠΎΠΌΡƒ Π°Π΄Ρ€ΠµΡΠΎΠ²Π°Π½ Ρ„Π°ΠΊΡ (ΠΏΠΎΠ»ΡƒΡ‡Π°Ρ‚ΠµΠ»Ρ)"
+msgstr "Πρόσωπο προορισμού (παραλήπτης)"
 
 #: ../JobFormat.java:106 ../model/archive/QueueFileFormat.java:80
 #: ../RecvFormat.java:98
 msgid "Sender"
-msgstr "ΠΡ‚ΠΏΡ€Π°Π²ΠΈΡ‚ΠµΠ»Ρ"
+msgstr "Αποστολέας"
 
 #: ../JobFormat.java:106 ../model/archive/QueueFileFormat.java:80
 msgid "Sender's identity"
-msgstr "Π›ΠΈΡ‡Π½ΠΎΡΡ‚Ρ ΠΎΡ‚ΠΏΡ€Π°Π²ΠΈΡ‚ΠµΠ»Ρ"
+msgstr "Ταυτότητα αποστολέα"
 
 #: ../JobFormat.java:110
 msgid "Tries: done/max."
-msgstr "ΠΠΎΠΏΡ‹Ρ‚ΠΎΠΊ/ΠΌΠ°ΠΊΡ."
+msgstr "Προσπάθειες:Ολοκληρώθηκαν/στο μέγιστο."
 
 #: ../JobFormat.java:110
 msgid "Total # tries/maximum # tries"
-msgstr "# ΠΏΠΎΠΏΡ‹Ρ‚ΠΎΠΊ / ΠΌΠ°ΠΊΡΠΈΠΌΠ°Π»ΡΠ½ΠΎΠµ # ΠΏΠΎΠΏΡ‹Ρ‚ΠΎΠΊ"
+msgstr "Συνολικές # προσπάθειες/μέγιστες # προσπάθειες"
 
 #: ../JobFormat.java:114 ../model/archive/QueueFileFormat.java:36
 msgid "Page chopping threshold (inches)"
-msgstr "Π“Ρ€Π°Π½ΠΈΡ†Π° ΠΎΠ±Ρ€ΠµΠ·ΠΊΠΈ ΡΡ‚Ρ€Π°Π½ΠΈΡ† (Π΄ΡΠΉΠΌΡ‹)"
+msgstr "Αποκοπή περιθωρίων σελίδας (inches)"
 
 #: ../JobFormat.java:118 ../model/archive/QueueFileFormat.java:47
 msgid "Job done operation"
-msgstr "ΠΠΏΠµΡ€Π°Ρ†ΠΈΡ Π·Π°Π²ΠµΡ€ΡΠµΠ½ΠΈΡ"
+msgstr "Ολοκλήρωση χειρισμού εργασίας"
 
 #: ../JobFormat.java:118 ../model/archive/QueueFileFormat.java:47
 msgid "Operation to perform when job is done"
-msgstr "ΠΠΏΠµΡ€Π°Ρ†ΠΈΡ, Π²Ρ‹ΠΏΠΎΠ»Π½ΡΠµΠΌΠ°Ρ ΠΏΠΎΡΠ»Πµ Π·Π°Π²ΠµΡ€ΡΠµΠ½ΠΈΡ Π·Π°Π΄Π°Π½ΠΈΡ"
+msgstr ""
 
 #: ../JobFormat.java:122
 msgid "Communication identifier"
-msgstr "ΠΠ΄ΠµΠ½Ρ‚ΠΈΡ„ΠΈΠΊΠ°Ρ‚ΠΎΡ€ ΡΠµΠ°Π½ΡΠ°"
+msgstr "Εντοπιστής επικοινωνίας"
 
 #: ../JobFormat.java:126 ../model/archive/QueueFileFormat.java:53
 msgid "Job type"
-msgstr "ΠΆΠΈΠΏ Π·Π°Π΄Π°Π½ΠΈΡ"
+msgstr "Τύπος εργασίας"
 
 #: ../JobFormat.java:126
 msgid "Job type (one-character symbol)"
-msgstr "ΠΆΠΈΠΏ Π·Π°Π΄Π°Π½ΠΈΡ (Π±ΡƒΠΊΠ²ΠµΠ½Π½ΠΎΠµ ΠΎΠ±ΠΎΠ·Π½Π°Ρ‡ΠµΠ½ΠΈΠµ)"
+msgstr "Τύπος εργασίας (σύμβολο ενός χαρακτήρα)"
 
 #: ../JobFormat.java:130
 msgid "Scheduled time"
-msgstr "Π—Π°ΠΏΠ»Π°Π½ΠΈΡ€ΠΎΠ²Π°Π½Π½ΠΎΠµ Π²Ρ€ΠµΠΌΡ"
+msgstr "Προγραμματισμένη ώρα"
 
 #: ../JobFormat.java:130
 msgid "Scheduled date and time"
-msgstr "Π—Π°ΠΏΠ»Π°Π½ΠΈΡ€ΠΎΠ²Π°Π½Π½Ρ‹Πµ Π΄Π°Ρ‚Π° ΠΈ Π²Ρ€ΠµΠΌΡ"
+msgstr "Προγραμματισμένη ημερομηνία και ώρα"
 
 #: ../JobFormat.java:134
 msgid "Scheduled time (UNIX)"
-msgstr "Π—Π°ΠΏΠ»Π°Π½ΠΈΡ€ΠΎΠ²Π°Π½Π½ΠΎΠµ Π²Ρ€ΠµΠΌΡ (UNIX)"
+msgstr ""
 
 #: ../JobFormat.java:134
 msgid "Scheduled time in seconds since the UNIX epoch"
-msgstr "Π—Π°ΠΏΠ»Π°Π½ΠΈΡ€ΠΎΠ²Π°Π½Π½ΠΎΠµ Π²Ρ€ΠµΠΌΡ Π² ΡΠµΠΊΡƒΠ½Π΄Π°Ρ… ΠΎΡ‚ Π½Π°Ρ‡Π°Π»Π° ΡΠΏΠΎΡ…ΠΈ UNIX"
+msgstr "προγραμματισμένη ώρα σε δευτερόλεπτα από την εποχή του UNIX"
 
 #: ../JobFormat.java:138 ../model/archive/QueueFileFormat.java:82
 msgid "Job state"
-msgstr "Π΅ΠΎΡΡ‚ΠΎΡΠ½ΠΈΠµ Π·Π°Π΄Π°Π½ΠΈΡ"
+msgstr "Κατάσταση εργασίας"
 
 #: ../JobFormat.java:138
 msgid "Job state (one-character symbol)"
-msgstr "Π΅ΠΎΡΡ‚ΠΎΡΠ½ΠΈΠµ Π·Π°Π΄Π°Π½ΠΈΡ (Π±ΡƒΠΊΠ²ΠµΠ½Π½ΠΎΠµ ΠΎΠ±ΠΎΠ·Π½Π°Ρ‡ΠµΠ½ΠΈΠµ)"
+msgstr "Κατάσταση Εργασίας (Ε)"
 
 #: ../JobFormat.java:142 ../model/archive/QueueFileFormat.java:61
 msgid "# consecutive failed tries"
-msgstr "# Π½ΠµΡƒΡΠΏΠµΡΠ½Ρ‹Ρ… ΠΏΠµΡ€ΠµΠ΄Π°Ρ‡"
+msgstr "# αλλεπάλληλες αποτυχημένες προσπάθειες"
 
 #: ../JobFormat.java:142 ../model/archive/QueueFileFormat.java:61
 msgid "Number of consecutive failed attempts to place call"
-msgstr "ΠΠΎΠ»ΠΈΡ‡ΠµΡΡ‚Π²ΠΎ ΠΏΠΎΡΠ»ΠµΠ΄ΠΎΠ²Π°Ρ‚ΠµΠ»ΡΠ½Ρ‹Ρ… Π½ΠµΡƒΡΠΏΠµΡΠ½Ρ‹Ρ… ΠΏΠΎΠΏΡ‹Ρ‚ΠΎΠΊ Π΄ΠΎΠ·Π²ΠΎΠ½ΠΈΡ‚ΡΡΡ"
+msgstr ""
 
 #: ../JobFormat.java:146
 msgid "Client machine name"
-msgstr "ΠΠΌΡ ΠΌΠ°ΡΠΈΠ½Ρ‹ ΠΊΠ»ΠΈΠµΠ½Ρ‚Π°"
+msgstr "Όνομα μηχανής πελάτη"
 
 #: ../JobFormat.java:150 ../model/archive/QueueFileFormat.java:86
 msgid "Total # dials"
-msgstr "ΠΠ±Ρ‰ΠµΠµ # Π”ΠΎΠ·Π²ΠΎΠ½ΠΎΠ²"
+msgstr "Σύνολο # κλήσεων "
 
 #: ../JobFormat.java:150 ../model/archive/QueueFileFormat.java:86
 msgid "Total number of phone calls"
-msgstr "ΠΠ±Ρ‰ΠµΠµ ΠΊΠΎΠ»ΠΈΡ‡ΠµΡΡ‚Π²ΠΎ Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½Ρ‹Ρ… Π·Π²ΠΎΠ½ΠΊΠΎΠ²"
+msgstr ""
 
 #: ../JobFormat.java:154 ../model/archive/QueueFileFormat.java:48
 msgid "Number"
-msgstr "ΠΠΎΠΌΠµΡ€"
+msgstr "Αριθμός"
 
 #: ../JobFormat.java:154 ../model/archive/QueueFileFormat.java:48
 msgid "Public (external) format of dialstring"
-msgstr "ΠΠΎΠ»Π½Ρ‹ΠΉ Π½ΠΎΠΌΠµΡ€ (Ρ ΠΏΡ€ΠµΡ„ΠΈΠΊΡΠ°ΠΌΠΈ)"
+msgstr "Εξωτερική διαμόρφωση κλήσεων"
 
 #: ../JobFormat.java:158
 msgid "# consecutive failed dials"
-msgstr "# Π½ΠµΡƒΡΠΏΠµΡΠ½Ρ‹Ρ… Π΄ΠΎΠ·Π²ΠΎΠ½ΠΎΠ²"
+msgstr "# αλλεπάλληλες αποτυχημένες κλήσεις"
 
 #: ../JobFormat.java:162 ../model/archive/QueueFileFormat.java:50
 msgid "Group identifier"
-msgstr "Π“Ρ€ΡƒΠΏΠΏΠΎΠ²ΠΎΠΉ ΠΈΠ΄ΠµΠ½Ρ‚ΠΈΡ„ΠΈΠΊΠ°Ρ‚ΠΎΡ€"
+msgstr "Εντοπιστής ομάδας"
 
 #: ../JobFormat.java:166 ../model/archive/QueueFileFormat.java:68
 msgid "Page chop handling"
-msgstr "ΠΠΎΠ΄Π΄ΠµΡ€Π¶ΠΊΠ° ΠΎΠ±Ρ€ΠµΠ·ΠΊΠΈ ΡΡ‚Ρ€Π°Π½ΠΈΡ†"
+msgstr "χειρισμός οριοθέτησης σελίδας"
 
 #: ../JobFormat.java:166 ../model/archive/QueueFileFormat.java:68
 msgid "Whitespace truncation handling"
-msgstr "ΠΠΎΠ΄Π΄ΠµΡ€Π¶ΠΊΠ° ΡƒΡΠµΡ‡ΠµΠ½ΠΈΡ ΠΏΡƒΡΡ‚ΠΎΠ³ΠΎ ΠΌΠµΡΡ‚Π°"
+msgstr ""
 
 #: ../JobFormat.java:170 ../model/archive/QueueFileFormat.java:79
 msgid "Scheduling priority"
-msgstr "ΠΡ€ΠΈΠΎΡ€ΠΈΡ‚ΠµΡ‚ Π·Π°Π΄Π°Π½ΠΈΡ"
+msgstr "προγραμματισμένη προτεραιότητα"
 
 #: ../JobFormat.java:170 ../model/archive/QueueFileFormat.java:79
 msgid "Current scheduling priority"
-msgstr "ΠΆΠµΠΊΡƒΡ‰ΠΈΠΉ ΠΏΡ€ΠΈΠΎΡ€ΠΈΡ‚ΠµΡ‚ Π·Π°Π΄Π°Π½ΠΈΡ"
+msgstr "Τρέχουσα προγραμματισμένη προτεραιότητα"
 
 #: ../JobFormat.java:174 ../model/archive/QueueFileFormat.java:51
 msgid "ID"
@@ -1188,218 +1173,218 @@ msgstr ""
 
 #: ../JobFormat.java:174
 msgid "Job identifier"
-msgstr "ΠΠ΄ΠµΠ½Ρ‚ΠΈΡ„ΠΈΠΊΠ°Ρ‚ΠΎΡ€ Π·Π°Π΄Π°Π½ΠΈΡ"
+msgstr "Αναγνωριστικό εργασίας"
 
 #: ../JobFormat.java:178 ../model/archive/QueueFileFormat.java:54
 msgid "Job kill time"
-msgstr "Π’Ρ€ΠµΠΌΡ ΠΎΡ‚ΠΌΠµΠ½Ρ‹ Π·Π°Π΄Π°Π½ΠΈΡ"
+msgstr "Χρόνος τερματισμού εργασίας"
 
 #: ../JobFormat.java:178 ../model/archive/QueueFileFormat.java:54
 msgid "Time to give up trying to send job"
-msgstr "Π’Ρ€ΠµΠΌΡ ΠΏΡ€ΠµΠΊΡ€Π°Ρ‰ΠµΠ½ΠΈΡ ΠΏΠΎΠΏΡ‹Ρ‚ΠΎΠΊ Π²Ρ‹ΠΏΠΎΠ»Π½ΠΈΡ‚Ρ Π·Π°Π΄Π°Π½ΠΈΠµ ΠΎΡ‚ΠΏΡ€Π°Π²ΠΊΠΈ"
+msgstr ""
 
 #: ../JobFormat.java:182 ../model/archive/QueueFileFormat.java:70
 #: ../RecvFormat.java:70
 msgid "Page length"
-msgstr "Π”Π»ΠΈΠ½Π° ΡΡ‚Ρ€Π°Π½ΠΈΡ†Ρ‹"
+msgstr "Μήκος σελίδων"
 
 #: ../JobFormat.java:182 ../model/archive/QueueFileFormat.java:70
 #: ../RecvFormat.java:70
 msgid "Page length in mm"
-msgstr "Π”Π»ΠΈΠ½Π° ΡΡ‚Ρ€Π°Π½ΠΈΡ†Ρ‹ Π² ΠΌΠΌ"
+msgstr "Μήκος σελίδων σε χιλιοστά"
 
 #: ../JobFormat.java:186 ../model/archive/QueueFileFormat.java:60
 msgid "Modem"
-msgstr "ΠΠΎΠ΄ΠµΠΌ"
+msgstr "διαμορφωτης-αποδιαμορφωτής"
 
 #: ../JobFormat.java:186
 msgid "Assigned modem"
-msgstr "ΠΠ°Π·Π½Π°Ρ‡ΠµΠ½Π½Ρ‹ΠΉ ΠΌΠΎΠ΄ΠµΠΌ"
+msgstr "Καθορισμένο modem"
 
 #: ../JobFormat.java:190 ../model/archive/QueueFileFormat.java:62
 msgid "Notification"
-msgstr "Π£Π²ΠµΠ΄ΠΎΠΌΠ»ΠµΠ½ΠΈΠµ"
+msgstr "Γνωστοποίηση"
 
 #: ../JobFormat.java:190
 msgid "E-mail notification handling (one-character symbol)"
-msgstr "Π£Π²ΠµΠ΄ΠΎΠΌΠ»ΠµΠ½ΠΈΠµ ΠΏΠΎ E-mail (Π±ΡƒΠΊΠ²ΠµΠ½Π½ΠΎΠµ ΠΎΠ±ΠΎΠ·Π½Π°Ρ‡ΠµΠ½ΠΈΠµ)"
+msgstr "Χειρισμόςγνωστοποίησης E-mail (σύμβολο ενός χαρακτήρα)"
 
 #: ../JobFormat.java:194 ../model/archive/QueueFileFormat.java:66
 #: ../RecvFormat.java:82
 msgid "Owner"
-msgstr "Π’Π»Π°Π΄ΠµΠ»ΠµΡ†"
+msgstr "Κάτοχος"
 
 #: ../JobFormat.java:194 ../model/archive/QueueFileFormat.java:66
 msgid "Job owner"
-msgstr "Π’Π»Π°Π΄ΠµΠ»ΠµΡ† Π·Π°Π΄Π°Π½ΠΈΡ"
+msgstr "Κάτοχος εργασίας"
 
 #: ../JobFormat.java:198 ../model/archive/QueueFileFormat.java:63
 msgid "# pages"
-msgstr "# ΡΡ‚Ρ€Π°Π½ΠΈΡ†"
+msgstr "# σελίδες"
 
 #: ../JobFormat.java:198 ../model/archive/QueueFileFormat.java:63
 msgid "Number of pages transmitted"
-msgstr "ΠΠΎΠ»ΠΈΡ‡ΠµΡΡ‚Π²ΠΎ ΠΏΠµΡ€ΠµΠ΄Π°Π½Π½Ρ‹Ρ… ΡΡ‚Ρ€Π°Π½ΠΈΡ†"
+msgstr ""
 
 #: ../JobFormat.java:202 ../model/archive/QueueFileFormat.java:77
 msgid "Retry time"
-msgstr "Π’Ρ€ΠµΠΌΡ ΠΏΠΎΠ²Ρ‚ΠΎΡ€Π°"
+msgstr "Χρόνος επαναπροσπάθειας"
 
 #: ../JobFormat.java:202
 msgid "Job retry time"
-msgstr "Π’Ρ€ΠµΠΌΡ ΠΏΠΎΠ²Ρ‚ΠΎΡ€Π° Π·Π°Π΄Π°Π½ΠΈΡ"
+msgstr ""
 
 #: ../JobFormat.java:206 ../model/archive/QueueFileFormat.java:76
 #: ../RecvFormat.java:94
 msgid "Resolution"
-msgstr "Π Π°Π·Ρ€ΠµΡΠµΠ½ΠΈΠµ"
+msgstr "Ανάλυση/ευκρίνεια"
 
 #: ../JobFormat.java:206 ../model/archive/QueueFileFormat.java:76
 msgid "Document resolution in lines/inch"
-msgstr "Π Π°Π·Ρ€ΠµΡΠµΠ½ΠΈΠµ Π΄ΠΎΠΊΡƒΠΌΠµΠ½Ρ‚Π°, ΡΡ‚Ρ€ΠΎΠΊ/Π΄ΡΠΉΠΌ"
+msgstr "Ευκρίνεια εγγράφου σε γραμμές"
 
 #: ../JobFormat.java:210 ../model/archive/QueueFileFormat.java:83
 msgid "Status"
-msgstr "Π΅ΠΎΡΡ‚ΠΎΡΠ½ΠΈΠµ"
+msgstr "Κατάσταση"
 
 #: ../JobFormat.java:210 ../model/archive/QueueFileFormat.java:83
 msgid "Job status information from last failure"
-msgstr "ΠΠ½Ρ„ΠΎΡ€ΠΌΠ°Ρ†ΠΈΡ ΠΎ ΡΠΎΡΡ‚ΠΎΡΠ½ΠΈΠΈ Π·Π°Π΄Π°Π½ΠΈΡ"
+msgstr "Κατάσταση εργασίας απο την τελευταία αποτυχία"
 
 #: ../JobFormat.java:214 ../model/archive/QueueFileFormat.java:88
 msgid "Tries"
-msgstr "ΠΠΎΠΏΡ‹Ρ‚ΠΊΠΈ"
+msgstr "Προσπάθειες"
 
 #: ../JobFormat.java:214 ../model/archive/QueueFileFormat.java:88
 msgid "Total number of attempts to send job"
-msgstr "ΠΠ±Ρ‰ΠµΠµ ΠΊΠΎΠ»ΠΈΡ‡ΠµΡΡ‚Π²ΠΎ ΠΏΠΎΠΏΡ‹Ρ‚ΠΎΠΊ ΠΎΡ‚ΠΏΡ€Π°Π²ΠΈΡ‚Ρ Π·Π°Π΄Π°Π½ΠΈΠµ"
+msgstr ""
 
 #: ../JobFormat.java:218 ../model/archive/QueueFileFormat.java:58
 msgid "Max. tries"
-msgstr "ΠΠ°ΠΊΡ. ΠΏΠΎΠΏΡ‹Ρ‚ΠΎΠΊ"
+msgstr "Μέγιστες.προσπάθειες"
 
 #: ../JobFormat.java:218 ../model/archive/QueueFileFormat.java:58
 msgid "Maximum number of attempts to send job"
-msgstr "ΠΠ°ΠΊΡΠΈΠΌΠ°Π»ΡΠ½ΠΎΠµ ΠΊΠΎΠ»ΠΈΡ‡ΠµΡΡ‚Π²ΠΎ ΠΏΠΎΠΏΡ‹Ρ‚ΠΎΠΊ ΠΎΡ‚ΠΏΡ€Π°Π²ΠΊΠΈ Π·Π°Π΄Π°Π½ΠΈΡ"
+msgstr ""
 
 #: ../JobFormat.java:222 ../model/archive/QueueFileFormat.java:65
 msgid "Specified number"
-msgstr "Π—Π°Π΄Π°Π½Π½Ρ‹ΠΉ Π½ΠΎΠΌΠµΡ€"
+msgstr "Εξειδικευμένος αριθμός"
 
 #: ../JobFormat.java:222 ../model/archive/QueueFileFormat.java:65
 msgid "Client-specified dialstring"
-msgstr "ΠΠΎΠΌΠµΡ€, Π·Π°Π΄Π°Π½Π½Ρ‹ΠΉ ΠΊΠ»ΠΈΠµΠ½Ρ‚ΠΎΠΌ"
+msgstr "Κλήση οριζόμενη απο τον πελάτη"
 
 #: ../JobFormat.java:226 ../model/archive/QueueFileFormat.java:71
 #: ../RecvFormat.java:106
 msgid "Page width"
-msgstr "Π¨ΠΈΡ€ΠΈΠ½Π° ΡΡ‚Ρ€Π°Π½ΠΈΡ†Ρ‹"
+msgstr "Πλάτος σελίδας"
 
 #: ../JobFormat.java:226 ../model/archive/QueueFileFormat.java:71
 #: ../RecvFormat.java:106
 msgid "Page width in mm"
-msgstr "Π¨ΠΈΡ€ΠΈΠ½Π° ΡΡ‚Ρ€Π°Π½ΠΈΡ†Ρ‹ Π² ΠΌΠΌ"
+msgstr "Πλάτος σελίδας σε χιλιοστά"
 
 #: ../JobFormat.java:230 ../model/archive/QueueFileFormat.java:57
 msgid "Maximum # dials"
-msgstr "ΠΠ°ΠΊΡ. # Π΄ΠΎΠ·Π²ΠΎΠ½ΠΎΠ²"
+msgstr "Μέγιστος αριθμός # κλήσεων"
 
 #: ../JobFormat.java:230 ../model/archive/QueueFileFormat.java:57
 msgid "Maximum number of times to dial"
-msgstr "ΠΠ°ΠΊΡΠΈΠΌΠ°Π»ΡΠ½ΠΎΠµ ΠΊΠΎΠ»ΠΈΡ‡ΠµΡΡ‚Π²ΠΎ Π΄ΠΎΠ·Π²ΠΎΠ½ΠΎΠ²"
+msgstr ""
 
 #: ../JobFormat.java:234 ../model/archive/QueueFileFormat.java:87
 #: ../RecvFormat.java:86
 msgid "Pages"
-msgstr "Π΅Ρ‚Ρ€Π°Π½ΠΈΡ†"
+msgstr "Σελίδες"
 
 #: ../JobFormat.java:234 ../model/archive/QueueFileFormat.java:87
 msgid "Total # pages to transmit"
-msgstr "ΠΠ±Ρ‰ΠµΠµ # ΡΡ‚Ρ€Π°Π½ΠΈΡ† "
+msgstr "Συνολικές # σελίδες για μεταφορά"
 
 #: ../JobFormat.java:238 ../model/archive/QueueFileFormat.java:89
 msgid "Time to send job"
-msgstr "Π’Ρ€ΠµΠΌΡ ΠΎΡ‚ΠΏΡ€Π°Π²ΠΊΠΈ Π·Π°Π΄Π°Π½ΠΈΡ"
+msgstr "Χρόνος αποστολής εργασίας"
 
 #: ../JobFormat.java:242 ../model/archive/QueueFileFormat.java:92
 msgid "State"
-msgstr "Π΅ΠΎΡΡ‚ΠΎΡΠ½ΠΈΠµ"
+msgstr "Κατάσταση"
 
 #: ../JobFormat.java:242 ../model/archive/QueueFileFormat.java:92
 msgid "Job state (long description)"
-msgstr "Π΅ΠΎΡΡ‚ΠΎΡΠ½ΠΈΠµ Π·Π°Π΄Π°Π½ΠΈΡ (ΠΏΠΎΠ΄Ρ€ΠΎΠ±Π½ΠΎΠµ ΠΎΠΏΠΈΡΠ°Π½ΠΈΠµ)"
+msgstr ""
 
 #: ../JobFormat.java:246 ../model/archive/QueueFileFormat.java:93
 msgid "Notification when"
-msgstr "Π£Π²ΠµΠ΄ΠΎΠΌΠ»ΡΡ‚Ρ ΠΊΠΎΠ³Π΄Π°"
+msgstr ""
 
 #: ../JobFormat.java:246 ../model/archive/QueueFileFormat.java:93
 msgid "E-mail notification handling (long description)"
-msgstr "ΠΠΎΠ΄Π΄ΠµΡ€Π¶ΠΊΠ° ΡƒΠ²ΠµΠ΄ΠΎΠΌΠ»ΠµΠ½ΠΈΡ ΠΏΠΎ E-mail (ΠΏΠΎΠ΄Ρ€ΠΎΠ±Π½ΠΎΠµ ΠΎΠΏΠΈΡΠ°Π½ΠΈΠµ)"
+msgstr ""
 
 #: ../HylaClientManager.java:111
 msgid "Log in"
-msgstr "Π ΠµΠ³ΠΈΡΡ‚Ρ€Π°Ρ†ΠΈΡ Π½Π° ΡΠµΡ€Π²ΠµΡ€Πµ"
+msgstr ""
 
 #: ../HylaClientManager.java:111
 msgid "Please enter the credentials to log into the HylaFAX server:"
-msgstr "ΠΠΎΠ¶Π°Π»ΡƒΠΉΡΡ‚Π°, Π²Π²ΠµΠ΄ΠΈΡ‚Πµ ΡƒΡ‡ΠµΡ‚Π½Ρ‹Πµ Π΄Π°Π½Π½Ρ‹Πµ Π΄Π»Ρ Ρ€ΠµΠ³ΠΈΡΡ‚Ρ€Π°Ρ†ΠΈΠΈ Π½Π° ΡΠµΡ€Π²ΠµΡ€Πµ HylaFAX:"
+msgstr ""
 
 #: ../HylaClientManager.java:133
 msgid "User password"
-msgstr "ΠΠ°Ρ€ΠΎΠ»Ρ ΠΏΠΎΠ»ΡΠ·ΠΎΠ²Π°Ρ‚ΠµΠ»Ρ"
+msgstr "Κωδικός Χρήστη"
 
 #: ../HylaClientManager.java:133
 msgid "Please enter the user password:"
-msgstr "ΠΠΎΠ¶Π°Π»ΡƒΠΉΡΡ‚Π°, Π²Π²ΠµΠ΄ΠΈΡ‚Πµ ΠΏΠΎΠ»ΡΠ·ΠΎΠ²Π°Ρ‚ΠµΠ»ΡΡΠΊΠΈΠΉ ΠΏΠ°Ρ€ΠΎΠ»Ρ:"
+msgstr ""
 
 #: ../HylaClientManager.java:146 ../HylaClientManager.java:168
 msgid "An error occured in response to the password:"
-msgstr "ΠΡΠΈΠ±ΠΊΠ° Π°ΡƒΡ‚ΠµΠ½Ρ‚ΠΈΡ„ΠΈΠΊΠ°Ρ†ΠΈΠΈ:"
+msgstr "Σφάλμα προέκυψε στην ανταπόκριση του κωδικού για τον χρήστη:"
 
 #: ../HylaClientManager.java:159
 msgid "Admin password"
-msgstr "ΠΠ΄ΠΌΠΈΠ½ΠΈΡΡ‚Ρ€Π°Ρ‚ΠΈΠ²Π½Ρ‹ΠΉ ΠΏΠ°Ρ€ΠΎΠ»Ρ"
+msgstr "Κωδικός διαχειριστή"
 
 #: ../HylaClientManager.java:159
 msgid "Please enter the administrative password:"
-msgstr "ΠΠΎΠ¶Π°Π»ΡƒΠΉΡΡ‚Π°, Π²Π²ΠµΠ΄ΠΈΡ‚Πµ Π°Π΄ΠΌΠΈΠ½ΠΈΡΡ‚Ρ€Π°Ρ‚ΠΈΠ²Π½Ρ‹ΠΉ ΠΏΠ°Ρ€ΠΎΠ»Ρ:"
+msgstr ""
 
 #: ../plugin/PluginTableModel.java:44
 msgid "File name"
-msgstr "ΠΠΌΡ Ρ„Π°ΠΉΠ»Π°"
+msgstr "Όνομα αρχείου"
 
 #: ../plugin/PluginTableModel.java:44
 msgid "Type"
-msgstr "ΠΆΠΈΠΏ"
+msgstr "Tύπος"
 
 #: ../plugin/PluginTableModel.java:44
 msgid "Loaded"
-msgstr "Π—Π°Π³Ρ€ΡƒΠ¶ΠµΠ½"
+msgstr "Φορτώθηκε"
 
 #: ../plugin/PluginTableModel.java:44
 msgid "Only this session"
-msgstr "ΠΆΠΎΠ»ΡΠΊΠΎ Π΄Π»Ρ Ρ‚ΠµΠΊΡƒΡΠµΠ³ΠΎ ΡΠµΠ°Π½ΡΠ°"
+msgstr "Μόνο αυτή η ενότητα"
 
 #: ../plugin/PluginTableModel.java:48
 msgid "JDBC driver"
-msgstr "Π”Ρ€Π°ΠΉΠ²ΠµΡ€ JDBC"
+msgstr "Οδηγός JDBC"
 
 #: ../plugin/PluginTableModel.java:50
 msgid "Plugin"
-msgstr "ΠΠ»Π°Π³ΠΈΠ½"
+msgstr "Σύνδεση"
 
 #: ../Launcher2.java:503
 msgid "The new instance did not start after 20 seconds."
-msgstr "ΠΠΎΠ²Ρ‹ΠΉ ΡΠΊΠ·ΠµΠΌΠΏΠ»ΡΡ€ ΠΏΡ€ΠΎΠ³Ρ€Π°ΠΌΠΌΡ‹ Π½Πµ Π·Π°ΠΏΡƒΡΡ‚ΠΈΠ»ΡΡ Π² Ρ‚ΠµΡ‡ΠµΠ½ΠΈΠµ 20 ΡΠµΠΊΡƒΠ½Π΄."
+msgstr "Η νέα υπόδειξη απέτυχε να ξεκινήσει μετά απο 2 δευτ."
 
 #: ../Launcher2.java:517
 msgid ""
 "Cannot launch new program instance, continuing with the existing one!\n"
 "Reason: "
 msgstr ""
-"ΠΠµΠ²ΠΎΠ·ΠΌΠΎΠ¶Π½ΠΎ Π·Π°ΠΏΡƒΡΡ‚ΠΈΡ‚Ρ Π½ΠΎΠ²Ρ‹ΠΉ ΡΠΊΠ·ΠµΠΌΠΏΠ»ΡΡ€ ΠΏΡ€ΠΎΠ³Ρ€Π°ΠΌΠΌΡ‹!\n"
-"ΠΡ€ΠΈΡ‡ΠΈΠ½Π°:"
+"Δέν μπορεί να τρέξει η νέα υπόδειξη, συνέχιση με την υπάρχουσα!\n"
+"Λόγος: "
 
 #: ../Launcher2.java:539
 msgid "Error launching the new program instance:"
@@ -1407,45 +1392,46 @@ msgstr ""
 
 #: ../Launcher2.java:600
 msgid "There already is a running instance!"
-msgstr "Π£Π¶Πµ ΠΈΠΌΠµΠµΡ‚ΡΡ Π·Π°ΠΏΡƒΡ‰ΠµΠ½Π½Ρ‹ΠΉ ΡΠΊΠ·ΠµΠΌΠΏΠ»ΡΡ€ ΠΏΡ€ΠΎΠ³Ρ€Π°ΠΌΠΌΡ‹!"
+msgstr "Μία υπόδειξη εκτελείται ήδη!"
 
 #: ../options/OptionsWin.java:387 ../options/CoverPanel.java:81
 #: ../send/SendWin.java:478
 msgid "General"
-msgstr "ΠΠ±Ρ‰ΠΈΠµ"
+msgstr "Γενικός"
 
 #: ../options/OptionsWin.java:390
 msgid "Paths and viewers"
-msgstr "ΠΡƒΡ‚ΠΈ ΠΈ ΠΏΡ€ΠΎΡΠΌΠΎΡ‚Ρ€"
+msgstr ""
 
 #: ../options/OptionsWin.java:393
 msgid "Server"
-msgstr "Π΅ΠµΡ€Π²ΠµΡ€"
+msgstr ""
 
 #: ../options/OptionsWin.java:396
 msgid "Delivery"
-msgstr "Π”ΠΎΡΡ‚Π°Π²ΠΊΠ°"
+msgstr "Παράδοση"
 
 #: ../options/OptionsWin.java:399 ../send/SendWin.java:479
 msgid "Cover page"
-msgstr "ΠΆΠΈΡ‚ΡƒΠ»ΡΠ½Ρ‹ΠΉ Π»ΠΈΡΡ‚"
+msgstr "Εξώφυλλο"
 
 #: ../options/OptionsWin.java:404 ../options/OptionsWin.java:1094
 msgid "Plugins & JDBC"
-msgstr "ΠΠ»Π°Π³ΠΈΠ½Ρ‹ ΠΈ JDBC"
+msgstr ""
 
 #: ../options/OptionsWin.java:407
 msgid "Please select on the left which table you want to edit."
-msgstr "ΠΠΎΠ¶Π°Π»ΡƒΠΉΡΡ‚Π°, ΡΠ»ΠµΠ²Π° Π²Ρ‹Π±ΠµΡ€ΠΈΡ‚Πµ Ρ‚Π°Π±Π»ΠΈΡ†Ρƒ, ΠΊΠΎΡ‚ΠΎΡ€ΡƒΡ Π’Ρ‹ Ρ…ΠΎΡ‚ΠΈΡ‚Πµ Ρ€ΠµΠ΄Π°ΠΊΡ‚ΠΈΡ€ΠΎΠ²Π°Ρ‚Ρ."
+msgstr ""
+"Παρακαλώ διαλέξτε στα αριστερά τον πίνακα που θέλετε να επεξεργαστείτε."
 
 #: ../options/OptionsWin.java:415
 msgid "Tables"
-msgstr "ΠΆΠ°Π±Π»ΠΈΡ†Ρ‹"
+msgstr "Πίνακες"
 
 #: ../options/OptionsWin.java:416
 #, java-format
 msgid "Table \"{0}\""
-msgstr "ΠΆΠ°Π±Π»ΠΈΡ†Π° \"{0}\""
+msgstr "Πίνακας \"{0}\""
 
 #: ../options/OptionsWin.java:549
 msgid "Update check"
@@ -1457,123 +1443,123 @@ msgstr ""
 
 #: ../options/OptionsWin.java:571
 msgid "Connection settings:"
-msgstr "ΠΠ°Ρ€Π°ΠΌΠµΡ‚Ρ€Ρ‹ ΠΏΠΎΠ΄ΠΊΠ»ΡΡ‡ΠµΠ½ΠΈΡ:"
+msgstr "Ρυθμίσεις σύνδεσης:"
 
 #: ../options/OptionsWin.java:582 ../options/OptionsWin.java:588
 #: ../options/OptionsWin.java:594 ../phonebook/ldap/ConnectionDialog.java:144
 #: ../phonebook/jdbc/ConnectionDialog.java:203
 msgid "Always ask"
-msgstr "Π—Π°ΠΏΡ€Π°ΡΠΈΠ²Π°Ρ‚Ρ"
+msgstr "Να γίνεται πάντα ερώτηση"
 
 #: ../options/OptionsWin.java:609
 msgid "Use passive mode to fetch faxes"
-msgstr "ΠΡΠΏΠΎΠ»ΡΠ·ΠΎΠ²Π°Ρ‚Ρ ΠΏΠ°ΡΡΠΈΠ²Π½Ρ‹ΠΉ Ρ€ΠµΠ¶ΠΈΠΌ ΠΏΡ€ΠΈ Π·Π°Π³Ρ€ΡƒΠ·ΠΊΠµ Ρ„Π°ΠΊΡΠΎΠ²"
+msgstr "Χρησιμοποίησε παθητικό τρόπο για να λάβεις τα φαξ"
 
 #: ../options/OptionsWin.java:611
 msgid "Host name:"
-msgstr "ΠΠΌΡ Ρ…ΠΎΡΡ‚Π°:"
+msgstr "Όνομα οικοδεσπότη:"
 
 #: ../options/OptionsWin.java:612 ../phonebook/ldap/ConnectionDialog.java:183
 msgid "Port:"
-msgstr "ΠΠΎΡ€Ρ‚:"
+msgstr "Θύρα:"
 
 #: ../options/OptionsWin.java:613 ../phonebook/jdbc/ConnectionDialog.java:224
 #: ../util/PasswordDialog.java:80
 msgid "Username:"
-msgstr "ΠΠΌΡ ΠΏΠΎΠ»ΡΠ·ΠΎΠ²Π°Ρ‚ΠµΠ»Ρ:"
+msgstr "Όνομα χρήστη:"
 
 #: ../options/OptionsWin.java:616 ../phonebook/ldap/ConnectionDialog.java:188
 #: ../phonebook/jdbc/ConnectionDialog.java:227 ../util/PasswordDialog.java:83
 msgid "Password:"
-msgstr "ΠΠ°Ρ€ΠΎΠ»Ρ:"
+msgstr "Σύνθημα:"
 
 #: ../options/OptionsWin.java:618
 msgid "Admin Password:"
-msgstr "ΠΠ°Ρ€ΠΎΠ»Ρ Π°Π΄ΠΌΠΈΠ½ΠΈΡΡ‚Ρ€Π°Ρ‚ΠΎΡ€Π°:"
+msgstr "Σύνθημα χρήστη:"
 
 #: ../options/OptionsWin.java:646
 msgid "User interface"
-msgstr "ΠΠΎΠ»ΡΠ·ΠΎΠ²Π°Ρ‚ΠµΠ»ΡΡΠΊΠΈΠΉ ΠΈΠ½Ρ‚ΠµΡ€Ρ„ΠµΠΉΡ"
+msgstr "Διασυνδετικό στοιχείο χρήστη"
 
 #: ../options/OptionsWin.java:668
 msgid "Show tray icon"
-msgstr "ΠΠΎΠΊΠ°Π·Ρ‹Π²Π°Ρ‚Ρ ΠΈΠΊΠΎΠ½ΠΊΡƒ Π² Ρ‚Ρ€ΠµΠµ"
+msgstr ""
 
 #: ../options/OptionsWin.java:669
 msgid "Show a system tray icon (works only with Java 6 or higher)"
-msgstr "ΠΠΎΠΊΠ°Π·Ρ‹Π²Π°Ρ‚Ρ ΠΈΠΊΠΎΠ½ΠΊΡƒ Π² ΡΠΈΡΡ‚ΠµΠΌΠ½ΠΎΠΌ Ρ‚Ρ€ΠµΠµ (Ρ€Π°Π±ΠΎΡ‚Π°ΠµΡ‚ Ρ‚ΠΎΠ»ΡΠΊΠΎ Ρ Java 6 ΠΈΠ»ΠΈ Π²Ρ‹ΡΠµ)"
+msgstr ""
 
 #: ../options/OptionsWin.java:677
 msgid "Minimize to tray"
-msgstr "Π΅Π²ΠΎΡ€Π°Ρ‡ΠΈΠ²Π°Ρ‚Ρ Π² Ρ‚Ρ€ΠµΠΉ"
+msgstr "Ελαχιστοποίησε στον πίνακα"
 
 #: ../options/OptionsWin.java:681
 msgid "Language:"
-msgstr "Π―Π·Ρ‹ΠΊ:"
+msgstr "Γλώσσα:"
 
 #: ../options/OptionsWin.java:682
 msgid "Look and Feel:"
-msgstr "ΠΆΠµΠΌΠ°:"
+msgstr "Όψη και αίσθηση:"
 
 #: ../options/OptionsWin.java:683
 msgid "Style of send dialog:"
-msgstr "Π΅Ρ‚ΠΈΠ»Ρ ΠΎΠΊΠ½Π° ΠΎΡ‚ΠΏΡ€Π°Π²ΠΊΠΈ:"
+msgstr "Στιλ του σταλμένου παραθύρου διαλόγου:"
 
 #: ../options/OptionsWin.java:706
 msgid "Actions after receiving a new fax:"
-msgstr "Π”ΠµΠΉΡΡ‚Π²ΠΈΡ ΠΏΠΎΡΠ»Πµ ΠΏΡ€ΠΈΠµΠΌΠ° Π½ΠΎΠ²ΠΎΠ³ΠΎ Ρ„Π°ΠΊΡΠ°:"
+msgstr "Ενέργειες μετά τη λήψη ενός νέου φαξ:"
 
 #: ../options/OptionsWin.java:708
 msgid "Beep"
-msgstr "Π—Π²ΡƒΠΊΠΎΠ²ΠΎΠΉ ΡΠΈΠ³Π½Π°Π»"
+msgstr ";Hxoς σήματος"
 
 #: ../options/OptionsWin.java:709
 msgid "Bring to front"
-msgstr "ΠΠµΡ€ΠµΠΌΠµΡΡ‚ΠΈΡ‚Ρ Π½Π° ΠΏΠµΡ€ΠµΠ΄Π½ΠΈΠΉ ΠΏΠ»Π°Π½"
+msgstr "Φέρε μπροστά"
 
 #: ../options/OptionsWin.java:710
 msgid "Open in viewer"
-msgstr "ΠΡ‚ΠΊΡ€Ρ‹Ρ‚Ρ Π² ΠΏΡ€ΠΎΠ³Ρ€Π°ΠΌΠΌΠµ ΠΏΡ€ΠΎΡΠΌΠΎΡ‚Ρ€Π°"
+msgstr "Άνοιξε στην οθόνη"
 
 #: ../options/OptionsWin.java:716
 msgid "And mark as read"
-msgstr "ΠΠΎΠΌΠµΡ‚ΠΈΡ‚Ρ ΠΊΠ°ΠΊ ΠΏΡ€ΠΎΡ‡ΠΈΡ‚Π°Π½Π½Ρ‹ΠΉ"
+msgstr "Και σημείωσε το σαν διαβασμένο"
 
 #: ../options/OptionsWin.java:718
 msgid "Show flashing tray icon"
-msgstr "ΠΠΎΠΊΠ°Π·Ρ‹Π²Π°Ρ‚Ρ ΠΌΠΈΠ³Π°ΡΡ‰ΡƒΡ ΠΈΠΊΠΎΠ½ΠΊΡƒ Π² Ρ‚Ρ€ΠµΠµ"
+msgstr ""
 
 #: ../options/OptionsWin.java:736
 msgid "Date and Time Format:"
-msgstr "Π¤ΠΎΡ€ΠΌΠ°Ρ‚ Π΄Π°Ρ‚Ρ‹ ΠΈ Π²Ρ€ΠµΠΌΠµΠ½ΠΈ:"
+msgstr ""
 
 #: ../options/OptionsWin.java:743
 msgid "Date format:"
-msgstr "Π¤ΠΎΡ€ΠΌΠ°Ρ‚ Π΄Π°Ρ‚Ρ‹:"
+msgstr ""
 
 #: ../options/OptionsWin.java:744
 msgid "Time format:"
-msgstr "Π¤ΠΎΡ€ΠΌΠ°Ρ‚ Π²Ρ€ΠµΠΌΠµΠ½ΠΈ:"
+msgstr ""
 
 #: ../options/OptionsWin.java:765
 msgid "General settings:"
-msgstr "ΠΠ±Ρ‰ΠΈΠµ Π½Π°ΡΡ‚Ρ€ΠΎΠΉΠΊΠΈ:"
+msgstr "Γενικές ρυθμίσεις:"
 
 #: ../options/OptionsWin.java:767
 msgid "Use PCL file type bugfix"
-msgstr "ΠΡΠΏΡ€Π°Π²Π»ΡΡ‚Ρ ΠΎΡΠΈΠ±ΠΊΡƒ Ρ€Π°ΡΠΏΠΎΠ·Π½Π°Π²Π°Π½ΠΈΡ PCL Ρ„Π°ΠΉΠ»ΠΎΠ²"
+msgstr "Χρησιμοποίησε PCL αρχείο τύπου bugfix"
 
 #: ../options/OptionsWin.java:773
 msgid ""
 "The maximum time to wait for a interaction with the server to complete. "
 "Values below 5 are not recommended; 0 disables this timeout."
 msgstr ""
-"ΠΠ°ΠΊΡΠΈΠΌΠ°Π»ΡΠ½ΠΎΠµ Π²Ρ€ΠµΠΌΡ ΠΎΠ¶ΠΈΠ΄Π°Π½ΠΈΡ Π·Π°Π²ΠµΡ€ΡΠµΠ½ΠΈΡ Π²Π·Π°ΠΈΠΌΠΎΠ΄ΠµΠΉΡΡ‚Π²ΠΈΡ Ρ ΡΠµΡ€Π²ΠµΡ€ΠΎΠΌ. Π—Π½Π°Ρ‡ΠµΠ½ΠΈΡ "
-"ΠΌΠµΠ½ΠµΠµ 5 Π½Πµ Ρ€ΠµΠΊΠΎΠΌΠµΠ½Π΄ΡƒΡΡ‚ΡΡ; 0 ΠΎΡ‚ΠΊΠ»ΡΡ‡Π°ΠµΡ‚ Ρ‚Π°ΠΉΠΌ-Π°ΡƒΡ‚."
+"Ο μέγιστος χρόνος αναμονής για την ολοκλήρωση αλληλεπίδρασης με τον σερβερ. "
+"Τιμές κάτω του 5 δεν συνιστώνται, 0 απενεργοποιεί αυτό το χρονικό όριο."
 
 #: ../options/OptionsWin.java:778
 msgid "Create new session for every action"
-msgstr "Π΅ΠΎΠ·Π΄Π°Π²Π°Ρ‚Ρ Π½ΠΎΠ²Ρ‹ΠΉ ΡΠµΠ°Π½Ρ Π΄Π»Ρ ΠΊΠ°Π¶Π΄ΠΎΠ³ΠΎ Π΄ΠµΠΉΡΡ‚Π²ΠΈΡ"
+msgstr "Δημιουργήστε νέα περίοδο για κάθε ενέργεια"
 
 #: ../options/OptionsWin.java:779
 msgid ""
@@ -1581,767 +1567,772 @@ msgid ""
 "tables, ...) and disconnect afterwards. This impairs performance but might "
 "work around some bugs."
 msgstr ""
-"Π΅ΠΎΠµΠ΄ΠΈΠ½ΡΡ‚ΡΡΡ Ρ ΡΠµΡ€Π²ΠµΡ€ΠΎΠΌ ΠΈ Π°Π²Ρ‚ΠΎΡ€ΠΈΠ·ΠΎΠ²Π°Ρ‚ΡΡΡ ΠΏΡ€ΠΈ ΠΊΠ°Π¶Π΄ΠΎΠΌ Π΄ΠµΠΉΡΡ‚Π²ΠΈΠΈ (ΠΏΡ€ΠΎΡΠΌΠΎΡ‚Ρ€ Ρ„Π°ΠΊΡΠ°, "
-"ΠΎΠ±Π½ΠΎΠ²Π»ΠµΠ½ΠΈΠµ Ρ‚Π°Π±Π»ΠΈΡ†, ...) Ρ ΠΏΠΎΡΠ»ΠµΠ΄ΡƒΡΡ‰ΠΈΠΌ ΠΎΡ‚ΡΠΎΠµΠ΄ΠΈΠ½ΠµΠ½ΠΈΠµΠΌ. Π­Ρ‚ΠΎ ΡΠ½ΠΈΠ¶Π°ΠµΡ‚ "
-"ΠΏΡ€ΠΎΠΈΠ·Π²ΠΎΠ΄ΠΈΡ‚ΠµΠ»ΡΠ½ΠΎΡΡ‚Ρ,Π½ΠΎ ΠΌΠΎΠ¶ΠµΡ‚ ΠΏΠΎΠΌΠΎΡ‡Ρ ΠΎΠ±ΠΎΠΉΡ‚ΠΈ Π½ΠµΠΊΠΎΡ‚ΠΎΡ€Ρ‹Πµ ΠΎΡΠΈΠ±ΠΊΠΈ."
+"Συνδεθείτε στον σέρβερ και μπείτε μέσα για κάθε ενέργεια (π.χ. προβολή ενός "
+"φαξ, αναβάθμιση πινάκων, ...) και έπειτα αποσυνδεθείτε. Αυτό φθείρει/"
+"εξασθενήσει την απόδοση μα μπορεί να φθάσει/καταλήξει σε κάποιους ιούς."
 
 #: ../options/OptionsWin.java:781
 msgid "Date/Time offset:"
-msgstr "Π§Π°ΡΠΎΠ²ΠΎΠΉ ΠΏΠΎΡΡ:"
+msgstr "Ημερομηνία/Αντιστάθμισμα/Διαφορά ώρας:"
 
 #: ../options/OptionsWin.java:782
 msgid ""
 "Offset to be added to dates received from the HylaFAX server before "
 "displaying them."
 msgstr ""
-"Π‘ΡƒΠ΄ΠµΡ‚ ΠΏΡ€ΠΈΠ±Π°Π²Π»ΡΡ‚ΡΡΡ ΠΊ Π²Ρ€ΠµΠΌΠµΠ½ΠΈ ΠΏΠΎΠ»ΡƒΡ‡ΠµΠ½ΠΈΡ Ρ„Π°ΠΊΡΠ° ΡΠµΡ€Π²ΠµΡ€ΠΎΠΌ HylaFAX ΠΏΠµΡ€ΠµΠ΄ "
-"ΠΎΡ‚ΠΎΠ±Ρ€Π°Π¶ΠµΠ½ΠΈΠµΠΌ."
+"Αντιστάθμισμα να προστεθεί στις ημερομηνίες που έχουν παραληφθεί από τον "
+"HylaFAX σέρβερ πριν από τη"
 
 #: ../options/OptionsWin.java:787
 msgid "Table refresh interval (secs.):"
-msgstr "ΠΠ½Ρ‚ΠµΡ€Π²Π°Π» ΠΎΠ±Π½ΠΎΠ²Π»ΠµΠ½ΠΈΡ Ρ‚Π°Π±Π»ΠΈΡ† (ΡΠµΠΊ.):"
+msgstr "Διάλειμμα ανανέωσης πίνακα (secs.):"
 
 #: ../options/OptionsWin.java:788
 msgid "Server status refresh interval (secs.):"
-msgstr "ΠΠ½Ρ‚ΠµΡ€Π²Π°Π» ΠΎΠ±Π½ΠΎΠ²Π»ΠµΠ½ΠΈΡ ΡΠΎΡΡ‚ΠΎΡΠ½ΠΈΡ ΡΠµΡ€Π²ΠµΡ€Π° (ΡΠµΠΊ.):"
+msgstr "Διάλειμμα ανανέωσης κατάστασης σέρβερ(secs.):"
 
 #: ../options/OptionsWin.java:789
 msgid "Server socket timeout (secs):"
-msgstr "Π’Ρ€ΠµΠΌΡ ΠΎΠ¶ΠΈΠ΄Π°Π½ΠΈΡ ΡΠµΡ€Π²ΠµΡ€Π° (ΡΠµΠΊ.):"
+msgstr "Διάλειμμα υποδοχής σέρβερ (secs):"
 
 #: ../options/OptionsWin.java:808
 msgid "Delivery settings"
-msgstr "ΠΠ°Ρ€Π°ΠΌΠµΡ‚Ρ€Ρ‹ Π΄ΠΎΡΡ‚Π°Π²ΠΊΠΈ"
+msgstr "Ρυθμίσεις παραλαβής"
 
 #: ../options/OptionsWin.java:828
 msgid "E-mail address for notifications:"
-msgstr "E-mail Π΄Π»Ρ ΡƒΠ²ΠµΠ΄ΠΎΠΌΠ»ΠµΠ½ΠΈΠΉ:"
+msgstr "Διεύθυνση E-mail για γνωστοποιήσεις:"
 
 #: ../options/OptionsWin.java:829 ../send/SendWin.java:464
 #: ../send/SimplifiedSendDialog.java:513
 msgid "Notify when:"
-msgstr "Π£Π²ΠµΠ΄ΠΎΠΌΠ»ΡΡ‚Ρ ΠΊΠΎΠ³Π΄Π°:"
+msgstr "Γνωστοποίηση όταν:"
 
 #: ../options/OptionsWin.java:830 ../send/SendWin.java:465
 #: ../send/SimplifiedSendDialog.java:514
 msgid "Modem:"
-msgstr "ΠΠΎΠ΄ΠµΠΌ:"
+msgstr ""
 
 #: ../options/OptionsWin.java:831
 msgid "Time zone:"
-msgstr "Π§Π°ΡΠΎΠ²ΠΎΠΉ ΠΏΠΎΡΡ:"
+msgstr "Ζώνη ώρας:"
 
 #: ../options/OptionsWin.java:832 ../send/SendWin.java:466
 #: ../send/SimplifiedSendDialog.java:515
 msgid "Resolution:"
-msgstr "Π Π°Π·Ρ€ΠµΡΠµΠ½ΠΈΠµ:"
+msgstr "Ευκρίνεια:"
 
 #: ../options/OptionsWin.java:833 ../send/SendWin.java:467
 #: ../send/SimplifiedSendDialog.java:516
 msgid "Paper size:"
-msgstr "Π Π°Π·ΠΌΠµΡ€ Π±ΡƒΠΌΠ°Π³ΠΈ:"
+msgstr "Μέγεθος χαρτιού:"
 
 #: ../options/OptionsWin.java:834 ../send/SendWin.java:468
 #: ../send/SimplifiedSendDialog.java:517
 msgid "Cancel job after (minutes):"
-msgstr "ΠΡ‚ΠΌΠµΠ½ΠΈΡ‚Ρ Π·Π°Π΄Π°Π½ΠΈΠµ ΠΏΠΎΡΠ»Πµ (ΠΌΠΈΠ½ΡƒΡ‚):"
+msgstr "Ακύρωση εργασίας μετα από (λεπτά):"
 
 #: ../options/OptionsWin.java:835
 msgid "Maximum dials:"
-msgstr "ΠΠ°ΠΊΡΠΈΠΌΡƒΠΌ Π΄ΠΎΠ·Π²ΠΎΠ½ΠΎΠ²:"
+msgstr "Mέγιστος αριθμός κλήσεων:"
 
 #: ../options/OptionsWin.java:836 ../send/SendWin.java:469
 #: ../send/SimplifiedSendDialog.java:518
 msgid "Maximum tries:"
-msgstr "ΠΠ°ΠΊΡΠΈΠΌΡƒΠΌ ΠΏΠΎΠΏΡ‹Ρ‚ΠΎΠΊ:"
+msgstr "Mέγιστος αριθμός προσπαθειών:"
 
 #: ../options/OptionsWin.java:863 ../options/OptionsWin.java:870
 #: ../options/OptionsWin.java:877 ../options/ArchivePanel.java:77
 msgid "Selected columns:"
-msgstr "Π’Ρ‹Π±Ρ€Π°Π½Π½Ρ‹Πµ ΠΊΠΎΠ»ΠΎΠ½ΠΊΠΈ:"
+msgstr "Επιλεγμένες στήλες:"
 
 #: ../options/OptionsWin.java:863 ../options/OptionsWin.java:870
 #: ../options/OptionsWin.java:877 ../options/ArchivePanel.java:77
 msgid "Available columns:"
-msgstr "Π”ΠΎΡΡ‚ΡƒΠΏΠ½Ρ‹Πµ ΠΊΠΎΠ»ΠΎΠ½ΠΊΠΈ:"
+msgstr "Διαθέσιμες στήλες:"
 
 #: ../options/OptionsWin.java:925
 msgid "(System native)"
-msgstr "(Π΅ΠΈΡΡ‚ΠµΠΌΠ½Π°Ρ)"
+msgstr "Μητρικό σύστημα"
 
 #: ../options/OptionsWin.java:926
 msgid "(Crossplatform)"
-msgstr "(ΠΡ€ΠΎΡΡΠΏΠ»Π°Ρ‚Ρ„ΠΎΡ€ΠΌΠµΠ½Π½Π°Ρ)"
+msgstr ""
 
 #: ../options/OptionsWin.java:1039
 msgid ""
 "You must restart the program for the change of the language to take effect."
-msgstr "ΠΠµΡ€ΠµΠ·Π°ΠΏΡƒΡΡ‚ΠΈΡ‚Πµ ΠΏΡ€ΠΎΠ³Ρ€Π°ΠΌΠΌΡƒ, Ρ‡Ρ‚ΠΎΠ±Ρ‹ ΠΈΠ·ΠΌΠµΠ½ΠΈΠµΠ½ΠΈΠµ ΡΠ·Ρ‹ΠΊΠ° Π²ΡΡ‚ΡƒΠΏΠΈΠ»ΠΎ Π² ΡΠΈΠ»Ρƒ."
+msgstr ""
+"Πρέπει να γίνει επανεκκίνηση του προγράμματος για να γίνει χρήση της αλλαγής "
+"γλώσσας."
 
 #: ../options/OptionsWin.java:1094
 msgid ""
 "You will need to restart the program for the changes to the list of plugins "
 "and JDBC drivers to take full effect."
 msgstr ""
-"Π§Ρ‚ΠΎΠ±Ρ‹ ΠΈΠ·ΠΌΠµΠ½ΠµΠ½ΠΈΡ Π² ΡΠΏΠΈΡΠΊΠµ ΠΏΠ»Π°Π³ΠΈΠ½ΠΎΠ² ΠΈ Π΄Ρ€Π°ΠΉΠ²ΠµΡ€ΠΎΠ² JDBC Π²ΡΡ‚ΡƒΠΏΠΈΠ»ΠΈ Π² ΡΠΈΠ»Ρƒ, "
-"ΠΏΠµΡ€ΠµΠ·Π°ΠΏΡƒΡΡ‚ΠΈΡ‚Πµ ΠΏΡ€ΠΎΠ³Ρ€Π°ΠΌΠΌΡƒ."
 
 #: ../options/OptionsWin.java:1099
 msgid "Error saving the settings:"
-msgstr "ΠΡΠΈΠ±ΠΊΠ° ΡΠΎΡ…Ρ€Π°Π½ΠµΠ½ΠΈΡ Π½Π°ΡΡ‚Ρ€ΠΎΠµΠΊ:"
+msgstr "Σφάλμα στην αποθήκευση των ρυθμίσεων:"
 
 #: ../options/OptionsWin.java:1113
 msgid "Please enter a host name."
-msgstr "ΠΠΎΠ¶Π°Π»ΡƒΠΉΡΡ‚Π°, Π²Π²ΠµΠ΄ΠΈΡ‚Πµ ΠΈΠΌΡ Ρ…ΠΎΡΡ‚Π°."
+msgstr "Παρακαλώ εισάγετε ένα όνομα οικοδεσπότη."
 
 #: ../options/OptionsWin.java:1119
 msgid "Please enter a user name."
-msgstr "ΠΠΎΠ¶Π°Π»ΡƒΠΉΡΡ‚Π°, Π²Π²ΠµΠ΄ΠΈΡ‚Πµ ΠΈΠΌΡ ΠΏΠΎΠ»ΡΠ·ΠΎΠ²Π°Ρ‚ΠµΠ»Ρ."
+msgstr "Παρακαλώ εισάγετε ένα όνομα χρήστη."
 
 #: ../options/OptionsWin.java:1137
 msgid "Please enter a valid port number."
-msgstr "ΠΠΎΠ¶Π°Π»ΡƒΠΉΡΡ‚Π°, Π²Π²ΠµΠ΄ΠΈΡ‚Πµ Π΄ΠΎΠΏΡƒΡΡ‚ΠΈΠΌΡ‹ΠΉ Π½ΠΎΠΌΠµΡ€ ΠΏΠΎΡ€Ρ‚Π°."
+msgstr "Παρακαλώ εισάγετε έναν έγκυρο αριθμό θύρας."
 
 #: ../options/OptionsWin.java:1146
 msgid "Please enter a valid date format:"
-msgstr "ΠΠΎΠ¶Π°Π»ΡƒΠΉΡΡ‚Π°, Π²Π²ΠµΠ΄ΠΈΡ‚Πµ ΠΏΡ€Π°Π²ΠΈΠ»ΡΠ½Ρ‹ΠΉ Ρ„ΠΎΡ€ΠΌΠ°Ρ‚ Π΄Π°Ρ‚Ρ‹:"
+msgstr ""
 
 #: ../options/OptionsWin.java:1154
 msgid "Please enter a valid time format."
-msgstr "ΠΠΎΠ¶Π°Π»ΡƒΠΉΡΡ‚Π°, Π²Π²ΠµΠ΄ΠΈΡ‚Πµ ΠΏΡ€Π°Π²ΠΈΠ»ΡΠ½Ρ‹ΠΉ Ρ„ΠΎΡ€ΠΌΠ°Ρ‚ Π²Ρ€ΠµΠΌΠµΠ½ΠΈ:"
+msgstr ""
 
 #: ../options/OptionsWin.java:1203
 msgid "Read/Unread state of faxes"
-msgstr "Π΅ΠΎΡΡ‚ΠΎΡΠ½ΠΈΠµ Ρ„Π°ΠΊΡΠΎΠ² ΠΡ€ΠΎΡ‡ΠΈΡ‚Π°Π½ΠΎ/ΠΠµΠΏΡ€ΠΎΡ‡ΠΈΡ‚Π°Π½ΠΎ"
+msgstr "Αναγνωσμένα/Μη αναγνωσμένα κατάσταση των φαξ"
 
 #: ../options/OptionsWin.java:1237
 msgid "Configure..."
-msgstr "ΠΠ°ΡΡ‚Ρ€ΠΎΠΈΡ‚Ρ..."
+msgstr "Συντονίζει..."
 
 #: ../options/OptionsWin.java:1241
 msgid "Save location:"
-msgstr "Π΅ΠΎΡ…Ρ€Π°Π½ΡΡ‚Ρ Π²:"
+msgstr "Αποθήκευση τοποθεσίας:"
 
 #: ../options/OptionsWin.java:1296
 msgid "JAR files"
-msgstr "JAR Ρ„Π°ΠΉΠ»Ρ‹"
+msgstr "JAR αρχεία"
 
 #: ../options/OptionsWin.java:1309 ../options/OptionsWin.java:1333
 msgid "Add JDBC driver"
-msgstr "Π”ΠΎΠ±Π°Π²ΠΈΡ‚Ρ Π΄Ρ€Π°ΠΉΠ²ΠµΡ€ JDBC"
+msgstr "Προσθήκη JDBC οδηγού"
 
 #: ../options/OptionsWin.java:1315 ../options/OptionsWin.java:1320
 #: ../options/OptionsWin.java:1336
 msgid "Add plugin"
-msgstr "Π”ΠΎΠ±Π°Π²ΠΈΡ‚Ρ ΠΏΠ»Π°Π³ΠΈΠ½"
+msgstr "Προσθήκη plugin"
 
 #: ../options/OptionsWin.java:1320
 #, java-format
 msgid "The file {0} is not a valid YajHFC plugin!"
-msgstr "Π¤Π°ΠΉΠ» {0} Π½Πµ ΡΠ²Π»ΡΠµΡ‚ΡΡ ΠΏΠ»Π°Π³ΠΈΠ½ΠΎΠΌ YajHFC!"
+msgstr "Tο αρχείο {0} δεν είναι έγκυρο YajHFC plugin!"
 
 #: ../options/OptionsWin.java:1339
 msgid "Remove item"
-msgstr "Π£Π΄Π°Π»ΠΈΡ‚Ρ ΡΠ»ΠµΠΌΠµΠ½Ρ‚"
+msgstr "Μετακίνηση στοιχείου"
 
 #: ../options/CoverPanel.java:84
 msgid "Use a custom default cover page:"
-msgstr "ΠΡΠΏΠΎΠ»ΡΠ·ΠΎΠ²Π°Ρ‚Ρ Ρ‚ΠΈΡ‚ΡƒΠ»ΡΠ½Ρ‹ΠΉ Π»ΠΈΡΡ‚ ΠΏΠΎ ΡƒΠΌΠΎΠ»Ρ‡Π°Π½ΠΈΡ:"
+msgstr ""
 
 #: ../options/CoverPanel.java:108
 msgid "Name format:"
-msgstr "Π¤ΠΎΡ€ΠΌΠ°Ρ‚ ΠΈΠΌΠµΠ½ΠΈ:"
+msgstr "Διαμόρφωση ονόματος:"
 
 #: ../options/CoverPanel.java:110
 msgid "Company format:"
-msgstr "Π¤ΠΎΡ€ΠΌΠ°Ρ‚ ΠΊΠΎΠΌΠΏΠ°Π½ΠΈΠΈ:"
+msgstr "Διαμόρφωση εταιρείας:"
 
 #: ../options/CoverPanel.java:112
 msgid "Location format:"
-msgstr "Π¤ΠΎΡ€ΠΌΠ°Ρ‚ Π°Π΄Ρ€ΠµΡΠ°:"
+msgstr "Διαμόρφωση τοποθεσίας:"
 
 #: ../options/CoverPanel.java:114
 msgid "ZIP code format:"
-msgstr "Π¤ΠΎΡ€ΠΌΠ°Ρ‚ ΠΏΠΎΡ‡Ρ‚ΠΎΠ²ΠΎΠ³ΠΎ ΠΈΠ½Π΄ΠµΠΊΡΠ°:"
+msgstr "ZIP κωδικός διαμόρφωσης:"
 
 #: ../options/CoverPanel.java:167
 msgid "Sender data"
-msgstr "Π”Π°Π½Π½Ρ‹Πµ ΠΎΡ‚ΠΏΡ€Π°Π²ΠΈΡ‚ΠµΠ»Ρ"
+msgstr "Αποστολέας δεδομένων"
 
 #: ../options/CoverPanel.java:240
 msgid "The selected default cover page can not be read."
-msgstr "ΠΠµΠ²ΠΎΠ·ΠΌΠΎΠ¶Π½ΠΎ ΠΏΡ€ΠΎΡ‡ΠΈΡ‚Π°Ρ‚Ρ Π²Ρ‹Π±Ρ€Π°Π½Π½Ρ‹ΠΉ Ρ‚ΠΈΡ‚ΡƒΠ»ΡΠ½Ρ‹ΠΉ Π»ΠΈΡΡ‚ ΠΏΠΎ ΡƒΠΌΠΎΠ»Ρ‡Π°Π½ΠΈΡ."
+msgstr "Το εξ'ορισμού επιλεγμένο εξώφυλλο δεν μπορεί να διαβαστεί."
 
 #: ../options/MultiFileMode.java:28
 msgid "Multiple files, no conversion"
-msgstr "ΠΠµΡΠΊΠΎΠ»ΡΠΊΠΎ Ρ„Π°ΠΉΠ»ΠΎΠ², Π±ΠµΠ· ΠΏΡ€ΠµΠΎΠ±Ρ€Π°Π·ΠΎΠ²Π°Π½ΠΈΡ"
+msgstr ""
 
 #: ../options/MultiFileMode.java:29
 msgid "Single file except for cover (needs GhostScript+tiff2pdf)"
-msgstr "ΠΠ΄ΠΈΠ½ Ρ„Π°ΠΉΠ», ΠΈΡΠΊΠ»ΡΡ‡Π°Ρ Ρ‚ΠΈΡ‚ΡƒΠ»ΡΠ½Ρ‹ΠΉ Π»ΠΈΡΡ‚ (Ρ‚Ρ€ΠµΠ±ΡƒΠµΡ‚ΡΡ GhostScript+tiff2pdf)"
+msgstr ""
 
 #: ../options/MultiFileMode.java:30
 msgid "Complete fax as single file (needs GhostScript+tiff2pdf)"
-msgstr "Π’ΠµΡΡ Ρ„Π°ΠΊΡ Π² ΠΎΠ΄Π½ΠΎΠΌ Ρ„Π°ΠΉΠ»Πµ (Ρ‚Ρ€ΠµΠ±ΡƒΠµΡ‚ΡΡ GhostScript+tiff2pdf)"
+msgstr ""
 
 #: ../options/ArchivePanel.java:65
 msgid "Location of archive directory:"
-msgstr "Π Π°Π·ΠΌΠµΡ‰ΠµΠ½ΠΈΠµ ΠΊΠ°Ρ‚Π»ΠΎΠ³Π° Π°Ρ€Ρ…ΠΈΠ²Π°:"
+msgstr ""
 
 #: ../options/ArchivePanel.java:67
 msgid "Show archive table"
-msgstr "ΠΠΎΠΊΠ°Π·Ρ‹Π²Π°Ρ‚Ρ Ρ‚Π°Π±Π»ΠΈΡ†Ρƒ \"ΠΡ€Ρ…ΠΈΠ²\""
+msgstr ""
 
 #: ../options/PathAndViewPanel.java:81
 msgid "Path settings"
-msgstr "ΠΡƒΡ‚ΠΈ"
+msgstr "Pυθμίσεις διαδρομής"
 
 #: ../options/PathAndViewPanel.java:98
 msgid "Same as PostScript viewer"
-msgstr "ΠΆΠ°ΠΊΠ°Ρ Π¶Πµ ΠΊΠ°ΠΊ ΠΈ Π΄Π»Ρ ΠΏΡ€ΠΎΠ³Ρ€Π°ΠΌΠΌΡ‹ ΠΏΡ€ΠΎΡΠΌΠΎΡ‚Ρ€Π° PostScript"
+msgstr ""
 
 #: ../options/PathAndViewPanel.java:106
 msgid ""
 "Command line for fax viewer: (insert %s as a placeholder for the filename)"
 msgstr ""
-"ΠΠΎΠΌΠ°Π½Π΄Π½Π°Ρ ΡΡ‚Ρ€ΠΎΠΊΠ° Π΄Π»Ρ ΠΏΡ€ΠΎΠ³Ρ€Π°ΠΌΠΌΡ‹ ΠΏΡ€ΠΎΡΠΌΠΎΡ‚Ρ€Π° Ρ„Π°ΠΊΡΠΎΠ²: (ΠΈΡΠΏΠΎΠ»ΡΠ·ΡƒΠΉΡ‚Πµ %s ΠΊΠ°ΠΊ "
-"Π·Π°ΠΌΠµΡΡ‚ΠΈΡ‚ΠµΠ»Ρ ΠΈΠΌΠµΠ½ΠΈ Ρ„Π°ΠΉΠ»Π°)"
+"Γραμμή εντολής για τον αναγνώστη του φαξ: (εισάγετε %s as a placeholder για "
+"το όνομα του αρχείου )"
 
 #: ../options/PathAndViewPanel.java:108
 msgid ""
 "Command line for Postscript viewer: (insert %s as a placeholder for the "
 "filename)"
 msgstr ""
-"ΠΠΎΠΌΠ°Π½Π΄Π½Π°Ρ ΡΡ‚Ρ€ΠΎΠΊΠ° Π΄Π»Ρ ΠΏΠΎΠ³Ρ€Π°ΠΌΠΌΡ‹ ΠΏΡ€ΠΎΡΠΌΠΎΡ‚Ρ€Π° Postscript: (ΠΈΡΠΏΠΎΠ»ΡΠ·ΡƒΠΉΡ‚Πµ %s ΠΊΠ°ΠΊ "
-"Π·Π°ΠΌΠµΡΡ‚ΠΈΡ‚ΠµΠ»Ρ ΠΈΠΌΠµΠ½ΠΈ Ρ„Π°ΠΉΠ»Π°)"
+"Γραμμή εντολής για τον αναγνώστη του υστερόγραφου: (εισάγετε %s as a "
+"placeholder για το  όνομα του αρχείου)"
 
 #: ../options/PathAndViewPanel.java:110
 msgid ""
 "Command line for PDF viewer: (insert %s as a placeholder for the filename)"
 msgstr ""
-"ΠΠΎΠΌΠ°Π½Π΄Π½Π°Ρ ΡΡ‚Ρ€ΠΎΠΊΠ° Π΄Π»Ρ ΠΏΡ€ΠΎΠ³Ρ€Π°ΠΌΠΌΡ‹ ΠΏΡ€ΠΎΡΠΌΠΎΡ‚Ρ€Π° PDF: (ΠΈΡΠΏΠΎΠ»ΡΠ·ΡƒΠΉΡ‚Πµ %s ΠΊΠ°ΠΊ "
-"Π·Π°ΠΌΠµΡΡ‚ΠΈΡ‚ΠµΠ»Ρ ΠΈΠΌΠµΠ½ΠΈ Ρ„Π°ΠΉΠ»Π°)"
 
 #: ../options/PathAndViewPanel.java:112
 msgid "Location of GhostScript executable (optional):"
-msgstr "Π Π°ΡΠΏΠΎΠ»ΠΎΠ¶ΠµΠ½ΠΈΠµ ΠΈΡΠΏΠΎΠ»Π½ΡΠµΠΌΠΎΠ³ΠΎ Ρ„Π°ΠΉΠ»Π° GhostScript (Π½ΠµΠΎΠ±ΡΠ·Π°Ρ‚ΠµΠ»ΡΠ½ΠΎ):"
+msgstr ""
 
 #: ../options/PathAndViewPanel.java:114
 msgid "Location of tiff2pdf executable (optional):"
-msgstr "Π Π°ΡΠΏΠΎΠ»ΠΎΠ¶ΠµΠ½ΠΈΠµ ΠΈΡΠΏΠΎΠ»Π½ΡΠµΠΌΠΎΠ³ΠΎ Ρ„Π°ΠΉΠ»Π° tiff2pdf (Π½ΠµΠΎΠ±ΡΠ·Π°Ρ‚ΠµΠ»ΡΠ½ΠΎ):"
+msgstr ""
 
 #: ../options/PathAndViewPanel.java:153
 msgid "View and send settings"
-msgstr "ΠΠ°ΡΡ‚Ρ€ΠΎΠΉΠΊΠΈ ΠΏΡ€ΠΎΡΠΌΠΎΡ‚Ρ€Π° ΠΈ ΠΎΡ‚ΠΏΡ€Π°Π²ΠΊΠΈ"
+msgstr ""
 
 #: ../options/PathAndViewPanel.java:155
 msgid "View faxes as single file (needs GhostScript+tiff2pdf)"
-msgstr "ΠΡ€ΠΎΡΠΌΠ°Ρ‚Ρ€ΠΈΠ²Π°Ρ‚Ρ Ρ„Π°ΠΊΡΡ‹ Π² ΠΎΠ΄Π½ΠΎΠΌ Ρ„Π°ΠΉΠ»Πµ (Ρ‚Ρ€ΠµΠ±ΡƒΠµΡ‚ΡΡ GhostScript+tiff2pdf)"
+msgstr ""
 
 #: ../options/PathAndViewPanel.java:156
 msgid "View/send faxes always in this format"
-msgstr "ΠΡ€ΠΎΡΠΌΠ°Ρ‚Ρ€ΠΈΠ²Π°Ρ‚Ρ/ΠΎΡ‚ΠΏΡ€Π°Π²Π»ΡΡ‚Ρ Ρ„Π°ΠΊΡΡ‹ Π²ΡΠµΠ³Π΄Π° Π² ΡΡ‚ΠΎΠΌ Ρ„ΠΎΡ€ΠΌΠ°Ρ‚Πµ"
+msgstr ""
 
 #: ../options/PathAndViewPanel.java:169
 msgid "Send multiple files as:"
-msgstr "ΠΡ‚ΠΏΡ€Π°Π²Π»ΡΡ‚Ρ Π½ΠµΡΠΊΠΎΠ»ΡΠΊΠΎ Ρ„Π°ΠΉΠ»ΠΎΠ² ΠΊΠ°ΠΊ:"
+msgstr ""
 
 #: ../options/PathAndViewPanel.java:171
 msgid "Format for viewing/sending:"
-msgstr "Π¤ΠΎΡ€ΠΌΠ°Ρ‚ Π΄Π»Ρ ΠΏΡ€ΠΎΡΠΌΠΎΡ‚Ρ€Π°/ΠΎΡ‚ΠΏΡ€Π°Π²ΠΊΠΈ:"
+msgstr ""
 
 #: ../options/PathAndViewPanel.java:244
 msgid "Please enter the command line for the fax viewer."
-msgstr "ΠΠΎΠ¶Π°Π»ΡƒΠΉΡΡ‚Π°, Π²Π²ΠµΠ΄ΠΈΡ‚Πµ ΠΊΠΎΠΌΠ°Π½Π΄Π½ΡƒΡ ΡΡ‚Ρ€ΠΎΠΊΡƒ Π΄Π»Ρ ΠΏΡ€ΠΎΠ³Ρ€Π°ΠΌΠΌΡ‹ ΠΏΡ€ΠΎΡΠΌΠΎΡ‚Ρ€Π° Ρ„Π°ΠΊΡΠΎΠ²."
+msgstr "Παρακαλώ εισάγετε τη γραμμή εντολής για τον αναγνώστη του φαξ."
 
 #: ../options/PathAndViewPanel.java:250
 msgid "Please enter the command line for the PostScript viewer."
 msgstr ""
-"ΠΠΎΠ¶Π°Π»ΡƒΠΉΡΡ‚Π°, Π²Π²ΠµΠ΄ΠΈΡ‚Πµ ΠΊΠΎΠΌΠ°Π½Π΄Π½ΡƒΡ ΡΡ‚Ρ€ΠΎΠΊΡƒ Π΄Π»Ρ ΠΏΡ€ΠΎΠ³Ρ€Π°ΠΌΠΌΡ‹ ΠΏΡ€ΠΎΡΠΌΠΎΡ‚Ρ€Π° PostScript."
+"Παρακαλώ εισάγετε τη γραμμή εντολής για τον αναγνώστη του υστερόγραφου."
 
 #: ../options/PathAndViewPanel.java:256
 msgid "Please enter the command line for the PDF viewer."
-msgstr "ΠΠΎΠ¶Π°Π»ΡƒΠΉΡΡ‚Π°, Π²Π²ΠµΠ΄ΠΈΡ‚Πµ ΠΊΠΎΠΌΠ°Π½Π΄Π½ΡƒΡ ΡΡ‚Ρ€ΠΎΠΊΡƒ Π΄Π»Ρ ΠΏΡ€ΠΎΠ³Ρ€Π°ΠΌΠΌΡ‹ ΠΏΡ€ΠΎΡΠΌΠΎΡ‚Ρ€Π° PDF."
+msgstr ""
 
 #: ../options/PathAndViewPanel.java:264
 msgid "Please enter the location of the GhostScript executable."
-msgstr "ΠΠΎΠ¶Π°Π»ΡƒΠΉΡΡ‚Π°, Π²Π²ΠµΠ΄ΠΈΡ‚Πµ Ρ€Π°ΡΠΏΠΎΠ»ΠΎΠ¶ΠµΠ½ΠΈΠµ ΠΈΡΠΏΠΎΠ»Π½ΡΠµΠΌΠΎΠ³ΠΎ Ρ„Π°ΠΉΠ»Π° GhostScript."
+msgstr ""
 
 #: ../options/PathAndViewPanel.java:270
 msgid "Please enter the location of the tiff2pdf executable."
-msgstr "ΠΠΎΠ¶Π°Π»ΡƒΠΉΡΡ‚Π°, Π²Π²ΠµΠ΄ΠΈΡ‚Πµ Ρ€Π°ΡΠΏΠΎΠ»ΠΎΠ¶ΠµΠ½ΠΈΠµ ΠΈΡΠΏΠΎΠ»Π½ΡΠµΠΌΠΎΠ³ΠΎ Ρ„Π°ΠΉΠ»Π° tiff2pdf."
+msgstr ""
 
 #: ../phonebook/NewPhoneBookWin.java:237
 msgid "Current phone book:"
-msgstr "ΠΆΠµΠΊΡƒΡ‰ΠΈΠΉ Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½Ρ‹ΠΉ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊ:"
+msgstr "Τρέχων τηλεφωνικός κατάλογος:"
 
 #: ../phonebook/NewPhoneBookWin.java:279 ../send/SendWin.java:327
 #: ../send/SimplifiedSendDialog.java:296
 msgid "Comments:"
-msgstr "ΠΠΎΠΌΠΌΠµΠ½Ρ‚Π°Ρ€ΠΈΠΈ:"
+msgstr "Σχόλια:"
 
 #: ../phonebook/NewPhoneBookWin.java:310
 msgid "This phone book has already been added."
-msgstr "Π­Ρ‚ΠΎΡ‚ Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½Ρ‹ΠΉ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊ ΡƒΠ¶Πµ Π±Ρ‹Π» Π΄ΠΎΠ±Π°Π²Π»ΠµΠ½."
+msgstr "Αυτός ο τηλεφωνικός κατάλογος έχει προστεθεί ήδη."
 
 #: ../phonebook/NewPhoneBookWin.java:310 ../phonebook/NewPhoneBookWin.java:659
 msgid "Add to list"
-msgstr "Π”ΠΎΠ±Π°Π²ΠΈΡ‚Ρ ΠΊ ΡΠΏΠΈΡΠΊΡƒ"
+msgstr "Προσθήκη στη λίστα"
 
 #: ../phonebook/NewPhoneBookWin.java:319
 msgid "Unknown phone book type selected."
-msgstr "Π’Ρ‹Π±Ρ€Π°Π½ Π½ΠµΠΈΠ·Π²ΠµΡΡ‚Π½Ρ‹ΠΉ Ρ‚ΠΈΠΏ Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½ΠΎΠ³ΠΎ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊΠ°."
+msgstr "Άγνωστος τύπος τηλεφωνικού καταλόγου επιλέχθηκε."
 
 #: ../phonebook/NewPhoneBookWin.java:327 ../phonebook/NewPhoneBookWin.java:360
 #: ../phonebook/NewPhoneBookWin.java:463
 msgid "Error loading the phone book: "
-msgstr "ΠΡΠΈΠ±ΠΊΠ° Π·Π°Π³Ρ€ΡƒΠ·ΠΊΠΈ Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½ΠΎΠ³ΠΎ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊΠ°:"
+msgstr "Σφάλμα φόρτωσης του τηλεφωνικού καταλόγου: "
 
 #: ../phonebook/NewPhoneBookWin.java:418
 msgid "Please enter the phone book descriptor to open."
-msgstr "ΠΠΎΠ¶Π°Π»ΡƒΠΉΡΡ‚Π°, Π²Π²ΠµΠ΄ΠΈΡ‚Πµ Π΄ΠµΡΠΊΡ€ΠΈΠΏΡ‚ΠΎΡ€ Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½ΠΎΠ³ΠΎ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊΠ°."
+msgstr ""
+"Παρακαλώ εισάγετε τον περιγραφέα του τηλεφωνικού καταλόγου για να ανοίξει."
 
 #: ../phonebook/NewPhoneBookWin.java:422
 msgid "Open by descriptor"
-msgstr "ΠΡ‚ΠΊΡ€Ρ‹Ρ‚Ρ ΠΏΠΎ Π΄ΠµΡΠΊΡ€ΠΈΠΏΡ‚ΠΎΡ€Ρƒ"
+msgstr "Ανοιχτό από τον περιγραφέα"
 
 #: ../phonebook/NewPhoneBookWin.java:432
 msgid "Import by descriptor"
-msgstr "ΠΠΌΠΏΠΎΡ€Ρ‚ΠΈΡ€ΠΎΠ°Ρ‚Ρ ΠΏΠΎ Π΄ΠµΡΠΊΡ€ΠΈΠΏΡ‚ΠΎΡ€Ρƒ"
+msgstr "Εισαγωγή από τον περιγραφέα"
 
 #: ../phonebook/NewPhoneBookWin.java:444
 msgid "Unsupported phone book format."
-msgstr "ΠΠµΠΏΠΎΠ΄Π΄ΠµΡ€Π¶ΠΈΠ²Π°ΠµΠΌΡ‹ΠΉ Ρ„ΠΎΡ€ΠΌΠ°Ρ‚ Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½ΠΎΠ³ΠΎ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊΠ°."
+msgstr "Μη υποστηριζόμενη διαμόφωση τηλεφωνικού καταλόγου."
 
 #: ../phonebook/NewPhoneBookWin.java:488 ../util/ToolbarEditorDialog.java:130
 msgid "Reset"
-msgstr "Π΅Π±Ρ€ΠΎΡ"
+msgstr "Επανεκκίνηση"
 
 #: ../phonebook/NewPhoneBookWin.java:492
 msgid "Reset quick search and show all phone book entries."
-msgstr "Π΅Π±Ρ€ΠΎΡΠΈΡ‚Ρ Π±Ρ‹ΡΡ‚Ρ€Ρ‹ΠΉ ΠΏΠΎΠΈΡΠΊ ΠΈ ΠΏΠΎΠΊΠ°Π·Π°Ρ‚Ρ Π²ΡΠµ Π·Π°ΠΏΠΈΡΠΈ Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½ΠΎΠ³ΠΎ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊΠ°."
+msgstr ""
+"Επανατοποθέτηση γρήγορης έρευνας και προβολή όλων των καταχωρήσεων του "
+"τηλεφωνικού καταλόγου"
 
 #: ../phonebook/NewPhoneBookWin.java:494 ../phonebook/NewSearchWin.java:146
 msgid "Search"
-msgstr "ΠΠΎΠΈΡΠΊ"
+msgstr "Έρευνα"
 
 #: ../phonebook/NewPhoneBookWin.java:657
 msgid "Import"
-msgstr "ΠΠΌΠΏΠΎΡ€Ρ‚"
+msgstr "Εισαγωγή"
 
 #: ../phonebook/NewPhoneBookWin.java:685 ../phonebook/NewPhoneBookWin.java:692
 msgid "By descriptor..."
-msgstr "ΠΠΎ Π΄ΠµΡΠΊΡ€ΠΈΠΏΡ‚ΠΎΡ€Ρƒ..."
+msgstr "Από τον περιγραφέα..."
 
 #: ../phonebook/NewPhoneBookWin.java:703 ../phonebook/NewPhoneBookWin.java:822
 msgid "Phonebook"
-msgstr "ΠΆΠµΠ»ΠµΡ„ΠΎΠ½Π½Ρ‹ΠΉ_ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊ"
+msgstr "Τηλεφωνικός κατάλογος"
 
 #: ../phonebook/NewPhoneBookWin.java:717
 msgid "Entry"
-msgstr "Π—Π°ΠΏΠΈΡΡ"
+msgstr "Καταχώρηση"
 
 #: ../phonebook/NewPhoneBookWin.java:752
 msgid "Add new entry"
-msgstr "Π”ΠΎΠ±Π°Π²ΠΈΡ‚Ρ Π½ΠΎΠ²ΡƒΡ Π·Π°ΠΏΠΈΡΡ"
+msgstr "Προσθήκη νέας καταχώρησης"
 
 #: ../phonebook/NewPhoneBookWin.java:760
 msgid "Do you want to delete the selected entries?"
-msgstr "Π’Ρ‹ Π΄ΠµΠΉΡΡ‚Π²ΠΈΡ‚ΠµΠ»ΡΠ½ΠΎ Ρ…ΠΎΡ‚ΠΈΡ‚Πµ ΡƒΠ΄Π°Π»ΠΈΡ‚Ρ Π²Ρ‹Π΄ΠµΠ»ΠµΠ½Π½Ρ‹Πµ Π·Π°ΠΏΠΈΡΠΈ?"
+msgstr "Θέλετε να διαγραφούν οι επιλεγμένες καταχωρήσεις?"
 
 #: ../phonebook/NewPhoneBookWin.java:760
 msgid "Delete entries"
-msgstr "Π£Π΄Π°Π»ΠµΠ½ΠΈΠµ Π·Π°ΠΏΠΈΡΠµΠΉ"
+msgstr "Διαγραφή καταχωρήσεων"
 
 #: ../phonebook/NewPhoneBookWin.java:773
 msgid "Delete selected entry"
-msgstr "Π£Π΄Π°Π»ΠΈΡ‚Ρ Π²Ρ‹Π΄ΠµΠ»ΠµΠ½Π½ΡƒΡ Π·Π°ΠΏΠΈΡΡ"
+msgstr "Διαγραφή επιλεγμένης καταχώρησης"
 
 #: ../phonebook/NewPhoneBookWin.java:787
 msgid "Find..."
-msgstr "ΠΠ°ΠΉΡ‚ΠΈ..."
+msgstr "Εύρεση..."
 
 #: ../phonebook/NewPhoneBookWin.java:789
 msgid "Search for an entry"
-msgstr "ΠΠΎΠΈΡΠΊ Π·Π°ΠΏΠΈΡΠΈ"
+msgstr "Αναζήτηση μιας καταχώρησης"
 
 #: ../phonebook/NewPhoneBookWin.java:793
 msgid "Do you want to remove the current phone book from the list?"
-msgstr ""
-"Π’Ρ‹ Π΄ΠµΠΉΡΡ‚Π²ΠΈΡ‚ΠµΠ»ΡΠ½ΠΎ Ρ…ΠΎΡ‚ΠΈΡ‚Πµ ΡƒΠ΄Π°Π»ΠΈΡ‚Ρ Ρ‚ΠµΠΊΡƒΡ‰ΠΈΠΉ Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½Ρ‹ΠΉ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊ ΠΈΠ· ΡΠΏΠΈΡΠΊΠ°?"
+msgstr "Θέλετε να μετακινήσετε τον τρέχων τηλεφωνικό κατάλογο από τη λίστα?"
 
 #: ../phonebook/NewPhoneBookWin.java:793 ../phonebook/NewPhoneBookWin.java:798
 msgid "Remove from list"
-msgstr "Π£Π΄Π°Π»ΠΈΡ‚Ρ ΠΈΠ· ΡΠΏΠΈΡΠΊΠ°"
+msgstr "Μετακίνηση από τη λίστα"
 
 #: ../phonebook/NewPhoneBookWin.java:807
 msgid "Display style"
-msgstr "Π΅Ρ‚ΠΈΠ»Ρ"
+msgstr "Στυλ προβολής"
 
 #: ../phonebook/NewPhoneBookWin.java:1054
 msgid "Error executing the desired action:"
-msgstr "ΠΡΠΈΠ±ΠΊΠ° Π²Ρ‹ΠΏΠΎΠ»Π½ΠµΠ½ΠΈΡ Π¶ΠµΠ»Π°ΠµΠΌΠΎΠ³ΠΎ Π΄ΠµΠΉΡΡ‚Π²ΠΈΡ:"
+msgstr "Σφάλμα κατά την εκτέλεση της επιθυμητής ενέργειας:"
 
 #: ../phonebook/PhoneBookFactory.java:57
 msgid "Personal phone book"
-msgstr "Π›ΠΈΡ‡Π½Ρ‹ΠΉ Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½Ρ‹ΠΉ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊ"
+msgstr ""
 
 #: ../phonebook/ldap/LDAPPhoneBook.java:54
 msgid "LDAP phone book (read only)"
-msgstr "LDAP Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½Ρ‹ΠΉ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊ (Ρ‚ΠΎΠ»ΡΠΊΠΎ Ρ‡Ρ‚ΠµΠ½ΠΈΠµ)"
+msgstr "LDAP Τηλεφωνικός κατάλογος (ανάγνωση μόνο)"
 
 #: ../phonebook/ldap/LDAPPhoneBook.java:55
 msgid "A phone book reading its entries from an LDAP directory."
-msgstr "ΠΆΠµΠ»ΠµΡ„ΠΎΠ½Π½Ρ‹ΠΉ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊ ΡΡ‡ΠΈΡ‚Ρ‹Π²Π°ΠµΡ‚ Π·Π°ΠΏΠΈΡΠΈ ΠΈΠ· Π΄ΠΈΡ€ΠµΠΊΡ‚ΠΎΡ€ΠΈΠΈ LDAP."
+msgstr ""
+"Ένας τηλεφωνικός κατάλογος διαβάζει τις καταχωρήσεις του από έναν LDAP "
+"κατάλογο."
 
 #: ../phonebook/ldap/LDAPPhoneBook.java:119
 #: ../phonebook/ldap/ConnectionDialog.java:279
 msgid "LDAP password"
-msgstr "ΠΠ°Ρ€ΠΎΠ»Ρ LDAP"
+msgstr "LDAP συνθηματικό"
 
 #: ../phonebook/ldap/LDAPPhoneBook.java:119
 #: ../phonebook/ldap/ConnectionDialog.java:279
 msgid "Please enter the LDAP password:"
-msgstr "ΠΠΎΠ¶Π°Π»ΡƒΠΉΡΡ‚Π°, Π²Π²ΠµΠ΄ΠΈΡ‚Πµ ΠΏΠ°Ρ€ΠΎΠ»Ρ LDAP:"
+msgstr ""
 
 #: ../phonebook/ldap/LDAPPhoneBook.java:180
 msgid "Error executing the search:"
-msgstr "ΠΡΠΈΠ±ΠΊΠ° Π²Ρ‹ΠΏΠΎΠ»Π½ΠµΠ½ΠΈΡ ΠΏΠΎΠΈΡΠΊΠ°:"
+msgstr "Σφάλμα κατά την εκτέλεση της έρευνας:"
 
 #: ../phonebook/ldap/ConnectionDialog.java:134
 msgid "Use authentication"
-msgstr "ΠΡΠΏΠΎΠ»ΡΠ·ΠΎΠ²Π°Ρ‚Ρ Π°ΡƒΡ‚ΠµΠ½Ρ‚ΠΈΡ„ΠΈΠΊΠ°Ρ†ΠΈΡ"
+msgstr "Χρήση πιστοποίησης"
 
 #: ../phonebook/ldap/ConnectionDialog.java:160
 msgid ""
 "RFC 2254 Filter expression (e.g. \"objectClass=person\") selecting the "
 "directory entries to include. Leave blank to include all."
 msgstr ""
-"Π’Ρ‹Ρ€Π°Π¶ΠµΠ½ΠΈΠµ RFC 2254 (Π½Π°ΠΏΡ€ΠΈΠΌΠµΡ€, \"objectClass=person\"). ΠΡΡ‚Π°Π²ΡΡ‚Πµ ΠΏΡƒΡΡ‚Ρ‹ΠΌ, "
-"Ρ‡Ρ‚ΠΎΠ±Ρ‹ Π²Ρ‹Π±Ρ€Π°Ρ‚Ρ Π²ΡΠµ."
+"RFC 2254 Έκφραση φίλτρου (π.χ. \"αντικείμενοτάξη=άτομο\") επιλέγοντας τις "
+"περιλαμβανόμενες καταχωρήσεις καταλόγου. Αφήστε κενό για να τα περιλάβει όλα."
 
 #: ../phonebook/ldap/ConnectionDialog.java:162
 msgid "Also search subtrees"
-msgstr "ΠΆΠ°ΠΊΠ¶Πµ ΠΈΡΠΊΠ°Ρ‚Ρ Π² ΠΏΠΎΠ΄Π΄ΠµΡ€ΠµΠ²ΡΡΡ…"
+msgstr ""
 
 #: ../phonebook/ldap/ConnectionDialog.java:167
 msgid "The maximum number of items loaded"
-msgstr "ΠΠ°ΠΊΡΠΈΠΌΠ°Π»ΡΠ½ΠΎΠµ ΠΊΠΎΠ»ΠΈΡ‡ΠµΡΡ‚Π²ΠΎ Π·Π°Π³Ρ€ΡƒΠ¶Π°ΠµΠΌΡ‹Ρ… ΡΠ»ΠµΠΌΠµΠ½Ρ‚ΠΎΠ²"
+msgstr "Ο μέγιστος αριθμός των στοιχείων που έχουν φορτωθεί"
 
 #: ../phonebook/ldap/ConnectionDialog.java:169
 msgid "Load all entries when opened"
-msgstr "Π—Π°Π³Ρ€ΡƒΠ¶Π°Ρ‚Ρ Π²ΡΠµ Π·Π°ΠΏΠΈΡΠΈ ΠΏΡ€ΠΈ ΠΎΡ‚ΠΊΡ€Ρ‹Ρ‚ΠΈΠΈ"
+msgstr "Φορτώνει όλες τις καταχωρήσεις όταν ανοιχτεί"
 
 #: ../phonebook/ldap/ConnectionDialog.java:170
 msgid ""
 "If checked, all entries in the directory are loaded when the phone book is "
 "opened. If not, entries are loaded only if a quick search is performed."
 msgstr ""
-"Π•ΡΠ»ΠΈ ΠΎΡ‚ΠΌΠµΡ‡ΠµΠ½ΠΎ, ΠΏΡ€ΠΈ ΠΎΡ‚ΠΊΡ€Ρ‹Ρ‚ΠΈΠΈ Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½ΠΎΠ³ΠΎ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊΠ° Π·Π°Π³Ρ€ΡƒΠ¶Π°ΡΡ‚ΡΡ Π²ΡΠµ ΡΠ»ΠµΠΌΠµΠ½Ρ‚Ρ‹ "
-"ΠΊΠ°Ρ‚Π°Π»ΠΎΠ³Π°. Π•ΡΠ»ΠΈ Π½ΠµΡ‚, ΡΠ»ΠµΠΌΠµΠ½Ρ‚Ρ‹ Π·Π°Π³Ρ€ΡƒΠ¶Π°ΡΡ‚ΡΡ Ρ‚ΠΎΠ»ΡΠΊΠΎ ΠµΡΠ»ΠΈ Π²Ρ‹ΠΏΠΎΠ»Π½ΡΠµΡ‚ΡΡ Π±Ρ‹ΡΡ‚Ρ€Ρ‹ΠΉ "
-"ΠΏΠΎΠΈΡΠΊ."
+"Εάν έγινε έλεγχος, όλες οι καταχωρήσεις στον κατάλογο φορτώνονται όταν ο "
+"τηλεφωνικός κατάλογος είνα"
 
 #: ../phonebook/ldap/ConnectionDialog.java:178
 #: ../phonebook/jdbc/ConnectionDialog.java:216
 msgid "Test connection"
-msgstr "ΠΡ€ΠΎΠ²ΠµΡ€ΠΈΡ‚Ρ ΠΏΠΎΠ΄ΠΊΠ»ΡΡ‡ΠµΠ½ΠΈΠµ"
+msgstr "Δοκιμαστική σύνδεση"
 
 #: ../phonebook/ldap/ConnectionDialog.java:182
 msgid "Server name:"
-msgstr "ΠΠΌΡ ΡΠµΡ€Π²ΠµΡ€Π°:"
+msgstr "Όνομα εξυπηρετητή:"
 
 #: ../phonebook/ldap/ConnectionDialog.java:184
 msgid "Root (Base DN):"
-msgstr ""
+msgstr "Γονικός κόμβος (Βάση DN):"
 
 #: ../phonebook/ldap/ConnectionDialog.java:187
 msgid "User name (Bind DN):"
-msgstr "ΠΈΠΌΡ ΠΏΠΎΠ»ΡΠ·ΠΎΠ²Π°Ρ‚ΠµΠ»Ρ (Bind DN):"
+msgstr "Όνομα χρήστη (Δέσμευση DN):"
 
 #: ../phonebook/ldap/ConnectionDialog.java:192
 #: ../phonebook/XMLPhoneBook.java:275 ../phonebook/jdbc/JDBCPhoneBook.java:80
 msgid "Phone book name to display:"
-msgstr "ΠΠ°Π·Π²Π°Π½ΠΈΠµ Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½ΠΎΠ³ΠΎ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊΠ° Π΄Π»Ρ ΠΎΡ‚ΠΎΠ±Ρ€Π°Π¶ΠµΠ½ΠΈΡ:"
+msgstr "Όνομα τηλεφωνικού καταλόγου για προβολή:"
 
 #: ../phonebook/ldap/ConnectionDialog.java:196
 msgid "Object filter:"
-msgstr "Π¤ΠΈΠ»ΡΡ‚Ρ€ ΠΎΠ±ΡΠµΠΊΡ‚ΠΎΠ²:"
+msgstr "Φίλτρο αντικειμένου:"
 
 #: ../phonebook/ldap/ConnectionDialog.java:200
 msgid "Count limit:"
-msgstr "ΠΡ€ΠµΠ΄ΠµΠ»ΡΠ½ΠΎΠµ ΠΊΠΎΠ»ΠΈΡ‡ΠµΡΡ‚Π²ΠΎ:"
+msgstr "Όριο καταμέτρησης:"
 
 #: ../phonebook/ldap/ConnectionDialog.java:204
 msgid ""
 "Please enter which LDAP attributes correspond to the phone book entry fields "
 "of YajHFC (default should usually work):"
 msgstr ""
-"ΠΠΎΠ¶Π°Π»ΡƒΠΉΡΡ‚Π°, Π²Π²ΠµΠ΄ΠΈΡ‚Πµ Π°Ρ‚Ρ€ΠΈΠ±ΡƒΡ‚Ρ‹ LDAP, ΡΠΎΠΎΡ‚Π²ΠµΡ‚ΡΠ²ΡƒΡΡ‰ΠΈΠµ ΠΏΠΎΠ»ΡΠΌ Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½ΠΎΠ³ΠΎ "
-"ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊΠ° YajHFC (ΡƒΡΡ‚Π°Π½ΠΎΠ²ΠΊΠΈ ΠΏΠΎ ΡƒΠΌΠΎΠ»Ρ‡Π°Π½ΠΈΡ ΠΎΠ±Ρ‹Ρ‡Π½ΠΎ Ρ€Π°Π±ΠΎΡ‚Π°ΡΡ‚):"
+"Παρακαλώ εισάγετε τα LDAP χαρακτηριστικά/γνωρίσματα που ανταποκρίνονται στα "
+"πεδία του τηλεφωνικού καταλόγου of YajHFC (default should usually work):"
 
 #: ../phonebook/ldap/ConnectionDialog.java:254
 msgid "You have to specify a server name and port."
-msgstr "Π’Ρ‹ Π΄ΠΎΠ»Π¶Π½Ρ‹ ΡƒΠΊΠ°Π·Π°Ρ‚Ρ ΠΈΠΌΡ ΡΠµΡ€Π²ΠµΡ€Π° ΠΈ ΠΏΠΎΡ€Ρ‚."
+msgstr "Πρέπει να ορίσετε ένα όνομα σερβερ και θύρας."
 
 #: ../phonebook/ldap/ConnectionDialog.java:314
 msgid "Could not connect to the LDAP server:"
-msgstr "ΠΠµΠ²ΠΎΠ·ΠΌΠΎΠ¶Π½ΠΎ ΡΠΎΠµΠ΄ΠΈΠ½ΠΈΡ‚ΡΡ Ρ ΡΠµΡ€Π²ΠµΡ€ΠΎΠΌ LDAP:"
+msgstr "Δεν μπορεί να συνδεθεί με τον LDAP σερβερ:"
 
 #: ../phonebook/ldap/ConnectionDialog.java:333
 msgid "Connection to the LDAP server succeeded."
-msgstr "Π΅ΠΎΠµΠ΄ΠΈΠ½ΠµΠ½ΠΈΠµ Ρ ΡΠµΡ€Π²ΠµΡ€ΠΎΠΌ LDAP ΡƒΡΡ‚Π°Π½ΠΎΠ²Π»ΠµΠ½ΠΎ."
+msgstr "Σύνδεση με τον LDAP σέρβερ επιτυχής."
 
 #: ../phonebook/ldap/ConnectionDialog.java:381
 #: ../phonebook/ldap/ConnectionDialog.java:386
 msgid "New LDAP phone book"
-msgstr "ΠΠΎΠ²Ρ‹ΠΉ Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½Ρ‹ΠΉ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊ LDAP"
+msgstr "Nέος LDAP τηλεφωνικός κατάλογος"
 
 #: ../phonebook/convrules/LocationRule.java:67
 msgid "[Location with ZIP code]"
-msgstr "[ΠΠ΄Ρ€ΠµΡ Ρ ΠΈΠ½Π΄ΠµΠΊΡΠΎΠΌ]"
+msgstr "[Τοποθεσία/Θέση με ZIP κωδικό]"
 
 #: ../phonebook/PhoneBookTreeModel.java:418
 msgid "All phone books"
-msgstr "Π’ΡΠµ Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½Ρ‹Πµ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊΠΈ"
+msgstr "Όλοι οι τηλεφωνικοί κατάλογοι"
 
 #: ../phonebook/PBEntryField.java:29
 msgid "Given name"
-msgstr "ΠΠΌΡ"
+msgstr "Όνομα που δόθηκε"
 
 #: ../phonebook/PBEntryField.java:30
 msgid "Name"
-msgstr "Π¤Π°ΠΌΠΈΠ»ΠΈΡ"
+msgstr "Όνομα"
 
 #: ../phonebook/PBEntryField.java:31
 msgid "Title"
-msgstr "Π—Π²Π°Π½ΠΈΠµ"
+msgstr "Tίτλος"
 
 #: ../phonebook/PBEntryField.java:33
 msgid "Position"
-msgstr "Π”ΠΎΠ»Π¶Π½ΠΎΡΡ‚Ρ"
+msgstr "Θέση"
 
 #: ../phonebook/PBEntryField.java:34
 msgid "Department"
-msgstr "ΠΡ‚Π΄ΠµΠ»"
+msgstr "Διαμέρισμα"
 
 #: ../phonebook/PBEntryField.java:35
 msgid "Street"
-msgstr "Π£Π»ΠΈΡ†Π°"
+msgstr "Οδός"
 
 #: ../phonebook/PBEntryField.java:37
 msgid "Country"
-msgstr "Π΅Ρ‚Ρ€Π°Π½Π°"
+msgstr "Χώρα"
 
 #: ../phonebook/PBEntryField.java:38
 msgid "ZIP code"
-msgstr "ΠΠ½Π΄ΠµΠΊΡ"
+msgstr "Κωδικός ZIP"
 
 #: ../phonebook/PBEntryField.java:39
 msgid "State/Region"
-msgstr "Π¨Ρ‚Π°Ρ‚/ΠΠ±Π»Π°ΡΡ‚Ρ"
+msgstr ""
 
 #: ../phonebook/PBEntryField.java:40
 msgid "e-mail address"
-msgstr "e-mail Π°Π΄Ρ€ΠµΡ"
+msgstr "Διεύθυνση e-mail"
 
 #: ../phonebook/PBEntryField.java:41
 msgid "Website"
-msgstr "Π’ΠµΠ±ΡΠ°ΠΉΡ‚"
+msgstr ""
 
 #: ../phonebook/PBEntryField.java:42
 msgid "Fax number"
-msgstr "Π¤Π°ΠΊΡ"
+msgstr "Αριθμός φαξ"
 
 #: ../phonebook/PBEntryField.java:43
 msgid "Voice number"
-msgstr "ΠΆΠµΠ»ΠµΡ„ΠΎΠ½"
+msgstr "Αριθμός τηλεφώνου"
 
 #: ../phonebook/PBEntryField.java:44
 msgid "Comments"
-msgstr "ΠΠΎΠΌΠΌΠµΠ½Ρ‚Π°Ρ€ΠΈΠΈ"
+msgstr "Σχόλια"
 
 #: ../phonebook/XMLPhoneBook.java:60
 msgid "XML phone book"
-msgstr "XML Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½Ρ‹ΠΉ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊ"
+msgstr "XML τηλεφωνικός κατάλογος"
 
 #: ../phonebook/XMLPhoneBook.java:61
 msgid "A phone book saving its entries as a XML file."
-msgstr "ΠΆΠµΠ»ΠµΡ„ΠΎΠ½Π½Ρ‹ΠΉ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊ ΡΠΎΡ…Ρ€Π°Π½ΡΠµΡ‚ Π·Π°ΠΏΠΈΡΠΈ Π² Π²ΠΈΠ΄Πµ Ρ„Π°ΠΉΠ»Π° XML."
+msgstr ""
+"Ένας τηλεφωνικός κατάλογος αποθηκεύει τις καταχωρήσεις του με τη μορφή "
+"αρχείου XML ."
 
 #: ../phonebook/XMLPhoneBook.java:150
 msgid "Error saving the phone book: "
-msgstr "ΠΡΠΈΠ±ΠΊΠ° ΡΠΎΡ…Ρ€Π°Π½ΠµΠ½ΠΈΡ Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½ΠΎΠ³ΠΎ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊΠ°:"
+msgstr "Σφάλμα στην αποθήκευση του τηλεφωνικού καταλόγου: "
 
 #: ../phonebook/XMLPhoneBook.java:266
 msgid "Phone book files"
-msgstr "ΠΆΠµΠ»ΠµΡ„ΠΎΠ½Π½Ρ‹ΠΉ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊ"
+msgstr "Αρχεία τηλεφωνικού καταλόγου"
 
 #: ../phonebook/NewSearchWin.java:125
 msgid "No matching phone book entry found."
-msgstr "Π΅ΠΎΠΎΡ‚Π²ΠµΡ‚ΡΡ‚Π²ΡƒΡΡ‰Π°Ρ Π·Π°ΠΏΠΈΡΡ Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½ΠΎΠ³ΠΎ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊΠ° Π½Πµ Π½Π°ΠΉΠ΄ΠµΠ½Π°."
+msgstr "Δε βρέθηκε καταχώρηση τηλεφωνικού καταλόγου που να ταιριάζει."
 
 #: ../phonebook/NewSearchWin.java:160
 msgid "Forward"
-msgstr "Π’ΠΏΠµΡ€ΠµΠ΄"
+msgstr "Μπροστά"
 
 #: ../phonebook/NewSearchWin.java:162
 msgid "Backward"
-msgstr "ΠΠ°Π·Π°Π΄"
+msgstr "Πίσω"
 
 #: ../phonebook/NewSearchWin.java:167
 msgid "Case sensitive"
-msgstr "Π£Ρ‡ΠΈΡ‚Ρ‹Π²Π°Ρ‚Ρ Ρ€ΠµΠ³ΠΈΡΡ‚Ρ€"
+msgstr "Ευαίσθητη περίπτωση"
 
 #: ../phonebook/NewSearchWin.java:168
 msgid "Wrap Search"
-msgstr "Π¦ΠΈΠΊΠ»ΠΈΡ‡ΠµΡΠΊΠΈΠΉ ΠΏΠΎΠΈΡΠΊ"
+msgstr ""
 
 #: ../phonebook/NewSearchWin.java:171
 msgid "Direction:"
-msgstr "ΠΠ°ΠΏΡ€Π°Π²Π»ΠµΠ½ΠΈΠµ:"
+msgstr "Κατεύθυνση:"
 
 #: ../phonebook/NewSearchWin.java:176
 msgid "Search options:"
-msgstr "ΠΠ°Ρ€Π°ΠΌΠµΡ‚Ρ€Ρ‹ ΠΏΠΎΠΈΡΠΊΠ°:"
+msgstr "Επιλόγες αναζήτησης:"
 
 #: ../phonebook/NewSearchWin.java:206
 msgid "Find phone book entry"
-msgstr "ΠΠΎΠΈΡΠΊ Π·Π°ΠΏΠΈΡΠΈ Π² Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½ΠΎΠΌ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊΠµ"
+msgstr "Βρείτε καταχώρηση τηλεφωνικού καταλόγου"
 
 #: ../phonebook/jdbc/JDBCPhoneBookEntry.java:56
 msgid "<error>"
-msgstr "<ΠΎΡΠΈΠ±ΠΊΠ°>"
+msgstr "<σφάλμα>"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:79
 msgid "Open as read only"
-msgstr "ΠΡ‚ΠΊΡ€Ρ‹Ρ‚Ρ Ρ‚ΠΎΠ»ΡΠΊΠΎ Π΄Π»Ρ Ρ‡Ρ‚ΠµΠ½ΠΈΡ"
+msgstr "Ανοιχτό μόνο ως αναγνωσμένο"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:84
 msgid "JDBC phone book"
-msgstr "JDBC Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½Ρ‹ΠΉ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊ"
+msgstr "JDBC Τηλεφωνικός κατάλογος"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:85
 msgid "A phone book saving its entries in a relational database using JDBC."
-msgstr "ΠΆΠµΠ»ΠµΡ„ΠΎΠ½Π½Ρ‹ΠΉ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊ ΡΠΎΡ…Ρ€Π°Π½ΡΠµΡ‚ Π·Π°ΠΏΠΈΡΠΈ Π² Ρ€ΠµΠ»ΡΡ†ΠΈΠΎΠ½Π½ΠΎΠΉ Π±Π°Π·Πµ Π΄Π°Π½Π½Ρ‹Ρ… JDBC."
+msgstr ""
+"Ένας τηλεφωνικός κατάλογος αποθηκεύει τις καταχωρήσεις του σε μια σχετική "
+"βάση δεδομένων χρησιμοποιώντας JDBC."
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:104
 msgid "New JDBC phone book"
-msgstr "ΠΠΎΠ²Ρ‹ΠΉ Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½Ρ‹ΠΉ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊ JDBC"
+msgstr "Nέος JDBC τηλεφωνικός κατάλογος"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:105
 msgid ""
 "Please select which database fields correspond to the phone book entry "
 "fields of YajHFC:"
 msgstr ""
-"ΠΠΎΠ¶Π°Π»ΡƒΠΉΡΡ‚Π°, Π²Ρ‹Π±ΠµΡ€ΠΈΡ‚Πµ ΠΏΠΎΠ»Ρ Π±Π°Π·Ρ‹ Π΄Π°Π½Π½Ρ‹Ρ…, ΡΠΎΠΎΡ‚Π²ΠµΡ‚ΡΡ‚Π²ΡƒΡΡ‰ΠΈΠµ ΠΏΠΎΠ»ΡΠΌ ΠΆΠµΠ»ΠµΡ„ΠΎΠ½Π½ΠΎΠ³ΠΎ "
-"ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊΠ° YajHFC:"
+"Παρακαλώ επιλέξτε ποια πεδία της βάσης δεδομένων ανταποκρίνονται στα "
+"εισαγόμενα πεδία του τηλεφωνικού καταλόγου of YajHFC:"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:218
 #: ../phonebook/jdbc/ConnectionDialog.java:311
 msgid "Could not load the specified driver class:"
-msgstr "ΠΠµΠ²ΠΎΠ·ΠΌΠΎΠ¶Π½ΠΎ Π·Π°Π³Ρ€ΡƒΠ·ΠΈΡ‚Ρ ΡƒΠΊΠ°Π·Π°Π½Π½Ρ‹ΠΉ ΠΊΠ»Π°ΡΡ Π΄Ρ€Π°ΠΉΠ²ΠµΡ€Π°:"
+msgstr "Δεν μπορεί να φορτώσει την ορισμένη κατηγορία οδηγού:"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:223
 #: ../phonebook/jdbc/ConnectionDialog.java:317
 #: ../readstate/JDBCPersistentReadState.java:86
 msgid "Database password"
-msgstr "ΠΠ°Ρ€ΠΎΠ»Ρ Π±Π°Π·Ρ‹ Π΄Π°Π½Π½Ρ‹Ρ…"
+msgstr "Συνθηματικό βάσης δεδομένων"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:223
 #: ../phonebook/jdbc/ConnectionDialog.java:317
 #: ../readstate/JDBCPersistentReadState.java:86
 #, java-format
 msgid "Please enter the database password (database: {0}):"
-msgstr "ΠΠΎΠ¶Π°Π»ΡƒΠΉΡΡ‚Π°, Π²Π²ΠµΠ΄ΠΈΡ‚Πµ ΠΏΠ°Ρ€ΠΎΠ»Ρ Π±Π°Π·Ρ‹ Π΄Π°Π½Π½Ρ‹Ρ… (database: {0}):"
+msgstr ""
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:235
 #: ../phonebook/jdbc/ConnectionDialog.java:344
 msgid "Could not connect to the database:"
-msgstr "ΠΠµΠ²ΠΎΠ·ΠΌΠΎΠ¶Π½ΠΎ ΡΠΎΠµΠ΄ΠΈΠ½ΠΈΡ‚ΡΡΡ Ρ Π±Π°Π·ΠΎΠΉ Π΄Π°Π½Π½Ρ‹Ρ…:"
+msgstr "Δεν μπορεί να συνδεθεί στη βάση δεδομένων:"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:276
 msgid "Could not load the phone book:"
-msgstr "ΠΠµΠ²ΠΎΠ·ΠΌΠΎΠ¶Π½ΠΎ Π·Π°Π³Ρ€ΡƒΠ·ΠΈΡ‚Ρ Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½Ρ‹ΠΉ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊ:"
+msgstr "Δεν μπορεί να φορτώσει τον τηλεφωνικό κατάλογο:"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:293
 msgid "Cannot open phone book since no database fields were selected!"
 msgstr ""
-"ΠΠµΠ²ΠΎΠ·ΠΌΠΎΠ¶Π½ΠΎ ΠΎΡ‚ΠΊΡ€Ρ‹Ρ‚Ρ Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½Ρ‹ΠΉ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊ, Ρ‚Π°ΠΊ ΠΊΠ°ΠΊ Π½Πµ Π±Ρ‹Π»ΠΈ Π²Ρ‹Π±Ρ€Π°Π½Ρ‹ ΠΏΠΎΠ»Ρ Π±Π°Π·Ρ‹ "
-"Π΄Π°Π½Π½Ρ‹Ρ…!"
+"Δεν μπορεί να ανοίξει τηλεφωνικό κατάλογο από τη στιγμή που δεν έχουν "
+"επιλεγεί πεδία βάσης δεδομένων!"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:350
 #: ../phonebook/jdbc/JDBCPhoneBook.java:353
 msgid "Could not save the phone book:"
-msgstr "ΠΠµΠ²ΠΎΠ·ΠΌΠΎΠ¶Π½ΠΎ ΡΠΎΡ…Ρ€Π°Π½ΠΈΡ‚Ρ Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½Ρ‹ΠΉ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊ:"
+msgstr "Δεν μπορεί να αποθηκεύσει τον τηλεφωνικό κατάλογο:"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:375
 #: ../phonebook/jdbc/JDBCPhoneBook.java:385
 #: ../phonebook/jdbc/JDBCPhoneBook.java:395
 #, java-format
 msgid "Could not save the changes: No valid {0} query."
-msgstr "ΠΠµΠ²ΠΎΠ·ΠΌΠΎΠ¶Π½ΠΎ ΡΠΎΡ…Ρ€Π°Π½ΠΈΡ‚Ρ ΠΈΠ·ΠΌΠµΠ½ΠµΠ½ΠΈΡ: ΠΠµΠ΄ΠΎΠΏΡƒΡΡ‚ΠΈΠΌΡ‹ΠΉ {0} Π·Π°ΠΏΡ€ΠΎΡ."
+msgstr "Δεν μπορεί να αποθηκεύσει τις αλλαγές: Μη έγκυρη {0} ερώτηση."
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:406
 #: ../phonebook/jdbc/JDBCPhoneBook.java:413
 #, java-format
 msgid "Could not save the changes for entry {0}:"
-msgstr "ΠΠµΠ²ΠΎΠ·ΠΌΠΎΠ¶Π½ΠΎ ΡΠΎΡ…Ρ€Π°Π½ΠΈΡ‚Ρ ΠΈΠ·ΠΌΠµΠ½ΠµΠ½ΠΈΡ Π΄Π»Ρ Π·Π°ΠΏΠΈΡΠΈ {0}:"
+msgstr "Δεν μπορεί να αποθηκεύσει τις αλλαγές για εισαγωγή {0}:"
 
 #: ../phonebook/jdbc/ConnectionDialog.java:220
 msgid "Driver class:"
-msgstr "ΠΠ»Π°ΡΡ Π΄Ρ€Π°ΠΉΠ²ΠµΡ€Π°:"
+msgstr "Κατηγορία οδηγού:"
 
 #: ../phonebook/jdbc/ConnectionDialog.java:222
 msgid "Database URL:"
-msgstr "URL Π±Π°Π·Ρ‹ Π΄Π°Π½Π½Ρ‹Ρ…:"
+msgstr "Βάση δεδομένων URL:"
 
 #: ../phonebook/jdbc/ConnectionDialog.java:232
 msgid "Table:"
-msgstr "ΠΆΠ°Π±Π»ΠΈΡ†Π°:"
+msgstr "Πίνακας:"
 
 #: ../phonebook/jdbc/ConnectionDialog.java:289
 msgid "You have to specify a driver class."
-msgstr "Π’Ρ‹ Π΄ΠΎΠ»Π¶Π½Ρ‹ ΡƒΠΊΠ°Π·Π°Ρ‚Ρ ΠΊΠ»Π°ΡΡ Π΄Ρ€Π°ΠΉΠ²ΠµΡ€Π°."
+msgstr "Πρέπει να ορίσετε κατηγορία οδηγού."
 
 #: ../phonebook/jdbc/ConnectionDialog.java:293
 msgid "You have to specify a database URL."
-msgstr "Π’Ρ‹ Π΄ΠΎΠ»Π¶Π½Ρ‹ ΡƒΠΊΠ°Π·Π°Ρ‚Ρ URL Π±Π°Π·Ρ‹ Π΄Π°Π½Π½Ρ‹Ρ…."
+msgstr "Πρέπει να ορίσετε μια βάση δεδομένων URL."
 
 #: ../phonebook/jdbc/ConnectionDialog.java:393
 msgid "Could not get the field names:"
-msgstr "ΠΠµΠ²ΠΎΠ·ΠΌΠΎΠ¶Π½ΠΎ ΠΏΠΎΠ»ΡƒΡ‡ΠΈΡ‚Ρ ΠΈΠΌΠµΠ½Π° ΠΏΠΎΠ»ΠµΠΉ:"
+msgstr "Δε γίνεται λήψη των ονομάτων των πεδίων:"
 
 #: ../phonebook/jdbc/ConnectionDialog.java:405
 msgid "You have to specify a database table."
-msgstr "Π’Ρ‹ Π΄ΠΎΠ»Π¶Π½Ρ‹ ΡƒΠΊΠ°Π·Π°Ρ‚Ρ Ρ‚Π°Π±Π»ΠΈΡ†Ρƒ Π±Π°Π·Ρ‹ Π΄Π°Π½Π½Ρ‹Ρ…."
+msgstr "Πρέπει να ορίσετε πίνακα βάσης δεδομένων."
 
 #: ../phonebook/jdbc/ConnectionDialog.java:413
 msgid "Connection to the database succeeded."
-msgstr "Π΅ΠΎΠµΠ΄ΠΈΠ½ΠµΠ½ΠΈΠµ Ρ Π±Π°Π·ΠΎΠΉ Π΄Π°Π½Π½Ρ‹Ρ… ΡƒΡΡ‚Π°Π½ΠΎΠ²Π»ΠµΠ½ΠΎ."
+msgstr "Επιτυχής σύνδεση με τη βάση δεδομένων."
 
 #: ../phonebook/AbstractConnectionSettings.java:43 ../send/SendWin.java:216
 msgid "<none>"
-msgstr "<Π½ΠµΡ‚>"
+msgstr "<κανένα>"
 
 #: ../phonebook/PhoneBook.java:54
 msgid "<no name>"
-msgstr "<Π±ΠµΠ· ΠΈΠΌΠµΠ½ΠΈ>"
+msgstr "<χωρίς όνομα>"
 
 #: ../FaxResolution.java:28
 msgid "High (196 lpi)"
-msgstr "Π’Ρ‹ΡΠΎΠΊΠΎΠµ (196 lpi)"
+msgstr "Υψηλή (196 lpi)"
 
 #: ../FaxResolution.java:29
 msgid "Low (98 lpi)"
-msgstr "ΠΠΈΠ·ΠΊΠΎΠµ (196 lpi)"
+msgstr "Χαμηλή (98 lpi)"
 
 #: ../readstate/JDBCPersistentReadState.java:73
 msgid "Fax filename:"
-msgstr "ΠΠΌΡ Ρ„Π°ΠΉΠ»Π° Ρ„Π°ΠΊΡΠ°:"
+msgstr "Όνομα αρχείου φαξ:"
 
 #: ../readstate/JDBCPersistentReadState.java:74
 msgid "Read/Unread State:"
-msgstr "Π΅ΠΎΡΡ‚ΠΎΡΠ½ΠΈΠµ ΠΡ€ΠΎΡ‡ΠΈΡ‚Π°Π½ΠΎ/ΠΠµΠΏΡ€ΠΎΡ‡ΠΈΡ‚Π°Π½ΠΎ:"
+msgstr "Αναγνωσμένο/Μη αναγνωσμένο:"
 
 #: ../readstate/JDBCPersistentReadState.java:143
 msgid ""
@@ -2349,113 +2340,114 @@ msgid ""
 "current read/unread state will not be saved.\n"
 " Reason:"
 msgstr ""
-"ΠΠµΠ²ΠΎΠ·ΠΌΠΎΠ¶Π½ΠΎ ΠΎΡ‚ΠΊΡ€Ρ‹Ρ‚Ρ Ρ‚Π°Π±Π»ΠΈΡ†Ρƒ Π±Π°Π·Ρ‹ Π΄Π°Π½Π½Ρ‹Ρ… Π΄Π»Ρ ΡΠΎΡ…Ρ€Π°Π½ΠµΠ½ΠΈΡ ΡΠΎΡΡ‚ΠΎΡΠ½ΠΈΡ ΠΏΡ€ΠΎΡ‡ΠΈΡ‚Π°Π½ΠΎ/"
-"Π½ΠµΠΏΡ€ΠΎΡ‡ΠΈΡ‚Π°Π½ΠΎ. ΠΆΠµΠΊΡƒΡ‰ΠµΠµ ΡΠΎΡΡ‚ΠΎΡΠ½ΠΈΠµ ΡΠΎΡ…Ρ€Π°Π½ΠµΠ½ΠΎ Π½Πµ Π±ΡƒΠ΄ΠµΡ‚.\n"
-" ΠΡ€ΠΈΡ‡ΠΈΠ½Π°:"
+"Δεν μπορεί να ανοίξει τον πίνακα δεδομένων για να αποθηκεύσει την κατάσταση "
+"αναγνωσμένο/μη αναγνωσμένο. Η Τρέχουσα κατάσταση αναγνωσμένο/μη αναγνωσμένο "
+"δεν μπορεί να αποθηκευτεί.\n"
+" Αιτία:"
 
 #: ../readstate/JDBCPersistentReadState.java:374
 msgid "Database table"
-msgstr "Π‘Π°Π·Π° Π΄Π°Π½Π½Ρ‹Ρ…"
+msgstr "Πίνακας δεδομένων"
 
 #: ../readstate/JDBCPersistentReadState.java:388
 msgid "JDBC settings to save read/unread state"
-msgstr "Π£ΡΡ‚Π°Π½ΠΎΠ²ΠΊΠΈ JDBC Π΄Π»Ρ ΡΠΎΡ…Ρ€Π°Π½ΠµΠ½ΠΈΡ ΡΠΎΡΡ‚ΠΎΡΠ½ΠΈΡ \"ΠΏΡ€ΠΎΡ‡ΠΈΡ‚Π°Π½ΠΎ/Π½ΠµΠΏΡ€ΠΎΡ‡ΠΈΡ‚Π°Π½ΠΎ\""
+msgstr "JDBC ρυθμίσεις για να αποθηκευτεί ως αναγνωσμενο/μη αναγνωσμένο"
 
 #: ../readstate/JDBCPersistentReadState.java:389
 msgid ""
 "Please select which fields in the table correspond to the necessary fields "
 "to save the read/unread state"
 msgstr ""
-"ΠΠΎΠ¶Π°Π»ΡƒΠΉΡΡ‚Π°, Π²Ρ‹Π±ΠµΡ€ΠΈΡ‚Πµ ΡΠΎΠΎΡ‚Π²ΠµΡ‚ΡΠ²ΡƒΡΡ‰ΠΈΠµ ΠΏΠΎΠ»Ρ Ρ‚Π°Π±Π»ΠΈΡ†Ρ‹ Π΄Π»Ρ ΡΠΎΡ…Ρ€Π°Π½ΠµΠ½ΠΈΡ ΡΠΎΡΡ‚ΠΎΡΠ½ΠΈΡ "
-"ΠΏΡ€ΠΎΡ‡ΠΈΡ‚Π°Π½ΠΎ/Π½ΠµΠΏΡ€ΠΎΡ‡ΠΈΡ‚Π°Π½ΠΎ"
+"Παρακαλώ επιλέξτε ποιά πεδία στον πίνακα ανταποκρίνονται στα απαραίτητα "
+"πεδία για να αποθηκευτεί η κατάσταση αναγνωσμένο/μη αναγνωσμένο"
 
 #: ../readstate/LocalPersistentReadState.java:152
 msgid "Local file"
-msgstr "Π›ΠΎΠΊΠ°Π»ΡΠ½Ρ‹ΠΉ Ρ„Π°ΠΉΠ»"
+msgstr "Τοπικό αρχείο"
 
 #: ../NoGUISender.java:172
 msgid "Error sending the fax:"
-msgstr "ΠΡΠΈΠ±ΠΊΠ° ΠΎΡ‚ΠΏΡ€Π°Π²ΠΊΠΈ Ρ„Π°ΠΊΡΠ°:"
+msgstr ""
 
 #: ../model/SentYajJob.java:211
 msgid "Blocked (by concurrent activity to the same destination)"
-msgstr "Π—Π°Π±Π»ΠΎΠΊΠΈΡ€ΠΎΠ²Π°Π½ΠΎ (ΠΏΠ°Ρ€Π°Π»Π»ΠµΠ»ΡΠ½ΠΎΠΉ ΠΎΠΏΠµΡ€Π°Ρ†ΠΈΠµΠΉ)"
+msgstr "Μπλόκαρε (από ταυτόχρονη δραστηριότητα με τον ίδιο προορισμο)"
 
 #: ../model/SentYajJob.java:213 ../model/SentYajJob.java:244
 msgid "Done"
-msgstr "Π”ΠΎΡΡ‚Π°Π²Π»ΠµΠ½"
+msgstr "Πραγματοποιήθηκε"
 
 #: ../model/SentYajJob.java:215 ../model/SentYajJob.java:246
 msgid "Failed"
-msgstr "ΠΠµ ΡƒΠ΄Π°Π»ΠΎΡΡ Π΄ΠΎΡΡ‚Π°Π²ΠΈΡ‚Ρ"
+msgstr "Απέτυχε"
 
 #: ../model/SentYajJob.java:217
 msgid "Pending (waiting for the time to send to arrive)"
-msgstr "Π—Π°Π΄ΠµΡ€Π¶Π°Π½ΠΎ (ΠΎΠ¶ΠΈΠ΄Π°Π½ΠΈΠµ Π½Π°ΡΡ‚ΡƒΠΏΠ»ΠµΠ½ΠΈΡ Π²Ρ€ΠµΠΌΠµΠ½ΠΈ ΠΎΡ‚ΠΏΡ€Π°Π²ΠΊΠΈ)"
+msgstr "Σε αναμονή (αναμονή για να έρθει η στιγμή της αποστολής)"
 
 #: ../model/SentYajJob.java:219 ../model/SentYajJob.java:250
 msgid "Running"
-msgstr "Π’Ρ‹ΠΏΠΎΠ»Π½ΡΠµΡ‚ΡΡ"
+msgstr "Τρέχει/Σε εξέλιξη"
 
 #: ../model/SentYajJob.java:221
 msgid ""
 "Sleeping (waiting for a scheduled timeout such as a delay between attempts "
 "to send)"
 msgstr ""
-"Π‘ΠµΠ·Π΄ΠµΠΉΡΡ‚Π²ΡƒΠµΡ‚ (Π·Π°ΠΏΠ»Π°Π½ΠΈΡ€ΠΎΠ²Π°Π½Π½Ρ‹ΠΉ Ρ‚Π°ΠΉΠΌ-Π°ΡƒΡ‚, Π½Π°ΠΏΡ€. Π·Π°Π΄ΠµΡ€Π¶ΠΊΠ° ΠΌΠµΠ¶Π΄Ρƒ ΠΏΠΎΠΏΡ‹Ρ‚ΠΊΠ°ΠΌΠΈ "
-"ΠΏΠµΡ€ΠµΠ΄Π°Ρ‡ΠΈ)"
+"Κοιμάται (αναμονή για ένα προγραμματισμένο διάλειμμα όπως μια καθυστέρηση "
+"μεταξύ των προσπαθειών για αποστολή)"
 
 #: ../model/SentYajJob.java:223
 msgid "Suspended (not being scheduled)"
-msgstr "ΠΡΡ‚Π°Π½ΠΎΠ²Π»ΠµΠ½ΠΎ (Π½Πµ Π·Π°Π΄Π°Π½ΠΎ Π²Ρ€ΠµΠΌΡ ΠΎΡ‚ΠΏΡ€Π°Π²ΠΊΠΈ)"
+msgstr "Αναβλήθηκε (δεν είχε προγραμματιστεί)"
 
 #: ../model/SentYajJob.java:225 ../model/SentYajJob.java:256
 msgid "Undefined"
-msgstr "ΠΠµΠΎΠΏΡ€ΠµΠ΄ΠµΠ»ΠµΠ½ΠΎ"
+msgstr "Μη ορισμένο"
 
 #: ../model/SentYajJob.java:227
 msgid "Waiting (for resources such as a free modem)"
-msgstr "ΠΠ¶ΠΈΠ΄Π°Π½ΠΈΠµ (Ρ€ΠµΡΡƒΡ€ΡΠΎΠ² Ρ‚Π°ΠΊΠΈΡ… ΠΊΠ°ΠΊ ΡΠΎΠ±ΠΎΠ΄Π½Ρ‹ΠΉ ΠΌΠΎΠ΄ΠµΠΌ)"
+msgstr "Αναμονή (για πηγές όπως ένα ελεύθερο modem )"
 
 #: ../model/SentYajJob.java:242
 msgid "Blocked"
-msgstr "Π—Π°Π±Π»ΠΎΠΊΠΈΡ€ΠΎΠ²Π°Π½ΠΎ"
+msgstr ""
 
 #: ../model/SentYajJob.java:248
 msgid "Pending"
-msgstr "Π—Π°Π΄ΠµΡ€Π¶Π°Π½ΠΎ"
+msgstr ""
 
 #: ../model/SentYajJob.java:252
 msgid "Sleeping"
-msgstr "Π‘ΠµΠ·Π΄ΠµΠΉΡΡ‚Π²ΡƒΠµΡ‚"
+msgstr ""
 
 #: ../model/SentYajJob.java:254
 msgid "Suspended"
-msgstr "ΠΡΡ‚Π°Π½ΠΎΠ²Π»ΠµΠ½ΠΎ"
+msgstr ""
 
 #: ../model/SentYajJob.java:258
 msgid "Waiting"
-msgstr "ΠΠ¶ΠΈΠ΄Π°Π½ΠΈΠµ"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:37
 msgid "Communication identifier for last call"
-msgstr "ΠΠ΄ΠµΠ½Ρ‚ΠΈΡ„ΠΈΠΊΠ°Ρ‚ΠΎΡ€ ΡΠ²ΡΠ·ΠΈ ΠΏΠΎΡΠ»ΠµΠ΄Π½ΠµΠ³ΠΎ Π·Π²ΠΎΠ½ΠΊΠ°"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:39
 msgid "Host that submitted the job"
-msgstr "Π¥ΠΎΡΡ‚, ΠΏΠµΡ€ΠµΠ΄Π°Π²ΡΠΈΠΉ Π·Π°Π΄Π°Π½ΠΈΠµ"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:40
 msgid "Continuation coverpage file"
-msgstr "Π¤Π°ΠΉΠ» Ρ‚ΠΈΡ‚ΡƒΠ»ΡΠ½ΠΎΠ³ΠΎ Π»ΠΈΡΡ‚Π° ΠΏΡ€ΠΎΠ΄ΠΎΠ»Π¶ΠµΠ½ΠΈΡ"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:41
 msgid "Data format used to transmit a facsimile"
-msgstr "Π¤Π°Ρ€ΠΌΠ°Ρ‚ Π΄Π°Π½Π½Ρ‹Ρ…, ΠΈΡΠΏΠΎΠ»ΡΠ·ΠΎΠ²Π°Π½Π½Ρ‹ΠΉ Π΄Π»Ρ ΠΏΠµΡ€ΠµΠ΄Π°Ρ‡ΠΈ Ρ„Π°ΠΊΡΠ°"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:42
 msgid "Desired transmit speed"
-msgstr "Π–ΠµΠ»Π°ΠµΠΌΠ°Ρ ΡΠΊΠΎΡ€ΠΎΡΡ‚Ρ ΠΏΠµΡ€ΠµΠ΄Π°Ρ‡ΠΈ"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:44
 msgid "ECM"
@@ -2463,119 +2455,119 @@ msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:44
 msgid "Desired use of Error Correction Mode (ECM)"
-msgstr "Π–ΠµΠ»Π°ΠµΠΌΠΎΠµ ΠΈΡΠΏΠΎΠ»ΡΠ·Ρ€Π²Π°Π½ΠΈΠµ Π ΠµΠ¶ΠΈΠΌΠ° ΠΠΎΡ€Ρ€ΠµΠΊΡ†ΠΈΠΈ ΠΡΠΈΠ±ΠΎΠΊ (ECM)"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:46
 msgid "Tagline"
-msgstr "Π—Π°Π³ΠΎΠ»ΠΎΠ²ΠΎΠΊ"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:46
 msgid "Whether or not to use tagline parameter"
-msgstr "ΠΡΠΏΠΎΠ»ΡΠ·ΠΎΠ²Π°Ρ‚Ρ ΠΏΠ°Ρ€Π°ΠΌΠµΡ‚Ρ€ Π·Π°Π³ΠΎΠ»ΠΎΠ²ΠΊΠ°"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:49
 msgid "Ready"
-msgstr "Π“ΠΎΡ‚ΠΎΠ²"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:49
 msgid "Document ready for transmission"
-msgstr "Π”ΠΎΠΊΡƒΠΌΠµΠ½Ρ‚ Π³ΠΎΡ‚ΠΎΠ² ΠΊ ΠΏΠµΡ€ΠµΠ΄Π°Ρ‡Πµ"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:50
 msgid "HylaFAX job group identifier"
-msgstr "Π“Ρ€ΡƒΠΏΠΏΠΎΠ²ΠΎΠΉ ΠΈΠ΄ΠµΠ½Ρ‚ΠΈΡ„ΠΈΠΊΠ°Ρ‚ΠΎΡ€ Π·Π°Π΄Π°Π½ΠΈΡ HylaFAX"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:51
 msgid "HylaFAX job identifier"
-msgstr "ΠΠ΄ΠµΠ½Ρ‚ΠΈΡ„ΠΈΠΊΠ°Ρ‚ΠΎΡ€ Π·Π°Π΄Π°Π½ΠΈΡ HylaFAX"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:53
 msgid "Job type identification string"
-msgstr "Π΅Ρ‚Ρ€ΠΎΠΊΠ° ΠΈΠ΄ΠµΠ½Ρ‚ΠΈΡ„ΠΈΠΊΠ°Ρ‚ΠΎΡ€ΠΎΠ² Ρ‚ΠΈΠΏΠ° Π·Π°Π΄Π°Π½ΠΈΡ"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:56
 msgid "Email address of sender"
-msgstr "ΠΠ΄Ρ€ΠµΡ ΡΠ»ΠµΠΊΡ‚Ρ€ΠΎΠ½Π½ΠΎΠΉ ΠΏΠΎΡ‡Ρ‚Ρ‹ ΠΎΡ‚ΠΏΡ€Π°Π²ΠΈΡ‚ΠµΠ»Ρ"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:59
 msgid "Minimum speed"
-msgstr "ΠΠΈΠ½ΠΈΠΌΠ°Π»ΡΠ½Π°Ρ ΡΠΊΠΎΡ€ΠΎΡΡ‚Ρ"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:59
 msgid "Minimum required transmit speed"
-msgstr "ΠΆΡ€ΠµΠ±ΡƒΠµΠΌΠ°Ρ ΠΌΠΈΠ½ΠΈΠΌΠ°Π»ΡΠ½Π°Ρ ΡΠΊΠΎΡ€ΠΎΡΡ‚Ρ ΠΏΠµΡ€ΠµΠ΄Π°Ρ‡ΠΈ"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:60
 msgid "Outgoing modem to use"
-msgstr "ΠΠΎΠ΄ΠµΠΌ Π΄Π»Ρ ΠΈΡΡ…ΠΎΠ΄ΡΡ‰ΠµΠΉ ΡΠ²ΡΠ·ΠΈ"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:62
 msgid "Email notification specification"
-msgstr "Π”ΠµΡ‚Π°Π»ΠΈΠ·Π°Ρ†ΠΈΡ ΡƒΠ²ΠµΠ΄ΠΎΠΌΠ»ΠµΠ½ΠΈΡ ΠΏΠΎ Email"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:64
 msgid "Tries (current page)"
-msgstr "ΠΠΎΠΏΡ‹Ρ‚ΠΊΠΈ (Ρ‚ΠµΠΊΡƒΡ‰Π°Ρ ΡΡ‚Ρ€Π°Π½ΠΈΡ†Π°)"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:64
 msgid "Number of attempts to send current page"
-msgstr "ΠΠΎΠ»ΠΈΡ‡ΠµΡΡ‚Π²ΠΎ ΠΏΠΎΠΏΡ‹Ρ‚ΠΎΠΊ ΠΏΠµΡ€ΠµΠ΄Π°Ρ‡ΠΈ Ρ‚ΠµΠΊΡƒΡ‰ΠµΠΉ ΡΡ‚Ρ€Π°Π½ΠΈΡ†Ρ‹"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:67
 msgid "Page PIN"
-msgstr "PIN ΡΡ‚Ρ€Π°Π½ΠΈΡ†Ρ‹"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:67
 msgid "PIN in a page operation"
-msgstr "PIN Π² ΠΎΠΏΠµΡ€Π°Ρ†ΠΈΠΈ ΡΠΎ ΡΡ‚Ρ€Π°Π½ΠΈΡ†ΠµΠΉ"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:69
 msgid "Page handling"
-msgstr "ΠΠ±Ρ€Π°Π±ΠΎΡ‚ΠΊΠ° ΡΡ‚Ρ€Π°Π½ΠΈΡ†Ρ‹"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:69
 msgid "Page analysis information"
-msgstr "ΠΠ½Π°Π»ΠΈΡ‚ΠΈΡ‡ΠµΡΠΊΠ°Ρ ΠΈΠ½Ρ„ΠΎΡ€ΠΌΠ°Ρ†ΠΈΡ ΡΡ‚Ρ€Π°Π½ΠΈΡ†Ρ‹"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:73
 msgid "Polling request"
-msgstr "Π—Π°ΠΏΡ€ΠΎΡ"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:77
 msgid "Time to use between job retries"
-msgstr "Π’Ρ€ΠµΠΌΠµΠ½Π½ΠΎΠΉ ΠΈΠ½Ρ‚ΠµΡ€Π²Π°Π», ΠΈΡΠΏΠΎΠ»ΡΠ·ΡƒΠµΠΌΡ‹ΠΉ ΠΌΠµΠ¶Π΄Ρƒ ΠΏΠΎΠ²Ρ‚ΠΎΡ€Π°ΠΌΠΈ Π·Π°Π΄Π°Π½ΠΈΡ"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:78
 msgid "Returned status"
-msgstr "Π’ΠΎΠ·Π²Ρ€Π°Ρ‰Ρ‘Π½Π½ΠΎΠµ ΡΠΎΡΡ‚ΠΎΡΠ½ΠΈΠµ"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:78
 msgid "Indicates status return value for the job"
-msgstr "ΠΠΎΠΊΠ°Π·Ρ‹Π²Π°ΠµΡ‚ Π²ΠΎΠ·Π²Ρ€Π°Ρ‰Ρ‘Π½Π½ΠΎΠµ Π·Π½Π°Ρ‡ΠµΠ½ΠΈΠµ ΡΠΎΡΡ‚ΠΎΡΠ½ΠΈΡ Π·Π°Π΄Π°Π½ΠΈΡ"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:81
 msgid "Signalling rate at which a facsimile was sent"
-msgstr "Π΅ΠΊΠΎΡ€ΠΎΡΡ‚Ρ ΠΏΠµΡ€ΠµΠ΄Π°Ρ‡ΠΈ, Π½Π° ΠΊΠΎΡ‚ΠΎΡ€ΠΎΠΉ Π±Ρ‹Π» ΠΎΡ‚ΠΏΡ€Π°Π²Π»ΠµΠ½ Ρ„Π°ΠΊΡ"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:90
 msgid "Whether or not to use a continuation cover page"
-msgstr "ΠΡΠΏΠΎΠ»ΡΠ·ΠΎΠ²Π°Ρ‚Ρ Ρ‚ΠΈΡ‚ΡƒΠ»ΡΠ½Ρ‹ΠΉ Π»ΠΈΡΡ‚ ΠΏΡ€ΠΎΠ΄ΠΎΠ»Π¶ΠµΠ½ΠΈΡ"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:91
 msgid "Use max. vertical resolution"
-msgstr "ΠΡΠΏΠΎΠ»ΡΠ·ΠΎΠ²Π°Ρ‚Ρ ΠΌΠ°ΠΊΡ. Π²ΠµΡ€Ρ‚ΠΈΠΊΠ°Π»ΡΠ½ΠΎΠµ Ρ€Π°Π·Ρ€ΠµΡΠµΠ½ΠΈΠµ"
+msgstr ""
 
 #: ../model/archive/QueueFileFormat.java:91
 msgid "Whether or not to use highest vertical resolution"
-msgstr "ΠΡΠΏΠΎΠ»ΡΠ·ΠΎΠ²Π°Ρ‚Ρ Π½Π°ΠΈΠ²Ρ‹ΡΡΠµΠµ Π²ΠµΡ€Ρ‚ΠΈΠΊΠ°Π»ΡΠ½ΠΎΠµ Ρ€Π°Π·Ρ€ΠµΡΠµΠ½ΠΈΠµ"
+msgstr ""
 
 #: ../DateStyle.java:66
 msgid "(Language default)"
-msgstr "(ΠΠΎ ΡƒΠΌΠΎΠ»Ρ‡Π°Π½ΠΈΡ Π΄Π»Ρ ΡΠ·Ρ‹ΠΊΠ°)"
+msgstr ""
 
 #: ../DateStyle.java:95
 msgid "dd/MM/yyyy"
-msgstr "dd.MM.yyyy"
+msgstr ""
 
 #: ../DateStyle.java:105
 msgid "HH:mm:ss"
@@ -2583,51 +2575,51 @@ msgstr ""
 
 #: ../RecvFormat.java:34
 msgid "Time/Date"
-msgstr "Π”Π°Ρ‚Π°/Π’Ρ€ΠµΠΌΡ"
+msgstr "ώρα/ημερομηνία"
 
 #: ../RecvFormat.java:34
 msgid "Extended representation of the time when the receive happened"
-msgstr "Π”Π°Ρ‚Π° ΠΈ Π²Ρ€ΠµΠΌΡ ΠΏΠΎΠ»ΡƒΡ‡ΠµΠ½ΠΈΡ Ρ„Π°ΠΊΡΠ°"
+msgstr "Παρατεταμένη παρουσίαση του χρόνου που συνέβει η λήψη"
 
 #: ../RecvFormat.java:38
 msgid "SubAddress received from sender (if any)"
-msgstr "SubAddress ΠΏΠΎΠ»ΡƒΡ‡ΠµΠ½Π½Ρ‹ΠΉ ΠΎΡ‚ ΠΎΡ‚ΠΏΡ€Π°Π²ΠΈΡ‚ΠµΠ»Ρ"
+msgstr "Υποδιεύθυνση ελήφθη από τον αποστολέα (εάν υπάρχει)"
 
 #: ../RecvFormat.java:42
 msgid "Signalling rate used during receive"
-msgstr "Π΅ΠΊΠΎΡ€ΠΎΡΡ‚Ρ, ΠΈΡΠΏΠΎΠ»ΡΠ·ΠΎΠ²Π°Π½Π½Π°Ρ Π²ΠΎ Π²Ρ€ΠµΠΌΡ ΠΏΡ€ΠΈΠµΠΌΠ°"
+msgstr "Ρυθμός εκπομπής που χρησιμοποιήθηκε κατά τη διάρκεια της λήψης"
 
 #: ../RecvFormat.java:46
 msgid "Format"
-msgstr "Π¤ΠΎΡ€ΠΌΠ°Ρ‚"
+msgstr "Διαμόρφωση"
 
 #: ../RecvFormat.java:46
 msgid "Data format used during receive"
-msgstr "Π¤ΠΎΡ€ΠΌΠ°Ρ‚ Π΄Π°Π½Π½Ρ‹Ρ…, ΠΈΡΠΏΠΎΠ»ΡΠ·ΠΎΠ²Π°Π½Π½Ρ‹ΠΉ ΠΏΡ€ΠΈ ΠΏΡ€ΠΈΠµΠΌΠµ"
+msgstr "Διαμόρφωση δεδομένων που χρησιμοποιήθηκαν κατά τη διάρκεια της λήψης"
 
 #: ../RecvFormat.java:50
 msgid "Error description"
-msgstr "ΠΠΏΠΈΡΠ°Π½ΠΈΠµ ΠΎΡΠΈΠ±ΠΊΠΈ"
+msgstr "περιγραφή σφάλματος"
 
 #: ../RecvFormat.java:50
 msgid "Error description if an error occurred during receive"
-msgstr "ΠΠΏΠΈΡΠ°Π½ΠΈΠµ ΠΎΡΠΈΠ±ΠΊΠΈ (ΠµΡΠ»ΠΈ ΠΏΡ€ΠΎΠΈΠ·ΠΎΡΠ»Π° ΠΎΡΠΈΠ±ΠΊΠ° Π²ΠΎ Π²Ρ€ΠµΠΌΡ ΠΏΡ€ΠΈΠµΠΌΠ°)"
+msgstr "Περιγραφή σφάλματος εάν ένα σφάλμα προκύψει κατά τη διάρκεια της λήψης"
 
 #: ../RecvFormat.java:54
 msgid "Filename"
-msgstr "ΠΠΌΡ Ρ„Π°ΠΉΠ»Π°"
+msgstr "Όνομα αρχείου"
 
 #: ../RecvFormat.java:54
 msgid "Document filename (relative to the recvq directory)"
-msgstr "ΠΠΌΡ Ρ„Π°ΠΉΠ»Π° Π΄ΠΎΠΊΡƒΠΌΠµΠ½Ρ‚Π° (ΠΎΡ‚Π½ΠΎΡΠΈΡ‚ΠµΠ»ΡΠ½ΠΎ ΠΊΠ°Ρ‚Π°Π»ΠΎΠ³Π° recvq)"
+msgstr "Όνομα αρχείου εγγράφου (σχετικό με τον recvq κατάλογο )"
 
 #: ../RecvFormat.java:58
 msgid "Time to receive"
-msgstr "Π”Π»ΠΈΡ‚ΠµΠ»ΡΠ½ΠΎΡΡ‚Ρ ΠΏΡ€ΠΈΠµΠΌΠ°"
+msgstr "Χρόνος λήψης"
 
 #: ../RecvFormat.java:58
 msgid "Time spent receiving document (HH:MM:SS)"
-msgstr "Π’Ρ€ΠµΠΌΡ Π·Π°Ρ‚Ρ€Π°Ρ‡ΠµΠ½Π½ΠΎΠµ Π½Π° ΠΏΡ€ΠΈΠµΠΌ Π΄ΠΎΠΊΡƒΠΌΠµΠ½Ρ‚Π° (HH:MM:SS)"
+msgstr "Χρόνος που καταναλώθηκε κατά τη λήψη εγγράφου (HH:MM:SS)"
 
 #: ../RecvFormat.java:62
 msgid "CIDName"
@@ -2635,7 +2627,7 @@ msgstr ""
 
 #: ../RecvFormat.java:62
 msgid "CIDName value for received fax"
-msgstr "Π·Π½Π°Ρ‡ΠµΠ½ΠΈΠµ CIDName ΠΏΡ€ΠΈΠ½ΡΡ‚ΠΎΠ³ΠΎ Ρ„Π°ΠΊΡΠ°"
+msgstr ""
 
 #: ../RecvFormat.java:66
 msgid "CIDNumber"
@@ -2643,79 +2635,79 @@ msgstr ""
 
 #: ../RecvFormat.java:66
 msgid "CIDNumber value for received fax"
-msgstr "Π·Π½Π°Ρ‡ΠµΠ½ΠΈΠµ CIDNumber ΠΏΡ€ΠΈΠ½ΡΡ‚ΠΎΠ³ΠΎ Ρ„Π°ΠΊΡΠ°"
+msgstr ""
 
 #: ../RecvFormat.java:74
 msgid "Fax Protection"
-msgstr "ΠΡ€Π°Π²Π° (Ρ„Π°ΠΊΡ)"
+msgstr "Προστασία φαξ"
 
 #: ../RecvFormat.java:74
 msgid "Fax-style protection mode string (``-rwxrwx'')"
-msgstr "ΠΡ€Π°Π²Π° Π΄ΠΎΡΡ‚ΡƒΠΏΠ° Π² Ρ„Π°ΠΊΡ-ΡΡ‚ΠΈΠ»Πµ - ΡΡ‚Ρ€ΠΎΠΊΠ° Π²ΠΈΠ΄Π° (``-rwxrwx'')"
+msgstr ""
 
 #: ../RecvFormat.java:78
 msgid "File size"
-msgstr "Π Π°Π·ΠΌΠµΡ€ Ρ„Π°ΠΉΠ»Π°"
+msgstr "Μέγεθος αρχείου"
 
 #: ../RecvFormat.java:78
 msgid "File size (number of bytes)"
-msgstr "Π Π°Π·ΠΌΠµΡ€ Ρ„Π°ΠΉΠ»Π° (Π² Π±Π°ΠΉΡ‚Π°Ρ…)"
+msgstr "Μέγεθος αρχείου (αριθμός byte)"
 
 #: ../RecvFormat.java:82
 msgid "File owner"
-msgstr "Π’Π»Π°Π΄ΠµΠ»ΠµΡ† Ρ„Π°ΠΉΠ»Π°"
+msgstr "Ιδιοκτήτης αρχείου"
 
 #: ../RecvFormat.java:86
 msgid "Number of pages in document"
-msgstr "ΠΠΎΠ»ΠΈΡ‡ΠµΡΡ‚Π²ΠΎ ΡΡ‚Ρ€Π°Π½ΠΈΡ† Π² Π΄ΠΎΠΊΡƒΠΌΠµΠ½Ρ‚Πµ"
+msgstr "Αριθμός σελίδων στο έγγραφο"
 
 #: ../RecvFormat.java:90
 msgid "Protection"
-msgstr "ΠΡ€Π°Π²Π°"
+msgstr "Προστασία"
 
 #: ../RecvFormat.java:90
 msgid "UNIX-style protection flags"
-msgstr "Π¤Π»Π°Π³ΠΈ ΠΏΡ€Π°Π² Π΄ΠΎΡΡ‚ΡƒΠΏΠ° Π² UNIX-ΡΡ‚ΠΈΠ»Πµ"
+msgstr "UNIX-style ενδείξεις προστασίας"
 
 #: ../RecvFormat.java:94
 msgid "Resolution of received data"
-msgstr "Π Π°Π·Ρ€ΠµΡΠµΠ½ΠΈΠµ ΠΏΡ€ΠΈΠ½ΡΡ‚Ρ‹Ρ… Π΄ΠΎΠΊΡƒΠΌΠµΠ½Ρ‚ΠΎΠ²"
+msgstr "Ευκρίνεια των δεδομένων που ελήφθησαν"
 
 #: ../RecvFormat.java:98
 msgid "Sender identity (TSI)"
-msgstr "ΠΠ΄ΠµΠ½Ρ‚ΠΈΡ„ΠΈΠΊΠ°Ρ‚ΠΎΡ€ ΠΏΠµΡ€ΠµΠ΄Π°ΡΡ‰ΠµΠ³ΠΎ Π°Π±ΠΎΠ½ΠµΠ½Ρ‚Π° (TSI)"
+msgstr "Ταυτότητα αποστολέα (TSI)"
 
 #: ../RecvFormat.java:102
 msgid "Date"
-msgstr "Π”Π°Ρ‚Π°"
+msgstr "Ημερομηνία"
 
 #: ../RecvFormat.java:102
 msgid "Compact representation of the time when the receive happened"
-msgstr "ΠΠΎΠΌΠΏΠ°ΠΊΡ‚Π½ΠΎΠµ ΠΏΡ€ΠµΠ΄ΡΡ‚Π°Π²Π»ΠµΠ½ΠΈΠµ Π²Ρ€ΠµΠΌΠµΠ½ΠΈ ΠΏΡ€ΠΈΠµΠΌΠ°"
+msgstr "Συμπιεσμένη παρουσίαση της ώρας όταν συνέβει η λήψη"
 
 #: ../RecvFormat.java:110
 msgid "In progress"
-msgstr "Π’Ρ‹ΠΏΠΎΠ»Π½ΡΠµΡ‚ΡΡ"
+msgstr "Σε εξέλιξη"
 
 #: ../RecvFormat.java:110
 msgid "A ``*'' if receive is going on; otherwise `` '' (space)"
-msgstr "``*'' Π²ΠΎ Π²Ρ€ΠµΠΌΡ ΠΏΡ€ΠΈΠµΠΌΠ°; ΠΈΠ½Π°Ρ‡Πµ `` '' (ΠΏΡ€ΠΎΠ±ΠµΠ»)"
+msgstr "A ``*'' αν η λήψη συνεχιστεί; διαφορετικά `` '' (κενό)"
 
 #: ../RecvFormat.java:114
 msgid "Time/Date (UNIX)"
-msgstr "Π’Ρ€ΠµΠΌΡ/Π”Π°Ρ‚Π° (UNIX)"
+msgstr ""
 
 #: ../RecvFormat.java:114
 msgid "Time in seconds since the UNIX epoch"
-msgstr "Π’Ρ€ΠµΠΌΡ Π² ΡΠµΠΊΡƒΠ½Π΄Π°Ρ… ΠΎΡ‚ Π½Π°Ρ‡Π°Π»Π° ΡΠΏΠΎΡ…ΠΈ UNIX"
+msgstr ""
 
 #: ../util/ExceptionDialog.java:82 ../util/ExceptionDialog.java:206
 msgid "Details"
-msgstr "ΠΠΎΠ΄Ρ€ΠΎΠ±Π½ΠΎ"
+msgstr "Λεπτομέρειες"
 
 #: ../util/ProgressWorker.java:161 ../util/ProgressWorker.java:163
 msgid "Initializing..."
-msgstr "ΠΠ½ΠΈΡ†ΠΈΠ°Π»ΠΈΠ·Π°Ρ†ΠΈΡ..."
+msgstr "Εκκίνηση..."
 
 #: ../util/ExternalProcessExecutor.java:76
 #, java-format
@@ -2724,166 +2716,168 @@ msgstr ""
 
 #: ../util/ToolbarEditorDialog.java:70
 msgid "Separator"
-msgstr "Π Π°Π·Π΄ΠµΠ»ΠΈΡ‚ΠµΠ»Ρ"
+msgstr "Διαχωριστής"
 
 #: ../util/ToolbarEditorDialog.java:190
 msgid "Selected toolbar buttons:"
-msgstr "Π’Ρ‹Π±Ρ€Π°Π½Π½Ρ‹Πµ ΠΊΠ½ΠΎΠΏΠΊΠΈ ΠΏΠ°Π½ΠµΠ»ΠΈ ΠΈΠ½ΡΡ‚Ρ€ΡƒΠΌΠµΠ½Ρ‚ΠΎΠ²:"
+msgstr "Επιλεγμένα κουμπιά γραμμής εργαλείων:"
 
 #: ../util/ToolbarEditorDialog.java:190
 msgid "Available toolbar buttons:"
-msgstr "Π”ΠΎΡΡ‚ΡƒΠΏΠ½Ρ‹Πµ ΠΊΠ½ΠΎΠΏΠΊΠΈ ΠΏΠ°Π½ΠµΠ»ΠΈ ΠΈΠ½ΡΡ‚Ρ€ΡƒΠΌΠµΠ½Ρ‚ΠΎΠ²:"
+msgstr "Διαθέσιμα κουμπιά γραμμής εργαλείων:"
 
 #: ../util/ClipboardPopup.java:52
 msgid "Cut"
-msgstr "Π’Ρ‹Ρ€ΠµΠ·Π°Ρ‚Ρ"
+msgstr "Αποκοπή"
 
 #: ../util/ClipboardPopup.java:56
 msgid "Paste"
-msgstr "Π’ΡΡ‚Π°Π²ΠΈΡ‚Ρ"
+msgstr "Επικόλληση"
 
 #: ../util/ClipboardPopup.java:60
 msgid "Select All"
-msgstr "Π’Ρ‹Π΄ΠµΠ»ΠΈΡ‚Ρ Π’ΡΠµ"
+msgstr "Επιλογή όλων"
 
 #: ../util/fmtEditor.java:110 ../send/TextFieldList.java:83
 msgid "Up"
-msgstr "Π’Π²ΠµΡ€Ρ…"
+msgstr "Επάνω"
 
 #: ../util/fmtEditor.java:111
 msgid "Moves the selected item up"
-msgstr "ΠΠµΡ€ΠµΠΌΠµΡ‰Π°ΠµΡ‚ Π²Ρ‹Π΄ΠµΠ»ΠµΠ½Π½Ρ‹ΠΉ ΡΠ»ΠµΠΌΠµΠ½Ρ‚ Π²Π²ΠµΡ€Ρ…"
+msgstr "Mετακινεί το επιλεγμένο στοιχείο προς τα πάνω"
 
 #: ../util/fmtEditor.java:118
 msgid "Adds the selected item"
-msgstr "Π”ΠΎΠ±Π°Π²Π»ΡΠµΡ‚ Π²Ρ‹Π΄ΠµΠ»ΠµΠ½Π½Ρ‹ΠΉ ΡΠ»ΠµΠΌΠµΠ½Ρ‚"
+msgstr "Προσθέτει το επιλεγμένο στοιχείο"
 
 #: ../util/fmtEditor.java:125
 msgid "Removes the selected item"
-msgstr "Π£Π΄Π°Π»ΡΠµΡ‚ Π²Ρ‹Π΄ΠµΠ»ΠµΠ½Π½Ρ‹ΠΉ ΡΠ»ΠµΠΌΠµΠ½Ρ‚"
+msgstr "Μετακινεί το επιλεγμένο στοιχείο"
 
 #: ../util/fmtEditor.java:131 ../send/TextFieldList.java:108
 msgid "Down"
-msgstr "Π’Π½ΠΈΠ·"
+msgstr "Κάτω"
 
 #: ../util/fmtEditor.java:132
 msgid "Moves the selected item down"
-msgstr "ΠΠµΡ€ΠµΠΌΠµΡ‰Π°ΠµΡ‚ Π²Ρ‹Π΄ΠµΠ»ΠµΠ½Π½Ρ‹ΠΉ ΡΠ»ΠµΠΌΠµΠ½Ρ‚ Π²Π½ΠΈΠ·"
+msgstr "Mετακινεί το επιλεγμένο στοιχείο προς τα κάτω"
 
 #: ../send/SendWinStyle.java:24
 msgid "Traditional"
-msgstr "ΠΆΡ€Π°Π΄ΠΈΡ†ΠΈΠΎΠ½Π½Ρ‹ΠΉ"
+msgstr "Παραδοσιακό"
 
 #: ../send/SendWinStyle.java:25
 msgid "Simplified"
-msgstr "Π£ΠΏΡ€ΠΎΡ‰Ρ‘Π½Π½Ρ‹ΠΉ"
+msgstr "Aπλοποιημένο"
 
 #: ../send/SendWin.java:179
 msgid "Send Fax"
-msgstr "ΠΡ‚ΠΏΡ€Π°Π²ΠΈΡ‚Ρ Π¤Π°ΠΊΡ"
+msgstr "Αποστολή φαξ"
 
 #: ../send/SendWin.java:219
 msgid "Poll fax"
-msgstr "Π—Π°ΠΏΡ€ΠΎΡΠΈΡ‚Ρ Ρ„Π°ΠΊΡ"
+msgstr ""
 
 #: ../send/SendWin.java:274 ../send/SimplifiedSendDialog.java:272
 msgid "Use cover page"
-msgstr "ΠΡΠΏΠΎΠ»ΡΠ·ΠΎΠ²Π°Ρ‚Ρ Ρ‚ΠΈΡ‚ΡƒΠ»ΡΠ½Ρ‹ΠΉ Π»ΠΈΡΡ‚"
+msgstr "Χρήση εξωφύλλου"
 
 #: ../send/SendWin.java:282 ../send/SimplifiedSendDialog.java:475
 msgid "Use custom cover page:"
-msgstr "ΠΡΠΏΠΎΠ»ΡΠ·ΠΎΠ²Π°Ρ‚Ρ ΡΠΏΠµΡ†ΠΈΠ°Π»ΡΠ½Ρ‹ΠΉ Ρ‚ΠΈΡ‚ΡƒΠ»ΡΠ½Ρ‹ΠΉ Π»ΠΈΡΡ‚:"
+msgstr "Χρήση ορισμένου εξωφύλλου:"
 
 #: ../send/SendWin.java:322
 msgid "Recipient Name:"
-msgstr "ΠΠΌΡ ΠΏΠΎΠ»ΡƒΡ‡Π°Ρ‚ΠµΠ»Ρ:"
+msgstr "Όνομα παραλήπτη:"
 
 #: ../send/SendWin.java:323
 msgid "Company:"
-msgstr "ΠΠΎΠΌΠΏΠ°Π½ΠΈΡ:"
+msgstr "Εταιρεία:"
 
 #: ../send/SendWin.java:324
 msgid "Location:"
-msgstr "ΠΠ΄Ρ€ΠµΡ:"
+msgstr "Τοποθεσία/Θέση:"
 
 #: ../send/SendWin.java:325
 msgid "Voice number:"
-msgstr "ΠΆΠµΠ»ΠµΡ„ΠΎΠ½:"
+msgstr "Αριθμός τηλεφώνου:"
 
 #: ../send/SendWin.java:326 ../send/SimplifiedSendDialog.java:295
 msgid "Subject:"
-msgstr "ΠΆΠµΠΌΠ°:"
+msgstr "Θέμα:"
 
 #: ../send/SendWin.java:366
 msgid "File(s):"
-msgstr "Π¤Π°ΠΉΠ»(Ρ‹):"
+msgstr "Αρχείο(α):"
 
 #: ../send/SendWin.java:461
 msgid "Fax number(s):"
-msgstr "ΠΠΎΠΌΠµΡ€(Π°) Ρ„Π°ΠΊΡ(Π°|ΠΎΠ²):"
+msgstr "Νούμερο(α) φαξ"
 
 #: ../send/SendWin.java:566 ../send/SendWin.java:571
 #: ../send/SimplifiedSendDialog.java:222 ../send/SimplifiedSendDialog.java:241
 msgid "Preview"
-msgstr "ΠΡ€ΠΎΡΠΌΠΎΡ‚Ρ€"
+msgstr "Προεπισκόπηση"
 
 #: ../send/SendWin.java:571 ../send/SimplifiedSendDialog.java:222
 msgid ""
 "Nothing to preview! (Neither a cover page nor a file to send has been "
 "selected.)"
-msgstr "ΠΠµΡ‡ΠµΠ³ΠΎ ΡΠΌΠΎΡ‚Ρ€ΠµΡ‚Ρ! (ΠΠµ Π²Ρ‹Π±Ρ€Π°Π½Ρ‹ Π½ΠΈ Ρ„Π°ΠΉΠ» Π΄Π»Ρ ΠΎΡ‚ΠΏΡ€Π°Π²ΠΊΠΈ Π½ΠΈ Ρ‚ΠΈΡ‚ΡƒΠ»ΡΠ½Ρ‹ΠΉ Π»ΠΈΡΡ‚)."
+msgstr ""
+"Τίποτα για προεπισκόπηση! (Δεν έχει επιλεγεί ούτε εξώφυλλο ούτε αρχείο  για "
+"να σταλεί.)"
 
 #: ../send/SendWin.java:633 ../send/SimplifiedSendDialog.java:371
 msgid "Choose number from phone book"
-msgstr "Π’Ρ‹Π±Ρ€Π°Ρ‚Ρ Π½ΠΎΠΌΠµΡ€ ΠΈΠ· Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½ΠΎΠ³ΠΎ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊΠ°"
+msgstr "Επέλεξε νούμερο από τον τηλεφωνικό κατάλογο"
 
 #: ../send/SendWin.java:657 ../send/SimplifiedSendDialog.java:611
 msgid "An error occured reading the input: "
-msgstr "ΠΡ€ΠΎΠΈΠ·ΠΎΡΠ»Π° ΠΎΡΠΈΠ±ΠΊΠ° ΠΏΡ€ΠΈ Ρ‡Ρ‚ΠµΠ½ΠΈΠΈ Π²Π²ΠΎΠ΄Π°:"
+msgstr "Σφάλμα προέκυψε κατά την ανάγνωση των εισερχομένων: "
 
 #: ../send/SimplifiedSendDialog.java:129
 msgid ">> Advanced"
-msgstr ">> Π”ΠΎΠΏΠΎΠ»Π½ΠΈΡ‚ΠµΠ»ΡΠ½ΠΎ"
+msgstr ">> Προηγμένο/Βελτιωμένο"
 
 #: ../send/SimplifiedSendDialog.java:130
 msgid "<< Simplified"
-msgstr "<< Π£ΠΏΡ€ΠΎΡ‰Ρ‘Π½Π½Ρ‹ΠΉ"
+msgstr "<< Απλοποιημένο"
 
 #: ../send/SimplifiedSendDialog.java:137
 msgid "Send fax"
-msgstr "ΠΡ‚ΠΏΡ€Π°Π²ΠΈΡ‚Ρ Ρ„Π°ΠΊΡ"
+msgstr "Αποστολή φαξ"
 
 #: ../send/SimplifiedSendDialog.java:334
 msgid "File(s) to send:"
-msgstr "Π¤Π°ΠΉΠ»(Ρ‹) Π΄Π»Ρ ΠΎΡ‚ΠΏΡ€Π°Π²ΠΊΠΈ:"
+msgstr "Αρχεία για αποστολή:"
 
 #: ../send/SimplifiedSendDialog.java:370
 msgid "Add from phone book..."
-msgstr "Π”ΠΎΠ±Π°Π²ΠΈΡ‚Ρ ΠΈΠ· Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½ΠΎΠ³ΠΎ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊΠ° ..."
+msgstr "Προσθέτει από τον τηλεφωνικό κατάλογο..."
 
 #: ../send/SimplifiedSendDialog.java:387
 msgid "Add a new recipient"
-msgstr "Π”ΠΎΠ±Π°Π²ΠΈΡ‚Ρ Π½ΠΎΠ²ΠΎΠ³ΠΎ ΠΏΠΎΠ»ΡƒΡ‡Π°Ρ‚ΠµΠ»Ρ"
+msgstr "Προσθέτει έναν νέο παραλήπτη"
 
 #: ../send/SimplifiedSendDialog.java:402 ../send/TextFieldList.java:149
 msgid "Remove"
-msgstr "Π£Π΄Π°Π»ΠΈΡ‚Ρ"
+msgstr "Μετακινεί"
 
 #: ../send/SimplifiedSendDialog.java:404
 msgid "Remove selected recipient"
-msgstr "Π£Π΄Π°Π»ΠΈΡ‚Ρ Π²Ρ‹Π±Ρ€Π°Π½Π½ΠΎΠ³ΠΎ ΠΏΠΎΠ»ΡƒΡ‡Π°Ρ‚ΠµΠ»Ρ"
+msgstr "Μετακινεί τον επιλεγμένο παραλήπτη"
 
 #: ../send/SimplifiedSendDialog.java:446
 msgid "Fax number:"
-msgstr "Π¤Π°ΠΊΡ:"
+msgstr "Νούμερο φαξ:"
 
 #: ../send/SimplifiedSendDialog.java:448
 msgid "Recipients:"
-msgstr "ΠΠΎΠ»ΡƒΡ‡Π°Ρ‚ΠµΠ»ΠΈ:"
+msgstr "Παραλήπτες:"
 
 #: ../send/SimplifiedSendDialog.java:519
 msgid "Time to send:"
-msgstr "Π’Ρ€ΠµΠΌΡ ΠΎΡ‚ΠΏΡ€Π°Π²ΠΊΠΈ:"
+msgstr ""
 
 #: ../send/StreamTFLItem.java:104
 msgid "<stdin>"
@@ -2894,66 +2888,66 @@ msgstr ""
 msgid ""
 "The document {0} could not be converted to PostScript, PDF or TIFF. Reason:"
 msgstr ""
-"Π”ΠΎΠΊΡƒΠΌΠµΠ½Ρ‚ {0} Π½ΠµΠ²ΠΎΠ·ΠΌΠΎΠ¶Π½ΠΎ ΠΏΡ€ΠµΠΎΠ±Ρ€Π°Π·ΠΎΠ²Π°Ρ‚Ρ Π² PostScript, PDF ΠΈΠ»ΠΈ TIFF. ΠΡ€ΠΈΡ‡ΠΈΠ½Π°:"
+"Tο έγγραφο {0} δεν μπορεί να μετατραπεί σε υστερόγραφο , PDF or TIFF.Λόγος:"
 
 #: ../send/TimeToSendEntry.java:49 ../send/TimeToSendEntry.java:79
 msgid "Now"
-msgstr "Π΅ΠµΠΉΡ‡Π°Ρ"
+msgstr ""
 
 #: ../send/TimeToSendEntry.java:50
 msgid "In (timespan)"
-msgstr "Π§ΠµΡ€ΠµΠ· (ΠΈΠ½Ρ‚ΠµΡ€Π²Π°Π» Π²Ρ€ΠµΠΌΠµΠ½ΠΈ)"
+msgstr ""
 
 #: ../send/TimeToSendEntry.java:51
 msgid "At (exact time)"
-msgstr "Π’ (Ρ‚ΠΎΡ‡Π½ΠΎΠµ Π²Ρ€ΠµΠΌΡ)"
+msgstr ""
 
 #: ../send/SendFileManager.java:64 ../send/SendFileManager.java:132
 #, java-format
 msgid "Uploading {0}"
-msgstr "Π’Ρ‹Π³Ρ€ΡƒΠ·ΠΊΠ° {0}"
+msgstr "Ανεβάζει {0}"
 
 #: ../send/SendFileManager.java:110
 #, java-format
 msgid "Converting {0}"
-msgstr "ΠΡ€ΠµΠΎΠ±Ρ€Π°Π·ΠΎΠ²Π°Π½ΠΈΠµ {0}"
+msgstr ""
 
 #: ../send/SendFileManager.java:118
 msgid "Uploading document"
-msgstr "Π’Ρ‹Π³Ρ€ΡƒΠ·ΠΊΠ° Π΄ΠΎΠΊΡƒΠΌΠµΠ½Ρ‚Π°"
+msgstr ""
 
 #: ../send/SendFileManager.java:127
 #, java-format
 msgid "Creating {0} from documents to send"
-msgstr "Π΅ΠΎΠ·Π΄Π°ΠµΡ‚ΡΡ {0} ΠΈΠ· Π΄ΠΎΠΊΡƒΠΌΠµΠ½Ρ‚ΠΎΠ² Π΄Π»Ρ ΠΎΡ‚ΠΏΡ€Π°Π²ΠΊΠΈ"
+msgstr ""
 
 #: ../send/SendController.java:128
 #, java-format
 msgid "Can not read file \"{0}\"!"
-msgstr "ΠΠµΠ²ΠΎΠ·ΠΌΠΎΠ¶Π½ΠΎ ΠΏΡ€ΠΎΡ‡ΠΈΡ‚Π°Ρ‚Ρ Ρ„Π°ΠΉΠ» \"{0}\"!"
+msgstr "Δεν μπορεί να διαβάσει το αρχείο \"{0}\"!"
 
 #: ../send/SendController.java:133
-#, java-format
+#, fuzzy, java-format
 msgid "Can not read default cover page file \"{0}\"!"
-msgstr "ΠΠµΠ²ΠΎΠ·ΠΌΠΎΠ¶Π½ΠΎ ΠΏΡ€ΠΎΡ‡ΠΈΡ‚Π°Ρ‚Ρ Ρ„Π°ΠΉΠ» Ρ‚ΠΈΡ‚ΡƒΠ»ΡΠ½ΠΎΠ³ΠΎ Π»ΠΈΡΡ‚Π° ΠΏΠΎ ΡƒΠΌΠΎΠ»Ρ‡Π°Π½ΠΈΡ  \"{0}\"!"
+msgstr "Δεν μπορεί να διαβάσει εξ'ορισμού το αρχείο του εξωφύλλου \"{0}\"!"
 
 #: ../send/SendController.java:202
 msgid "Creating cover page"
-msgstr "Π΅ΠΎΠ·Π΄Π°Π½ΠΈΠµ Ρ‚ΠΈΡ‚ΡƒΠ»ΡΠ½ΠΎΠ³ΠΎ Π»ΠΈΡΡ‚Π°"
+msgstr "Δημιουργεί εξώφυλλο"
 
 #: ../send/SendController.java:220
 #, java-format
 msgid "Formatting {0}"
-msgstr "Π¤ΠΎΡ€ΠΌΠ°Ρ‚ΠΈΡ€ΠΎΠ²Π°Π½ΠΈΠµ {0}"
+msgstr "Διαμορφώνει {0}"
 
 #: ../send/SendController.java:231
 msgid "Error previewing the documents:"
-msgstr "ΠΡΠΈΠ±ΠΊΠ° ΠΏΡ€ΠΎΡΠΌΠΎΡ‚Ρ€Π° Π΄ΠΎΠΊΡƒΠΌΠµΡ‚Π½Ρ‚ΠΎΠ²:"
+msgstr "Σφάλμα στην προεπισκόπηση των εγγράφων:"
 
 #: ../send/SendController.java:306
 #, java-format
 msgid "Creating job to {0}"
-msgstr "Π΅ΠΎΠ·Π΄Π°Π½ΠΈΠµ Π·Π°Π΄Π°Π½ΠΈΡ Π΄Π»Ρ {0}"
+msgstr "Δημιουργεί εργασία στο {0}"
 
 #: ../send/SendController.java:377
 #, java-format
@@ -2961,30 +2955,31 @@ msgid ""
 "An error occured while submitting the fax job for phone number \"{0}\" (will "
 "try to submit the fax to the other numbers anyway): "
 msgstr ""
-"ΠΡ€ΠΎΠΈΠ·ΠΎΡΠ»Π° ΠΎΡΠΈΠ±ΠΊΠ° ΠΏΡ€ΠΈ ΠΎΡ‚ΠΏΡ€Π°Π²ΠΊΠµ Ρ„Π°ΠΊΡΠ° Π½Π° Π½ΠΎΠΌΠµΡ€ \"{0}\" (Π±ΡƒΠ΄ΠµΡ‚ ΡΠ΄ΠµΠ»Π°Π½Π° ΠΏΠΎΠΏΡ‹Ρ‚ΠΊΠ° "
-"Π΄ΠΎΡΡ‚Π°Π²ΠΊΠΈ Ρ„Π°ΠΊΡΠ° Π½Π° ΠΎΡΡ‚Π°Π»ΡΠ½Ρ‹Πµ Π½ΠΎΠΌΠµΡ€Π°):"
+"Σφάλμα προέκυψε κατά τη διάρκεια υποβολής του φαξ για το νούμερο τηλεφώνου "
+"\"{0}\" (να προσπαθήσει να υποβάλλει το φαξ στα άλλα νούμερα ούτως ή άλλως): "
 
 #: ../send/SendController.java:381
 msgid "Cleaning up"
-msgstr "ΠΡ‡ΠΈΡΡ‚ΠΊΠ°"
+msgstr "Καθαρίζει"
 
 #: ../send/SendController.java:386
 msgid "An error occured while submitting the fax: "
-msgstr "ΠΡ€ΠΎΠΈΠ·ΠΎΡΠ»Π° ΠΎΡΠΈΠ±ΠΊΠ° ΠΏΡ€ΠΈ ΠΎΡ‚ΠΏΡ€Π°Π²ΠΊΠµ Ρ„Π°ΠΊΡΠ°:"
+msgstr "Σφάλμα προέκυψε κατά την υποβολή του φαξ: "
 
 #: ../send/SendController.java:423
 msgid "To send a fax you have to enter at least one phone number!"
-msgstr "Π§Ρ‚ΠΎΠ±Ρ‹ ΠΎΡ‚ΠΏΡ€Π°Π²ΠΈΡ‚Ρ Ρ„Π°ΠΊΡ, Π²Π²ΠµΠ΄ΠΈΡ‚Πµ Ρ…ΠΎΡ‚Ρ Π±Ρ‹ ΠΎΠ΄ΠΈΠ½ Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½Ρ‹ΠΉ Π½ΠΎΠΌΠµΡ€!"
+msgstr ""
+"Για να σταλεί φαξ πρέπει να εισαχθεί τουλάχιστον ένας αριθμός τηλεφώνου!"
 
 #: ../send/SendController.java:423 ../send/SendController.java:430
 #: ../send/SendController.java:440
 msgid "Warning"
-msgstr "ΠΡ€ΠµΠ΄ΡƒΠΏΡ€ΠµΠ¶Π΄ΠµΠ½ΠΈΠµ"
+msgstr "Προειδοποίηση"
 
 #: ../send/SendController.java:430
 #, java-format
 msgid "For recipient {0} (\"{1}\") no fax number has been entered."
-msgstr "Π”Π»Ρ ΠΏΠΎΠ»ΡƒΡ‡Π°Ρ‚ΠµΠ»Ρ {0} (\"{1}\") Π½Πµ Π±Ρ‹Π» ΡƒΠΊΠ°Π·Π°Π½ Π½ΠΎΠΌΠµΡ€ Ρ„Π°ΠΊΡΠ°."
+msgstr "Για τον παραλήπτη {0} (\"{1}\") δεν έχει εισαχθεί αριθμός φαξ."
 
 #: ../send/SendController.java:437
 msgid ""
@@ -2992,143 +2987,97 @@ msgid ""
 "cover page.\n"
 "Continue anyway?"
 msgstr ""
-"Π’Ρ‹ Π½Πµ Π²Ρ‹Π±Ρ€Π°Π»ΠΈ Ρ„Π°ΠΉΠ» Π΄Π»Ρ ΠΎΡ‚ΠΏΡ€Π°Π²ΠΊΠΈ, Π’Π°Ρ Ρ„Π°ΠΊΡ ΡΠΎΠ΄ΠµΡ€Π¶ΠΈΡ‚ ΠΆΠΠ›Π¬ΠΠ Ρ‚ΠΈΡ‚ΡƒΠ»ΡΠ½Ρ‹ΠΉ Π»ΠΈΡΡ‚.\n"
-"ΠΡ€ΠΎΠ΄ΠΎΠ»Π¶ΠΈΡ‚Ρ?"
+"Δεν έχετε επιλέξει ένα αρχείο για αποστολή , επομένως το φαξ σας θα περιέχει "
+"μόνο το εξώφυλλο.\n"
+"Να συνεχίσει ούτως ή άλλως?"
 
 #: ../send/SendController.java:437
 msgid "Continue?"
-msgstr "ΠΡ€ΠΎΠ΄ΠΎΠ»Π¶ΠΈΡ‚Ρ?"
+msgstr "Να συνεχίσει?"
 
 #: ../send/SendController.java:440
 msgid "To send a fax you must select at least one file!"
-msgstr "Π§Ρ‚ΠΎΠ±Ρ‹ ΠΎΡ‚ΠΏΡ€Π°Π²ΠΈΡ‚Ρ Ρ„Π°ΠΊΡ, Π²Ρ‹Π±ΠµΡ€ΠΈΡ‚Πµ Ρ…ΠΎΡ‚Ρ Π±Ρ‹ ΠΎΠ΄ΠΈΠ½ Ρ„Π°ΠΉΠ»!"
+msgstr "Για να σταλεί ένα φαξ πρέπει να επιλεχθεί τουλάχιστον ένα αρχείο!"
 
 #: ../send/SendController.java:450
 msgid "Sending fax"
-msgstr "ΠΠµΡ€ΠµΠ΄Π°Ρ‡Π° Ρ„Π°ΠΊΡΠ°"
+msgstr "Αποστολή φαξ"
 
 #: ../send/SendController.java:455
 msgid "Previewing fax"
-msgstr "ΠΡ€ΠΎΡΠΌΠΎΡ‚Ρ€ Ρ„Π°ΠΊΡΠ°"
+msgstr "Προεπισκόπηση φαξ"
 
 #: ../send/TextFieldList.java:84
 msgid "Moves the item upwards"
-msgstr "ΠΠµΡ€ΠµΠΌΠµΡΡ‚ΠΈΡ‚Ρ ΡΠ»ΠµΠΌΠµΠ½Ρ‚ Π²Π²ΠµΡ€Ρ…"
+msgstr "Mετακινεί το στοιχείο προς τα πάνω"
 
 #: ../send/TextFieldList.java:109
 msgid "Moves the item downwards"
-msgstr "ΠΠµΡ€ΠµΠΌΠµΡΡ‚ΠΈΡ‚Ρ ΡΠ»ΠµΠΌΠµΠ½Ρ‚ Π²Π½ΠΈΠ·"
+msgstr "Mετακινεί το στοιχείο προς τα κάτω"
 
 #: ../send/TextFieldList.java:128
 msgid "Adds the text to the list"
-msgstr "Π”ΠΎΠ±Π°Π²ΠΈΡ‚Ρ Ρ‚ΠµΠΊΡΡ‚ ΠΊ ΡΠΏΠΈΡΠΊΡƒ"
+msgstr "Προσθέτει το κείμενο στη λίστα"
 
 #: ../send/TextFieldList.java:150
 msgid "Removes the selected item from the list"
-msgstr "Π£Π΄Π°Π»ΠΈΡ‚Ρ Π²Ρ‹Π΄ΠµΠ»ΠµΠ½Π½Ρ‹ΠΉ ΡΠ»ΠµΠΌΠµΠ½Ρ‚ ΠΈΠ· ΡΠΏΠΈΡΠΊΠ°"
+msgstr "Μετακινεί τα επιλεγμένα στοιχεία από τη λίστα"
 
 #: ../send/TextFieldList.java:169
 msgid "Update"
-msgstr "ΠΠ±Π½ΠΎΠ²ΠΈΡ‚Ρ"
+msgstr "Αναβάθμιση"
 
 #: ../send/TextFieldList.java:170
 msgid "Updates the selected list item"
-msgstr "ΠΠ±Π½ΠΎΠ²ΠΈΡ‚Ρ Π²Ρ‹Π±Ρ€Π°Π½Π½Ρ‹ΠΉ ΡΠ»ΠµΠΌΠµΠ½Ρ‚ ΡΠΏΠΈΡΠΊΠ°"
+msgstr "Αναβαθμίζει τα επιλεγμένα στοιχεία της λίστας"
 
 #: ../send/MinutesFormatter.java:62
 msgid "minutes"
-msgstr "ΠΌΠΈΠ½ΡƒΡ‚"
+msgstr ""
 
-#~ msgid ""
-#~ "<html>YajHFC is a client for the hylafax fax server (http://www.hylafax."
-#~ "org).<br><br>Homepage: {1} <br>Author: {0} </html>"
-#~ msgstr ""
-#~ "<html>YajHFC - ΡΡ‚ΠΎ ΠΊΠ»ΠΈΠµΠ½Ρ‚ Π΄Π»Ρ Ρ„Π°ΠΊΡ-ΡΠµΡ€Π²ΠµΡ€Π° HylaFAX (http://www.hylafax."
-#~ "org).<br><br>Π”ΠΎΠΌΠ°ΡΠ½ΡΡ ΡΡ‚Ρ€Π°Π½ΠΈΡ†Π°: {1} <br>ΠΠ²Ρ‚ΠΎΡ€: {0} </html>"
-
-#~ msgid "Please enter at least one filtering condition."
-#~ msgstr "ΠΠΎΠ¶Π°Π»ΡƒΠΉΡΡ‚Π°, Π²Π²ΠµΠ΄ΠΈΡ‚Πµ Ρ…ΠΎΡ‚Ρ Π±Ρ‹ ΠΎΠ΄Π½ΠΎ ΡƒΡΠ»ΠΎΠ²ΠΈΠµ."
-
-#~ msgid "Job retry time (MM::SS)"
-#~ msgstr "Π’Ρ€ΠµΠΌΡ ΠΏΠΎΠ²Ρ‚ΠΎΡ€Π° Π·Π°Π΄Π°Π½ΠΈΡ (MM::SS)"
+#~ msgid "{0} faxes received ({1} unread fax(es)):"
+#~ msgstr "{0} φαξ που παρελήφθησαν ({1} μη αναγνωσμένα φαξ)"
 
 #~ msgid "No document files available for the fax \"{0}\"."
-#~ msgstr "ΠΠµΡ‚ Π΄ΠΎΡΡ‚ΡƒΠΏΠ½Ρ‹Ρ… Ρ„Π°ΠΉΠ»ΠΎΠ² Π΄Π»Ρ Ρ„Π°ΠΊΡΠ° \"{0}\"."
+#~ msgstr "Δεν υπάρχουν διαθέσιμα έγγραφα για το ΦΑΞ \"{0}\"."
 
-#~ msgid "Page chop handling (one-character symbol)"
-#~ msgstr "ΠΠΎΠ΄Π΄ΠµΡ€Π¶ΠΊΠ° ΠΎΠ±Ρ€ΠµΠ·ΠΊΠΈ ΡΡ‚Ρ€Π°Π½ΠΈΡ† (Π±ΡƒΠΊΠ²ΠµΠ½Π½ΠΎΠµ ΠΎΠ±ΠΎΠ·Π½Π°Ρ‡ΠµΠ½ΠΈΠµ)"
-
-#~ msgid "# pages transmitted"
-#~ msgstr "# ΡΡ‚Ρ€Π°Π½ΠΈΡ† ΠΏΠµΡ€ΠµΠ΄Π°Π½ΠΎ"
-
-#~ msgid "Total # tries attempted"
-#~ msgstr "ΠΠ±Ρ‰ΠµΠµ ΠΊΠΎΠ»ΠΈΡ‡ΠµΡΡ‚Π²ΠΎ ΠΏΡ€ΠµΠ΄ΠΏΡ€ΠΈΠ½ΡΡ‚Ρ‹Ρ… ΠΏΠΎΠΏΡ‹Ρ‚ΠΎΠΊ"
-
-#~ msgid "Maximum # tries"
-#~ msgstr "ΠΠ°ΠΊΡΠΈΠΌΠ°Π»ΡΠ½ΠΎΠµ # ΠΏΠΎΠΏΡ‹Ρ‚ΠΎΠΊ"
+#~ msgid "Please enter at least one filtering condition."
+#~ msgstr "Παρακαλώ επιλέξτε ένα φιλτρο."
 
 #~ msgid "Please enter the password for user \"{0}\"."
-#~ msgstr "ΠΠΎΠ¶Π°Π»ΡƒΠΉΡΡ‚Π°, Π²Π²ΠµΠ΄ΠΈΡ‚Πµ ΠΏΠ°Ρ€ΠΎΠ»Ρ ΠΏΠΎΠ»ΡΠ·ΠΎΠ²Π°Ρ‚ΠµΠ»Ρ \"{0}\"."
+#~ msgstr "Παρακαλώ εισάγετε τον κωδικό για τον χρήστη \"{0}\"."
 
 #~ msgid "Please enter the administrative password for user \"{0}\"."
 #~ msgstr ""
-#~ "ΠΠΎΠ¶Π°Π»ΡƒΠΉΡΡ‚Π°, Π²Π²ΠµΠ΄ΠΈΡ‚Πµ Π°Π΄ΠΌΠΈΠ½ΠΈΡΡ‚Ρ€Π°Ρ‚ΠΈΠ²Π½Ρ‹ΠΉ ΠΏΠ°Ρ€ΠΎΠ»Ρ Π΄Π»Ρ ΠΏΠΎΠ»ΡΠ·ΠΎΠ²Π°Ρ‚ΠµΠ»Ρ \"{0}\"."
+#~ "Παρακαλώ εισάγετε τον κωδικό του διαχειριστή για τον χρήστη \"{0}\"."
 
-#~ msgid "Dials: toal/max."
-#~ msgstr "Π”ΠΎΠ·Π²ΠΎΠ½ΠΎΠ²/ΠΌΠ°ΠΊΡ."
+#~ msgid "Page chop handling (one-character symbol)"
+#~ msgstr "χειρισμός οριοθέτησης σελίδας (σύμβολο ενός χαρακτήρα)"
+
+#~ msgid "# pages transmitted"
+#~ msgstr "# σελίδες που μεταφέρθηκαν"
+
+#~ msgid "Job retry time (MM:SS)"
+#~ msgstr "Χρόνος επαναπροσπάθειας εργασίας (MM:SS)"
+
+#~ msgid "Total # tries attempted"
+#~ msgstr "Συνολικές # προσπάθειες που επιχειρήθηκαν"
+
+#~ msgid "Common"
+#~ msgstr "Κοινός"
+
+#~ msgid "Minimize to system tray (works only with Java 6 or higher)"
+#~ msgstr ""
+#~ "Ελαχιστοποίησε στον πίνακα/δίσκο του συστήματος(εργάζεται μόνο με Java 6 "
+#~ "ή υψηλότερο)"
 
 #~ msgid "Please enter the LDAP password for user {0}."
-#~ msgstr "ΠΠΎΠ¶Π°Π»ΡƒΠΉΡΡ‚Π°, Π²ΠµΠ΄ΠΈΡ‚Πµ ΠΏΠ°Ρ€ΠΎΠ»Ρ LDAP Π΄Π»Ρ ΠΏΠΎΠ»ΡΠ·ΠΎΠ²Π°Ρ‚ΠµΠ»Ρ {0}."
+#~ msgstr "Παρακαλώ εισάγετε το LDAΡ συνθηματικό για το χρήστη {0}."
 
 #~ msgid "Please enter the database password for user {0} (database: {1})."
 #~ msgstr ""
-#~ "ΠΠΎΠ¶Π°Π»ΡƒΠΉΡΡ‚Π°, Π²Π²ΠµΠ΄ΠΈΡ‚Πµ ΠΏΠ°Ρ€ΠΎΠ»Ρ Π±Π°Π·Ρ‹ Π΄Π°Π½Π½Ρ‹Ρ… Π΄Π»Ρ ΠΏΠΎΠ»ΡΠ·ΠΎΠ²Π°Ρ‚ΠµΠ»Ρ {0} (Π±Π°Π·Π° Π΄Π°Π½Π½Ρ‹Ρ…: "
-#~ "{1})."
+#~ "Παρακαλώ εισάγετε το συνθηματικό της βάσης δεδομένων για το χρήστη {0} "
+#~ "(βάση δεδομένων: {1})."
 
 #~ msgid "Preview is not supported for document \"{0}\"."
-#~ msgstr "ΠΡ€ΠΎΡΠΌΠΎΡ‚Ρ€ Π½Πµ ΠΏΠΎΠ΄Π΄ΠµΡ€Π¶ΠΈΠ²Π°ΠµΡ‚ΡΡ Π΄Π»Ρ Π΄ΠΎΠΊΡƒΠΌΠµΠ½Ρ‚Π° \"{0}\"."
-
-#~ msgid "Fax cover page from:"
-#~ msgstr "Π ΠµΠΊΠ²ΠΈΠ·ΠΈΡ‚Ρ‹ ΠΎΡ‚ΠΏΡ€Π°Π²ΠΈΡ‚ΠµΠ»Ρ:"
-
-#~ msgid "Name:"
-#~ msgstr "ΠΠΌΡ:"
-
-#~ msgid "E-mail address:"
-#~ msgstr "E-mail Π°Π΄Ρ€ΠµΡ:"
-
-#~ msgid "Moves the selected Column up"
-#~ msgstr "ΠΠµΡ€ΠµΠΌΠµΡΡ‚ΠΈΡ‚Ρ Π²Ρ‹Π΄ΠµΠ»ΠµΠ½Π½ΡƒΡ ΠΠΎΠ»ΠΎΠ½ΠΊΡƒ Π²Π²ΠµΡ€Ρ…"
-
-#~ msgid "Adds the selected Column"
-#~ msgstr "Π”ΠΎΠ±Π°Π²ΠΈΡ‚Ρ Π²Ρ‹Π΄ΠµΠ»ΠµΠ½Π½ΡƒΡ ΠΠΎΠ»ΠΎΠ½ΠΊΡƒ"
-
-#~ msgid "Removes the selected Column"
-#~ msgstr "Π£Π΄Π°Π»ΠΈΡ‚Ρ Π²Ρ‹Π΄ΠµΠ»ΠµΠ½Π½ΡƒΡ ΠΠΎΠ»ΠΎΠ½ΠΊΡƒ"
-
-#~ msgid "Moves the selected Column down"
-#~ msgstr "ΠΠµΡ€ΠµΠΌΠµΡΡ‚ΠΈΡ‚Ρ Π²Ρ‹Π΄ΠµΠ»ΠµΠ½Π½ΡƒΡ ΠΠΎΠ»ΠΎΠ½ΠΊΡƒ Π²Π½ΠΈΠ·"
-
-#~ msgid "Given name:"
-#~ msgstr "ΠΠΌΡ:"
-
-#~ msgid "Surname:"
-#~ msgstr "Π¤Π°ΠΌΠΈΠ»ΠΈΡ:"
-
-#~ msgid "Title:"
-#~ msgstr "Π—Π²Π°Π½ΠΈΠµ:"
-
-#~ msgid "Please enter a number."
-#~ msgstr "ΠΠΎΠ¶Π°Π»ΡƒΠΉΡΡ‚Π°, Π²Π²ΠµΠ΄ΠΈΡ‚Πµ Ρ‡ΠΈΡΠ»ΠΎ."
-
-#~ msgid "Miscellaneous settings"
-#~ msgstr "ΠΠ°ΡΡ‚Ρ€ΠΎΠΉΠΊΠ° ΠΈΠ½Ρ‚ΠµΡ€Ρ„ΠµΠΉΡΠ°"
-
-#~ msgid "Do you want to delete the entry for \"{0}\"?"
-#~ msgstr "Π’Ρ‹ Π΄ΠµΠΉΡΡ‚Π²ΠΈΡ‚ΠµΠ»ΡΠ½ΠΎ Ρ…ΠΎΡ‚ΠΈΡ‚Πµ ΡƒΠ΄Π°Π»ΠΈΡ‚Ρ Π·Π°ΠΏΠΈΡΡ \"{0}\"?"
-
-#~ msgid "No phone book"
-#~ msgstr "ΠΠµΡ‚ Ρ‚ΠµΠ»ΠµΡ„ΠΎΠ½Π½ΠΎΠ³ΠΎ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊΠ°"
-
-#~ msgid "Phone book:"
-#~ msgstr "ΠΆΠµΠ»ΠµΡ„ΠΎΠ½Π½Ρ‹ΠΉ ΡΠΏΡ€Π°Π²ΠΎΡ‡Π½ΠΈΠΊ:"
+#~ msgstr "Δεν υποστηρίζεται προεπισκόπηση για το έγγραφο\"{0}\"."

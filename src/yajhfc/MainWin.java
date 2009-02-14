@@ -195,7 +195,7 @@ public final class MainWin extends JFrame {
     // Actions:
     protected Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward, actAdminMode;
     protected Action actRefresh, actResend, actPrintTable, actSuspend, actResume, actClipCopy, actShowRowNumbers, actAdjustColumns, actReconnect, actEditToolbar;
-    protected Action actSaveAsPDF, actSaveAsTIFF, actUpdateCheck;
+    protected Action actSaveAsPDF, actSaveAsTIFF, actUpdateCheck, actAnswerCall;
     protected ActionEnabler actChecker;
     protected Map<String,Action> availableActions = new HashMap<String,Action>();
     protected YajHFCTrayIcon trayIcon = null;
@@ -1011,7 +1011,7 @@ public final class MainWin extends JFrame {
         actResend = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {                
                 TooltipJTable<? extends FmtItem> selTable = getSelectedTable();
-                if (!(selTable == tableSent && selTable != tableSending) || selTable.getSelectedRow() < 0)
+                if (selTable != tableSent || selTable.getSelectedRow() < 0)
                     return;
                 
                 Utils.setWaitCursor(null);
@@ -1196,6 +1196,49 @@ public final class MainWin extends JFrame {
         actUpdateCheck.putValue(Action.SHORT_DESCRIPTION, _("Checks if there is a newer version of YajHFC available"));
         //actEditToolbar.putValue(Action.SMALL_ICON, Utils.loadIcon("media/Play"));
         putAvailableAction("UpdateCheck", actUpdateCheck);
+        
+        actAnswerCall = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(java.awt.event.ActionEvent e) {
+                if (clientManager.isAdminMode()) {
+                    List<HylaModem> modems = new ArrayList<HylaModem>();
+                    for (HylaModem modem : clientManager.getModems()) {
+                        if (!modem.getInternalName().equals("any")) {
+                            modems.add(modem);
+                        }
+                    }
+                    
+                    Object modem;
+                    if (modems.size() == 0) {
+                        JOptionPane.showMessageDialog(MainWin.this, _("No valid modem found."), _("Answer call"), JOptionPane.INFORMATION_MESSAGE);
+                        return;
+                    } /*else if (modems.size() == 1) {
+                        modem = modems.get(0);
+                    } */else {
+                        modem = JOptionPane.showInputDialog(MainWin.this, _("Please select which modem shall answer a phone call:"), _("Answer call"), JOptionPane.QUESTION_MESSAGE, null, modems.toArray(), modems.get(0));
+                    }
+                    if (modem == null)
+                        return;
+                    
+                    HylaFAXClient hyfc = clientManager.beginServerTransaction(MainWin.this);
+                    if (hyfc == null)
+                        return;
+                    
+                    try {
+                        hyfc.answer(((HylaModem)modem).getInternalName() + " fax");
+                    } catch (Exception e1) {
+                        ExceptionDialog.showExceptionDialog(MainWin.this, _("Error answering the phone call:"), e1);
+                    } finally {
+                        clientManager.endServerTransaction();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(MainWin.this, _("Answering a phone call needs administrative privileges.\nPlease enable admin mode first."), _("Answer call"), JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        };
+        actAnswerCall.putValue(Action.NAME, _("Answer call") + "...");
+        actAnswerCall.putValue(Action.SHORT_DESCRIPTION, _("Manually answers a phone call with a specific modem"));
+        //actEditToolbar.putValue(Action.SMALL_ICON, Utils.loadIcon("media/Play"));
+        putAvailableAction("AnswerCall", actAnswerCall);
         
         actSaveAsPDF = new SaveToFormatAction(FileFormat.PDF);
         putAvailableAction("SaveAsPDF", actSaveAsPDF);
@@ -1518,8 +1561,14 @@ public final class MainWin extends JFrame {
     }
     
     void doLogout() {
+        doLogout(false);
+    }
+    
+    private void doLogout(boolean immediateReconnect) {
         try {
             log.fine("Logging out...");
+            sendReady = immediateReconnect ? SendReadyState.NeedToWait : SendReadyState.NotReady;
+            
             tablePanel.showIndeterminateProgress(_("Logging out..."));
             if (tableRefresher != null)
                 tableRefresher.cancel();
@@ -1530,6 +1579,8 @@ public final class MainWin extends JFrame {
                 myopts.recvColState = getTableRecv().getColumnCfgString();
                 myopts.sentColState = getTableSent().getColumnCfgString();
                 myopts.sendingColState = getTableSending().getColumnCfgString();
+                if (tableArchive != null)
+                    myopts.archiveColState = tableArchive.getColumnCfgString();
                 
                 //myopts.recvReadState = recvTableModel.getStateString();
 //                if (tableRefresher != null && tableRefresher.didFirstRun ) {
@@ -1558,6 +1609,7 @@ public final class MainWin extends JFrame {
             actSend.setEnabled(false);
             actPoll.setEnabled(false);
             menuView.setEnabled(false);
+            actAnswerCall.setEnabled(false);
             
             setActReconnectState(true);
             this.setTitle("Disconnected - " + Utils.AppName);
@@ -1600,10 +1652,8 @@ public final class MainWin extends JFrame {
             tableArchive.setColumnCfgString(myopts.archiveColState);
     }
     
-    public void reconnectToServer(Runnable loginAction) {
-        sendReady = SendReadyState.NeedToWait;
-        
-        doLogout();
+    public void reconnectToServer(Runnable loginAction) {        
+        doLogout(true);
         
         if (myopts.host.length() == 0) { // Prompt for server if not set
             actOptions.actionPerformed(null);
@@ -1940,6 +1990,7 @@ public final class MainWin extends JFrame {
             menuExtras.addSeparator();
             menuExtras.add(new JMenuItem(actReconnect));
             menuExtras.add(new ActionJCheckBoxMenuItem(actAdminMode));
+            menuExtras.add(new JMenuItem(actAnswerCall));
             if (PluginManager.pluginUIs.size() > 0) {
                 menuExtras.addSeparator();
                 for (PluginUI pmc : PluginManager.pluginUIs) {
@@ -2153,20 +2204,21 @@ public final class MainWin extends JFrame {
             boolean resendState = false;
             boolean suspResumeState = false;
             
-            if (tabMain.getSelectedComponent() == scrollRecv) { // Received Table active
+            final Component selectedComponent = tabMain.getSelectedComponent();
+            if (selectedComponent == scrollRecv) { // Received Table active
                 if (tableRecv.getSelectedRow() >= 0) {
                     showState = true;
                     deleteState = true;
                     faxReadState = true;
                     faxReadSelected = ((RecvYajJob)tableRecv.getJobForRow(tableRecv.getSelectedRow())).isRead();
                 }
-            } else if (tabMain.getSelectedComponent() == scrollSent) { // Sent Table
+            } else if (selectedComponent == scrollSent) { // Sent Table
                 if (tableSent.getSelectedRow() >= 0) {
                     deleteState = true;
                     showState = true;
                     resendState = true;
                 }
-            } else if (tabMain.getSelectedComponent() == scrollSending) { // Sending Table
+            } else if (selectedComponent == scrollSending) { // Sending Table
                 if (tableSending.getSelectedRow() >= 0) {
                     deleteState = true;
                     showState = true;
@@ -2174,7 +2226,7 @@ public final class MainWin extends JFrame {
                     suspResumeState = true;
                 }
                 // Uncomment for archive support.
-            } if (tabMain.getSelectedComponent() == scrollArchive) { // Archive Table
+            } if (selectedComponent == scrollArchive) { // Archive Table
                 if (tableArchive.getSelectedRow() >= 0) {
                     deleteState = true;
                     showState = true;
@@ -2470,64 +2522,8 @@ public final class MainWin extends JFrame {
         
         @Override
         public void run() {  
-            
-            /*
-            hyfc = new HylaFAXClient();
-            hyfc.setDebug(Utils.debugMode);*/
             try {
-                /*hyfc.open(myopts.host, myopts.port);
                 
-                while (hyfc.user(myopts.user)) {                
-                        if (myopts.askPassword) {
-                            
-                            String pwd = PasswordDialog.showPasswordDialogThreaded(MainWin.this, _("User password"), MessageFormat.format(_("Please enter the password for user \"{0}\"."), myopts.user));
-                            if (pwd == null) { // User cancelled
-                                hyfc.quit();
-                                doErrorCleanup();
-                                return;
-                            } else
-                                try {
-                                    hyfc.pass(pwd);
-                                    //repeatAsk = false;
-                                    break;
-                                } catch (ServerResponseException e) {
-                                    ExceptionDialog.showExceptionDialogThreaded(MainWin.this, _("An error occured in response to the password:"), e);
-                                    //repeatAsk = true;
-                                }
-                        } else {
-                            hyfc.pass(myopts.pass);
-                            break;
-                        }
-                } 
-                
-                if (haveAdmin) {
-                    boolean authOK = false;
-                    if (myopts.askAdminPassword) {
-                        do {
-                            String pwd = PasswordDialog.showPasswordDialogThreaded(MainWin.this, _("Admin password"), MessageFormat.format(_("Please enter the administrative password for user \"{0}\"."), myopts.user));
-                            if (pwd == null) { // User cancelled
-                                break; //Continue in "normal" mode
-                            } else
-                                try {
-                                    hyfc.admin(pwd);
-                                    authOK = true;
-                                } catch (ServerResponseException e) {
-                                    ExceptionDialog.showExceptionDialogThreaded(MainWin.this, _("An error occured in response to the password:"), e);
-                                    authOK = false;
-                                }
-                        } while (!authOK);
-                    } else {
-                        hyfc.admin(myopts.AdminPassword);
-                        authOK = true; // No error => authOK
-                    }
-;
-                    haveAdmin = authOK;
-                }
-                
-                hyfc.setPassive(myopts.pasv);
-                hyfc.tzone(myopts.tzone.type);
-                
-                hyfc.rcvfmt(myopts.recvfmt.getFormatString());*/
                 if (Utils.debugMode) {
                     log.info("Begin login (wantAdmin=" + wantAdmin + ")");
                 }
@@ -2550,8 +2546,7 @@ public final class MainWin extends JFrame {
 
                 tableRefresher = new TableRefresher(myopts.sentfmt.getFormatString(), myopts.sendingfmt.getFormatString());
                 
-                //// Read the read/unread status *after* the table contents has been set 
-                //tableRefresher.run();
+                // Read the read/unread status *after* the table contents has been set 
 
                 persistentReadState.prepareReadStates();
                 
@@ -2583,6 +2578,7 @@ public final class MainWin extends JFrame {
                        
                        actSend.setEnabled(true);
                        actPoll.setEnabled(true);
+                       actAnswerCall.setEnabled(true);
                        
                        setActReconnectState(false);
                        

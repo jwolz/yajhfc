@@ -22,12 +22,15 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import yajhfc.PaperSize;
 import yajhfc.Utils;
 import yajhfc.file.FileConverter.ConversionException;
 import yajhfc.file.FormattedFile.FileFormat;
+import yajhfc.util.ExternalProcessExecutor;
 
 /**
  * @author jonas
@@ -70,23 +73,25 @@ public class PDFMultiFileConverter extends MultiFileConverter {
         String gsPath = Utils.getFaxOptions().ghostScriptLocation;
         
         String[] additionalParams = getAdditionalGSParams();
-        String[] cmdList =  new String[5 + additionalParams.length + defaultGSParams.length + 2*files.length];
-        int listIndex = 0;
+        List<String> cmdList = new ArrayList<String>(5 + additionalParams.length + defaultGSParams.length + 2*files.length);
         
-        cmdList[listIndex++] = gsPath;
-        System.arraycopy(defaultGSParams, 0, cmdList, listIndex, defaultGSParams.length);
-        listIndex += defaultGSParams.length;
-        cmdList[listIndex++] = "-sDEVICE=" + getGSDevice();
-        cmdList[listIndex++] = "-sOutputFile=" + targetFile.getAbsolutePath();
-        cmdList[listIndex++] = "-sPAPERSIZE=" + paperSize.name().toLowerCase();
-        cmdList[listIndex++] = calcResolution(paperSize);
-        System.arraycopy(additionalParams, 0, cmdList, listIndex, additionalParams.length);
-        listIndex += additionalParams.length;
+        cmdList.add(gsPath);
+        for (String param : defaultGSParams) {
+            cmdList.add(param);
+        }
+        cmdList.add("-sDEVICE=" + getGSDevice());
+        cmdList.add("-sOutputFile=" + targetFile.getAbsolutePath());
+        cmdList.add("-sPAPERSIZE=" + paperSize.name().toLowerCase());
+        cmdList.add(calcResolution(paperSize));
+        for (String param : additionalParams) {
+            cmdList.add(param);
+        }
         for (File file : files) {
-            cmdList[listIndex++] = "-f";
-            cmdList[listIndex++] = file.getAbsolutePath();
+            cmdList.add("-f");
+            cmdList.add(file.getAbsolutePath());
         }
         
+        ExternalProcessExecutor.quoteCommandLine(cmdList);
         if (Utils.debugMode) {
             log.fine("Ghostscript command line:");
             for (String cmd : cmdList) {

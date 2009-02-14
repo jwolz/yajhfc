@@ -557,6 +557,10 @@ public class FaxOptions {
                 this.faxViewer = "kfax %s";
                 this.psViewer = "gv %s";
                 this.pdfViewer = "xpdf %s";
+            } else {
+                this.faxViewer = defaultViewer;
+                this.psViewer = defaultViewer;
+                this.pdfViewer = defaultViewer;
             }
             this.ghostScriptLocation = "gs";
             this.tiff2PDFLocation = "tiff2pdf";

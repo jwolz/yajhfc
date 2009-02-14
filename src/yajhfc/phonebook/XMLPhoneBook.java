@@ -194,7 +194,7 @@ public class XMLPhoneBook extends PhoneBook {
 /*        for (int i = 0; i < 20; i++) {
             XMLPhoneBookEntry pb = new XMLPhoneBookEntry();
             
-            pb.surname = "Müller";
+            pb.surname = "MÃ¼ller";
             pb.faxnumber = "01234/56789";
             pb.company = "foobar AG";
             pb.givenname = "Number " + i; 

@@ -259,13 +259,13 @@ public class PathAndViewPanel extends JPanel implements OptionsPage {
         
         final boolean needsGS = (checkCreateSingleFile.isSelected() || 
                 comboSendMode.getSelectedItem() != MultiFileMode.NONE);
-        if (needsGS && !commandLineOK(ftfGSLocation.getText())) {
+        if (needsGS && !executableOK(ftfGSLocation.getText())) {
             optionsWin.focusComponent(ftfGSLocation.getJTextField());
             JOptionPane.showMessageDialog(optionsWin, _("Please enter the location of the GhostScript executable."), _("Error"), JOptionPane.ERROR_MESSAGE);
             return false;
         }
         
-        if (allowTIFF2PDF && needsGS && !commandLineOK(ftfTIFF2PDFLocation.getText())) {
+        if (allowTIFF2PDF && needsGS && !executableOK(ftfTIFF2PDFLocation.getText())) {
             optionsWin.focusComponent(ftfTIFF2PDFLocation.getJTextField());
             JOptionPane.showMessageDialog(optionsWin, _("Please enter the location of the tiff2pdf executable."), _("Error"), JOptionPane.ERROR_MESSAGE);
             return false;
@@ -277,6 +277,11 @@ public class PathAndViewPanel extends JPanel implements OptionsPage {
     private boolean commandLineOK(String commandLine) {
         return commandLine != null && commandLine.length() > 0 && 
             Utils.searchExecutableInPath(Utils.extractExecutableFromCmdLine(commandLine)) != null;
+    }
+    
+    private boolean executableOK(String commandLine) {
+        return commandLine != null && commandLine.length() > 0 && 
+            Utils.searchExecutableInPath(commandLine) != null;
     }
     
     static class ExeFileTextField extends FileTextField {

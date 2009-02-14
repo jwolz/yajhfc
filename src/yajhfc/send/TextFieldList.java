@@ -338,7 +338,7 @@ public abstract class TextFieldList<T extends TFLItem> extends JPanel implements
         }
         
         getModifyAction().setEnabled(selIdx >= 0 && sel.isMutable());
-        getRemoveAction().setEnabled(selIdx >= 0 && sel.isMutable());
+        getRemoveAction().setEnabled(selIdx >= 0 && sel.isDeletable());
         if (useUpDown) {
             getUpAction().setEnabled(selIdx >= 1);
             getDownAction().setEnabled(selIdx >= 0 && selIdx < model.getSize() - 1);

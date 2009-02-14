@@ -19,7 +19,6 @@
 package yajhfc.send;
 
 import java.awt.Window;
-import java.io.InputStream;
 
 import yajhfc.HylaServerFile;
 import yajhfc.phonebook.convrules.PBEntryFieldContainer;
@@ -32,13 +31,14 @@ import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 public interface SendWinControl {
     public void setVisible(boolean visible);
     public boolean getModalResult();
+    public boolean isPollMode();
     public Window getWindow();
     
     public void addServerFile(HylaServerFile serverFile);
     public void addRecipient(PBEntryFieldContainer recipient);
     public void addRecipient(String faxNumber, String name, String company, String location, String voiceNumber);
     public void setSubject(String subject);
-    public void addInputStream(InputStream inStream);
+    public void addInputStream(StreamTFLItem inStream);
     public void addLocalFile(String fileName);
     
     public void setUseCover(boolean useCover);

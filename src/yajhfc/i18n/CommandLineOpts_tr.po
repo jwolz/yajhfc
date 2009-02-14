@@ -3,14 +3,14 @@
 # while those ending in -arg contain the description of parameter to the argument
 msgid ""
 msgstr ""
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: Mesut GÜLER <maxut@yahoo.com>\n"
 "Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
 
 # Untranslated text: Usage
 msgid "usage"
@@ -34,7 +34,10 @@ msgstr "ALICI"
 
 # Untranslated text: Specifies a recipient to send the fax to. You may specify either a fax number or detailed cover page information (see the FAQ for the format in the latter case). You may specify --recipient multiple times for multiple recipients.
 msgid "recipient-desc"
-msgstr "Faks gönderilecek alıcıyı tanımlar. Bir faks numarası yada ayrıntılı kapak sayfası bilgisi tanımlayabilirsiniz (En son durumdaki biçim için SSS'ye göz atın. Bir çok alıcı için bir çok kez tanımlama yapabilirsiniz."
+msgstr ""
+"Faks gönderilecek alıcıyı tanımlar. Bir faks numarası yada ayrıntılı kapak "
+"sayfası bilgisi tanımlayabilirsiniz (En son durumdaki biçim için SSS'ye göz "
+"atın. Bir çok alıcı için bir çok kez tanımlama yapabilirsiniz."
 
 # Untranslated text: Use a cover page for sending a fax.
 msgid "use-cover-desc"
@@ -74,7 +77,9 @@ msgstr "GÜNLÜKDOSYASI"
 
 # Untranslated text: The log file to log debug information to (if not specified, use stdout).
 msgid "logfile-desc"
-msgstr "Hata giderme bilgisini yazdırmak için kullanılacak günlük dosyası (eğer tanımlanmazsa stdout kullan). "
+msgstr ""
+"Hata giderme bilgisini yazdırmak için kullanılacak günlük dosyası (eğer "
+"tanımlanmazsa stdout kullan). "
 
 # Untranslated text: LOGFILE
 msgid "appendlogfile-arg"
@@ -86,7 +91,9 @@ msgstr "Verilen günlük dosyasına hata giderme bilgisini ekle."
 
 # Untranslated text: If there is no already running instance of YajHFC, launch a new instance and terminate this instance (after submitting the fax to send).
 msgid "background-desc"
-msgstr "Çalışan YajHFC kopyası yoksa, yeni bir kopya çalıştır ve (faksı göndermek için ilettikten sonra) bu kopyayı sonlandır."
+msgstr ""
+"Çalışan YajHFC kopyası yoksa, yeni bir kopya çalıştır ve (faksı göndermek "
+"için ilettikten sonra) bu kopyayı sonlandır."
 
 # Untranslated text: Do not close YajHFC after submitting the fax.
 msgid "noclose-desc"
@@ -94,7 +101,9 @@ msgstr "Faks iletiminden sonra YajHFC'yi kapatma."
 
 # Untranslated text: Sets the tab to display on startup. Specify 0 or R for the "Received", 1 or S for the "Sent" or 2 or T for the "Transmitting" tab.
 msgid "showtab-desc"
-msgstr "Açılışta gösterilecek sekmeyi ayarlar. \"Gelen\" için 0 veya R, \"Giden\" için 1 veya S, \"İletiliyor\" için 2 veya T tanımlayın."
+msgstr ""
+"Açılışta gösterilecek sekmeyi ayarlar. \"Gelen\" için 0 veya R, \"Giden\" "
+"için 1 veya S, \"İletiliyor\" için 2 veya T tanımlayın."
 
 # Untranslated text: JARFILE
 msgid "loadplugin-arg"
@@ -140,3 +149,6 @@ msgstr "Bu metni görüntüler."
 msgid "no-check-desc"
 msgstr "Açılışta Java sürüm kontrolünü kaldır."
 
+# Untranslated text: Do not wait for the send window to be closed by the user. If YajHFC is invoked multiple times before the user closes the send window, the submitted documents are added to the list of files there. This option implies --background.
+msgid "no-wait-desc"
+msgstr ""
