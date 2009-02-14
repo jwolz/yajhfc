@@ -34,6 +34,7 @@ import yajhfc.plugin.PluginManager;
 import yajhfc.plugin.PluginManager.PluginInfo;
 import yajhfc.send.LocalFileTFLItem;
 import yajhfc.send.SendController;
+import yajhfc.send.SendControllerListener;
 import yajhfc.send.StreamTFLItem;
 import yajhfc.util.ExceptionDialog;
 import yajhfc.util.ProgressWorker.ProgressUI;
@@ -143,6 +144,11 @@ public class NoGUISender extends JFrame implements ProgressUI {
             clientManager.forceLogin(progressFrame);
             
             SendController sendController = new SendController(clientManager, progressFrame, false, progressFrame);
+            sendController.addSendControllerListener(new SendControllerListener() {
+               public void sendOperationComplete(boolean success) {
+                   System.exit(success ? 0 : 1);
+               } 
+            });
             
             for (String number : recipients) {
                 sendController.getNumbers().add(new DefaultPBEntryFieldContainer().parseFromString(number));

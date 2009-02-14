@@ -21,6 +21,7 @@ package yajhfc.file;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ import java.util.logging.Logger;
 import yajhfc.PaperSize;
 import yajhfc.Utils;
 import yajhfc.file.FormattedFile.FileFormat;
+import yajhfc.util.ExternalProcessExecutor;
 
 /**
  * @author jonas
@@ -52,6 +54,7 @@ public class TIFFLibConverter implements FileConverter {
             PaperSize paperSize, FileFormat desiredFormat) throws ConversionException, IOException {
         
         List<String> commandLine = getCommandLine(desiredFormat, inFile);
+        ExternalProcessExecutor.quoteCommandLine(commandLine);
         if (Utils.debugMode) {
             log.fine("Invoking tiff2pdf with the following command line:");
             for (String item : commandLine) {
@@ -61,17 +64,22 @@ public class TIFFLibConverter implements FileConverter {
         Process tiff2PDF = new ProcessBuilder(commandLine).start();
         //tiff2PDF.getOutputStream().close();
 
+        final InputStream inputStream = tiff2PDF.getInputStream();
         if (desiredFormat == FileFormat.PDF) {
             // Work around a strange bug which results in garbage (a TIFF signature followed by NULs)
             // at the beginning of the stream
             final byte[] buf = new byte[1000];
             int readLen;
-            int buflen = readLen = tiff2PDF.getInputStream().read(buf);
+            int buflen = readLen = inputStream.read(buf);
 
             while (readLen >=0 && buflen < 3) {
-                readLen = tiff2PDF.getInputStream().read(buf, buflen, buf.length-buflen);
-                buflen += readLen;
+                readLen = inputStream.read(buf, buflen, buf.length-buflen);
+                if (readLen > 0)
+                    buflen += readLen;
             }
+            if (readLen < 0 || buflen < 0)
+                throw new IOException("Premature end of stream reading stdout from tiff2pdf (readLen=" + readLen + ", buflen=" + buflen + ").");
+            
             if (buf[0] == 'I' && buf[1] == 'I' && buf[2] == '*') {
                 int offset = 3;
                 readLoop: 
@@ -83,13 +91,13 @@ public class TIFFLibConverter implements FileConverter {
                             }
                         }
                         offset = 0;
-                        buflen = tiff2PDF.getInputStream().read(buf);
+                        buflen = inputStream.read(buf);
                     } while (buflen >= 0);
             } else {
                 destination.write(buf, 0, buflen);
             }
         }
-        Utils.copyStream(tiff2PDF.getInputStream(), destination);
+        Utils.copyStream(inputStream, destination);
         
         BufferedReader errReader = new BufferedReader(new InputStreamReader(tiff2PDF.getErrorStream()));
         String line;

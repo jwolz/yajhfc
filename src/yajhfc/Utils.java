@@ -35,6 +35,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -55,13 +56,14 @@ import javax.swing.UIManager;
 import yajhfc.model.archive.QueueFileDateFormat;
 import yajhfc.plugin.PluginManager;
 import yajhfc.plugin.PluginUI;
+import yajhfc.util.ExternalProcessExecutor;
 
 
 public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
-    public static final String AppCopyright = "Copyright © 2005-2009 by Jonas Wolz";
-    public static final String AppVersion = "0.4.0beta3";
+    public static final String AppCopyright = "Copyright Â© 2005-2009 by Jonas Wolz";
+    public static final String AppVersion = "0.4.0beta6";
     public static final String AuthorName = "Jonas Wolz";
     public static final String AuthorEMail = "jwolz@freenet.de";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
@@ -193,7 +195,12 @@ public final class Utils {
                 log.log(Level.WARNING, "Error determining application dir:", e);
             }
             if (utilURL.getProtocol().equals("file")) {
-                applicationDir = (new File(utilURL.getPath())).getParentFile();
+                try {
+                    applicationDir = (new File(utilURL.toURI())).getParentFile();
+                } catch (URISyntaxException e) {
+                    applicationDir = new File(".");
+                    log.log(Level.SEVERE, "Application directory not found, url was: " + Utils.class.getResource("Utils.class"), e);
+                }
             } else {
                 applicationDir = new File(".");
                 log.severe("Application directory not found, url was: " + Utils.class.getResource("Utils.class"));
@@ -576,93 +583,6 @@ public final class Utils {
     }
     
     
-    
-    private static final int STATE_NORMAL = 0;
-    private static final int STATE_DQUOTE = 1;
-    private static final int STATE_SQUOTE = 2;
-    private static final int STATE_WHITESPACE = 3;
-    /**
-     * Splits a command line string and returns a list of arguments suitable
-     * for a process builder
-     * @param str
-     * @return
-     */
-    public static List<String> splitCommandLine(String str) {
-        List<String> result = new ArrayList<String>();
-        int state = STATE_NORMAL;
-        int argStart = 0;
-        str = str.trim();
-        for (int i = 0; i < str.length(); i++) {
-            final char c = str.charAt(i);
-            switch (state) {
-            case STATE_NORMAL:
-                switch (c) {
-                case '\'':
-                    state = STATE_SQUOTE;
-                    break;
-                case '\"':
-                    state = STATE_DQUOTE;
-                    break;
-                case ' ':
-                    String res = str.substring(argStart, i);
-                    if (!IS_WINDOWS || res.indexOf(' ') < 0) {
-                        res = stripQuotes(res);
-                    }
-                    result.add(res);
-                    state = STATE_WHITESPACE;
-                    break;
-                default: // Do nothing
-                    break;
-                }
-                break;
-            case STATE_DQUOTE:
-                if (c == '\"') {
-                    state = STATE_NORMAL;
-                }
-                break;
-            case STATE_SQUOTE:
-                if (c == '\'') {
-                    state = STATE_NORMAL;
-                }
-                break;
-            case STATE_WHITESPACE:
-                switch (c) {
-                case ' ':
-                    break;
-                case '\'':
-                    argStart = i;
-                    state = STATE_SQUOTE;
-                    break;
-                case '\"':
-                    argStart = i;
-                    state = STATE_DQUOTE;
-                    break;
-                default:
-                    argStart = i;
-                    state = STATE_NORMAL;
-                    break;
-                }
-                break;
-            }
-        }
-        if (argStart < str.length() - 1) {
-            String res = str.substring(argStart);
-            if (!IS_WINDOWS || res.indexOf(' ') < 0) {
-                res = stripQuotes(res);
-            }
-            result.add(res);
-        }
-        
-        if (debugMode) {
-            log.fine("Result from parsing command line «" + str + "»:");
-            for (int i = 0; i < result.size(); i++) {
-                log.fine("" + i + ": «" + result.get(i) + '»');
-            }
-        }
-        
-        return result;
-    }
-    
     /**
      * Strips quotes (" or ') at the beginning and end of the specified String
      * @param str
@@ -688,6 +608,8 @@ public final class Utils {
         Object keys[] = prop.keySet().toArray();
         Arrays.sort(keys);
         StringBuilder s = new StringBuilder();
+        final String newLine = System.getProperty("line.separator", "\n");
+        
         for (Object key : keys) {
             //s.setLength(0);
             s.append(key).append('=');
@@ -702,7 +624,7 @@ public final class Utils {
                 }
             }
             //out.println(s);
-            s.append('\n');
+            s.append(newLine);
         }
         out.config(s.toString());
     }
@@ -743,7 +665,7 @@ public final class Utils {
      * @param replacement
      */
     public static String sanitizeInput(String input) {
-        return sanitizeInput(input, "\r\n", ' ');    
+        return sanitizeInput(input, "\r\n", ' ', 255);    
     }
     
     /**
@@ -752,9 +674,11 @@ public final class Utils {
      * @param forbiddenChars
      * @param replacement
      */
-    public static String sanitizeInput(String input, String forbiddenChars, char replacement) {
+    public static String sanitizeInput(String input, String forbiddenChars, char replacement, int maxLen) {
         if (input == null)
             return null;
+        if (input.length() > maxLen)
+            input = input.substring(0, maxLen);
         
         char[] chars = input.toCharArray();
         boolean changed = false;
@@ -774,7 +698,7 @@ public final class Utils {
     
     /**
      * Returns the index of the element in the List that is == the given obj 
-     * (i.e. returns the index of the given instance, not only of an equal object).
+     * (i.e. returns the index of the given instance, not only that of an equal object).
      * @param list
      * @param obj
      * @return
@@ -928,7 +852,7 @@ public final class Utils {
         else
             viewerCommandLine += " \"" + fileParam + "\"";
 
-        new ProcessBuilder(Utils.splitCommandLine(viewerCommandLine)).start();
+        ExternalProcessExecutor.executeProcess(viewerCommandLine);
     }
 }
 

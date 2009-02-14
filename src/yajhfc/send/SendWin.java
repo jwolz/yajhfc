@@ -31,7 +31,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -650,9 +649,9 @@ final class SendWin extends JDialog implements SendWinControl  {
         tflFiles.model.add(new ServerFileTFLItem(serverFile));
     }
     
-    public void addInputStream(InputStream inStream) {
+    public void addInputStream(StreamTFLItem inStream) {
         try {
-            tflFiles.model.add(new StreamTFLItem(inStream));
+            tflFiles.model.add(inStream);
         } catch (Exception e) {
             //JOptionPane.showMessageDialog(ButtonSend, _("An error occured reading the input: ") + "\n" + e.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
             ExceptionDialog.showExceptionDialog(this, _("An error occured reading the input: "), e);
@@ -713,6 +712,11 @@ final class SendWin extends JDialog implements SendWinControl  {
 
     public void setUseCover(boolean useCover) {
         checkUseCover.setSelected(useCover);
+    }
+
+
+    public boolean isPollMode() {
+        return pollMode;
     }
 }  
 

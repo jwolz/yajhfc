@@ -33,6 +33,10 @@ public enum DateKind {
     DATE_AND_TIME,
     DURATION;
     
+    public DateFormat getFormat() {
+        return getInstanceFromKind(this);
+    }
+    
     private static final Map<DateKind,DateFormat> lastInstances = new EnumMap<DateKind,DateFormat>(DateKind.class);
     private static String lastDateStyle;
     private static String lastTimeStyle;

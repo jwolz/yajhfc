@@ -23,6 +23,8 @@ import gnu.hylafax.Job;
 
 import java.awt.Frame;
 import java.awt.Window;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -85,6 +87,9 @@ public class SendController {
      * The selected modem. Either a HylaModem or a String containing the modem's name.
      */
     protected Object selectedModem = Utils.getFaxOptions().defaultModem;
+    
+    // Internal properties:
+    protected final List<SendControllerListener> listeners = new ArrayList<SendControllerListener>();
     
     private static final int FILE_DISPLAY_LEN = 30;
     
@@ -231,6 +236,7 @@ public class SendController {
     class SendWorker extends ProgressWorker {
         private final Logger log = Logger.getLogger(SendWorker.class.getName());    
         private final SendFileManager fileManager;
+        private boolean success = false;
         
         private void setIfNotEmpty(Job j, String prop, String val) {
             try {
@@ -374,6 +380,7 @@ public class SendController {
 
                 updateNote(Utils._("Cleaning up"));
                 fileManager.cleanup();
+                success = true;
             } catch (Exception e1) {
                 //JOptionPane.showMessageDialog(ButtonSend, _("An error occured while submitting the fax: ") + "\n" + e1.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
                 showExceptionDialog(Utils._("An error occured while submitting the fax: "), e1);
@@ -383,7 +390,10 @@ public class SendController {
 
         @Override
         protected void done() {
-            SendController.this.parent.dispose();
+            fireSendOperationComplete(success);
+            if (success) {
+                SendController.this.parent.dispose();
+            }
         }
         
         public SendWorker() {
@@ -575,14 +585,67 @@ public class SendController {
         this.sendTime = sendTime;
     }
     
+    public void addSendControllerListener(SendControllerListener l) {
+        listeners.add(l);
+    }
+    
+    public void removeSendControllerListener(SendControllerListener l) {
+        listeners.remove(l);
+    }
+    
+    protected void fireSendOperationComplete(boolean success) {
+        for (SendControllerListener l : listeners) {
+            l.sendOperationComplete(success);
+        }
+    }
+    
+    static SendWinControl lastSendWin = null;
+    /**
+     * Creates a new send window or returns a reference to a existing one
+     * @param owner
+     * @param manager
+     * @param initiallyHideFiles
+     * @return
+     */
+    public static SendWinControl getSendWindow(Frame owner, HylaClientManager manager, boolean pollMode, boolean initiallyHideFiles) {
+        if (lastSendWin == null || lastSendWin.isPollMode() != pollMode) {
+            return createSendWindow(owner, manager, false, initiallyHideFiles);
+        } else {
+            return lastSendWin;
+        }
+    }
+    /**
+     * Creates a new send window and returns it.
+     * @param owner
+     * @param manager
+     * @param pollMode
+     * @param initiallyHideFiles
+     * @return
+     */
     public static SendWinControl createSendWindow(Frame owner, HylaClientManager manager, boolean pollMode, boolean initiallyHideFiles) {
         SendWinControl result;
-    
+        
+        if (lastSendWin != null) {
+            lastSendWin.getWindow().dispose();
+            lastSendWin = null;
+        }
+        
+        
         if (pollMode || Utils.getFaxOptions().sendWinStyle == SendWinStyle.TRADITIONAL) {
             result = new SendWin(manager, owner, pollMode);
         } else {
             result = new SimplifiedSendDialog(manager, owner, initiallyHideFiles);
-        } 
+        }
+        
+        lastSendWin = result;
+        result.getWindow().addWindowListener(new WindowAdapter() {
+           @Override
+            public void windowClosed(WindowEvent e) {
+               if (lastSendWin == e.getSource()) {
+                   lastSendWin = null;
+               }
+            } 
+        });
         return result;
     }
 }

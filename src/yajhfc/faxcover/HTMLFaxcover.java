@@ -58,7 +58,7 @@ public class HTMLFaxcover extends MarkupFaxcover {
 //        Faxcover cov = new HTMLFaxcover(new URL("file:/home/jonas/java/yajhfc/extra/cover/Coverpage example.html"));
 //
 //        cov.comments = "foo\niniun iunuini uinini <tag> ninuin iuniuniu 9889hz h897h789 bnin uibiubui ubuib uibub ubiu bib bib ib uib i \nbar";
-//        cov.fromCompany = "foo ‹&÷ OHG";
+//        cov.fromCompany = "foo √ú&√ñ OHG";
 //        cov.fromFaxNumber = "989898";
 //        cov.fromLocation = "Bardorf";
 //        cov.fromVoiceNumber = "515616";
@@ -68,12 +68,12 @@ public class HTMLFaxcover extends MarkupFaxcover {
 //        cov.pageCount = 55;
 //        cov.pageSize = Utils.papersizes[0];
 //        cov.regarding = "Test fax";
-//        cov.sender = "Werner Meiﬂner";
+//        cov.sender = "Werner Mei√üner";
 //
-//        cov.toCompany = "B‚r GmbH & Co. KGaA";
+//        cov.toCompany = "B√¢r GmbH & Co. KGaA";
 //        cov.toFaxNumber = "87878787";
-//        cov.toLocation = "Foost‰dtle";
-//        cov.toName = "Otto M¸ller";
+//        cov.toLocation = "Foost√§dtle";
+//        cov.toName = "Otto M√ºller";
 //        cov.toVoiceNumber = "4545454";
 //
 //        try {

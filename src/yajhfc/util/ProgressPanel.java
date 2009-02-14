@@ -109,7 +109,7 @@ public class ProgressPanel extends JLayeredPane implements ProgressWorker.Progre
             remove(this.contentComponent);
         }
         this.contentComponent = contentComponent;
-        add(contentComponent, JLayeredPane.FRAME_CONTENT_LAYER);
+        add(contentComponent, JLayeredPane.DEFAULT_LAYER);
     }
 
     /**

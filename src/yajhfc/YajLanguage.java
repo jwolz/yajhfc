@@ -25,6 +25,7 @@ public enum YajLanguage  {
     ENGLISH(Locale.ENGLISH),
     FRENCH(Locale.FRENCH),
     GERMAN(Locale.GERMAN),
+    GREEK(new Locale("el")),
     ITALIAN(Locale.ITALIAN),
     SPANISH(new Locale("es")),
     RUSSIAN(new Locale("ru")),

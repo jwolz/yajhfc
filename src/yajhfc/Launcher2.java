@@ -44,6 +44,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
@@ -72,7 +73,9 @@ import yajhfc.plugin.PluginType;
 import yajhfc.plugin.PluginManager.PluginInfo;
 import yajhfc.send.SendController;
 import yajhfc.send.SendWinControl;
+import yajhfc.send.StreamTFLItem;
 import yajhfc.util.ExampleFileFilter;
+import yajhfc.util.ExternalProcessExecutor;
 
 public final class Launcher2 {
     private static final Logger launchLog = Logger.getLogger(Launcher2.class.getName());
@@ -94,6 +97,8 @@ public final class Launcher2 {
     final static int codeUseCover = 6;
     final static int codeSetSubject = 7;
     final static int codeSetComment = 8;
+    final static int codeAddStream = 9;
+    final static int codeMultiAddFile = 10;
     final static int codeQuit = 255;
     
     final static int responseOK = 0;
@@ -243,6 +248,7 @@ public final class Launcher2 {
         Boolean useCover = null; // Use cover? null: Don't change, else use booleanValue()
         String subject = null;
         String comment = null;
+        boolean noWait = false;
         
         // Also modify CommandLineOpts.properties if new options are added
         final LongOpt[] longOpts = new LongOpt[] {
@@ -257,6 +263,7 @@ public final class Launcher2 {
                 new LongOpt("appendlogfile", LongOpt.REQUIRED_ARGUMENT, null, 6),
                 new LongOpt("background", LongOpt.NO_ARGUMENT, null, 2),
                 new LongOpt("noclose", LongOpt.NO_ARGUMENT, null, 3),
+                new LongOpt("no-wait", LongOpt.NO_ARGUMENT, null, 10),
                 new LongOpt("showtab", LongOpt.REQUIRED_ARGUMENT, null, 'T'),
                 new LongOpt("loadplugin", LongOpt.REQUIRED_ARGUMENT, null, 4),
                 new LongOpt("loaddriver", LongOpt.REQUIRED_ARGUMENT, null, 5),
@@ -307,6 +314,10 @@ public final class Launcher2 {
                 break;
             case 9: // comment
                 comment = getopt.getOptarg();
+                break;
+            case 10: // no-wait
+                noWait = true;
+                forkNewInst = true;
                 break;
             case 'C': // use-cover
                 String optarg = getopt.getOptarg();
@@ -375,70 +386,6 @@ public final class Launcher2 {
             fileNames.add(args[i]);
         }
         
-//        for (int i = 0; i < args.length; i++) {
-//            String curArg = args[i];
-//            if (curArg.startsWith("--")) { // command line argument
-//                if (curArg.equals("--help")) {
-//                    printHelp();
-//                    System.exit(0);
-//                } else if (curArg.equals("--stdin"))
-//                    useStdin = true;
-//                else if (curArg.equals("--admin"))
-//                    adminMode = true;
-//                else if (curArg.equals("--debug"))
-//                    debugMode = true;
-//                else if (curArg.equals("--background"))
-//                    forkNewInst = true;
-//                else if (curArg.equals("--noclose")) 
-//                    closeAfterSubmit = false;
-//                else if (curArg.startsWith("--configdir="))
-//                    cmdLineConfDir = stripQuotes(curArg.substring(12)); // 12 == "--configdir=".length()
-//                else if (curArg.startsWith("--recipient="))
-//                    recipients.add(stripQuotes(curArg.substring(12))); // 12 == "--recipient=".length()
-//                else if (curArg.startsWith("--showtab=") && curArg.length() > 10) { // 10 == ""--showtab="".length()
-//                    switch (curArg.charAt(10)) {
-//                    case '0':
-//                    case 'R':
-//                    case 'r':
-//                        selectedTab = 0;
-//                        break;
-//                    case '1':
-//                    case 'S':
-//                    case 's':
-//                        selectedTab = 1;
-//                        break;
-//                    case '2':
-//                    case 'T':
-//                    case 't':
-//                        selectedTab = 2;
-//                        break;
-//                    default:
-//                        System.err.println("Unknown tab: " + curArg.substring(10));
-//                    }
-//                } else if (curArg.startsWith("--loadplugin=")) {
-//                    plugins.add(new PluginInfo(new File(stripQuotes(curArg.substring("--loadplugin=".length()))),
-//                            PluginType.PLUGIN, false));
-//                } else if (curArg.startsWith("--loaddriver=")) {
-//                    plugins.add(new PluginInfo(new File(stripQuotes(curArg.substring("--loaddriver=".length()))), 
-//                            PluginType.JDBCDRIVER, false));
-//                } else if (curArg.startsWith("--logfile=")) {
-//                    logFile = stripQuotes(curArg.substring("--logfile=".length()));
-//                    appendToLog = false;
-//                } else if (curArg.startsWith("--appendlogfile=")) {
-//                    logFile = stripQuotes(curArg.substring("--appendlogfile=".length()));
-//                    appendToLog = true;
-//                } else if (curArg.equals("--no-plugins")) {
-//                    noPlugins = true;
-//                } else if (curArg.equals("--no-gui")) {
-//                    noGUI = true;
-//                } else {
-//                    System.err.println("Unknown command line argument: " + curArg);
-//                }
-//            } else if (curArg.startsWith("-"))
-//                System.err.println("Unknown command line argument: " + curArg);
-//            else // treat argument as file name to send
-//                fileNames.add(curArg);
-//        }
         
         if (debugMode && ":prompt:".equals(logFile)) {
             logFile = (new LogFilePrompter()).promptForLogfile();
@@ -512,13 +459,27 @@ public final class Launcher2 {
                     launchArgs.add("--debug");
                 }
                 if (logFile != null) {
-                    launchArgs.add("--appendlogfile=\"" + logFile + "\"");
+                    launchArgs.add("--logfile");
+                    
+                    // Create a file name for the new log file
+                    File log = new File(logFile);
+                    String name = log.getName();
+                    String ext;
+                    int pos = name.lastIndexOf('.');
+                    if (pos >= 0) {
+                        ext = name.substring(pos);
+                        name = name.substring(0, pos);
+                    } else {
+                        ext = "";
+                    }
+                    launchArgs.add(new File(log.getParentFile(), name + "-background" + ext).getAbsolutePath());
                 }
                 if (!closeAfterSubmit) {
                     launchArgs.add("--noclose");
                 }
                 if (cmdLineConfDir != null) {
-                    launchArgs.add("--configdir=" + cmdLineConfDir);
+                    launchArgs.add("--configdir");
+                    launchArgs.add(cmdLineConfDir);
                 }
                 if (selectedTab >= 0) {
                     launchArgs.add("--showtab=" + selectedTab);
@@ -529,10 +490,12 @@ public final class Launcher2 {
                 for (PluginInfo entry : plugins) {
                     switch (entry.type) {
                     case PLUGIN:
-                        launchArgs.add("--loadplugin=\"" + entry.file.getAbsolutePath() + "\"");
+                        launchArgs.add("--loadplugin");
+                        launchArgs.add(entry.file.getAbsolutePath());
                         break;
                     case JDBCDRIVER:
-                        launchArgs.add("--loaddriver=\"" + entry.file.getAbsolutePath() + "\"");
+                        launchArgs.add("--loaddriver");
+                        launchArgs.add(entry.file.getAbsolutePath());
                         break;
                     }
                 }
@@ -543,7 +506,7 @@ public final class Launcher2 {
                         launchLog.info("launchArgs[" + i + "] = " + launchArgs.get(i));
                     }
                 }
-                new ProcessBuilder(launchArgs).start();
+                ExternalProcessExecutor.executeProcess(launchArgs);
                 
                 int time = 0;
                 if (Utils.debugMode) {
@@ -585,9 +548,14 @@ public final class Launcher2 {
             PluginManager.addPlugins(plugins);
             PluginManager.loadAllKnownPlugins();
             
+            try {
             SwingUtilities.invokeLater(new NewInstRunner(
                     SubmitRunner.createWhenNecessary(fileNames, useStdin, recipients, closeAfterSubmit, comment, subject, useCover), 
                     adminMode, selectedTab));
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, Utils._("Error launching the new program instance:") + ex.toString() );
+                System.exit(1);
+            }
             blockThread = new SockBlockAcceptor();
             blockThread.start();
             if (Utils.debugMode) {
@@ -599,7 +567,7 @@ public final class Launcher2 {
                     launchLog.info("Found old instance at: " + oldinst);
                 }
                 DataOutputStream outStream = new DataOutputStream(new BufferedOutputStream(oldinst.getOutputStream()));
-                DataInputStream inStream = new DataInputStream(oldinst.getInputStream());
+                InputStream inStream = oldinst.getInputStream();
                 
                 if (recipients.size() > 0)
                 {
@@ -632,10 +600,10 @@ public final class Launcher2 {
                 }
                 
                 if (useStdin) { 
-                    outStream.write(codeSubmitStream);
+                    outStream.write(noWait ? codeAddStream : codeSubmitStream);
                     Utils.copyStream(System.in, outStream);
                 } else if ( (fileNames != null && fileNames.size() > 0) || recipients.size() > 0) {
-                    outStream.write(codeMultiSubmitFile);
+                    outStream.write(noWait ? codeMultiAddFile : codeMultiSubmitFile);
                     for (String fileName : fileNames) {
                         File f = new File(fileName);
                         outStream.writeUTF(f.getAbsolutePath());
@@ -651,10 +619,17 @@ public final class Launcher2 {
                 //outStream.write(codeQuit);
                 outStream.flush();
                 oldinst.shutdownOutput();
+                //outStream.close(); // Do NOT uncomment this -> else we will exit too early
                 
+                if (Utils.debugMode)
+                    launchLog.info("Waiting for final response from old instance");
                 int response = inStream.read();
+                if (Utils.debugMode)
+                    launchLog.info("Got response: " + response);
                 
                 if (!oldinst.isClosed()) {
+                    inStream.close();
+                    outStream.close();
                     oldinst.close();
                 }
                 
@@ -760,6 +735,8 @@ public final class Launcher2 {
     }
     
     static class SockBlockAcceptor extends Thread {
+        private static final Logger log = Logger.getLogger(SockBlockAcceptor.class.getName());
+        
         private int waitSubmitOK() throws InterruptedException  {
             while (true) {
                 if (application != null) {
@@ -778,31 +755,37 @@ public final class Launcher2 {
         
         @Override
         public void run() {
-            Logger log = Logger.getLogger(SockBlockAcceptor.class.getName());
             while (isLocking) {
                 Socket srv = null;
                 DataInputStream strIn = null;
-                DataOutputStream strOut = null;
+                OutputStream strOut = null;
                 List<String> recipients = null;
                 Boolean useCover = null;
                 String subject = null;
                 String comment = null;
+                int opcode;
                 
                 try {
                     srv = sockBlock.accept();
                     strIn = new DataInputStream(srv.getInputStream());
-                    strOut = new DataOutputStream(srv.getOutputStream());
+                    strOut = srv.getOutputStream();
                     boolean doLoop = true;
 
                     do {
-                        switch (strIn.read()) {
+                        switch (opcode = strIn.read()) {
+                        case codeAddStream:
                         case codeSubmitStream:
                             if (Utils.debugMode) {
                                 log.info("Received codeSubmitStream:");
                             }
                             int ok = waitSubmitOK();
                             if (ok == responseOK) {
-                                SwingUtilities.invokeAndWait(new SubmitRunner(null, strIn, recipients, false, comment, subject, useCover)); // Accept new faxes only sequentially
+                                SubmitRunner runner = new SubmitRunner(null, strIn, recipients, false, comment, subject, useCover);
+                                if (opcode == codeAddStream) 
+                                    SwingUtilities.invokeLater(runner); // Accept additional files
+                                else 
+                                    SwingUtilities.invokeAndWait(runner); // Accept new faxes only sequentially
+                                
                                 recipients = null;
                                 useCover = null;
                                 subject = null;
@@ -826,6 +809,7 @@ public final class Launcher2 {
                             }
                             strOut.write(ok);
                             break;
+                        case codeMultiAddFile:
                         case codeMultiSubmitFile:
                             if (Utils.debugMode) {
                                 log.info("Received codeMultiSubmitFiles:");
@@ -843,7 +827,12 @@ public final class Launcher2 {
                                     line = strIn.readUTF();
                                 }
 
-                                SwingUtilities.invokeAndWait(new SubmitRunner(fileNames, null, recipients, false , comment, subject, useCover)); // Accept new faxes only sequentially
+                                SubmitRunner runner = new SubmitRunner(fileNames, null, recipients, false , comment, subject, useCover);
+                                if (opcode == codeMultiAddFile) 
+                                    SwingUtilities.invokeLater(runner); // Accept additional files
+                                else 
+                                    SwingUtilities.invokeAndWait(runner); // Accept new faxes only sequentially
+                                
                                 recipients = null;
                                 useCover = null;
                                 subject = null;
@@ -905,6 +894,9 @@ public final class Launcher2 {
                         }
 
                         strOut.flush();
+                        if (Utils.debugMode) {
+                            log.fine("Flushed strOut.");
+                        }
                     } while (doLoop && !srv.isClosed());
                     
                     if (Utils.debugMode) {
@@ -942,7 +934,8 @@ public final class Launcher2 {
     }
     
     static class SubmitRunner implements Runnable {
-        protected final InputStream inStream;
+        private final Logger log = Logger.getLogger(SubmitRunner.class.getName());
+        protected final StreamTFLItem inStream;
         protected final List<String> fileNames;
         protected final List<String> recipients;
         protected final boolean closeAfterSubmit;
@@ -951,6 +944,7 @@ public final class Launcher2 {
         protected final String comment;
         
         public void run() {
+            log.fine("Running...");
             application.bringToFront();
             doSubmit();
             if (closeAfterSubmit)
@@ -958,7 +952,8 @@ public final class Launcher2 {
         }
         
         protected void doSubmit() {
-            SendWinControl sw = SendController.createSendWindow(application, application.clientManager, false, true);
+            log.fine("Initializing SendWin");
+            SendWinControl sw = SendController.getSendWindow(application, application.clientManager, false, true);
 
             if (inStream != null) {                
                 sw.addInputStream(inStream);
@@ -980,17 +975,26 @@ public final class Launcher2 {
             if (comment != null) {
                 sw.setComment(comment);
             }
+            log.fine("Showing SendWin");
             sw.setVisible(true);
+            log.fine("SendWin closed");
         }
         
         
         
         public SubmitRunner(List<String> fileNames, InputStream inStream,
                 List<String> recipients, boolean closeAfterSubmit,
-                String comment, String subject, Boolean useCover) {
+                String comment, String subject, Boolean useCover) throws FileNotFoundException, IOException {
             super();
             this.fileNames = fileNames;
-            this.inStream = inStream;
+            if (inStream != null) {
+                log.fine("Reading stdin...");
+                this.inStream = new StreamTFLItem(inStream);
+                log.fine("stdin read.");
+            } else {
+                this.inStream = null;
+            }
+            
             this.recipients = recipients;
             this.closeAfterSubmit = closeAfterSubmit;
             this.comment = comment;
@@ -1009,10 +1013,12 @@ public final class Launcher2 {
          * @param subject
          * @param useCover
          * @return
+         * @throws IOException 
+         * @throws FileNotFoundException 
          */
         public static SubmitRunner createWhenNecessary(List<String> fileNames, boolean useStdin,
                 List<String> recipients, boolean closeAfterSubmit,
-                String comment, String subject, Boolean useCover) {
+                String comment, String subject, Boolean useCover) throws FileNotFoundException, IOException {
             
             if ((fileNames != null && fileNames.size() > 0) || useStdin || (recipients != null && recipients.size() > 0)) {
                 return new SubmitRunner(fileNames, useStdin ? System.in : null, recipients, closeAfterSubmit, comment, subject, useCover);

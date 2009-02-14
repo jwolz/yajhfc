@@ -29,8 +29,10 @@ msgstr "Recipiente"
 
 # Untranslated text: Specifies a recipient to send the fax to. You may specify either a fax number or detailed cover page information (see the FAQ for the format in the latter case). You may specify --recipient multiple times for multiple recipients.
 msgid "recipient-desc"
-msgstr "Specifica una casella a cui inviare il fax. Puoi specificare un numero di fax o informazioni di frontespizio dettagliate"
-"(nel secondo caso vedi le FAQ per il formato). Puoi specificare più volte --recipient per diverse caselle."
+msgstr ""
+"Specifica una casella a cui inviare il fax. Puoi specificare un numero di "
+"fax o informazioni di frontespizio dettagliate(nel secondo caso vedi le FAQ "
+"per il formato). Puoi specificare più volte --recipient per diverse caselle."
 
 # Untranslated text: Use a cover page for sending a fax.
 msgid "use-cover-desc"
@@ -70,7 +72,9 @@ msgstr "File di LOG"
 
 # Untranslated text: The log file to log debug information to (if not specified, use stdout).
 msgid "logfile-desc"
-msgstr "Il file di LOG dove scrivere le informazioni di debug (se non specificato, utilizza lo standard output)."
+msgstr ""
+"Il file di LOG dove scrivere le informazioni di debug (se non specificato, "
+"utilizza lo standard output)."
 
 # Untranslated text: LOGFILE
 msgid "appendlogfile-arg"
@@ -82,7 +86,9 @@ msgstr "Appende le informazioni di debug al file di LOG indicato."
 
 # Untranslated text: If there is no already running instance of YajHFC, launch a new instance and terminate this instance (after submitting the fax to send).
 msgid "background-desc"
-msgstr "Se non c'è già un'istanza di YajHFC attiva, lancia una nuova istanza e chiude questa (dopo aver sottomesso il fax da inviare)."
+msgstr ""
+"Se non c'è già un'istanza di YajHFC attiva, lancia una nuova istanza e "
+"chiude questa (dopo aver sottomesso il fax da inviare)."
 
 # Untranslated text: Do not close YajHFC after submitting the fax.
 msgid "noclose-desc"
@@ -90,7 +96,9 @@ msgstr "Non chiude YajHFC dopo aver sottomesso il fax."
 
 # Untranslated text: Sets the tab to display on startup. Specify 0 or R for the "Received", 1 or S for the "Sent" or 2 or T for the "Transmitting" tab.
 msgid "showtab-desc"
-msgstr "Imposta il tab da visualizzare all'avviao. Specifica 0 o R per 'Ricevuti', 1 o S per 'Inviati', 2 o T per 'in Trasmissione'."
+msgstr ""
+"Imposta il tab da visualizzare all'avviao. Specifica 0 o R per 'Ricevuti', 1 "
+"o S per 'Inviati', 2 o T per 'in Trasmissione'."
 
 # Untranslated text: JARFILE
 msgid "loadplugin-arg"
@@ -122,7 +130,8 @@ msgstr "Directory"
 
 # Untranslated text: Sets the configuration directory to use instead of ~/.yajhfc
 msgid "configdir-desc"
-msgstr "Imposta la directory di configurazione da utilizzare al posto di ~/.yajhfc."
+msgstr ""
+"Imposta la directory di configurazione da utilizzare al posto di ~/.yajhfc."
 
 # Untranslated text: COLUMNS
 msgid "help-arg"
@@ -135,3 +144,7 @@ msgstr "Visualizza questo testo."
 # Untranslated text: Suppresses the check for the Java version at startup.
 msgid "no-check-desc"
 msgstr "Esclude la verifica della versione di Java all'avvio."
+
+# Untranslated text: Do not wait for the send window to be closed by the user. If YajHFC is invoked multiple times before the user closes the send window, the submitted documents are added to the list of files there. This option implies --background.
+msgid "no-wait-desc"
+msgstr ""

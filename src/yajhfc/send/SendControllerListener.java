@@ -1,7 +1,6 @@
-package yajhfc.send;
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005 Jonas Wolz
+ * Copyright (C) 2005-2009 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,33 +16,20 @@ package yajhfc.send;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+package yajhfc.send;
 
-public abstract class TFLItem {
+/**
+ * @author jonas
+ *
+ */
+public interface SendControllerListener {
 
-    public abstract void setText(String newText);
-    
-    public abstract String getText();
-    
-    public boolean isMutable() {
-        return true;
-    }
-    
-    public boolean isDeletable() {
-        return isMutable();
-    }
-    
-    @Override
-    public String toString() {
-        return getText();
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-        return getText().equals(obj.toString());
-    }
-    
-    @Override
-    public int hashCode() {
-        return getText().hashCode();
-    }
+    /**
+     * Called if a send operation has completed. 
+     * The success parameter determines if the operation can be considered to have 
+     * completed successfully.
+     * @param success
+     */
+    public void sendOperationComplete(boolean success);
+
 }

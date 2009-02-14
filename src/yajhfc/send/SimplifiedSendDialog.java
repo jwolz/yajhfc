@@ -33,7 +33,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.InputStream;
 
 import javax.swing.Action;
 import javax.swing.Box;
@@ -158,6 +157,12 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         setAdvancedView(Utils.getFaxOptions().sendWinIsAdvanced);
         
         sendController.setProgressMonitor(progressPanel);
+        sendController.addSendControllerListener(new SendControllerListener() {
+           public void sendOperationComplete(boolean success) {
+               actSend.setEnabled(true);
+               SimplifiedSendDialog.this.setEnabled(true);
+            } 
+        });
         
         this.addWindowListener(new WindowAdapter() {
             @Override
@@ -194,6 +199,9 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
 
                 if (sendController.validateEntries()) {
                     sendController.sendFax();
+                    
+                    actSend.setEnabled(false);
+                    SimplifiedSendDialog.this.setEnabled(false);
                     modalResult = true;
                 }
             }
@@ -596,9 +604,9 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         validate();
     }
     
-    public void addInputStream(InputStream inStream) {
+    public void addInputStream(StreamTFLItem inStream) {
         try {
-            tflFiles.model.add(new StreamTFLItem(inStream));
+            tflFiles.model.add(inStream);
         } catch (Exception e) {
             ExceptionDialog.showExceptionDialog(this, Utils._("An error occured reading the input: "), e);
         }
@@ -665,6 +673,10 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
 
     public void setUseCover(boolean useCover) {
         checkUseCover.setSelected(useCover);
+    }
+
+    public boolean isPollMode() {
+        return false;
     }
     
 }

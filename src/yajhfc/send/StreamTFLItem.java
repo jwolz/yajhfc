@@ -27,12 +27,20 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 
+import yajhfc.DateKind;
 import yajhfc.Utils;
 import yajhfc.file.FormattedFile;
 
 public class StreamTFLItem extends HylaTFLItem {
     protected FormattedFile tempFile;
+    protected String text;
+    
+    @Override
+    public boolean equals(Object obj) {
+        return (obj == this);
+    }
     
     @Override
     public void cleanup() {
@@ -53,12 +61,17 @@ public class StreamTFLItem extends HylaTFLItem {
 
     @Override
     public String getText() {
-        return Utils._("<stdin>");
+        return text;
     }
 
     @Override
     public boolean isMutable() {
         return false;
+    }
+    
+    @Override
+    public boolean isDeletable() {
+        return true;
     }
     
     @Override
@@ -71,6 +84,13 @@ public class StreamTFLItem extends HylaTFLItem {
         throw new IllegalArgumentException("StreamTFLItem is immutable!");
     }
     
+    /**
+     * Creates a new StreamTFLItem by copying the specified stream to a temporary
+     * file.
+     * @param inStream
+     * @throws IOException
+     * @throws FileNotFoundException
+     */
     public StreamTFLItem(InputStream inStream) throws IOException, FileNotFoundException {
         File tmp;
         // Copy input stream to a temporary file:
@@ -81,7 +101,7 @@ public class StreamTFLItem extends HylaTFLItem {
         fOut.close();
         
         tempFile = new FormattedFile(tmp);
-        tempFile.detectFormat();
+        text = Utils._("<stdin>") + " – " + DateKind.TIME_ONLY.getFormat().format(new Date());
     }
     
 }
