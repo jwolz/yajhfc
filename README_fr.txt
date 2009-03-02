@@ -23,7 +23,7 @@ INSTALLATION
 ------------
 
 Pres requis:
-* JRE 5.0 ou superieur
+* JRE 5.0 ou superieur (Java 6 recommande)
 * Un serveur Hylafax operationnel sur votre reseau (bien sur ;-) )
 * Un programme pour visualiser les fichiers TIFF (voir aussi les FAQ)
 * Optionnel: Un visualiseur Postscript (e.g. Ghostview)
@@ -62,6 +62,9 @@ YajHFC a ete originellement ecrit comme un premier projet Java
 MODIFICATIONS
 -------------
 0.4.0:
+- Installation en grec ajoutee
+- Support pour ajouter manuellement un appel telephonique
+- Mise a jour automatique
 - Support d'un repertoire d'archive
 - Support de lavisualisation et de l'envoi de fax comme un seul fichier (format PDF, TIFF ou PS)
 - Le carnet d'adresse inclus plus de champs classiques maintenant

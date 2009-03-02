@@ -32,7 +32,7 @@ Gereksinimler:
 Kurulum için sadece YajHFC'yi dosya sisteminizdeki herhangi bir dizine
 indirin.
 Çalıştırmak için "java -jar yajhfc-0_4_0.jar" kullanın.
-(Windows'da genellikle jar dosyasına iki kez tıklayabilirsiniz)
+(Windows'da çalıştırmak için genellikle jar dosyasına iki kez tıklayabilirsiniz)
 
 LİSANS
 -------
@@ -59,7 +59,7 @@ YajHFC aşağıdaki paketleri kullanır:
 (2), (3) ve (4). bölümdeki gerekli dosyaların kopyaları aynı zamanda 
 jar dosyasının altdizinlerindeki kaynak arşivinde de bulunur.
 
-YajHFC bir ilkten daha karmaşık ("hello world" programlarından daha gelişmiş) 
+YajHFC bir ilkten daha karmaşık ("merhaba dünya" programlarından daha gelişmiş) 
 Java projesi olarak Eclipse IDE kullanılarak özgün biçimde yazılmıştır.
 
 DEĞİŞİKLİKLER

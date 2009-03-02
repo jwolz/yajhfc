@@ -14,7 +14,7 @@ Features:
 * Viewing sent and received faxes
 * Phone book (entries can optionally be read from SQL databases or LDAP directories)
 * Visible table columns may be selected in a dialog
-* Supports seven languages: English, French, German, Italian, Russian, Spanish and Turkish
+* Supports eight languages: English, French, German, Greek, Italian, Russian, Spanish and Turkish
 
 Homepage: http://yajhfc.berlios.de/
 email:    Jonas Wolz <jwolz@freenet.de>
@@ -67,6 +67,9 @@ CHANGES
 -------
 
 0.4.0:
+- Greek translation added
+- Support to manually answer a phone call
+- Update checker
 - Support for archive directory
 - Support to view and send faxes as a single file (in PDF, TIFF or PS format)
 - Phone book includes most common fields now

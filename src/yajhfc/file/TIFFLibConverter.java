@@ -127,6 +127,7 @@ public class TIFFLibConverter implements FileConverter {
             commandLine.add(input.getAbsolutePath());
             break;
         case PostScript:
+        default:
             // Try to find tiff2ps by the simple minded logic that it will be in the same directory as tiff2pdf
             File tiff2ps = Utils.searchExecutableInPath(new File(new File(Utils.getFaxOptions().tiff2PDFLocation).getParentFile(), "tiff2ps").getPath());
             if (tiff2ps == null) {
@@ -139,8 +140,8 @@ public class TIFFLibConverter implements FileConverter {
             }
             commandLine.add(input.getAbsolutePath());
             break;
-        default:
-            throw new ConversionException("Unsupported file format: " + targetFormat);
+//        default:
+//            throw new ConversionException("Unsupported file format: " + targetFormat);
         }
         return commandLine;
     }

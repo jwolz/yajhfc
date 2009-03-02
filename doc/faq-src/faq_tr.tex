@@ -81,7 +81,6 @@ Bu tür dosyların nasıl oluşturulacağı ve düzenleneceğine dair ipucları 
 \url{http://www.hylafax.org/howto/tweaking.html}\\
 
 Seçenek olarak, YajHFC 0.3.7 sürümünden itibaren, kapak sayfalarını, HTML yada bir eklenti ile XSL:FO veya ODT (OpenDocument Text) biçiminde kullanabilirsiniz.
-Alternatively, starting with YajHFC 0.3.7, you can use Cover pages in HTML or, with a plugin, in XSL:FO or ODT (OpenDocument Text) format.
 
  \subsection{Bir HTML kapak sayfasında hangi alanlar tanınır}
 Bir HTML kapak sayfası kullanılırken, aşağıdaki ``kelimeler'' karşılığı olan değerlerle değiştirilir (büyük/küçük harf duyarlı):
@@ -173,44 +172,27 @@ ve \verb#?# joker karakteri için \verb#.#.
 \subsection{YajHFC hangi komut satırı değişkenlerini anlıyor?}
 
 \begin{verbatim}
-Kullanım:
-java -jar yajhfc.jar [SEÇENEKLER]... [GIDECEK DOSYALAR]...
-
+Genel Kullanım:
+java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose]
+         [--configdir=directory] [--loadplugin=filename] [--logfile=filename]
+         [--showtab=0|R|1|S|2|T] [--recipient=...] [--stdin | filename ...]
 Değişken açıklaması:
--r, --recipient=ALICI             Faks gönderilecek alıcıyı tanımlar. Bir faks
-                                  numarası yada ayrıntılı kapak sayfası bilgisi
-                                  tanımlayabilirsiniz (En son durumdaki biçim
-                                  için SSS'ye göz atın. Bir çok alıcı için bir
-                                  çok kez tanımlama yapabilirsiniz.
--C, --use-cover[=yes|no]          Faks göndermek için bir kapak sayfası kullan.
--s, --subject=KONU                Kapak sayfası için faks konusu.
-    --comment=YORUM               Kapak sayfası için yorum.
-    --stdin                       Dosya göndermek için standart girişten oku.
--A, --admin                       Yönetici kipinde başlat.
--d, --debug                       Bazı hata giderme bilgileri çıkarır.
--l, --logfile=GÜNLÜKDOSYASI       Hata giderme bilgisini yazdırmak için
-                                  kullanılacak günlük dosyası (eğer
-                                  tanımlanmazsa stdout kullan).
-    --appendlogfile=GÜNLÜKDOSYASI Verilen günlük dosyasına hata giderme
-                                  bilgisini ekle.
-    --background                  Çalışan YajHFC kopyası yoksa, yeni bir kopya
-                                  çalıştır ve (faksı göndermek için ilettikten
-                                  sonra) bu kopyayı sonlandır.
-    --noclose                     Faks iletiminden sonra YajHFC'yi kapatma.
--T, --showtab=0|R|1|S|2|T         Açılışta gösterilecek sekmeyi ayarlar.
-                                  "Gelen" için 0 veya R, "Giden" için 1 veya S,
-                                  "İletiliyor" için 2 veya T tanımlayın.
-    --loadplugin=JARDOSYASI       Yüklenecek YajHFC eklenti jar dosyası
-                                  tanımla.
-    --loaddriver=JARDOSYASI       Yüklenecek JDBC sürücü JAR dosyasının yerini
-                                  tanımlar.
-    --no-plugins                  Eklenti .lst dosyasındaki eklentilerin
-                                  yüklemesini devre dışı bırak.
-    --no-gui                      Faksı sadece en düşük GUI ile gönder.
-    --no-check                    Açılışta Java sürüm kontrolünü kaldır.
--c, --configdir=KLASÖR            ~/.yajhfc yerine başka bir ayar klasörü
-                                  kullan.
--h, --help[=DESTEK]               Bu metni görüntüler.
+Dosya adı	Gönderilecek PostScript dosya veya dosyalarının adı.
+--stdin 	Standart girişten gönderilecek dosyaları okur
+--recipient 	Faksı yollamak için alıcının telefon numarasını tanımlar.
+		Çoklu alıcılar için çoklu değişken tanımlayabilirsiniz.
+--admin		Yönetici kipinde başlatır
+--debug		Hata ayıklama çıktısı verir
+--logfile	Hata ayıklama çıktılarını kaydetmek için günlük dosyası (belirtilmezse, stdout kullanır)
+--background	Eğer çalışan kopya yoksa, yeni bir kopya çalıştırır
+		ve (dosya gönderilten sonra) sonlandırır.
+--noclose	Faks gönderildikten sonra YajHFC'yi kapatmaz
+--showtab	Açılışta gösterilecek sekmeleri ayarlar. "Gelen" için 0 yada R, 
+		"Giden" için 1 yada S, "Gönderiliyor" sekmesi için 2 yada T tanımlayın.
+--loadplugin	Yüklenecek YajHFC jar eklenti dosyasını tanımlar.
+--no-plugins	plugin.lst dosyasından eklenti yüklenmesini devre dışı bırakır.
+--configdir	~/.yajhfc yerine kullanılacak ayar dizinini tanımlar
+--help		Bu metini görüntüler
 \end{verbatim}
 
 
@@ -258,7 +240,7 @@ ve kısaltılmıştır/çevirilmiştir.
 Sürüm 0.4.0 ile başlayarak, kaydedilmiş ayarları getirmek için aşağıdaki dosyalar (varsa) yüklenir:
 \begin{enumerate}
  \item \texttt{[yajhfc.jar dosyasının olduğu klasör]/settings.default}
- \item \texttt{\{user.home\}\footnote{In Windows \texttt{user.home} genelde \texttt{C:\textbackslash Documents and Settings\textbackslash USERNAME}.}/.yajhfc/settings} klasöründen kullanıcı ayarları, (eğer \texttt{-{-}configdir=DIR} belirtirseniz, \texttt{DIR/settings} kullanılacaktır)
+ \item \texttt{\{user.home\}\footnote{Windows'da \texttt{user.home} genelde \texttt{C:\textbackslash Documents and Settings\textbackslash KullanıcıAdı klasörüdür}.}/.yajhfc/settings} klasöründen kullanıcı ayarları, (eğer \texttt{-{-}configdir=DIR} belirtirseniz, \texttt{DIR/settings} kullanılacaktır)
  \item \texttt{[yajhfc.jar dosyasının olduğu klasör]/settings.override}
 \end{enumerate}
 
@@ -392,8 +374,8 @@ Tek güvenli yöntem, YajHFC'yi çalıştırdığınızda her zaman sizden ana p
 istemesidir, fakat benim fikrime göre bu, ``gerçek'' parolayı girmenin ötesinde
 bir gelişme sağlamayacaktır.
 
-Because of many requests passwords are obfuscated using a simple algorithm in version 0.4.0 and up.
-The statement above still holds true, however, i.e. once you read the source code, the password can be decrypted easily.
+Bir çok istek nedeniyle, 0.4.0 ve üstü sürümlerde, parolalar sabit bir algoritma kullanarak gizlenmiştir.
+Lakin yukarıda belirtilen durum hala doğrudur. örn. bir kez kaynak kodu okuyarak parolalar kolaylıkla çözülebilir.
 
 \subsection{Neden böyle aptal bir isim seçtiniz?}
 

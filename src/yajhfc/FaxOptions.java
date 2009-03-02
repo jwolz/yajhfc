@@ -402,6 +402,10 @@ public class FaxOptions {
      */
     public boolean minimizeToTray = true;
     /**
+     * Minimize to tray when main window is closed?
+     */
+    public boolean minimizeToTrayOnMainWinClose = true;
+    /**
      * Display style of the phone book entries
      */
     public NameRule phonebookDisplayStyle = NameRule.GIVENNAME_NAME;
