@@ -614,7 +614,8 @@ public final class Launcher2 {
                 } else {
                     outStream.write(codeToForeground);
                     
-                    launchLog.log(Level.WARNING, Utils._("There already is a running instance!"));
+                    launchLog.fine("There already is a running instance!");
+                    getConsoleWriter().println(Utils._("There already is a running instance!"));
                 }
                 //outStream.write(codeQuit);
                 outStream.flush();
@@ -660,6 +661,11 @@ public final class Launcher2 {
     }
     
     private static PrintWriter consoleWriter;
+    /**
+     * Returns a print writer writing on standard output on the console. <br>
+     * On Windows with Java 6 the correct console encoding is used (in contrast to System.out) 
+     * @return
+     */
     public static PrintWriter getConsoleWriter() {
         if (consoleWriter == null) {
             try {
@@ -933,7 +939,7 @@ public final class Launcher2 {
         }
     }
     
-    static class SubmitRunner implements Runnable {
+    public static class SubmitRunner implements Runnable {
         private final Logger log = Logger.getLogger(SubmitRunner.class.getName());
         protected final StreamTFLItem inStream;
         protected final List<String> fileNames;

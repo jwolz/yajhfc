@@ -44,6 +44,17 @@ public abstract class MultiFileConverter {
     public abstract void convertMultiplePSorPDFFiles(File[] files, File targetFile, PaperSize paperSize) throws IOException, ConversionException;
 
     public void convertMultipleFiles(List<FormattedFile> files, File targetName, PaperSize paperSize) throws IOException, UnknownFormatException, ConversionException {
+        // Do not convert the files if we already have a single file *and* it has the right format
+        if ((files.size() == 1 && files.get(0).format == getTargetFormat())) {
+            FileInputStream in = new FileInputStream(files.get(0).file);
+            FileOutputStream out = new FileOutputStream(targetName);
+            Utils.copyStream(in, out);
+            in.close();
+            out.close();
+            return;
+        }
+        
+        
         File[] target = new File[files.size()];
 
         for (int i=0; i< files.size(); i++) {

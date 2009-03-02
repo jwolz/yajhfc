@@ -19,7 +19,6 @@
 package yajhfc;
 
 import java.lang.reflect.Array;
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -46,16 +45,17 @@ public class FmtItemList<T extends FmtItem> extends ArrayList<T> implements Filt
      */
     public List<T> getCompleteView() {
         if (completeView == null) {
-            List<T> additionalItems = new ArrayList<T>(obligateItems.length);
+            List<T> completeView = new ArrayList<T>(size() + obligateItems.length);
+            completeView.addAll(this);
             for (T fi : obligateItems) {
                 if (!this.contains(fi)) {
-                    additionalItems.add(fi);
+                    completeView.add(fi);
                 }
             }
-            if (additionalItems.size() > 0) {
-                completeView = new CompleteView(additionalItems);
+            if (completeView.size() > size()) {
+                this.completeView = completeView;
             } else {
-                completeView = this; // Optimization: If all required items are present, the "full view" is identical
+                this.completeView = this; // Optimization: If all required items are present, the "full view" is identical
             }
         }
         return completeView;
@@ -187,30 +187,30 @@ public class FmtItemList<T extends FmtItem> extends ArrayList<T> implements Filt
         this.obligateItems = obligateItems;
     }
     
-    protected class CompleteView extends AbstractList<T> {
-        protected List<T> additionalItems;
-        
-        @Override
-        public T get(int index) {
-            int additionalIdx = index - FmtItemList.this.size();
-            if (additionalIdx < 0) {
-                return FmtItemList.this.get(index);
-            } else if (additionalIdx < additionalItems.size()){
-                return additionalItems.get(additionalIdx);
-            } else {
-                throw new ArrayIndexOutOfBoundsException(index);
-            }
-        }
-
-        @Override
-        public int size() {
-            return FmtItemList.this.size() + additionalItems.size();
-        }
-        
-        public CompleteView(List<T> additionalItems) {
-            this.additionalItems = additionalItems;
-        }
-    }
+//    protected class CompleteView extends AbstractList<T> {
+//        protected List<T> additionalItems;
+//        
+//        @Override
+//        public T get(int index) {
+//            int additionalIdx = index - FmtItemList.this.size();
+//            if (additionalIdx < 0) {
+//                return FmtItemList.this.get(index);
+//            } else if (additionalIdx < additionalItems.size()){
+//                return additionalItems.get(additionalIdx);
+//            } else {
+//                throw new ArrayIndexOutOfBoundsException(index);
+//            }
+//        }
+//
+//        @Override
+//        public int size() {
+//            return FmtItemList.this.size() + additionalItems.size();
+//        }
+//        
+//        public CompleteView(List<T> additionalItems) {
+//            this.additionalItems = additionalItems;
+//        }
+//    }
 
     public boolean containsKey(T key) {
         return getCompleteView().contains(key);

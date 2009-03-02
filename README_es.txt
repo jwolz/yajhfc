@@ -14,7 +14,7 @@ Características:
 * Visualización de faxes enviados y recibidos
 * Agenda telefónica (los datos se pueden leer, de manera opcional, desde bases de datos SQL o directorios LDAP)
 * Selección de columnas visibles (seleccionable desde cuadro de diálogo)
-* Disponible en siete idiomas: alemán, español, francés, inglés, italiano, ruso y turco.
+* Disponible en ocho idiomas: alemán, español, francés, griego, inglés, italiano, ruso y turco.
 
 Página principal: 	http://yajhfc.berlios.de/
 E-mail:			Jonas Wolz <jwolz@freenet.de>
@@ -67,6 +67,9 @@ CAMBIOS
 -------
 
 0.4.0:
+- Se añade la traducción al griego
+- Posibilidad de responder manualmente a una llamada de voz
+- Verificación de actualización
 - Soporte del directorio para los faxes archivados
 - Soporte para visualizar y enviar faxes como un archivo único (en formato PDF, TIFF o PS)
 - La agenda telefónica incluye los campos más comunes

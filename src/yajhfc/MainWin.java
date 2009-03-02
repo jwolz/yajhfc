@@ -36,7 +36,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.WindowEvent;
 import java.awt.print.PrinterException;
 import java.io.File;
 import java.net.SocketException;
@@ -1231,12 +1230,12 @@ public final class MainWin extends JFrame {
                         clientManager.endServerTransaction();
                     }
                 } else {
-                    JOptionPane.showMessageDialog(MainWin.this, _("Answering a phone call needs administrative privileges.\nPlease enable admin mode first."), _("Answer call"), JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(MainWin.this, _("Answering a phone call requires administrative privileges.\nPlease enable admin mode first."), _("Answer call"), JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         };
         actAnswerCall.putValue(Action.NAME, _("Answer call") + "...");
-        actAnswerCall.putValue(Action.SHORT_DESCRIPTION, _("Manually answers a phone call with a specific modem"));
+        actAnswerCall.putValue(Action.SHORT_DESCRIPTION, _("Manually answer a phone call with a modem"));
         //actEditToolbar.putValue(Action.SMALL_ICON, Utils.loadIcon("media/Play"));
         putAvailableAction("AnswerCall", actAnswerCall);
         
@@ -1478,23 +1477,23 @@ public final class MainWin extends JFrame {
         
         createActions(adminState);
         
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setJMenuBar(getJJMenuBar());
         this.setSize(644, 466);
         this.setContentPane(getJContentPane());
         this.setTitle(Utils.AppName);
         this.addWindowListener(new java.awt.event.WindowAdapter() {
-            private boolean saved = false;
+            //private boolean saved = false;
             
-            public void windowClosing(java.awt.event.WindowEvent e) {
+            public void windowClosed(java.awt.event.WindowEvent e) {
                 sendReady = SendReadyState.NotReady;
                 
                 doLogout();
                 PersistentReadState.getCurrent().persistReadState();
                 
                 menuViewListener.saveToOptions();
-                myopts.mainWinBounds = getBounds();
                 myopts.mainwinLastTab = getTabMain().getSelectedIndex();
+                myopts.mainWinBounds = getBounds();
                 
                 Boolean selVal = (Boolean)actShowRowNumbers.getValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY);
                 myopts.showRowNumbers = (selVal != null && selVal.booleanValue());
@@ -1503,16 +1502,10 @@ public final class MainWin extends JFrame {
                 myopts.toolbarConfig = ToolbarEditorDialog.saveConfigToString(toolbar);
                 
                 Utils.storeOptionsToFile();
-                saved = true;
+                //saved = true;
                 Launcher2.releaseLock();
                 Thread.yield();
                 System.exit(0);
-            }
-            
-            @Override
-            public void windowClosed(WindowEvent e) {
-                if (!saved)
-                    windowClosing(null);
             }
         });
         setIconImage(Toolkit.getDefaultToolkit().getImage(MainWin.class.getResource("icon.png")));
@@ -1542,6 +1535,7 @@ public final class MainWin extends JFrame {
                 trayIcon = new YajHFCTrayIcon(this, recvTableModel, actSend, actReconnect, null, actExit, null, actAbout);
             }
             if (trayIcon != null) {
+                setDefaultCloseOperation(myopts.minimizeToTrayOnMainWinClose ? JFrame.HIDE_ON_CLOSE : JFrame.DISPOSE_ON_CLOSE);
                 trayIcon.setMinimizeToTray(myopts.minimizeToTray);
             }
         } else {
@@ -1549,6 +1543,7 @@ public final class MainWin extends JFrame {
                 trayIcon.dispose();
                 trayIcon = null;
             }
+            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         }
     }
     
@@ -1990,6 +1985,7 @@ public final class MainWin extends JFrame {
             menuExtras.addSeparator();
             menuExtras.add(new JMenuItem(actReconnect));
             menuExtras.add(new ActionJCheckBoxMenuItem(actAdminMode));
+            menuExtras.addSeparator();
             menuExtras.add(new JMenuItem(actAnswerCall));
             if (PluginManager.pluginUIs.size() > 0) {
                 menuExtras.addSeparator();

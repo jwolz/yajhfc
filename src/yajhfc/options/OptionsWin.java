@@ -142,7 +142,7 @@ public class OptionsWin extends JDialog {
     JSpinner spinStatusInterval, spinTableInterval;
     
     //JCheckBox checkPreferTIFF;
-    JCheckBox checkUseDisconnected, checkShowTrayIcon, checkMinimizeToTray, checkAutoCheckForUpdate;
+    JCheckBox checkUseDisconnected, checkShowTrayIcon, checkMinimizeToTray, checkMinimizeToTrayOnMainWinClose, checkAutoCheckForUpdate;
     
     JPanel panelPersistence;
     JComboBox comboPersistenceMethods;
@@ -244,6 +244,7 @@ public class OptionsWin extends JDialog {
         checkUseDisconnected.setSelected(foEdit.useDisconnectedMode);
         checkShowTrayIcon.setSelected(foEdit.showTrayIcon);
         checkMinimizeToTray.setSelected(foEdit.minimizeToTray);
+        checkMinimizeToTrayOnMainWinClose.setSelected(foEdit.minimizeToTrayOnMainWinClose);
         checkAutoCheckForUpdate.setSelected(foEdit.automaticallyCheckForUpdate);
 
         checkNewFax_Beep.setSelected((foEdit.newFaxAction & FaxOptions.NEWFAX_BEEP) != 0);
@@ -277,11 +278,14 @@ public class OptionsWin extends JDialog {
             }
         });
 
-        if (foEdit.optWinBounds != null)
+        
+        if (foEdit.optWinBounds != null) {
             this.setBounds(foEdit.optWinBounds);
-        else
+        } else {
             //this.setLocationByPlatform(true);
-        Utils.setDefWinPos(this);
+            this.pack();
+            Utils.setDefWinPos(this);
+        }
 
         // Small special handling for new users
         if (foEdit.host.length() == 0) {
@@ -291,7 +295,6 @@ public class OptionsWin extends JDialog {
             mainTree.setSelectionRow(0);
         }
         //PROFILE: System.out.println("  After load settings: " + (-time + (time = System.currentTimeMillis())));
-        this.pack();
         //PROFILE: System.out.println("  After pack: " + (-time + (time = System.currentTimeMillis())));
     }
     
@@ -528,7 +531,7 @@ public class OptionsWin extends JDialog {
         if (PanelCommon == null) {
             double[][] tablelay = {
                     {border, 0.4, border, TableLayout.FILL, border},
-                    {border, TableLayout.PREFERRED, border, TableLayout.PREFERRED, TableLayout.FILL, border }
+                    {border, 0.75, border, TableLayout.PREFERRED, TableLayout.FILL, border }
             };
             PanelCommon = new JPanel(new TableLayout(tablelay), false);
             
@@ -625,22 +628,23 @@ public class OptionsWin extends JDialog {
     
     private JPanel getPanelUI() {
         if (panelUI == null) {
-            final int rowCount = 10;
+            final int rowCount = 11;
             final double[][] tablelay = {
                     {border, TableLayout.FILL, border},
                     new double[rowCount]
             };
-            final double rowh = 2 / (double)(rowCount - 1);
+            final double rowh = 2 / (double)(rowCount + 1);
             //tablelay[1][0] = border;
             tablelay[1][rowCount - 1] = border;
-            for (int i = 0; i < rowCount-2; i++) {
+            for (int i = 0; i < rowCount-4; i++) {
                 if (i%2 == 0) {
                     tablelay[1][i] = TableLayout.PREFERRED;
                 } else {
                     tablelay[1][i] = rowh;
                 }
             }
-            tablelay[1][rowCount - 2] = TableLayout.FILL;
+            tablelay[1][rowCount - 3] = tablelay[1][rowCount - 4] = rowh;
+            tablelay[1][rowCount - 2] =  TableLayout.FILL;
             
             panelUI = new JPanel(new TableLayout(tablelay), false);
             panelUI.setBorder(BorderFactory.createTitledBorder(_("User interface")));
@@ -668,9 +672,10 @@ public class OptionsWin extends JDialog {
             checkShowTrayIcon = new JCheckBox(_("Show tray icon"));
             checkShowTrayIcon.setToolTipText(_("Show a system tray icon (works only with Java 6 or higher)"));
             checkShowTrayIcon.addItemListener(new ItemListener() {
-               public void itemStateChanged(ItemEvent e) {
-                   checkMinimizeToTray.setEnabled(checkShowTrayIcon.isSelected());
-                   
+                public void itemStateChanged(ItemEvent e) {
+                    final boolean selected = checkShowTrayIcon.isSelected();
+                    checkMinimizeToTray.setEnabled(selected);
+                    checkMinimizeToTrayOnMainWinClose.setEnabled(selected);
                 } 
             });
             
@@ -678,6 +683,9 @@ public class OptionsWin extends JDialog {
             checkMinimizeToTray.setEnabled(false);
             //checkMinimizeToTray.setToolTipText(_("Minimize to system tray (works only with Java 6 or higher)"));
 
+            checkMinimizeToTrayOnMainWinClose = new JCheckBox("<html>" + _("Minimize to tray when main window is closed") + "</html>");
+            checkMinimizeToTrayOnMainWinClose.setEnabled(false);
+            
             addWithLabel(panelUI, comboLang, _("Language:"), "1, 1, 1, 1, f, c");
             addWithLabel(panelUI, comboLookAndFeel, _("Look and Feel:"), "1, 3, 1, 3, f, c");
             addWithLabel(panelUI, comboSendWinStyle, _("Style of send dialog:"), "1, 5, 1, 5, f, c");
@@ -685,6 +693,7 @@ public class OptionsWin extends JDialog {
             
             panelUI.add(checkShowTrayIcon, "1,7,1,7,f,c");
             panelUI.add(checkMinimizeToTray, "1,8,1,8,f,c");
+            panelUI.add(checkMinimizeToTrayOnMainWinClose, "1,9,1,9,f,c");
         }
         return panelUI;
     }
@@ -1048,6 +1057,7 @@ public class OptionsWin extends JDialog {
             foEdit.useDisconnectedMode = checkUseDisconnected.isSelected();
             foEdit.showTrayIcon = checkShowTrayIcon.isSelected();
             foEdit.minimizeToTray = checkMinimizeToTray.isSelected();
+            foEdit.minimizeToTrayOnMainWinClose = checkMinimizeToTrayOnMainWinClose.isSelected();
             foEdit.automaticallyCheckForUpdate = checkAutoCheckForUpdate.isSelected();
             
             int val = 0;
