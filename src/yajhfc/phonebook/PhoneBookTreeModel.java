@@ -19,6 +19,8 @@
 package yajhfc.phonebook;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.EventListener;
 import java.util.List;
 
@@ -80,6 +82,19 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
         return phoneBooks;
     }
     
+    public void sortPhonebooks() {
+        Collections.sort(phoneBooks, new Comparator<PhoneBook>() {
+           public int compare(PhoneBook o1, PhoneBook o2) {
+                int res = o1.toString().compareToIgnoreCase(o2.toString());
+                if (res == 0) {
+                    res = o1.getDescriptor().compareTo(o2.getDescriptor());
+                }
+                return res;
+            } 
+        });
+        fireTreeStructureChanged(new TreeModelEvent(this, new Object[] {rootNode}));
+    }
+    
     /* (non-Javadoc)
      * @see javax.swing.tree.TreeModel#addTreeModelListener(javax.swing.event.TreeModelListener)
      */
@@ -108,7 +123,7 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
             return phoneBooks.get(index);
         } else if (parent instanceof PhoneBook) {
             List<PhoneBookEntry> childs = (showFilteredResults ? 
-                    ((PhoneBook)parent).getLastFilterResult() :
+                    ((PhoneBook)parent).lastFilterResult :
                         ((PhoneBook)parent).getEntries());
             return (childs == null) ? null : childs.get(index);
         } else {
@@ -124,7 +139,7 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
             return phoneBooks.size();
         } else if (parent instanceof PhoneBook) {
             List<PhoneBookEntry> childs = (showFilteredResults ? 
-                    ((PhoneBook)parent).getLastFilterResult() :
+                    ((PhoneBook)parent).lastFilterResult :
                         ((PhoneBook)parent).getEntries());
             return (childs == null) ? 0 : childs.size();
         } else {
@@ -140,7 +155,7 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
             return phoneBooks.indexOf(child);
         } else if (parent instanceof PhoneBook && child instanceof PhoneBookEntry) {
             List<PhoneBookEntry> childs = (showFilteredResults ? 
-                    ((PhoneBook)parent).getLastFilterResult() :
+                    ((PhoneBook)parent).lastFilterResult :
                         ((PhoneBook)parent).getEntries());
             return (childs == null) ? -1 : childs.indexOf(child);
         } else {
@@ -215,10 +230,10 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
         }
         
         for (PhoneBook pb : phoneBooks) {
-            List<PhoneBookEntry> oldEntries = oldFiltered ? pb.getLastFilterResult() : pb.getEntries();
-            pb.applyFilter(filter);
+            List<PhoneBookEntry> oldEntries = oldFiltered ? pb.lastFilterResult : pb.getEntries();
+            pb.lastFilterResult = pb.applyFilter(filter);
             
-            List<PhoneBookEntry> newEntries = showFilteredResults ? pb.getLastFilterResult() : pb.getEntries();
+            List<PhoneBookEntry> newEntries = showFilteredResults ? pb.lastFilterResult : pb.getEntries();
             if (!listQuickEquals(oldEntries, newEntries)) {
                 fireTreeStructureChanged(new TreeModelEvent(this, new Object[] {rootNode, pb}));
             }
@@ -229,6 +244,13 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
         }
     }
     
+    /**
+     * Compares if the content of two lists consists of identical objects 
+     * (in the sense of ==, not equals())
+     * @param list1
+     * @param list2
+     * @return
+     */
     private static boolean listQuickEquals(List<?> list1, List<?> list2) {
         if (list1 == list2)
             return true;
@@ -399,7 +421,7 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
             for (PhoneBook pb : getPhoneBooks()) {
                 pb.setEntryToStringRule(toStringRule);
 
-                List<PhoneBookEntry> entries = showFilteredResults ? pb.getLastFilterResult() : pb.getEntries();
+                List<PhoneBookEntry> entries = showFilteredResults ? pb.lastFilterResult : pb.getEntries();
                 final Object[] entryArray = entries.toArray();
                 final int[] indexArray = new int[entryArray.length];
                 for (int i = 0 ; i < indexArray.length; i++) {

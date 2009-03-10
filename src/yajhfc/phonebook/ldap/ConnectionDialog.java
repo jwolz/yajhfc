@@ -22,7 +22,6 @@ import static yajhfc.Utils._;
 import info.clearthought.layout.TableLayout;
 import info.clearthought.layout.TableLayoutConstraints;
 
-import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
@@ -71,30 +70,12 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
     private final static int border = 10;
     
     public boolean clickedOK;
-        
-    private JLabel addWithLabel(JPanel container, Component comp, String label, String layout) {
-        return addWithLabel(container, comp, label, new TableLayoutConstraints(layout));
-    }
     
-    private JLabel addWithLabel(JPanel container, Component comp, String label, TableLayoutConstraints c) {
-        JLabel lbl = new JLabel(label);
-        lbl.setLabelFor(comp);
-        
-        container.add(comp, c);
-        
-        c.col1 = c.col2 = c.col1 - 2;
-        c.vAlign = TableLayoutConstraints.CENTER;
-        c.hAlign = TableLayoutConstraints.RIGHT;
-        container.add(lbl, c);
-        
-        return lbl; 
-    }
-
     private JTextField addTextField(JPanel container, PBEntryField field, TableLayoutConstraints layout) {
         JTextField rv = new JTextField(20);
         rv.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
         String label = field.getDescription() + ":";
-        addWithLabel(container, rv, label, layout);
+        Utils.addWithLabelHorz(container, rv, label, layout);
         mappingFields.put(field, rv);
         return rv;
     }
@@ -179,25 +160,25 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         buttonTest.setActionCommand("test");
         buttonTest.addActionListener(this);
         
-        addWithLabel(jContentPane, textServerName, _("Server name:"), "3, 1, f, c");
-        addWithLabel(jContentPane, textPort, _("Port:"), "7, 1, f, c");
-        addWithLabel(jContentPane, textBaseDN, _("Root (Base DN):"), "3, 3, 5, 3, f, c");
+        Utils.addWithLabelHorz(jContentPane, textServerName, _("Server name:"), "3, 1, f, c");
+        Utils.addWithLabelHorz(jContentPane, textPort, _("Port:"), "7, 1, f, c");
+        Utils.addWithLabelHorz(jContentPane, textBaseDN, _("Root (Base DN):"), "3, 3, 5, 3, f, c");
         jContentPane.add(buttonTest, "7, 3");
         jContentPane.add(checkDoAuth, "1, 5, 3, 5, f, c");
-        addWithLabel(jContentPane, textBindDN, _("User name (Bind DN):"), "3, 7, 7, 7, f, c");
-        addWithLabel(jContentPane, textPassword, _("Password:"), "3, 9, 5, 9, f, c");
+        Utils.addWithLabelHorz(jContentPane, textBindDN, _("User name (Bind DN):"), "3, 7, 7, 7, f, c");
+        Utils.addWithLabelHorz(jContentPane, textPassword, _("Password:"), "3, 9, 5, 9, f, c");
         jContentPane.add(checkAskForPassword, "7, 9, f, c");
         jContentPane.add(new JSeparator(JSeparator.HORIZONTAL), "0, 11, 8, 11");
         
-        addWithLabel(jContentPane, textDisplayCaption, _("Phone book name to display:"), "3, 13, 7, 13, f, c");
+        Utils.addWithLabelHorz(jContentPane, textDisplayCaption, _("Phone book name to display:"), "3, 13, 7, 13, f, c");
         
         jContentPane.add(new JSeparator(JSeparator.HORIZONTAL), "0, 15, 8, 15");
         
-        addWithLabel(jContentPane, textFilter, _("Object filter:"), "3, 17, 5, 17, f, c");
+        Utils.addWithLabelHorz(jContentPane, textFilter, _("Object filter:"), "3, 17, 5, 17, f, c");
         jContentPane.add(checkSearchSubtree, "7, 17");
         
         jContentPane.add(checkInitiallyShowAll, "1,19,3,19,f,c");
-        addWithLabel(jContentPane, textCountLimit, _("Count limit:"), "7,19,f,c");
+        Utils.addWithLabelHorz(jContentPane, textCountLimit, _("Count limit:"), "7,19,f,c");
         
         jContentPane.add(new JSeparator(JSeparator.HORIZONTAL), "0, 21, 8, 21");
         

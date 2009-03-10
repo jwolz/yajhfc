@@ -93,6 +93,8 @@ public class NoGUISender extends JFrame implements ProgressUI {
      * @see yajhfc.util.ProgressWorker.ProgressUI#setProgress(int)
      */
     public void setProgress(int progress) {
+        if (progressBar.isIndeterminate())
+            progressBar.setIndeterminate(false);
         progressBar.setValue(progress);
     }
 
@@ -108,6 +110,10 @@ public class NoGUISender extends JFrame implements ProgressUI {
         commonProgressSetup(message, initialNote);
     }
 
+    public boolean supportsIndeterminateProgress() {
+        return true;
+    }
+    
     public void showIndeterminateProgress(String message, String initialNote) {
         progressBar.setIndeterminate(true);
         commonProgressSetup(message, initialNote);
@@ -116,6 +122,14 @@ public class NoGUISender extends JFrame implements ProgressUI {
     protected void commonProgressSetup(String progressText, String noteText) {
         progressLabel.setText(progressText);
         setNote(noteText);
+    }
+    
+    public boolean isShowingIndeterminate() {
+        return progressBar.isIndeterminate();
+    }
+    
+    public void setMaximum(int progress) {
+        progressBar.setMaximum(progress);
     }
     
     public static void startUpWithoutUI(List<String> recipients, List<String> files, List<PluginInfo> plugins, boolean noPlugins, boolean useStdIn, boolean useCover, String subject, String comment) {

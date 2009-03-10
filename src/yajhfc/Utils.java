@@ -18,6 +18,9 @@ package yajhfc;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+import info.clearthought.layout.TableLayoutConstants;
+import info.clearthought.layout.TableLayoutConstraints;
+
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
@@ -51,6 +54,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.UIManager;
 
 import yajhfc.model.archive.QueueFileDateFormat;
@@ -63,7 +68,7 @@ public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2009 by Jonas Wolz";
-    public static final String AppVersion = "0.4.0";
+    public static final String AppVersion = "0.4.1alpha1";
     public static final String AuthorName = "Jonas Wolz";
     public static final String AuthorEMail = "jwolz@freenet.de";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
@@ -588,8 +593,10 @@ public final class Utils {
      * @param str
      * @return
      */
-    public static String stripQuotes(String str)
-    {
+    public static String stripQuotes(String str) {
+        if (str==null || str.length() < 2)
+            return str;
+        
         final char f = str.charAt(0);
         final char l = str.charAt(str.length()-1);
         if (f == l && (f == '\"' || f == '\'')) {
@@ -827,7 +834,8 @@ public final class Utils {
         } else if (System.getProperty("os.name").startsWith("Mac OS X")) {
             return "open \"%s\"";
         } else {
-            if ("true".equals(System.getenv("KDE_FULL_SESSION"))) {
+            String kde = System.getenv("KDE_FULL_SESSION");
+            if (kde != null && kde.length() > 0) {
                 return "kfmclient exec \"%s\"";
             } else {
                 String gnome = System.getenv("GNOME_DESKTOP_SESSION_ID");
@@ -853,6 +861,40 @@ public final class Utils {
             viewerCommandLine += " \"" + fileParam + "\"";
 
         ExternalProcessExecutor.executeProcess(viewerCommandLine);
+    }
+    
+    
+    public static JLabel addWithLabel(JPanel pane, Component comp, String text, String layout) {
+        return addWithLabel(pane, comp, text, new TableLayoutConstraints(layout));
+    }
+    public static JLabel addWithLabel(JPanel pane, Component comp, String text, TableLayoutConstraints c) { 
+        pane.add(comp, c);
+        
+        JLabel lbl = new JLabel(text);
+        lbl.setLabelFor(comp);
+        c.row1 = c.row2 = c.row1 - 1;
+        c.vAlign = TableLayoutConstants.BOTTOM;
+        c.hAlign = TableLayoutConstants.LEFT;
+        pane.add(lbl, c); 
+        
+        return lbl;
+    }
+    
+    public static JLabel addWithLabelHorz(JPanel container, Component comp, String label, String layout) {
+        return addWithLabelHorz(container, comp, label, new TableLayoutConstraints(layout));
+    }
+    public static JLabel addWithLabelHorz(JPanel container, Component comp, String label, TableLayoutConstraints layout) {
+        JLabel lbl = new JLabel(label);
+        lbl.setLabelFor(comp);
+        
+        container.add(comp, layout);
+        
+        layout.col1 = layout.col2 = layout.col1 - 2;
+        layout.vAlign = TableLayoutConstraints.CENTER;
+        layout.hAlign = TableLayoutConstraints.LEFT;
+        container.add(lbl, layout);
+        
+        return lbl; 
     }
 }
 

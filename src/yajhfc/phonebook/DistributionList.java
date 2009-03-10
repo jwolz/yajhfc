@@ -18,36 +18,11 @@
  */
 package yajhfc.phonebook;
 
-import yajhfc.filters.FilterableObject;
-import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 
 /**
  * @author jonas
  *
  */
-public interface PhoneBookEntry extends Comparable<PhoneBookEntry>, FilterableObject, PBEntryFieldContainer {
-    
-    public abstract PhoneBook getParent();
-    
-    /**
-     * Deletes this entry from the phonebook
-     */
-    public abstract void delete();
+public interface DistributionList extends PhoneBookEntry, PhoneBookEntryList {
 
-    /**
-     * Commits all changes made by the get/set-Methods
-     */
-    public abstract void commit();
-
-    /**
-     * Just update the displayed position (don't necessarily write through)
-     */
-    public void updateDisplay();
-
-    public void copyFrom(PBEntryFieldContainer other);
-
-    /**
-     * Refreshes the return value of toString()
-     */
-    public void refreshToStringRule();
 }

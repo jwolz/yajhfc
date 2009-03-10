@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import yajhfc.Utils;
 import yajhfc.phonebook.jdbc.JDBCPhoneBook;
 import yajhfc.phonebook.ldap.LDAPPhoneBook;
+import yajhfc.phonebook.xml.XMLPhoneBook;
+import yajhfc.phonebook.xml.XMLSettings;
 
 /*
  * YAJHFC - Yet another Java Hylafax client

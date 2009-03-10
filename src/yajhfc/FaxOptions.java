@@ -365,6 +365,10 @@ public class FaxOptions {
      * The last path faxes have been saved to
      */
     public String lastSavePath = "";
+    /**
+     * Archive sent faxes by default?
+     */
+    public boolean archiveSentFaxes = false;
     
     /**
      * Style of the send dialog

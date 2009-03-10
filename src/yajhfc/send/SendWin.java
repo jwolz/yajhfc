@@ -19,9 +19,8 @@ package yajhfc.send;
  */
 
 import static yajhfc.Utils._;
+import static yajhfc.Utils.addWithLabel;
 import info.clearthought.layout.TableLayout;
-import info.clearthought.layout.TableLayoutConstants;
-import info.clearthought.layout.TableLayoutConstraints;
 
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -130,21 +129,6 @@ final class SendWin extends JDialog implements SendWinControl  {
     
     HylaClientManager clientManager;
     SendController sendController;
-    
-    private JLabel addWithLabel(JPanel pane, JComponent comp, String text, String layout) {
-        TableLayoutConstraints c = new TableLayoutConstraints(layout);
-        
-        pane.add(comp, c);
-        
-        JLabel lbl = new JLabel(text);
-        lbl.setLabelFor(comp);
-        c.row1 = c.row2 = c.row1 - 1;
-        c.vAlign = TableLayoutConstants.BOTTOM;
-        c.hAlign = TableLayoutConstants.LEFT;
-        pane.add(lbl, c); 
-        
-        return lbl;
-    }
     
     
     public SendWin(HylaClientManager manager, Frame owner) {
@@ -605,7 +589,7 @@ final class SendWin extends JDialog implements SendWinControl  {
                     Utils.setWaitCursor(SendWin.this);
                     NewPhoneBookWin pbw = new NewPhoneBookWin(SendWin.this);
                     Utils.unsetWaitCursorOnOpen(SendWin.this, pbw);
-                    PhoneBookEntry[] pbs = pbw.selectNumbers();
+                    List<PhoneBookEntry> pbs = pbw.selectNumbers();
                     if (pbs != null) {
                         for (PhoneBookEntry pb : pbs)
                         {

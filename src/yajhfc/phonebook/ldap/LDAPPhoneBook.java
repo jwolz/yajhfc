@@ -179,7 +179,6 @@ public class LDAPPhoneBook extends PhoneBook {
             } catch (NamingException e) {
                 ExceptionDialog.showExceptionDialog(this.parentDialog, Utils._("Error executing the search:"), e);
             }
-            lastFilterResult = resultList;
             return resultList;
         }
     }

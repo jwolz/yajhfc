@@ -1,6 +1,6 @@
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005-2009 Jonas Wolz
+ * Copyright (C) 2005-2008 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,38 +16,34 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package yajhfc.phonebook;
+package yajhfc.phonebook.xml;
 
-import yajhfc.filters.FilterableObject;
-import yajhfc.phonebook.convrules.PBEntryFieldContainer;
+import java.io.File;
+
+import yajhfc.phonebook.AbstractConnectionSettings;
+import yajhfc.phonebook.PhoneBookFactory;
+
 
 /**
  * @author jonas
  *
  */
-public interface PhoneBookEntry extends Comparable<PhoneBookEntry>, FilterableObject, PBEntryFieldContainer {
+public class XMLSettings extends AbstractConnectionSettings {
+    public String fileName;
+    public String caption;
     
-    public abstract PhoneBook getParent();
+    @Override
+    public void loadFromString(String input) {
+        if (!(input.contains("fileName=") && input.contains("caption="))) { //Compatibility
+            fileName = input;
+            if (PhoneBookFactory.getDefaultPhonebook().equals(new File(fileName))) {
+                caption = PhoneBookFactory.DEFAULT_PHONEBOOK_NAME;
+            } else {
+                caption = "";
+            }
+        } else {
+            super.loadFromString(input);
+        }
+    }
     
-    /**
-     * Deletes this entry from the phonebook
-     */
-    public abstract void delete();
-
-    /**
-     * Commits all changes made by the get/set-Methods
-     */
-    public abstract void commit();
-
-    /**
-     * Just update the displayed position (don't necessarily write through)
-     */
-    public void updateDisplay();
-
-    public void copyFrom(PBEntryFieldContainer other);
-
-    /**
-     * Refreshes the return value of toString()
-     */
-    public void refreshToStringRule();
 }

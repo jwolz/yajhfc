@@ -1,5 +1,7 @@
 package yajhfc.phonebook;
 
+import java.util.Arrays;
+
 
 
 /*
@@ -21,17 +23,17 @@ package yajhfc.phonebook;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-public abstract class SimplePhoneBookEntry extends PhoneBookEntry {
+public abstract class SimplePhoneBookEntry extends DefaultPhoneBookEntry {
     
     // Not using an EnumMap here to save some memory (we will have lots of Entries...)
     protected String[] data = new String[PBEntryField.FIELD_COUNT];
     
-    protected boolean dirty = false;
+    private boolean dirty = false;
     /**
      * The cached result of the last toString call. Reset this to null
      * when you also would set dirty to true.
      */
-    protected String lastToString = null;
+    private String lastToString = null;
     
     @Override
     public String getField(PBEntryField field) {
@@ -52,6 +54,13 @@ public abstract class SimplePhoneBookEntry extends PhoneBookEntry {
         }
     }
     
+    protected void setDirty(boolean dirty) {
+        this.dirty = dirty;
+        if (dirty) {
+            lastToString = null;
+        }
+    }
+    
     public boolean isDirty() {
         return dirty;
     }
@@ -68,5 +77,9 @@ public abstract class SimplePhoneBookEntry extends PhoneBookEntry {
             lastToString = super.toString();
         }
         return lastToString;
+    }
+    
+    public SimplePhoneBookEntry() {
+        Arrays.fill(data, "");
     }
 }

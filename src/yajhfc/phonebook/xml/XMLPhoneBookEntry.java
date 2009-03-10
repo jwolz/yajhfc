@@ -1,6 +1,6 @@
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005-2008 Jonas Wolz
+ * Copyright (C) 2005-2009 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,31 +16,18 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package yajhfc.phonebook;
+package yajhfc.phonebook.xml;
 
-import java.io.File;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
+import yajhfc.phonebook.PhoneBookEntry;
 
 /**
  * @author jonas
  *
  */
-public class XMLSettings extends AbstractConnectionSettings {
-    public String fileName;
-    public String caption;
-    
-    @Override
-    public void loadFromString(String input) {
-        if (!(input.contains("fileName=") && input.contains("caption="))) { //Compatibility
-            fileName = input;
-            if (PhoneBookFactory.getDefaultPhonebook().equals(new File(fileName))) {
-                caption = PhoneBookFactory.DEFAULT_PHONEBOOK_NAME;
-            } else {
-                caption = "";
-            }
-        } else {
-            super.loadFromString(input);
-        }
-    }
-    
+public interface XMLPhoneBookEntry extends PhoneBookEntry {
+    public void loadFromXML(Element el);
+    public void saveToXML(Element el, Document doc);
 }

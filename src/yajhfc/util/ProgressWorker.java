@@ -160,7 +160,12 @@ public abstract class ProgressWorker extends Thread{
         if (progressMonitor == null) {
             progressMonitor = new MyProgressMonitor(parent, text, Utils._("Initializing..."), 0, calculateMaxProgress());
         } else {
-            progressMonitor.showDeterminateProgress(text, Utils._("Initializing..."), 0, calculateMaxProgress());
+            if (progressMonitor.supportsIndeterminateProgress()) {
+                progressMonitor.showIndeterminateProgress(text, Utils._("Initializing..."));
+                progressMonitor.setMaximum(calculateMaxProgress());
+            } else {
+                progressMonitor.showDeterminateProgress(text, Utils._("Initializing..."), 0, calculateMaxProgress());
+            }
         }
         progress = 0;
         //parent.setEnabled(false);
@@ -170,7 +175,7 @@ public abstract class ProgressWorker extends Thread{
     }
     
     @Override
-    public void run() {
+    public final void run() {
         try {
             doWork();
         } finally {
@@ -237,8 +242,9 @@ public abstract class ProgressWorker extends Thread{
         private ProgressUI pMon;
         
         public void run() {
-            if (pMon != null)
+            if (pMon != null) {
                 pMon.setProgress(progress);
+            }
         }
         
         public ProgressUpdater(int progress, ProgressUI pMon) {
@@ -272,7 +278,21 @@ public abstract class ProgressWorker extends Thread{
     public interface ProgressUI {
         public void close();
         public void setNote(String note);
+        /**
+         * Sets the progress. If this UI is currently in indeterminate mode this
+         * has to switch it to determinate.
+         * @param progress
+         */
         public void setProgress(int progress);
+        /**
+         * Sets the maximum. Should not change (in)determinate mode.
+         * @param progress
+         */
+        public void setMaximum(int progress);
+        
+        public boolean supportsIndeterminateProgress();
+        public void showIndeterminateProgress(String message, String initialNote);
+        public boolean isShowingIndeterminate();
         
         public void showDeterminateProgress(String message, String initialNote, int min, int max);
     }
@@ -287,10 +307,22 @@ public abstract class ProgressWorker extends Thread{
                 String note, int min, int max) {
             super(parentComponent, message, note, min, max);
         }
-
+        
         public void showDeterminateProgress(String message, String initialNote, int min,
                 int max) {
             throw new IllegalStateException("Can not reinitialize a progress monitor.");            
+        }
+
+        public void showIndeterminateProgress(String message, String initialNote) {
+            throw new UnsupportedOperationException("Indeterminate progress not supported.");
+        }
+
+        public boolean supportsIndeterminateProgress() {
+            return false;
+        }
+
+        public boolean isShowingIndeterminate() {
+            return false;
         }
     }
 }

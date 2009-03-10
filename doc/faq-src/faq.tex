@@ -195,6 +195,11 @@ Argument description:
                             launch a new instance and terminate this instance
                             (after submitting the fax to send).
     --noclose               Do not close YajHFC after submitting the fax.
+    --no-wait               Do not wait for the send window to be closed by the
+                            user. If YajHFC is invoked multiple times before
+                            the user closes the send window, the specified
+                            documents are added to the list of files there.
+                            This option implies --background.
 -T, --showtab=0|R|1|S|2|T   Sets the tab to display on startup. Specify 0 or R
                             for the "Received", 1 or S for the "Sent" or 2 or T
                             for the "Transmitting" tab.
@@ -207,8 +212,8 @@ Argument description:
                             startup.
 -c, --configdir=DIRECTORY   Sets the configuration directory to use instead of
                             ~/.yajhfc
--h, --help[=COLUMNS]        Displays this text (formatted for COLUMNS columns if
-                            given).
+-h, --help[=COLUMNS]        Displays this text (formatted for COLUMNS columns
+                            if given).
 \end{verbatim}
 
 \subsection{How can I give cover page information using the \texttt{-{-}recipient} switch?}

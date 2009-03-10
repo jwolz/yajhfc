@@ -466,6 +466,11 @@ Argument description:
                             launch a new instance and terminate this instance
                             (after submitting the fax to send).
     --noclose               Do not close YajHFC after submitting the fax.
+    --no-wait               Do not wait for the send window to be closed by the
+                            user. If YajHFC is invoked multiple times before
+                            the user closes the send window, the specified
+                            documents are added to the list of files there.
+                            This option implies --background.
 -T, --showtab=0|R|1|S|2|T   Sets the tab to display on startup. Specify 0 or R
                             for the "Received", 1 or S for the "Sent" or 2 or T
                             for the "Transmitting" tab.
@@ -478,8 +483,8 @@ Argument description:
                             startup.
 -c, --configdir=DIRECTORY   Sets the configuration directory to use instead of
                             ~/.yajhfc
--h, --help[=COLUMNS]        Displays this text (formatted for COLUMNS columns if
-                            given).
+-h, --help[=COLUMNS]        Displays this text (formatted for COLUMNS columns
+                            if given).
 </PRE>
 
 <P>
@@ -858,7 +863,7 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>-no_subdir -split 0 -html_version 3.2,latin1,unicode,utf8 -no_navigation -prefix faq faq.tex</TT>
 <P>
-The translation was initiated by Jonas Wolz on 2009-01-05
+The translation was initiated by Jonas Wolz on 2009-03-09
 <BR><HR><H4>Footnotes</H4>
 <DL>
 <DT><A NAME="foot184">...\{user.home\}</A><A
@@ -871,7 +876,7 @@ The translation was initiated by Jonas Wolz on 2009-01-05
 <BR><HR>
 <ADDRESS>
 Jonas Wolz
-2009-01-05
+2009-03-09
 </ADDRESS>
 </BODY>
 </HTML>

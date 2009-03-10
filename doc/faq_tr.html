@@ -439,27 +439,50 @@ YajHFC hangi komut satýrý deðiþkenlerini anlýyor?</A>
 
 <P>
 <PRE>
-Genel Kullaným:
-java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose]
-         [--configdir=directory] [--loadplugin=filename] [--logfile=filename]
-         [--showtab=0|R|1|S|2|T] [--recipient=...] [--stdin | filename ...]
+Kullaným:
+java -jar yajhfc.jar [SEÇENEKLER]... [GIDECEK DOSYALAR]...
+
 Deðiþken açýklamasý:
-Dosya adý	Gönderilecek PostScript dosya veya dosyalarýnýn adý.
---stdin 	Standart giriþten gönderilecek dosyalarý okur
---recipient 	Faksý yollamak için alýcýnýn telefon numarasýný tanýmlar.
-		Çoklu alýcýlar için çoklu deðiþken tanýmlayabilirsiniz.
---admin		Yönetici kipinde baþlatýr
---debug		Hata ayýklama çýktýsý verir
---logfile	Hata ayýklama çýktýlarýný kaydetmek için günlük dosyasý (belirtilmezse, stdout kullanýr)
---background	Eðer çalýþan kopya yoksa, yeni bir kopya çalýþtýrýr
-		ve (dosya gönderilten sonra) sonlandýrýr.
---noclose	Faks gönderildikten sonra YajHFC'yi kapatmaz
---showtab	Açýlýþta gösterilecek sekmeleri ayarlar. "Gelen" için 0 yada R, 
-		"Giden" için 1 yada S, "Gönderiliyor" sekmesi için 2 yada T tanýmlayýn.
---loadplugin	Yüklenecek YajHFC jar eklenti dosyasýný tanýmlar.
---no-plugins	plugin.lst dosyasýndan eklenti yüklenmesini devre dýþý býrakýr.
---configdir	~/.yajhfc yerine kullanýlacak ayar dizinini tanýmlar
---help		Bu metini görüntüler
+-r, --recipient=ALICI             Faks gönderilecek alýcýyý tanýmlar. Bir faks
+                                  numarasý yada ayrýntýlý kapak sayfasý bilgisi
+                                  tanýmlayabilirsiniz (En son durumdaki biçim
+                                  için SSS'ye göz atýn. Bir çok alýcý için bir
+                                  çok kez tanýmlama yapabilirsiniz.
+-C, --use-cover[=yes|no]          Faks göndermek için bir kapak sayfasý kullan.
+-s, --subject=KONU                Kapak sayfasý için faks konusu.
+    --comment=YORUM               Kapak sayfasý için yorum.
+    --stdin                       Dosya göndermek için standart giriþten oku.
+-A, --admin                       Yönetici kipinde baþlat.
+-d, --debug                       Bazý hata giderme bilgileri çýkarýr.
+-l, --logfile=GÜNLÜKDOSYASI       Hata giderme bilgisini yazdýrmak için
+                                  kullanýlacak günlük dosyasý (eðer
+                                  tanýmlanmazsa stdout kullan).
+    --appendlogfile=GÜNLÜKDOSYASI Verilen günlük dosyasýna hata giderme
+                                  bilgisini ekle.
+    --background                  Çalýþan YajHFC kopyasý yoksa, yeni bir kopya
+                                  çalýþtýr ve (faksý göndermek için ilettikten
+                                  sonra) bu kopyayý sonlandýr.
+    --noclose                     Faks iletiminden sonra YajHFC'yi kapatma.
+    --no-wait                     Gönder penceresinin kullanýcý tarafýndan
+                                  kapatýlmasýný bekleme. Eðer YajHFC, kullanýcý
+                                  pencereyi kapatmadan önce birden çok defa
+                                  çalýþtýrýlmýþsa, gönderilen belge ordaki
+                                  dosya listesine eklenir. Seçenek
+                                  --bakckground iþlemini kapsar.
+-T, --showtab=0|R|1|S|2|T         Açýlýþta gösterilecek sekmeyi ayarlar.
+                                  "Gelen" için 0 veya R, "Giden" için 1 veya S,
+                                  "Ýletiliyor" için 2 veya T tanýmlayýn.
+    --loadplugin=JARDOSYASI       Yüklenecek YajHFC eklenti jar dosyasý
+                                  tanýmla.
+    --loaddriver=JARDOSYASI       Yüklenecek JDBC sürücü JAR dosyasýnýn yerini
+                                  tanýmlar.
+    --no-plugins                  Eklenti .lst dosyasýndaki eklentilerin
+                                  yüklemesini devre dýþý býrak.
+    --no-gui                      Faksý sadece en düþük GUI ile gönder.
+    --no-check                    Açýlýþta Java sürüm kontrolünü kaldýr.
+-c, --configdir=KLASÖR            ~/.yajhfc yerine baþka bir ayar klasörü
+                                  kullan.
+-h, --help[=DESTEK]               Bu metni görüntüler.
 </PRE>
 
 <P>
@@ -846,7 +869,7 @@ $USE_CURLY_QUOTES=1;
 </PRE></BLOCKQUOTE>
 
 <P>
-Belgeyi oluœturan: Jonas Wolz 2009-02-20
+Belgeyi oluœturan: Jonas Wolz 2009-03-09
 <BR><HR><H4>Footnotes</H4>
 <DL>
 <DT><A NAME="foot181">...\{user.home\}</A><A
@@ -859,7 +882,7 @@ Belgeyi oluœturan: Jonas Wolz 2009-02-20
 <BR><HR>
 <ADDRESS>
 Jonas Wolz
-2009-02-20
+2009-03-09
 </ADDRESS>
 </BODY>
 </HTML>

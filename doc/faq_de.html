@@ -459,11 +459,13 @@ Argumentbeschreibung:
                              eine Faxnummer oder detaillierte
                              Deckblattinformationen angeben (siehe die FAQ für
                              das Format im letzteren Fall). Sie können
-                             --recipient mehrmals angeben für mehrere Empfänger.
+                             --recipient mehrmals angeben für mehrere
+                             Empfänger.
 -C, --use-cover[=yes|no]     Benutze ein Deckblatt beim Versendes des Faxes.
 -s, --subject=BETREFF        Der Betreff des Faxes für das Deckblatt.
     --comment=KOMMENTAR      Der Kommentar für das Deckblatt.
-    --stdin                  Lese die zu sendende Datei von der Standardeingabe.
+    --stdin                  Lese die zu sendende Datei von der
+                             Standardeingabe.
 -A, --admin                  Starte im Admin-Modus.
 -d, --debug                  Gib einige Debugging-Informationen aus.
 -l, --logfile=LOGDATEI       Die Logdatei, in die die Debugginginformationen
@@ -471,22 +473,30 @@ Argumentbeschreibung:
                              Standardausgabe).
     --appendlogfile=LOGDATEI Hänge die Debugginginformationen an die angegebene
                              Logdatei an.
-    --background             Falls noch keine Instanz von YajHFC läuft, erstelle
-                             eine neue Instanz und beende diese Instanz (nachdem
-                             das zu sendende Fax abgeschickt wurde)
+    --background             Falls noch keine Instanz von YajHFC läuft,
+                             erstelle eine neue Instanz und beende diese
+                             Instanz (nachdem das zu sendende Fax abgeschickt
+                             wurde)
     --noclose                YajHFC nach Absenden des Faxes nicht schließen.
--T, --showtab=0|R|1|S|2|T    Setzt den beim Start anzuzeigenden Tab. Geben Sie 0
-                             oder R für den Tab "Empfangen", 1 oder S für
+    --no-wait                Warte nicht darauf, dass der Sendedialog
+                             geschlossen wird. Wenn YajHFC mehrfach aufgerufen
+                             wird, bevor der Benutzer den Sendedialog schließt,
+                             werden die angegebenen Dokumente zur Liste der
+                             Dateien hinzugefügt. Diese Option impliziert
+                             --background.
+-T, --showtab=0|R|1|S|2|T    Setzt den beim Start anzuzeigenden Tab. Geben Sie
+                             0 oder R für den Tab "Empfangen", 1 oder S für
                              "Gesendet" oder 2 oder T für "Sendend" an.
-    --loadplugin=JARDATEI    Gibt die JAR-Datei eines zu ladenden YajHFC-Plugins
-                             an.
+    --loadplugin=JARDATEI    Gibt die JAR-Datei eines zu ladenden
+                             YajHFC-Plugins an.
     --loaddriver=JARDATEI    Gibt die JAR-Datei eines zu ladenden JDBC-Treibers
                              an.
     --no-plugins             Deaktiviert das Laden von Plugins aus der
                              plugin.lst-Datei.
     --no-gui                 Sende ein Fax mit einer nur minimalen graphischen
                              Oberfläche.
-    --no-check               Unterdrückt die Prüfung der Javaversion beim Start.
+    --no-check               Unterdrückt die Prüfung der Javaversion beim
+                             Start.
 -c, --configdir=VERZEICHNIS  Setzt ein anstatt von ~/.yajhfc zu verwendendes
                              Konfigurationsverzeichnis.
 -h, --help[=SPALTEN]         Zeigt diesen Text (ggf. formatiert für SPALTEN
@@ -876,7 +886,7 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>-no_subdir -split 0 -html_version 3.2,latin1,unicode,utf8 -no_navigation -prefix faq_de faq_de.tex</TT>
 <P>
-The translation was initiated by Jonas Wolz on 2009-01-04
+The translation was initiated by Jonas Wolz on 2009-03-09
 <BR><HR><H4>Footnotes</H4>
 <DL>
 <DT><A NAME="foot183">...\{user.home\}</A><A
@@ -889,7 +899,7 @@ The translation was initiated by Jonas Wolz on 2009-01-04
 <BR><HR>
 <ADDRESS>
 Jonas Wolz
-2009-01-04
+2009-03-09
 </ADDRESS>
 </BODY>
 </HTML>
