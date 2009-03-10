@@ -52,7 +52,7 @@ public class SendFileManager {
     
     protected final MultiFileMode mode;
     protected final FileFormat targetFormat;
-    protected final boolean createAlwaysPDF;
+    protected final boolean createAlwaysTargetFormat;
     protected final PaperSize paperSize;
     
     private static final int FILE_DISPLAY_LEN = 30;
@@ -114,7 +114,7 @@ public class SendFileManager {
             toUpdate.stepProgressBar(10);
         }
         
-        if (ffs.size() == 1 && (!createAlwaysPDF || ffs.get(0).format == FileFormat.PDF)) {
+        if (ffs.size() == 1 && (!createAlwaysTargetFormat || ffs.get(0).format == targetFormat)) {
             toUpdate.updateNote(Utils._("Uploading document"));
             FileInputStream fi = new FileInputStream(ffs.get(0).file);
             hyfc.type(HylaFAXClient.TYPE_IMAGE);
@@ -155,7 +155,7 @@ public class SendFileManager {
             } else {
                 coverName = null; 
             }
-            coverFile = null;
+            this.coverFile = null;
             break;
         case FULL_FAX:
         default:
@@ -220,7 +220,7 @@ public class SendFileManager {
         this.mode = mode;
         this.targetFormat = targetFormat;
         this.files = files;
-        this.createAlwaysPDF = createAlwaysPDF;
+        this.createAlwaysTargetFormat = createAlwaysPDF;
         this.paperSize = paperSize;
     }
 }

@@ -19,28 +19,28 @@ package yajhfc.phonebook;
  */
 
 import info.clearthought.layout.TableLayout;
-import info.clearthought.layout.TableLayoutConstraints;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.Point;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -60,12 +60,12 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
-import javax.swing.ScrollPaneConstants;
+import javax.swing.OverlayLayout;
+import javax.swing.TransferHandler;
 import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -73,49 +73,49 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.text.JTextComponent;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import yajhfc.FaxOptions;
 import yajhfc.Utils;
 import yajhfc.phonebook.PhoneBookTreeModel.PBTreeModelListener;
+import yajhfc.phonebook.PhoneBookTreeModel.RootNode;
 import yajhfc.phonebook.convrules.NameRule;
 import yajhfc.util.ClipboardPopup;
 import yajhfc.util.ExcDialogAbstractAction;
 import yajhfc.util.ExceptionDialog;
-import yajhfc.util.LimitedPlainDocument;
 import yajhfc.util.MultiButtonGroup;
+import yajhfc.util.ProgressPanel;
+import yajhfc.util.ProgressWorker;
 
 public final class NewPhoneBookWin extends JDialog implements ActionListener {
 
     static final Logger log = Logger.getLogger(NewPhoneBookWin.class.getName());
     
-    private static final String PBFIELD_PROP = "YajHFC-PBEntryfield";
-    
     JSplitPane splitPane;
     JTree phoneBookTree;
-    PhoneBookTreeModel treeModel;
+    PhoneBookTreeModel treeModel;    
     JPanel rightPane, leftPane;
 
+    SingleEntryPhonebookPanel singleEntryPanel;
+    DistributionListPhonebookPanel distListPanel;
+    
     JTextField textDescriptor;
     JButton buttonBrowse;
-    
-    Map<PBEntryField,JTextComponent> entryFields = new EnumMap<PBEntryField, JTextComponent>(PBEntryField.class);
-    JScrollPane scrollComment;
-    JTextArea textComment;
-    
-    EntryTextFieldListener entryListener;
     
     JMenu pbMenu, importMenu, openMenu, entryMenu;
     JPopupMenu treePopup;
     
     Action listRemoveAction, addEntryAction, removeEntryAction, searchEntryAction, selectAction;
+    Action addDistListAction;
     
     JTextField searchField;
     JButton clearButton;
     MultiButtonGroup nameStyleGroup;
+    
+    ProgressPanel progressPanel;
     
     SearchHelper searchHelper = new SearchHelper();
     
@@ -123,100 +123,53 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     
     boolean usedSelectButton = false;
     
-    List<PhoneBookEntry> selectedItems = new ArrayList<PhoneBookEntry>();
+    final List<PhoneBookEntry> selectedItems = new ArrayList<PhoneBookEntry>();
     PhoneBook currentPhonebook = null;
     
-    private static final double border = 5;
+    static final int border = 5;
     
-    public void writeToTextFields(PhoneBook phoneBook, PhoneBookEntry pb) {
-        
-        if (pb == null || phoneBook == null) {
-            for (JTextComponent comp : entryFields.values()) {
-                comp.setText("");
-                comp.setEnabled(false);
-            }
-            scrollComment.setEnabled(false);
+    TreeCellRenderer phoneBookRenderer = new PhoneBookRenderer();
+    
+    private PhonebookPanel lastPanel;
+    void writeToTextFields(PhoneBook phoneBook, List<PhoneBookEntry> pbs) {
+        PhonebookPanel panel;
+        if (pbs == null || pbs.size() == 0) {
+            panel = getPanelFor(null);
+            panel.writeToTextFields(null, null);
+        } else if (pbs.size() == 1) {
+            PhoneBookEntry pbe = pbs.get(0);
+            panel = getPanelFor(pbe);
+            panel.writeToTextFields(phoneBook, pbe);
         } else {
-            boolean editable = !phoneBook.isReadOnly();
-            for (Map.Entry<PBEntryField, JTextComponent> entry : entryFields.entrySet()) {
-                JTextComponent comp = entry.getValue();
-                PBEntryField field = entry.getKey();
-                
-                comp.setText(pb.getField(field));
-                comp.setEnabled(phoneBook.isFieldAvailable(field));
-                comp.setEditable(editable);
-                ((LimitedPlainDocument)comp.getDocument()).setLimit(phoneBook.getMaxLength(field));
-            }
-            scrollComment.setEnabled(textComment.isEnabled());
+            panel = distListPanel;
+            distListPanel.showMultiSelection(phoneBook, pbs);
+        }
+        if (panel != lastPanel) {
+            if (lastPanel != null)
+                lastPanel.setVisible(false);
+            panel.setVisible(true);
+            lastPanel = panel;
         }
     }
     
-    public void readFromTextFields(PhoneBookEntry pb, boolean updateOnly) {
-        if (pb == null)
-           return; 
-        
-        for (Map.Entry<PBEntryField, JTextComponent> entry : entryFields.entrySet()) {
-            JTextComponent comp = entry.getValue();
-            PBEntryField field = entry.getKey();
-            
-            pb.setField(field, comp.getText());
-        }
-
-        if (updateOnly)
-            pb.updateDisplay();
-        else
-            pb.commit();
+    void readFromTextFields(PhoneBookEntry pb, boolean updateOnly) {
+        getPanelFor(pb).readFromTextFields(pb, updateOnly);
     }
     
-//    private void addWithLabel(JPanel pane, JComponent comp, String text, String layout) {
-//        addWithLabel(pane, comp, text, new TableLayoutConstraints(layout));
-//    }
-    
-    private void addWithLabel(JPanel pane, JComponent comp, String text, TableLayoutConstraints c) {
-        pane.add(comp, c);
-        
-        JLabel lbl = new JLabel(text);
-        lbl.setLabelFor(comp);
-        c.row1 = c.row2 = c.row1 - 1;
-        c.vAlign = TableLayoutConstraints.BOTTOM;
-        c.hAlign = TableLayoutConstraints.LEFT;
-        pane.add(lbl, c);
-    }
-    
-    
-    private JTextField createEntryTextField(PBEntryField field) {
-        JTextField res = new JTextField(new LimitedPlainDocument(0), "", 0);
-        res.addFocusListener(entryListener);
-        res.addActionListener(entryListener);
-        res.addMouseListener(getDefClPop());
-        
-        entryFields.put(field, res);
-        res.putClientProperty(PBFIELD_PROP, field);
-        return res;
+    private PhonebookPanel getPanelFor(PhoneBookEntry pb) {
+        if (pb instanceof DistributionList) {
+            return distListPanel;
+        } else {
+            return singleEntryPanel;
+        } 
     }
     
     private JPanel getRightPane() {
         if (rightPane == null) {
-            int longFields = 0;
-            int shortFields = 0;
-            final PBEntryField[] fields = PBEntryField.values();
-            for (PBEntryField field : fields) {
-                if (field.isShortLength()) {
-                    shortFields++;
-                } else {
-                    longFields++;
-                }
-            }
-            final int rowCount = 5 + 2 * (longFields + (shortFields+1)/2);
             double[][] dLay = {
-                    {border, 0.5, border, TableLayout.FILL, border},
-                    new double[rowCount]
+                    {border, TableLayout.FILL, border},
+                    {border, TableLayout.PREFERRED, TableLayout.PREFERRED, border, TableLayout.PREFERRED, border, TableLayout.FILL, border}
             };
-            final double rowH = 1.0 / (double)(rowCount+3);
-            Arrays.fill(dLay[1], 1, rowCount - 2, rowH);
-            dLay[1][0] = dLay[1][rowCount - 1] = border;
-            dLay[1][rowCount - 2] = TableLayout.FILL;
-            
             rightPane = new JPanel(new TableLayout(dLay));
             
             textDescriptor = new JTextField();
@@ -228,56 +181,26 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             buttonBrowse.setActionCommand("browse");
             buttonBrowse.addActionListener(this);
                     
-
+            JPanel panelPanel = new JPanel(null);
+            panelPanel.setLayout(new OverlayLayout(panelPanel));
+            
+            singleEntryPanel = new SingleEntryPhonebookPanel(this);
+            lastPanel = singleEntryPanel;
+            distListPanel    = new DistributionListPhonebookPanel(this);
+            distListPanel.setVisible(false);
+            panelPanel.add(singleEntryPanel);
+            panelPanel.add(distListPanel);
             
             Box box = Box.createHorizontalBox();
             box.add(textDescriptor);
             box.add(buttonBrowse);
             
-            rightPane.add(new JLabel(Utils._("Current phone book:")), "1, 1, L, B");
-            rightPane.add(box, "1, 2, 3, 2");
+            rightPane.add(new JLabel(Utils._("Current phone book:")), "1,1");
+            rightPane.add(box, "1,2");
             
-            //rightPane.add(buttonSelect, "3, 1");
+            rightPane.add(new JSeparator(), "0,4,2,4");
             
-            rightPane.add(new JSeparator(), "0,3,4,3,F,C");
-            
-            entryListener = new EntryTextFieldListener();
-            
-            int row = 5;
-            int col = 1;
-            for (PBEntryField field : fields) {
-                if (field != PBEntryField.Comment) {
-                    JTextField textField = createEntryTextField(field);
-                    TableLayoutConstraints layout;
-                    if (field.isShortLength()) {
-                        layout = new TableLayoutConstraints(col, row, col, row, TableLayoutConstraints.FULL, TableLayoutConstraints.CENTER);
-                        if (col == 1) {
-                            col = 3;
-                        } else {
-                            row += 2;
-                            col  = 1;
-                        }
-                    } else {
-                        layout = new TableLayoutConstraints(1, row, 3, row, TableLayoutConstraints.FULL, TableLayoutConstraints.CENTER);
-                        col  = 1;
-                        row += 2;
-                    }
-                    addWithLabel(rightPane, textField, field.getDescription()+":", layout);
-                }
-            }
-            
-            textComment = new JTextArea(new LimitedPlainDocument(0));
-            textComment.setWrapStyleWord(true);
-            textComment.setLineWrap(true);
-            textComment.addFocusListener(entryListener);
-            textComment.addMouseListener(getDefClPop());
-            entryFields.put(PBEntryField.Comment, textComment);
-            textComment.putClientProperty(PBFIELD_PROP, PBEntryField.Comment);
-            
-            scrollComment = new JScrollPane(textComment, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-            
-            addWithLabel(rightPane, scrollComment, Utils._("Comments:"), new TableLayoutConstraints(1,row,3,row,TableLayoutConstraints.FULL,TableLayoutConstraints.FULL));
-            
+            rightPane.add(panelPanel, "1,6");
         }
         return rightPane;
     }
@@ -291,7 +214,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         return currentPhonebook;
     }
     
-    public List<PhoneBookEntry> getSelectedEntries() {
+    public List<PhoneBookEntry> getRawSelectedEntries() {
         return selectedItems;
     }
  
@@ -303,6 +226,10 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         return treeModel.getPhoneBooks();
     }
     
+    /**
+     * Adds and opens the given phone book asynchronously
+     * @param descriptor
+     */
     void addPhoneBook(String descriptor) {
         // Try to check if the phone book has already been added:
         for (PhoneBook pb : treeModel.getPhoneBooks()) {
@@ -312,25 +239,27 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             }
         }
 
-        PhoneBook phoneBook = null;
-        try {
-            phoneBook = PhoneBookFactory.instanceForDescriptor(descriptor, this);
-            if (phoneBook == null) {
-                JOptionPane.showMessageDialog(this, Utils._("Unknown phone book type selected."), Utils._("Error"), JOptionPane.ERROR_MESSAGE);
-                return;
-            } else {
-                phoneBook.open(descriptor);
-            }
-
-        } catch (PhoneBookException e) {
-            if (!e.messageAlreadyDisplayed())
-                ExceptionDialog.showExceptionDialog(this, Utils._("Error loading the phone book: "), e);
-            //return; // do nothing...
-        }
-        if (phoneBook != null) {
-            treeModel.addPhoneBook(phoneBook);
-            phoneBookTree.expandPath(new TreePath(new Object[] { treeModel.rootNode, phoneBook }));
-        }
+        PBOpenWorker worker = new PBOpenWorker(descriptor);
+        worker.startWork(this, Utils._("Opening phone books..."));
+//        PhoneBook phoneBook = null;
+//        try {
+//            phoneBook = PhoneBookFactory.instanceForDescriptor(descriptor, this);
+//            if (phoneBook == null) {
+//                JOptionPane.showMessageDialog(this, Utils._("Unknown phone book type selected."), Utils._("Error"), JOptionPane.ERROR_MESSAGE);
+//                return;
+//            } else {
+//                phoneBook.open(descriptor);
+//            }
+//
+//        } catch (PhoneBookException e) {
+//            if (!e.messageAlreadyDisplayed())
+//                ExceptionDialog.showExceptionDialog(this, Utils._("Error loading the phone book: "), e);
+//            //return; // do nothing...
+//        }
+//        if (phoneBook != null) {
+//            treeModel.addPhoneBook(phoneBook);
+//            phoneBookTree.expandPath(new TreePath(new Object[] { treeModel.rootNode, phoneBook }));
+//        }
     }
     
     void closeCurrentPhoneBook() {
@@ -364,18 +293,36 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         }
     }
     
-    void closeAndSaveAllPhonebooks() {
-        List<String> pbList = Utils.getFaxOptions().phoneBooks;
-        pbList.clear();
+    void closeAndSaveAllPhonebooks(final boolean disposeAfterClose) {
+        // Close phone books in a thread:
+        ProgressWorker closeWorker = new ProgressWorker() {
+            @Override
+            public void doWork() {
+                List<String> pbList = Utils.getFaxOptions().phoneBooks;
+                pbList.clear();
+
+                for (PhoneBook pb : treeModel.getPhoneBooks()) {
+                    updateNote(pb.toString());
+                    pbList.add(pb.getDescriptor());
+                    pb.close();
+                }
+            };
+            
+            @Override
+            protected void done() {
+                if (disposeAfterClose) {
+                    dispose();
+                } else {
+                    checkMenuEnable();
+                }
+            }
+            
+        };
+        closeWorker.setProgressMonitor(progressPanel);
         
         selectedItems.clear();
         currentPhonebook = null;
-        for (PhoneBook pb : treeModel.getPhoneBooks()) {
-            pbList.add(pb.getDescriptor());
-            pb.close();
-        }
-
-        checkMenuEnable();
+        closeWorker.startWork(this, Utils._("Closing phone books..."));
     }
     
     void checkMenuEnable() {
@@ -389,6 +336,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         
         removeEntryAction.setEnabled(delOK);
         addEntryAction.setEnabled(writeOK);
+        addDistListAction.setEnabled(writeOK && currentPhonebook.supportsDistributionLists());
     
         entryMenu.setEnabled(browseOK);
         importMenu.setEnabled(writeOK);
@@ -448,11 +396,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             if (descriptor != null) 
                 pb.open(descriptor); 
             
-            List<PhoneBookEntry> importedEntries = pb.getEntries();
-            for (int i=0; i < importedEntries.size(); i++) {
-                PhoneBookEntry pbe = currentPhonebook.addNewEntry();
-                pbe.copyFrom(importedEntries.get(i));
-            }
+            currentPhonebook.addEntries(pb.getEntries());
             
             if (descriptor != null) // Phone book has been opened above...
                 pb.close();
@@ -465,11 +409,14 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     }
        
     
-    private JPanel createJContentPane() {
+    private JComponent createJContentPane() {
         JPanel contentPane = new JPanel(new BorderLayout());
         contentPane.add(createToolBar(), BorderLayout.NORTH);
         contentPane.add(getSplitPane(), BorderLayout.CENTER);
-        return contentPane;
+        
+        progressPanel = new ProgressPanel();
+        progressPanel.setContentComponent(contentPane);
+        return progressPanel;
     }
     
     private JToolBar createToolBar() {
@@ -526,21 +473,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             phoneBookTree.setEditable(false);
             phoneBookTree.setRootVisible(true);
             phoneBookTree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
-            phoneBookTree.setCellRenderer(new DefaultTreeCellRenderer() {
-                private ImageIcon phoneBookIcon = Utils.loadIcon("general/Bookmarks");
-                
-                @Override
-                public Component getTreeCellRendererComponent(JTree tree,
-                        Object value, boolean sel, boolean expanded,
-                        boolean leaf, int row, boolean hasFocus) {
-                    super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf,
-                            row, hasFocus);
-                    if (value instanceof PhoneBook) {
-                        setIcon(phoneBookIcon);
-                    }
-                    return this;
-                } 
-            });
+            phoneBookTree.setCellRenderer(phoneBookRenderer);
             phoneBookTree.addTreeSelectionListener(new TreeSelectionListener() {
 
                 private TreePath[] oldSelection = null;
@@ -584,17 +517,13 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                     }
 
                     checkMenuEnable();
-                    if (selectedItems.size() == 1) {
-                        writeToTextFields(currentPhonebook, selectedItems.get(0));
-                    } else {
-                        writeToTextFields(null, null);
-                    }
-
+                    writeToTextFields(currentPhonebook, selectedItems);
+                    
                     if (currentPhonebook != null) {
                         textDescriptor.setText(currentPhonebook.getDescriptor());
                         textDescriptor.setCaretPosition(0);
                     } else {
-                        textDescriptor.setText("");
+                        textDescriptor.setText("<" + Utils._("Multiple phone books selected") + ">");
                     }
 
                     oldSelection = paths;
@@ -602,6 +531,65 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             });
             phoneBookTree.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "RemoveEntry");
             phoneBookTree.getActionMap().put("RemoveEntry", removeEntryAction);
+            phoneBookTree.setTransferHandler(new TransferHandler() {
+                @Override
+                public boolean canImport(JComponent comp,
+                        DataFlavor[] transferFlavors) {
+                    return (Utils.indexOfArray(transferFlavors, PBEntryTransferable.PHONEBOOKENTRY_FLAVOR) >= 0); /* &&
+                        ((dropItem instanceof PhoneBook && addEntryAction.isEnabled()) || (dropItem instanceof DistributionList));*/
+                }
+                
+                @Override
+                protected Transferable createTransferable(JComponent c) {
+                    return new PBEntryTransferable(resolveDistributionLists(selectedItems));
+                }
+                
+                private Object getDropItem() {
+                    Point mousePos = phoneBookTree.getMousePosition();
+                    if (mousePos == null)
+                        return null;
+                    
+                    int row = phoneBookTree.getRowForLocation(mousePos.x, mousePos.y);
+                    if (row >= 0)
+                        return phoneBookTree.getPathForRow(row).getLastPathComponent();
+                    else
+                        return null;
+                }
+                
+                @Override
+                public int getSourceActions(JComponent c) {
+                    return (selectedItems.size() > 0) ? COPY : NONE;
+                }
+                
+                @SuppressWarnings("unchecked")
+                @Override
+                public boolean importData(JComponent comp, Transferable t) {
+                    if (t.isDataFlavorSupported(PBEntryTransferable.PHONEBOOKENTRY_FLAVOR)) {
+                        try {
+                            List<PhoneBookEntry> entries = (List<PhoneBookEntry>)t.getTransferData(PBEntryTransferable.PHONEBOOKENTRY_FLAVOR);
+                            Object dropItem = getDropItem();
+                            if (dropItem instanceof PhoneBookEntryList) {
+                                PhoneBookEntryList target = (PhoneBookEntryList)dropItem;
+                                if (!target.isReadOnly()) {
+                                    target.addEntries(entries);
+                                    if (target instanceof DistributionList) {
+                                        ((DistributionList)target).commit();
+                                    }
+                                    return true;
+                                }
+                            }
+                            return false;
+                        } catch (Exception e) {
+                            log.log(Level.SEVERE, "Error importing drag data", e);
+                            return false;
+                        }
+                        
+                    } else {
+                        return super.importData(comp, t);
+                    }
+                }
+            });
+            phoneBookTree.setDragEnabled(true);
             
             treePopup = new JPopupMenu();
             treePopup.add(new JMenuItem(addEntryAction));
@@ -700,7 +688,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             closeWinMenu.setActionCommand("close");
             closeWinMenu.addActionListener(this);
 
-            pbMenu = new JMenu(Utils._("Phonebook"));
+            pbMenu = new JMenu(Utils._("Phone book"));
             pbMenu.add(openMenu);
             pbMenu.add(importMenu);
             //pbMenu.add(saveAsMenu);
@@ -717,6 +705,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             entryMenu = new JMenu(Utils._("Entry"));
 
             entryMenu.add(new JMenuItem(addEntryAction));
+            entryMenu.add(new JMenuItem(addDistListAction));
             entryMenu.add(new JMenuItem(removeEntryAction));
             entryMenu.add(new JSeparator());
             JMenu viewMenu = new JMenu(nameStyleGroup.label);
@@ -748,9 +737,26 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             }
         };
         addEntryAction.putValue(Action.NAME, Utils._("Add"));
-        addEntryAction.putValue(Action.SMALL_ICON, Utils.loadIcon("general/Add"));
+        addEntryAction.putValue(Action.SMALL_ICON, Utils.loadCustomIcon("pbaddentry.png"));
         addEntryAction.putValue(Action.SHORT_DESCRIPTION, Utils._("Add new entry"));
         addEntryAction.setEnabled(false);
+        
+        addDistListAction = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(ActionEvent e) {
+                if (currentPhonebook == null || currentPhonebook.isReadOnly()) 
+                    return;
+                
+                DistributionList dl = currentPhonebook.addDistributionList();
+                if (selectedItems.size() > 1) {
+                    dl.addEntries(resolveDistributionLists(selectedItems));
+                }
+                phoneBookTree.setSelectionPath(new TreePath(new Object[] { treeModel.rootNode, currentPhonebook, dl }));
+            }
+        };
+        addDistListAction.putValue(Action.NAME, Utils._("Add distribution list"));
+        addDistListAction.putValue(Action.SMALL_ICON, Utils.loadCustomIcon("pbadddistlist.png"));
+        addDistListAction.putValue(Action.SHORT_DESCRIPTION, Utils._("Add a new distribution list"));
+        addDistListAction.setEnabled(false);
         
         removeEntryAction = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {
@@ -818,18 +824,18 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         createActions();
         setContentPane(createJContentPane());
         setJMenuBar(getMenu());
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        setTitle(Utils._("Phonebook"));
+        setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        setTitle(Utils._("Phone book"));
         
         addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosed(WindowEvent e) {
+            public void windowClosing(WindowEvent e) {
                 
 //                Utils.getFaxOptions().lastSelectedPhonebook = tabPhonebooks.getSelectedIndex();
                 Utils.getFaxOptions().phoneWinBounds = getBounds();
                 Utils.getFaxOptions().phonebookDisplayStyle = NameRule.valueOf(nameStyleGroup.getSelectedActionCommand());
                 
-                closeAndSaveAllPhonebooks();
+                closeAndSaveAllPhonebooks(true);
                 
                 if (searchWin != null) {
                     searchWin.dispose();
@@ -911,7 +917,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         }
     }
     
-    public PhoneBookEntry[] selectNumbers() {
+    public List<PhoneBookEntry> selectNumbers() {
         usedSelectButton = false;
         setModal(true);
         showSelectButton();
@@ -919,7 +925,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         setVisible(true);
         
         if (usedSelectButton && selectedItems.size() > 0) {
-            PhoneBookEntry[] res = selectedItems.toArray(new PhoneBookEntry[selectedItems.size()]);
+            List<PhoneBookEntry> res = resolveDistributionLists(selectedItems);
             dispose();
             return res;
         } else {
@@ -927,6 +933,18 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         }
     }
 
+    static List<PhoneBookEntry> resolveDistributionLists(List<PhoneBookEntry> entries) {
+        List<PhoneBookEntry> result = new ArrayList<PhoneBookEntry>(entries.size() + 20);
+        for (PhoneBookEntry entry : entries) {
+            if (entry instanceof DistributionList) {
+                result.addAll(((DistributionList)entry).getEntries());
+            } else {
+                result.add(entry);
+            }
+        }
+        return result;
+    }
+    
     protected static boolean treePathsEqual(TreePath[] sel1, TreePath[] sel2) {
         if (sel1 == sel2)
             return true;
@@ -963,28 +981,35 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         }
         return true;
     }
+
     
-    class EntryTextFieldListener implements ActionListener, FocusListener {
+    public static class PhoneBookRenderer extends DefaultTreeCellRenderer {
+        private ImageIcon allPhoneBooksIcon = Utils.loadIcon("general/Bookmarks"); 
+        private ImageIcon phoneBookIcon = Utils.loadCustomIcon("phonebook.png");
+        private ImageIcon entryIcon = Utils.loadCustomIcon("pbentry.png");
+        private ImageIcon distlistIcon = Utils.loadCustomIcon("pbdistlist.png");
 
-        public void actionPerformed(ActionEvent e) {
-            updateListEntries();
-        }
-
-        public void focusGained(FocusEvent e) {
-            // do nothing
-        }
-
-        public void focusLost(FocusEvent e) {
-            updateListEntries();
+        @Override
+        public Component getTreeCellRendererComponent(JTree tree,
+                Object value, boolean sel, boolean expanded,
+                boolean leaf, int row, boolean hasFocus) {
+            super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf,
+                    row, hasFocus);
+            if (value instanceof DistributionList) {
+                setIcon(distlistIcon);
+            } else if (value instanceof RootNode) {
+                setIcon(allPhoneBooksIcon);
+            }
+            return this;
         }
         
-        private void updateListEntries() { 
-            if (selectedItems.size() == 1) {
-                readFromTextFields(selectedItems.get(0), true); 
-            }
+        public PhoneBookRenderer() {
+            setLeafIcon(entryIcon);
+            setOpenIcon(phoneBookIcon);
+            setClosedIcon(phoneBookIcon);
         }
     }
-    
+
     class SearchHelper implements DocumentListener, PBTreeModelListener, ActionListener {
         private boolean eventLock = false;
         
@@ -1093,6 +1118,87 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         
         public PhonebookMenuActionListener(PhoneBookType pbType) {
             this.pbType = pbType;
+        }
+    }
+    
+    static class PBEntryTransferable implements Transferable {
+        public static final DataFlavor PHONEBOOKENTRY_FLAVOR = new DataFlavor(List.class, "Phone book entries");
+        protected final List<PhoneBookEntry> items;
+
+        public Object getTransferData(DataFlavor flavor)
+                throws UnsupportedFlavorException, IOException {
+            if (flavor == PHONEBOOKENTRY_FLAVOR) {
+                return items;
+            } else if (DataFlavor.stringFlavor.equals(flavor)) {
+                return Utils.listToString(items, "\n");
+            } else {
+                throw new UnsupportedFlavorException(flavor);
+            }
+        }
+
+        public DataFlavor[] getTransferDataFlavors() {
+            return new DataFlavor[] { PHONEBOOKENTRY_FLAVOR, DataFlavor.stringFlavor };
+        }
+
+        public boolean isDataFlavorSupported(DataFlavor flavor) {
+            return (flavor == PHONEBOOKENTRY_FLAVOR) || DataFlavor.stringFlavor.equals(flavor);
+        }
+
+        public PBEntryTransferable(List<PhoneBookEntry> items) {
+            super();
+            this.items = items;
+        }
+    }
+    
+    int openCounter = 0;
+    class PBOpenWorker extends ProgressWorker {
+        protected PhoneBook phoneBook = null;
+        protected String descriptor;
+        
+        @Override
+        public void doWork() {
+            synchronized (NewPhoneBookWin.this) {
+                if (openCounter++ == 0) {
+                    updateNote(Utils._("Loading..."));
+                }
+            }
+            try {
+                phoneBook = PhoneBookFactory.instanceForDescriptor(descriptor, NewPhoneBookWin.this);
+                if (phoneBook == null) {
+                    showMessageDialog(Utils._("Unknown phone book type selected."), Utils._("Error"), JOptionPane.ERROR_MESSAGE);
+                    return;
+                } else {
+                    phoneBook.open(descriptor);
+                }
+
+            } catch (PhoneBookException e) {
+                if (!e.messageAlreadyDisplayed())
+                    showExceptionDialog(Utils._("Error loading the phone book: "), e);
+                //return; // do nothing...
+            }
+        }
+     
+        @Override
+        protected void done() {
+            if (phoneBook != null) {
+                treeModel.addPhoneBook(phoneBook);
+            }
+            synchronized (NewPhoneBookWin.this) {
+                if (--openCounter == 0) {
+                    treeModel.sortPhonebooks();
+                    for (PhoneBook pb : treeModel.getPhoneBooks()) {
+                        phoneBookTree.expandPath(new TreePath(new Object[] { treeModel.rootNode, pb }));
+                    }
+                    progressMonitor.close();
+                }
+            }
+        }
+        
+        
+        public PBOpenWorker(String descriptor) {
+            this.descriptor = descriptor;
+            this.closeOnExit = false;
+            this.progressMonitor = progressPanel;
         }
     }
 }

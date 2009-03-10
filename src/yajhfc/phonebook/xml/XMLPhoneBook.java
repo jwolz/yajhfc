@@ -1,4 +1,4 @@
-package yajhfc.phonebook;
+package yajhfc.phonebook.xml;
 /*
  * YAJHFC - Yet another Java Hylafax client
  * Copyright (C) 2005 Jonas Wolz
@@ -24,6 +24,7 @@ import java.awt.Dialog;
 import java.awt.HeadlessException;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,7 +38,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Result;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -46,8 +50,15 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import yajhfc.Utils;
+import yajhfc.phonebook.DistributionList;
+import yajhfc.phonebook.PhoneBook;
+import yajhfc.phonebook.PhoneBookEntry;
+import yajhfc.phonebook.PhoneBookException;
+import yajhfc.phonebook.PhonebookEvent;
 import yajhfc.util.ExampleFileFilter;
 import yajhfc.util.ExceptionDialog;
 import yajhfc.util.SafeJFileChooser;
@@ -65,7 +76,22 @@ public class XMLPhoneBook extends PhoneBook {
     private boolean isOpened = false;
     private boolean wasChanged = false;
     
-    protected final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    protected static DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY;
+    protected static TransformerFactory TRANSFORMER_FACTORY;
+    
+    protected static DocumentBuilder createDocumentBuilder() throws ParserConfigurationException {
+        if (DOCUMENT_BUILDER_FACTORY == null) {
+            DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
+        }
+        return DOCUMENT_BUILDER_FACTORY.newDocumentBuilder();
+    }
+    
+    protected static TransformerFactory getTransformerFactory() {
+        if (TRANSFORMER_FACTORY == null) {
+            TRANSFORMER_FACTORY = TransformerFactory.newInstance();
+        }
+        return TRANSFORMER_FACTORY;
+    }
     
     public void resort() {
         Collections.sort(list);
@@ -81,14 +107,25 @@ public class XMLPhoneBook extends PhoneBook {
     
     @Override
     public PhoneBookEntry addNewEntry() {
-        XMLPhoneBookEntry pb = new XMLPhoneBookEntry(this);
+        XMLPhoneBookEntry pb = new SingleXMLPhoneBookEntry(this);
+        addEntryGeneral(pb);
+        return pb;
+    }
+
+    @Override
+    public DistributionList addDistributionList() {
+        XMLDistributionList pb = new XMLDistributionList(this);
+        addEntryGeneral(pb);
+        return pb;
+    }
+    
+    private void addEntryGeneral(XMLPhoneBookEntry pb) {
         int pos = getInsertionPos(pb);
         list.add(pos, pb);
         fireEntriesAdded(pos, pb);
         wasChanged = true;
-        return pb;
     }
-
+    
     void deleteEntry(PhoneBookEntry entry) {
         int index = Utils.identityIndexOf(list, entry);
         if (index >= 0) {
@@ -108,6 +145,7 @@ public class XMLPhoneBook extends PhoneBook {
     }
 
     private List<PhoneBookEntry> itemsView;
+
     @Override
     public List<PhoneBookEntry> getEntries() {
         return itemsView;
@@ -129,23 +167,7 @@ public class XMLPhoneBook extends PhoneBook {
             return;
         if (wasChanged) {
             try {
-                DocumentBuilder builder = factory.newDocumentBuilder();
-
-                Document doc = builder.newDocument();
-
-                Element root = doc.createElement("phonebook");
-                doc.appendChild(root);
-                saveToXML(root, doc);
-
-                root.normalize();
-                TransformerFactory tFactory =
-                    TransformerFactory.newInstance();
-                Transformer transformer = tFactory.newTransformer();
-
-                DOMSource source = new DOMSource(doc);
-                StreamResult result = new StreamResult(new FileOutputStream(settings.fileName));
-                transformer.transform(source, result);
-                wasChanged = false;
+                saveToResult(new StreamResult(new FileOutputStream(settings.fileName)));
             } catch (Exception e) {
                 ExceptionDialog.showExceptionDialog(parentDialog, Utils._("Error saving the phone book: "), e);
             }
@@ -153,12 +175,36 @@ public class XMLPhoneBook extends PhoneBook {
         isOpened = false;
     }
 
+    public void saveToResult(Result result) throws ParserConfigurationException, TransformerException {
+        Document doc = createDocumentBuilder().newDocument();
+
+        Element root = doc.createElement("phonebook");
+        doc.appendChild(root);
+        saveToXML(root, doc);
+
+        root.normalize();
+        
+        TransformerFactory tFactory = getTransformerFactory();
+        Transformer transformer = tFactory.newTransformer();
+
+        DOMSource source = new DOMSource(doc);
+
+        transformer.transform(source, result);
+    }
+    
     public void saveToXML(Element el, Document doc) {
         for (XMLPhoneBookEntry entry : list) {
-            Element ent = doc.createElement("entry");
+            String entryName;
+            if (entry instanceof DistributionList) {
+                entryName = "distributionlist";
+            } else {
+                entryName = "entry";
+            }
+            Element ent = doc.createElement(entryName);
             entry.saveToXML(ent, doc);
             el.appendChild(ent);
         }
+        wasChanged = false;
     }
     
     public void loadFromXML(Element el) {
@@ -174,7 +220,11 @@ public class XMLPhoneBook extends PhoneBook {
             if ((item.getNodeType() == Node.ELEMENT_NODE)) {
                 String nodeName = item.getNodeName();
                 if (nodeName.equals("entry")) {
-                    XMLPhoneBookEntry entry = new XMLPhoneBookEntry(this);
+                    SingleXMLPhoneBookEntry entry = new SingleXMLPhoneBookEntry(this);
+                    entry.loadFromXML((Element)item);
+                    list.add(entry);
+                } else if (nodeName.equals("distributionlist")) {
+                    XMLDistributionList entry = new XMLDistributionList(this);
                     entry.loadFromXML((Element)item);
                     list.add(entry);
                 } else {
@@ -187,12 +237,13 @@ public class XMLPhoneBook extends PhoneBook {
         if (list.size() > 0) {
             fireEntriesAdded(eventObjectForInterval(0, list.size() - 1));
         }
+        wasChanged = false;
     }
     
     @Override
     protected void openInternal(String descriptor) throws PhoneBookException {       
 /*        for (int i = 0; i < 20; i++) {
-            XMLPhoneBookEntry pb = new XMLPhoneBookEntry();
+            SingleXMLPhoneBookEntry pb = new SingleXMLPhoneBookEntry();
             
             pb.surname = "Müller";
             pb.faxnumber = "01234/56789";
@@ -208,33 +259,45 @@ public class XMLPhoneBook extends PhoneBook {
         isOpened = true;
     }
 
+    public void loadFromInputSource(InputSource source) throws ParserConfigurationException, SAXException, IOException {
+        list.clear();
+        
+        DocumentBuilder builder = createDocumentBuilder();
+        
+        Document doc = builder.parse(source);
+        
+        Element root = doc.getDocumentElement();
+        
+        loadFromXML(root);
+    }
+    
     private void reloadEntries() throws PhoneBookException {
         list.clear();
         
         File file = new File(settings.fileName);
         if (!file.exists()) {
-            isOpened = true;
             return;
         }
         
         try {
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            
-            Document doc = builder.parse(file);
-            
-            Element root = doc.getDocumentElement();
-            
-            loadFromXML(root);
-            
-            wasChanged = false;
+            loadFromInputSource(new InputSource(file.toURI().toString()));
         } catch (Exception e) {
             throw new PhoneBookException(e, false);
         } 
     }
     
+    public boolean wasChanged() {
+        return wasChanged; 
+    }
+    
     @Override
     public boolean isOpen() {
         return isOpened;
+    }
+    
+    @Override
+    public boolean supportsDistributionLists() {
+        return true;
     }
     
     @Override

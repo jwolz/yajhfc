@@ -134,6 +134,10 @@ public class ProgressPanel extends JLayeredPane implements ProgressWorker.Progre
        }
     }
     
+    public boolean supportsIndeterminateProgress() {
+        return true;
+    }
+    
     public void showIndeterminateProgress(String message) {
         showIndeterminateProgress(message, null);
     }
@@ -185,15 +189,25 @@ public class ProgressPanel extends JLayeredPane implements ProgressWorker.Progre
     }
 
     public void setProgress(int progress) {
+        if (progressBar.isIndeterminate())
+            progressBar.setIndeterminate(false);
         progressBar.setValue(progress);
     }
 
+    public void setMaximum(int progress) {
+        progressBar.setMaximum(progress);
+    }
+    
     public void showDeterminateProgress(String message, String initialNote, int min, int max) {
         progressBar.setIndeterminate(false);
         progressBar.setMinimum(min);
         progressBar.setMaximum(max);
         progressBar.setValue(min);
         commonProgressSetup(message, initialNote);
+    }
+
+    public boolean isShowingIndeterminate() {
+        return progressBar.isIndeterminate();
     }
 
 }

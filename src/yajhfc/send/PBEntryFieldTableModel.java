@@ -28,6 +28,7 @@ import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 
 public class PBEntryFieldTableModel extends AbstractTableModel {
     protected List<PBEntryFieldContainer> list;
+    protected boolean editable = true;
     
     protected static final PBEntryField[] columns;
     static {
@@ -51,7 +52,7 @@ public class PBEntryFieldTableModel extends AbstractTableModel {
     }
 
     public int getRowCount() {
-        return list.size();
+        return (list == null) ? 0 : list.size();
     }
 
     public Object getValueAt(int rowIndex, int columnIndex) {
@@ -61,11 +62,14 @@ public class PBEntryFieldTableModel extends AbstractTableModel {
     
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return true;
+        return editable;
     }
     
     @Override
     public void setValueAt(Object value, int rowIndex, int columnIndex) {
+        if (!editable)
+            return;
+        
         PBEntryFieldContainer item = list.get(rowIndex);
         item.setField(columns[columnIndex], (String)value);
         fireTableCellUpdated(rowIndex, columnIndex);
@@ -90,7 +94,7 @@ public class PBEntryFieldTableModel extends AbstractTableModel {
         addRow(new DefaultPBEntryFieldContainer(""));
     }
     
-    public void addRows(Collection<PBEntryFieldContainer> newItems) {
+    public void addRows(Collection<? extends PBEntryFieldContainer> newItems) {
         list.addAll(newItems);
         fireTableRowsInserted(list.size()-newItems.size(), list.size()-1);
     }
@@ -98,5 +102,13 @@ public class PBEntryFieldTableModel extends AbstractTableModel {
     public void removeRow(int index) {
         list.remove(index);
         fireTableRowsDeleted(index, index);
+    }
+    
+    public boolean isEditable() {
+        return editable;
+    }
+    
+    public void setEditable(boolean editable) {
+        this.editable = editable;
     }
 }

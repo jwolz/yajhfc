@@ -20,7 +20,6 @@ package yajhfc.options;
 
 import static yajhfc.Utils._;
 import info.clearthought.layout.TableLayout;
-import info.clearthought.layout.TableLayoutConstraints;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -166,9 +165,9 @@ public class PathAndViewPanel extends JPanel implements OptionsPage {
         checkCreateSingleFile.addActionListener(panelViewListener);
         comboSendMode.addActionListener(panelViewListener);
         
-        addWithLabel(panelView, comboSendMode, _("Send multiple files as:"), "1,1,f,c");
+        Utils.addWithLabel(panelView, comboSendMode, _("Send multiple files as:"), "1,1,f,c");
         panelView.add(checkCreateSingleFile, "3,1,f,c");
-        addWithLabel(panelView, comboTargetFormat, _("Format for viewing/sending:"), "1,3,f,c");
+        Utils.addWithLabel(panelView, comboTargetFormat, _("Format for viewing/sending:"), "1,3,f,c");
         panelView.add(checkCreateAlwaysAsTargetFormat, "3,3,f,c");
         
         return panelView;
@@ -179,21 +178,6 @@ public class PathAndViewPanel extends JPanel implements OptionsPage {
                 comboSendMode.getSelectedItem() != MultiFileMode.NONE);
         checkCreateAlwaysAsTargetFormat.setEnabled(enable);
         comboTargetFormat.setEnabled(enable);
-    }
-    
-    private JLabel addWithLabel(JPanel pane, JComponent comp, String text, String layout) {
-        TableLayoutConstraints c = new TableLayoutConstraints(layout);
-        
-        pane.add(comp, c);
-        
-        JLabel lbl = new JLabel(text);
-        lbl.setLabelFor(comp);
-        c.row1 = c.row2 = c.row1 - 1;
-        c.vAlign = TableLayoutConstraints.BOTTOM;
-        c.hAlign = TableLayoutConstraints.LEFT;
-        pane.add(lbl, c); 
-        
-        return lbl;
     }
     
     /* (non-Javadoc)

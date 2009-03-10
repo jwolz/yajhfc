@@ -18,9 +18,8 @@
  */
 package yajhfc.send;
 
+import static yajhfc.Utils.addWithLabel;
 import info.clearthought.layout.TableLayout;
-import info.clearthought.layout.TableLayoutConstants;
-import info.clearthought.layout.TableLayoutConstraints;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -33,6 +32,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.util.List;
 
 import javax.swing.Action;
 import javax.swing.Box;
@@ -115,6 +115,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
     protected JTextArea textComments;
     protected JCheckBox checkUseCover;
     protected JCheckBox checkCustomCover;
+    protected JCheckBox checkArchiveJob;
     protected FileTextField ftfCustomCover;
     protected TimeToSendEntry ttsEntry;
     
@@ -358,7 +359,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
                 Utils.setWaitCursor(SimplifiedSendDialog.this);
                 NewPhoneBookWin pbw = new NewPhoneBookWin(SimplifiedSendDialog.this);
                 Utils.unsetWaitCursorOnOpen(SimplifiedSendDialog.this, pbw);
-                PhoneBookEntry[] pbs = pbw.selectNumbers();
+                List<PhoneBookEntry> pbs = pbw.selectNumbers();
                 if (pbs != null) {
                     for (PhoneBookEntry pb : pbs)
                     {
@@ -503,6 +504,8 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         comboModem = new JComboBox(clientManager.getModems().toArray());
         comboModem.setEditable(true);
 
+        checkArchiveJob = new JCheckBox(Utils._("Archive fax job"));
+        
         ttsEntry = new TimeToSendEntry();
 
         if (initiallyHideFiles) {
@@ -510,13 +513,18 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         }
         advancedPane.add(checkCustomCover, "0,2,2,2,f,c");
         advancedPane.add(ftfCustomCover, "0,3,2,3,f,c");
-        addWithLabel(advancedPane, comboNotification, Utils._("Notify when:"), "0, 6, F, C");
-        addWithLabel(advancedPane, comboModem, Utils._("Modem:"), "2,6, F, C");
-        addWithLabel(advancedPane, comboResolution, Utils._("Resolution:"), "0,9, F, C");
-        addWithLabel(advancedPane, comboPaperSize, Utils._("Paper size:"), "2,9, F, C");
-        addWithLabel(advancedPane, spinKillTime, Utils._("Cancel job after (minutes):"), "0,12, F, C");
-        addWithLabel(advancedPane, spinMaxTries, Utils._("Maximum tries:"), "2,12, F, C");
-        addWithLabel(advancedPane, ttsEntry, Utils._("Time to send:"), "0,15,2,15");
+        addWithLabel(advancedPane, comboNotification, Utils._("Notify when:"), "0,6,F,C");
+        addWithLabel(advancedPane, comboModem, Utils._("Modem:"), "2,6,,F,C");
+        addWithLabel(advancedPane, comboResolution, Utils._("Resolution:"), "0,9,F,C");
+        addWithLabel(advancedPane, comboPaperSize, Utils._("Paper size:"), "2,9,F,C");
+        addWithLabel(advancedPane, spinKillTime, Utils._("Cancel job after (minutes):"), "0,12,F,C");
+        addWithLabel(advancedPane, spinMaxTries, Utils._("Maximum tries:"), "2,12,F, C");
+        Box box = Box.createHorizontalBox();
+        ttsEntry.setAlignmentY(JComponent.CENTER_ALIGNMENT);
+        checkArchiveJob.setAlignmentY(JComponent.CENTER_ALIGNMENT);
+        box.add(ttsEntry);
+        box.add(checkArchiveJob);
+        addWithLabel(advancedPane, box, Utils._("Time to send:"), "0,15,2,15");
         
         comboResolution.setSelectedItem(fo.resolution);
         comboPaperSize.setSelectedItem(fo.paperSize);
@@ -534,22 +542,9 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         spinMaxTries.setValue(Integer.valueOf(fo.maxTry));
         spinKillTime.setValue(fo.killTime);
 
+        checkArchiveJob.setSelected(fo.archiveSentFaxes);
+        
         return advancedPane;
-    }
-
-    private JLabel addWithLabel(JPanel pane, JComponent comp, String text, String layout) {
-        TableLayoutConstraints c = new TableLayoutConstraints(layout);
-        
-        pane.add(comp, c);
-        
-        JLabel lbl = new JLabel(text);
-        lbl.setLabelFor(comp);
-        c.row1 = c.row2 = c.row1 - 1;
-        c.vAlign = TableLayoutConstants.BOTTOM;
-        c.hAlign = TableLayoutConstants.LEFT;
-        pane.add(lbl, c); 
-        
-        return lbl;
     }
     
         
@@ -570,6 +565,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         sendController.setResolution(((FaxResolution)comboResolution.getSelectedItem()).getResolution());
         sendController.setSelectedModem(comboModem.getSelectedItem());
         sendController.setSendTime(ttsEntry.getSelection());
+        sendController.setArchiveJob(checkArchiveJob.isSelected());
         
         sendController.setSubject(textSubject.getText());
         if (checkUseCover != null && checkUseCover.isSelected()) {

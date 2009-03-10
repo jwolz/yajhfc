@@ -477,6 +477,13 @@ Descripción de los argumentos:
                                         enviar).
     --noclose                           No cerrar YajHFC después de enviar el
                                         fax.
+    --no-wait                           No esperar a que el usuario cierre la
+                                        ventana de envío. Si se llama a YajHFC
+                                        varias veces antes de que el usuario
+                                        cierre la ventana de envío, se añaden
+                                        los documentos enviados a la lista de
+                                        archivos. Esta opción implica
+                                        --background.
 -T, --showtab=0|R|1|S|2|T               Define la pestaña para mostrar al
                                         inicio. Especifique 0 o R para la
                                         pestaña de "Recibidos", 1 o S para la
@@ -876,7 +883,7 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>-no_subdir -split 0 -html_version 3.2,unicode -no_navigation -prefix faq_es faq_es.tex</TT>
 <P>
-The translation was initiated by Jonas Wolz on 2009-01-04
+The translation was initiated by Jonas Wolz on 2009-03-09
 <BR><HR><H4>Notas al pie</H4>
 <DL>
 <DT><A NAME="foot182">...\{user.home\}</A><A
@@ -889,7 +896,7 @@ The translation was initiated by Jonas Wolz on 2009-01-04
 <BR><HR>
 <ADDRESS>
 Jonas Wolz
-2009-01-04
+2009-03-09
 </ADDRESS>
 </BODY>
 </HTML>

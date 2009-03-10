@@ -104,22 +104,6 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
     
     private static final String FIELD_ClientProperty = "YajHFC-FieldComboField";
     
-    private JLabel addWithLabel(JPanel container, Component comp, String label, String layout) {
-        return addWithLabel(container, comp, label, new TableLayoutConstraints(layout));
-    }
-    private JLabel addWithLabel(JPanel container, Component comp, String label, TableLayoutConstraints layout) {
-        JLabel lbl = new JLabel(label);
-        lbl.setLabelFor(comp);
-        
-        container.add(comp, layout);
-        
-        layout.col1 = layout.col2 = layout.col1 - 2;
-        layout.vAlign = TableLayoutConstraints.CENTER;
-        layout.hAlign = TableLayoutConstraints.LEFT;
-        container.add(lbl, layout);
-        
-        return lbl; 
-    }
     private JComboBox addFieldCombo(JPanel container, String field, String caption, int col, int row) {
         JComboBox rv = new JComboBox();
         rv.setEditable(true);
@@ -130,7 +114,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         TableLayoutConstraints layout = new TableLayoutConstraints(col, row);
         layout.hAlign = TableLayoutConstraints.FULL;
         layout.vAlign = TableLayoutConstraints.CENTER;
-        addWithLabel(container, rv, caption, layout);
+        Utils.addWithLabelHorz(container, rv, caption, layout);
         return rv;
     }
     private JComponent addAdditionalEntryField(JPanel container, String field, FieldMapEntry entry, int col, int row) {
@@ -141,7 +125,7 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         } else if (entry.dataType.equals(String.class)) {
             result = new JTextField();
             result.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
-            addWithLabel(container, result, entry.caption, new TableLayoutConstraints(col,row,col,row,TableLayoutConstraints.FULL,TableLayoutConstraints.CENTER));
+            Utils.addWithLabelHorz(container, result, entry.caption, new TableLayoutConstraints(col,row,col,row,TableLayoutConstraints.FULL,TableLayoutConstraints.CENTER));
         } else {
             throw new IllegalArgumentException("Unsupported data type for additional field.");
         }
@@ -217,19 +201,19 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
         buttonTest.setActionCommand("test");
         buttonTest.addActionListener(this);
         
-        addWithLabel(jContentPane, textDriverClass, _("Driver class:"), "3, 1, 7, 1, f, c");
+        Utils.addWithLabelHorz(jContentPane, textDriverClass, _("Driver class:"), "3, 1, 7, 1, f, c");
         settingsComponents.put(DRIVER_FIELD, textDriverClass);
-        addWithLabel(jContentPane, textURL, _("Database URL:"), "3, 3, 7, 3, f, c");
+        Utils.addWithLabelHorz(jContentPane, textURL, _("Database URL:"), "3, 3, 7, 3, f, c");
         settingsComponents.put(DBURL_FIELD, textURL);
-        addWithLabel(jContentPane, textUserName, _("Username:"), "3, 5, 5, 5, f, c");
+        Utils.addWithLabelHorz(jContentPane, textUserName, _("Username:"), "3, 5, 5, 5, f, c");
         settingsComponents.put(USER_FIELD, textUserName);
         jContentPane.add(buttonTest, "7, 5");
-        addWithLabel(jContentPane, textPassword, _("Password:"), "3, 7, 5, 7, f, c");
+        Utils.addWithLabelHorz(jContentPane, textPassword, _("Password:"), "3, 7, 5, 7, f, c");
         settingsComponents.put(PASSWORD_FIELD, textPassword);
         jContentPane.add(checkAskForPassword, "7, 7");
         settingsComponents.put(ASKFORPWD_FIELD, checkAskForPassword);
-        //addWithLabel(jContentPane, textQuery, _("Query:"), "3, 9, 7, 9, f, c");
-        addWithLabel(jContentPane, comboTable, _("Table:"), "3, 9, 7, 9, f, c");
+        //Utils.addWithLabelHorz(jContentPane, textQuery, _("Query:"), "3, 9, 7, 9, f, c");
+        Utils.addWithLabelHorz(jContentPane, comboTable, _("Table:"), "3, 9, 7, 9, f, c");
         settingsComponents.put(TABLE_FIELD, comboTable);
         
         jContentPane.add(new JSeparator(JSeparator.HORIZONTAL), new TableLayoutConstraints(0, 11 + addRowCount, 8, 11 + addRowCount));

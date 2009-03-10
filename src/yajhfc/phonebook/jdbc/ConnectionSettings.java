@@ -30,6 +30,7 @@ public class ConnectionSettings extends GeneralConnectionSettings {
     public String table = "";
     public boolean readOnly = false;
     public String displayCaption = "";
+    public boolean allowDistLists = true;
     
     public ConnectionSettings(String serialized) {
         super();

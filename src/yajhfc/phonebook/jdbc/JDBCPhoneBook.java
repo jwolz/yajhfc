@@ -40,11 +40,13 @@ import javax.swing.JOptionPane;
 
 import yajhfc.Utils;
 import yajhfc.phonebook.AbstractConnectionSettings;
+import yajhfc.phonebook.DistributionList;
 import yajhfc.phonebook.GeneralConnectionSettings;
 import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.PhoneBook;
 import yajhfc.phonebook.PhoneBookEntry;
 import yajhfc.phonebook.PhoneBookException;
+import yajhfc.phonebook.WrapperDistributionList;
 import yajhfc.phonebook.GeneralConnectionSettings.PBEntrySettingsField;
 import yajhfc.plugin.PluginManager;
 import yajhfc.util.ExceptionDialog;
@@ -55,9 +57,21 @@ public class JDBCPhoneBook extends PhoneBook {
     
     ConnectionSettings settings;
     boolean open = false;
-    ArrayList<JDBCPhoneBookEntry> items = new ArrayList<JDBCPhoneBookEntry>();
-    ArrayList<JDBCPhoneBookEntry> deleted_items = new ArrayList<JDBCPhoneBookEntry>();
-    ArrayList<DBKey> rowId = new ArrayList<DBKey>();
+    /**
+     * The actual items. <br>
+     * <b><em>Note:</em></b> Be careful to keep this List and the corresponding
+     * itemsView List synchronized (i.e. corresponding items are at the same position)
+     */
+    List<JDBCPhoneBookEntry> items = new ArrayList<JDBCPhoneBookEntry>();
+    List<JDBCPhoneBookEntry> deleted_items = new ArrayList<JDBCPhoneBookEntry>();
+    /**
+     * A "view" containing either a {@link JDBCPhoneBookEntry} or a {@link WrapperDistributionList} <br>
+     * <b><em>Note:</em></b> Be careful to keep this List and the corresponding
+     * items List synchronized (i.e. corresponding items are at the same position).
+     */
+    List<PhoneBookEntry> itemsView = new ArrayList<PhoneBookEntry>();
+    
+    List<DBKey> rowId = new ArrayList<DBKey>();
     int[] maxLength = new int[PBEntryField.FIELD_COUNT];
     
     protected static final Map<String,ConnectionDialog.FieldMapEntry> fieldNameMap = new HashMap<String,ConnectionDialog.FieldMapEntry>(); 
@@ -76,8 +90,9 @@ public class JDBCPhoneBook extends PhoneBook {
 //        fieldNameMap.put("voiceNumber", new ConnectionDialog.FieldMapEntry(Utils._("Voice number:"),6));
 //        fieldNameMap.put("comment", new ConnectionDialog.FieldMapEntry(Utils._("Comments:"),7));
         
-        fieldNameMap.put("readOnly", new ConnectionDialog.FieldMapEntry(Utils._("Open as read only"),1,false,Boolean.class));
-        fieldNameMap.put("displayCaption", new ConnectionDialog.FieldMapEntry(Utils._("Phone book name to display:"),0,false,String.class));
+        fieldNameMap.put("readOnly", new ConnectionDialog.FieldMapEntry(Utils._("Open as read only"),0,false,Boolean.class));
+        fieldNameMap.put("displayCaption", new ConnectionDialog.FieldMapEntry(Utils._("Phone book name to display:"),2,false,String.class));
+        fieldNameMap.put("allowDistLists", new ConnectionDialog.FieldMapEntry(Utils._("Allow distribution list entries"),1,false,Boolean.class));
     }
     
     public static final String PB_Prefix = "JDBC";      // The prefix of this Phonebook type's descriptor
@@ -92,12 +107,25 @@ public class JDBCPhoneBook extends PhoneBook {
     @Override
     public PhoneBookEntry addNewEntry() {
         JDBCPhoneBookEntry pb = new JDBCPhoneBookEntry(this);
-        int pos = getInsertionPos(pb);
+        int pos = getInsertionPos(pb, itemsView);
         items.add(pos, pb);
+        itemsView.add(pos, pb);
         fireEntriesAdded(pos, pb);
         return pb;
     }
 
+    @Override
+    public DistributionList addDistributionList() {
+        JDBCPhoneBookEntry pb = new JDBCPhoneBookEntry(this);
+        WrapperDistributionList dl = new WrapperDistributionList(pb);
+        
+        int pos = getInsertionPos(dl, itemsView);
+        items.add(pos, pb);
+        itemsView.add(pos, dl);
+        fireEntriesAdded(pos, dl);
+        return dl;
+    }
+    
     @Override
     public String browseForPhoneBook() {
         ConnectionSettings cs = new ConnectionSettings(settings);
@@ -311,27 +339,23 @@ public class JDBCPhoneBook extends PhoneBook {
         
         deleted_items.clear();
         items.clear();
+        itemsView.clear();
         while (resultSet.next()) {
             JDBCPhoneBookEntry jPBE = new JDBCPhoneBookEntry(this);
             jPBE.readFromCurrentDataset(resultSet);
             items.add(jPBE);
+            if (WrapperDistributionList.isDistributionList(jPBE)) {
+                itemsView.add(new WrapperDistributionList(jPBE));
+            } else {
+                itemsView.add(jPBE);
+            }
         }
         resultSet.close();
         stmt.close();
         
         resort();
     }
-    
-    @Override
-    public boolean isOpen() {
-        return open;
-    }
-
-    @Override
-    public boolean isReadOnly() {
-        return settings.readOnly;
-    }
-    
+        
     protected void commitToDB() {
         if (isReadOnly())
             return;
@@ -421,8 +445,8 @@ public class JDBCPhoneBook extends PhoneBook {
         deleteStmt.close();
     }
     
-    private int getInsertionPos(PhoneBookEntry pbe) {
-        int res = Collections.binarySearch(items, pbe);
+    private static int getInsertionPos(PhoneBookEntry pbe, List<PhoneBookEntry> targetList) {
+        int res = Collections.binarySearch(targetList, pbe);
         if (res >= 0) // Element found?
             return res + 1;
         else
@@ -432,8 +456,13 @@ public class JDBCPhoneBook extends PhoneBook {
     void updatePosition(JDBCPhoneBookEntry entry) {
         int oldpos = Utils.identityIndexOf(items, entry);
         items.remove(oldpos);
-        int pos = getInsertionPos(entry);
+        PhoneBookEntry oldView = itemsView.remove(oldpos);
+        
+        int pos = getInsertionPos(oldView, itemsView);
+        
         items.add(pos, entry);
+        itemsView.add(pos, oldView);
+        
         fireEntriesChanged(eventObjectForInterval(oldpos, pos));
     }
     
@@ -441,6 +470,7 @@ public class JDBCPhoneBook extends PhoneBook {
         int pos = Utils.identityIndexOf(items, entry);
         if (pos >= 0) {
             items.remove(pos);
+            itemsView.remove(pos);
         
             fireEntriesRemoved(pos, entry);
         }
@@ -448,10 +478,12 @@ public class JDBCPhoneBook extends PhoneBook {
     
     @Override
     public void resort() {
-        Collections.sort(items);
+        Collections.sort(itemsView);
+        for (int i = 0; i < itemsView.size(); i++) {
+            items.set(i, toJDBCEntry(itemsView.get(i)));
+        }
     }
 
-    private List<PhoneBookEntry> itemsView = Collections.<PhoneBookEntry>unmodifiableList(items);
     @Override
     public List<PhoneBookEntry> getEntries() {
         return itemsView;
@@ -472,6 +504,21 @@ public class JDBCPhoneBook extends PhoneBook {
     }
     
     @Override
+    public boolean isOpen() {
+        return open;
+    }
+
+    @Override
+    public boolean isReadOnly() {
+        return settings.readOnly;
+    }
+    
+    @Override
+    public boolean supportsDistributionLists() {
+        return settings.allowDistLists && WrapperDistributionList.areDistributionListsSupported(this);
+    }
+    
+    @Override
     public boolean isFieldAvailable(PBEntryField field) {
         return (!ConnectionSettings.isNoField(settings.getMappingFor(field)));
     }
@@ -479,6 +526,21 @@ public class JDBCPhoneBook extends PhoneBook {
     @Override
     public int getMaxLength(PBEntryField field) {
         return maxLength[field.ordinal()];
+    }
+    
+    /**
+     * Returns the corresponding {@link JDBCPhoneBookEntry} for the specified entry
+     * (which may be either a JDBCPhoneBookEntry or a WrapperDistributionList wrapping
+     *  a JDBCPhoneBookEntry)
+     * @param entry
+     * @return
+     */
+    private static JDBCPhoneBookEntry toJDBCEntry(PhoneBookEntry entry) {
+        if (entry instanceof WrapperDistributionList) {
+            return (JDBCPhoneBookEntry)((WrapperDistributionList)entry).getWrappedEntry();
+        } else {
+            return (JDBCPhoneBookEntry)entry;
+        }
     }
     
     protected static class DBKey {

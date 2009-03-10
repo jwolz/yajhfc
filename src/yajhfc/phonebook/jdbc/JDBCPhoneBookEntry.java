@@ -64,7 +64,7 @@ public class JDBCPhoneBookEntry extends SimplePhoneBookEntry {
         
         readKeys(rs);
         entryStatus = ENTRY_UNCHANGED;
-        dirty = false;
+        setDirty(false);
     }
     private void readKeys(ResultSet rs) throws SQLException {
         for (int i = 0; i < parent.rowId.size(); i++) {
@@ -122,19 +122,19 @@ public class JDBCPhoneBookEntry extends SimplePhoneBookEntry {
     
     @Override
     public void updateDisplay() {
-        if (dirty) {
+        if (isDirty()) {
             parent.updatePosition(this);
         }
     }
     
     @Override
     public void commit() {
-        if (dirty) {
+        if (isDirty()) {
             parent.updatePosition(this);
 
             if (entryStatus == ENTRY_UNCHANGED)
                 entryStatus = ENTRY_CHANGED;
-            dirty = false;
+            setDirty(false);
         }
     }
 

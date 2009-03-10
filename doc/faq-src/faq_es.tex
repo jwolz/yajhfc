@@ -207,6 +207,13 @@ Descripción de los argumentos:
                                         enviar).
     --noclose                           No cerrar YajHFC después de enviar el
                                         fax.
+    --no-wait                           No esperar a que el usuario cierre la
+                                        ventana de envío. Si se llama a YajHFC
+                                        varias veces antes de que el usuario
+                                        cierre la ventana de envío, se añaden
+                                        los documentos enviados a la lista de
+                                        archivos. Esta opción implica
+                                        --background.
 -T, --showtab=0|R|1|S|2|T               Define la pestaña para mostrar al
                                         inicio. Especifique 0 o R para la
                                         pestaña de "Recibidos", 1 o S para la

@@ -1,4 +1,4 @@
-package yajhfc.phonebook;
+package yajhfc.phonebook.xml;
 /*
  * YAJHFC - Yet another Java Hylafax client
  * Copyright (C) 2006 Jonas Wolz
@@ -27,20 +27,24 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class XMLPhoneBookEntry extends SimplePhoneBookEntry {
-    private static final Logger log = Logger.getLogger(XMLPhoneBookEntry.class.getName());
+import yajhfc.phonebook.PBEntryField;
+import yajhfc.phonebook.PhoneBook;
+import yajhfc.phonebook.SimplePhoneBookEntry;
+
+public class SingleXMLPhoneBookEntry extends SimplePhoneBookEntry implements XMLPhoneBookEntry {
+    private static final Logger log = Logger.getLogger(SingleXMLPhoneBookEntry.class.getName());
         
     private XMLPhoneBook parent;
     
-    public XMLPhoneBookEntry(XMLPhoneBook parent) {
+    public SingleXMLPhoneBookEntry(XMLPhoneBook parent) {
         this.parent = parent;
     }
     
     @Override
     public void commit() {
-        if (dirty) {
+        if (isDirty()) {
             parent.writeEntry(this);
-            dirty = false;
+            setDirty(false);
         }
     }
     
@@ -84,7 +88,7 @@ public class XMLPhoneBookEntry extends SimplePhoneBookEntry {
                 }
             }
         }
-        dirty = false;
+        setDirty(false);
     }
 
     @Override

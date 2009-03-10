@@ -21,6 +21,7 @@ package yajhfc.phonebook;
 import java.awt.Dialog;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import yajhfc.Utils;
@@ -29,6 +30,7 @@ import yajhfc.phonebook.convrules.ChoiceRule;
 import yajhfc.phonebook.convrules.ConcatRule;
 import yajhfc.phonebook.convrules.EntryToStringRule;
 import yajhfc.phonebook.convrules.NameRule;
+import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 
 /**
  * Abstract class describing a phone book
@@ -43,7 +45,7 @@ import yajhfc.phonebook.convrules.NameRule;
  * public static String PB_Description; // A user-readable description of this Phonebook type
  * */
 
-public abstract class PhoneBook {
+public abstract class PhoneBook implements PhoneBookEntryList {
 
     public static final EntryToStringRule DEFAULT_TOSTRINGRULE = toStringRuleFromNameRule(NameRule.GIVENNAME_NAME);
     
@@ -63,11 +65,15 @@ public abstract class PhoneBook {
     /***
      * The dialog to be used as parent when a UI is shown.
      */
-    public Dialog parentDialog = null;
+    public final Dialog parentDialog;
     
     protected String strDescriptor;
     
-    protected List<PhoneBookEntry> lastFilterResult = null;
+    /**
+     * Field for internal use by the PhoneBookTreeModel to save the result of
+     * the last filtering operation
+     */
+    List<PhoneBookEntry> lastFilterResult = null;
     
     public String getDescriptor() {
         return strDescriptor;
@@ -137,7 +143,31 @@ public abstract class PhoneBook {
         return -1;
     }
     
+    /**
+     * Adds a new "normal" phone book entry
+     * @return
+     */
     public abstract PhoneBookEntry addNewEntry();
+    /**
+     * Adds a new distribution list
+     * @return the new distribution list or null if distribution lists are unsupported
+     */
+    public DistributionList addDistributionList() {
+        return null;
+    }
+    
+    public void addEntries(Collection<? extends PBEntryFieldContainer> items) {
+        for (PBEntryFieldContainer item : items) {
+            addNewEntry(item);
+        }
+    }
+    
+    public PhoneBookEntry addNewEntry(PBEntryFieldContainer item) {
+        PhoneBookEntry newEntry = addNewEntry();
+        newEntry.copyFrom(item);
+        newEntry.commit();
+        return newEntry;
+    }
     
 //    public int indexOf(PhoneBookEntry pbe) {
 //        for (int i = 0; i < getSize(); i++) {
@@ -178,20 +208,10 @@ public abstract class PhoneBook {
                     rv.add(entry);
                 }
             }
-            lastFilterResult = rv;
             return rv;
         } else {
-            lastFilterResult = null;
             return null;
         }
-    }
-    
-    /**
-     * Returns the result of the last filter application or null if no such result exists.
-     * @return
-     */
-    public List<PhoneBookEntry> getLastFilterResult() {
-        return lastFilterResult;
     }
     
     public void addPhonebookEventListener(PhonebookEventListener pel) {
@@ -308,6 +328,14 @@ public abstract class PhoneBook {
     }
     
     public boolean isReadOnly() {
+        return false;
+    }
+    
+    /**
+     * Returns true if this phone book supports the addition of distribution lists.
+     * @return
+     */
+    public boolean supportsDistributionLists() {
         return false;
     }
     

@@ -185,24 +185,12 @@ public class CoverPanel extends JPanel implements OptionsPage {
                         col  = 1;
                         row += 2;
                     }
-                    addWithLabel(panelCover, textField, field.getDescription()+":", layout);
+                    Utils.addWithLabel(panelCover, textField, field.getDescription()+":", layout);
                 }
             }
             
         }
         return panelCover;
-    }
-
-    
-    private void addWithLabel(JPanel pane, JComponent comp, String text, TableLayoutConstraints c) {
-        pane.add(comp, c);
-        
-        JLabel lbl = new JLabel(text);
-        lbl.setLabelFor(comp);
-        c.row1 = c.row2 = c.row1 - 1;
-        c.vAlign = TableLayoutConstraints.BOTTOM;
-        c.hAlign = TableLayoutConstraints.LEFT;
-        pane.add(lbl, c);
     }
 
     public void loadSettings(FaxOptions foEdit) {

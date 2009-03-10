@@ -19,8 +19,8 @@ package yajhfc.options;
  */
 
 import static yajhfc.Utils._;
+import static yajhfc.Utils.addWithLabel;
 import info.clearthought.layout.TableLayout;
-import info.clearthought.layout.TableLayoutConstraints;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -132,6 +132,7 @@ public class OptionsWin extends JDialog {
     JComboBox comboTZone, comboNotify, comboPaperSize, comboResolution; //, comboNewFaxAction;
     JComboBox comboLang, comboLookAndFeel, comboModem, comboSendWinStyle;
     JCheckBox checkPasv, checkPCLBug, checkAskPassword, checkAskAdminPassword, checkAskUsername;
+    JCheckBox checkArchiveSentFaxes;
     JSpinner spinMaxTry, spinMaxDial, spinOffset, spinKillTime, spinSocketTimeout;
     JComboBox comboDateFormat, comboTimeFormat;
     
@@ -246,6 +247,7 @@ public class OptionsWin extends JDialog {
         checkMinimizeToTray.setSelected(foEdit.minimizeToTray);
         checkMinimizeToTrayOnMainWinClose.setSelected(foEdit.minimizeToTrayOnMainWinClose);
         checkAutoCheckForUpdate.setSelected(foEdit.automaticallyCheckForUpdate);
+        checkArchiveSentFaxes.setSelected(foEdit.archiveSentFaxes);
 
         checkNewFax_Beep.setSelected((foEdit.newFaxAction & FaxOptions.NEWFAX_BEEP) != 0);
         checkNewFax_ToFront.setSelected((foEdit.newFaxAction & FaxOptions.NEWFAX_TOFRONT) != 0);
@@ -802,7 +804,7 @@ public class OptionsWin extends JDialog {
     
     private JPanel getPanelSend() {
         if (panelSend == null) {
-            final int rowCount = 12;
+            final int rowCount = 13;
             double[][] tablelay = {
                     {border,  0.5, border, TableLayout.FILL, border},
                     new double[rowCount]
@@ -833,6 +835,7 @@ public class OptionsWin extends JDialog {
             spinMaxTry = new JSpinner(new SpinnerNumberModel(6, 1, 100, 1));
             spinKillTime= new JSpinner(new SpinnerNumberModel(180, 0, 2000, 15));
             
+            checkArchiveSentFaxes = new JCheckBox(_("Archive sent fax jobs"));
             
             addWithLabel(panelSend, textNotifyAddress, _("E-mail address for notifications:"), "1, 2, 3, 2, f, c");
             addWithLabel(panelSend, comboNotify, _("Notify when:"), "1, 4, 1, 4, f, c");
@@ -843,28 +846,9 @@ public class OptionsWin extends JDialog {
             addWithLabel(panelSend, spinKillTime, _("Cancel job after (minutes):"), "3, 8, f, c");
             addWithLabel(panelSend, spinMaxDial, _("Maximum dials:"), "1, 10, f, c");
             addWithLabel(panelSend, spinMaxTry, _("Maximum tries:"), "3, 10, f, c");    
-            
+            panelSend.add(checkArchiveSentFaxes, "1,11,f,c");
         }
         return panelSend;
-    }
-    
-
-    
-
-    
-    private JLabel addWithLabel(JPanel pane, JComponent comp, String text, String layout) {
-        TableLayoutConstraints c = new TableLayoutConstraints(layout);
-        
-        pane.add(comp, c);
-        
-        JLabel lbl = new JLabel(text);
-        lbl.setLabelFor(comp);
-        c.row1 = c.row2 = c.row1 - 1;
-        c.vAlign = TableLayoutConstraints.BOTTOM;
-        c.hAlign = TableLayoutConstraints.LEFT;
-        pane.add(lbl, c); 
-        
-        return lbl;
     }
     
     private fmtEditor<RecvFormat> getPanelRecvFmt() {
@@ -946,8 +930,7 @@ public class OptionsWin extends JDialog {
      * Refreshes the Look&Feel for the complete application
      */
     static void refreshLF() {
-        Frame[] frames = Frame.getFrames();
-        for (Frame f: frames) {
+        for (Frame f: Frame.getFrames()) {
             //refreshLF(f);
             SwingUtilities.updateComponentTreeUI(f);
         }
@@ -1059,6 +1042,7 @@ public class OptionsWin extends JDialog {
             foEdit.minimizeToTray = checkMinimizeToTray.isSelected();
             foEdit.minimizeToTrayOnMainWinClose = checkMinimizeToTrayOnMainWinClose.isSelected();
             foEdit.automaticallyCheckForUpdate = checkAutoCheckForUpdate.isSelected();
+            foEdit.archiveSentFaxes = checkArchiveSentFaxes.isSelected();
             
             int val = 0;
             if (checkNewFax_Beep.isSelected())

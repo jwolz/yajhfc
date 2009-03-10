@@ -80,6 +80,7 @@ public class SendController {
     protected int killTime = Utils.getFaxOptions().killTime;
     // null = "NOW"
     protected Date sendTime = null;
+    protected boolean archiveJob = Utils.getFaxOptions().archiveSentFaxes;
     
     protected ProgressUI progressMonitor = null;
     
@@ -357,6 +358,10 @@ public class SendController {
 
                             j.setProperty("MODEM", modem);
 
+                            if (archiveJob) {
+                                j.setProperty("doneop", "archive");
+                            }
+                            
                             if (pollMode) 
                                 j.setProperty("POLL", "\"\" \"\"");
                             else {               
@@ -584,7 +589,15 @@ public class SendController {
     public void setSendTime(Date sendTime) {
         this.sendTime = sendTime;
     }
-    
+
+    public boolean isArchiveJob() {
+        return archiveJob;
+    }
+
+    public void setArchiveJob(boolean archiveJob) {
+        this.archiveJob = archiveJob;
+    }
+
     public void addSendControllerListener(SendControllerListener l) {
         listeners.add(l);
     }
