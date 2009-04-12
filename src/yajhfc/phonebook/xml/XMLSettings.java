@@ -34,7 +34,7 @@ public class XMLSettings extends AbstractConnectionSettings {
     
     @Override
     public void loadFromString(String input) {
-        if (!(input.contains("fileName=") && input.contains("caption="))) { //Compatibility
+        if (!input.contains("fileName=")) { //Compatibility
             fileName = input;
             if (PhoneBookFactory.getDefaultPhonebook().equals(new File(fileName))) {
                 caption = PhoneBookFactory.DEFAULT_PHONEBOOK_NAME;

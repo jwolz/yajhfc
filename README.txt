@@ -66,9 +66,14 @@ YajHFC was originally written as a first more complicated
 CHANGES
 -------
 
+0.4.1:
+- Support for distribution lists in the phone book
+- Support for CSV phone books (for import/export)
+- Support to set the "archive flag" (doneop) for sent faxes
+
 0.4.0:
 - Greek translation added
-- Support to manually answer a phone call
+- Support to manually answer a phone call (like faxanswer)
 - Update checker
 - Support for archive directory
 - Support to view and send faxes as a single file (in PDF, TIFF or PS format)

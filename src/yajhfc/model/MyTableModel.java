@@ -39,8 +39,10 @@ public abstract class MyTableModel<T extends FmtItem> extends AbstractTableModel
     protected Filter<YajJob<T>,T> jobFilter = null;
     protected int rowCount = 0;
     /**
-     * visibleJobs: Only the visible Jobs (after jobFilter has been applied).
-     * n.b.: if jobFilter == null then visibleJobs == jobs
+     * visibleJobs: Only the visible Jobs (after jobFilter has been applied). <br>
+     * n.b.: if jobFilter == null then visibleJobs == jobs <br>
+     * If a filter is applied, only the rowCount first elements of visibleJobs are valid
+     * (i.e. visibleJobs.length > rowCount is possible)
      */
     protected YajJob<T>[] visibleJobs;
     

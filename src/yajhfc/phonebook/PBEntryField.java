@@ -82,6 +82,9 @@ public enum PBEntryField implements FilterKey {
         return String.class;
     }
     
+    /**
+     * The number of fields. Equals values().length, but is more efficient
+     */
     public static final int FIELD_COUNT = values().length;
     
     public static final FilterKeyList<PBEntryField> filterKeyList = new FilterKeyList<PBEntryField>() {

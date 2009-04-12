@@ -78,4 +78,15 @@ public class ComparableFilter<V extends FilterableObject, K extends FilterKey> i
     public boolean validate(FilterKeyList<K> columns) {
         return columns.containsKey(column);
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder res = new StringBuilder();
+        this.toString(res);
+        return res.toString();
+    }
+    
+    public void toString(StringBuilder appendTo) {
+        appendTo.append(column).append(' ').append(operator.getShortSymbol()).append(' ').append(compareValue);
+    }
 }

@@ -72,7 +72,7 @@ public class LDAPPhoneBook extends PhoneBook {
     }
 
     @Override
-    public String browseForPhoneBook() {
+    public String browseForPhoneBook(boolean exportMode) {
         ConnectionDialog cDlg = new ConnectionDialog(parentDialog);
         LDAPSettings cs = new LDAPSettings(settings);
         if (cDlg.browseForPhonebook(cs))

@@ -80,8 +80,8 @@ public class UnReadMyTableModel extends MyTableModel<RecvFormat> implements Read
             return 0;
         
         int numUnread = 0;
-        for (YajJob<RecvFormat> job : visibleJobs) {
-            if (!((RecvYajJob)job).isRead()) {
+        for (int i = 0; i < rowCount; i++) {
+            if (!((RecvYajJob)visibleJobs[i]).isRead()) {
                 numUnread++;
             }
         }

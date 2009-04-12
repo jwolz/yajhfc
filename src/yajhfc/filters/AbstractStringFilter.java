@@ -79,4 +79,17 @@ public abstract class AbstractStringFilter<V extends FilterableObject, K extends
         return operator;
     }
     
+    @Override
+    public String toString() {
+        StringBuilder res = new StringBuilder();
+        this.toString(res);
+        return res.toString();
+    }
+    
+    protected abstract void fieldToString(StringBuilder appendTo);
+    
+    public void toString(StringBuilder appendTo) {
+        fieldToString(appendTo);
+        appendTo.append(' ').append(operator).append(" \"").append(compareValue).append('\"');
+    }
 }

@@ -21,21 +21,27 @@ import yajhfc.Utils;
 
 
 public enum ComparableFilterOperator {
-    EQUAL(Utils._("equals")),
-    NOTEQUAL(Utils._("not equals")),
-    LESS(Utils._("less than")),
-    GREATER(Utils._("greater than")),
-    LESSEQUAL(Utils._("less or equal")),
-    GREATEREQUAL(Utils._("greater or equal"));
+    EQUAL(Utils._("equals"), "="),
+    NOTEQUAL(Utils._("not equals"), "≠"),
+    LESS(Utils._("less than"), "<"),
+    GREATER(Utils._("greater than"), ">"),
+    LESSEQUAL(Utils._("less or equal"), "≤"),
+    GREATEREQUAL(Utils._("greater or equal"), "≥");
     
     private final String description;
+    private final String shortSymbol;
     
-    ComparableFilterOperator(String description) {
+    ComparableFilterOperator(String description, String shortSymbol) {
         this.description = description;
+        this.shortSymbol = shortSymbol;
     }
     
     public String description() {
         return description;
+    }
+    
+    public String getShortSymbol() {
+        return shortSymbol;
     }
     
     @Override

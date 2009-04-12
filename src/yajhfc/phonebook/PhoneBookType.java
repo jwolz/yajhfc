@@ -31,6 +31,15 @@ public class PhoneBookType {
         return targetClass;
     }
     
+    public boolean canExport() {
+        try {
+            Field f = targetClass.getField("PB_CanExport");
+            return (Boolean)f.get(null);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
     public String getPrefix() {
         try {
             Field f = targetClass.getField("PB_Prefix");

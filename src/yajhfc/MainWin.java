@@ -425,7 +425,9 @@ public final class MainWin extends JFrame {
                             stepProgressBar(step);
                         }
                         updateNote(Utils._("Launching viewer"));
-                        MultiFileConverter.viewMultipleFiles(downloadedFiles, myopts.paperSize, false);
+                        if (downloadedFiles.size() > 0) {
+                            MultiFileConverter.viewMultipleFiles(downloadedFiles, myopts.paperSize, false);
+                        }
                         stepProgressBar(100);
                     }
                     if (yj instanceof RecvYajJob) {
@@ -1295,6 +1297,7 @@ public final class MainWin extends JFrame {
         
         tablePanel.showIndeterminateProgress(_("Fetching fax list..."));
         
+        tableRefresher.hideProgress = true;
         utmrTable.schedule(new TimerTaskWrapper(tableRefresher), 0);
     }
     
@@ -1491,7 +1494,7 @@ public final class MainWin extends JFrame {
                 doLogout();
                 PersistentReadState.getCurrent().persistReadState();
                 
-                menuViewListener.saveToOptions();
+                menuViewListener.saveToOptions(myopts);
                 myopts.mainwinLastTab = getTabMain().getSelectedIndex();
                 myopts.mainWinBounds = getBounds();
                 
@@ -1512,7 +1515,7 @@ public final class MainWin extends JFrame {
         
         utmrTable = new java.util.Timer("RefreshTimer", true);
         reloadTableColumnSettings();
-        menuViewListener.loadFromOptions();
+        menuViewListener.loadFromOptions(myopts);
         
         if (myopts.mainWinBounds != null)
             this.setBounds(myopts.mainWinBounds);
@@ -2156,11 +2159,11 @@ public final class MainWin extends JFrame {
             }
         }
         
-        public void loadFromOptions() {
-            loadSaveString(0, myopts.recvFilter);
-            loadSaveString(1, myopts.sentFilter);
-            loadSaveString(2, myopts.sendingFilter);
-            loadSaveString(3, myopts.archiveFilter);
+        public void loadFromOptions(FaxOptions opts) {
+            loadSaveString(0, opts.recvFilter);
+            loadSaveString(1, opts.sentFilter);
+            loadSaveString(2, opts.sendingFilter);
+            loadSaveString(3, opts.archiveFilter);
             reConnected();
         }
         
@@ -2176,11 +2179,11 @@ public final class MainWin extends JFrame {
                 return null;
         }
         
-        public void saveToOptions() {
-            myopts.recvFilter = getSaveString(0);
-            myopts.sentFilter = getSaveString(1);
-            myopts.sendingFilter = getSaveString(2);
-            myopts.archiveFilter = getSaveString(3);
+        public void saveToOptions(FaxOptions opts) {
+            opts.recvFilter = getSaveString(0);
+            opts.sentFilter = getSaveString(1);
+            opts.sendingFilter = getSaveString(2);
+            opts.archiveFilter = getSaveString(3);
         }
     }
 
@@ -2301,6 +2304,10 @@ public final class MainWin extends JFrame {
         long lastArchiveModification = -1;
         HylaDirAccessor hyda;
         boolean cancelled = false;
+        /**
+         * Whether to hide the progress panel on the next run
+         */
+        public boolean hideProgress = false;
         
         @Override
         public boolean cancel() {
@@ -2448,7 +2455,7 @@ public final class MainWin extends JFrame {
                     log.fine("archive complete");
                 }
 
-                if (tablePanel.isShowingProgress()) {
+                if (hideProgress && tablePanel.isShowingProgress()) {
                     log.fine("Hiding progress...");
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
@@ -2460,6 +2467,7 @@ public final class MainWin extends JFrame {
                             log.fine("Progress hidden");
                         }
                     });
+                    hideProgress = false;
                 }
                 if (clientManager != null)
                     clientManager.endServerTransaction();
@@ -2541,6 +2549,7 @@ public final class MainWin extends JFrame {
                 statRefresher = new StatusRefresher();
 
                 tableRefresher = new TableRefresher(myopts.sentfmt.getFormatString(), myopts.sendingfmt.getFormatString());
+                tableRefresher.hideProgress = true;
                 
                 // Read the read/unread status *after* the table contents has been set 
 

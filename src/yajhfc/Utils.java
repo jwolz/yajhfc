@@ -68,7 +68,7 @@ public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2009 by Jonas Wolz";
-    public static final String AppVersion = "0.4.1alpha1";
+    public static final String AppVersion = "0.4.1alpha4";
     public static final String AuthorName = "Jonas Wolz";
     public static final String AuthorEMail = "jwolz@freenet.de";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
@@ -201,7 +201,12 @@ public final class Utils {
             }
             if (utilURL.getProtocol().equals("file")) {
                 try {
-                    applicationDir = (new File(utilURL.toURI())).getParentFile();
+                    URI uri = utilURL.toURI();
+                    if (IS_WINDOWS && uri.getAuthority() != null) {
+                        // Work around a JDK bug with UNC paths
+                        uri = new URI("file", null, "////" + uri.getAuthority() + '/' + uri.getPath(), null); 
+                    }
+                    applicationDir = (new File(uri)).getParentFile();
                 } catch (URISyntaxException e) {
                     applicationDir = new File(".");
                     log.log(Level.SEVERE, "Application directory not found, url was: " + Utils.class.getResource("Utils.class"), e);
@@ -737,7 +742,7 @@ public final class Utils {
      */
     public static String shortenFileNameForDisplay(String fileName, int desiredLen) {
         if (fileName.length() > desiredLen) {
-            return "..." + fileName.substring(fileName.length() - desiredLen + 3);
+            return fileName.substring(0, 3) + "..." + fileName.substring(fileName.length() - desiredLen + 6); // 6 = 3 + "...".length()
         } else {
             return fileName;
         }
@@ -819,33 +824,45 @@ public final class Utils {
         return null;
     }
 
+    private static String systemViewer = "";
     /**
      * Returns the command line of the default System file viewer or null
      * if it cannot be determined.
      * @return
      */
     public static String getSystemViewerCommandLine() {
-        if (Utils.IS_WINDOWS) {
-            String startCmd = System.getenv("COMSPEC");
-            if (startCmd == null) startCmd = "COMMAND";
-            startCmd += " /C start \"Viewer\" \"%s\"";
+        if ("".equals(systemViewer)) {
+            if (Utils.IS_WINDOWS) {
+                String startCmd = System.getenv("COMSPEC");
+                if (startCmd == null) startCmd = "COMMAND";
+                startCmd += " /C start \"Viewer\" \"%s\"";
 
-            return startCmd;
-        } else if (System.getProperty("os.name").startsWith("Mac OS X")) {
-            return "open \"%s\"";
-        } else {
-            String kde = System.getenv("KDE_FULL_SESSION");
-            if (kde != null && kde.length() > 0) {
-                return "kfmclient exec \"%s\"";
-            } else {
-                String gnome = System.getenv("GNOME_DESKTOP_SESSION_ID");
-                if (gnome != null && gnome.length() > 0) {
-                    return "gnome-open \"%s\"";
+                systemViewer = startCmd;
+            } else if (System.getProperty("os.name").startsWith("Mac OS X")) {
+                systemViewer = "open \"%s\"";
+            } else { // Assume Unix
+                String kde = System.getenv("KDE_FULL_SESSION");
+                if (kde != null && kde.length() > 0) {
+                    systemViewer = "kfmclient exec \"%s\"";
                 } else {
-                    return null;
+                    String gnome = System.getenv("GNOME_DESKTOP_SESSION_ID");
+                    if (gnome != null && gnome.length() > 0) {
+                        systemViewer = "gnome-open \"%s\"";
+                    } else {
+                        if (searchExecutableInPath("exo-open") != null) {
+                            systemViewer = "exo-open \"%s\"";
+                        } else if (searchExecutableInPath("gnome-open") != null) {
+                            systemViewer = "gnome-open \"%s\"";
+                        } else if (searchExecutableInPath("kfmclient") != null) {
+                            systemViewer = "kfmclient exec \"%s\"";
+                        } else {
+                            systemViewer = null;
+                        }
+                    }
                 }
             }
         }
+        return systemViewer;
     }
     
     public static void startViewer(String viewerCommandLine, URI uri) throws IOException {

@@ -33,4 +33,8 @@ public class OrFilter<V extends FilterableObject, K extends FilterKey> extends A
         return retVal;
     }
 
+    @Override
+    protected String getToStringSymbol() {
+        return "OR";
+    }
 }

@@ -116,6 +116,9 @@ public class JDBCPhoneBook extends PhoneBook {
 
     @Override
     public DistributionList addDistributionList() {
+        if (!settings.allowDistLists) 
+            throw new UnsupportedOperationException("No distribution lists allowed.");
+        
         JDBCPhoneBookEntry pb = new JDBCPhoneBookEntry(this);
         WrapperDistributionList dl = new WrapperDistributionList(pb);
         
@@ -127,7 +130,7 @@ public class JDBCPhoneBook extends PhoneBook {
     }
     
     @Override
-    public String browseForPhoneBook() {
+    public String browseForPhoneBook(boolean exportMode) {
         ConnectionSettings cs = new ConnectionSettings(settings);
         ConnectionDialog cDlg = new ConnectionDialog(parentDialog, Utils._("New JDBC phone book"),
                 Utils._("Please select which database fields correspond to the phone book entry fields of YajHFC:"),
