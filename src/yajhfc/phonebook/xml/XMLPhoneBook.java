@@ -70,11 +70,13 @@ public class XMLPhoneBook extends PhoneBook {
     public static final String PB_Prefix = "XML";      // The prefix of this Phonebook type's descriptor
     public static final String PB_DisplayName = Utils._("XML phone book"); // A user-readable name for this Phonebook type
     public static final String PB_Description = Utils._("A phone book saving its entries as a XML file."); // A user-readable description of this Phonebook type
+    public static final boolean PB_CanExport = true;   // Can the phone book used to export entries?
     
     private ArrayList<XMLPhoneBookEntry> list;
     private XMLSettings settings;
     private boolean isOpened = false;
     private boolean wasChanged = false;
+    protected final boolean allowDistLists;
     
     protected static DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY;
     protected static TransformerFactory TRANSFORMER_FACTORY;
@@ -114,6 +116,9 @@ public class XMLPhoneBook extends PhoneBook {
 
     @Override
     public DistributionList addDistributionList() {
+        if (!allowDistLists) 
+            throw new UnsupportedOperationException("No distribution lists allowed.");
+        
         XMLDistributionList pb = new XMLDistributionList(this);
         addEntryGeneral(pb);
         return pb;
@@ -152,8 +157,8 @@ public class XMLPhoneBook extends PhoneBook {
     }
 
     @Override
-    public String browseForPhoneBook() {
-        XMLSettings newSettings = new PBBrowser(settings).browseForPhoneBook(parentDialog);
+    public String browseForPhoneBook(boolean exportMode) {
+        XMLSettings newSettings = new PBBrowser(settings, exportMode).browseForPhoneBook(parentDialog);
         if (newSettings == null) {
             return null;
         } else {
@@ -297,7 +302,7 @@ public class XMLPhoneBook extends PhoneBook {
     
     @Override
     public boolean supportsDistributionLists() {
-        return true;
+        return allowDistLists;
     }
     
     @Override
@@ -310,20 +315,28 @@ public class XMLPhoneBook extends PhoneBook {
         }
     }
     
-    public XMLPhoneBook(Dialog parent) {
+    public XMLPhoneBook(Dialog parent, boolean allowDistLists) {
         super(parent);
+        this.allowDistLists = allowDistLists;
         
         list = new ArrayList<XMLPhoneBookEntry>();
         itemsView = Collections.<PhoneBookEntry>unmodifiableList(list);
+    }
+    
+    public XMLPhoneBook(Dialog parent) {
+        this(parent, true);
     }
 
     static class PBBrowser extends SafeJFileChooser {
         
         private JTextField textCaption;
         private JPanel bottomPanel;
+        private final boolean exportMode;
         
-        public PBBrowser(XMLSettings settings) {
+        public PBBrowser(XMLSettings settings, boolean exportMode) {
             super();
+            
+            this.exportMode = exportMode;
             
             removeChoosableFileFilter(getAcceptAllFileFilter());
             ExampleFileFilter ff = new ExampleFileFilter("phonebook", Utils._("Phone book files"));
@@ -331,24 +344,25 @@ public class XMLPhoneBook extends PhoneBook {
             addChoosableFileFilter(getAcceptAllFileFilter());
             setFileFilter(ff);
             
-            
-            bottomPanel = new JPanel(false);
-            bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
-            bottomPanel.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createTitledBorder(Utils._("Phone book name to display:")),
-                    BorderFactory.createEmptyBorder(5, 10, 5, 10)));
-            
-//            JLabel captionLabel = new JLabel(Utils._("Phonebook name to display:"));
-//            captionLabel.setAlignmentX(JComponent.LEFT_ALIGNMENT);
-            
-            textCaption = new JTextField();
-            
-            //bottomPanel.add(captionLabel);
-            bottomPanel.add(textCaption);
-            
-            if (settings != null) {
-                setSelectedFile(new File(settings.fileName));
-                textCaption.setText(settings.caption);
+            if (!exportMode) {
+                bottomPanel = new JPanel(false);
+                bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
+                bottomPanel.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createTitledBorder(Utils._("Phone book name to display:")),
+                        BorderFactory.createEmptyBorder(5, 10, 5, 10)));
+
+                //            JLabel captionLabel = new JLabel(Utils._("Phonebook name to display:"));
+                //            captionLabel.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+
+                textCaption = new JTextField();
+
+                //bottomPanel.add(captionLabel);
+                bottomPanel.add(textCaption);
+
+                if (settings != null) {
+                    setSelectedFile(new File(settings.fileName));
+                    textCaption.setText(settings.caption);
+                }
             }
         }
         
@@ -356,10 +370,12 @@ public class XMLPhoneBook extends PhoneBook {
         protected JDialog createDialog(Component parent)
                 throws HeadlessException {
             JDialog dialog = super.createDialog(parent);
-            JPanel newContentPane = new JPanel(new BorderLayout(), false);
-            newContentPane.add(dialog.getContentPane(), BorderLayout.CENTER);
-            newContentPane.add(bottomPanel, BorderLayout.SOUTH);
-            dialog.setContentPane(newContentPane);
+            if (!exportMode) {
+                JPanel newContentPane = new JPanel(new BorderLayout(), false);
+                newContentPane.add(dialog.getContentPane(), BorderLayout.CENTER);
+                newContentPane.add(bottomPanel, BorderLayout.SOUTH);
+                dialog.setContentPane(newContentPane);
+            }
             return dialog;
         }
         
@@ -369,11 +385,13 @@ public class XMLPhoneBook extends PhoneBook {
          * @return
          */
         public XMLSettings browseForPhoneBook(Component parentDialog) {
-            if (showOpenDialog(parentDialog) == JFileChooser.APPROVE_OPTION) {
+            setDialogType(exportMode ? JFileChooser.SAVE_DIALOG : JFileChooser.OPEN_DIALOG);
+            if (showDialog(parentDialog, null) == JFileChooser.APPROVE_OPTION) {
                 XMLSettings settings = new XMLSettings();
                 settings.fileName = getSelectedFile().getAbsolutePath();
                 
-                settings.caption = textCaption.getText().trim();
+                if (textCaption != null)
+                    settings.caption = textCaption.getText().trim();
                 
                 return settings;
             } else {

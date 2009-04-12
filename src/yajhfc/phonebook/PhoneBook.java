@@ -150,15 +150,36 @@ public abstract class PhoneBook implements PhoneBookEntryList {
     public abstract PhoneBookEntry addNewEntry();
     /**
      * Adds a new distribution list
-     * @return the new distribution list or null if distribution lists are unsupported
+     * @return the new distribution list 
+     * @throws UnsupportedOperationException if no distribution lists are supported
      */
     public DistributionList addDistributionList() {
-        return null;
+        throw new UnsupportedOperationException("No distribution lists supported.");
+    }
+    
+    /**
+     * Adds a new distribution list with the specified entries and name
+     * @return the new distribution list or null if distribution lists are unsupported
+     */
+    public DistributionList addDistributionList(String name, Collection<? extends PBEntryFieldContainer> entries) {
+        DistributionList res = addDistributionList();
+        res.addEntries(entries);
+        res.setField(PBEntryField.Name, name);
+        return res;
     }
     
     public void addEntries(Collection<? extends PBEntryFieldContainer> items) {
         for (PBEntryFieldContainer item : items) {
-            addNewEntry(item);
+            if (item instanceof DistributionList) {
+                List<PhoneBookEntry> entryList = ((DistributionList)item).getEntries();
+                if (supportsDistributionLists()) {
+                    addDistributionList(item.getField(PBEntryField.Name), entryList);
+                } else {
+                    addEntries(entryList); // Resolve the distribution list
+                }
+            } else {
+                addNewEntry(item);
+            }
         }
     }
     
@@ -275,8 +296,9 @@ public abstract class PhoneBook implements PhoneBookEntryList {
     /**
      * Show dialog to select a new Phonebook.
      * Returns a descriptor if the user selected a valid one or null if user selects cancel
+     * @param exportMode 
      */
-    public abstract String browseForPhoneBook();
+    public abstract String browseForPhoneBook(boolean exportMode);
     
     public void open(String descriptor) throws PhoneBookException {
         int pos = descriptor.indexOf(':');

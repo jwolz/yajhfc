@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import yajhfc.Utils;
+import yajhfc.phonebook.csv.CSVPhoneBook;
 import yajhfc.phonebook.jdbc.JDBCPhoneBook;
 import yajhfc.phonebook.ldap.LDAPPhoneBook;
 import yajhfc.phonebook.xml.XMLPhoneBook;
@@ -38,6 +39,7 @@ public class PhoneBookFactory {
         PhonebookTypes.add(new PhoneBookType(XMLPhoneBook.class));
         PhonebookTypes.add(new PhoneBookType(JDBCPhoneBook.class));
         PhonebookTypes.add(new PhoneBookType(LDAPPhoneBook.class));
+        PhonebookTypes.add(new PhoneBookType(CSVPhoneBook.class));
     }
     
     public static PhoneBook instanceForDescriptor(String descriptor, Dialog parent) {

@@ -43,4 +43,16 @@ public interface Filter<V extends FilterableObject,K extends FilterKey> {
      * @return
      */
     public boolean validate(FilterKeyList<K> columns);
+    
+    /**
+     * Converts this Filter to a human readable String
+     * @return
+     */
+    public String toString();
+    
+    /**
+     * Appends a human readable String representation of this filter to the given StringBuilder
+     * @return
+     */
+    public void toString(StringBuilder appendTo);
 }

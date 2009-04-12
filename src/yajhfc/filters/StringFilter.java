@@ -54,4 +54,9 @@ public class StringFilter<V extends FilterableObject, K extends FilterKey> exten
     public boolean validate(FilterKeyList<K> columns) {
         return columns.containsKey(column);
     }
+    
+    @Override
+    protected void fieldToString(StringBuilder appendTo) {
+        appendTo.append(column);
+    }
 }

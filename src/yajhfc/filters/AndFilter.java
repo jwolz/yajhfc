@@ -68,4 +68,26 @@ public class AndFilter<V extends FilterableObject, K extends FilterKey> implemen
         }
         return (children.size() > 0);
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder res = new StringBuilder();
+        this.toString(res);
+        return res.toString();
+    }
+    
+    protected String getToStringSymbol() {
+        return "AND";
+    }
+    
+    public void toString(StringBuilder appendTo) {
+        for (int i = 0; i < children.size(); i++) {
+            appendTo.append('(');
+            children.get(i).toString(appendTo);
+            appendTo.append(')');
+            if (i < children.size() - 1) {
+                appendTo.append(' ').append(getToStringSymbol()).append(' ');
+            }
+        }
+    }
 }

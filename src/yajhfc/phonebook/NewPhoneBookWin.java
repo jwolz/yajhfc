@@ -105,7 +105,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     JTextField textDescriptor;
     JButton buttonBrowse;
     
-    JMenu pbMenu, importMenu, openMenu, entryMenu;
+    JMenu pbMenu, importMenu, openMenu, entryMenu, exportMenu;
     JPopupMenu treePopup;
     
     Action listRemoveAction, addEntryAction, removeEntryAction, searchEntryAction, selectAction;
@@ -275,7 +275,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     
     public void browseForPhonebook() {
         if (currentPhonebook != null) {
-            String newPB = currentPhonebook.browseForPhoneBook();
+            String newPB = currentPhonebook.browseForPhoneBook(false);
             if (newPB != null) {
                 //                closeCurrentPhoneBook();
                 //                addPhoneBook(newPB);
@@ -294,6 +294,8 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     }
     
     void closeAndSaveAllPhonebooks(final boolean disposeAfterClose) {
+        commitCurrentEdits();        
+        
         // Close phone books in a thread:
         ProgressWorker closeWorker = new ProgressWorker() {
             @Override
@@ -340,6 +342,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     
         entryMenu.setEnabled(browseOK);
         importMenu.setEnabled(writeOK);
+        exportMenu.setEnabled(selOK || havePB);
         
         listRemoveAction.setEnabled(havePB);
         buttonBrowse.setEnabled(havePB);
@@ -393,21 +396,44 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                 return;
             }
             
-            if (descriptor != null) 
+            if (descriptor != null) {
                 pb.open(descriptor); 
-            
-            currentPhonebook.addEntries(pb.getEntries());
-            
-            if (descriptor != null) // Phone book has been opened above...
+                currentPhonebook.addEntries(pb.getEntries());
                 pb.close();
-            
-            currentPhonebook.resort();
+                currentPhonebook.resort();
+            }
         } catch (PhoneBookException e) {
             if (!e.messageAlreadyDisplayed())
                 ExceptionDialog.showExceptionDialog(NewPhoneBookWin.this, Utils._("Error loading the phone book: "), e);
         }
     }
        
+    protected void exportToPhonebook(PhoneBook pb, String descriptor) {
+        try {
+            if (pb == null) {
+                pb = PhoneBookFactory.instanceForDescriptor(descriptor, NewPhoneBookWin.this);
+            }
+            if (pb == null) {
+                JOptionPane.showMessageDialog(NewPhoneBookWin.this, Utils._("Unsupported phone book format."), Utils._("Error"), JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            if (descriptor != null) {
+                pb.open(descriptor); 
+
+                if (selectedItems.size() > 0) { 
+                    pb.addEntries(selectedItems);
+                } else if (currentPhonebook != null) {
+                    pb.addEntries(currentPhonebook.getEntries());
+                }
+
+                pb.close();
+            }
+        } catch (PhoneBookException e) {
+            if (!e.messageAlreadyDisplayed())
+                ExceptionDialog.showExceptionDialog(NewPhoneBookWin.this, Utils._("Error loading the phone book: "), e);
+        }
+    }
     
     private JComponent createJContentPane() {
         JPanel contentPane = new JPanel(new BorderLayout());
@@ -484,9 +510,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                         return;
                     }
 
-                    if (selectedItems.size() == 1) {
-                        readFromTextFields(selectedItems.get(0), false);
-                    }
+                    commitCurrentEdits();
 
                     // Read out selection:
                     selectedItems.clear();
@@ -523,7 +547,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                         textDescriptor.setText(currentPhonebook.getDescriptor());
                         textDescriptor.setCaretPosition(0);
                     } else {
-                        textDescriptor.setText("<" + Utils._("Multiple phone books selected") + ">");
+                        textDescriptor.setText("<" + Utils._("Multiple or no phone books selected") + ">");
                     }
 
                     oldSelection = paths;
@@ -541,7 +565,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                 
                 @Override
                 protected Transferable createTransferable(JComponent c) {
-                    return new PBEntryTransferable(resolveDistributionLists(selectedItems));
+                    return new PBEntryTransferable(new ArrayList<PhoneBookEntry>(selectedItems));
                 }
                 
                 private Object getDropItem() {
@@ -646,8 +670,8 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             importMenu.setIcon(Utils.loadIcon("general/Import"));
             openMenu = new JMenu(Utils._("Add to list"));
             openMenu.setIcon(Utils.loadIcon("general/Open"));
-            /*JMenu saveAsMenu = new JMenu(Utils._("Save as"));
-            saveAsMenu.setIcon(Utils.loadIcon("general/SaveAs"));*/
+            exportMenu = new JMenu(Utils._("Export"));
+            exportMenu.setIcon(Utils.loadIcon("general/Export"));
 
             for (PhoneBookType pbt : PhoneBookFactory.PhonebookTypes) {
                 String menuText = pbt.getDisplayName();
@@ -664,10 +688,12 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                 mi.addActionListener(pbmal);
                 openMenu.add(mi);
 
-                /*mi = new JMenuItem(menuText);
-            mi.setActionCommand(PhonebookMenuActionListener.SAVEAS_COMMAND);
-            mi.addActionListener(pbmal);
-            saveAsMenu.add(mi);*/
+                if (pbt.canExport()) {
+                    mi = new JMenuItem(menuText);
+                    mi.setActionCommand(PhonebookMenuActionListener.EXPORT_COMMAND);
+                    mi.addActionListener(pbmal);
+                    exportMenu.add(mi);
+                }
             }
             
             JMenuItem mi = new JMenuItem(Utils._("By descriptor..."));
@@ -691,7 +717,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             pbMenu = new JMenu(Utils._("Phone book"));
             pbMenu.add(openMenu);
             pbMenu.add(importMenu);
-            //pbMenu.add(saveAsMenu);
+            pbMenu.add(exportMenu);
             pbMenu.add(new JSeparator());
             pbMenu.add(new JMenuItem(listRemoveAction));
             pbMenu.add(new JSeparator());
@@ -866,6 +892,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
 //        if (fopts.lastSelectedPhonebook >= 0 && fopts.lastSelectedPhonebook < tabPhonebooks.getTabCount())
 //            tabPhonebooks.setSelectedIndex(fopts.lastSelectedPhonebook);
         phoneBookTree.setSelectionRow(1);
+        checkMenuEnable();
     }
     
     public NewPhoneBookWin(Dialog owner) {
@@ -930,6 +957,12 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             return res;
         } else {
             return null;
+        }
+    }
+
+    void commitCurrentEdits() {
+        if (selectedItems.size() == 1) {
+            readFromTextFields(selectedItems.get(0), false);
         }
     }
 
@@ -1058,7 +1091,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     private class PhonebookMenuActionListener implements ActionListener{
         
         public static final String IMPORT_COMMAND = "pb_import";
-        //public static final String SAVEAS_COMMAND = "pb_saveas";
+        public static final String EXPORT_COMMAND = "pb_export";
         public static final String OPEN_COMMAND = "pb_open";
         
         public PhoneBookType pbType;
@@ -1069,8 +1102,8 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
 
                 if (cmd.equals(OPEN_COMMAND)) 
                     doOpen();
-                /*else if (cmd.equals(SAVEAS_COMMAND))
-                    doSaveAs();*/
+                else if (cmd.equals(EXPORT_COMMAND))
+                    doExport();
                 else if (cmd.equals(IMPORT_COMMAND)) 
                     doImport();
                 else
@@ -1089,15 +1122,24 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             
             pb = pbType.createInstance(NewPhoneBookWin.this);
             
-            descriptor = pb.browseForPhoneBook();
+            descriptor = pb.browseForPhoneBook(false);
             if (descriptor != null) {
                 importFromPhonebook(pb, descriptor);
             }
         }
         
-        /*private void doSaveAs() {
+        private void doExport() {
+            if (selectedItems.size() == 0 && currentPhonebook == null) {
+                return;
+            }
             
-        }*/
+            PhoneBook pb = pbType.createInstance(NewPhoneBookWin.this);
+            
+            String descriptor = pb.browseForPhoneBook(true);
+            if (descriptor != null) {
+                exportToPhonebook(pb, descriptor);
+            }
+        }
         
         private void doOpen() {
             PhoneBook pb;
@@ -1110,7 +1152,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
 //            else
             pb = pbType.createInstance(NewPhoneBookWin.this);
             
-            descriptor = pb.browseForPhoneBook();
+            descriptor = pb.browseForPhoneBook(false);
             if (descriptor != null) {
                 addPhoneBook(descriptor);                
             }

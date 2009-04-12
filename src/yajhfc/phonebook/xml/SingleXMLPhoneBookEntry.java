@@ -1,7 +1,7 @@
 package yajhfc.phonebook.xml;
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2006 Jonas Wolz
+ * Copyright (C) 2005-2009 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -57,7 +57,7 @@ public class SingleXMLPhoneBookEntry extends SimplePhoneBookEntry implements XML
         for (PBEntryField field : PBEntryField.values()) {
             try {
                 String val = getField(field);
-                if (val == null)
+                if (val == null || val.length() == 0)
                     continue;
                 
                 Element dataEl = doc.createElement(field.getKey());

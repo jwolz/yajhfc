@@ -87,4 +87,21 @@ public class ConcatStringFilter<V extends FilterableObject, K extends FilterKey>
     public Object[] getConcatVals() {
         return concatVals;
     }
+    
+    @Override
+    protected void fieldToString(StringBuilder appendTo) {
+        appendTo.append('(');
+        for (int i=0; i < concatVals.length; i++) {
+            Object val = concatVals[i];
+            if (keyClass.isInstance(val)) {
+                appendTo.append(val);
+            } else {
+                appendTo.append('\"').append(val).append('\"');
+            }
+            if (i < concatVals.length - 1) {
+                appendTo.append('+');
+            }
+        }
+        appendTo.append(')');
+    }
 }
