@@ -186,6 +186,8 @@ public class ArchiveYajJob extends YajJob<QueueFileFormat> {
         fileEntries.put("!tiff", FileFormat.TIFF);
         fileEntries.put("data", FileFormat.Unknown);
         fileEntries.put("!data", FileFormat.Unknown);
+        fileEntries.put("pdf", FileFormat.PDF);
+        fileEntries.put("!pdf", FileFormat.PDF);
     }
     private static ArchiveYajJob processSingleEntry(HylaDirAccessor hyda, FmtItemList<QueueFileFormat> cols, Map<String,int[]> desiredItems, String queueNr) throws FileNotFoundException, IOException, ServerResponseException {
         BufferedReader qFileReader = new BufferedReader(hyda.getInputReader(queueNr + "/q" + queueNr));
