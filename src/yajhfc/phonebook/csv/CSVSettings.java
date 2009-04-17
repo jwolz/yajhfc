@@ -45,11 +45,23 @@ public class CSVSettings extends GeneralConnectionSettings {
     public boolean overwrite = false;
     public String displayCaption = "";
     
+    /**
+     * Creates a CSV reader configured with this settings
+     * @return
+     * @throws UnsupportedEncodingException
+     * @throws FileNotFoundException
+     */
     public CSVReader createReader() throws UnsupportedEncodingException, FileNotFoundException {
         return new CSVReader(new InputStreamReader(new FileInputStream(fileName), charset),
                 separator.charAt(0), quoteChar.charAt(0));
     }
     
+    /**
+     * Creates a CSV writer configured with this settings
+     * @return
+     * @throws UnsupportedEncodingException
+     * @throws FileNotFoundException
+     */
     public CSVWriter createWriter() throws UnsupportedEncodingException, FileNotFoundException {
         return new CSVWriter(new OutputStreamWriter(new FileOutputStream(fileName), charset),
                 separator.charAt(0), quoteChar.charAt(0));

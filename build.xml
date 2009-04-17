@@ -136,7 +136,7 @@
 
 	<target name="dist" depends="compile,i18n,doc" description="generate the distribution" >
 		<jar jarfile="${jar-output}" manifest="${jar-extra}/manifest.txt">
-			<fileset dir="${build}" includes="yajhfc/**,gnu/**"/>
+			<fileset dir="${build}" includes="yajhfc/**,gnu/**,au/**"/>
 			<fileset dir="${src}/src" includes="yajhfc/i18n/*.class,**/*.properties"/>
 			<fileset dir="${jar-extra}" includes="info/**/*.class,toolbarButtonGraphics/**/*.gif,org/**/*.class"/>
 			<fileset dir="${gnu.hylafax.classFileLocation}" includes="**/*.class"/>
