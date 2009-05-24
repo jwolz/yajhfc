@@ -90,7 +90,7 @@ public class ConcatStringFilter<V extends FilterableObject, K extends FilterKey>
     
     @Override
     protected void fieldToString(StringBuilder appendTo) {
-        appendTo.append('(');
+        appendTo.append('[');
         for (int i=0; i < concatVals.length; i++) {
             Object val = concatVals[i];
             if (keyClass.isInstance(val)) {
@@ -102,6 +102,6 @@ public class ConcatStringFilter<V extends FilterableObject, K extends FilterKey>
                 appendTo.append('+');
             }
         }
-        appendTo.append(')');
+        appendTo.append(']');
     }
 }

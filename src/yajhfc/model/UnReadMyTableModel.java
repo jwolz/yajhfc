@@ -30,6 +30,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.EventListenerList;
 
 import yajhfc.RecvFormat;
+import yajhfc.TableType;
 import yajhfc.readstate.PersistentReadState;
 import yajhfc.readstate.ReadStateChangedListener;
 
@@ -276,6 +277,11 @@ public class UnReadMyTableModel extends MyTableModel<RecvFormat> implements Read
         }
         this.persistentReadState = persistentReadState;
         persistentReadState.addReadStateChangedListener(this);
+    }
+    
+    @Override
+    public TableType getTableType() {
+        return TableType.RECEIVED;
     }
 }
 

@@ -26,6 +26,7 @@ import javax.swing.table.AbstractTableModel;
 
 import yajhfc.FmtItem;
 import yajhfc.FmtItemList;
+import yajhfc.TableType;
 import yajhfc.Utils;
 import yajhfc.filters.Filter;
 
@@ -194,4 +195,6 @@ public abstract class MyTableModel<T extends FmtItem> extends AbstractTableModel
     public Class<?> getColumnClass(int columnIndex) {
         return columns.get(columnIndex).getDataType();
     }
+    
+    public abstract TableType getTableType();
 }

@@ -20,6 +20,7 @@ package yajhfc.model.archive;
 
 import java.util.List;
 
+import yajhfc.TableType;
 import yajhfc.model.MyTableModel;
 import yajhfc.model.YajJob;
 
@@ -46,5 +47,10 @@ public class ArchiveTableModel extends MyTableModel<QueueFileFormat> {
             this.jobs = jobList.toArray(new YajJob[jobList.size()]);
         }
         refreshVisibleJobs();
+    }
+    
+    @Override
+    public TableType getTableType() {
+        return TableType.ARCHIVE;
     }
 }

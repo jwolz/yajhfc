@@ -55,9 +55,11 @@ import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -69,6 +71,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
@@ -79,6 +82,8 @@ import javax.swing.JTable.PrintMode;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
@@ -87,11 +92,13 @@ import javax.swing.table.DefaultTableCellRenderer;
 import yajhfc.file.FormattedFile;
 import yajhfc.file.MultiFileConverter;
 import yajhfc.file.FormattedFile.FileFormat;
-import yajhfc.filters.CustomFilterDialog;
+import yajhfc.filters.AndFilter;
 import yajhfc.filters.Filter;
 import yajhfc.filters.FilterCreator;
+import yajhfc.filters.OrFilter;
 import yajhfc.filters.StringFilter;
 import yajhfc.filters.StringFilterOperator;
+import yajhfc.filters.ui.CustomFilterDialog;
 import yajhfc.model.MyTableModel;
 import yajhfc.model.RecvYajJob;
 import yajhfc.model.SendingYajJob;
@@ -116,6 +123,7 @@ import yajhfc.send.SendWinControl;
 import yajhfc.tray.TrayFactory;
 import yajhfc.tray.YajHFCTrayIcon;
 import yajhfc.util.ActionJCheckBoxMenuItem;
+import yajhfc.util.ClipboardPopup;
 import yajhfc.util.ExampleFileFilter;
 import yajhfc.util.ExcDialogAbstractAction;
 import yajhfc.util.ExceptionDialog;
@@ -132,12 +140,11 @@ import yajhfc.util.ToolbarEditorDialog;
 public final class MainWin extends JFrame {
     
     static final Logger log = Logger.getLogger(MainWin.class.getName());
-    // Uncomment for archive support (change 3 -> 4)
-    private static final int TABLE_COUNT = 4;
     
     protected JPanel jContentPane = null;
     
     protected JToolBar toolbar;
+    protected QuickSearchHelper quickSearchHelper = new QuickSearchHelper();
     
     protected JTabbedPane tabMain = null;
     
@@ -194,7 +201,7 @@ public final class MainWin extends JFrame {
     // Actions:
     protected Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward, actAdminMode;
     protected Action actRefresh, actResend, actPrintTable, actSuspend, actResume, actClipCopy, actShowRowNumbers, actAdjustColumns, actReconnect, actEditToolbar;
-    protected Action actSaveAsPDF, actSaveAsTIFF, actUpdateCheck, actAnswerCall;
+    protected Action actSaveAsPDF, actSaveAsTIFF, actUpdateCheck, actAnswerCall, actSearchFax;
     protected ActionEnabler actChecker;
     protected Map<String,Action> availableActions = new HashMap<String,Action>();
     protected YajHFCTrayIcon trayIcon = null;
@@ -1241,6 +1248,21 @@ public final class MainWin extends JFrame {
         //actEditToolbar.putValue(Action.SMALL_ICON, Utils.loadIcon("media/Play"));
         putAvailableAction("AnswerCall", actAnswerCall);
         
+        actSearchFax = new ExcDialogAbstractAction() {
+            private MainWinSearchWin searchWin = null;
+            
+            public void actualActionPerformed(java.awt.event.ActionEvent e) {
+                if (searchWin == null) {
+                    searchWin = new MainWinSearchWin(MainWin.this);
+                }
+                searchWin.setVisible(true);
+            }
+        };
+        actSearchFax.putValue(Action.NAME, _("Search fax") + "...");
+        actSearchFax.putValue(Action.SHORT_DESCRIPTION, _("Searches for a fax"));
+        actSearchFax.putValue(Action.SMALL_ICON, Utils.loadIcon("general/Find"));
+        putAvailableAction("SearchFax", actSearchFax);
+        
         actSaveAsPDF = new SaveToFormatAction(FileFormat.PDF);
         putAvailableAction("SaveAsPDF", actSaveAsPDF);
         
@@ -1685,12 +1707,16 @@ public final class MainWin extends JFrame {
             
             tablePanel.setContentComponent(box);
             
-            jContentPane.add(tablePanel, BorderLayout.CENTER);
+            JPanel quickSearchPanel = new JPanel(new BorderLayout());
+            quickSearchPanel.add(tablePanel, BorderLayout.CENTER);
+            quickSearchPanel.add(quickSearchHelper.getQuickSearchBar(actSearchFax), BorderLayout.NORTH);
+            
+            jContentPane.add(quickSearchPanel, BorderLayout.CENTER);
             jContentPane.add(getToolbar(), BorderLayout.NORTH);
         }
         return jContentPane;
     }
-
+    
     /**
      * This method initializes jJMenuBar	
      * 	
@@ -1729,6 +1755,7 @@ public final class MainWin extends JFrame {
             addOrRemoveArchiveTab();
             
             tabMain.addChangeListener(actChecker);
+            tabMain.addChangeListener(quickSearchHelper);
         }
         return tabMain;
     }
@@ -1883,6 +1910,11 @@ public final class MainWin extends JFrame {
                 protected YajJob<JobFormat> createYajJob(String[] data) {
                     return new SentYajJob(this.columns, data);
                 }
+                
+                @Override
+                public TableType getTableType() {
+                    return TableType.SENT;
+                }
             };
         }
         return sentTableModel;
@@ -1925,6 +1957,11 @@ public final class MainWin extends JFrame {
                 @Override
                 protected YajJob<JobFormat> createYajJob(String[] data) {
                     return new SendingYajJob(this.columns, data);
+                }
+                
+                @Override
+                public TableType getTableType() {
+                    return TableType.SENDING;
                 }
             };
         }
@@ -1982,6 +2019,7 @@ public final class MainWin extends JFrame {
             menuExtras.addSeparator();
             menuExtras.add(new JMenuItem(actClipCopy));
             menuExtras.add(new JMenuItem(actPrintTable));
+            menuExtras.add(new JMenuItem(actSearchFax));
             menuExtras.addSeparator();
             menuExtras.add(new JMenuItem(actOptions));
             menuExtras.add(new JMenuItem(actEditToolbar));
@@ -2006,7 +2044,20 @@ public final class MainWin extends JFrame {
     }
     
     class MenuViewListener implements ActionListener, ChangeListener {
-        private JRadioButtonMenuItem[] lastSel = new JRadioButtonMenuItem[TABLE_COUNT];
+        private JRadioButtonMenuItem[] lastSel = new JRadioButtonMenuItem[TableType.TABLE_COUNT];
+        @SuppressWarnings("unchecked")
+        private Filter[] currentFilters = new Filter[TableType.TABLE_COUNT];
+        
+        @SuppressWarnings("unchecked")
+        private void setJobFilter(MyTableModel model, Filter filter) {
+            currentFilters[model.getTableType().ordinal()] = filter;
+            refreshFilter();
+        }
+        
+        @SuppressWarnings("unchecked")
+        public Filter getFilterFor(TableType tableType) {
+            return currentFilters[tableType.ordinal()];
+        }
         
         @SuppressWarnings("unchecked")
         public void actionPerformed(ActionEvent e) {
@@ -2016,10 +2067,10 @@ public final class MainWin extends JFrame {
                 int selTab = tabMain.getSelectedIndex();
 
                 if (cmd.equals("view_all")) {
-                    model.setJobFilter(null);
+                    setJobFilter(model, null);
                     lastSel[selTab] = menuViewAll;
                 } else if (cmd.equals("view_own")) {
-                    model.setJobFilter(getOwnFilterFor(model));
+                    setJobFilter(model, getOwnFilterFor(model));
                     lastSel[selTab] = menuViewOwn;
                 } else if (cmd.equals("view_custom")) {
                     CustomFilterDialog cfd = new CustomFilterDialog(MainWin.this, tabMain.getTitleAt(selTab), 
@@ -2030,7 +2081,7 @@ public final class MainWin extends JFrame {
                             menuViewAll.doClick();
                             return;
                         } else {
-                            model.setJobFilter(cfd.returnValue);
+                            setJobFilter(model, cfd.returnValue);
                             lastSel[selTab] = menuViewCustom;
                         }
                     } else {
@@ -2072,7 +2123,7 @@ public final class MainWin extends JFrame {
             menuMarkError.setEnabled(markErrorState);
             if ((!viewOwnState && menuViewOwn.isSelected())) {
                 menuViewAll.setSelected(true);
-                model.setJobFilter(null);
+                setJobFilter(model, null);
             }
         }
         
@@ -2082,26 +2133,30 @@ public final class MainWin extends JFrame {
         }
         
         private boolean canMarkError(MyTableModel<? extends FmtItem> model) {
-            if (model == sentTableModel || model == sendingTableModel) { 
-                return model.columns.getCompleteView().contains(JobFormat.a) || model.columns.getCompleteView().contains(JobFormat.s);
-            } else if (model == recvTableModel) { 
-                return myopts.recvfmt.getCompleteView().contains(RecvFormat.e);
-            } else if (model == archiveTableModel) {
-                return myopts.archiveFmt.getCompleteView().contains(QueueFileFormat.state);
-            } else {
+            List<? extends FmtItem> columns = model.columns.getCompleteView();
+            switch (model.getTableType()) {
+            case RECEIVED:
+                return columns.contains(RecvFormat.e);
+            case SENT:
+            case SENDING:
+                return columns.contains(JobFormat.a) || columns.contains(JobFormat.s);
+            case ARCHIVE:
+                return columns.contains(QueueFileFormat.state);
+            default:
                 return false;
             }
         }
         
         private FmtItem getOwnerColumn(MyTableModel<? extends FmtItem> model) {
-            if (model == recvTableModel) { 
+            switch (model.getTableType()) {
+            case RECEIVED:
                 return RecvFormat.o;
-            } else if (model == sentTableModel || model == sendingTableModel) { 
+            case SENT:
+            case SENDING:
                 return JobFormat.o;
-                // Uncomment for archive support.
-            } else if (model == archiveTableModel) {
+            case ARCHIVE:
                 return QueueFileFormat.owner;
-            } else {
+            default:
                 return null;
             }
         }
@@ -2119,19 +2174,19 @@ public final class MainWin extends JFrame {
                 MyTableModel model = getTableByIndex(i).getRealModel();
                 if (lastSel[i] == menuViewOwn) {
                     if (ownFilterOK(model)) 
-                        model.setJobFilter(getOwnFilterFor(model));
+                        setJobFilter(model, getOwnFilterFor(model));
                     else {
                         lastSel[i] = menuViewAll;
-                        model.setJobFilter(null);
+                        setJobFilter(model, null);
                     }
                 } else if (lastSel[i] == menuViewCustom) {
                     if (!model.getJobFilter().validate(model.columns)) {
                         lastSel[i] = menuViewAll;
-                        model.setJobFilter(null);
+                        setJobFilter(model, null);
                     }
                     
                 } else if (lastSel[i] == menuViewAll) 
-                    model.setJobFilter(null);
+                    setJobFilter(model, null);
             }
             stateChanged(null);
         }
@@ -2150,7 +2205,7 @@ public final class MainWin extends JFrame {
                     lastSel[idx] = menuViewAll;
                 } else {
                     lastSel[idx] = menuViewCustom;
-                    model.setJobFilter(yjf);
+                    setJobFilter(model, yjf);
                 }
             } else {
                 // Fall back to view all faxes
@@ -2640,6 +2695,30 @@ public final class MainWin extends JFrame {
         return utmrTable;
     }
     
+    @SuppressWarnings("unchecked")
+    void refreshFilter() {
+        MyTableModel selectedModel = getSelectedTable().getRealModel();
+        TableType selectedTableType = selectedModel.getTableType();
+        Filter viewFilter = menuViewListener.getFilterFor(selectedTableType);
+        Filter quickSearchFilter = quickSearchHelper.getFilterFor(selectedTableType);
+        
+        Filter modelFilter;
+        if (viewFilter == null) {
+            if (quickSearchFilter == null) {
+                modelFilter = null;
+            } else {
+                modelFilter = quickSearchFilter;
+            }
+        } else {
+            if (quickSearchFilter == null) {
+                modelFilter = viewFilter;
+            } else {
+                modelFilter = new AndFilter(viewFilter, quickSearchFilter); 
+            }
+        }
+        selectedModel.setJobFilter(modelFilter);
+    }
+    
     private static class AsyncLogoutTask extends TimerTask {
         private HylaClientManager clientManager;
 
@@ -2657,6 +2736,138 @@ public final class MainWin extends JFrame {
             this.clientManager = clientManager;
         }
         
+    }
+    
+    class QuickSearchHelper implements DocumentListener, ActionListener, ChangeListener {
+        private boolean eventLock = false;
+        
+        protected JToolBar quickSearchBar;
+        protected JTextField textQuickSearch;
+        protected JButton clearQuickSearchButton;
+        
+        @SuppressWarnings("unchecked")
+        public Filter getFilterFor(TableType tableType) {
+            String searchText = textQuickSearch.getText();
+            if (searchText == null || searchText.length() == 0) {
+                return null;
+            }
+            
+            FmtItem[] filterCols;
+            switch (tableType) {
+            case RECEIVED:
+                filterCols = new FmtItem[] { RecvFormat.e, RecvFormat.f, RecvFormat.s, RecvFormat.i, RecvFormat.j};
+                break;
+            case SENT:
+            case SENDING:
+                filterCols = new FmtItem[] { JobFormat.C, JobFormat.e, JobFormat.j, JobFormat.R, JobFormat.s, JobFormat.v};
+                break;
+            case ARCHIVE:
+                filterCols = new FmtItem[] { QueueFileFormat.company, QueueFileFormat.external, QueueFileFormat.jobid, QueueFileFormat.number, QueueFileFormat.receiver, QueueFileFormat.status };
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown table type");
+            }
+            List<? extends FmtItem> availableCols = getColumnsFor(tableType).getCompleteView();
+            OrFilter rv = new OrFilter();
+            
+            for (FmtItem fi : filterCols) {
+                if (availableCols.contains(fi)) {
+                    rv.addChild(new StringFilter(fi, StringFilterOperator.CONTAINS, searchText, false));
+                }
+            }
+            return rv;
+        }
+        
+        private FmtItemList<? extends FmtItem> getColumnsFor(TableType tableType) {
+            switch (tableType) {
+            case RECEIVED:
+                return recvTableModel.columns;
+            case SENT:
+                return sentTableModel.columns;
+            case SENDING:
+                return sendingTableModel.columns;
+            case ARCHIVE:
+                return archiveTableModel.columns;
+            default:
+                throw new IllegalArgumentException("Unknown table type");
+            }
+        }
+        
+        public void changedUpdate(DocumentEvent e) {
+            // do nothing
+        }
+
+        public void insertUpdate(DocumentEvent e) {
+            if (eventLock)
+                return;
+            
+            performQuickSearch();
+        }
+
+        public void removeUpdate(DocumentEvent e) {
+            if (eventLock)
+                return;
+            
+            performQuickSearch();
+        }
+        
+        public void stateChanged(ChangeEvent e) {
+            refreshFilter();
+        }
+
+        private void performQuickSearch() {
+            String text = textQuickSearch.getText();
+            refreshFilter();
+            clearQuickSearchButton.setEnabled(text.length() > 0);
+        }
+        
+        public void filterWasReset() {
+            eventLock = true;
+            textQuickSearch.setText("");
+            clearQuickSearchButton.setEnabled(false);
+            eventLock = false;
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            String actCmd = e.getActionCommand();
+            if (actCmd.equals("clear")) {
+                textQuickSearch.setText("");
+            } else if (actCmd.equals("focus")) {
+                getSelectedTable().requestFocusInWindow();
+            }
+        }
+        
+        public JToolBar getQuickSearchBar(Action searchAction) {
+            if (quickSearchBar == null) {
+                quickSearchBar = new JToolBar();
+                
+                textQuickSearch = new JTextField(20);
+                textQuickSearch.getDocument().addDocumentListener(this);
+                textQuickSearch.setActionCommand("focus");
+                textQuickSearch.addActionListener(this);
+                textQuickSearch.setToolTipText(_("Type here parts of the sender, recipient or file name in order to search for a fax."));
+                Dimension prefSize = textQuickSearch.getPreferredSize();
+                prefSize.width = Integer.MAX_VALUE;
+                prefSize.height += 4;
+                textQuickSearch.setMaximumSize(prefSize);
+                textQuickSearch.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
+                
+                clearQuickSearchButton = new JButton(Utils._("Reset"));
+                clearQuickSearchButton.setActionCommand("clear");
+                clearQuickSearchButton.addActionListener(this);
+                clearQuickSearchButton.setEnabled(false);
+                clearQuickSearchButton.setToolTipText(Utils._("Reset quick search and show all faxes."));
+                
+                quickSearchBar.add(new JLabel(Utils._("Search") + ": "));
+                quickSearchBar.add(textQuickSearch);
+                quickSearchBar.add(clearQuickSearchButton);
+                if (searchAction != null) {
+                    quickSearchBar.addSeparator();
+                    quickSearchBar.add(searchAction);
+                }
+            }
+            return quickSearchBar;
+        }
     }
 }  
 

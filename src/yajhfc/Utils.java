@@ -68,7 +68,7 @@ public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2009 by Jonas Wolz";
-    public static final String AppVersion = "0.4.1alpha5";
+    public static final String AppVersion = "0.4.1beta";
     public static final String AuthorName = "Jonas Wolz";
     public static final String AuthorEMail = "jwolz@freenet.de";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
@@ -649,7 +649,8 @@ public final class Utils {
      */
     public static int indexOfArray(Object[] array, Object element) {
         for (int i = 0; i < array.length; i++) {
-            if (element.equals(array[i])) {
+            Object arrayItem = array[i];
+            if (arrayItem == element || (element != null && element.equals(arrayItem))) {
                 return i;
             }
         }

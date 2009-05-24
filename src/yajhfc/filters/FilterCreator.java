@@ -17,11 +17,13 @@ package yajhfc.filters;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import yajhfc.DateKind;
 import yajhfc.FmtItem;
 import yajhfc.IconMap;
 import yajhfc.Utils;
@@ -49,7 +51,15 @@ public class FilterCreator {
         return (cl != Boolean.class && cl != Void.class);
     }
     
+    public static boolean isCaseSensitiveEnabled(Class<?> dataClass) {
+        return (dataClass == String.class || dataClass == IconMap.class);
+    }
+    
     public static <V extends FilterableObject,K extends FmtItem> Filter<V,K> getFilter(K column, Object selectedOperator, String input) throws ParseException {
+        return getFilter(column,selectedOperator,input,true);
+    }
+    
+    public static <V extends FilterableObject,K extends FilterKey> Filter<V,K> getFilter(K column, Object selectedOperator, String input, boolean caseSensitive) throws ParseException {
         Class<?> dataClass = column.getDataType();
         if (dataClass == Integer.class) {
             return new ComparableFilter<V,K>(column, (ComparableFilterOperator)selectedOperator, Integer.valueOf(input));
@@ -58,9 +68,15 @@ public class FilterCreator {
         } else if (dataClass == Double.class) {
             return new ComparableFilter<V,K>(column, (ComparableFilterOperator)selectedOperator, Double.valueOf(input));
         } else if (dataClass == Date.class) {
-            return new ComparableFilter<V,K>(column, (ComparableFilterOperator)selectedOperator, column.getDisplayDateFormat().parse(input));
+            DateFormat parseFormat;
+            if (column instanceof FmtItem) {
+                parseFormat = ((FmtItem)column).getDisplayDateFormat();
+            } else {
+                parseFormat = DateKind.DATE_AND_TIME.getFormat();
+            }
+            return new ComparableFilter<V,K>(column, (ComparableFilterOperator)selectedOperator, parseFormat.parse(input));
         } else if (dataClass == String.class || dataClass == IconMap.class) {
-            return new StringFilter<V,K>(column, (StringFilterOperator)selectedOperator, input, true);
+            return new StringFilter<V,K>(column, (StringFilterOperator)selectedOperator, input, caseSensitive);
         } else if (dataClass == Boolean.class) {
             return new ComparableFilter<V,K>(column, ComparableFilterOperator.EQUAL, selectedOperator == booleanOperators[0]);
         } else

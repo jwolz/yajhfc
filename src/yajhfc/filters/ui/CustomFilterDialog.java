@@ -1,4 +1,4 @@
-package yajhfc.filters;
+package yajhfc.filters.ui;
 /*
  * YAJHFC - Yet another Java Hylafax client
  * Copyright (C) 2005-2006 Jonas Wolz
@@ -51,6 +51,9 @@ import javax.swing.KeyStroke;
 import yajhfc.FmtItem;
 import yajhfc.FmtItemList;
 import yajhfc.Utils;
+import yajhfc.filters.AndFilter;
+import yajhfc.filters.Filter;
+import yajhfc.filters.OrFilter;
 import yajhfc.model.YajJob;
 
 public class CustomFilterDialog extends JDialog 
