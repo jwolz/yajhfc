@@ -45,13 +45,11 @@ public class AndFilter<V extends FilterableObject, K extends FilterKey> implemen
         if (children.size() == 0)
             return true;
         
-        boolean retVal = true;
         for (Filter<V, K>  yjf: children) {
-            retVal = retVal && yjf.matchesFilter(filterObj);
-            if (!retVal)
+            if (!yjf.matchesFilter(filterObj))
                 return false;
         }
-        return retVal;
+        return true;
     }
 
     public void initFilter(FilterKeyList<K> columns) {
@@ -88,6 +86,16 @@ public class AndFilter<V extends FilterableObject, K extends FilterKey> implemen
             if (i < children.size() - 1) {
                 appendTo.append(' ').append(getToStringSymbol()).append(' ');
             }
+        }
+    }
+    
+    public AndFilter() {
+        super();
+    }
+    
+    public AndFilter(Filter<V, K>... children) {
+        for (Filter<V,K> f : children) {
+            addChild(f);
         }
     }
 }

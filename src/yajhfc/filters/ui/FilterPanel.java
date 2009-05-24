@@ -1,4 +1,4 @@
-package yajhfc.filters;
+package yajhfc.filters.ui;
 /*
  * YAJHFC - Yet another Java Hylafax client
  * Copyright (C) 2005-2006 Jonas Wolz
@@ -38,6 +38,9 @@ import yajhfc.FmtItem;
 import yajhfc.FmtItemList;
 import yajhfc.FmtItemRenderer;
 import yajhfc.Utils;
+import yajhfc.filters.Filter;
+import yajhfc.filters.FilterCreator;
+import yajhfc.filters.FilterableObject;
 import yajhfc.util.ClipboardPopup;
 
 public class FilterPanel<V extends FilterableObject,K extends FmtItem> extends JPanel implements ActionListener {

@@ -1,4 +1,4 @@
-README for YajHFC 0.4.0
+README for YajHFC 0.4.1
 =======================
 
 ABOUT
@@ -29,9 +29,9 @@ Requirements:
 * Optional: A PostScript viewer (e.g. Ghostview), GhostScript
      and tiff2pdf (from libtiff-utils)
 
-To install YajHFC just download the yajhfc-0_4_0.jar file to some folder on your
+To install YajHFC just download the yajhfc-0_4_1.jar file to some folder on your
 file system.
-To execute it, use: "java -jar yajhfc-0_4_0.jar"
+To execute it, use: "java -jar yajhfc-0_4_1.jar"
 (In Windows you usually can just double click the jar file as well.)
 
 LICENSE
@@ -68,8 +68,10 @@ CHANGES
 
 0.4.1:
 - Support for distribution lists in the phone book (XML+JDBC only)
-- Support for CSV phone books (for import/export)
+- Support for CSV phone books (i.e. for import/export)
 - Support to set the "archive flag" (doneop) for sent faxes
+- Quick search bar for the main window
+- Some bug fixes
 
 0.4.0:
 - Greek translation added

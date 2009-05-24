@@ -1,7 +1,6 @@
-package yajhfc.filters;
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005-2006 Jonas Wolz
+ * Copyright (C) 2005-2009 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,22 +16,32 @@ package yajhfc.filters;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+package yajhfc;
 
-public class OrFilter<V extends FilterableObject, K extends FilterKey> extends AndFilter<V, K> {
+import yajhfc.model.archive.QueueFileFormat;
 
-    public boolean matchesFilter(V filterObj) {
-        if (children.size() == 0)
-            return true;
-        
-        for (Filter<V, K>  yjf: children) {
-            if (yjf.matchesFilter(filterObj))
-                return true;
-        }
-        return false;
+/**
+ * @author jonas
+ *
+ */
+public enum TableType {
+    RECEIVED(RecvFormat.class),
+    SENT(JobFormat.class),
+    SENDING(JobFormat.class),
+    ARCHIVE(QueueFileFormat.class);
+    
+    private final Class<? extends Enum<? extends FmtItem>> fieldsEnumClass;
+    
+    private TableType(Class<? extends Enum<? extends FmtItem>> fieldsEnumClass) {
+        this.fieldsEnumClass = fieldsEnumClass;
     }
 
-    @Override
-    protected String getToStringSymbol() {
-        return "OR";
+    public Class<? extends Enum<? extends FmtItem>> getFieldsEnumClass() {
+        return fieldsEnumClass;
     }
+    
+    /**
+     * The number of tables. Equals values().length
+     */
+    public static final int TABLE_COUNT = values().length;
 }
