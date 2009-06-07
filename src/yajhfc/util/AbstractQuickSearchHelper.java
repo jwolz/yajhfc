@@ -52,7 +52,10 @@ public abstract class AbstractQuickSearchHelper implements DocumentListener, Act
     
     private int searchTXID = 0;
     
-    protected static int QUICKSEARCH_DELAY = 200;
+    /**
+     * Delay in milliseconds before the quick search is performed
+     */
+    protected final static int QUICKSEARCH_DELAY = 500;
     
     private static Timer quickSearchTimer = null;
     protected static Timer getQuickSearchTimer() {
@@ -62,12 +65,19 @@ public abstract class AbstractQuickSearchHelper implements DocumentListener, Act
         return quickSearchTimer;
     }
     
-    
-    synchronized int nextTXID() {
+    /**
+     * Returns a new "transaction id" for a new quick search
+     * @return
+     */
+    protected final synchronized int nextTXID() {
         return ++searchTXID;
     }
     
-    synchronized int curTXID() {
+    /**
+     * Returns the current "transaction id" for quick searches
+     * @return
+     */
+    protected final synchronized int curTXID() {
         return searchTXID;
     }
     
@@ -96,14 +106,17 @@ public abstract class AbstractQuickSearchHelper implements DocumentListener, Act
         clearQuickSearchButton.setEnabled(textQuickSearch.getText().length() > 0);
         
         getQuickSearchTimer().schedule(new TimerTask() {
-            private final int txID = nextTXID();
+            final int txID = nextTXID();
             
             @Override
             public void run() {
                 if (txID == curTXID()) {
+                    // Only perform the quick search if there is no newer one requested
                     SwingUtilities.invokeLater(new Runnable() {
                        public void run() {
-                           performActualQuickSearch();
+                           if (txID == curTXID()) {
+                               performActualQuickSearch();
+                           }
                         } 
                     });
                 }
