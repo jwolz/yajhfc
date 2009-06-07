@@ -37,6 +37,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.print.PrinterException;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.net.SocketException;
 import java.text.DateFormat;
@@ -52,14 +54,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.ButtonGroup;
-import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -69,9 +67,9 @@ import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
@@ -79,7 +77,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.UIManager;
 import javax.swing.JTable.PrintMode;
-import javax.swing.border.BevelBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
@@ -122,8 +119,8 @@ import yajhfc.send.SendController;
 import yajhfc.send.SendWinControl;
 import yajhfc.tray.TrayFactory;
 import yajhfc.tray.YajHFCTrayIcon;
+import yajhfc.util.AbstractQuickSearchHelper;
 import yajhfc.util.ActionJCheckBoxMenuItem;
-import yajhfc.util.ClipboardPopup;
 import yajhfc.util.ExampleFileFilter;
 import yajhfc.util.ExcDialogAbstractAction;
 import yajhfc.util.ExceptionDialog;
@@ -163,6 +160,7 @@ public final class MainWin extends JFrame {
     protected NumberRowViewport recvRowNumbers, sentRowNumbers, sendingRowNumbers;
     
     protected JTextPane textStatus = null;
+    protected JSplitPane statusSplitter;
     
     protected JMenuBar jJMenuBar = null;
     
@@ -201,7 +199,8 @@ public final class MainWin extends JFrame {
     // Actions:
     protected Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward, actAdminMode;
     protected Action actRefresh, actResend, actPrintTable, actSuspend, actResume, actClipCopy, actShowRowNumbers, actAdjustColumns, actReconnect, actEditToolbar;
-    protected Action actSaveAsPDF, actSaveAsTIFF, actUpdateCheck, actAnswerCall, actSearchFax;
+    protected Action actSaveAsPDF, actSaveAsTIFF, actUpdateCheck, actAnswerCall, actSearchFax; 
+    protected StatusBarResizeAction actAutoSizeStatus;
     protected ActionEnabler actChecker;
     protected Map<String,Action> availableActions = new HashMap<String,Action>();
     protected YajHFCTrayIcon trayIcon = null;
@@ -1263,6 +1262,11 @@ public final class MainWin extends JFrame {
         actSearchFax.putValue(Action.SMALL_ICON, Utils.loadIcon("general/Find"));
         putAvailableAction("SearchFax", actSearchFax);
         
+        actAutoSizeStatus = new StatusBarResizeAction();
+        actAutoSizeStatus.putValue(Action.NAME, _("Auto-size status bar"));
+        actAutoSizeStatus.putValue(Action.SHORT_DESCRIPTION, _("Automatically resize the status bar"));
+        putAvailableAction("AutoSizeStatus", actAutoSizeStatus);
+        
         actSaveAsPDF = new SaveToFormatAction(FileFormat.PDF);
         putAvailableAction("SaveAsPDF", actSaveAsPDF);
         
@@ -1476,6 +1480,7 @@ public final class MainWin extends JFrame {
             menuView.add(menuMarkError);
             menuView.add(new ActionJCheckBoxMenuItem(actShowRowNumbers));
             menuView.add(new ActionJCheckBoxMenuItem(actAdjustColumns));
+            menuView.add(new ActionJCheckBoxMenuItem(actAutoSizeStatus));
             menuView.add(new JSeparator());
             menuView.add(new JMenuItem(actRefresh));
             
@@ -1525,6 +1530,12 @@ public final class MainWin extends JFrame {
                 selVal = (Boolean)actAdjustColumns.getValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY);
                 myopts.adjustColumnWidths = (selVal != null && selVal.booleanValue());
                 myopts.toolbarConfig = ToolbarEditorDialog.saveConfigToString(toolbar);
+                
+                if (actAutoSizeStatus.isSelected()) {
+                    myopts.statusBarSize = -1;
+                } else {
+                    myopts.statusBarSize = statusSplitter.getHeight() - statusSplitter.getDividerLocation();
+                }
                 
                 Utils.storeOptionsToFile();
                 //saved = true;
@@ -1701,11 +1712,13 @@ public final class MainWin extends JFrame {
             
             tablePanel = new ProgressPanel();
             
-            Box box = Box.createVerticalBox();
-            box.add(getTabMain());
-            box.add(getTextStatus());
-            
-            tablePanel.setContentComponent(box);
+//            Box box = Box.createVerticalBox();
+//            box.add(getTabMain());
+//            box.add(getTextStatus());
+//            tablePanel.setContentComponent(box);
+//            
+
+            tablePanel.setContentComponent(getStatusSplitter());
             
             JPanel quickSearchPanel = new JPanel(new BorderLayout());
             quickSearchPanel.add(tablePanel, BorderLayout.CENTER);
@@ -1715,6 +1728,29 @@ public final class MainWin extends JFrame {
             jContentPane.add(getToolbar(), BorderLayout.NORTH);
         }
         return jContentPane;
+    }
+    
+    private JSplitPane getStatusSplitter() {
+        if (statusSplitter == null) {
+            statusSplitter = new JSplitPane(JSplitPane.VERTICAL_SPLIT, getTabMain(),
+                    new JScrollPane(getTextStatus(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
+            statusSplitter.setOneTouchExpandable(true);
+            statusSplitter.setResizeWeight(1); // Table gets all available space
+            statusSplitter.setBorder(null);
+
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {                
+                    actAutoSizeStatus.setSelected(myopts.statusBarSize < 0);
+                    if (myopts.statusBarSize >= 0) {
+                        statusSplitter.setDividerLocation(statusSplitter.getHeight() - myopts.statusBarSize);
+                    }
+                    
+                    textStatus.getDocument().addDocumentListener(actAutoSizeStatus);
+                    statusSplitter.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, actAutoSizeStatus);
+                }
+            });
+        }
+        return statusSplitter;
     }
     
     /**
@@ -1817,7 +1853,7 @@ public final class MainWin extends JFrame {
                     return d;
                 }
             };
-            textStatus.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+            //textStatus.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 
             textStatus.setBackground(getDefStatusBackground());
             textStatus.setFont(new java.awt.Font("DialogInput", java.awt.Font.PLAIN, 12));
@@ -2738,12 +2774,7 @@ public final class MainWin extends JFrame {
         
     }
     
-    class QuickSearchHelper implements DocumentListener, ActionListener, ChangeListener {
-        private boolean eventLock = false;
-        
-        protected JToolBar quickSearchBar;
-        protected JTextField textQuickSearch;
-        protected JButton clearQuickSearchButton;
+    class QuickSearchHelper extends AbstractQuickSearchHelper implements ChangeListener {
         
         @SuppressWarnings("unchecked")
         public Filter getFilterFor(TableType tableType) {
@@ -2755,14 +2786,14 @@ public final class MainWin extends JFrame {
             FmtItem[] filterCols;
             switch (tableType) {
             case RECEIVED:
-                filterCols = new FmtItem[] { RecvFormat.e, RecvFormat.f, RecvFormat.s, RecvFormat.i, RecvFormat.j};
+                filterCols = new FmtItem[] { RecvFormat.e, RecvFormat.f, RecvFormat.s, RecvFormat.i, RecvFormat.j, RecvFormat.o};
                 break;
             case SENT:
             case SENDING:
-                filterCols = new FmtItem[] { JobFormat.C, JobFormat.e, JobFormat.j, JobFormat.R, JobFormat.s, JobFormat.v};
+                filterCols = new FmtItem[] { JobFormat.C, JobFormat.e, JobFormat.j, JobFormat.R, JobFormat.s, JobFormat.v, JobFormat.J, JobFormat.S, JobFormat.o};
                 break;
             case ARCHIVE:
-                filterCols = new FmtItem[] { QueueFileFormat.company, QueueFileFormat.external, QueueFileFormat.jobid, QueueFileFormat.number, QueueFileFormat.receiver, QueueFileFormat.status };
+                filterCols = new FmtItem[] { QueueFileFormat.company, QueueFileFormat.external, QueueFileFormat.jobid, QueueFileFormat.number, QueueFileFormat.receiver, QueueFileFormat.status, QueueFileFormat.jobtag, QueueFileFormat.sender, QueueFileFormat.owner };
                 break;
             default:
                 throw new IllegalArgumentException("Unknown table type");
@@ -2793,80 +2824,82 @@ public final class MainWin extends JFrame {
             }
         }
         
-        public void changedUpdate(DocumentEvent e) {
-            // do nothing
-        }
-
-        public void insertUpdate(DocumentEvent e) {
-            if (eventLock)
-                return;
-            
-            performQuickSearch();
-        }
-
-        public void removeUpdate(DocumentEvent e) {
-            if (eventLock)
-                return;
-            
-            performQuickSearch();
-        }
-        
         public void stateChanged(ChangeEvent e) {
             refreshFilter();
         }
 
-        private void performQuickSearch() {
-            String text = textQuickSearch.getText();
+        protected void performActualQuickSearch() {
             refreshFilter();
-            clearQuickSearchButton.setEnabled(text.length() > 0);
         }
         
-        public void filterWasReset() {
-            eventLock = true;
-            textQuickSearch.setText("");
-            clearQuickSearchButton.setEnabled(false);
-            eventLock = false;
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            String actCmd = e.getActionCommand();
-            if (actCmd.equals("clear")) {
-                textQuickSearch.setText("");
-            } else if (actCmd.equals("focus")) {
-                getSelectedTable().requestFocusInWindow();
-            }
+        @Override
+        protected Component getFocusComponent() {
+            return getSelectedTable();
         }
         
         public JToolBar getQuickSearchBar(Action searchAction) {
-            if (quickSearchBar == null) {
-                quickSearchBar = new JToolBar();
-                
-                textQuickSearch = new JTextField(20);
-                textQuickSearch.getDocument().addDocumentListener(this);
-                textQuickSearch.setActionCommand("focus");
-                textQuickSearch.addActionListener(this);
-                textQuickSearch.setToolTipText(_("Type here parts of the sender, recipient or file name in order to search for a fax."));
-                Dimension prefSize = textQuickSearch.getPreferredSize();
-                prefSize.width = Integer.MAX_VALUE;
-                prefSize.height += 4;
-                textQuickSearch.setMaximumSize(prefSize);
-                textQuickSearch.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
-                
-                clearQuickSearchButton = new JButton(Utils._("Reset"));
-                clearQuickSearchButton.setActionCommand("clear");
-                clearQuickSearchButton.addActionListener(this);
-                clearQuickSearchButton.setEnabled(false);
-                clearQuickSearchButton.setToolTipText(Utils._("Reset quick search and show all faxes."));
-                
-                quickSearchBar.add(new JLabel(Utils._("Search") + ": "));
-                quickSearchBar.add(textQuickSearch);
-                quickSearchBar.add(clearQuickSearchButton);
-                if (searchAction != null) {
-                    quickSearchBar.addSeparator();
-                    quickSearchBar.add(searchAction);
-                }
+            return getQuickSearchBar(searchAction, 
+                    _("Type here parts of the sender, recipient or file name in order to search for a fax."),
+                    _("Reset quick search and show all faxes."));
+        }
+    }
+    
+    class StatusBarResizeAction extends ExcDialogAbstractAction implements DocumentListener, PropertyChangeListener {        
+        public void actualActionPerformed(ActionEvent e) {
+            setSelected(!isSelected());
+        };
+
+        public boolean isSelected() {
+            Boolean state = (Boolean)getValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY);
+            return (state != null) ? state.booleanValue() : false;
+        }
+        
+        public void setSelected(boolean selected) {
+            putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, selected);
+            if (selected) {
+                makePreferredSize();
             }
-            return quickSearchBar;
+        }
+
+        private void makePreferredSize() {
+            //statusSplitter.resetToPreferredSizes();
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    statusSplitter.setDividerLocation(getAutoDividerLocation());
+                }
+            });
+        }
+        
+        int getAutoDividerLocation() {
+            return statusSplitter.getHeight() - statusSplitter.getBottomComponent().getPreferredSize().height - statusSplitter.getDividerSize() - 1;
+        }
+        
+        public void changedUpdate(DocumentEvent e) {
+            // NOP
+        }
+
+        public void insertUpdate(DocumentEvent e) {
+            if (isSelected()) {
+                makePreferredSize();
+            }
+        }
+
+        public void removeUpdate(DocumentEvent e) {
+            if (isSelected()) {
+                makePreferredSize();
+            }
+        }
+        
+        private boolean initialAdjustments = true;
+        public void propertyChange(PropertyChangeEvent evt) {
+//            System.out.println((Integer)evt.getNewValue() - getAutoDividerLocation());
+            
+            if (isSelected() && ((Integer)evt.getNewValue() - getAutoDividerLocation()) != 0) {
+                if (!initialAdjustments)
+                    setSelected(false);
+            } else {
+                initialAdjustments = false;
+            }
         }
     }
 }  

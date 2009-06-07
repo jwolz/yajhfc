@@ -507,6 +507,12 @@ public class FaxOptions {
      */
     public boolean automaticallyCheckForUpdate = false;
     
+    /**
+     * Status bar size in the main window. -1 means "automatically resize"
+     */
+    public int statusBarSize = -1;
+
+    
     public FaxOptions() {
         this.host = "";
         this.port = 4559;

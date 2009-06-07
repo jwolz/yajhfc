@@ -1,4 +1,4 @@
-YajHFC 0.4.0 
+YajHFC 0.4.1 
 =======================
 
 HAKKINDA
@@ -14,7 +14,7 @@ YajHFC (Yet Another Java HylaFAX Client), HylaFAX faks sunucusu
 * Alınan ve gönderilen faksları görüntüleme
 * Telefon Defteri (Girdiler isteğe bağlı olarak SQL veritabanı veya LDAP dizininden okunabilir)
 * Bir iletişimde görünür tablo sütunlarını seçebilme
-* Yedi Dil desteği: İngilizce, Fransızca, Almanca, İtalyanca, Rusça, İspanyolca ve Türkçe
+* Sekiz Dil desteği: İngilizce, Fransızca, Almanca, İtalyanca, Rusça, İspanyolca, Türkçe ve Yunanca
 
 Web sitesi: http://yajhfc.berlios.de/
 e-posta:    Jonas Wolz <jwolz@freenet.de>
@@ -31,7 +31,7 @@ Gereksinimler:
 
 Kurulum için sadece YajHFC'yi dosya sisteminizdeki herhangi bir dizine
 indirin.
-Çalıştırmak için "java -jar yajhfc-0_4_0.jar" kullanın.
+Çalıştırmak için "java -jar yajhfc-0_4_1.jar" kullanın.
 (Windows'da çalıştırmak için genellikle jar dosyasına iki kez tıklayabilirsiniz)
 
 LİSANS
@@ -65,7 +65,17 @@ Java projesi olarak Eclipse IDE kullanılarak özgün biçimde yazılmıştır.
 DEĞİŞİKLİKLER
 -------
 
+0.4.1:
+- Telefon defterinde dağıtım listesi desteği (sadece XML+JDB)
+- CSV telefon defteri desteği ( örn: içe/dışa aktarma)
+- Gönderilmiş fakslar için arşiv bayrağı desteği
+- Ana penceredeki fakslar için hızlı arama
+- Bazı hatalar düzeltildi
+
 0.4.0:
+- Yunanca çeviri eklendi
+- Faks aramasına el ile cevap verme desteği 
+- Güncelleme kontrolü
 - Arşiv dizin desteği
 - Tek dosya olarak faksları görüntüleme ve gönderme (PDF, TIFF veya PS biçiminde)
 - Telefon defteri şimdi bir çok ortak alan içeriyor

@@ -1,4 +1,4 @@
-LISEZ MOI for YajHFC 0.3.8
+LISEZ MOI for YajHFC 0.4.1
 ==========================
 
 A PROPOS DE
@@ -26,11 +26,12 @@ Pres requis:
 * JRE 5.0 ou superieur (Java 6 recommande)
 * Un serveur Hylafax operationnel sur votre reseau (bien sur ;-) )
 * Un programme pour visualiser les fichiers TIFF (voir aussi les FAQ)
-* Optionnel: Un visualiseur Postscript (e.g. Ghostview)
+* Optionnel: Un visualiseur Postscript (e.g. Ghostview), GhostScript
+     et tiff2pdf (librairie libtiff-utils)
 
-Pour Installer YajHFC Telechargez le fichier yajhfc-0_3_7.jar dans un repertoire
+Pour Installer YajHFC Telechargez le fichier yajhfc-0_4_1.jar dans un repertoire
 sur votre machine.
-Pour l'executer, utilisez la commande: "java -jar yajhfc-0_3_7.jar"
+Pour l'executer, utilisez la commande: "java -jar yajhfc-0_4_1.jar"
 (Sous Windows vous pouvez habituellement double cliquer sur le fichier jar.)
 
 LICENCE
@@ -61,6 +62,13 @@ YajHFC a ete originellement ecrit comme un premier projet Java
 
 MODIFICATIONS
 -------------
+0.4.1:
+- Support des listes de diffusion pour les carnet d'adresse (XML+JDBC seulement)
+- Support des carnets d'adresse au format CSV (e.g. pour import/export)
+- Support d'activation du "archive flag" (doneop) pour les faxes envoyes
+- Barre de recherche rapide de Faxs dans la fenetre principale
+- Quelques corrections de Bugs
+
 0.4.0:
 - Installation en grec ajoutee
 - Support pour ajouter manuellement un appel telephonique
