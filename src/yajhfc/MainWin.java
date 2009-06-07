@@ -1519,7 +1519,6 @@ public final class MainWin extends JFrame {
                 sendReady = SendReadyState.NotReady;
                 
                 doLogout();
-                PersistentReadState.getCurrent().persistReadState();
                 
                 menuViewListener.saveToOptions(myopts);
                 myopts.mainwinLastTab = getTabMain().getSelectedIndex();
@@ -1536,10 +1535,7 @@ public final class MainWin extends JFrame {
                 } else {
                     myopts.statusBarSize = statusSplitter.getHeight() - statusSplitter.getDividerLocation();
                 }
-                
-                Utils.storeOptionsToFile();
-                //saved = true;
-                Launcher2.releaseLock();
+            
                 Thread.yield();
                 System.exit(0);
             }
@@ -1563,6 +1559,15 @@ public final class MainWin extends JFrame {
         if (myopts.automaticallyCheckForUpdate) {
             UpdateChecker.startSilentUpdateCheck();
         }
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+           @Override
+           public void run() {               
+               PersistentReadState.getCurrent().persistReadState();
+               
+               Utils.storeOptionsToFile();
+               Launcher2.releaseLock();
+           } 
+        });
     }
     
     void showOrHideTrayIcon() {
