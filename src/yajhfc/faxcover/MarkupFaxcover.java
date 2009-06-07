@@ -56,6 +56,11 @@ public abstract class MarkupFaxcover extends Faxcover {
     protected String newLineReplacement = "\n";
     
     /**
+     * The encoding used for input and output streams
+     */
+    protected String encoding = "utf-8";
+    
+    /**
      * @param coverTemplate
      */
     public MarkupFaxcover(URL coverTemplate) {
@@ -86,8 +91,8 @@ public abstract class MarkupFaxcover extends Faxcover {
         File tempFile = null;
         try {
             tempFile = File.createTempFile("cover", ".tmp");
-            Reader inReader = new InputStreamReader(in, "utf-8");
-            Writer outWriter = new OutputStreamWriter(new FileOutputStream(tempFile), "utf-8");
+            Reader inReader = new InputStreamReader(in, encoding);
+            Writer outWriter = new OutputStreamWriter(new FileOutputStream(tempFile), encoding);
             replaceTags(inReader, outWriter);
             inReader.close();
             outWriter.close();

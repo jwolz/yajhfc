@@ -1,4 +1,4 @@
-LÉEME (README) de YajHFC 0.4.0
+LÉEME (README) de YajHFC 0.4.1
 ==============================
 
 ACERCA DE
@@ -29,9 +29,9 @@ Requisitos:
 * Opcional: un visor PostScript (por ejemplo, Ghostview), GhostScript
   y tiff2pdf (integrado en libtiff-utils)
 
-Para instalar YajHFC hay que descargar el archivo yajhfc-0_4_0.jar en algún lugar 
+Para instalar YajHFC hay que descargar el archivo yajhfc-0_4_1.jar en algún lugar 
 de su disco.
-Para ejecutarlo, utilizar: "java -jar yajhfc-0_4_0.jar"
+Para ejecutarlo, utilizar: "java -jar yajhfc-0_4_1.jar"
 (En Windows seguramente sólo sea necesario ejecutarlo pulsando dos veces sobre el archivo).
 
 LICENCIA
@@ -66,9 +66,16 @@ de Java (más avanzado que los programas "Hola mundo") utilizando la IDE Eclipse
 CAMBIOS
 -------
 
+0.4.1:
+- Soporte para listas de distribución en la agenda telefónica (sólo para XML+JDBC)
+- Soporte de CSV para agendas telefónicas (p. ej. para importar/exportar)
+- Soporte para establecer el "indicador de archivar" (doneop) para los faxes enviados
+- Barra de búsqueda rápida de faxes en la ventana principal
+- Corrección de algunos errores
+
 0.4.0:
 - Se añade la traducción al griego
-- Posibilidad de responder manualmente a una llamada de voz
+- Posibilidad de responder manualmente a una llamada de voz (como la función "faxanswer")
 - Verificación de actualización
 - Soporte del directorio para los faxes archivados
 - Soporte para visualizar y enviar faxes como un archivo único (en formato PDF, TIFF o PS)

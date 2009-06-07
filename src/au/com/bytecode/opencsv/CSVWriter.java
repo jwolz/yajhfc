@@ -72,7 +72,7 @@ public class CSVWriter {
     public static final char NO_ESCAPE_CHARACTER = '\u0000';
     
     /** Default line terminator uses platform encoding. */
-    public static final String DEFAULT_LINE_END = "\n";
+    public static final String DEFAULT_LINE_END = System.getProperty("line.separator");
 
     private static final SimpleDateFormat
     	TIMESTAMP_FORMATTER = 

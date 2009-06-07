@@ -330,7 +330,7 @@ public class DistributionListPhonebookPanel extends PhonebookPanel {
             treePopup.add(addAction);
             itemsTree.setComponentPopupMenu(treePopup);
             
-            contentPane.add(new JLabel("<html>" + "Please select the items to add to the distribution list:" + "</html>"), "0,0");
+            contentPane.add(new JLabel("<html>" + Utils._("Please select the items to add to the distribution list:") + "</html>"), "0,0");
             contentPane.add(new JScrollPane(itemsTree), "0,1");
             contentPane.add(new JButton(addAction), "0,3");
             contentPane.add(cancelAct.createCancelButton(), "0,4");

@@ -23,7 +23,6 @@ import info.clearthought.layout.TableLayout;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dialog;
-import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
@@ -67,8 +66,6 @@ import javax.swing.KeyStroke;
 import javax.swing.OverlayLayout;
 import javax.swing.TransferHandler;
 import javax.swing.UIManager;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.event.TreeSelectionEvent;
@@ -83,6 +80,7 @@ import yajhfc.Utils;
 import yajhfc.phonebook.PhoneBookTreeModel.PBTreeModelListener;
 import yajhfc.phonebook.PhoneBookTreeModel.RootNode;
 import yajhfc.phonebook.convrules.NameRule;
+import yajhfc.util.AbstractQuickSearchHelper;
 import yajhfc.util.ClipboardPopup;
 import yajhfc.util.ExcDialogAbstractAction;
 import yajhfc.util.ExceptionDialog;
@@ -111,8 +109,6 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     Action listRemoveAction, addEntryAction, removeEntryAction, searchEntryAction, selectAction;
     Action addDistListAction;
     
-    JTextField searchField;
-    JButton clearButton;
     MultiButtonGroup nameStyleGroup;
     
     ProgressPanel progressPanel;
@@ -445,32 +441,10 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         return progressPanel;
     }
     
-    private JToolBar createToolBar() {
-        JToolBar toolBar = new JToolBar();
-        
-        searchField = new JTextField(20);
-        searchField.getDocument().addDocumentListener(searchHelper);
-        searchField.setActionCommand("focus");
-        searchField.addActionListener(searchHelper);
-        Dimension prefSize = searchField.getPreferredSize();
-        prefSize.width = Integer.MAX_VALUE;
-        prefSize.height += 4;
-        searchField.setMaximumSize(prefSize);
-        searchField.addMouseListener(getDefClPop());
-        
-        clearButton = new JButton(Utils._("Reset"));
-        clearButton.setActionCommand("clear");
-        clearButton.addActionListener(searchHelper);
-        clearButton.setEnabled(false);
-        clearButton.setToolTipText(Utils._("Reset quick search and show all phone book entries."));
-        
-        toolBar.add(new JLabel(Utils._("Search") + ": "));
-        toolBar.add(searchField);
-        toolBar.add(clearButton);
-        toolBar.addSeparator();
-        toolBar.add(searchEntryAction);
-        
-        return toolBar;
+    private JToolBar createToolBar() {        
+        return searchHelper.getQuickSearchBar(searchEntryAction,
+                null,
+                Utils._("Reset quick search and show all phone book entries."));
     }
     
     private JSplitPane getSplitPane() {
@@ -891,7 +865,6 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         
 //        if (fopts.lastSelectedPhonebook >= 0 && fopts.lastSelectedPhonebook < tabPhonebooks.getTabCount())
 //            tabPhonebooks.setSelectedIndex(fopts.lastSelectedPhonebook);
-        phoneBookTree.setSelectionRow(1);
         checkMenuEnable();
     }
     
@@ -1043,49 +1016,23 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         }
     }
 
-    class SearchHelper implements DocumentListener, PBTreeModelListener, ActionListener {
-        private boolean eventLock = false;
+    class SearchHelper extends AbstractQuickSearchHelper implements PBTreeModelListener {
         
-        public void changedUpdate(DocumentEvent e) {
-            // do nothing
-        }
-
-        public void insertUpdate(DocumentEvent e) {
-            if (eventLock)
-                return;
-            
-            performQuickSearch();
-        }
-
-        public void removeUpdate(DocumentEvent e) {
-            if (eventLock)
-                return;
-            
-            performQuickSearch();
-        }
-
-        private void performQuickSearch() {
-            String text = searchField.getText();
-            treeModel.applyFilter(text);
-            clearButton.setEnabled(text.length() > 0);
+        protected void performActualQuickSearch() {
+            treeModel.applyFilter(textQuickSearch.getText());
         }
         
         public void filterWasReset() {
             eventLock = true;
-            searchField.setText("");
-            clearButton.setEnabled(false);
+            textQuickSearch.setText("");
+            clearQuickSearchButton.setEnabled(false);
             eventLock = false;
         }
-
-        public void actionPerformed(ActionEvent e) {
-            String actCmd = e.getActionCommand();
-            if (actCmd.equals("clear")) {
-                searchField.setText("");
-            } else if (actCmd.equals("focus")) {
-                phoneBookTree.requestFocusInWindow();
-            }
-        }
         
+        @Override
+        protected Component getFocusComponent() {
+            return phoneBookTree;
+        }
     }
     
     private class PhonebookMenuActionListener implements ActionListener{
@@ -1231,11 +1178,13 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                     for (PhoneBook pb : treeModel.getPhoneBooks()) {
                         phoneBookTree.expandPath(new TreePath(new Object[] { treeModel.rootNode, pb }));
                     }
+                    if (phoneBookTree.getSelectionPath() == null) {
+                        phoneBookTree.setSelectionRow(1);
+                    }
                     progressMonitor.close();
                 }
             }
         }
-        
         
         public PBOpenWorker(String descriptor) {
             this.descriptor = descriptor;

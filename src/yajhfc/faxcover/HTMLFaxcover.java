@@ -39,6 +39,7 @@ public class HTMLFaxcover extends MarkupFaxcover {
         super(coverTemplate);
         encodeNonASCIIAsEntity = true;
         newLineReplacement = "<br>";
+        encoding = "iso-8859-1";
     }
 
     /* (non-Javadoc)

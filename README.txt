@@ -68,9 +68,9 @@ CHANGES
 
 0.4.1:
 - Support for distribution lists in the phone book (XML+JDBC only)
-- Support for CSV phone books (i.e. for import/export)
+- Support for CSV phone books (e.g. for import/export)
 - Support to set the "archive flag" (doneop) for sent faxes
-- Quick search bar for the main window
+- Quick search bar for faxes in the main window
 - Some bug fixes
 
 0.4.0:

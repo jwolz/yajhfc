@@ -247,7 +247,13 @@ public class FormattedFile {
                 }
             }
             
-            String startOfFileLower = new String(data, 0, 32, "ISO-8859-1").toLowerCase();
+            String startOfFileLower;
+            if (data[0] == (byte)0xef && data[1] == (byte)0xbb && data[2] == (byte)0xbf) { // Byte order mark (utf-8)
+                startOfFileLower = new String(data, 3, 35, "UTF-8");
+            } else {
+                startOfFileLower = new String(data, 0, 32, "ISO-8859-1");
+            }
+            startOfFileLower = startOfFileLower.trim().toLowerCase();
             if (startOfFileLower.startsWith("<html") || startOfFileLower.startsWith("<!doctype html") ||
                 startOfFileLower.startsWith("<head") || startOfFileLower.startsWith("<title")) {
                 return FileFormat.HTML;
