@@ -35,8 +35,14 @@ public abstract class PersistentReadState {
     private static final Logger log = Logger.getLogger(PersistentReadState.class.getName());
     
     /**
-     * Saves the list of faxes considered read. Must be called
-     * before the application exits!
+     * Saves the list of faxes considered read and closes any open connections.
+     * Must be called before the application exits!
+     * @param readFaxes
+     */
+    public abstract void shutdown();
+    
+    /**
+     * Saves the list of faxes considered read.
      * @param readFaxes
      */
     public abstract void persistReadState();

@@ -149,13 +149,19 @@ public class JDBCPhoneBook extends PhoneBook {
         }
     }
 
-    private boolean isDataField(String fieldName) {
+    /**
+     * Returns the PBEntryField corresponding to the given column name or null if
+     * no such field exists.
+     * @param fieldName
+     * @return
+     */
+    private PBEntryField getPBEntryFieldFor(String fieldName) {
         for (PBEntryField field : PBEntryField.values()) {
             if (fieldName.equalsIgnoreCase(settings.getMappingFor(field))) {
-                return true;
+                return field;
             }
         }
-        return false;
+        return null;
     }
     
     private int appendFieldList(StringBuilder s, String suffix, String separator) {
@@ -189,7 +195,7 @@ public class JDBCPhoneBook extends PhoneBook {
             return null; // No fields selected
         }
         for (DBKey col : rowId) {
-            if (!col.isDataColumn) {
+            if (!col.isDataColumn()) {
                 s.append(", ").append(col.columnName);
             }
         }
@@ -281,9 +287,8 @@ public class JDBCPhoneBook extends PhoneBook {
             ResultSet rs = dbmd.getBestRowIdentifier(null, null, settings.table, DatabaseMetaData.bestRowSession, true);
             rowId.clear();
             while (rs.next()) {
-                DBKey key = new DBKey(rs.getString(("COLUMN_NAME")));
-                key.isDataColumn = isDataField(key.columnName);
-                rowId.add(key);
+                String columnName = rs.getString("COLUMN_NAME");
+                rowId.add(new DBKey(columnName, getPBEntryFieldFor(columnName)));
             }
             rs.close();
             
@@ -293,11 +298,13 @@ public class JDBCPhoneBook extends PhoneBook {
                 for (PBEntryField field : PBEntryField.values()) {
                     String mapping = settings.getMappingFor(field);
                     if (!AbstractConnectionSettings.isNoField(mapping)) {
-                        DBKey key = new DBKey(mapping);
-                        key.isDataColumn = true;
-                        rowId.add(key);
+                        rowId.add(new DBKey(mapping, field));
                     }
                 }
+            }
+            
+            if (Utils.debugMode) {
+                log.fine("Table key is: " + rowId);
             }
             
             loadItems(connection);
@@ -547,11 +554,27 @@ public class JDBCPhoneBook extends PhoneBook {
     }
     
     protected static class DBKey {
-        public String columnName;
-        public boolean isDataColumn;
+        public final String columnName;
+        /**
+         * The data field this key corresponds to or null if no such field exists.
+         */
+        public final PBEntryField dataField;
         
-        public DBKey(String columnName) {
+        public DBKey(String columnName, PBEntryField dataField) {
             this.columnName = columnName;
+            this.dataField = dataField;
+        }
+        
+        @Override
+        public String toString() {
+            return "DBKey[columnName=" + columnName + ";dataField=" + ((dataField == null) ? "<null>" : dataField.name()) + "]";
+        }
+
+        /**
+         * @return the isDataColumn
+         */
+        public boolean isDataColumn() {
+            return (dataField != null);
         }
     }
 }

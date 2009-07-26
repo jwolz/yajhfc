@@ -164,9 +164,11 @@ public class NoGUISender extends JFrame implements ProgressUI {
                } 
             });
             
-            for (String number : recipients) {
-                sendController.getNumbers().add(new DefaultPBEntryFieldContainer().parseFromString(number));
-            }
+//            for (String number : recipients) {
+//                sendController.getNumbers().add(new DefaultPBEntryFieldContainer().parseFromString(number));
+//            }
+            DefaultPBEntryFieldContainer.parseCmdLineStrings(sendController.getNumbers(), recipients);
+            
             sendController.setUseCover(useCover);
             if (subject != null)
                 sendController.setSubject(subject);

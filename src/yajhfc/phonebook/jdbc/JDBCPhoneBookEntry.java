@@ -21,13 +21,18 @@ package yajhfc.phonebook.jdbc;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import yajhfc.Utils;
 import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.PhoneBook;
 import yajhfc.phonebook.SimplePhoneBookEntry;
-import yajhfc.Utils;
+import yajhfc.phonebook.jdbc.JDBCPhoneBook.DBKey;
 
 public class JDBCPhoneBookEntry extends SimplePhoneBookEntry {
+    private static final Logger log = Logger.getLogger(JDBCPhoneBookEntry.class.getName());
+    
     private JDBCPhoneBook parent;
     
     private Object[] rowKeys;
@@ -53,6 +58,7 @@ public class JDBCPhoneBookEntry extends SimplePhoneBookEntry {
         try {
             return rs.getString(fieldName);
         } catch (SQLException e) {
+            log.log(Level.WARNING, "Error loading value " + fieldName + " from " + rs, e);
             return Utils._("<error>");
         }
     }
@@ -66,12 +72,18 @@ public class JDBCPhoneBookEntry extends SimplePhoneBookEntry {
         entryStatus = ENTRY_UNCHANGED;
         setDirty(false);
     }
+    
     private void readKeys(ResultSet rs) throws SQLException {
         for (int i = 0; i < parent.rowId.size(); i++) {
-            rowKeys[i] = rs.getObject(parent.rowId.get(i).columnName);
+            DBKey key = parent.rowId.get(i);
+            if (key.isDataColumn()) {
+                rowKeys[i] = getField(key.dataField);
+            } else {
+                rowKeys[i] = rs.getObject(key.columnName);
+            }
         }
     }
-    
+
     /**
      * Sets the changed value in the prepared statement. The order of fields must
      * be the one specified by PBEntryField.values().

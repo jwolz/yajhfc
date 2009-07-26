@@ -269,6 +269,11 @@ public class JDBCPersistentReadState extends PersistentReadState {
      */
     @Override
     public void persistReadState() {
+        // NOP
+    }
+    
+    @Override
+    public void shutdown() {
         disconnect();
     }
 

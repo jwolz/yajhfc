@@ -32,6 +32,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.util.AbstractList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.swing.Action;
@@ -41,6 +43,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -55,6 +58,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
@@ -77,11 +81,13 @@ import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
 import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 import yajhfc.util.CancelAction;
 import yajhfc.util.ClipboardPopup;
+import yajhfc.util.ExampleFileFilter;
 import yajhfc.util.ExcDialogAbstractAction;
 import yajhfc.util.ExceptionDialog;
 import yajhfc.util.JTableTABAction;
 import yajhfc.util.LimitedPlainDocument;
 import yajhfc.util.ProgressPanel;
+import yajhfc.util.SafeJFileChooser;
 
 /**
  * @author jonas
@@ -100,7 +106,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
     protected JTable tableNumbers;
     protected PBEntryFieldTableModel numberTableModel;
     protected JTextField textNumber;
-    protected Action actSend, actPreview, actPhonebook;
+    protected Action actSend, actPreview, actPhonebook, actFromFile;
     
     
     protected JComboBox comboResolution;
@@ -180,6 +186,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
             Utils.setDefWinPos(this);
 
         enableCoverComps(Utils.getFaxOptions().useCover);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
     }
 
     protected JComponent createContentPane() {
@@ -349,7 +356,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
     protected Component createNumberEntryList() {
         double[][] tablelay = {
                 { TableLayout.FILL, TableLayout.PREFERRED},
-                { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.FILL }
+                { TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.FILL }
         };
         JPanel tablePanel = new JPanel(new TableLayout(tablelay), false);
         
@@ -407,9 +414,38 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         JButton buttonRemoveNumber = new JButton(actRemoveNumber);
         buttonRemoveNumber.setText("");
 
+        actFromFile = new ExcDialogAbstractAction() {
+            private JFileChooser chooser;
+            
+            @Override
+            protected void actualActionPerformed(ActionEvent e) {
+                if (chooser == null) {
+                    chooser = new SafeJFileChooser();
+                }
+                FileFilter ff = new ExampleFileFilter("txt", Utils._("Text files"));
+                chooser.addChoosableFileFilter(ff);
+                chooser.setFileFilter(ff);
+                
+                if (chooser.showOpenDialog(SimplifiedSendDialog.this) == JFileChooser.APPROVE_OPTION) {
+                    try {
+                        DefaultPBEntryFieldContainer.readListFile(getRecipients(), chooser.getSelectedFile().getPath());
+                    } catch (Exception e1) {
+                        ExceptionDialog.showExceptionDialog(SimplifiedSendDialog.this, Utils._("Error reading the specified file:"), e1);
+                    }
+                }
+            }
+        };
+        actFromFile.putValue(Action.NAME, Utils._("Add from text file..."));
+        actFromFile.putValue(Action.SMALL_ICON, Utils.loadCustomIcon("importtxt.png"));
+        actFromFile.putValue(Action.SHORT_DESCRIPTION, Utils._("Adds recipients from a text file containing one recipient per line"));
+        JButton buttonFromFile = new JButton(actFromFile);
+        buttonFromFile.setText("");
+        
+        
         JPopupMenu tablePopup = new JPopupMenu();
         tablePopup.add(new JMenuItem(actAddNumber));
         tablePopup.add(new JMenuItem(actPhonebook));
+        tablePopup.add(new JMenuItem(actFromFile));
         tablePopup.addSeparator();
         tablePopup.add( new JMenuItem(actRemoveNumber));
         
@@ -448,9 +484,10 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         tablePanel.add(textNumber, "0,1");
         tablePanel.add(new JLabel(Utils._("Recipients:")), "0,2,1,2, f,f");
         tablePanel.add(buttonAddNumber, "1,1");
-        tablePanel.add(tablePane, "0,3,0,5,f,f");
+        tablePanel.add(tablePane, "0,3,0,6,f,f");
         tablePanel.add(buttonRemoveNumber, "1,3");
         tablePanel.add(buttonPhonebook, "1,4");
+        tablePanel.add(buttonFromFile, "1,5");
         
         return tablePanel;
     }
@@ -611,20 +648,36 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
     public void addLocalFile(String fileName) {
         tflFiles.addListItem(fileName);        
     }
-
-    public void addRecipient(String faxNumber, String name, String company,
-            String location, String voiceNumber) {
-        PBEntryFieldContainer tfl = new DefaultPBEntryFieldContainer("");
-        tfl.setField(PBEntryField.FaxNumber, faxNumber);
-        tfl.setField(PBEntryField.Name, name);
-        tfl.setField(PBEntryField.Company, company);
-        tfl.setField(PBEntryField.Location, location);
-        tfl.setField(PBEntryField.VoiceNumber, voiceNumber);
-        numberTableModel.addRow(tfl);
-    }
     
-    public void addRecipient(PBEntryFieldContainer recipient) {
-        numberTableModel.addRow(new DefaultPBEntryFieldContainer(recipient));
+    private List<PBEntryFieldContainer> recipientList;
+    public Collection<PBEntryFieldContainer> getRecipients() {
+        if (recipientList == null) {
+            recipientList = new AbstractList<PBEntryFieldContainer>() {
+                @Override
+                public PBEntryFieldContainer get(int index) {
+                    return numberTableModel.getRow(index);
+                }
+
+                @Override
+                public int size() {
+                    return numberTableModel.getRowCount();
+                }
+                
+                @Override
+                public boolean add(PBEntryFieldContainer o) {
+                    numberTableModel.addRow(new DefaultPBEntryFieldContainer(o));
+                    return true;
+                }
+                
+                @Override
+                public PBEntryFieldContainer remove(int index) {
+                    PBEntryFieldContainer res = numberTableModel.getRow(index);
+                    numberTableModel.removeRow(index);
+                    return res;
+                }
+            };
+        }
+        return recipientList;
     }
 
     public void addServerFile(HylaServerFile serverFile) {

@@ -18,7 +18,12 @@
  */
 package yajhfc.phonebook.convrules;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Collection;
 import java.util.EnumMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import yajhfc.phonebook.PBEntryField;
@@ -118,5 +123,51 @@ public class DefaultPBEntryFieldContainer extends EnumMap<PBEntryField, String>
     public DefaultPBEntryFieldContainer(PBEntryFieldContainer other) {
         this();
         copyFrom(other);
+    }
+    
+    public DefaultPBEntryFieldContainer(String faxNumber, String name, String company, String location, String voiceNumber) {
+        this("");
+        setField(PBEntryField.FaxNumber, faxNumber);
+        setField(PBEntryField.Name, name);
+        setField(PBEntryField.Company, company);
+        setField(PBEntryField.Location, location);
+        setField(PBEntryField.VoiceNumber, voiceNumber);
+    }
+        
+    /**
+     * Parses a list of recipients as given on the command line and adds them to the target list
+     * @param cmdLineRecipients
+     * @param targetList
+     */
+    public static void parseCmdLineStrings(Collection<PBEntryFieldContainer> targetList, Collection<String> cmdLineRecipients) {
+        for (String number : cmdLineRecipients) {
+            if (number.startsWith("@")) {
+                try {
+                    readListFile(targetList, number.substring(1));
+                } catch (IOException e) {
+                    log.log(Level.WARNING, "Error reading the recipients from the file specified by " + number, e);
+                }
+            } else {
+                targetList.add(new DefaultPBEntryFieldContainer().parseFromString(number));
+            }
+        }
+    }
+    
+    /**
+     * Parses a file containing recipients as given on the command line and adds them to the target list
+     * @param cmdLineRecipients
+     * @param targetList
+     * @throws IOException 
+     */
+    public static void readListFile(Collection<PBEntryFieldContainer> targetList, String fileName) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(fileName));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            line = line.trim();
+            if (line.length() > 0) {
+                targetList.add(new DefaultPBEntryFieldContainer().parseFromString(line));
+            }
+        }
+        reader.close();
     }
 }

@@ -33,6 +33,7 @@ package yajhfc;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 
+import java.awt.Frame;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -108,6 +109,9 @@ public final class Launcher2 {
     
     final static String multiFileEOF = "\003\004"; // ETX + EOT
     
+    final static int WINDOWSTATE_NOCHANGE = -1;
+    final static int WINDOWSTATE_TOTRAY = -2;
+    
     private static InetAddress getLocalhost() 
         throws UnknownHostException {
             final byte[] addr = {127, 0, 0, 1};
@@ -176,57 +180,6 @@ public final class Launcher2 {
         }
     }
     
-    
-    
-
-    
-//    private static void printHelp() {
-//        System.out.print(
-//            "General usage:\n"+
-//            "java -jar yajhfc.jar [--help] [--debug] [--admin] [--background|--noclose] \n" +
-//            "         [--configdir=directory] [--loadplugin=filename] [--logfile=filename]\n" +
-//            "         [--showtab=0|R|1|S|2|T] [--recipient=...] [--stdin | filename ...]\n"+
-//            "Argument description:\n"+
-//            "filename     One or more file names of PostScript files to send.\n"+
-//            "--stdin      Read the file to send from standard input.\n"+
-//            "--recipient  Specifies the phone number of a recipient to send the fax to.\n"+
-//            "             You may specify multiple arguments for multiple recipients.\n"+
-//            "--admin      Start up in admin mode.\n"+
-//            "--debug      Output some debugging information.\n"+
-//            "--logfile    The logfile to log debug information to (if not specified, use stdout).\n"+
-//            "--background If there is no already running instance, launch a new instance \n" +
-//            "             and terminate (after submitting the file to send).\n" +
-//            "--noclose    Do not close YajHFC after submitting the fax.\n"+
-//            "--showtab    Sets the tab to display on startup. Specify 0 or R for the \"Received\", \n"+
-//            "             1 or S for the \"Sent\" or 2 or T for the \"Transmitting\" tab.\n"+
-//            "--loadplugin Specifies the jar file of a YajHFC plugin to load.\n" +
-//            "--loaddriver Specifies the location of a JDBC driver JAR file.\n" +
-//            "--no-plugins Disables loading plugins from the plugin.lst file.\n" +
-//            "--no-gui     Sends a fax with a minimal GUI.\n" +
-//            "--configdir  Sets a configuration directory to use instead of ~/.yajhfc\n" +
-//            "--help       Displays this text.\n"
-//            );   
-//    }
-//
-//    /**
-//     * Strips quotes (" or ') at the beginning and end of the specified String
-//     * @param str
-//     * @return
-//     */
-//    public static String stripQuotes(String str)
-//    {
-//        char c = str.charAt(0);
-//        if (c == '\"' || c == '\'') {
-//            c = str.charAt(str.length()-1);
-//            if (c == '\"' || c == '\'') {
-//                return str.substring(1, str.length()-1);
-//            }
-//        }
-//        return str;
-//    }
-    
-   
-    
     /**
      * Launches this application
      */
@@ -249,6 +202,7 @@ public final class Launcher2 {
         String subject = null;
         String comment = null;
         boolean noWait = false;
+        int desiredWindowState = -1;
         
         // Also modify CommandLineOpts.properties if new options are added
         final LongOpt[] longOpts = new LongOpt[] {
@@ -265,6 +219,7 @@ public final class Launcher2 {
                 new LongOpt("noclose", LongOpt.NO_ARGUMENT, null, 3),
                 new LongOpt("no-wait", LongOpt.NO_ARGUMENT, null, 10),
                 new LongOpt("showtab", LongOpt.REQUIRED_ARGUMENT, null, 'T'),
+                new LongOpt("windowstate", LongOpt.REQUIRED_ARGUMENT, null, 11),
                 new LongOpt("loadplugin", LongOpt.REQUIRED_ARGUMENT, null, 4),
                 new LongOpt("loaddriver", LongOpt.REQUIRED_ARGUMENT, null, 5),
                 new LongOpt("no-plugins", LongOpt.NO_ARGUMENT, null, 7),
@@ -318,6 +273,30 @@ public final class Launcher2 {
             case 10: // no-wait
                 noWait = true;
                 forkNewInst = true;
+                break;
+            case 11: // windowstate
+                if (getopt.getOptarg().length() >= 1) {
+                    switch (getopt.getOptarg().charAt(0)) {
+                    case 'N':
+                    case 'n':
+                        desiredWindowState = Frame.NORMAL;
+                        break;
+                    case 'M':
+                    case 'm':
+                        desiredWindowState = Frame.MAXIMIZED_BOTH;
+                        break;
+                    case 'I':
+                    case 'i':
+                        desiredWindowState = Frame.ICONIFIED;
+                        break;
+                    case 'T':
+                    case 't':
+                        desiredWindowState = WINDOWSTATE_TOTRAY;
+                        break;
+                    default:
+                        System.err.println("Unknown window state: " + getopt.getOptarg());
+                    }
+                }
                 break;
             case 'C': // use-cover
                 String optarg = getopt.getOptarg();
@@ -551,7 +530,7 @@ public final class Launcher2 {
             try {
             SwingUtilities.invokeLater(new NewInstRunner(
                     SubmitRunner.createWhenNecessary(fileNames, useStdin, recipients, closeAfterSubmit, comment, subject, useCover), 
-                    adminMode, selectedTab));
+                    adminMode, selectedTab, desiredWindowState));
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, Utils._("Error launching the new program instance:") + ex.toString() );
                 System.exit(1);
@@ -719,12 +698,26 @@ public final class Launcher2 {
         protected final boolean adminMode;
         protected final int selectedTab;
         protected final SubmitRunner loginRunner;
+        protected final int desiredWindowState;
         
         public void run() {
+            boolean setVisible = true;
             Utils.setLookAndFeel(Utils.getFaxOptions().lookAndFeel);
             
             application = new MainWin(adminMode);
-            application.setVisible(true);
+            
+            if (desiredWindowState != WINDOWSTATE_NOCHANGE) {
+                if (desiredWindowState >= 0) {
+                    application.setVisible(true);
+                    application.setExtendedState(desiredWindowState);
+                } else if (desiredWindowState == WINDOWSTATE_TOTRAY) {
+                    setVisible = !application.hasTrayIcon();
+                } else {
+                    Logger.getLogger(NewInstRunner.class.getName()).warning("Unknown window state: " + desiredWindowState);
+                }
+            }           
+            
+            application.setVisible(setVisible);            
             
             application.reconnectToServer(loginRunner);
             if (selectedTab >= 0) {
@@ -732,11 +725,12 @@ public final class Launcher2 {
             }
         }   
         
-        public NewInstRunner(SubmitRunner loginRunner, boolean adminMode, int selectedTab) {
+        public NewInstRunner(SubmitRunner loginRunner, boolean adminMode, int selectedTab, int desiredWindowState) {
             this.loginRunner = loginRunner;
             
             this.adminMode = adminMode;
             this.selectedTab = selectedTab;
+            this.desiredWindowState = desiredWindowState;
         }
     }
     
@@ -968,9 +962,10 @@ public final class Launcher2 {
                     sw.addLocalFile(fileName);
             }
             if (recipients != null && recipients.size() > 0) {
-                for (String num : recipients) {
-                    sw.addRecipient(new DefaultPBEntryFieldContainer().parseFromString(num));
-                }
+//                for (String num : recipients) {
+//                    sw.addRecipient(new DefaultPBEntryFieldContainer().parseFromString(num));
+//                }
+                DefaultPBEntryFieldContainer.parseCmdLineStrings(sw.getRecipients(), recipients);
             }
             if (useCover != null) {
                 sw.setUseCover(useCover);

@@ -27,8 +27,9 @@ public enum YajLanguage  {
     GERMAN(Locale.GERMAN),
     GREEK(new Locale("el")),
     ITALIAN(Locale.ITALIAN),
-    SPANISH(new Locale("es")),
+    POLISH(new Locale("pl")),
     RUSSIAN(new Locale("ru")),
+    SPANISH(new Locale("es")),
     TURKISH(new Locale("tr"))
     ;
     private final Locale locale;

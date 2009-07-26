@@ -19,6 +19,7 @@
 package yajhfc.send;
 
 import java.awt.Window;
+import java.util.Collection;
 
 import yajhfc.HylaServerFile;
 import yajhfc.phonebook.convrules.PBEntryFieldContainer;
@@ -29,18 +30,68 @@ import yajhfc.phonebook.convrules.PBEntryFieldContainer;
  *
  */
 public interface SendWinControl {
+    /**
+     * Shows/hides the dialog
+     * @param visible
+     */
     public void setVisible(boolean visible);
+    /**
+     * Returns true if the user clicked "send fax"
+     * @return
+     */
     public boolean getModalResult();
+    /**
+     * Returns true if this dialog is in "poll fax" style
+     * @return
+     */
     public boolean isPollMode();
+    /**
+     * Returns the window used for the actual dialog
+     * @return
+     */
     public Window getWindow();
     
+    /**
+     * Adds a file on the fax server to the list of files to send
+     * @param serverFile
+     */
     public void addServerFile(HylaServerFile serverFile);
-    public void addRecipient(PBEntryFieldContainer recipient);
-    public void addRecipient(String faxNumber, String name, String company, String location, String voiceNumber);
+//    /**
+//     * Adds the specified recipient to list of recipients
+//     * @param recipient
+//     */
+//    public void addRecipient(PBEntryFieldContainer recipient);
+    
+    //public void addRecipient(String faxNumber, String name, String company, String location, String voiceNumber);
+    
+    /**
+     * Returns the collection of recipients. It is partly modifiable: At least the add() method is implemented.
+     */
+    public Collection<PBEntryFieldContainer> getRecipients();
+    
+    /**
+     * Sets the subject of the new fax
+     */
     public void setSubject(String subject);
+    /**
+     * Adds a document with data from the specified input stream to the list of documents to send
+     * @param inStream
+     */
     public void addInputStream(StreamTFLItem inStream);
+    /**
+     * Adds a local file to the list of documents to send
+     * @param fileName
+     */
     public void addLocalFile(String fileName);
     
+    /**
+     * Specifies if a cover page should be used
+     * @param useCover
+     */
     public void setUseCover(boolean useCover);
+    /**
+     * Specifies the comment for the new fax
+     * @param comment
+     */
     public void setComment(String comment);
 }
