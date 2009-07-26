@@ -112,11 +112,13 @@ import yajhfc.model.archive.HylaDirAccessor;
 import yajhfc.model.archive.QueueFileFormat;
 import yajhfc.options.OptionsWin;
 import yajhfc.phonebook.NewPhoneBookWin;
+import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
 import yajhfc.plugin.PluginManager;
 import yajhfc.plugin.PluginUI;
 import yajhfc.readstate.PersistentReadState;
 import yajhfc.send.SendController;
 import yajhfc.send.SendWinControl;
+import yajhfc.shutdown.ShutdownManager;
 import yajhfc.tray.TrayFactory;
 import yajhfc.tray.YajHFCTrayIcon;
 import yajhfc.util.AbstractQuickSearchHelper;
@@ -136,6 +138,10 @@ import yajhfc.util.ToolbarEditorDialog;
 @SuppressWarnings("serial")
 public final class MainWin extends JFrame {
     
+    /**
+     * The interval in which the read state is automatically saved
+     */
+    private static final int READ_PERSIST_INTERVAL = 12345;
     static final Logger log = Logger.getLogger(MainWin.class.getName());
     
     protected JPanel jContentPane = null;
@@ -759,6 +765,7 @@ public final class MainWin extends JFrame {
                     showOrHideTrayIcon();
                     addOrRemoveArchiveTab();
                     reconnectToServer(null);
+                    Utils.storeOptionsToFile();
                 } else {
                     sendReady = oldState;
                 }
@@ -1054,7 +1061,7 @@ public final class MainWin extends JFrame {
                 for (HylaServerFile hysf : files) {
                     sw.addServerFile(hysf);
                 }
-                sw.addRecipient(number, name, company, location, voiceNumber);
+                sw.getRecipients().add(new DefaultPBEntryFieldContainer(number, name, company, location, voiceNumber));
                 sw.setSubject(subject);
                 
                 Utils.unsetWaitCursorOnOpen(null, sw.getWindow());
@@ -1559,15 +1566,27 @@ public final class MainWin extends JFrame {
         if (myopts.automaticallyCheckForUpdate) {
             UpdateChecker.startSilentUpdateCheck();
         }
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-           @Override
-           public void run() {               
-               PersistentReadState.getCurrent().persistReadState();
-               
-               Utils.storeOptionsToFile();
-               Launcher2.releaseLock();
-           } 
+        
+        ShutdownManager.getInstance().registerShutdownHook(new Runnable() {
+            public void run() {   
+                if (Utils.debugMode)
+                    System.err.println("Doing shutdown work...");
+                
+                PersistentReadState.getCurrent().persistReadState();
+
+                Utils.storeOptionsToFile();
+                Launcher2.releaseLock();
+                
+                if (Utils.debugMode)
+                    System.err.println("Shutdown work finished.");
+            } 
         });
+        utmrTable.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                PersistentReadState.getCurrent().persistReadState();
+            }
+        }, READ_PERSIST_INTERVAL, READ_PERSIST_INTERVAL);
     }
     
     void showOrHideTrayIcon() {
@@ -1586,6 +1605,10 @@ public final class MainWin extends JFrame {
             }
             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         }
+    }
+    
+    public boolean hasTrayIcon() {
+        return (trayIcon != null);
     }
     
     void invokeLogoutThreaded() {
@@ -2849,7 +2872,12 @@ public final class MainWin extends JFrame {
         }
     }
     
-    class StatusBarResizeAction extends ExcDialogAbstractAction implements DocumentListener, PropertyChangeListener {        
+    class StatusBarResizeAction extends ExcDialogAbstractAction implements DocumentListener, PropertyChangeListener {
+        /**
+         * The maximum value the status bar size may differ from getAutoDividerLocation() to keep it at auto size
+         */
+        private static final int RESET_THRESHOLD = 2;
+        
         public void actualActionPerformed(ActionEvent e) {
             setSelected(!isSelected());
         };
@@ -2897,11 +2925,13 @@ public final class MainWin extends JFrame {
         
         private boolean initialAdjustments = true;
         public void propertyChange(PropertyChangeEvent evt) {
-//            System.out.println((Integer)evt.getNewValue() - getAutoDividerLocation());
             
-            if (isSelected() && ((Integer)evt.getNewValue() - getAutoDividerLocation()) != 0) {
-                if (!initialAdjustments)
+            if (isSelected() && MainWin.this.isVisible() && 
+                    Math.abs((Integer)evt.getNewValue() - getAutoDividerLocation()) > RESET_THRESHOLD) {
+                if (!initialAdjustments) {
                     setSelected(false);
+                    //System.out.println("Reset: " + ((Integer)evt.getNewValue() - getAutoDividerLocation()));
+                }
             } else {
                 initialAdjustments = false;
             }

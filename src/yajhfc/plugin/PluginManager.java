@@ -311,13 +311,22 @@ public class PluginManager {
      * and then at the location of the jar file.
      */
     public static void readPluginList() {
-        File pluginLst = new File(Utils.getConfigDir(), "plugin.lst");
-        if (!pluginLst.canRead()) {
-            pluginLst = new File(Utils.getApplicationDir(), "plugin.lst");
-            if (!pluginLst.canRead()) {
-                return;
-            }
+        File pluginLst = new File(Utils.getApplicationDir(), "plugin.lst");
+        if (pluginLst.canRead()) {
+            readPluginList(pluginLst);
         }
+        
+        pluginLst = new File(Utils.getConfigDir(), "plugin.lst");
+        if (pluginLst.canRead()) {
+            readPluginList(pluginLst);
+        }
+    }
+    
+    /**
+     * Reads the specified plugin list
+     * @param pluginLst
+     */
+    public static void readPluginList(File pluginLst) {
         try {
             BufferedReader lstReader = new BufferedReader(new FileReader(pluginLst));
             String line = lstReader.readLine();

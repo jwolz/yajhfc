@@ -111,4 +111,8 @@ public class PBEntryFieldTableModel extends AbstractTableModel {
     public void setEditable(boolean editable) {
         this.editable = editable;
     }
+    
+    public PBEntryFieldContainer getRow(int index) {
+        return list.get(index);
+    }
 }

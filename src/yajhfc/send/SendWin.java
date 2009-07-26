@@ -30,8 +30,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
@@ -641,19 +643,30 @@ final class SendWin extends JDialog implements SendWinControl  {
             ExceptionDialog.showExceptionDialog(this, _("An error occured reading the input: "), e);
         }
     }
-    
-    public void addRecipient(String faxNumber, String name, String company, String location, String voiceNumber) {
-        NumberTFLItem tfl = new NumberTFLItem(faxNumber);
-        tfl.fields.put(PBEntryField.Name, name);
-        tfl.fields.put(PBEntryField.Company, company);
-        tfl.fields.put(PBEntryField.Location, location);
-        tfl.fields.put(PBEntryField.VoiceNumber, voiceNumber);
-        tflNumbers.addListItem(tfl);
-    }
-    
-    public void addRecipient(PBEntryFieldContainer recipient) {
-        NumberTFLItem tfl = new NumberTFLItem(recipient);
-        tflNumbers.addListItem(tfl);
+            
+    private List<PBEntryFieldContainer> recipientList;
+    public Collection<PBEntryFieldContainer> getRecipients() {
+        if (recipientList == null) {
+            recipientList = new AbstractList<PBEntryFieldContainer>() {
+                @Override
+                public PBEntryFieldContainer get(int index) {
+                    return sendController.getNumbers().get(index);
+                }
+
+                @Override
+                public int size() {
+                    return sendController.getNumbers().size();
+                }
+                
+                @Override
+                public boolean add(PBEntryFieldContainer o) {
+                    NumberTFLItem tfl = new NumberTFLItem(o);
+                    tflNumbers.addListItem(tfl);
+                    return true;
+                }
+            };
+        }
+        return recipientList;
     }
     
     public void setSubject(String subject) {

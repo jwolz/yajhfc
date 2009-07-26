@@ -44,6 +44,7 @@ public class LocalPersistentReadState extends PersistentReadState {
     
     protected File file;
     protected Map<String,Boolean> readStateMap = null;
+    protected boolean dirty = false;
     
     public LocalPersistentReadState(File file) {
         this.file = file;
@@ -66,6 +67,7 @@ public class LocalPersistentReadState extends PersistentReadState {
             }
             bIn.close();
             
+            dirty = false;
         } catch (FileNotFoundException e) { 
             // No file yet - keep empty
         } catch (IOException e) {
@@ -73,12 +75,19 @@ public class LocalPersistentReadState extends PersistentReadState {
         }
     }
 
-    /* (non-Javadoc)
-     * @see yajhfc.PersistentReadState#persistReadState(java.util.Collection)
-     */
+    
     @Override
     public void persistReadState() {
-        if (readStateMap == null)
+        persistReadState(false);
+    }
+    
+    @Override
+    public void shutdown() {
+        persistReadState(true);
+    }
+
+    protected void persistReadState(boolean always) {
+        if (readStateMap == null || !(always || dirty) )
             return;
         
         try {
@@ -94,6 +103,8 @@ public class LocalPersistentReadState extends PersistentReadState {
                 }
             }
             bOut.close();
+            
+            dirty = false;
         } catch (IOException e) {
             log.log(Level.WARNING, "Error storing read state: ", e);
         }
@@ -110,6 +121,7 @@ public class LocalPersistentReadState extends PersistentReadState {
     @Override
     public void setRead(String idValue, boolean read) {
         getReadStateMap().put(idValue, read);
+        dirty = true;
     }
 
     
@@ -123,7 +135,7 @@ public class LocalPersistentReadState extends PersistentReadState {
         // Do nothing as no notifications are sent
     }
 
-    public Map<String, Boolean> getReadStateMap() {
+    protected Map<String, Boolean> getReadStateMap() {
         if (readStateMap == null) {
             loadReadFaxes();
         }
@@ -136,6 +148,7 @@ public class LocalPersistentReadState extends PersistentReadState {
             return; //"Safety" measure
         
         readStateMap.keySet().retainAll(existingFaxes);
+        dirty = true;
     }
     
     static class PersistenceMethod implements AvailablePersistenceMethod {
