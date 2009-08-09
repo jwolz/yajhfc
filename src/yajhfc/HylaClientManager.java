@@ -143,7 +143,7 @@ public class HylaClientManager {
                                     //repeatAsk = false;
                                     break;
                                 } catch (ServerResponseException e) {
-                                    ExceptionDialog.showExceptionDialogThreaded(owner, Utils._("An error occured in response to the password:"), e);
+                                    ExceptionDialog.showExceptionDialog(owner, Utils._("An error occured in response to the password:"), e);
                                     //repeatAsk = true;
                                 }
                         } else {
@@ -165,7 +165,7 @@ public class HylaClientManager {
                                         adminPassword = pwd[1];
                                         authOK = true;
                                     } catch (ServerResponseException e) {
-                                        ExceptionDialog.showExceptionDialogThreaded(owner, Utils._("An error occured in response to the password:"), e);
+                                        ExceptionDialog.showExceptionDialog(owner, Utils._("An error occured in response to the password:"), e);
                                         authOK = false;
                                     }
                             } while (!authOK);
@@ -183,7 +183,7 @@ public class HylaClientManager {
                     client.rcvfmt(myopts.recvfmt.getFormatString());
                     return client;
                 } catch (Exception e) {
-                    ExceptionDialog.showExceptionDialogThreaded(owner, Utils._("An error occured connecting to the server:"), e);
+                    ExceptionDialog.showExceptionDialog(owner, Utils._("An error occured connecting to the server:"), e);
                     return null;
                 }
             }

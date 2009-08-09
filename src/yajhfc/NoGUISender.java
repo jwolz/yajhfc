@@ -20,7 +20,7 @@ package yajhfc;
 
 import java.awt.Cursor;
 import java.awt.HeadlessException;
-import java.util.List;
+import java.awt.Toolkit;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -29,9 +29,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
+import yajhfc.launch.CommandLineOpts;
 import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
 import yajhfc.plugin.PluginManager;
-import yajhfc.plugin.PluginManager.PluginInfo;
 import yajhfc.send.LocalFileTFLItem;
 import yajhfc.send.SendController;
 import yajhfc.send.SendControllerListener;
@@ -68,6 +68,7 @@ public class NoGUISender extends JFrame implements ProgressUI {
         
         setContentPane(progressPanel);
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(NoGUISender.class.getResource("/yajhfc/icon.png")));
         pack();
         setResizable(false);
         setLocationRelativeTo(null);
@@ -132,21 +133,21 @@ public class NoGUISender extends JFrame implements ProgressUI {
         progressBar.setMaximum(progress);
     }
     
-    public static void startUpWithoutUI(List<String> recipients, List<String> files, List<PluginInfo> plugins, boolean noPlugins, boolean useStdIn, boolean useCover, String subject, String comment) {
-        if (recipients.size() == 0) {
+    public static void startUpWithoutUI(CommandLineOpts opts) {
+        if (opts.recipients.size() == 0) {
             System.err.println("In no GUI mode you have to specify at least one recipient.");
             System.exit(1);
         }
-        if (files.size() == 0 && !useStdIn) {
+        if (opts.fileNames.size() == 0 && !opts.useStdin) {
             System.err.println("In no GUI mode you have to specify at least one file to send or --stdin.");
             System.exit(1);
         }
         
         // Load plugins:
-        if (!noPlugins) {
+        if (!opts.noPlugins) {
             PluginManager.readPluginList();
         }
-        PluginManager.addPlugins(plugins);
+        PluginManager.addPlugins(opts.plugins);
         PluginManager.loadAllKnownPlugins();
         
         NoGUISender progressFrame = new NoGUISender();
@@ -167,17 +168,17 @@ public class NoGUISender extends JFrame implements ProgressUI {
 //            for (String number : recipients) {
 //                sendController.getNumbers().add(new DefaultPBEntryFieldContainer().parseFromString(number));
 //            }
-            DefaultPBEntryFieldContainer.parseCmdLineStrings(sendController.getNumbers(), recipients);
+            DefaultPBEntryFieldContainer.parseCmdLineStrings(sendController.getNumbers(), opts.recipients);
             
-            sendController.setUseCover(useCover);
-            if (subject != null)
-                sendController.setSubject(subject);
-            if (comment != null)
-                sendController.setComments(comment);
-            if (useStdIn) {
+            sendController.setUseCover(opts.useCover != null ? opts.useCover : false);
+            if (opts.subject != null)
+                sendController.setSubject(opts.subject);
+            if (opts.comment != null)
+                sendController.setComments(opts.comment);
+            if (opts.useStdin) {
                 sendController.getFiles().add(new StreamTFLItem(System.in));
             }
-            for (String file : files) {
+            for (String file : opts.fileNames) {
                 sendController.getFiles().add(new LocalFileTFLItem(file));
             }
             

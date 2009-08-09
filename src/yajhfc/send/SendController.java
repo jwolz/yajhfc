@@ -34,6 +34,8 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -81,6 +83,8 @@ public class SendController {
     // null = "NOW"
     protected Date sendTime = null;
     protected boolean archiveJob = Utils.getFaxOptions().archiveSentFaxes;
+    
+    protected final Map<String,String> customProperties = new TreeMap<String,String>(Utils.getFaxOptions().customJobOptions);
     
     protected ProgressUI progressMonitor = null;
     
@@ -362,6 +366,10 @@ public class SendController {
                                 j.setProperty("doneop", "archive");
                             }
                             
+                            for (Map.Entry<String, String> prop : customProperties.entrySet()) {
+                                j.setProperty(prop.getKey(), prop.getValue());
+                            }
+                            
                             if (pollMode) 
                                 j.setProperty("POLL", "\"\" \"\"");
                             else {               
@@ -562,6 +570,15 @@ public class SendController {
         this.selectedModem = selectedModem;
     }
 
+    /**
+     * Returns a map containing custom properties
+     * @param propertyName
+     * @param value
+     */
+    public Map<String,String> getCustomProperties() {
+        return customProperties;
+    }
+    
     public HylaClientManager getClientManager() {
         return clientManager;
     }

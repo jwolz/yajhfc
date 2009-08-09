@@ -48,8 +48,8 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import yajhfc.Launcher2;
 import yajhfc.Utils;
+import yajhfc.launch.Launcher2;
 
 public class ExceptionDialog extends JDialog implements ActionListener {
     private final static int border = 12;
@@ -230,37 +230,38 @@ public class ExceptionDialog extends JDialog implements ActionListener {
     }
     
     public static void showExceptionDialog(Component owner, String title, String message, Exception exc) {
-        ExceptionDialog eDlg;
-        if (!(owner instanceof Window)) {
-            if (owner != null) {
-                owner = SwingUtilities.getWindowAncestor(owner);
+        if (SwingUtilities.isEventDispatchThread()) {
+            ExceptionDialog eDlg;
+            if (!(owner instanceof Window)) {
+                if (owner != null) {
+                    owner = SwingUtilities.getWindowAncestor(owner);
+                }
+                if (owner == null) {
+                    owner = Launcher2.application.getFrame();
+                }
             }
-            if (owner == null) {
-                owner = Launcher2.application;
+
+
+            if (owner instanceof Dialog) {
+                eDlg = new ExceptionDialog((Dialog)owner, title, message, exc);
+            } else if (owner instanceof Frame) {
+                eDlg = new ExceptionDialog((Frame)owner, title, message, exc);
+            } else {
+                JOptionPane.showMessageDialog(owner, message + "\n" + exc.getMessage(), Utils._("Error"), JOptionPane.ERROR_MESSAGE);
+                return;
             }
-        }
-        
-        
-        if (owner instanceof Dialog) {
-            eDlg = new ExceptionDialog((Dialog)owner, title, message, exc);
-        } else if (owner instanceof Frame) {
-            eDlg = new ExceptionDialog((Frame)owner, title, message, exc);
+            eDlg.setVisible(true);
         } else {
-            JOptionPane.showMessageDialog(owner, message + "\n" + exc.getMessage(), Utils._("Error"), JOptionPane.ERROR_MESSAGE);
-            return;
+            try {
+                SwingUtilities.invokeAndWait(new DisplayRunnable(owner, title, message, exc));
+            } catch (InterruptedException e) {
+                log.log(Level.WARNING, "Error showing exception dialog.", e);
+            } catch (InvocationTargetException e) {
+                log.log(Level.WARNING, "Error showing exception dialog.", e);
+            }
         }
-        eDlg.setVisible(true);
     }
 
-    public static void showExceptionDialogThreaded(Component owner, String message, Exception exc) {
-        try {
-            SwingUtilities.invokeAndWait(new DisplayRunnable(owner, exc, message));
-        } catch (InterruptedException e) {
-            log.log(Level.WARNING, "Error showing exception dialog.", e);
-        } catch (InvocationTargetException e) {
-            log.log(Level.WARNING, "Error showing exception dialog.", e);
-        }
-    }
     
 //    public void componentHidden(ComponentEvent e) {
 //        //  not used   
@@ -284,19 +285,21 @@ public class ExceptionDialog extends JDialog implements ActionListener {
      * @author jonas
      *
      */
-    public static class DisplayRunnable implements Runnable {
+    static class DisplayRunnable implements Runnable {
         private Component parent;
         private Exception ex;
         private String msg;
+        private String title;
         
-        public DisplayRunnable(Component parent, Exception ex, String msg) {
+        public DisplayRunnable(Component parent, String title, String msg, Exception ex) {
             this.parent = parent;
             this.ex = ex;
             this.msg = msg;
+            this.title = title;
         }
         
         public void run() {
-            showExceptionDialog(parent, msg, ex);
+            showExceptionDialog(parent, title, msg, ex);
         }
     }
 }

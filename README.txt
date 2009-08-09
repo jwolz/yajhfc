@@ -66,6 +66,13 @@ YajHFC was originally written as a first more complicated
 CHANGES
 -------
 
+0.4.2:
+- Support to read recipients from text files
+- Desired window state can be specified on the command line
+- "Send only mode" without display of main window (when a 
+  document to send and neither --background nor --noclose is specified)
+- Arbitrary HylaFAX options can be specified for new fax jobs
+
 0.4.1:
 - Support for distribution lists in the phone book (XML+JDBC only)
 - Support for CSV phone books (e.g. for import/export)

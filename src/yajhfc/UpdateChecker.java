@@ -47,6 +47,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import yajhfc.launch.Launcher2;
 import yajhfc.util.ProgressWorker;
 import yajhfc.util.ProgressWorker.ProgressUI;
 
@@ -172,8 +173,7 @@ public class UpdateChecker {
         final FaxOptions fo = Utils.getFaxOptions();
             
         if (System.currentTimeMillis() - fo.lastUpdateCheck > CHECK_INTERVAL) {
-            Thread t = new Thread() {
-                @Override
+            Runnable r = new Runnable() {
                 public void run() {
                     try {
                         final UpdateChecker uc = new UpdateChecker();
@@ -182,7 +182,7 @@ public class UpdateChecker {
                                     new YajHFCVersion(fo.lastSeenUpdateVersion).compareTo(uc.currentVersion) >= 0) { 
                                 SwingUtilities.invokeLater(new Runnable() {
                                     public void run() {
-                                        if (uc.showInfoDialog(Launcher2.application, true)) {
+                                        if (uc.showInfoDialog(Launcher2.application.getFrame(), true)) {
                                             fo.lastSeenUpdateVersion = "";
                                         } else  {
                                             fo.lastSeenUpdateVersion = uc.currentVersion.toString();
@@ -197,7 +197,7 @@ public class UpdateChecker {
                     }
                 }
             };
-            t.start();
+            Utils.executorService.submit(r);
         }
     }
     

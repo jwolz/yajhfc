@@ -50,6 +50,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -58,6 +60,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
+import yajhfc.launch.Launcher2;
 import yajhfc.model.archive.QueueFileDateFormat;
 import yajhfc.plugin.PluginManager;
 import yajhfc.plugin.PluginUI;
@@ -161,6 +164,11 @@ public final class Utils {
     public static final DateFormat HYLA_UNIX_DATE_FORMAT_GMT = new QueueFileDateFormat(true);
     
     public static boolean debugMode = false;
+    
+    /**
+     * Returns an executor service which may be used for various non time critical asynchronous computations
+     */
+    public static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
     
     /**
      * True if we run under the Windows platform
@@ -360,6 +368,9 @@ public final class Utils {
                 msgs = null;
             }
         }
+        
+        //XXX: Move somewhere else?
+        UIManager.getDefaults().addResourceBundle("yajhfc.i18n.UIDefaults");
     }
     
     public static String minutesToHylaTime(int mins) {
@@ -914,6 +925,7 @@ public final class Utils {
         
         return lbl; 
     }
+    
 }
 
 

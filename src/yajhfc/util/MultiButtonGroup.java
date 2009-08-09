@@ -28,8 +28,8 @@ import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JRadioButtonMenuItem;
 
-import yajhfc.Launcher2;
 import yajhfc.Utils;
+import yajhfc.launch.Launcher2;
 
 /**
  * This class synchronizes multiple button groups.
@@ -60,7 +60,7 @@ public abstract class MultiButtonGroup implements ActionListener {
                 src = e.getSource();
             }
             if (src == null || !(src instanceof Component)) {
-                src = Launcher2.application;
+                src = Launcher2.application.getFrame();
             }
             
             ExceptionDialog.showExceptionDialog((Component)src, Utils._("An Error occurred executing the desired action:"), ex);

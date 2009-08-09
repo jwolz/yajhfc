@@ -35,6 +35,7 @@ import java.io.File;
 import java.util.AbstractList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import javax.swing.Action;
 import javax.swing.Box;
@@ -79,6 +80,7 @@ import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.PhoneBookEntry;
 import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
 import yajhfc.phonebook.convrules.PBEntryFieldContainer;
+import yajhfc.util.AsyncComboBoxOrListModel;
 import yajhfc.util.CancelAction;
 import yajhfc.util.ClipboardPopup;
 import yajhfc.util.ExampleFileFilter;
@@ -108,6 +110,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
     protected JTextField textNumber;
     protected Action actSend, actPreview, actPhonebook, actFromFile;
     
+    protected JButton buttonCustomProps;
     
     protected JComboBox comboResolution;
     protected JComboBox comboPaperSize;
@@ -125,7 +128,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
     protected FileTextField ftfCustomCover;
     protected TimeToSendEntry ttsEntry;
     
-    protected Action actAddNumber, actRemoveNumber;
+    protected Action actAddNumber, actRemoveNumber, actCustomProps;
     
     protected boolean isAdvancedView = false;
     protected boolean initiallyHideFiles = false;
@@ -250,6 +253,17 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         actPreview.putValue(Action.SMALL_ICON, Utils.loadIcon("general/PrintPreview"));
         JButton buttonPreview = new JButton(actPreview);
 
+        actCustomProps = new ExcDialogAbstractAction() {
+            @Override
+            protected void actualActionPerformed(ActionEvent e) {
+                JobPropsEditorDialog editDlg = new JobPropsEditorDialog(SimplifiedSendDialog.this, sendController.getCustomProperties());
+                editDlg.setVisible(true);                
+            }
+        };
+        actCustomProps.putValue(Action.NAME, Utils._("Job properties") + "...");
+        
+        buttonCustomProps = new JButton(actCustomProps);
+        
         CancelAction actCancel = new CancelAction(this);
         buttonCancel = actCancel.createCancelButton();
 
@@ -269,13 +283,14 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         JPanel buttonPanel = new JPanel(new TableLayout(
                 new double[][] {
                         { TableLayout.FILL },
-                        { TableLayout.PREFERRED, border, TableLayout.PREFERRED, border, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, border}
+                        { TableLayout.PREFERRED, border, TableLayout.PREFERRED, border, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, border, TableLayout.PREFERRED, border}
                 }
                 ), false);
         buttonPanel.add(buttonSend, "0,0");
         buttonPanel.add(buttonPreview, "0,2");
         buttonPanel.add(buttonCancel, "0,4");
-        buttonPanel.add(buttonAdvanced, "0,6");
+        buttonPanel.add(buttonCustomProps, "0,6");
+        buttonPanel.add(buttonAdvanced, "0,8");
 
         checkUseCover = new JCheckBox(Utils._("Use cover page"));
         checkUseCover.setSelected(Utils.getFaxOptions().useCover);
@@ -509,7 +524,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         };
         advancedPane = new JPanel(new TableLayout(dLay), false);
 
-        FaxOptions fo = Utils.getFaxOptions();
+        final FaxOptions fo = Utils.getFaxOptions();
         checkCustomCover = new JCheckBox(Utils._("Use custom cover page:"));
         checkCustomCover.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -538,8 +553,30 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
 
         spinMaxTries = new JSpinner(new SpinnerNumberModel(12, 1, 100, 1));
 
-        comboModem = new JComboBox(clientManager.getModems().toArray());
+        final AsyncComboBoxOrListModel<HylaModem> modemModel =
+            new AsyncComboBoxOrListModel<HylaModem>(
+                    HylaModem.defaultModems,
+                    new Callable<List<HylaModem>>() {
+                        public List<HylaModem> call() throws Exception {
+                            return clientManager.getModems();
+                        }
+                    }, 
+                    true,
+                    new Runnable() {
+                        public void run() {
+                            Object selModem = fo.defaultModem;
+                            for (HylaModem modem : clientManager.getModems()) {
+                                if (modem.getInternalName().equals(fo.defaultModem)) {
+                                    selModem = modem;
+                                    break;
+                                }
+                            }
+                            comboModem.setSelectedItem(selModem);
+                        }
+                    });
+        comboModem = new JComboBox(modemModel);
         comboModem.setEditable(true);
+        comboModem.setSelectedItem(fo.defaultModem);
 
         checkArchiveJob = new JCheckBox(Utils._("Archive fax job"));
         
@@ -566,20 +603,11 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         comboResolution.setSelectedItem(fo.resolution);
         comboPaperSize.setSelectedItem(fo.paperSize);
         comboNotification.setSelectedItem(fo.notifyWhen);
-
-        Object selModem = fo.defaultModem;
-        for (HylaModem modem : clientManager.getModems()) {
-            if (modem.getInternalName().equals(fo.defaultModem)) {
-                selModem = modem;
-                break;
-            }
-        }
-        comboModem.setSelectedItem(selModem);
         
         spinMaxTries.setValue(Integer.valueOf(fo.maxTry));
         spinKillTime.setValue(fo.killTime);
 
-        checkArchiveJob.setSelected(fo.archiveSentFaxes);
+        checkArchiveJob.setSelected(fo.archiveSentFaxes);   
         
         return advancedPane;
     }
@@ -621,6 +649,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         }
         
         isAdvancedView = isAdvanced;
+        buttonCustomProps.setVisible(isAdvanced);
         if (isAdvanced) {
             buttonAdvanced.setText(SIMPLIFIED_TEXT);
             contentPane.add(advancedPane, "1,12,f,f");

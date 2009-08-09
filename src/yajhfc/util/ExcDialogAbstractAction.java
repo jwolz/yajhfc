@@ -24,8 +24,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 
-import yajhfc.Launcher2;
 import yajhfc.Utils;
+import yajhfc.launch.Launcher2;
 
 /**
  * An abstract Action where RuntimeExceptions occurring in actualActionPerformed
@@ -69,7 +69,7 @@ public abstract class ExcDialogAbstractAction extends AbstractAction {
                 src = e.getSource();
             }
             if (src == null || !(src instanceof Component)) {
-                src = Launcher2.application;
+                src = Launcher2.application.getFrame();
             }
             
            ExceptionDialog.showExceptionDialog((Component)src, Utils._("An Error occurred executing the desired action:"), ex);

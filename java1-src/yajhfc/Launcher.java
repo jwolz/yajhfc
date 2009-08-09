@@ -22,6 +22,8 @@ import java.awt.Frame;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import yajhfc.launch.Launcher2;
+
 /**
  * Java 1.1 compatible launcher to show a nice error message when Java is too old
  * @author jonas

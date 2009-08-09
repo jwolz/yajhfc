@@ -119,13 +119,7 @@ public abstract class ProgressWorker extends Thread{
     }
 
     public void showExceptionDialog(String message, Exception ex) {
-        try {
-            SwingUtilities.invokeAndWait(new ExceptionDialog.DisplayRunnable(parent, ex, message));
-        } catch (InterruptedException e) {
-            // NOP
-        } catch (InvocationTargetException e) {
-            // NOP
-        }
+        ExceptionDialog.showExceptionDialog(parent, message, ex);
     }
     
     public void showMessageDialog(String message, String title, int msgType) {
