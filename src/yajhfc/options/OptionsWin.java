@@ -44,9 +44,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.Vector;
 import java.util.logging.Logger;
 
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -102,10 +104,12 @@ import yajhfc.plugin.PluginType;
 import yajhfc.plugin.PluginUI;
 import yajhfc.readstate.AvailablePersistenceMethod;
 import yajhfc.readstate.PersistentReadState;
+import yajhfc.send.JobPropsEditorDialog;
 import yajhfc.send.SendWinStyle;
 import yajhfc.util.CancelAction;
 import yajhfc.util.ClipboardPopup;
 import yajhfc.util.ExampleFileFilter;
+import yajhfc.util.ExcDialogAbstractAction;
 import yajhfc.util.ExceptionDialog;
 import yajhfc.util.IntVerifier;
 import yajhfc.util.JTableTABAction;
@@ -141,6 +145,9 @@ public class OptionsWin extends JDialog {
     JPanel panelServerRetrieval, panelNewFaxAction;
     JCheckBox checkNewFax_Beep, checkNewFax_ToFront, checkNewFax_Open, checkNewFax_MarkAsRead, checkNewFax_BlinkTrayIcon;
     JSpinner spinStatusInterval, spinTableInterval;
+    
+    Action jobOptionAction;
+    Map<String,String> customProperties;
     
     //JCheckBox checkPreferTIFF;
     JCheckBox checkUseDisconnected, checkShowTrayIcon, checkMinimizeToTray, checkMinimizeToTrayOnMainWinClose, checkAutoCheckForUpdate;
@@ -265,6 +272,8 @@ public class OptionsWin extends JDialog {
 
         pluginTableModel.addAllItems(PluginManager.getKnownPlugins());
 
+        customProperties = new TreeMap<String,String>(foEdit.customJobOptions);
+        
         for (OptionsPage page : optionsPages) {
             page.loadSettings(foEdit);
         }
@@ -837,6 +846,16 @@ public class OptionsWin extends JDialog {
             
             checkArchiveSentFaxes = new JCheckBox(_("Archive sent fax jobs"));
             
+            jobOptionAction = new ExcDialogAbstractAction() {
+                @Override
+                protected void actualActionPerformed(ActionEvent e) {
+                    JobPropsEditorDialog editDlg = new JobPropsEditorDialog(OptionsWin.this, customProperties);
+                    editDlg.setVisible(true);     
+                }
+            };
+            jobOptionAction.putValue(Action.NAME, Utils._("Job properties") + "...");
+            JButton buttonJobOption = new JButton(jobOptionAction);
+            
             addWithLabel(panelSend, textNotifyAddress, _("E-mail address for notifications:"), "1, 2, 3, 2, f, c");
             addWithLabel(panelSend, comboNotify, _("Notify when:"), "1, 4, 1, 4, f, c");
             addWithLabel(panelSend, comboModem, _("Modem:"), "3, 4, 3, 4, f, c");
@@ -847,6 +866,7 @@ public class OptionsWin extends JDialog {
             addWithLabel(panelSend, spinMaxDial, _("Maximum dials:"), "1, 10, f, c");
             addWithLabel(panelSend, spinMaxTry, _("Maximum tries:"), "3, 10, f, c");    
             panelSend.add(checkArchiveSentFaxes, "1,11,f,c");
+            panelSend.add(buttonJobOption, "3,11,f,c");
         }
         return panelSend;
     }
@@ -1067,6 +1087,9 @@ public class OptionsWin extends JDialog {
             foEdit.defaultModem = getModem();
             foEdit.dateStyle = getDateStyle(comboDateFormat);
             foEdit.timeStyle = getDateStyle(comboTimeFormat);
+            
+            foEdit.customJobOptions.clear();
+            foEdit.customJobOptions.putAll(customProperties);
             
             for (OptionsPage page : optionsPages) {
                 page.saveSettings(foEdit);

@@ -34,12 +34,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimerTask;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import yajhfc.Launcher2;
 import yajhfc.Password;
 import yajhfc.Utils;
+import yajhfc.launch.Launcher2;
 import yajhfc.phonebook.AbstractConnectionSettings;
 import yajhfc.phonebook.jdbc.ConnectionDialog;
 import yajhfc.phonebook.jdbc.ConnectionDialog.FieldMapEntry;
@@ -60,7 +62,7 @@ public class JDBCPersistentReadState extends PersistentReadState {
     protected PreparedStatement selectStmt, updateStmt, insertStmt;
     private Map<String,Boolean> readStateMap = null;
     
-    protected TimerTask updateTask;
+    protected ScheduledFuture<?> updateTask;
     
     protected List<ReadStateChangedListener> listeners = new ArrayList<ReadStateChangedListener>();
     
@@ -83,7 +85,7 @@ public class JDBCPersistentReadState extends PersistentReadState {
 
         String password;
         if (settings.askForPWD) {
-            String[] pwd = PasswordDialog.showPasswordDialog(Launcher2.application, Utils._("Database password"), MessageFormat.format(Utils._("Please enter the database password (database: {0}):"), settings.dbURL), settings.user, false);
+            String[] pwd = PasswordDialog.showPasswordDialog(Launcher2.application.getFrame(), Utils._("Database password"), MessageFormat.format(Utils._("Please enter the database password (database: {0}):"), settings.dbURL), settings.user, false);
             if (pwd == null)
                 return;
             else
@@ -140,11 +142,10 @@ public class JDBCPersistentReadState extends PersistentReadState {
             } catch (Exception e) {
                 readStateMap = new HashMap<String,Boolean>();
                 //log.log(Level.SEVERE, "Could not read read state table.", e);
-                ExceptionDialog.showExceptionDialog(Launcher2.application, Utils._("Could not open the database table to store the read/unread state. The current read/unread state will not be saved.\n Reason:"), e);
+                ExceptionDialog.showExceptionDialog(Launcher2.application.getFrame(), Utils._("Could not open the database table to store the read/unread state. The current read/unread state will not be saved.\n Reason:"), e);
             }
             
-            updateTask = new TimerTask() {
-                @Override
+            Runnable updater = new Runnable() {
                 public void run() {
                     try {      
                         Map<String,Boolean> newReadStateMap = loadReadState();
@@ -173,7 +174,10 @@ public class JDBCPersistentReadState extends PersistentReadState {
                     }
                 }  
             };
-            Launcher2.application.getRefreshTimer().schedule(updateTask, Utils.getFaxOptions().statusUpdateInterval, Utils.getFaxOptions().statusUpdateInterval);
+            updateTask = Utils.executorService.scheduleAtFixedRate(updater, 
+                    Utils.getFaxOptions().statusUpdateInterval,
+                    Utils.getFaxOptions().statusUpdateInterval,
+                    TimeUnit.MILLISECONDS);
         }
         return readStateMap;
     }
@@ -204,7 +208,7 @@ public class JDBCPersistentReadState extends PersistentReadState {
         
         final boolean isNew = (oldValue == null);
         
-        TimerTask dbUpdater = new TimerTask() {
+        Runnable dbUpdater = new TimerTask() {
             public void run() {
                 try {
                     if (isNew) {
@@ -229,7 +233,7 @@ public class JDBCPersistentReadState extends PersistentReadState {
                 }
             };
         };
-        Launcher2.application.getRefreshTimer().schedule(dbUpdater, 0);
+        Utils.executorService.submit(dbUpdater);
         
         map.put(idValue, read);
     }
@@ -237,7 +241,7 @@ public class JDBCPersistentReadState extends PersistentReadState {
     
     protected synchronized void disconnect() {
         if (updateTask != null) {
-            updateTask.cancel();
+            updateTask.cancel(false);
             updateTask = null;
         }
         

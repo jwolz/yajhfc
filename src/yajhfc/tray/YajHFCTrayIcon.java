@@ -39,10 +39,10 @@ import javax.swing.Action;
 import javax.swing.Timer;
 
 import yajhfc.FaxOptions;
-import yajhfc.Launcher2;
 import yajhfc.MainWin;
 import yajhfc.RecvFormat;
 import yajhfc.Utils;
+import yajhfc.launch.Launcher2;
 import yajhfc.model.RecvYajJob;
 import yajhfc.model.UnReadMyTableModel;
 import yajhfc.model.UnreadItemEvent;

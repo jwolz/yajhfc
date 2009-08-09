@@ -287,7 +287,9 @@ public class JDBCPhoneBook extends PhoneBook {
             ResultSet rs = dbmd.getBestRowIdentifier(null, null, settings.table, DatabaseMetaData.bestRowSession, true);
             rowId.clear();
             while (rs.next()) {
-                String columnName = rs.getString("COLUMN_NAME");
+                // Workaround for gettext
+                final String COLUMN_NAME = "COLUMN_NAME";
+                String columnName = rs.getString(COLUMN_NAME);
                 rowId.add(new DBKey(columnName, getPBEntryFieldFor(columnName)));
             }
             rs.close();

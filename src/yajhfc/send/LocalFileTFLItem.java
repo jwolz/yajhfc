@@ -31,12 +31,12 @@ import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import yajhfc.Launcher2;
 import yajhfc.PaperSize;
 import yajhfc.Utils;
 import yajhfc.file.FileConverter;
 import yajhfc.file.FormattedFile;
 import yajhfc.file.FormattedFile.FileFormat;
+import yajhfc.launch.Launcher2;
 import yajhfc.util.ExceptionDialog;
 
 public class LocalFileTFLItem extends HylaTFLItem {    
@@ -57,7 +57,7 @@ public class LocalFileTFLItem extends HylaTFLItem {
             
             preparedFile = new FormattedFile(tempFile);
         }  catch (Exception e) {
-            ExceptionDialog.showExceptionDialog(Launcher2.application, MessageFormat.format(Utils._("The document {0} could not be converted to PostScript, PDF or TIFF. Reason:"), getText()), e);
+            ExceptionDialog.showExceptionDialog(Launcher2.application.getFrame(), MessageFormat.format(Utils._("The document {0} could not be converted to PostScript, PDF or TIFF. Reason:"), getText()), e);
         }        
     }
     

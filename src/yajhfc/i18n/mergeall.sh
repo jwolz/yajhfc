@@ -5,6 +5,8 @@ echo 'Extracting Strings ...'
 
 . ./jxgettext.sh
 
+java -cp ../../../util FillUIProps UIDefaults.props UIDefaults.po
+
 echo 'Merging language files ...'
 
 for PO in messages_*.po ; do
@@ -20,4 +22,9 @@ for PO in CommandLineOpts_*.po ; do
 	msgmerge -N -U $PO $CLO_TMP
 done
 rm -f $CLO_TMP
+
+for PO in UIDefaults_*.po ; do
+	echo $PO
+	msgmerge -N -U $PO UIDefaults.po
+done
 

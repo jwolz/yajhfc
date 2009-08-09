@@ -78,6 +78,10 @@ if [ -z "$1" ]; then
 	catprops $PO CommandLineOpts
   done ;
 
+  for PO in UIDefaults_*.po ; do
+	catprops $PO UIDefaults
+  done ;
+
 else 
   LANGFILE="messages_$1.po"
   if [ -f $LANGFILE ]; then

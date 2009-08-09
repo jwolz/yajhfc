@@ -27,6 +27,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -96,6 +97,9 @@ import yajhfc.filters.OrFilter;
 import yajhfc.filters.StringFilter;
 import yajhfc.filters.StringFilterOperator;
 import yajhfc.filters.ui.CustomFilterDialog;
+import yajhfc.launch.Launcher2;
+import yajhfc.launch.Lock;
+import yajhfc.launch.MainApplicationFrame;
 import yajhfc.model.MyTableModel;
 import yajhfc.model.RecvYajJob;
 import yajhfc.model.SendingYajJob;
@@ -136,7 +140,7 @@ import yajhfc.util.SelectedActionPropertyChangeListener;
 import yajhfc.util.ToolbarEditorDialog;
 
 @SuppressWarnings("serial")
-public final class MainWin extends JFrame {
+public final class MainWin extends JFrame implements MainApplicationFrame {
     
     /**
      * The interval in which the read state is automatically saved
@@ -1575,7 +1579,7 @@ public final class MainWin extends JFrame {
                 PersistentReadState.getCurrent().persistReadState();
 
                 Utils.storeOptionsToFile();
-                Launcher2.releaseLock();
+                Lock.releaseLock();
                 
                 if (Utils.debugMode)
                     System.err.println("Shutdown work finished.");
@@ -1722,7 +1726,7 @@ public final class MainWin extends JFrame {
         this.setEnabled(false);
         tablePanel.showIndeterminateProgress(_("Logging in..."));
         
-        new LoginThread((Boolean)actAdminMode.getValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY), loginAction).start();
+        Utils.executorService.submit(new LoginThread((Boolean)actAdminMode.getValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY), loginAction));
         
     }
     
@@ -2105,6 +2109,10 @@ public final class MainWin extends JFrame {
             }
         }
         return menuExtras;
+    }
+    
+    public Frame getFrame() {
+        return this;
     }
     
     class MenuViewListener implements ActionListener, ChangeListener {
@@ -2639,11 +2647,10 @@ public final class MainWin extends JFrame {
         }
     }
     
-    class LoginThread extends Thread {
+    class LoginThread implements Runnable {
         protected boolean wantAdmin;
         protected Runnable loginAction;
         
-        @Override
         public void run() {  
             try {
                 
@@ -2725,7 +2732,7 @@ public final class MainWin extends JFrame {
                     } 
                 });
             } catch (Exception e) {
-                ExceptionDialog.showExceptionDialogThreaded(MainWin.this, _("An error occured connecting to the server:"), e);
+                ExceptionDialog.showExceptionDialog(MainWin.this, _("An error occured connecting to the server:"), e);
                 doErrorCleanup();
             }
         }
@@ -2745,7 +2752,6 @@ public final class MainWin extends JFrame {
         }
         
         public LoginThread(boolean wantAdmin, Runnable loginAction) {
-            super(LoginThread.class.getName());
             this.wantAdmin = wantAdmin;
             this.loginAction = loginAction;
         }
@@ -2753,10 +2759,6 @@ public final class MainWin extends JFrame {
 
     public HylaClientManager getClientManager() {
         return clientManager;
-    }
-
-    public java.util.Timer getRefreshTimer() {
-        return utmrTable;
     }
     
     @SuppressWarnings("unchecked")

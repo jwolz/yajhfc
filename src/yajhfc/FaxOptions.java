@@ -23,8 +23,11 @@ import java.awt.Rectangle;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -512,6 +515,11 @@ public class FaxOptions {
      */
     public int statusBarSize = -1;
 
+    /**
+     * Custom job options.
+     */
+    public final Map<String,String> customJobOptions = new TreeMap<String,String>();
+    
     
     public FaxOptions() {
         this.host = "";
@@ -655,6 +663,17 @@ public class FaxOptions {
                     p.setProperty(name, ((Enum)val).name());
                 } else if (val instanceof Password) {
                     p.setProperty(name + "-obfuscated", ((Password)val).getObfuscatedPassword());
+                } else if (val instanceof Map)  {
+                    StringBuilder res = new StringBuilder();
+                    Iterator it = ((Map)val).entrySet().iterator();
+                    while (it.hasNext()) {
+                        Map.Entry entry = (Map.Entry)it.next();
+                        String key = Utils.escapeChars((String)entry.getKey(), "=;", '~');
+                        String value = Utils.escapeChars((String)entry.getValue(), "=;", '~');
+                        
+                        res.append(key).append('=').append(value).append(';');
+                    }
+                    p.setProperty(name, res.toString());
                 } else {
                     log.log(Level.WARNING, "Unknown field type " + val.getClass().getName());
                 }
@@ -832,6 +851,21 @@ public class FaxOptions {
                             f.set(this, new Point(Integer.parseInt(v[0]), Integer.parseInt(v[1])));
                         } else if (Enum.class.isAssignableFrom(fcls)) {
                             f.set(this, Enum.valueOf((Class<? extends Enum>)fcls, val));
+                        } else if (Map.class.isAssignableFrom(fcls)) {
+                            Map map = (Map)f.get(this);
+                            map.clear();
+                            
+                            String[] entries = Utils.fastSplit(val, ';');
+                            for (String entry : entries) {
+                                int pos = entry.indexOf('=');
+                                if (pos > 0) {
+                                    String key = Utils.unEscapeChars(entry.substring(0,pos), "=;", '~');
+                                    String value = Utils.unEscapeChars(entry.substring(pos+1), "=;", '~');
+                                    map.put(key,value);
+                                } else {
+                                    log.warning("Unknown map entry in " + f.getName() + ": " + entry);
+                                }
+                            }
                         } else {
                             log.log(Level.WARNING, "Unknown field type " + fcls);
                         }

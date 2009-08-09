@@ -28,8 +28,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.logging.Logger;
 
-import yajhfc.Launcher2;
 import yajhfc.Utils;
+import yajhfc.launch.Launcher2;
 
 /**
  * @author jonas
@@ -75,7 +75,7 @@ public class ExternalProcessExecutor extends Thread {
                 log.info(commandName +  " executed successfully.");
             }
         } catch (Exception e) {
-            ExceptionDialog.showExceptionDialogThreaded(Launcher2.application, MessageFormat.format(Utils._("Error executing {0}:"), commandName), e);
+            ExceptionDialog.showExceptionDialog(Launcher2.application.getFrame(), MessageFormat.format(Utils._("Error executing {0}:"), commandName), e);
         }
     }
     
