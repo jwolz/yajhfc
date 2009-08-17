@@ -27,6 +27,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+import yajhfc.FaxOptions;
 import yajhfc.PaperSize;
 import yajhfc.Utils;
 import yajhfc.file.FileConverter.ConversionException;
@@ -106,15 +107,16 @@ public abstract class MultiFileConverter {
      * @throws ConversionException 
      */
     public static void viewMultipleFiles(List<FormattedFile> files, PaperSize paperSize, boolean isPreview) throws IOException, UnknownFormatException, ConversionException {
-        if (Utils.getFaxOptions().createSingleFilesForViewing ||
-                (isPreview &&  Utils.getFaxOptions().multiFileSendMode != MultiFileMode.NONE)) {
+        final FaxOptions faxOptions = Utils.getFaxOptions();
+        if (faxOptions.createSingleFilesForViewing ||
+                (isPreview &&  faxOptions.multiFileSendMode != MultiFileMode.NONE)) {
             if (files.size() == 1 && 
-                    (files.get(0).format == Utils.getFaxOptions().singleFileFormat || !Utils.getFaxOptions().alwaysCreateTargetFormat)) {
+                    (files.get(0).format == faxOptions.singleFileFormat || !faxOptions.alwaysCreateTargetFormat)) {
                 files.get(0).view();
             } else {
-                File tmpFile = File.createTempFile("view", "." + Utils.getFaxOptions().singleFileFormat.getDefaultExtension());
+                File tmpFile = File.createTempFile("view", "." + faxOptions.singleFileFormat.getDefaultExtension());
                 tmpFile.deleteOnExit();
-                FormattedFile ff = convertMultipleFilesToSingleFile(files, tmpFile, Utils.getFaxOptions().singleFileFormat, paperSize);
+                FormattedFile ff = convertMultipleFilesToSingleFile(files, tmpFile, faxOptions.singleFileFormat, paperSize);
                 ff.view();
             }
         } else {

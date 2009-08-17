@@ -23,7 +23,6 @@ import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.HeadlessException;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -62,6 +61,7 @@ import yajhfc.phonebook.PhonebookEvent;
 import yajhfc.util.ExampleFileFilter;
 import yajhfc.util.ExceptionDialog;
 import yajhfc.util.SafeJFileChooser;
+import yajhfc.util.TransactFileOutputStream;
 
 public class XMLPhoneBook extends PhoneBook {
 
@@ -172,7 +172,7 @@ public class XMLPhoneBook extends PhoneBook {
             return;
         if (wasChanged) {
             try {
-                saveToResult(new StreamResult(new FileOutputStream(settings.fileName)));
+                saveToResult(new StreamResult(new TransactFileOutputStream(new File(settings.fileName))));
             } catch (Exception e) {
                 ExceptionDialog.showExceptionDialog(parentDialog, Utils._("Error saving the phone book: "), e);
             }

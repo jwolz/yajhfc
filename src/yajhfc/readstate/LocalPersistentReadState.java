@@ -24,8 +24,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +33,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import yajhfc.Utils;
+import yajhfc.util.TransactFileOutputStream;
 
 /**
  * Stores the read state of faxes in a local file.
@@ -91,7 +92,7 @@ public class LocalPersistentReadState extends PersistentReadState {
             return;
         
         try {
-            BufferedWriter bOut = new BufferedWriter(new FileWriter(file));
+            BufferedWriter bOut = new BufferedWriter(new OutputStreamWriter(new TransactFileOutputStream(file)));
             
             bOut.write("# " + Utils.AppShortName + " " + Utils.AppVersion + " configuration file\n");
             bOut.write("# This file contains a list of faxes considered read\n\n");

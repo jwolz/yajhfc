@@ -161,6 +161,9 @@ public class SendWinSubmitProtocol implements SubmitProtocol, Runnable {
         if (comments != null) {
             sw.setComment(comments);
         }
+        if (Launcher2.application.getFrame().isVisible()) {
+            Launcher2.application.getFrame().toFront();
+        }
         log.fine("Showing SendWin");
         sw.setVisible(true);
         log.fine("SendWin closed");

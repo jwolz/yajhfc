@@ -65,13 +65,14 @@ import yajhfc.model.archive.QueueFileDateFormat;
 import yajhfc.plugin.PluginManager;
 import yajhfc.plugin.PluginUI;
 import yajhfc.util.ExternalProcessExecutor;
+import yajhfc.util.TransactFileOutputStream;
 
 
 public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2009 by Jonas Wolz";
-    public static final String AppVersion = "0.4.2beta3";
+    public static final String AppVersion = "0.4.2beta4";
     public static final String AuthorName = "Jonas Wolz";
     public static final String AuthorEMail = "jwolz@freenet.de";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
@@ -329,7 +330,7 @@ public final class Utils {
             theoptions.storeToProperties(p);
             
             try {
-                FileOutputStream filout = new FileOutputStream(file);
+                FileOutputStream filout = new TransactFileOutputStream(file);
                 p.store(filout, Utils.AppShortName + " " + Utils.AppVersion + " configuration file");
                 filout.close();
             } catch (Exception e) {

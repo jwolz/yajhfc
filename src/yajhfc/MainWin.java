@@ -51,6 +51,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimerTask;
 import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -98,7 +99,6 @@ import yajhfc.filters.StringFilter;
 import yajhfc.filters.StringFilterOperator;
 import yajhfc.filters.ui.CustomFilterDialog;
 import yajhfc.launch.Launcher2;
-import yajhfc.launch.Lock;
 import yajhfc.launch.MainApplicationFrame;
 import yajhfc.model.MyTableModel;
 import yajhfc.model.RecvYajJob;
@@ -122,7 +122,6 @@ import yajhfc.plugin.PluginUI;
 import yajhfc.readstate.PersistentReadState;
 import yajhfc.send.SendController;
 import yajhfc.send.SendWinControl;
-import yajhfc.shutdown.ShutdownManager;
 import yajhfc.tray.TrayFactory;
 import yajhfc.tray.YajHFCTrayIcon;
 import yajhfc.util.AbstractQuickSearchHelper;
@@ -1571,26 +1570,11 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             UpdateChecker.startSilentUpdateCheck();
         }
         
-        ShutdownManager.getInstance().registerShutdownHook(new Runnable() {
-            public void run() {   
-                if (Utils.debugMode)
-                    System.err.println("Doing shutdown work...");
-                
-                PersistentReadState.getCurrent().persistReadState();
-
-                Utils.storeOptionsToFile();
-                Lock.releaseLock();
-                
-                if (Utils.debugMode)
-                    System.err.println("Shutdown work finished.");
-            } 
-        });
-        utmrTable.schedule(new TimerTask() {
-            @Override
+        Utils.executorService.scheduleAtFixedRate(new Runnable() {
             public void run() {
                 PersistentReadState.getCurrent().persistReadState();
             }
-        }, READ_PERSIST_INTERVAL, READ_PERSIST_INTERVAL);
+        }, READ_PERSIST_INTERVAL, READ_PERSIST_INTERVAL, TimeUnit.MILLISECONDS);
     }
     
     void showOrHideTrayIcon() {
