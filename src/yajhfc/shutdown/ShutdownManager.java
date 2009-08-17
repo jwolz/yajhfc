@@ -18,18 +18,37 @@
  */
 package yajhfc.shutdown;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import yajhfc.Utils;
+
 /**
  * @author jonas
  *
  */
 public class ShutdownManager {
 
-    private static ShutdownManager INSTANCE = new ShutdownManager();
+    private static ShutdownManager INSTANCE;
     /**
      * Returns the currently active shut down manager instance 
      * @return
      */
     public static ShutdownManager getInstance() {
+        if (INSTANCE == null) {
+            if (Utils.IS_WINDOWS) {
+                // Work around a bug which results in ShutdownHooks not being run on Vista
+                try {
+                    INSTANCE = new Win32ShutdownManager();
+                } catch (Throwable e) {
+                    Logger.getLogger(ShutdownManager.class.getName()).
+                        log(Level.WARNING, "Error installing Win32 shutdown manager: ", e);
+                    INSTANCE = new ShutdownManager();
+                }
+            } else {
+                INSTANCE = new ShutdownManager();
+            }
+        }
         return INSTANCE;
     }
     

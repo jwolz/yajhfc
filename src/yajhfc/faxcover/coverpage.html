@@ -1,0 +1,206 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+       "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+	<title>YajHFC default cover page</title>	
+	</head>
+	<body>
+		<p align="center">
+			<b><font face="SansSerif" size="12">F A X</font></b>
+		</p>
+		<p> </p>
+		<table width="100%" cellspacing="0" cellpadding="0">
+			<!-- define widths: -->
+			<tr>
+				<td width="20"></td>
+				<td width="50%"></td>
+				<td width="20"></td>
+				<td width="30%"></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<b><font face="SansSerif">To:</font></b>
+				</td>
+				<td colspan="2">
+					<b><font face="SansSerif">From:</font></b>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<font face="SansSerif">@@Name@@ </font>
+				</td>
+				<td colspan="2">
+					<font face="SansSerif">@@FromName@@ </font>
+				</td>
+			</tr>
+			@@IfSomeFilled:Position,FromPosition@@
+			<tr>
+				<td colspan="2">
+					<font face="SansSerif">@@Position@@ </font>
+				</td>
+				<td colspan="2">
+					<font face="SansSerif">@@FromPosition@@ </font>
+				</td>
+			</tr>
+			@@EndIf@@
+			@@IfSomeFilled:Company,FromCompany@@
+			<tr>
+				<td colspan="2">
+					<font face="SansSerif">@@Company@@ </font>
+				</td>
+				<td colspan="2">
+					<font face="SansSerif">@@FromCompany@@ </font>
+				</td>
+			</tr>
+			@@EndIf@@
+			@@IfSomeFilled:Street,FromStreet@@
+			<tr>
+				<td colspan="2">
+					<font face="SansSerif">@@Street@@ </font>
+				</td>
+				<td colspan="2">
+					<font face="SansSerif">@@FromStreet@@ </font>
+				</td>
+			</tr>
+			@@EndIf@@
+			@@IfSomeFilled:Place,State,ZIPCode,FromPlace,FromState,FromZIPCode@@
+			<tr>
+				<td colspan="2">
+					<font face="SansSerif">@@Place@@ @@IfSomeFilled:State,ZIPCode@@, @@State@@ @@ZIPCode@@ @@EndIf@@ </font>
+				</td>
+				<td colspan="2">
+					<font face="SansSerif">@@FromPlace@@ @@IfSomeFilled:FromState,FromZIPCode@@, @@FromState@@ @@FromZIPCode@@ @@EndIf@@ </font>
+				</td>
+			</tr>
+			@@EndIf@@
+			@@IfSomeFilled:Country,FromCountry@@
+			<tr>
+				<td colspan="2">
+					<font face="SansSerif">@@Country@@ </font>
+				</td>
+				<td colspan="2">
+					<font face="SansSerif">@@FromCountry@@ </font>
+				</td>
+			</tr>
+			@@EndIf@@
+			@@IfSomeFilled:Voicenumber,FromVoicenumber@@
+			<tr>
+				<td>
+					<font face="SansSerif">@@IfSomeFilled:Voicenumber@@Phone: @@EndIf@@</font>
+				</td>
+				<td>
+					<font face="SansSerif">@@Voicenumber@@</font>
+				</td>
+				<td>
+					<font face="SansSerif">@@IfSomeFilled:FromVoicenumber@@Phone: @@EndIf@@</font>
+				</td>
+				<td>
+					<font face="SansSerif">@@FromVoicenumber@@</font>
+				</td>
+			</tr>
+			@@EndIf@@
+			<tr>
+				<td>
+					<font face="SansSerif">Fax: </font>
+				</td>
+				<td>
+					<font face="SansSerif">@@Faxnumber@@ </font>
+				</td>
+				<td>
+					<font face="SansSerif">Fax: </font>
+				</td>
+				<td>
+					<font face="SansSerif">@@FromFaxnumber@@ </font>
+				</td>
+			</tr>
+			@@IfSomeFilled:EMail,FromEMail@@
+			<tr>
+				<td>
+					<font face="SansSerif">@@IfSomeFilled:EMail@@eMail: @@ENDIF@@</font>
+				</td>
+				<td>
+					<font face="SansSerif">@@EMail@@</font>
+				</td>
+				<td>
+					<font face="SansSerif">@@IfSomeFilled:FromEMail@@eMail: @@ENDIf@@</font>
+				</td>
+				<td>
+					<font face="SansSerif">@@FromEMail@@</font>
+				</td>
+			</tr>
+			@@EndIf@@
+			@@IfSomeFilled:Website,FromWebsite@@
+			<tr>
+				<td>
+					<font face="SansSerif">@@IfSomeFilled:Website@@Web: @@EndIf@@</font>
+				</td>
+				<td>
+					<font face="SansSerif">@@Website@@</font>
+				</td>
+				<td>
+					<font face="SansSerif">@@IfSomeFilled:FromWebsite@@Web: @@EndIf@@</font>
+				</td>
+				<td>
+					<font face="SansSerif">@@FromWebsite@@</font>
+				</td>
+			</tr>
+			@@EndIf@@
+			<tr>
+				<td>
+					&nbsp;
+				</td>
+				<td>
+					&nbsp;
+				</td>
+				<td>
+					&nbsp;
+				</td>
+				<td>
+					&nbsp;
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<font face="SansSerif"><b>Date: </b></font>
+				</td>
+				<td colspan="3">
+					<font face="SansSerif">@@Date@@</font>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<font face="SansSerif"><b>Pages: </b></font>
+				</td>
+				<td colspan="3">
+					<font face="SansSerif">@@TotalPageCount@@</font>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					&nbsp;
+				</td>
+				<td>
+					&nbsp;
+				</td>
+				<td>
+					&nbsp;
+				</td>
+				<td>
+					&nbsp;
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<font face="SansSerif">@@IfAllFilled:Subject@@<b>Subject: </b>@@EndIf@@</font>
+				</td>
+				<td colspan="3">
+					<font face="SansSerif">@@Subject@@ </font>
+				</td>
+			</tr>
+		</table>
+		<p align="left">
+			<br>
+			<font face="Monospaced">@@Comments@@</font>
+		</p>
+	</body>
+</html>

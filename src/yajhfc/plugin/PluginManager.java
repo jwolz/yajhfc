@@ -22,8 +22,8 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -46,8 +46,8 @@ import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 import yajhfc.Utils;
+import yajhfc.util.TransactFileOutputStream;
 
 /**
  * This class contains static method to load YajHFC plugins.
@@ -204,7 +204,7 @@ public class PluginManager {
      * @throws IOException 
      */
     public static void writePluginList(File file) throws IOException {
-        Writer outWriter = new BufferedWriter(new FileWriter(file));
+        Writer outWriter = new BufferedWriter(new OutputStreamWriter(new TransactFileOutputStream(file)));
         outWriter.write("# This file contains the list of plugins and JDBC drivers loaded by YajHFC on startup.\n");
         outWriter.write("# Format: One file name per line, a prefix of \":jdbcdriver:\" denotes a JDBC driver.\n");
         outWriter.write("# \n");

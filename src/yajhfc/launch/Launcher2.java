@@ -38,11 +38,14 @@ import java.util.logging.StreamHandler;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import yajhfc.HylaClientManager;
 import yajhfc.MainWin;
 import yajhfc.NoGUISender;
 import yajhfc.Utils;
 import yajhfc.plugin.PluginManager;
 import yajhfc.plugin.PluginManager.PluginInfo;
+import yajhfc.readstate.PersistentReadState;
+import yajhfc.shutdown.ShutdownManager;
 import yajhfc.util.ExternalProcessExecutor;
 
 /**
@@ -157,6 +160,20 @@ public class Launcher2 {
             if (Utils.debugMode) {
                 launchLog.info("Lock and listener created.");
             }
+            ShutdownManager.getInstance().registerShutdownHook(new Runnable() {
+                public void run() {   
+                    if (Utils.debugMode)
+                        System.err.println("Doing shutdown work...");
+                    
+                    PersistentReadState.getCurrent().persistReadState();
+
+                    Utils.storeOptionsToFile();
+                    Lock.releaseLock();
+                    
+                    if (Utils.debugMode)
+                        System.err.println("Shutdown work finished.");
+                } 
+            });
         } else {
             try {
                 launchLog.info("Connecting to old instance...");
@@ -207,19 +224,37 @@ public class Launcher2 {
             launchLog.info("Send only startup...");
         }
         try {
+            initializePlugins(opts.plugins, opts.noPlugins);
+            
             final SendWinSubmitProtocol submitProto = new SendWinSubmitProtocol();
             fillSubmitProtocol(submitProto, opts);
             submitProto.setCloseAfterSubmit(true);
             
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
-                    Launcher2.application = new DummyFrame();
+                    NoGUISender dummyFrame = new NoGUISender();
+                    dummyFrame.clientManager = new HylaClientManager(Utils.getFaxOptions());
+                    Launcher2.application = dummyFrame;
                     try {
                         submitProto.submit(true);
                     } catch (IOException e) {
                         launchLog.log(Level.WARNING, "Error submitting fax", e);
                     }
                     System.exit(0);
+                } 
+            });
+            ShutdownManager.getInstance().registerShutdownHook(new Runnable() {
+                public void run() {   
+                    if (Utils.debugMode)
+                        System.err.println("Doing shutdown work...");
+                    
+                    //PersistentReadState.getCurrent().persistReadState();
+
+                    Utils.storeOptionsToFile();
+                    //Lock.releaseLock();
+                    
+                    if (Utils.debugMode)
+                        System.err.println("Shutdown work finished.");
                 } 
             });
         } catch (Exception e) {

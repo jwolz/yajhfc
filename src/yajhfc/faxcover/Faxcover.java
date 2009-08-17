@@ -52,7 +52,7 @@ import yajhfc.phonebook.convrules.ZIPCodeRule;
  * Constructor(URL coverTemplate)
  */
 public abstract class Faxcover {
-    private static final String DEFAULT_FAXCOVER_NAME = "faxcover/faxcover.ps";
+    private static final String DEFAULT_FAXCOVER_NAME = "/yajhfc/faxcover/coverpage.html";
     
     
     public DateFormat dateFmt;    // date format for Output

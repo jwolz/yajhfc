@@ -23,10 +23,12 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -270,8 +272,8 @@ public class Lock implements SubmitProtocol {
                 }
             }
             if (sockBlock != null) {
-                FileWriter filout = new FileWriter(lock);
-                filout.write(String.valueOf(port) + "\n");
+                Writer filout = new OutputStreamWriter(new FileOutputStream(lock));
+                filout.write("" + port + "\n");
                 filout.close();
                 lock.deleteOnExit();
                 //isLocking = true;
@@ -300,6 +302,8 @@ public class Lock implements SubmitProtocol {
             }
             
             lockThread = null;
+            
+            getLockFile().delete();
         } catch (IOException e) {
             // do nothing
         }

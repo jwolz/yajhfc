@@ -30,11 +30,14 @@ import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import yajhfc.Utils;
 import yajhfc.file.FileConverter.ConversionException;
 import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.convrules.EntryToStringRule;
@@ -44,6 +47,8 @@ import yajhfc.phonebook.convrules.EntryToStringRule;
  *
  */
 public abstract class MarkupFaxcover extends Faxcover {
+    
+    static final Logger log = Logger.getLogger(MarkupFaxcover.class.getName());
     
     /**
      * Set this to true if non-ASCII characters should be encoded as 
@@ -114,6 +119,7 @@ public abstract class MarkupFaxcover extends Faxcover {
     
     
     public static final Map<String,Tag> availableTags = new HashMap<String,Tag>();
+
     static {
         // Tag names MUST be lower case to allow case insensitive comparison!
     
@@ -168,23 +174,34 @@ public abstract class MarkupFaxcover extends Faxcover {
         availableTags.put("comments", new ReflectionTag("comments"));
         availableTags.put("date", new Tag() {
             @Override
-            public String getValue(Faxcover arg0) {
+            public String getValue(Faxcover arg0, List<ConditionState> conditionStack, String param) {
                 return arg0.dateFmt.format(arg0.coverDate);
             }
         });
         availableTags.put("pagecount", new ReflectionTag("pageCount"));
         availableTags.put("totalpagecount", new Tag() {
             @Override
-            public String getValue(Faxcover arg0) {
+            public String getValue(Faxcover arg0, List<ConditionState> conditionStack, String param) {
                 return String.valueOf(arg0.pageCount+1);
             }
         });
+        
+        // Conditionals:
+        IfTag allFilled = new IfAllFilledTag();
+        IfTag someFilled = new IfSomeFilledTag();
+        availableTags.put("ifallfilled", allFilled);
+        availableTags.put("ifsomefilled", someFilled);
+        availableTags.put("ifallempty", new IfNotTag(someFilled));
+        availableTags.put("ifsomeempty", new IfNotTag(allFilled));
+        availableTags.put("else", new ElseTag());
+        availableTags.put("endif", new EndIfTag());
     }
-    public static final int MAXTAGLENGTH = 16;
+    public static final int MAXTAGLENGTH = 300;
     public static final char TAGCHAR = '@';
     
     protected void replaceTags(Reader in, Writer out) throws IOException {
         final char[] buf = new char[8000];
+        final List<ConditionState> conditionStack = new ArrayList<ConditionState>();
         int readLen;
         int readOffset = 0;
         int numRead;
@@ -200,81 +217,65 @@ public abstract class MarkupFaxcover extends Faxcover {
                 if (buf[i] == TAGCHAR && (i+1) < loopEnd && buf[i+1] == TAGCHAR) {
                     // Found start/end of a tag
                     if (lastTag != -1 && i - lastTag < MAXTAGLENGTH) {
-//                        if (matchesTag(buf, lastTag, NAME_TAG)) {
-//                            replacement = nameRule.applyRule(toData);
-//                        } else if (matchesTag(buf, lastTag, LOCATION_TAG)) {
-//                            replacement = locationRule.applyRule(toData);
-//                        } else if (matchesTag(buf, lastTag, COMPANY_TAG)) {
-//                            replacement = companyRule.applyRule(toData);
-//                        } else if (matchesTag(buf, lastTag, FAXNUMBER_TAG)) {
-//                            replacement = toData.get(PBEntryField.FaxNumber);
-//                        } else if (matchesTag(buf, lastTag, VOICENUMBER_TAG)) {
-//                            replacement = toData.get(PBEntryField.VoiceNumber);
-//                        } else if (matchesTag(buf, lastTag, FROMNAME_TAG)) {
-//                            replacement = nameRule.applyRule(fromData);
-//                        } else if (matchesTag(buf, lastTag, FROMCOMPANY_TAG)) {
-//                            replacement = companyRule.applyRule(fromData);
-//                        } else if (matchesTag(buf, lastTag, FROMLOCATION_TAG)) {
-//                            replacement = locationRule.applyRule(fromData);
-//                        } else if (matchesTag(buf, lastTag, FROMFAXNUMBER_TAG)) {
-//                            replacement = fromData.get(PBEntryField.FaxNumber);
-//                        } else if (matchesTag(buf, lastTag, FROMVOICENUMBER_TAG)) {
-//                            replacement = fromData.get(PBEntryField.VoiceNumber);
-//                        } else if (matchesTag(buf, lastTag, FROMEMAIL_TAG)) {
-//                            replacement = fromData.get(PBEntryField.EMailAddress);
-//                        } else if (matchesTag(buf, lastTag, SUBJECT_TAG)) {
-//                            replacement = this.regarding;
-//                        } else if (matchesTag(buf, lastTag, COMMENT_TAG)) {
-//                            replacement = this.comments;
-//                        } else if (matchesTag(buf, lastTag, DATE_TAG)) {
-//                            replacement = this.dateFmt.format(new Date());
-//                        } else if (matchesTag(buf, lastTag, NUMPAGES_TAG)) {
-//                            replacement = String.valueOf(this.pageCount);
-//                        }
                         
-                        String tagName = new String(buf, lastTag, i - lastTag).toLowerCase();
+                        String tagText = new String(buf, lastTag, i - lastTag).toLowerCase();
+                        String tagName;
+                        String tagParam;
+                        int pos = tagText.indexOf(':');
+                        if (pos > 0) {
+                            tagName = tagText.substring(0, pos);
+                            tagParam = tagText.substring(pos+1);
+                        } else {
+                            tagName = tagText;
+                            tagParam = null;
+                        }
+                        
                         Tag tag = availableTags.get(tagName);
                         if (tag == null) { // Doesn't match any tag -> copy unmodified
                             lastTag = i+2;
                             i++; // skip second @
                         } else {
-                            String replacement = tag.getValue(this);
+                            String replacement = tag.getValue(this, conditionStack, tagParam);
                             if (replacement == null) {
                                 replacement = "";
                             }
                             // Write the unmodified part
                             out.write(buf, writePointer, lastTag - writePointer - 2);
-                            for (int j = 0; j < replacement.length(); j++) {
-                                char c = replacement.charAt(j);
-                                // Escape &, <, >, " and '
-                                switch (c) {
-                                case '&':
-                                    out.write("&amp;");
-                                    break;
-                                case '<':
-                                    out.write("&lt;");
-                                    break;
-                                case '>':
-                                    out.write("&gt;");
-                                    break;
-                                case '\"':
-                                    out.write("&quot;");
-                                    break;
-                                case '\'':
-                                    out.write("&apos;");
-                                    break;
-                                case '\n':
-                                    out.write(newLineReplacement);
-                                    break;
-                                default:
-                                    if (encodeNonASCIIAsEntity) {
-                                        if (c <= 127) {
-                                            out.write(c);
+                            if (tag.valueIsRaw()) {
+                                out.write(replacement);
+                            } else {
+                                for (int j = 0; j < replacement.length(); j++) {
+                                    char c = replacement.charAt(j);
+                                    // Escape &, <, >, " and '
+                                    switch (c) {
+                                    case '&':
+                                        out.write("&amp;");
+                                        break;
+                                    case '<':
+                                        out.write("&lt;");
+                                        break;
+                                    case '>':
+                                        out.write("&gt;");
+                                        break;
+                                    case '\"':
+                                        out.write("&quot;");
+                                        break;
+                                    case '\'':
+                                        out.write("&apos;");
+                                        break;
+                                    case '\n':
+                                        out.write(newLineReplacement);
+                                        break;
+                                    default:
+                                        if (encodeNonASCIIAsEntity) {
+                                            if (c <= 127) {
+                                                out.write(c);
+                                            } else {
+                                                out.write("&#" + (int)c + ";");
+                                            }
                                         } else {
-                                            out.write("&#" + (int)c + ";");
+                                            out.write(c);
                                         }
-                                    } else {
-                                        out.write(c);
                                     }
                                 }
                             }
@@ -304,20 +305,186 @@ public abstract class MarkupFaxcover extends Faxcover {
         } while (numRead >= 0); // (numRead == readLen);
 
         out.close();
+        
+        if (conditionStack.size() > 0) {
+            log.warning("Found " + conditionStack.size() + " if tags without an @@ENDIF@@!");
+        }
     }
-
-//    private static boolean matchesTag(char[] buffer, int offset, String tag) {
-//        int tagLen = tag.length();
-//        for (int i = 0; i < tagLen; i++) {
-//            if (Character.toLowerCase(buffer[i + offset]) != tag.charAt(i)) {
-//                return false;
-//            }
-//        }
-//        return (buffer[offset+tagLen] == TAGCHAR && buffer[offset+tagLen+1] == TAGCHAR);
-//    }
-
+    
     protected static abstract class Tag {
-        public abstract String getValue(Faxcover instance);
+        /**
+         * Returns the String the tag should be replaced with
+         * @param instance
+         * @param conditionStack
+         * @param param
+         * @return
+         */
+        public abstract String getValue(Faxcover instance, List<ConditionState> conditionStack, String param);
+        
+        /**
+         * Determines if the value should be copied unmodified or if characters should be escaped
+         * @return
+         */
+        public boolean valueIsRaw() {
+            return false;
+        }
+    }
+    
+    protected abstract static class IfTag extends Tag { 
+        protected abstract boolean evaluate(Faxcover arg0, List<ConditionState> conditionStack, String param);
+        
+        @Override
+        public String getValue(Faxcover arg0, List<ConditionState> conditionStack, String param) {
+            if (param == null) {
+                log.info("Found If without an parameter!");
+                return "Found If without an parameter!";
+            }
+            boolean val = evaluate(arg0, conditionStack, param);
+            conditionStack.add(new ConditionState(val));
+            if (val) {
+                return "";
+            } else {
+                return "<!-- ";
+            }
+        }
+        
+        @Override
+        public boolean valueIsRaw() {
+            return true;
+        }
+    }
+    
+    protected static class IfNotTag extends IfTag {
+        protected final IfTag wrapped;
+        
+        @Override
+        protected boolean evaluate(Faxcover arg0, List<ConditionState> arg1,
+                String arg2) {
+            return !wrapped.evaluate(arg0, arg1, arg2);
+        }
+
+        public IfNotTag(IfTag wrapped) {
+            super();
+            this.wrapped = wrapped;
+        }
+    }
+    
+    /**
+     * State for IfTags
+     * @author jonas
+     *
+     */
+    protected static class ConditionState {
+        public final boolean ifWasTaken;
+        public boolean hadElse = false;
+        
+        public ConditionState(boolean ifWasTaken) {
+            super();
+            this.ifWasTaken = ifWasTaken;
+        }
+    }
+    
+    protected static class IfAllFilledTag extends IfTag {
+        @Override
+        protected boolean evaluate(Faxcover arg0, List<ConditionState> conditionStack, String param) {
+            String[] childTags = Utils.fastSplit(param, ',');
+            for (String sTag : childTags) {
+                Tag tag = availableTags.get(sTag);
+                String tagValue = null;
+                if (tag != null) {
+                    tagValue = tag.getValue(arg0, conditionStack, null);
+                }
+                if (tagValue == null || tagValue.length() == 0) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+    
+    protected static class IfSomeFilledTag extends IfTag {
+        @Override
+        protected boolean evaluate(Faxcover arg0, List<ConditionState> conditionStack, String param) {
+            String[] childTags = Utils.fastSplit(param, ',');
+            for (String sTag : childTags) {
+                Tag tag = availableTags.get(sTag);
+                String tagValue = null;
+                if (tag != null) {
+                    tagValue = tag.getValue(arg0, conditionStack, null);
+                }
+                if (tagValue != null && tagValue.length() > 0) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+    
+    protected static class ElseTag extends Tag {        
+        @Override
+        public String getValue(Faxcover arg0, List<ConditionState> conditionStack, String param) {
+            int size = conditionStack.size();
+            if (size == 0) {
+                log.warning("Found @@ELSE@@ without an if!");
+                return "Found @@ELSE@@ without an if!";
+            }
+            
+            ConditionState state = conditionStack.get(size-1);
+            if (state.hadElse) {
+                log.warning("Found more than one @@ELSE@@ for an IF!");
+                return "Found more than one @@ELSE@@ for an IF!";
+            } else {
+                state.hadElse = true;
+                if (state.ifWasTaken) { // Last if was taken
+                    return "<!-- ";
+                } else {
+                    // Check if this else is embedded in an already commented out section:
+                    for (int i = size - 2; i >= 0; i--) {
+                        state = conditionStack.get(i);
+                        if (!state.ifWasTaken || state.hadElse) {
+                            return "---";
+                        }
+                    }
+                    return "-->";
+                }
+            }
+        }
+        
+        @Override
+        public boolean valueIsRaw() {
+            return true;
+        }
+    }
+    
+    protected static class EndIfTag extends Tag {
+        @Override
+        public String getValue(Faxcover arg0, List<ConditionState> conditionStack, String param) {
+            int size = conditionStack.size();
+            if (size == 0) {
+                log.warning("Found @@ENDIF@@ without an if!");
+                return "Found @@ENDIF@@ without an if!";
+            }
+            
+            ConditionState lastState = conditionStack.remove(size-1);
+            boolean writeEndComment = !lastState.ifWasTaken || lastState.hadElse;
+            
+            if (writeEndComment) {
+                // Check if this end if is embedded in an already commented out section:
+                for (ConditionState state : conditionStack) {
+                    if (!state.ifWasTaken || state.hadElse) {
+                        return "---";
+                    }
+                }
+                return "-->";
+            }
+
+            return "";
+        }
+        
+        @Override
+        public boolean valueIsRaw() {
+            return true;
+        }
     }
     
     protected static class PBFieldTag extends Tag {
@@ -325,7 +492,7 @@ public abstract class MarkupFaxcover extends Faxcover {
         protected final PBEntryField field;
         
         @Override
-        public String getValue(Faxcover arg0) {
+        public String getValue(Faxcover arg0, List<ConditionState> conditionStack, String param) {
             return (isFrom ? arg0.fromData : arg0.toData).getField(field);
         }
 
@@ -341,11 +508,12 @@ public abstract class MarkupFaxcover extends Faxcover {
         protected final Field ruleField;
         
         @Override
-        public String getValue(Faxcover arg0) {
+        public String getValue(Faxcover arg0, List<ConditionState> conditionStack, String param) {
             try {
                 EntryToStringRule entryRule = (EntryToStringRule)ruleField.get(arg0);
                 return entryRule.applyRule(isFrom ? arg0.fromData : arg0.toData);
             } catch (Exception e) {
+                log.log(Level.WARNING, "Error getting value", e);
                 return "";
             }
         }
@@ -357,7 +525,7 @@ public abstract class MarkupFaxcover extends Faxcover {
             try {
                 field = Faxcover.class.getField(ruleFieldName);
             } catch (Exception e) {
-                Logger.getAnonymousLogger().log(Level.SEVERE, "Invalid field", e);
+                log.log(Level.SEVERE, "Invalid field", e);
             }
             this.ruleField = field;
         }
@@ -367,10 +535,11 @@ public abstract class MarkupFaxcover extends Faxcover {
         protected final Field field;
 
         @Override
-        public String getValue(Faxcover instance) {
+        public String getValue(Faxcover instance, List<ConditionState> conditionStack, String param) {
             try {
                 return field.get(instance).toString();
             } catch (Exception e) {
+                log.log(Level.WARNING, "Error getting value", e);
                 return "";
             }
         }
@@ -381,7 +550,7 @@ public abstract class MarkupFaxcover extends Faxcover {
             try {
                 rField = Faxcover.class.getField(fieldName);
             } catch (Exception e) {
-                Logger.getAnonymousLogger().log(Level.SEVERE, "Invalid field", e);
+                log.log(Level.SEVERE, "Invalid field", e);
             }
             this.field = rField;
         }

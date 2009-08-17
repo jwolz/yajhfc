@@ -19,6 +19,7 @@
 package yajhfc;
 
 import java.awt.Cursor;
+import java.awt.Frame;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
 
@@ -29,9 +30,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
+import yajhfc.MainWin.SendReadyState;
 import yajhfc.launch.CommandLineOpts;
+import yajhfc.launch.Launcher2;
+import yajhfc.launch.MainApplicationFrame;
 import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
-import yajhfc.plugin.PluginManager;
 import yajhfc.send.LocalFileTFLItem;
 import yajhfc.send.SendController;
 import yajhfc.send.SendControllerListener;
@@ -43,10 +46,11 @@ import yajhfc.util.ProgressWorker.ProgressUI;
  * @author jonas
  *
  */
-public class NoGUISender extends JFrame implements ProgressUI {
+public class NoGUISender extends JFrame implements ProgressUI, MainApplicationFrame {
 
     JLabel progressLabel, noteLabel;
     JProgressBar progressBar;
+    public HylaClientManager clientManager;
     
     /**
      * @throws HeadlessException
@@ -74,7 +78,22 @@ public class NoGUISender extends JFrame implements ProgressUI {
         setLocationRelativeTo(null);
     }
 
-
+    public void bringToFront() {
+        toFront();
+    }
+    
+    public HylaClientManager getClientManager() {
+        return clientManager;
+    }
+    
+    public Frame getFrame() {
+        return this;
+    }
+    
+    public SendReadyState getSendReadyState() {
+        return SendReadyState.Ready;
+    }
+    
     /* (non-Javadoc)
      * @see yajhfc.util.ProgressWorker.ProgressUI#close()
      */
@@ -143,19 +162,16 @@ public class NoGUISender extends JFrame implements ProgressUI {
             System.exit(1);
         }
         
-        // Load plugins:
-        if (!opts.noPlugins) {
-            PluginManager.readPluginList();
-        }
-        PluginManager.addPlugins(opts.plugins);
-        PluginManager.loadAllKnownPlugins();
+        Launcher2.initializePlugins(opts.plugins, opts.noPlugins);
         
         NoGUISender progressFrame = new NoGUISender();
+        Launcher2.application = progressFrame;
         progressFrame.showIndeterminateProgress(Utils._("Logging in..."), null);
         progressFrame.setVisible(true);
         
         try {
             HylaClientManager clientManager = new HylaClientManager(Utils.getFaxOptions());
+            progressFrame.clientManager = clientManager;
             clientManager.forceLogin(progressFrame);
             
             SendController sendController = new SendController(clientManager, progressFrame, false, progressFrame);
