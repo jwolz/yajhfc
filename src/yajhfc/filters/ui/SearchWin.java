@@ -188,6 +188,10 @@ public abstract class SearchWin<T extends FilterableObject,S extends FilterKey> 
             panelMisc.add(checkCaseSensitive);
             panelMisc.add(checkWrapAround);
 
+            JPanel panelPanel = new JPanel(new GridLayout(1, 2));
+            panelPanel.add(panelDirection);
+            panelPanel.add(panelMisc);
+            
             Box boxButtons = new Box(BoxLayout.X_AXIS);
             boxButtons.add(buttonSearch);
             boxButtons.add(Box.createHorizontalStrut(border));
@@ -197,8 +201,8 @@ public abstract class SearchWin<T extends FilterableObject,S extends FilterKey> 
             myContentPane.add(comboFields, "1, 2");
             myContentPane.add(comboOp, "3, 2");
             myContentPane.add(textCondition, "5, 2");
-            myContentPane.add(panelDirection, "1, 4, 3, 4");
-            myContentPane.add(panelMisc, "5, 4");
+            myContentPane.add(panelPanel, "1, 4, 5, 4");
+            //myContentPane.add(panelMisc, "5, 4");
             myContentPane.add(new JSeparator(JSeparator.HORIZONTAL), "0, 6, 6, 6, f, c");
             myContentPane.add(boxButtons, "1, 8, 5, 8");
         }

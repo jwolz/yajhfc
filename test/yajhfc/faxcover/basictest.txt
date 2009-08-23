@@ -1,0 +1,90 @@
+# Test specification:
+# Lines starting with # are comments and ignored.
+# Else: Every odd line (including empty lines) specifies the input 
+# and the following even line the expected output.
+@@Name@@
+Recipient GivenName Recipient Name
+@@Company@@
+Recipient Department, Recipient Company
+@@Location@@
+Recipient Street, Recipient ZIP code Recipient Location
+@@Faxnumber@@
+Recipient FaxNumber
+@@Voicenumber@@
+Recipient VoiceNumber
+@@FromName@@
+Sender GivenName Sender Name
+@@FromCompany@@
+Sender Department, Sender Company
+@@FromLocation@@
+Sender Street, Sender ZIP code Sender Location
+@@FromFaxnumber@@
+Sender FaxNumber
+@@FromVoicenumber@@
+Sender VoiceNumber
+@@FromEMail@@
+Sender EMailAddress
+@@Subject@@
+Just a Test
+@@Date@@
+2010-11-12 13:14:15
+@@PageCount@@
+42
+@@Comments@@
+Some comments: ÄÖÜ &lt;&gt;&amp;
+
+
+@@Surname@@
+Recipient Name
+@@GivenName@@
+Recipient GivenName
+@@Title@@
+Recipient Title
+@@Position@@
+Recipient Position
+@@Department@@
+Recipient Department
+@@CompanyName@@
+Recipient Company
+@@Street@@
+Recipient Street
+@@Place@@
+Recipient Location
+@@ZIPCode@@
+Recipient ZIP code
+@@State@@
+Recipient State
+@@Country@@
+Recipient Country
+@@EMail@@
+Recipient EMailAddress
+@@WebSite@@
+Recipient WebSite
+@@FromSurname@@
+Sender Name
+@@FromGivenName@@
+Sender GivenName
+@@FromTitle@@
+Sender Title
+@@FromPosition@@
+Sender Position
+@@FromDepartment@@
+Sender Department
+@@FromCompanyName@@
+Sender Company
+@@FromStreet@@
+Sender Street
+@@FromPlace@@
+Sender Location
+@@FromZIPCode@@
+Sender ZIP code
+@@FromState@@
+Sender State
+@@FromCountry@@
+Sender Country
+@@FromEMail@@
+Sender EMailAddress
+@@FromWebSite@@
+Sender WebSite
+@@TotalPageCount@@
+43

@@ -71,6 +71,17 @@ Thanks to Scott Harris for figuring this out.
 \item[Linux/*BSD/...:] Install the ``libtiff tools'' package for your distribution. Usually this package will have the word \texttt{tiff} in its name (on Debian/Ubuntu it is called \texttt{libtiff-tools} and on SUSE \texttt{tiff}).
 \end{description}
 
+\subsection{How can I supply already downloaded versions of tiff2pdf and GhostScript to the Windows setup?}
+
+Starting with version 0.4.2 the Windows setup optionally downloads and installs tiff2pdf and GhostScript.
+Before starting a download the setup program searches in the following places for already downloaded versions:
+\begin{enumerate}
+ \item The directory where the \texttt{setup.exe} resides
+ \item The user's desktop (where the files are saved if you choose to preserve downloaded files)
+\end{enumerate}
+
+Please note that the file names must exactly match the ones of the downloaded files (i.e. \texttt{gs864w32.exe} (32 bit) or \texttt{gs864w64.exe} (64 bit) and \texttt{tiff-3.8.2-1.exe}).
+
 \section{Usage of the program}	
 
 \subsection{How can I edit PostScript cover page templates?}
@@ -147,6 +158,25 @@ Starting with version 0.4.0 the following additional fields are available (note 
 
 This replacement is done at the source code level, so those words will not be recognized if the formatting changes inside one of it (e.g. \texttt{@@sub\textit{ject@@}}).
 
+Starting with version 0.4.2 some simple conditional statements are supported. These are implemented using HTML comments, so please make sure that the text enclosed in a conditional statement does not contain any comments.
+\begin{center}
+\begin{tabular}{|l|p{.5\textwidth}|}
+\hline
+\bfseries Word & \bfseries Meaning \\
+\hline\hline
+\ttfamily @@IfSomeFilled:\textit{field1,field2,...}@@ & Include the following text only if at least one of the given fields is filled (i.e. has a value with a length > 0).\\\hline
+\ttfamily @@IfAllFilled:\textit{field1,field2,...}@@ & Include the following text only if all of the given fields are filled (i.e. have a value with a length > 0).\\\hline
+\ttfamily @@IfSomeEmpty:\textit{field1,field2,...}@@ & Include the following text only if at least one of the given fields is empty (i.e. has a value with a length = 0).\\\hline
+\ttfamily @@IfAllEmpty:\textit{field1,field2,...}@@ & Include the following text only if all one of the given fields are empty (i.e. have a value with a length = 0).\\\hline
+\ttfamily @@Else@@ & Include the following text only if the last \texttt{@@If...@@}-Statement did not match.\\\hline
+\ttfamily @@EndIf@@ & Marks the end of the area influenced by the last if. Every \texttt{@@If...@@} must have exactly one corresponding \texttt{@@EndIf@@}.\\\hline
+\end{tabular}
+\end{center}
+
+\subsection{Where can I find the old default cover page used before version 0.4.2?}
+
+You can find it in the ``Coverpage examples'' archive at \url{ftp://ftp.berlios.de/pub/yajhfc/download/coverpages.zip}
+
 \subsection{I liked the old send dialog better. Can I have it back?}
 
 Just open the Options dialog and select \texttt{Traditional} as ``Style of send dialog''.
@@ -160,6 +190,8 @@ So, please start YajHFC using the following commands (replace \texttt{/path/to/d
 \item [Windows:] \verb#java -classpath c:\path\to\dbdriver.jar;c:\path\to\yajhfc.jar yajhfc.Launcher#
 \end{description}
 
+In recent YajHFC versions you can also simply add the driver using the \texttt{Plugins \& JDBC} panel in the Options dialog.
+
 \subsection{What can I enter as a value for the \texttt{matches} Operator in the custom filter dialog?}
 
 Regular Expressions. A short reference about the accepted syntax can be found at:
@@ -171,7 +203,7 @@ for the effect of the wildcard \verb#?# use \verb#.#.
 
 \subsection{Which command line arguments does YajHFC understand?}
 
-Output from \verb#java -jar yajhfc.jar --help# (version 0.4.0):
+Output from \verb#java -jar yajhfc.jar --help# (version 0.4.2):
 \begin{verbatim}
 Usage:
 java -jar yajhfc.jar [OPTIONS]... [FILES TO SEND]...
@@ -203,6 +235,9 @@ Argument description:
 -T, --showtab=0|R|1|S|2|T   Sets the tab to display on startup. Specify 0 or R
                             for the "Received", 1 or S for the "Sent" or 2 or T
                             for the "Transmitting" tab.
+    --windowstate=N|M|I|T   Sets the initial window state of the main window to
+                            _N_ormal, _M_aximized, _I_conified (minimized) or
+                            minimized to _T_ray.
     --loadplugin=JARFILE    Specifies a jar file of a YajHFC plugin to load.
     --loaddriver=JARFILE    Specifies the location of a JDBC driver JAR file to
                             load.
@@ -246,6 +281,9 @@ The following field names are recognized:
 \end{tabular}
 \end{center}
 
+Starting with version 0.4.2 you can also specify an input textfile with recipients using \texttt{-{-}recipient=@\textit{filename}} or the respective button in the send dialog.
+It is assumed that the text file contains one recipient per line (either a fax number or a data set using the above format).
+
 \subsection{What does the column XYZ mean?}
 
 Most likely, I don't know exactly either, because the column descriptions
@@ -277,7 +315,7 @@ Note, however that the user can still set these settings to a different value fo
 
 With version 0.4.0 support for the HylaFAX \texttt{archive} folder has been implemented.
 
-This directory cannot be accessed using the "`normal"' HylaFAX connection like the other folders, however, because HylaFAX does only allow to get the list of subfolders in the \texttt{archive} directory, but not to get any information (except the ID) about the archived jobs or the attached documents (if you know a HylaFAX version where this is different, please let me know).
+This directory cannot be accessed using the ``normal'' HylaFAX connection like the other folders, however, because HylaFAX does only allow to get the list of subfolders in the \texttt{archive} directory, but not to get any information (except the ID) about the archived jobs or the attached documents (if you know a HylaFAX version where this is different, please let me know).
 
 For this reason the directory has to be accessed by other methods. Currently (0.4.0) YajHFC only supports access using the file system. This means you have to export the  \texttt{archive} directory on the server using Samba, NFS or any other network file system, mount it on the client (if you use Unix; on Windows, you can just use UNC paths) and tell YajHFC in the options under which path the \texttt{archive} directory can be found.
 
@@ -329,6 +367,10 @@ When this option is \textit{checked}, a fax consisting of a single file is also 
 \subsection{Which characters are recognized as date/time format?}
 
 The date is formatted using a Java \texttt{SimpleDateFormat}. A description of the characters recognized can be found at \url{http://java.sun.com/j2se/1.5.0/docs/api/java/text/SimpleDateFormat.html}.
+
+\subsection{What does the \texttt{Answer call} feature do?}
+
+The same as the HylaFAX \verb#faxanswer# command: It instructs the HylaFAX server to try answering an incoming call on the given modem even if the modem normally ignores inbound calls. This can be useful for testing or for small installations where a modem shares the line with a normal telephone.
 
 \section{Problems/Known bugs}
 

@@ -2,8 +2,8 @@
        "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-	<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-	<title>YajHFC default cover page</title>
+	  <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+	  <title>YajHFC Standarddeckblatt</title>	
 	</head>
 	<body>
 		<p align="center">
@@ -13,10 +13,10 @@
 		<table width="100%" cellspacing="0" cellpadding="0">
 			<!-- define widths: -->
 			<tr>
-				<td width="20"></td>
-				<td width="50%"></td>
-				<td width="20"></td>
-				<td width="30%"></td>
+				<td width="15"></td>
+				<td width="45%"></td>
+				<td width="15"></td>
+				<td width="33%"></td>
 			</tr>
 			<tr>
 				<td colspan="2">
@@ -34,7 +34,7 @@
 					<font face="SansSerif">@@FromName@@ </font>
 				</td>
 			</tr>
-			<!--
+			@@IfSomeFilled:Position,FromPosition@@
 			<tr>
 				<td colspan="2">
 					<font face="SansSerif">@@Position@@ </font>
@@ -42,7 +42,9 @@
 				<td colspan="2">
 					<font face="SansSerif">@@FromPosition@@ </font>
 				</td>
-			</tr>-->
+			</tr>
+			@@EndIf@@
+			@@IfSomeFilled:Company,FromCompany@@
 			<tr>
 				<td colspan="2">
 					<font face="SansSerif">@@Company@@ </font>
@@ -51,6 +53,8 @@
 					<font face="SansSerif">@@FromCompany@@ </font>
 				</td>
 			</tr>
+			@@EndIf@@
+			@@IfSomeFilled:Street,FromStreet@@
 			<tr>
 				<td colspan="2">
 					<font face="SansSerif">@@Street@@ </font>
@@ -59,14 +63,18 @@
 					<font face="SansSerif">@@FromStreet@@ </font>
 				</td>
 			</tr>
+			@@EndIf@@
+			@@IfSomeFilled:Place,State,ZIPCode,FromPlace,FromState,FromZIPCode@@
 			<tr>
 				<td colspan="2">
-					<font face="SansSerif">@@Place@@, @@State@@ @@ZIPCode@@ </font>
+					<font face="SansSerif">@@Place@@ @@IfSomeFilled:State,ZIPCode@@, @@State@@ @@ZIPCode@@ @@EndIf@@ </font>
 				</td>
 				<td colspan="2">
-					<font face="SansSerif">@@FromPlace@@, @@FromState@@ @@FromZIPCode@@ </font>
+					<font face="SansSerif">@@FromPlace@@ @@IfSomeFilled:FromState,FromZIPCode@@, @@FromState@@ @@FromZIPCode@@ @@EndIf@@ </font>
 				</td>
 			</tr>
+			@@EndIf@@
+			@@IfSomeFilled:Country,FromCountry@@
 			<tr>
 				<td colspan="2">
 					<font face="SansSerif">@@Country@@ </font>
@@ -75,20 +83,37 @@
 					<font face="SansSerif">@@FromCountry@@ </font>
 				</td>
 			</tr>
+			@@EndIf@@
 			<tr>
 				<td>
-					<font face="SansSerif">Telefon: </font>
+					&nbsp;
+				</td>
+				<td>
+					&nbsp;
+				</td>
+				<td>
+					&nbsp;
+				</td>
+				<td>
+					&nbsp;
+				</td>
+			</tr>
+			@@IfSomeFilled:Voicenumber,FromVoicenumber@@
+			<tr>
+				<td>
+					<font face="SansSerif">@@IfSomeFilled:Voicenumber@@Phone: @@EndIf@@</font>
 				</td>
 				<td>
 					<font face="SansSerif">@@Voicenumber@@</font>
 				</td>
 				<td>
-					<font face="SansSerif">Telefon: </font>
+					<font face="SansSerif">@@IfSomeFilled:FromVoicenumber@@Phone: @@EndIf@@</font>
 				</td>
 				<td>
 					<font face="SansSerif">@@FromVoicenumber@@</font>
 				</td>
 			</tr>
+			@@EndIf@@
 			<tr>
 				<td>
 					<font face="SansSerif">Fax: </font>
@@ -103,34 +128,38 @@
 					<font face="SansSerif">@@FromFaxnumber@@ </font>
 				</td>
 			</tr>
+			@@IfSomeFilled:EMail,FromEMail@@
 			<tr>
 				<td>
-					<font face="SansSerif">E-Mail: </font>
+					<font face="SansSerif">@@IfSomeFilled:EMail@@E-Mail: @@ENDIF@@</font>
 				</td>
 				<td>
 					<font face="SansSerif">@@EMail@@</font>
 				</td>
 				<td>
-					<font face="SansSerif">E-Mail: </font>
+					<font face="SansSerif">@@IfSomeFilled:FromEMail@@E-Mail: @@ENDIf@@</font>
 				</td>
 				<td>
 					<font face="SansSerif">@@FromEMail@@</font>
 				</td>
 			</tr>
+			@@EndIf@@
+			@@IfSomeFilled:Website,FromWebsite@@
 			<tr>
 				<td>
-					<font face="SansSerif">Web: </font>
+					<font face="SansSerif">@@IfSomeFilled:Website@@Web: @@EndIf@@</font>
 				</td>
 				<td>
 					<font face="SansSerif">@@Website@@</font>
 				</td>
 				<td>
-					<font face="SansSerif">Web: </font>
+					<font face="SansSerif">@@IfSomeFilled:FromWebsite@@Web: @@EndIf@@</font>
 				</td>
 				<td>
 					<font face="SansSerif">@@FromWebsite@@</font>
 				</td>
 			</tr>
+			@@EndIf@@
 			<tr>
 				<td>
 					&nbsp;
@@ -177,7 +206,7 @@
 			</tr>
 			<tr>
 				<td>
-					<font face="SansSerif"><b>Betreff: </b></font>
+					<font face="SansSerif">@@IfAllFilled:Subject@@<b>Betreff: </b>@@EndIf@@</font>
 				</td>
 				<td colspan="3">
 					<font face="SansSerif">@@Subject@@ </font>

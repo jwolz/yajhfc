@@ -80,6 +80,17 @@ Falls dieser Link nicht funktionert, sehen Sie bitte unter \url{http://gnuwin32.
 Installieren Sie das "`libtiff tools"'-Paket für Ihre Distribution. Normalerweise hat dieses Paket das Wort \texttt{tiff} in seinem Namen (unter Debian/Ubuntu heißt es \texttt{libtiff-tools} und unter SUSE \texttt{tiff}).
 \end{description}
 
+\subsection{How can I supply already downloaded versions of tiff2pdf and GhostScript to the Windows setup?}
+
+Starting with version 0.4.2 the Windows setup optionally downloads and installs tiff2pdf and GhostScript.
+Before starting a download the setup program searches in the following places for already downloaded versions:
+\begin{enumerate}
+ \item The directory where the \texttt{setup.exe} resides
+ \item The user's desktop (where the files are saved if you choose to preserve downloaded files)
+\end{enumerate}
+
+Please note that the file names must exactly match the ones of the downloaded files (i.e. \texttt{gs864w32.exe} (32 bit) or \texttt{gs864w64.exe} (64 bit) and \texttt{tiff-3.8.2-1.exe}).
+
 \section{Benutzung des Programms}	
 
 \subsection{Wie kann ich PostScript-Deckblattvorlagen bearbeiten?}
@@ -157,6 +168,26 @@ Beginnend mit Version 0.4.0, sind die folgenden zusätzlichen Felder verfügbar (b
 
 Diese Ersetzung wird auf der Quelltextebene durchgeführt, so dass diese Wörter vermutlich nicht mehr erkannt werden, wenn sich die Formatierung innerhalb eines Wortes ändert (z.B. \texttt{@@sub\textit{ject@@}}).
 
+Starting with version 0.4.2 some simple conditional statements are supported. These are implemented using HTML comments, so please make sure that the text enclosed in a conditional statement does not contain any comments.
+\begin{center}
+\begin{tabular}{|l|p{.5\textwidth}|}
+\hline
+\bfseries Word & \bfseries Meaning \\
+\hline\hline
+\ttfamily @@IfSomeFilled:\textit{field1,field2,...}@@ & Include the following text only if at least one of the given fields is filled (i.e. has a value with a length > 0).\\\hline
+\ttfamily @@IfAllFilled:\textit{field1,field2,...}@@ & Include the following text only if all of the given fields are filled (i.e. have a value with a length > 0).\\\hline
+\ttfamily @@IfSomeEmpty:\textit{field1,field2,...}@@ & Include the following text only if at least one of the given fields is empty (i.e. has a value with a length = 0).\\\hline
+\ttfamily @@IfAllEmpty:\textit{field1,field2,...}@@ & Include the following text only if all one of the given fields are empty (i.e. have a value with a length = 0).\\\hline
+\ttfamily @@Else@@ & Include the following text only if the last \texttt{@@If...@@}-Statement did not match.\\\hline
+\ttfamily @@EndIf@@ & Marks the end of the area influenced by the last if. Every \texttt{@@If...@@} must have exactly one corresponding \texttt{@@EndIf@@}.\\\hline
+\end{tabular}
+\end{center}
+
+\subsection{Where can I find the old default cover page used before version 0.4.2?}
+
+You can find it in the ``Coverpage examples'' archive at \url{ftp://ftp.berlios.de/pub/yajhfc/download/coverpages.zip}
+
+
 \subsection{Mir gefiel der alte Sendedialog besser. Kann ich ihn zurück haben?}
 
 Öffnen Sie einfach das Optionen-Dialogfeld und wählen sie \texttt{Traditionell} als Stil des Sendedialogs aus.
@@ -221,6 +252,9 @@ Argumentbeschreibung:
 -T, --showtab=0|R|1|S|2|T    Setzt den beim Start anzuzeigenden Tab. Geben Sie
                              0 oder R für den Tab "Empfangen", 1 oder S für
                              "Gesendet" oder 2 oder T für "Sendend" an.
+    --windowstate=N|M|I|T    Setzt den anfänglichen Status des Hauptfensters
+                             auf _N_ormal, _M_aximiert, als _I_con (minimiert)
+                             oder minimiert in die System-_T_ray.
     --loadplugin=JARDATEI    Gibt die JAR-Datei eines zu ladenden
                              YajHFC-Plugins an.
     --loaddriver=JARDATEI    Gibt die JAR-Datei eines zu ladenden JDBC-Treibers
@@ -357,6 +391,10 @@ Wenn diese Option \textit{aktiviert} ist, wird ein aus einer einzelnen Datei bes
 \subsection{Welche Zeichen werden beim Datums- und Uhrzeitformat erkannt?}
 
 Die Datumsformatierung erfolgt durch ein Java"=\texttt{SimpleDateFormat}. Eine Beschreibung der erkannten Buchstaben kann unter \url{http://java.sun.com/j2se/1.5.0/docs/api/java/text/SimpleDateFormat.html} (Englisch) gefunden werden.
+
+\subsection{What does the \texttt{Answer call} feature do?}
+
+The same as the HylaFAX \verb#faxanswer# command: It instructs the HylaFAX server to try answering an incoming call on the given modem even if the modem normally ignores inbound calls. This can be useful for testing or for small installations where a modem shares the line with a normal telephone.
 
 \section{Probleme/Bekannte Fehler}
 

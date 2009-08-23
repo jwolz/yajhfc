@@ -47,7 +47,7 @@ public enum YajLanguage  {
     
     public Locale getLocale() {
         if (locale == null) {
-            return Locale.getDefault();
+            return Utils.DEFAULT_LOCALE;
         } else {
             return locale;
         }

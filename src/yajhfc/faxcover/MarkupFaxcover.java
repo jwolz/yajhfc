@@ -294,7 +294,8 @@ public abstract class MarkupFaxcover extends Faxcover {
             } else if (lastTag >= 0 && loopEnd - lastTag < MAXTAGLENGTH + 4) { // There might be an incomplete tag at the end
                 readOffset = loopEnd - lastTag + 2;
             } else {
-                readOffset = 2;
+                // Copy an eventual @@ at the beginning
+                readOffset = Math.min(2, loopEnd - writePointer);
             }
 
             out.write(buf, writePointer, loopEnd - readOffset - writePointer);
@@ -441,7 +442,7 @@ public abstract class MarkupFaxcover extends Faxcover {
                     // Check if this else is embedded in an already commented out section:
                     for (int i = size - 2; i >= 0; i--) {
                         state = conditionStack.get(i);
-                        if (!state.ifWasTaken || state.hadElse) {
+                        if (!state.ifWasTaken ^ state.hadElse) {
                             return "---";
                         }
                     }
@@ -466,12 +467,12 @@ public abstract class MarkupFaxcover extends Faxcover {
             }
             
             ConditionState lastState = conditionStack.remove(size-1);
-            boolean writeEndComment = !lastState.ifWasTaken || lastState.hadElse;
+            boolean writeEndComment = !lastState.ifWasTaken ^ lastState.hadElse;
             
             if (writeEndComment) {
                 // Check if this end if is embedded in an already commented out section:
                 for (ConditionState state : conditionStack) {
-                    if (!state.ifWasTaken || state.hadElse) {
+                    if (!state.ifWasTaken ^ state.hadElse) {
                         return "---";
                     }
                 }

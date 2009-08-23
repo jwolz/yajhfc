@@ -295,6 +295,11 @@ public class OptionsWin extends JDialog {
         } else {
             //this.setLocationByPlatform(true);
             this.pack();
+            Dimension size = this.getSize();
+            if (size.width > 900) {
+                size.width = 900;
+                setSize(size);
+            }
             Utils.setDefWinPos(this);
         }
 
@@ -506,7 +511,7 @@ public class OptionsWin extends JDialog {
         rightPanel.add(tabPanel);
         
         JSplitPane mainPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(mainTree), rightPanel);
-        mainPanel.setDividerLocation(130);
+        mainPanel.setDividerLocation(mainTree.getPreferredSize().width + 8);
         //PROFILE: System.out.println("   After create main panel: " + (-time + (time = System.currentTimeMillis())));
         return mainPanel;
     }
