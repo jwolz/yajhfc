@@ -73,6 +73,17 @@ Merci à Scott Harris pour cette information.
 \item[Linux/*BSD/...:] Installez le paquet libtiff tools de votre distribution. Habituellement ce paquet contient les mots \texttt{tiff} dans le nom (on Debian/Ubuntu il est appellé \texttt{libtiff-tools} et sur SUSE \texttt{tiff}).
 \end{description}
 
+\subsection{How can I supply already downloaded versions of tiff2pdf and GhostScript to the Windows setup?}
+
+Starting with version 0.4.2 the Windows setup optionally downloads and installs tiff2pdf and GhostScript.
+Before starting a download the setup program searches in the following places for already downloaded versions:
+\begin{enumerate}
+ \item The directory where the \texttt{setup.exe} resides
+ \item The user's desktop (where the files are saved if you choose to preserve downloaded files)
+\end{enumerate}
+
+Please note that the file names must exactly match the ones of the downloaded files (i.e. \texttt{gs864w32.exe} (32 bit) or \texttt{gs864w64.exe} (64 bit) and \texttt{tiff-3.8.2-1.exe}).
+
 \section{Utilisation du programme}
 
 \subsection{Comment éditer les modèles de page de garde?}
@@ -149,6 +160,25 @@ Depuis la version 0.4.0 les champs additionnel suivants sont disponibles (notez 
 \end{center}
 
 Ces remplacements sont fais sur le code source de la page, aussi ces mots ne seront certainement pas reconnus s'il y a des chaine de formatage dans l'un d'eux (exemple. \texttt{@@sub\textit{ject@@}}).
+
+Starting with version 0.4.2 some simple conditional statements are supported. These are implemented using HTML comments, so please make sure that the text enclosed in a conditional statement does not contain any comments.
+\begin{center}
+\begin{tabular}{|l|p{.5\textwidth}|}
+\hline
+\bfseries Word & \bfseries Meaning \\
+\hline\hline
+\ttfamily @@IfSomeFilled:\textit{field1,field2,...}@@ & Include the following text only if at least one of the given fields is filled (i.e. has a value with a length > 0).\\\hline
+\ttfamily @@IfAllFilled:\textit{field1,field2,...}@@ & Include the following text only if all of the given fields are filled (i.e. have a value with a length > 0).\\\hline
+\ttfamily @@IfSomeEmpty:\textit{field1,field2,...}@@ & Include the following text only if at least one of the given fields is empty (i.e. has a value with a length = 0).\\\hline
+\ttfamily @@IfAllEmpty:\textit{field1,field2,...}@@ & Include the following text only if all one of the given fields are empty (i.e. have a value with a length = 0).\\\hline
+\ttfamily @@Else@@ & Include the following text only if the last \texttt{@@If...@@}-Statement did not match.\\\hline
+\ttfamily @@EndIf@@ & Marks the end of the area influenced by the last if. Every \texttt{@@If...@@} must have exactly one corresponding \texttt{@@EndIf@@}.\\\hline
+\end{tabular}
+\end{center}
+
+\subsection{Where can I find the old default cover page used before version 0.4.2?}
+
+You can find it in the ``Coverpage examples'' archive at \url{ftp://ftp.berlios.de/pub/yajhfc/download/coverpages.zip}
 
 \subsection{Je preferais l'ancienne boite de dialogue d'envoi. Puis je la conserver?}
 
@@ -333,6 +363,10 @@ Quand cette option est \textit{cochée}, un fax composé d'un seul fichier est éga
 \subsection{Quels caractères sont reconnus comme formats de date/heure ?}
 
 Le format de date est celui de la classe Java \texttt{SimpleDateFormat}. Une description des caractères reconnus est à l'adresse suivante \url{http://java.sun.com/j2se/1.5.0/docs/api/java/text/SimpleDateFormat.html}.
+
+\subsection{What does the \texttt{Answer call} feature do?}
+
+The same as the HylaFAX \verb#faxanswer# command: It instructs the HylaFAX server to try answering an incoming call on the given modem even if the modem normally ignores inbound calls. This can be useful for testing or for small installations where a modem shares the line with a normal telephone.
 
 \section{Problèmes/bugs connus}
 

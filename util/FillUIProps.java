@@ -6,10 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.util.Locale;
-
-import javax.swing.UIDefaults;
-import javax.swing.UIManager;
+import java.util.ResourceBundle;
 
 
 public class FillUIProps {
@@ -23,6 +20,14 @@ public class FillUIProps {
         "\"Content-Type: text/plain; charset=utf-8\\n\"\n"+
         "\"Content-Transfer-Encoding: 8bit\\n\"\n\n";
 
+    private static final String[] resources = {
+        "com.sun.swing.internal.plaf.basic.resources.basic",
+        "com.sun.swing.internal.plaf.metal.resources.metal",
+        "com.sun.java.swing.plaf.windows.resources.windows",
+        "com.sun.swing.internal.plaf.synth.resources.synth",
+        "com.sun.java.swing.plaf.gtk.resources.gtk",
+        "com.sun.java.swing.plaf.motif.resources.motif"
+    };
     
     /**
      * @param args
@@ -46,8 +51,12 @@ public class FillUIProps {
         BufferedReader inReader = new BufferedReader(new InputStreamReader(in));
         //Properties props = new Properties();
         BufferedWriter outWriter = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
-        UIDefaults uiDefs = UIManager.getDefaults();
-        Locale loc = Locale.ENGLISH;
+        //UIDefaults uiDefs = UIManager.getDefaults();
+        //Locale loc = Locale.ENGLISH;
+        ResourceBundle[] rbs = new ResourceBundle[resources.length];
+        for (int i = 0; i < resources.length; i++) {
+            rbs[i] = (ResourceBundle)Class.forName(resources[i]).newInstance();
+        }
         
         outWriter.write(header);
         
@@ -55,7 +64,19 @@ public class FillUIProps {
         while ((line = inReader.readLine()) != null) {
             line = line.trim();
             if (line.length() > 0 && !line.startsWith("#")) {
-                Object val = uiDefs.get(line, loc);
+                //Object val = uiDefs.get(line, loc);
+                Object val = null;
+                for (ResourceBundle rb : rbs) {
+                    try {
+                      val = rb.getObject(line);
+                      if (val != null) {
+                          break;
+                      }
+                    } catch (Exception e) {
+                        //System.err.println(e);
+                        // Do nothing
+                    }
+                }
                 if (val instanceof String) {
                     //props.put(line, val);
                     outWriter.write("# English text: \"" + val + "\"\n");
@@ -72,5 +93,4 @@ public class FillUIProps {
         //props.store(out, "Auto generated from " + in);
         //out.close();
     }
-
 }

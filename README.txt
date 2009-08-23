@@ -1,4 +1,4 @@
-README for YajHFC 0.4.1
+README for YajHFC 0.4.2
 =======================
 
 ABOUT
@@ -14,7 +14,7 @@ Features:
 * Viewing sent and received faxes
 * Phone book (entries can optionally be read from SQL databases or LDAP directories)
 * Visible table columns may be selected in a dialog
-* Supports eight languages: English, French, German, Greek, Italian, Russian, Spanish and Turkish
+* Supports nine languages: English, French, German, Greek, Italian, Polish, Russian, Spanish and Turkish
 
 Homepage: http://yajhfc.berlios.de/
 email:    Jonas Wolz <jwolz@freenet.de>
@@ -29,9 +29,9 @@ Requirements:
 * Optional: A PostScript viewer (e.g. Ghostview), GhostScript
      and tiff2pdf (from libtiff-utils)
 
-To install YajHFC just download the yajhfc-0_4_1.jar file to some folder on your
+To install YajHFC just download the yajhfc-0_4_2.jar file to some folder on your
 file system.
-To execute it, use: "java -jar yajhfc-0_4_1.jar"
+To execute it, use: "java -jar yajhfc-0_4_2.jar"
 (In Windows you usually can just double click the jar file as well.)
 
 LICENSE
@@ -67,11 +67,17 @@ CHANGES
 -------
 
 0.4.2:
+- Polish translation added
 - Support to read recipients from text files
 - Desired window state can be specified on the command line
 - "Send only mode" without display of main window (when a 
   document to send and neither --background nor --noclose is specified)
 - Arbitrary HylaFAX options can be specified for new fax jobs
+- Work around for a Java bug causing YajHFC not saving its settings when it is 
+  still running while the user logs off on Windows 7, Vista and (sometimes) XP
+- Default cover page is now HTML to avoid problems with non ISO-8859-1 characters
+- The Windows setup will now optionally install tiff2pdf and GhostScript
+- Various other bug fixes, improvements and code cleanup
 
 0.4.1:
 - Support for distribution lists in the phone book (XML+JDBC only)

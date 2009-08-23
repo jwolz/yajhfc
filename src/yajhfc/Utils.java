@@ -72,7 +72,7 @@ public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2009 by Jonas Wolz";
-    public static final String AppVersion = "0.4.2beta4";
+    public static final String AppVersion = "0.4.2rc";
     public static final String AuthorName = "Jonas Wolz";
     public static final String AuthorEMail = "jwolz@freenet.de";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
@@ -248,6 +248,10 @@ public final class Utils {
         }
         return theoptions;
     }
+    /**
+     * The host's original default locale before we changed it
+     */
+    public static final Locale DEFAULT_LOCALE = Locale.getDefault();
     
     private static Locale myLocale = null;
     public static Locale getLocale() {
@@ -257,9 +261,10 @@ public final class Utils {
             Properties prop = getSettingsProperties();
             String locale = prop.getProperty("locale", "auto");
             if (locale.equals("auto")) {
-                myLocale = Locale.getDefault();
+                myLocale = DEFAULT_LOCALE;
             } else {
                 myLocale = new Locale(locale);
+                Locale.setDefault(myLocale);
             }
         }
         return myLocale;
@@ -311,6 +316,11 @@ public final class Utils {
                     log.log(Level.WARNING, "Error reading file '" + file + "': " , e);
                     continue;
                 }
+            }
+            if (Utils.debugMode) {
+                log.config("---- BEGIN preferences dump");
+                Utils.dumpProperties(p, log, "pass", "AdminPassword", "pass-obfuscated", "AdminPassword-obfuscated");
+                log.config("---- END preferences dump");
             }
             settingsProperties = p;
         }
