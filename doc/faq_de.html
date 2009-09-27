@@ -54,7 +54,7 @@ Contents</A>
 <LI><A NAME="tex2html57"
   HREF="faq_de.html#SECTION00026000000000000000">Woher bekomme ich TIFF2PDF?</A>
 <LI><A NAME="tex2html58"
-  HREF="faq_de.html#SECTION00027000000000000000">How can I supply already downloaded versions of tiff2pdf and GhostScript to the Windows setup?</A>
+  HREF="faq_de.html#SECTION00027000000000000000">Wie kann ich dem Windows-Setup bereits heruntergeladene Versionen von tiff2pdf und GhostScript übergeben?</A>
 </UL>
 <BR>
 <LI><A NAME="tex2html59"
@@ -65,7 +65,7 @@ Contents</A>
 <LI><A NAME="tex2html61"
   HREF="faq_de.html#SECTION00032000000000000000">Welche Felder werden in einem HTML-Deckblatt erkannt?</A>
 <LI><A NAME="tex2html62"
-  HREF="faq_de.html#SECTION00033000000000000000">Where can I find the old default cover page used before version 0.4.2?</A>
+  HREF="faq_de.html#SECTION00033000000000000000">Woher kann ich das alte Standarddeckblatt bekommen, das vor Version 0.4.2 verwendet wurde?</A>
 <LI><A NAME="tex2html63"
   HREF="faq_de.html#SECTION00034000000000000000">Mir gefiel der alte Sendedialog besser. Kann ich ihn zurück haben?</A>
 <LI><A NAME="tex2html64"
@@ -87,7 +87,7 @@ Contents</A>
 <LI><A NAME="tex2html72"
   HREF="faq_de.html#SECTION000313000000000000000">Welche Zeichen werden beim Datums- und Uhrzeitformat erkannt?</A>
 <LI><A NAME="tex2html73"
-  HREF="faq_de.html#SECTION000314000000000000000">What does the Answer call feature do?</A>
+  HREF="faq_de.html#SECTION000314000000000000000">Was tut die Anruf beantworten Funktion?</A>
 </UL>
 <BR>
 <LI><A NAME="tex2html74"
@@ -227,22 +227,22 @@ Falls dieser Link nicht funktionert, sehen Sie bitte unter <TT><A NAME="tex2html
 <P>
 
 <H2><A NAME="SECTION00027000000000000000">
-How can I supply already downloaded versions of tiff2pdf and GhostScript to the Windows setup?</A>
+Wie kann ich dem Windows-Setup bereits heruntergeladene Versionen von tiff2pdf und GhostScript übergeben?</A>
 </H2>
 
 <P>
-Starting with version 0.4.2 the Windows setup optionally downloads and installs tiff2pdf and GhostScript.
-Before starting a download the setup program searches in the following places for already downloaded versions:
+Beginnend mit Version 0.4.2 kann das Windows-Setup optional tiff2pdf und GhostScript herunterladen und installieren.
+Bevor ein Download gestartet wird, sucht das Setupprogramm an folgenden Stellen nach bereits heruntergeladenenen Versionen:
 
 <OL>
-<LI>The directory where the <TT>setup.exe</TT> resides
+<LI>Dem Verzeichnis, in dem sich <TT>setup.exe</TT> befindet
 </LI>
-<LI>The user's desktop (where the files are saved if you choose to preserve downloaded files)
+<LI>Dem Desktop des angemeldeten Benutzers (wo auch die Dateien gespeichert werden, wenn sich entscheiden, die heruntergeladenen Dateien zu sichern)
 </LI>
 </OL>
 
 <P>
-Please note that the file names must exactly match the ones of the downloaded files (i.e. <TT>gs864w32.exe</TT> (32 bit) or <TT>gs864w64.exe</TT> (64 bit) and <TT>tiff-3.8.2-1.exe</TT>).
+Bitte beachten Sie, dass die Dateinamen exakt denen der heruntergeladenen Dateien entsprechen müssen (d.h.  <TT>gs864w32.exe</TT> (32 bit) oder <TT>gs864w64.exe</TT> (64 bit) bzw. <TT>tiff-3.8.2-1.exe</TT>).
 
 <P>
 
@@ -425,29 +425,29 @@ Beginnend mit Version 0.4.0, sind die folgenden zusätzlichen Felder verfügbar 
 Diese Ersetzung wird auf der Quelltextebene durchgeführt, so dass diese Wörter vermutlich nicht mehr erkannt werden, wenn sich die Formatierung innerhalb eines Wortes ändert (z.B. <TT>@@sub<I>ject@@</I></TT>).
 
 <P>
-Starting with version 0.4.2 some simple conditional statements are supported. These are implemented using HTML comments, so please make sure that the text enclosed in a conditional statement does not contain any comments.
+Beginnend mit Version 0.4.2 werden einige einfache bedingte Anweisungen unterstützt. Diese werden über HTML-Kommentare implementiert, also sollten Sie sicherstellen, dass der Text innerhalb einer bedingten Anweisung keine solchen Kommentare enthält.
 <DIV ALIGN="CENTER">
 <TABLE CELLPADDING=3 BORDER="1">
-<TR><TH ALIGN="LEFT"><B>Word </B></TH>
-<TH ALIGN="LEFT" VALIGN="TOP" WIDTH=250><B>Meaning </B></TH>
+<TR><TH ALIGN="LEFT"><B>Wort </B></TH>
+<TH ALIGN="LEFT" VALIGN="TOP" WIDTH=250><B>Bedeutung </B></TH>
 </TR>
-<TR><TD ALIGN="LEFT"><TT>@@IfSomeFilled:<I>field1,field2,...</I>@@ </TT></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Include the following text only if at least one of the given fields is filled (i.e. has a value with a length &gt; 0).</TD>
+<TR><TD ALIGN="LEFT"><TT>@@IfSomeFilled:<I>Feld1,Feld2,...</I>@@ </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Den folgenden Text nur einschließen, wenn mindestens eines der angegebenen Felder gefüllt ist (d.h. einen Wert mit einer Länge &gt; 0 besitzt).</TD>
 </TR>
-<TR><TD ALIGN="LEFT"><TT>@@IfAllFilled:<I>field1,field2,...</I>@@ </TT></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Include the following text only if all of the given fields are filled (i.e. have a value with a length &gt; 0).</TD>
+<TR><TD ALIGN="LEFT"><TT>@@IfAllFilled:<I>Feld1,Feld2,...</I>@@ </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Den folgenden Text nur einschließen, wenn alle der angegebenen Felder gefüllt sind (d.h. einen Wert mit einer Länge &gt; 0 besitzen).</TD>
 </TR>
-<TR><TD ALIGN="LEFT"><TT>@@IfSomeEmpty:<I>field1,field2,...</I>@@ </TT></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Include the following text only if at least one of the given fields is empty (i.e. has a value with a length = 0).</TD>
+<TR><TD ALIGN="LEFT"><TT>@@IfSomeEmpty:<I>Feld1,Feld2,...</I>@@ </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Den folgenden Text nur einschließen, wenn mindestens eines der angegebenen Felder leer ist (d.h. einen Wert mit einer Länge = 0 besitzt).</TD>
 </TR>
-<TR><TD ALIGN="LEFT"><TT>@@IfAllEmpty:<I>field1,field2,...</I>@@ </TT></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Include the following text only if all one of the given fields are empty (i.e. have a value with a length = 0).</TD>
+<TR><TD ALIGN="LEFT"><TT>@@IfAllEmpty:<I>Feld1,Feld2,...</I>@@ </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Den folgenden Text nur einschließen, wenn alle der angegebenen Felder leer sind (d.h. einen Wert mit einer Länge = 0 besitzen).</TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT>@@Else@@ </TT></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Include the following text only if the last <TT>@@If...@@</TT>-Statement did not match.</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Den folgenden Text nur einschließen, wenn die Bedingung der letzten <TT>@@If...@@</TT>-Anweisung nicht wahr war.</TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT>@@EndIf@@ </TT></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Marks the end of the area influenced by the last if. Every <TT>@@If...@@</TT> must have exactly one corresponding <TT>@@EndIf@@</TT>.</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Markiert das Ende des von einem <TT>If</TT> beeinflussten Bereichs. Jedes <TT>@@If...@@</TT> muss genau ein entsprechendes <TT>@@EndIf@@</TT> besitzen.</TD>
 </TR>
 </TABLE>
 </DIV>
@@ -455,11 +455,11 @@ Starting with version 0.4.2 some simple conditional statements are supported. Th
 <P>
 
 <H2><A NAME="SECTION00033000000000000000">
-Where can I find the old default cover page used before version 0.4.2?</A>
+Woher kann ich das alte Standarddeckblatt bekommen, das vor Version 0.4.2 verwendet wurde?</A>
 </H2>
 
 <P>
-You can find it in the “Coverpage examples” archive at <TT><A NAME="tex2html8"
+Sie können es im „Coverpage examples“-Archiv herunterladen von: <TT><A NAME="tex2html8"
   HREF="ftp://ftp.berlios.de/pub/yajhfc/download/coverpages.zip">ftp://ftp.berlios.de/pub/yajhfc/download/coverpages.zip</A></TT>
 <P>
 
@@ -661,7 +661,7 @@ Beginnend mit Version 0.4.0 werden die folgenden Dateien (falls sie existieren) 
 <LI><TT>[Verzeichnis, in dem sich yajhfc.jar befindet]/settings.default</TT>
 </LI>
 <LI>die Benutzereinstellungen aus <TT>{user.home}<A NAME="tex2html10"
-  HREF="#foot206"><SUP><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
+  HREF="#foot207"><SUP><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
  SRC="footnote.png"></SUP></A>/.yajhfc/settings</TT> (falls <TT>-configdir=DIR</TT> angegeben wurde, wird stattdessen <TT>DIR/settings</TT> verwendet)
 </LI>
 <LI><TT>[Verzeichnis, in dem sich yajhfc.jar befindet]/settings.override</TT>
@@ -804,11 +804,12 @@ Die Datumsformatierung erfolgt durch ein Java"=<TT>SimpleDateFormat</TT>. Eine B
 <P>
 
 <H2><A NAME="SECTION000314000000000000000">
-What does the <TT>Answer call</TT> feature do?</A>
+Was tut die <TT>Anruf beantworten</TT> Funktion?</A>
 </H2>
 
 <P>
-The same as the HylaFAX <code>faxanswer</code> command: It instructs the HylaFAX server to try answering an incoming call on the given modem even if the modem normally ignores inbound calls. This can be useful for testing or for small installations where a modem shares the line with a normal telephone.
+Das selbe wie das HylaFAX <code>faxanswer</code> Kommando: Es instruiert den HylaFAX"=Server, zu versuchen, auf dem angegebenen Modem einen Anruf zu beantworten, auch wenn das Modem normalerweise eingehende Anrufe ignoriert.
+Dies kann für Testzwecke nützlich sein oder bei kleinen Installationen, wo sich ein Modem eine Leitung mit einem normalen Telefon teilt.
 
 <P>
 
@@ -961,10 +962,10 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>-no_subdir -split 0 -html_version 3.2,latin1,unicode,utf8 -no_navigation -prefix faq_de faq_de.tex</TT>
 <P>
-The translation was initiated by Jonas Wolz on 2009-08-23
+The translation was initiated by Jonas Wolz on 2009-08-30
 <BR><HR><H4>Footnotes</H4>
 <DL>
-<DT><A NAME="foot206">...\{user.home\}</A><A
+<DT><A NAME="foot207">...\{user.home\}</A><A
  HREF="faq_de.html#tex2html10"><SUP><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
  SRC="footnote.png"></SUP></A></DT>
 <DD>Unter Windows ist <TT>user.home</TT> üblicherweise <TT>C:\Dokumente und Einstellungen\BENUTZERNAME</TT>.
@@ -974,7 +975,7 @@ The translation was initiated by Jonas Wolz on 2009-08-23
 <BR><HR>
 <ADDRESS>
 Jonas Wolz
-2009-08-23
+2009-08-30
 </ADDRESS>
 </BODY>
 </HTML>

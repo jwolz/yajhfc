@@ -71,16 +71,16 @@
 \item[Linux/*BSD/...:] Установите пакет libtiff для Вашего дистрибутива. Обычно название этого пакета содержит слово \texttt{tiff} (в Debian/Ubuntu он называется \texttt{libtiff-tools}, в SUSE \texttt{tiff}).
 \end{description}
 
-\subsection{How can I supply already downloaded versions of tiff2pdf and GhostScript to the Windows setup?}
+\subsection{Как сделать, чтобы программа установки для Windows использовала уже загруженные версии tiff2pdf и GhostScript?}
 
-Starting with version 0.4.2 the Windows setup optionally downloads and installs tiff2pdf and GhostScript.
-Before starting a download the setup program searches in the following places for already downloaded versions:
+Начиная с версии 0.4.2, программа установки для Windows дополнительно загружает и устанавливает tiff2pdf и GhostScript.
+Перед тем как начать загрузку программа установки ищет уже загруженные версии в следующих местах:
 \begin{enumerate}
- \item The directory where the \texttt{setup.exe} resides
- \item The user's desktop (where the files are saved if you choose to preserve downloaded files)
+ \item Каталог, в котором находится \texttt{setup.exe}
+ \item Рабочий стол пользователя (куда были сохранены файлы, если Вы решили сохранить загруженные файлы)
 \end{enumerate}
 
-Please note that the file names must exactly match the ones of the downloaded files (i.e. \texttt{gs864w32.exe} (32 bit) or \texttt{gs864w64.exe} (64 bit) and \texttt{tiff-3.8.2-1.exe}).
+Имейте в виду, что имена файлов должны точно совпадать с именами загруженных файлов (то есть \texttt{gs864w32.exe} (32-битная) или \texttt{gs864w64.exe} (64-битная) и \texttt{tiff-3.8.2-1.exe}).
 
 \section{Использование программы}	
 
@@ -154,24 +154,25 @@ Please note that the file names must exactly match the ones of the downloaded fi
 
 Замена производится на уровне исходного кода, следовательно, слова могут не распознаваться, если форматирование меняется внутри слова (например \texttt{@@sub\textit{ject@@}}).
 
-Starting with version 0.4.2 some simple conditional statements are supported. These are implemented using HTML comments, so please make sure that the text enclosed in a conditional statement does not contain any comments.
+Начиная с версии 0.4.2, поддерживаются простые условные операторы. Они реализованы с помощью комментариев HTML, следовательно, текст, заключённый в условном операторе, не должен содержать никаких комментариев.
 \begin{center}
 \begin{tabular}{|l|p{.5\textwidth}|}
 \hline
-\bfseries Word & \bfseries Meaning \\
+\bfseries Слово & \bfseries Значение \\
 \hline\hline
-\ttfamily @@IfSomeFilled:\textit{field1,field2,...}@@ & Include the following text only if at least one of the given fields is filled (i.e. has a value with a length > 0).\\\hline
-\ttfamily @@IfAllFilled:\textit{field1,field2,...}@@ & Include the following text only if all of the given fields are filled (i.e. have a value with a length > 0).\\\hline
-\ttfamily @@IfSomeEmpty:\textit{field1,field2,...}@@ & Include the following text only if at least one of the given fields is empty (i.e. has a value with a length = 0).\\\hline
-\ttfamily @@IfAllEmpty:\textit{field1,field2,...}@@ & Include the following text only if all one of the given fields are empty (i.e. have a value with a length = 0).\\\hline
-\ttfamily @@Else@@ & Include the following text only if the last \texttt{@@If...@@}-Statement did not match.\\\hline
-\ttfamily @@EndIf@@ & Marks the end of the area influenced by the last if. Every \texttt{@@If...@@} must have exactly one corresponding \texttt{@@EndIf@@}.\\\hline
+\ttfamily @@IfSomeFilled:\textit{поле1,поле2,...}@@ & Включить следующий текст, только если хотя бы одно из заданных полей заполнено (т.е. имеет значение с длиной > 0).\\\hline
+\ttfamily @@IfAllFilled:\textit{поле1,поле2,...}@@ & Включить следующий текст, только если все заданные поля заполнены (т.е. имеют значения с длиной > 0)).\\\hline
+\ttfamily @@IfSomeEmpty:\textit{поле1,поле2,...}@@ & Включить следующий текст, только если хотя бы одно из заданных полей пустое (т.е. имеет значение с длиной = 0).\\\hline
+\ttfamily @@IfAllEmpty:\textit{поле1,поле2,...}@@ & Включить следующий текст, только если все заданные поля пустые (т.е. имеют значения с длиной = 0).\\\hline
+\ttfamily @@Else@@ & Включить следующий текст, только если не было совпадения с последним оператором \texttt{@@If...@@}.\\\hline
+\ttfamily @@EndIf@@ & Обозначает завершение зоны влияния последнего оператора if. Для каждого \texttt{@@If...@@} должен быть строго один соответствующий \texttt{@@EndIf@@}.\\\hline
 \end{tabular}
 \end{center}
 
-\subsection{Where can I find the old default cover page used before version 0.4.2?}
+\subsection{Где взять старый титульный лист по умолчанию, который был до версии 0.4.2?}
 
-You can find it in the ``Coverpage examples'' archive at \url{ftp://ftp.berlios.de/pub/yajhfc/download/coverpages.zip}
+Вы можете найти его в архиве ``Coverpage examples'' на\\
+\url{ftp://ftp.berlios.de/pub/yajhfc/download/coverpages.zip}
 
 
 \subsection{Старое диалоговое окно отправки мне нравилось больше. Можно его вернуть?}
@@ -233,6 +234,9 @@ java -jar yajhfc.jar [ПАРАМЕТРЫ]... [ФАЙЛЫ ДЛЯ ОТПРАВКИ]...
 -T, --showtab=0|R|1|S|2|T   Устанавливает вкладку, показываемую после запуска.
                             Укажите 0 или R для вкладки "Принятые", 1 или S для
                             "Отправленные", 2 или T для "Передача".
+    --windowstate=N|M|I|T   Устанавливает начальное состояние главного окна в
+                            _N_ormal, _M_aximized, _I_conified (свернуто) или
+                            свернуто в _T_ray.
     --loadplugin=JARФАЙЛ    Указывает jar файл плагина YajHFC для загрузки.
     --loaddriver=JARФАЙЛ    Указывает расположение JAR-файла драйвера JDBC для
                             загрузки.
@@ -361,9 +365,9 @@ location:Энск;faxnumber:0123456" \textit{[...]}}
 Дата форматируется при помощи Java \texttt{SimpleDateFormat}. Описание распознаваемых символов смотрите по ссылке:\\
 \url{http://java.sun.com/j2se/1.5.0/docs/api/java/text/SimpleDateFormat.html}
 
-\subsection{What does the \texttt{Answer call} feature do?}
+\subsection{Что делает функция \texttt{Answer call}?}
 
-The same as the HylaFAX \verb#faxanswer# command: It instructs the HylaFAX server to try answering an incoming call on the given modem even if the modem normally ignores inbound calls. This can be useful for testing or for small installations where a modem shares the line with a normal telephone.
+То же что и команда \verb#faxanswer# HylaFAX: она указывает серверу HylaFAX  ответить на входящий звонок на заданном модеме, даже если обычно модем игнорирует входящие звонки. Это может быть полезно для тестирования или для небольших серверов, когда модем использует линию совместно с телефоном.
 
 \section{Проблемы/Известные ошибки}
 

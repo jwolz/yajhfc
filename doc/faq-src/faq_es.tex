@@ -71,16 +71,16 @@ Gracias a Scott Harris por esta ayuda.
 \item[Linux/*BSD/...:] Puede instalar el paquete de herramientas libtiff para su distribución. Normalmente este paquete contiene el término \texttt{tiff} en su nombre (en Debian/Ubuntu se llama \texttt{libtiff-tools} y en openSUSE \texttt{tiff}).
 \end{description}
 
-\subsection{How can I supply already downloaded versions of tiff2pdf and GhostScript to the Windows setup?}
+\subsection{¿Cómo puedo proporcionar versiones que han sido descargadas previamente de tiff2pdf y GhostScript al instalador de Windows?}
 
-Starting with version 0.4.2 the Windows setup optionally downloads and installs tiff2pdf and GhostScript.
-Before starting a download the setup program searches in the following places for already downloaded versions:
+Desde la versión 0.4.2, el instalador de Windows puede descargar e instalar tiff2pdf y GhostScript.
+Antes de iniciar la descarga, el instalador busca versiones que han sido instaladas con anterioridad en las siguientes ubicaciones:
 \begin{enumerate}
- \item The directory where the \texttt{setup.exe} resides
- \item The user's desktop (where the files are saved if you choose to preserve downloaded files)
+ \item El directorio donde se encuentra el archivo \texttt{setup.exe}
+ \item El escritorio del usuario (donde se guardan los archivos si decide mantener los archivos descargados)
 \end{enumerate}
 
-Please note that the file names must exactly match the ones of the downloaded files (i.e. \texttt{gs864w32.exe} (32 bit) or \texttt{gs864w64.exe} (64 bit) and \texttt{tiff-3.8.2-1.exe}).
+Tenga en cuenta que los nombres de los archivos deben coincidir con los que ha descargado (p. ej. \texttt{gs864w32.exe} (32 bits) o \texttt{gs864w64.exe} (64 bits) y \texttt{tiff-3.8.2-1.exe}).
 
 \section{Utilización del programa}	
 
@@ -127,7 +127,7 @@ Desde la versión 0.4.0 se encuentran disponibles los siguientes campos adiciona
 \bfseries Palabra & \bfseries Significado \\
 \hline\hline
 \ttfamily @@Surname@@ & Apellido del destinatario (faxes reenviados: igual que \texttt{@@Name@@}) \\\hline
-\ttfamily\itshape @@GivenName@@ & Nombre de pila del destinatario \\\hline
+\ttfamily\itshape @@GivenName@@ & Nombre del destinatario \\\hline
 \ttfamily\itshape @@Title@@ & Tratamiento del destinatario \\\hline
 \ttfamily\itshape @@Position@@ & Cargo del destinatario \\\hline
 \ttfamily\itshape @@Department@@ & Departamento del destinatario\\\hline
@@ -140,7 +140,7 @@ Desde la versión 0.4.0 se encuentran disponibles los siguientes campos adiciona
 \ttfamily\itshape @@EMail@@ & Dirección de correo electrónico del destinatario\\\hline
 \ttfamily\itshape @@WebSite@@ & Página web del destinatario\\\hline\hline
 \ttfamily @@FromSurname@@ & Apellido del remitente \\\hline
-\ttfamily @@FromGivenName@@ & Nombre de pila del remitente \\\hline
+\ttfamily @@FromGivenName@@ & Nombre del remitente \\\hline
 \ttfamily @@FromTitle@@ & Tratamiento del remitente \\\hline
 \ttfamily @@FromPosition@@ & Cargo del remitente \\\hline
 \ttfamily @@FromDepartment@@ & Departamento del remitente\\\hline
@@ -158,24 +158,24 @@ Desde la versión 0.4.0 se encuentran disponibles los siguientes campos adiciona
 
 El reemplazo se realiza a nivel de código fuente, por lo que esas palabras no se reconocerán en los cambios de formato dentro del mismo (por ejemplo, \texttt{@@sub\textit{ject@@}}).
 
-Starting with version 0.4.2 some simple conditional statements are supported. These are implemented using HTML comments, so please make sure that the text enclosed in a conditional statement does not contain any comments.
+Desde la versión 0.4.2 se admiten algunas instrucciones condicionales sencillas. Se utilizan por medio de comentarios HTML, por tanto, asegúrese de que el texto que está dentro de la instrucción condicional no contiene ningún comentario.
 \begin{center}
 \begin{tabular}{|l|p{.5\textwidth}|}
 \hline
-\bfseries Word & \bfseries Meaning \\
+\bfseries Palabra & \bfseries Significado \\
 \hline\hline
-\ttfamily @@IfSomeFilled:\textit{field1,field2,...}@@ & Include the following text only if at least one of the given fields is filled (i.e. has a value with a length > 0).\\\hline
-\ttfamily @@IfAllFilled:\textit{field1,field2,...}@@ & Include the following text only if all of the given fields are filled (i.e. have a value with a length > 0).\\\hline
-\ttfamily @@IfSomeEmpty:\textit{field1,field2,...}@@ & Include the following text only if at least one of the given fields is empty (i.e. has a value with a length = 0).\\\hline
-\ttfamily @@IfAllEmpty:\textit{field1,field2,...}@@ & Include the following text only if all one of the given fields are empty (i.e. have a value with a length = 0).\\\hline
-\ttfamily @@Else@@ & Include the following text only if the last \texttt{@@If...@@}-Statement did not match.\\\hline
-\ttfamily @@EndIf@@ & Marks the end of the area influenced by the last if. Every \texttt{@@If...@@} must have exactly one corresponding \texttt{@@EndIf@@}.\\\hline
+\ttfamily @@IfSomeFilled:\textit{field1,field2,...}@@ & Incluir el siguiente texto sólo si al menos uno de los campos proporcionados está rellenado (es decir, tiene un valor con una longitud > 0).\\\hline
+\ttfamily @@IfAllFilled:\textit{field1,field2,...}@@ & Incluir el siguiente texto sólo si todos los campos proporcionados están rellenados (es decir, tienen un valor con una longitud > 0).\\\hline
+\ttfamily @@IfSomeEmpty:\textit{field1,field2,...}@@ & Incluir el siguiente texto si al menos uno de los campos proporcionados está vacío (es decir, tiene un valor con una longitud = 0).\\\hline
+\ttfamily @@IfAllEmpty:\textit{field1,field2,...}@@ & Incluir el siguiente texto sólo si todos los campos proporcionados están vacíos (es decir, tienen un valor con una longitud = 0).\\\hline
+\ttfamily @@Else@@ & Incluir el siguiente texto sólo si la última instrucción \texttt{@@If...@@}-Statement no era coincidente.\\\hline
+\ttfamily @@EndIf@@ & Marca el final del área influenciada por la última instrucción if. Cada \texttt{@@If...@@} debe tener su correspondiente \texttt{@@EndIf@@}.\\\hline
 \end{tabular}
 \end{center}
 
-\subsection{Where can I find the old default cover page used before version 0.4.2?}
+\subsection{¿Dónde puedo encontrar la antigua página de portada predeterminada que se utilizaba en versiones anteriores de la 0.4.2?}
 
-You can find it in the ``Coverpage examples'' archive at \url{ftp://ftp.berlios.de/pub/yajhfc/download/coverpages.zip}
+Puede encontrarla en el archivador ``Ejemplos de páginas de portadas'' en \url{ftp://ftp.berlios.de/pub/yajhfc/download/coverpages.zip}
 
 
 \subsection{Me gustaba más el antiguo cuadro de diálogo. ¿Puedo volver a utilizarlo?}
@@ -250,6 +250,10 @@ Descripción de los argumentos:
                                         pestaña de "Recibidos", 1 o S para la
                                         pestaña de "Enviados" o 2 o T para la
                                         pestaña de "Transmisión".
+    --windowstate=N|M|I|T               Establece el estado inicial de la
+                                        ventana principal a _N_ormal,
+                                        _M_aximizada, M_i_nimizada) o
+                                        minimizada en la _B_andeja del sistema.
     --loadplugin=ARCHIVO JAR            Especifica un archivo jar de un
                                         complemento de YajHFC para cargar.
     --loaddriver=ARCHIVO JAR            Especifica la ubicación de un archivo
@@ -278,21 +282,21 @@ Se reconocen los siguientes nombres de campo:
 \hline
 \bfseries Nombre del campo & \bfseries Significado \\
 \hline\hline
-\ttfamily surname & Apellido del destinatario\\\hline
-\ttfamily givenname & Nombre de pila del destinatario \\\hline
+\ttfamily surname & Apellido del destinatario \\\hline
+\ttfamily givenname & Nombre del destinatario \\\hline
 \ttfamily title & Tratamiento del destinatario \\\hline
 \ttfamily position & Cargo del destinatario \\\hline
-\ttfamily department & The recipient's department\\\hline
-\ttfamily company & Nombre de la empresa del destinatario\\\hline
+\ttfamily department & Departamento del destinatario \\\hline
+\ttfamily company & Nombre de la empresa del destinatario \\\hline
 \ttfamily street & Nombre de la calle del destinatario \\\hline
-\ttfamily location & Ubicación del destinatario\\\hline
+\ttfamily location & Ubicación del destinatario \\\hline
 \ttfamily zipcode & Código postal del destinatario \\\hline
 \ttfamily state & Estado o provincia del destinatario\\\hline
-\ttfamily country & País del destinatario\\\hline
+\ttfamily country & País del destinatario \\\hline
 \ttfamily email & Dirección de correo electrónico del destinatario\\\hline
 \ttfamily faxnumber & Número de fax del destinatario \\\hline
 \ttfamily voicenumber & Número de teléfono del destinatario \\\hline
-\ttfamily website & Página web del destinatario\\\hline
+\ttfamily website & Página web del destinatario \\\hline
 \end{tabular}
 \end{center}
 
@@ -318,7 +322,7 @@ Sólo hay que configurar una instalación de YajHFC al gusto y luego copiar los 
 
 Las redefiniciones se pueden especificar de forma similar. En este caso, se recomienda editar el archivo de ajustes (es un archivo de texto plano), y eliminar cualquier línea donde de especifiquen los ajustes que no se quieran sobreescribir (normalmente querrá eliminar al menos \texttt{user} y \texttt{pass-obfuscated} (el nombre del usuario y la contraseña que se utiliza para conectar al servidor HylaFAX), \texttt{FromName}, \texttt{*ColState} (el ancho de las columnas de las tablas), \texttt{*Bounds} (la posición de las diferentes ventanas) y \texttt{mainwinLastTab}).
 
-Tenga en cuenta que el usuario aún puede definir estos ajustes con un valor diferente para una instancia de YajHFC que ya se encuentra en ejecuión. Sólo se restablecen a los valores redefinidos cuando se inicia YajHFC de nuevo (en otras palabras: el usuario puede definir estos ajustes pero no se guardan entre diferentes ejecuciones de YajHFC).
+Tenga en cuenta que el usuario aún puede definir estos ajustes con un valor diferente para una instancia de YajHFC que ya se encuentra en ejecución. Sólo se restablecen a los valores redefinidos cuando se inicia YajHFC de nuevo (en otras palabras: el usuario puede definir estos ajustes pero no se guardan entre diferentes ejecuciones de YajHFC).
 
 
 \subsection{¿Cómo se puede mostrar el directorio de HylaFAX \texttt{archive} en YajHFC?}
@@ -359,7 +363,7 @@ Se crea un archivo único para el fax completo pero la página de portada se man
 
 \textbf{Fax completo como archivo único:}\\
 Se crea un archivo para el fax completo incluyendo la página de la portada. Si el fax no tiene página de portada, el comportamiento es idéntico al caso anterior.\\
-\textit{Ventaja:} No es necesario relalizar conversiones en el cliente cuando se visualiza el fax enviado.\\
+\textit{Ventaja:} No es necesario realizar conversiones en el cliente cuando se visualiza el fax enviado.\\
 \textit{Desventaja:} Cuando se envía un fax a varios destinatarios se tiene que crear un archivo para cada destinatario y se tiene que enviar.
 }
 
@@ -378,9 +382,9 @@ Cuando esta opción está \textit{activada}, un fax que consiste en un único ar
 
 Para la fecha se utiliza el formato de Java \texttt{SimpleDateFormat}. Puede encontrar la descripción de los caracteres reconocidos en \url{http://java.sun.com/j2se/1.5.0/docs/api/java/text/SimpleDateFormat.html}.
 
-\subsection{What does the \texttt{Answer call} feature do?}
+\subsection{¿Para qué sirve la funcionalidad de \texttt{Responder a la llamada}?}
 
-The same as the HylaFAX \verb#faxanswer# command: It instructs the HylaFAX server to try answering an incoming call on the given modem even if the modem normally ignores inbound calls. This can be useful for testing or for small installations where a modem shares the line with a normal telephone.
+Tiene la misma funcionalidad que el comando de HylaFAX \verb#faxanswer#: ordena al servidor HylaFAX a intentar responder una llamada entrante con el módem seleccionado aunque normalmente el módem ignore las llamadas entrantes. Esta opción puede ser útil parahacer pruebas o en instalaciones pequeñas donde el módem comparte la línea con un teléfono.
 
 \section{Problemas/Errores conocidos}
 

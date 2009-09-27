@@ -513,6 +513,10 @@ public class FaxOptions extends AbstractFaxOptions {
      */
     public final Map<String,String> customJobOptions = new TreeMap<String,String>();
     
+    /**
+     * Try to use an alternate shutdown method on Windows to work around a Java bug.
+     */
+    public boolean useWin32ShutdownManager = true;
     
     public FaxOptions() {
         super(null);

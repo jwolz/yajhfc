@@ -54,7 +54,7 @@ Table des matières</A>
 <LI><A NAME="tex2html57"
   HREF="faq_fr.html#SECTION00026000000000000000">Ou trouver TIFF2PDF ?</A>
 <LI><A NAME="tex2html58"
-  HREF="faq_fr.html#SECTION00027000000000000000">How can I supply already downloaded versions of tiff2pdf and GhostScript to the Windows setup?</A>
+  HREF="faq_fr.html#SECTION00027000000000000000">Comment puis je renseigner des versions déjà téléchargées de tiff2pdf et Ghostscript à l'installation ?</A>
 </UL>
 <BR>
 <LI><A NAME="tex2html59"
@@ -65,7 +65,7 @@ Table des matières</A>
 <LI><A NAME="tex2html61"
   HREF="faq_fr.html#SECTION00032000000000000000">Quels champs sont reconnus dans une page de couverture HTML?</A>
 <LI><A NAME="tex2html62"
-  HREF="faq_fr.html#SECTION00033000000000000000">Where can I find the old default cover page used before version 0.4.2?</A>
+  HREF="faq_fr.html#SECTION00033000000000000000">Ou puis je trouver l'ancienne page de garde par défaut utilisée avant la version 0.4.2?</A>
 <LI><A NAME="tex2html63"
   HREF="faq_fr.html#SECTION00034000000000000000">Je preferais l'ancienne boite de dialogue d'envoi. Puis je la conserver?</A>
 <LI><A NAME="tex2html64"
@@ -87,7 +87,7 @@ Table des matières</A>
 <LI><A NAME="tex2html72"
   HREF="faq_fr.html#SECTION000313000000000000000">Quels caractères sont reconnus comme formats de date/heure ?</A>
 <LI><A NAME="tex2html73"
-  HREF="faq_fr.html#SECTION000314000000000000000">What does the Answer call feature do?</A>
+  HREF="faq_fr.html#SECTION000314000000000000000">Que fais la foction Answer call ?</A>
 </UL>
 <BR>
 <LI><A NAME="tex2html74"
@@ -224,22 +224,18 @@ Si ce lien ne fonctionne pas, voyez <TT><A NAME="tex2html4"
 <P>
 
 <H2><A NAME="SECTION00027000000000000000">
-How can I supply already downloaded versions of tiff2pdf and GhostScript to the Windows setup?</A>
+Comment puis je renseigner des versions déjà téléchargées de tiff2pdf et Ghostscript à l'installation ?</A>
 </H2>
-
-<P>
-Starting with version 0.4.2 the Windows setup optionally downloads and installs tiff2pdf and GhostScript.
-Before starting a download the setup program searches in the following places for already downloaded versions:
+Depuis la version 0.4.2 la procédure d'installation télécharge et installe de façon optionnelle tiff2pdf et Ghostscript.
+Avant de commencer le téléchargement, le programme d'installation recherche dans les répertoires suivants pour les versions déjà téléchargées :
 
 <OL>
-<LI>The directory where the <TT>setup.exe</TT> resides
+<LI>Le répertoire du programme <TT>setup.exe</TT>
 </LI>
-<LI>The user's desktop (where the files are saved if you choose to preserve downloaded files)
+<LI>Le Bureau Utilisateur (Ou les fichiers sont suavés si vous choisissez de garder les fichiers téléchargés)
 </LI>
 </OL>
-
-<P>
-Please note that the file names must exactly match the ones of the downloaded files (i.e. <TT>gs864w32.exe</TT> (32 bit) or <TT>gs864w64.exe</TT> (64 bit) and <TT>tiff-3.8.2-1.exe</TT>).
+Svp Notez que les noms de fichiers doivent correspondre exactement au noms de fichiers téléchargés (i.e. <TT>gs864w32.exe</TT> (32 bit) ou <TT>gs864w64.exe</TT> (64 bit) et <TT>tiff-3.8.2-1.exe</TT>).
 
 <P>
 
@@ -421,29 +417,29 @@ Depuis la version 0.4.0 les champs additionnel suivants sont disponibles (notez 
 Ces remplacements sont fais sur le code source de la page, aussi ces mots ne seront certainement pas reconnus s'il y a des chaine de formatage dans l'un d'eux (exemple. <TT>@@sub<I>ject@@</I></TT>).
 
 <P>
-Starting with version 0.4.2 some simple conditional statements are supported. These are implemented using HTML comments, so please make sure that the text enclosed in a conditional statement does not contain any comments.
+Depuis la version 0.4.2 quelques instruction conditionnelles sont supportées. Celles ci sont implémentées en utilisant les commentaires HTML, Aussi assurez vous que le texte inclus dans une instruction conditionnelle ne contient pas de commentaires.
 <DIV ALIGN="CENTER">
 <TABLE CELLPADDING=3 BORDER="1">
 <TR><TH ALIGN="LEFT"><B>Word </B></TH>
 <TH ALIGN="LEFT" VALIGN="TOP" WIDTH=250><B>Meaning </B></TH>
 </TR>
 <TR><TD ALIGN="LEFT"><TT>@@IfSomeFilled:<I>field1,field2,...</I>@@ </TT></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Include the following text only if at least one of the given fields is filled (i.e. has a value with a length &gt; 0).</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Inclus le texte suivant uniquement si au moins un des champs en paramètre est renseigné (i.e. a une valeur de longueur &gt; 0).</TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT>@@IfAllFilled:<I>field1,field2,...</I>@@ </TT></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Include the following text only if all of the given fields are filled (i.e. have a value with a length &gt; 0).</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Inclus le texte suivant uniquement si tous les champs en paramètre sont renseignés (i.e. a une valeur de longueur &gt; 0).</TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT>@@IfSomeEmpty:<I>field1,field2,...</I>@@ </TT></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Include the following text only if at least one of the given fields is empty (i.e. has a value with a length = 0).</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Inclus le texte suivant uniquement au moins un des champs en paramètre est vide (i.e. a une valeur de longueur = 0).</TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT>@@IfAllEmpty:<I>field1,field2,...</I>@@ </TT></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Include the following text only if all one of the given fields are empty (i.e. have a value with a length = 0).</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Inclus le texte suivant uniquement si tous les champs en paramètre sont vides (i.e. a une valeur de longueur = 0).</TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT>@@Else@@ </TT></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Include the following text only if the last <TT>@@If...@@</TT>-Statement did not match.</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Inclus le texte suivant uniquement si la dernière instruction <TT>@@If...@@</TT>-n'est pas valide.</TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT>@@EndIf@@ </TT></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Marks the end of the area influenced by the last if. Every <TT>@@If...@@</TT> must have exactly one corresponding <TT>@@EndIf@@</TT>.</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Marque la fin du bloc d'instructions conditionnelles. Tous les <TT>@@If...@@</TT> doivent avoir une instruction <TT>@@EndIf@@</TT> correspondante.</TD>
 </TR>
 </TABLE>
 </DIV>
@@ -451,11 +447,11 @@ Starting with version 0.4.2 some simple conditional statements are supported. Th
 <P>
 
 <H2><A NAME="SECTION00033000000000000000">
-Where can I find the old default cover page used before version 0.4.2?</A>
+Ou puis je trouver l'ancienne page de garde par défaut utilisée avant la version 0.4.2?</A>
 </H2>
 
 <P>
-You can find it in the “Coverpage examples” archive at <TT><A NAME="tex2html8"
+Vous pouvez la trouver dans l'archive “`Coverpage examples” à l'adresse <TT><A NAME="tex2html8"
   HREF="ftp://ftp.berlios.de/pub/yajhfc/download/coverpages.zip">ftp://ftp.berlios.de/pub/yajhfc/download/coverpages.zip</A></TT>
 <P>
 
@@ -536,6 +532,9 @@ Description des arguments:
 -T, --showtab=0|R|1|S|2|T    Specifier l'onglet a afficher au demarrage. Mettre
                              0 ou R pour "Recus",1 ou S pour "Envoyes" ou 2 ou
                              T pour l'onglet "Transmission"
+    --windowstate=N|M|I|T    Sets the initial window state of the main window
+                             to _N_ormal, _M_aximized, _I_conified (minimized)
+                             or minimized to _T_ray.
     --loadplugin=JARFILE     Specifie un fichier jar de plugin a charger dans
                              YajHFC.
     --loaddriver=JARFILE     Specifie la localisation des fichiers JAR de
@@ -780,11 +779,11 @@ Le format de date est celui de la classe Java <TT>SimpleDateFormat</TT>. Une des
 <P>
 
 <H2><A NAME="SECTION000314000000000000000">
-What does the <TT>Answer call</TT> feature do?</A>
+Que fais la foction <TT>Answer call</TT> ?</A>
 </H2>
 
 <P>
-The same as the HylaFAX <code>faxanswer</code> command: It instructs the HylaFAX server to try answering an incoming call on the given modem even if the modem normally ignores inbound calls. This can be useful for testing or for small installations where a modem shares the line with a normal telephone.
+La même chase que la commande Hylafax <code>faxanswer</code> : Cela demande au serveur Hylafax d'essayer de répondre à un appel entrant sur le modeme sélectionné même si le modem ignore en temps normal les appel entrants . Cela peut être utilise pour les tests ou pour des petites installaions ou le modem partage la ligne avec un téléphone normal.
 
 <P>
 
@@ -936,7 +935,7 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>-no_subdir -split 0 -html_version 3.2,latin1,unicode,utf8 -no_navigation -prefix faq_fr faq_fr.tex</TT>
 <P>
-The translation was initiated by Jonas Wolz on 2009-08-23
+The translation was initiated by Jonas Wolz on 2009-09-13
 <BR><HR><H4>Notes</H4>
 <DL>
 <DT><A NAME="foot207">...\{user.home\}</A><A
@@ -949,7 +948,7 @@ The translation was initiated by Jonas Wolz on 2009-08-23
 <BR><HR>
 <ADDRESS>
 Jonas Wolz
-2009-08-23
+2009-09-13
 </ADDRESS>
 </BODY>
 </HTML>

@@ -54,7 +54,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LI><A NAME="tex2html57"
   HREF="faq_es.html#SECTION00026000000000000000">¿Dónde puedo obtener TIFF2PDF?</A>
 <LI><A NAME="tex2html58"
-  HREF="faq_es.html#SECTION00027000000000000000">How can I supply already downloaded versions of tiff2pdf and GhostScript to the Windows setup?</A>
+  HREF="faq_es.html#SECTION00027000000000000000">¿Cómo puedo proporcionar versiones que han sido descargadas previamente de tiff2pdf y GhostScript al instalador de Windows?</A>
 </UL>
 <BR>
 <LI><A NAME="tex2html59"
@@ -65,7 +65,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LI><A NAME="tex2html61"
   HREF="faq_es.html#SECTION00032000000000000000">¿Qué campos se reconocen en una página de portada HTML?</A>
 <LI><A NAME="tex2html62"
-  HREF="faq_es.html#SECTION00033000000000000000">Where can I find the old default cover page used before version 0.4.2?</A>
+  HREF="faq_es.html#SECTION00033000000000000000">¿Dónde puedo encontrar la antigua página de portada predeterminada que se utilizaba en versiones anteriores de la 0.4.2?</A>
 <LI><A NAME="tex2html63"
   HREF="faq_es.html#SECTION00034000000000000000">Me gustaba más el antiguo cuadro de diálogo. ¿Puedo volver a utilizarlo?</A>
 <LI><A NAME="tex2html64"
@@ -87,7 +87,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LI><A NAME="tex2html72"
   HREF="faq_es.html#SECTION000313000000000000000">¿Qué caracteres se reconocen como formato para la fecha/hora?</A>
 <LI><A NAME="tex2html73"
-  HREF="faq_es.html#SECTION000314000000000000000">What does the Answer call feature do?</A>
+  HREF="faq_es.html#SECTION000314000000000000000">¿Para qué sirve la funcionalidad de Responder a la llamada?</A>
 </UL>
 <BR>
 <LI><A NAME="tex2html74"
@@ -220,22 +220,22 @@ Si el enlace no funciona, consulte <TT><A NAME="tex2html4"
 <P>
 
 <H2><A NAME="SECTION00027000000000000000">
-How can I supply already downloaded versions of tiff2pdf and GhostScript to the Windows setup?</A>
+¿Cómo puedo proporcionar versiones que han sido descargadas previamente de tiff2pdf y GhostScript al instalador de Windows?</A>
 </H2>
 
 <P>
-Starting with version 0.4.2 the Windows setup optionally downloads and installs tiff2pdf and GhostScript.
-Before starting a download the setup program searches in the following places for already downloaded versions:
+Desde la versión 0.4.2, el instalador de Windows puede descargar e instalar tiff2pdf y GhostScript.
+Antes de iniciar la descarga, el instalador busca versiones que han sido instaladas con anterioridad en las siguientes ubicaciones:
 
 <OL>
-<LI>The directory where the <TT>setup.exe</TT> resides
+<LI>El directorio donde se encuentra el archivo <TT>setup.exe</TT>
 </LI>
-<LI>The user's desktop (where the files are saved if you choose to preserve downloaded files)
+<LI>El escritorio del usuario (donde se guardan los archivos si decide mantener los archivos descargados)
 </LI>
 </OL>
 
 <P>
-Please note that the file names must exactly match the ones of the downloaded files (i.e. <TT>gs864w32.exe</TT> (32 bit) or <TT>gs864w64.exe</TT> (64 bit) and <TT>tiff-3.8.2-1.exe</TT>).
+Tenga en cuenta que los nombres de los archivos deben coincidir con los que ha descargado (p. ej. <TT>gs864w32.exe</TT> (32 bits) o <TT>gs864w64.exe</TT> (64 bits) y <TT>tiff-3.8.2-1.exe</TT>).
 
 <P>
 
@@ -335,7 +335,7 @@ Desde la versión 0.4.0 se encuentran disponibles los siguientes campos adiciona
 <TD ALIGN="LEFT" VALIGN="TOP" WIDTH=350>Apellido del destinatario (faxes reenviados: igual que <TT>@@Name@@</TT>)</TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT><I>@@GivenName@@ </I></TT></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=350>Nombre de pila del destinatario</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=350>Nombre del destinatario</TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT><I>@@Title@@ </I></TT></TD>
 <TD ALIGN="LEFT" VALIGN="TOP" WIDTH=350>Tratamiento del destinatario</TD>
@@ -374,7 +374,7 @@ Desde la versión 0.4.0 se encuentran disponibles los siguientes campos adiciona
 <TD ALIGN="LEFT" VALIGN="TOP" WIDTH=350>Apellido del remitente</TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT>@@FromGivenName@@ </TT></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=350>Nombre de pila del remitente</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=350>Nombre del remitente</TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT>@@FromTitle@@ </TT></TD>
 <TD ALIGN="LEFT" VALIGN="TOP" WIDTH=350>Tratamiento del remitente</TD>
@@ -419,29 +419,29 @@ Desde la versión 0.4.0 se encuentran disponibles los siguientes campos adiciona
 El reemplazo se realiza a nivel de código fuente, por lo que esas palabras no se reconocerán en los cambios de formato dentro del mismo (por ejemplo, <TT>@@sub<I>ject@@</I></TT>).
 
 <P>
-Starting with version 0.4.2 some simple conditional statements are supported. These are implemented using HTML comments, so please make sure that the text enclosed in a conditional statement does not contain any comments.
+Desde la versión 0.4.2 se admiten algunas instrucciones condicionales sencillas. Se utilizan por medio de comentarios HTML, por tanto, asegúrese de que el texto que está dentro de la instrucción condicional no contiene ningún comentario.
 <DIV ALIGN="CENTER">
 <TABLE CELLPADDING=3 BORDER="1">
-<TR><TH ALIGN="LEFT"><B>Word </B></TH>
-<TH ALIGN="LEFT" VALIGN="TOP" WIDTH=250><B>Meaning </B></TH>
+<TR><TH ALIGN="LEFT"><B>Palabra </B></TH>
+<TH ALIGN="LEFT" VALIGN="TOP" WIDTH=250><B>Significado </B></TH>
 </TR>
 <TR><TD ALIGN="LEFT"><TT>@@IfSomeFilled:<I>field1,field2,...</I>@@ </TT></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Include the following text only if at least one of the given fields is filled (i.e. has a value with a length &gt; 0).</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Incluir el siguiente texto sólo si al menos uno de los campos proporcionados está rellenado (es decir, tiene un valor con una longitud &gt; 0).</TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT>@@IfAllFilled:<I>field1,field2,...</I>@@ </TT></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Include the following text only if all of the given fields are filled (i.e. have a value with a length &gt; 0).</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Incluir el siguiente texto sólo si todos los campos proporcionados están rellenados (es decir, tienen un valor con una longitud &gt; 0).</TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT>@@IfSomeEmpty:<I>field1,field2,...</I>@@ </TT></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Include the following text only if at least one of the given fields is empty (i.e. has a value with a length = 0).</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Incluir el siguiente texto si al menos uno de los campos proporcionados está vacío (es decir, tiene un valor con una longitud = 0).</TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT>@@IfAllEmpty:<I>field1,field2,...</I>@@ </TT></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Include the following text only if all one of the given fields are empty (i.e. have a value with a length = 0).</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Incluir el siguiente texto sólo si todos los campos proporcionados están vacíos (es decir, tienen un valor con una longitud = 0).</TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT>@@Else@@ </TT></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Include the following text only if the last <TT>@@If...@@</TT>-Statement did not match.</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Incluir el siguiente texto sólo si la última instrucción <TT>@@If...@@</TT>-Statement no era coincidente.</TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT>@@EndIf@@ </TT></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Marks the end of the area influenced by the last if. Every <TT>@@If...@@</TT> must have exactly one corresponding <TT>@@EndIf@@</TT>.</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Marca el final del área influenciada por la última instrucción if. Cada <TT>@@If...@@</TT> debe tener su correspondiente <TT>@@EndIf@@</TT>.</TD>
 </TR>
 </TABLE>
 </DIV>
@@ -449,11 +449,11 @@ Starting with version 0.4.2 some simple conditional statements are supported. Th
 <P>
 
 <H2><A NAME="SECTION00033000000000000000">
-Where can I find the old default cover page used before version 0.4.2?</A>
+¿Dónde puedo encontrar la antigua página de portada predeterminada que se utilizaba en versiones anteriores de la 0.4.2?</A>
 </H2>
 
 <P>
-You can find it in the &#8220;Coverpage examples&#8221; archive at <TT><A NAME="tex2html8"
+Puede encontrarla en el archivador &#8220;Ejemplos de páginas de portadas&#8221; en <TT><A NAME="tex2html8"
   HREF="ftp://ftp.berlios.de/pub/yajhfc/download/coverpages.zip">ftp://ftp.berlios.de/pub/yajhfc/download/coverpages.zip</A></TT>
 <P>
 
@@ -552,6 +552,10 @@ Descripción de los argumentos:
                                         pestaña de "Recibidos", 1 o S para la
                                         pestaña de "Enviados" o 2 o T para la
                                         pestaña de "Transmisión".
+    --windowstate=N|M|I|T               Establece el estado inicial de la
+                                        ventana principal a _N_ormal,
+                                        _M_aximizada, M_i_nimizada) o
+                                        minimizada en la _B_andeja del sistema.
     --loadplugin=ARCHIVO JAR            Especifica un archivo jar de un
                                         complemento de YajHFC para cargar.
     --loaddriver=ARCHIVO JAR            Especifica la ubicación de un archivo
@@ -591,7 +595,7 @@ Se reconocen los siguientes nombres de campo:
 <TD ALIGN="LEFT" VALIGN="TOP" WIDTH=350>Apellido del destinatario</TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT>givenname </TT></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=350>Nombre de pila del destinatario</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=350>Nombre del destinatario</TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT>title </TT></TD>
 <TD ALIGN="LEFT" VALIGN="TOP" WIDTH=350>Tratamiento del destinatario</TD>
@@ -600,7 +604,7 @@ Se reconocen los siguientes nombres de campo:
 <TD ALIGN="LEFT" VALIGN="TOP" WIDTH=350>Cargo del destinatario</TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT>department </TT></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=350>The recipient's department</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=350>Departamento del destinatario</TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT>company </TT></TD>
 <TD ALIGN="LEFT" VALIGN="TOP" WIDTH=350>Nombre de la empresa del destinatario</TD>
@@ -682,7 +686,7 @@ Sólo hay que configurar una instalación de YajHFC al gusto y luego copiar los 
 Las redefiniciones se pueden especificar de forma similar. En este caso, se recomienda editar el archivo de ajustes (es un archivo de texto plano), y eliminar cualquier línea donde de especifiquen los ajustes que no se quieran sobreescribir (normalmente querrá eliminar al menos <TT>user</TT> y <TT>pass-obfuscated</TT> (el nombre del usuario y la contraseña que se utiliza para conectar al servidor HylaFAX), <TT>FromName</TT>, <TT>*ColState</TT> (el ancho de las columnas de las tablas), <TT>*Bounds</TT> (la posición de las diferentes ventanas) y <TT>mainwinLastTab</TT>).
 
 <P>
-Tenga en cuenta que el usuario aún puede definir estos ajustes con un valor diferente para una instancia de YajHFC que ya se encuentra en ejecuión. Sólo se restablecen a los valores redefinidos cuando se inicia YajHFC de nuevo (en otras palabras: el usuario puede definir estos ajustes pero no se guardan entre diferentes ejecuciones de YajHFC).
+Tenga en cuenta que el usuario aún puede definir estos ajustes con un valor diferente para una instancia de YajHFC que ya se encuentra en ejecución. Sólo se restablecen a los valores redefinidos cuando se inicia YajHFC de nuevo (en otras palabras: el usuario puede definir estos ajustes pero no se guardan entre diferentes ejecuciones de YajHFC).
 
 <P>
 
@@ -760,7 +764,7 @@ Se crea un archivo único para el fax completo pero la página de portada se man
 <BR>
 Se crea un archivo para el fax completo incluyendo la página de la portada. Si el fax no tiene página de portada, el comportamiento es idéntico al caso anterior.
 <BR>
-<I>Ventaja:</I> No es necesario relalizar conversiones en el cliente cuando se visualiza el fax enviado.
+<I>Ventaja:</I> No es necesario realizar conversiones en el cliente cuando se visualiza el fax enviado.
 <BR>
 <I>Desventaja:</I> Cuando se envía un fax a varios destinatarios se tiene que crear un archivo para cada destinatario y se tiene que enviar.
 
@@ -800,11 +804,11 @@ Para la fecha se utiliza el formato de Java <TT>SimpleDateFormat</TT>. Puede enc
 <P>
 
 <H2><A NAME="SECTION000314000000000000000">
-What does the <TT>Answer call</TT> feature do?</A>
+¿Para qué sirve la funcionalidad de <TT>Responder a la llamada</TT>?</A>
 </H2>
 
 <P>
-The same as the HylaFAX <code>faxanswer</code> command: It instructs the HylaFAX server to try answering an incoming call on the given modem even if the modem normally ignores inbound calls. This can be useful for testing or for small installations where a modem shares the line with a normal telephone.
+Tiene la misma funcionalidad que el comando de HylaFAX <code>faxanswer</code>: ordena al servidor HylaFAX a intentar responder una llamada entrante con el módem seleccionado aunque normalmente el módem ignore las llamadas entrantes. Esta opción puede ser útil parahacer pruebas o en instalaciones pequeñas donde el módem comparte la línea con un teléfono.
 
 <P>
 
@@ -955,7 +959,7 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>-no_subdir -split 0 -html_version 3.2,unicode -no_navigation -prefix faq_es faq_es.tex</TT>
 <P>
-The translation was initiated by Jonas Wolz on 2009-08-23
+The translation was initiated by Jonas Wolz on 2009-09-13
 <BR><HR><H4>Notas al pie</H4>
 <DL>
 <DT><A NAME="foot205">...\{user.home\}</A><A
@@ -968,7 +972,7 @@ The translation was initiated by Jonas Wolz on 2009-08-23
 <BR><HR>
 <ADDRESS>
 Jonas Wolz
-2009-08-23
+2009-09-13
 </ADDRESS>
 </BODY>
 </HTML>

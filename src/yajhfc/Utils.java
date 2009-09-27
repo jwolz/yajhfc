@@ -72,7 +72,7 @@ public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2009 by Jonas Wolz";
-    public static final String AppVersion = "0.4.2rc";
+    public static final String AppVersion = "0.4.2";
     public static final String AuthorName = "Jonas Wolz";
     public static final String AuthorEMail = "jwolz@freenet.de";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
@@ -282,13 +282,22 @@ public final class Utils {
      */
     public static Properties getSettingsProperties() {
         if (settingsProperties == null) {
+            File defaultConfigFile = getDefaultConfigFile();
+            if (TransactFileOutputStream.checkRecovery(defaultConfigFile)) {
+                File shutdownLog = new File(getConfigDir(), "shutdown.log");
+                if (shutdownLog.exists()) {
+                    // Save the shutdown log from the last failure
+                    shutdownLog.renameTo(new File(getConfigDir(), "shutdown-fail.log"));
+                }
+            }
+            
             /*
              * Load the settings properties from the specified files. The files are loaded in the specified
              * order, i.e. settings from "later" files override the earlier ones
              */
             final File[] files = {
                     new File(getApplicationDir(), "settings.default"),
-                    getDefaultConfigFile(),
+                    defaultConfigFile,
                     new File(getApplicationDir(), "settings.override")
             };
 
@@ -340,7 +349,7 @@ public final class Utils {
             theoptions.storeToProperties(p);
             
             try {
-                FileOutputStream filout = new TransactFileOutputStream(file);
+                FileOutputStream filout = new TransactFileOutputStream(file, true);
                 p.store(filout, Utils.AppShortName + " " + Utils.AppVersion + " configuration file");
                 filout.close();
             } catch (Exception e) {

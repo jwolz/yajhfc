@@ -54,7 +54,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LI><A NAME="tex2html57"
   HREF="faq_ru.html#SECTION00026000000000000000">Где взять TIFF2PDF?</A>
 <LI><A NAME="tex2html58"
-  HREF="faq_ru.html#SECTION00027000000000000000">How can I supply already downloaded versions of tiff2pdf and GhostScript to the Windows setup?</A>
+  HREF="faq_ru.html#SECTION00027000000000000000">Как сделать, чтобы программа установки для Windows использовала уже загруженные версии tiff2pdf и GhostScript?</A>
 </UL>
 <BR>
 <LI><A NAME="tex2html59"
@@ -65,7 +65,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LI><A NAME="tex2html61"
   HREF="faq_ru.html#SECTION00032000000000000000">Какие поля распознаются в титульных листах HTML?</A>
 <LI><A NAME="tex2html62"
-  HREF="faq_ru.html#SECTION00033000000000000000">Where can I find the old default cover page used before version 0.4.2?</A>
+  HREF="faq_ru.html#SECTION00033000000000000000">Где взять старый титульный лист по умолчанию, который был до версии 0.4.2?</A>
 <LI><A NAME="tex2html63"
   HREF="faq_ru.html#SECTION00034000000000000000">Старое диалоговое окно отправки мне нравилось больше. Можно его вернуть?</A>
 <LI><A NAME="tex2html64"
@@ -87,7 +87,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LI><A NAME="tex2html72"
   HREF="faq_ru.html#SECTION000313000000000000000">Какие символы распознаются в качестве формата даты/времени?</A>
 <LI><A NAME="tex2html73"
-  HREF="faq_ru.html#SECTION000314000000000000000">What does the Answer call feature do?</A>
+  HREF="faq_ru.html#SECTION000314000000000000000">Что делает функция Answer call?</A>
 </UL>
 <BR>
 <LI><A NAME="tex2html74"
@@ -216,22 +216,22 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <P>
 
 <H2><A NAME="SECTION00027000000000000000">
-How can I supply already downloaded versions of tiff2pdf and GhostScript to the Windows setup?</A>
+Как сделать, чтобы программа установки для Windows использовала уже загруженные версии tiff2pdf и GhostScript?</A>
 </H2>
 
 <P>
-Starting with version 0.4.2 the Windows setup optionally downloads and installs tiff2pdf and GhostScript.
-Before starting a download the setup program searches in the following places for already downloaded versions:
+Начиная с версии 0.4.2, программа установки для Windows дополнительно загружает и устанавливает tiff2pdf и GhostScript.
+Перед тем как начать загрузку программа установки ищет уже загруженные версии в следующих местах:
 
 <OL>
-<LI>The directory where the <TT>setup.exe</TT> resides
+<LI>Каталог, в котором находится <TT>setup.exe</TT>
 </LI>
-<LI>The user's desktop (where the files are saved if you choose to preserve downloaded files)
+<LI>Рабочий стол пользователя (куда были сохранены файлы, если Вы решили сохранить загруженные файлы)
 </LI>
 </OL>
 
 <P>
-Please note that the file names must exactly match the ones of the downloaded files (i.e. <TT>gs864w32.exe</TT> (32 bit) or <TT>gs864w64.exe</TT> (64 bit) and <TT>tiff-3.8.2-1.exe</TT>).
+Имейте в виду, что имена файлов должны точно совпадать с именами загруженных файлов (то есть <TT>gs864w32.exe</TT> (32-битная) или <TT>gs864w64.exe</TT> (64-битная) и <TT>tiff-3.8.2-1.exe</TT>).
 
 <P>
 
@@ -403,29 +403,29 @@ Please note that the file names must exactly match the ones of the downloaded fi
 Замена производится на уровне исходного кода, следовательно, слова могут не распознаваться, если форматирование меняется внутри слова (например <TT>@@sub<I>ject@@</I></TT>).
 
 <P>
-Starting with version 0.4.2 some simple conditional statements are supported. These are implemented using HTML comments, so please make sure that the text enclosed in a conditional statement does not contain any comments.
+Начиная с версии 0.4.2, поддерживаются простые условные операторы. Они реализованы с помощью комментариев HTML, следовательно, текст, заключённый в условном операторе, не должен содержать никаких комментариев.
 <DIV ALIGN="CENTER">
 <TABLE CELLPADDING=3 BORDER="1">
-<TR><TH ALIGN="LEFT"><B>Word </B></TH>
-<TH ALIGN="LEFT" VALIGN="TOP" WIDTH=250><B>Meaning </B></TH>
+<TR><TH ALIGN="LEFT"><B>Слово </B></TH>
+<TH ALIGN="LEFT" VALIGN="TOP" WIDTH=250><B>Значение </B></TH>
 </TR>
-<TR><TD ALIGN="LEFT"><TT>@@IfSomeFilled:<I>field1,field2,...</I>@@ </TT></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Include the following text only if at least one of the given fields is filled (i.e. has a value with a length &gt; 0).</TD>
+<TR><TD ALIGN="LEFT"><TT>@@IfSomeFilled:<I>поле1,поле2,...</I>@@ </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Включить следующий текст, только если хотя бы одно из заданных полей заполнено (т.е. имеет значение с длиной &gt; 0).</TD>
 </TR>
-<TR><TD ALIGN="LEFT"><TT>@@IfAllFilled:<I>field1,field2,...</I>@@ </TT></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Include the following text only if all of the given fields are filled (i.e. have a value with a length &gt; 0).</TD>
+<TR><TD ALIGN="LEFT"><TT>@@IfAllFilled:<I>поле1,поле2,...</I>@@ </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Включить следующий текст, только если все заданные поля заполнены (т.е. имеют значения с длиной &gt; 0)).</TD>
 </TR>
-<TR><TD ALIGN="LEFT"><TT>@@IfSomeEmpty:<I>field1,field2,...</I>@@ </TT></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Include the following text only if at least one of the given fields is empty (i.e. has a value with a length = 0).</TD>
+<TR><TD ALIGN="LEFT"><TT>@@IfSomeEmpty:<I>поле1,поле2,...</I>@@ </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Включить следующий текст, только если хотя бы одно из заданных полей пустое (т.е. имеет значение с длиной = 0).</TD>
 </TR>
-<TR><TD ALIGN="LEFT"><TT>@@IfAllEmpty:<I>field1,field2,...</I>@@ </TT></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Include the following text only if all one of the given fields are empty (i.e. have a value with a length = 0).</TD>
+<TR><TD ALIGN="LEFT"><TT>@@IfAllEmpty:<I>поле1,поле2,...</I>@@ </TT></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Включить следующий текст, только если все заданные поля пустые (т.е. имеют значения с длиной = 0).</TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT>@@Else@@ </TT></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Include the following text only if the last <TT>@@If...@@</TT>-Statement did not match.</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Включить следующий текст, только если не было совпадения с последним оператором <TT>@@If...@@</TT>.</TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT>@@EndIf@@ </TT></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Marks the end of the area influenced by the last if. Every <TT>@@If...@@</TT> must have exactly one corresponding <TT>@@EndIf@@</TT>.</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=250>Обозначает завершение зоны влияния последнего оператора if. Для каждого <TT>@@If...@@</TT> должен быть строго один соответствующий <TT>@@EndIf@@</TT>.</TD>
 </TR>
 </TABLE>
 </DIV>
@@ -433,11 +433,12 @@ Starting with version 0.4.2 some simple conditional statements are supported. Th
 <P>
 
 <H2><A NAME="SECTION00033000000000000000">
-Where can I find the old default cover page used before version 0.4.2?</A>
+Где взять старый титульный лист по умолчанию, который был до версии 0.4.2?</A>
 </H2>
 
 <P>
-You can find it in the ``Coverpage examples'' archive at <TT><A NAME="tex2html8"
+Вы можете найти его в архиве ``Coverpage examples'' на
+<BR><TT><A NAME="tex2html8"
   HREF="ftp://ftp.berlios.de/pub/yajhfc/download/coverpages.zip">ftp://ftp.berlios.de/pub/yajhfc/download/coverpages.zip</A></TT>
 <P>
 
@@ -523,6 +524,9 @@ java -jar yajhfc.jar [ПАРАМЕТРЫ]... [ФАЙЛЫ ДЛЯ ОТПРАВКИ]...
 -T, --showtab=0|R|1|S|2|T   Устанавливает вкладку, показываемую после запуска.
                             Укажите 0 или R для вкладки "Принятые", 1 или S для
                             "Отправленные", 2 или T для "Передача".
+    --windowstate=N|M|I|T   Устанавливает начальное состояние главного окна в
+                            _N_ormal, _M_aximized, _I_conified (свернуто) или
+                            свернуто в _T_ray.
     --loadplugin=JARФАЙЛ    Указывает jar файл плагина YajHFC для загрузки.
     --loaddriver=JARФАЙЛ    Указывает расположение JAR-файла драйвера JDBC для
                             загрузки.
@@ -760,11 +764,11 @@ location:Энск;faxnumber:0123456" <I>[...]</I></TT>
 <P>
 
 <H2><A NAME="SECTION000314000000000000000">
-What does the <TT>Answer call</TT> feature do?</A>
+Что делает функция <TT>Answer call</TT>?</A>
 </H2>
 
 <P>
-The same as the HylaFAX <code>faxanswer</code> command: It instructs the HylaFAX server to try answering an incoming call on the given modem even if the modem normally ignores inbound calls. This can be useful for testing or for small installations where a modem shares the line with a normal telephone.
+То же что и команда <code>faxanswer</code> HylaFAX: она указывает серверу HylaFAX  ответить на входящий звонок на заданном модеме, даже если обычно модем игнорирует входящие звонки. Это может быть полезно для тестирования или для небольших серверов, когда модем использует линию совместно с телефоном.
 
 <P>
 
@@ -912,7 +916,7 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>-no_subdir -split 0 -html_version 3.2,koi8-r -no_navigation -prefix faq_ru faq_ru.tex</TT>
 <P>
-The translation was initiated by Jonas Wolz on 2009-08-23
+The translation was initiated by Jonas Wolz on 2009-09-13
 <BR><HR><H4>Примечание</H4>
 <DL>
 <DT><A NAME="foot206">...\{user.home\}</A><A
@@ -925,7 +929,7 @@ The translation was initiated by Jonas Wolz on 2009-08-23
 <BR><HR>
 <ADDRESS>
 Jonas Wolz
-2009-08-23
+2009-09-13
 </ADDRESS>
 </BODY>
 </HTML>

@@ -62,6 +62,20 @@ YajHFC a ete originellement ecrit comme un premier projet Java
 
 MODIFICATIONS
 -------------
+
+0.4.2:
+- Traduction polonaise ajouté
+- Support de la lecture des récipiendaires dans un fichier texte
+- L'état de la fenêtre peut être spécifié dans la ligne de commande
+- "mode envoi seulement" sans affichage de la fenêtre principale (Quand un
+  document est envoyé et ni --background ou --noclose n'est spécifié)
+- Des options Hylafax peuvent être spécifiés pour les nouveaux travaus de Fax
+- Contournement du bug java empechant YajHFC d'enregistrer ses paramètres quand 
+  il est en cours et que l'utilisateur quite windows sous Windows 7, Vista et (quelquefois) XP
+- La page de garde par défaut est maintenant en HTML pour éliminer les problèmes avec les jeux de caractères non ISO-8859-1
+- Le programme d'installation peut de façon optionnelle installer tiff2pdf et GhostScript
+- D'autres corrections de bug, amélioration et nettoyage de code
+
 0.4.1:
 - Support des listes de diffusion pour les carnet d'adresse (XML+JDBC seulement)
 - Support des carnets d'adresse au format CSV (e.g. pour import/export)
