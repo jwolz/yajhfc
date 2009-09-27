@@ -36,7 +36,7 @@ public class ShutdownManager {
      */
     public static ShutdownManager getInstance() {
         if (INSTANCE == null) {
-            if (Utils.IS_WINDOWS) {
+            if (Utils.IS_WINDOWS && Utils.getFaxOptions().useWin32ShutdownManager) {
                 // Work around a bug which results in ShutdownHooks not being run on Vista
                 try {
                     INSTANCE = new Win32ShutdownManager();

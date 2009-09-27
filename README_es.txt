@@ -1,4 +1,4 @@
-LÉEME (README) de YajHFC 0.4.1
+LÉEME (README) de YajHFC 0.4.2
 ==============================
 
 ACERCA DE
@@ -8,30 +8,30 @@ YajHFC (Yet another java HylaFAX client) es un cliente para el servidor HylaFAX
 (http://www.hylafax.org) escrito en Java.
 
 Características:
-* Envío de faxes en formato PostScript o PDF
+* Envío de faxes en PostScript, PDF y otros formatos
 * Transmisión bajo demanda (polling) de faxes
 * Soporte para generar páginas de portada a partir de plantillas
 * Visualización de faxes enviados y recibidos
 * Agenda telefónica (los datos se pueden leer, de manera opcional, desde bases de datos SQL o directorios LDAP)
 * Selección de columnas visibles (seleccionable desde cuadro de diálogo)
-* Disponible en ocho idiomas: alemán, español, francés, griego, inglés, italiano, ruso y turco.
+* Disponible en nueve idiomas: alemán, español, francés, griego, inglés, italiano, polaco, ruso y turco.
 
-Página principal: 	http://yajhfc.berlios.de/
-E-mail:			Jonas Wolz <jwolz@freenet.de>
+Página principal: http://yajhfc.berlios.de/
+E-mail: 	  Jonas Wolz <jwolz@freenet.de>
 
 INSTALACIÓN
 -----------
 
 Requisitos:
 * JRE 5.0 o superior (se recomienda Java 6.0)
-* Servidor HylaFAX funcionando en red (obviamente ;-) )
-* Algún programa para ver archivos TIFF (revisar la FAQ)
+* Servidor HylaFAX funcionando en la red (obviamente ;-) )
+* Algún programa para ver archivos TIFF (consultar la FAQ)
 * Opcional: un visor PostScript (por ejemplo, Ghostview), GhostScript
   y tiff2pdf (integrado en libtiff-utils)
 
-Para instalar YajHFC hay que descargar el archivo yajhfc-0_4_1.jar en algún lugar 
+Para instalar YajHFC descargue el archivo yajhfc-0_4_2.jar en algún lugar 
 de su disco.
-Para ejecutarlo, utilizar: "java -jar yajhfc-0_4_1.jar"
+Para ejecutarlo, utilice: "java -jar yajhfc-0_4_2.jar"
 (En Windows seguramente sólo sea necesario ejecutarlo pulsando dos veces sobre el archivo).
 
 LICENCIA
@@ -65,6 +65,19 @@ de Java (más avanzado que los programas "Hola mundo") utilizando la IDE Eclipse
 
 CAMBIOS
 -------
+
+0.4.2:
+- Se añade la traducción al polaco
+- Soporte para leer destinatarios desde archivos de texto
+- Posibilidad de definir el estado deseado de la ventana desde línea de comandos
+- "Modo sólo envío" que no muestra la ventana principal (cuando se 
+  envía un documento y no se especifican los parámetros --background ni --noclose)
+- Posibilidad de especificar opciones arbitrarias de HylaFAX para los nuevos trabajos de fax
+- Solución temporal a un bug de Java que hacía que YajHFC no almacenara sus ajustes cuando estaba en ejecución
+  mientras el usuario cerraba la sesión en Windows 7, Vista y (a veces) XP. 
+- Página de portada predeterminada en formato HTML para evitar problemas con las codificaciones de caracteres distintas de ISO-8859-1
+- El programa de instalación de Windows ahora ofrece, de manera opcional, instalar tiff2pdf y GhostScript
+- Corrección de varios errores, mejoras y limpieza de código
 
 0.4.1:
 - Soporte para listas de distribución en la agenda telefónica (sólo para XML+JDBC)

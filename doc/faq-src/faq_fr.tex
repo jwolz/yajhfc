@@ -73,16 +73,15 @@ Merci à Scott Harris pour cette information.
 \item[Linux/*BSD/...:] Installez le paquet libtiff tools de votre distribution. Habituellement ce paquet contient les mots \texttt{tiff} dans le nom (on Debian/Ubuntu il est appellé \texttt{libtiff-tools} et sur SUSE \texttt{tiff}).
 \end{description}
 
-\subsection{How can I supply already downloaded versions of tiff2pdf and GhostScript to the Windows setup?}
-
-Starting with version 0.4.2 the Windows setup optionally downloads and installs tiff2pdf and GhostScript.
-Before starting a download the setup program searches in the following places for already downloaded versions:
+\subsection{Comment puis je renseigner des versions déjà téléchargées de tiff2pdf et Ghostscript à l'installation ?}
+Depuis la version 0.4.2 la procédure d'installation télécharge et installe de façon optionnelle tiff2pdf et Ghostscript.
+Avant de commencer le téléchargement, le programme d'installation recherche dans les répertoires suivants pour les versions déjà téléchargées :
 \begin{enumerate}
- \item The directory where the \texttt{setup.exe} resides
- \item The user's desktop (where the files are saved if you choose to preserve downloaded files)
+ \item Le répertoire du programme \texttt{setup.exe}
+ \item Le Bureau Utilisateur (Ou les fichiers sont suavés si vous choisissez de garder les fichiers téléchargés)
 \end{enumerate}
+Svp Notez que les noms de fichiers doivent correspondre exactement au noms de fichiers téléchargés (i.e. \texttt{gs864w32.exe} (32 bit) ou \texttt{gs864w64.exe} (64 bit) et \texttt{tiff-3.8.2-1.exe}).
 
-Please note that the file names must exactly match the ones of the downloaded files (i.e. \texttt{gs864w32.exe} (32 bit) or \texttt{gs864w64.exe} (64 bit) and \texttt{tiff-3.8.2-1.exe}).
 
 \section{Utilisation du programme}
 
@@ -161,24 +160,25 @@ Depuis la version 0.4.0 les champs additionnel suivants sont disponibles (notez 
 
 Ces remplacements sont fais sur le code source de la page, aussi ces mots ne seront certainement pas reconnus s'il y a des chaine de formatage dans l'un d'eux (exemple. \texttt{@@sub\textit{ject@@}}).
 
-Starting with version 0.4.2 some simple conditional statements are supported. These are implemented using HTML comments, so please make sure that the text enclosed in a conditional statement does not contain any comments.
+Depuis la version 0.4.2 quelques instruction conditionnelles sont supportées. Celles ci sont implémentées en utilisant les commentaires HTML, Aussi assurez vous que le texte inclus dans une instruction conditionnelle ne contient pas de commentaires.
 \begin{center}
 \begin{tabular}{|l|p{.5\textwidth}|}
 \hline
 \bfseries Word & \bfseries Meaning \\
 \hline\hline
-\ttfamily @@IfSomeFilled:\textit{field1,field2,...}@@ & Include the following text only if at least one of the given fields is filled (i.e. has a value with a length > 0).\\\hline
-\ttfamily @@IfAllFilled:\textit{field1,field2,...}@@ & Include the following text only if all of the given fields are filled (i.e. have a value with a length > 0).\\\hline
-\ttfamily @@IfSomeEmpty:\textit{field1,field2,...}@@ & Include the following text only if at least one of the given fields is empty (i.e. has a value with a length = 0).\\\hline
-\ttfamily @@IfAllEmpty:\textit{field1,field2,...}@@ & Include the following text only if all one of the given fields are empty (i.e. have a value with a length = 0).\\\hline
-\ttfamily @@Else@@ & Include the following text only if the last \texttt{@@If...@@}-Statement did not match.\\\hline
-\ttfamily @@EndIf@@ & Marks the end of the area influenced by the last if. Every \texttt{@@If...@@} must have exactly one corresponding \texttt{@@EndIf@@}.\\\hline
+\ttfamily @@IfSomeFilled:\textit{field1,field2,...}@@ & Inclus le texte suivant uniquement si au moins un des champs en paramètre est renseigné (i.e. a une valeur de longueur > 0).\\\hline
+\ttfamily @@IfAllFilled:\textit{field1,field2,...}@@ & Inclus le texte suivant uniquement si tous les champs en paramètre sont renseignés (i.e. a une valeur de longueur > 0).\\\hline
+\ttfamily @@IfSomeEmpty:\textit{field1,field2,...}@@ & Inclus le texte suivant uniquement au moins un des champs en paramètre est vide (i.e. a une valeur de longueur = 0).\\\hline
+\ttfamily @@IfAllEmpty:\textit{field1,field2,...}@@ & Inclus le texte suivant uniquement si tous les champs en paramètre sont vides (i.e. a une valeur de longueur = 0).\\\hline
+\ttfamily @@Else@@ & Inclus le texte suivant uniquement si la dernière instruction \texttt{@@If...@@}-n'est pas valide.\\\hline
+\ttfamily @@EndIf@@ & Marque la fin du bloc d'instructions conditionnelles. Tous les \texttt{@@If...@@} doivent avoir une instruction \texttt{@@EndIf@@} correspondante.\\\hline
 \end{tabular}
 \end{center}
 
-\subsection{Where can I find the old default cover page used before version 0.4.2?}
+\subsection{Ou puis je trouver l'ancienne page de garde par défaut utilisée avant la version 0.4.2?}
 
-You can find it in the ``Coverpage examples'' archive at \url{ftp://ftp.berlios.de/pub/yajhfc/download/coverpages.zip}
+Vous pouvez la trouver dans l'archive ```Coverpage examples'' à l'adresse \url{ftp://ftp.berlios.de/pub/yajhfc/download/coverpages.zip}
+
 
 \subsection{Je preferais l'ancienne boite de dialogue d'envoi. Puis je la conserver?}
 
@@ -235,6 +235,9 @@ Description des arguments:
 -T, --showtab=0|R|1|S|2|T    Specifier l'onglet a afficher au demarrage. Mettre
                              0 ou R pour "Recus",1 ou S pour "Envoyes" ou 2 ou
                              T pour l'onglet "Transmission"
+    --windowstate=N|M|I|T    Sets the initial window state of the main window
+                             to _N_ormal, _M_aximized, _I_conified (minimized)
+                             or minimized to _T_ray.
     --loadplugin=JARFILE     Specifie un fichier jar de plugin a charger dans
                              YajHFC.
     --loaddriver=JARFILE     Specifie la localisation des fichiers JAR de
@@ -364,9 +367,9 @@ Quand cette option est \textit{cochée}, un fax composé d'un seul fichier est éga
 
 Le format de date est celui de la classe Java \texttt{SimpleDateFormat}. Une description des caractères reconnus est à l'adresse suivante \url{http://java.sun.com/j2se/1.5.0/docs/api/java/text/SimpleDateFormat.html}.
 
-\subsection{What does the \texttt{Answer call} feature do?}
+\subsection{Que fais la foction \texttt{Answer call} ?}
 
-The same as the HylaFAX \verb#faxanswer# command: It instructs the HylaFAX server to try answering an incoming call on the given modem even if the modem normally ignores inbound calls. This can be useful for testing or for small installations where a modem shares the line with a normal telephone.
+La même chase que la commande Hylafax \verb#faxanswer# : Cela demande au serveur Hylafax d'essayer de répondre à un appel entrant sur le modeme sélectionné même si le modem ignore en temps normal les appel entrants . Cela peut être utilise pour les tests ou pour des petites installaions ou le modem partage la ligne avec un téléphone normal.
 
 \section{Problèmes/bugs connus}
 

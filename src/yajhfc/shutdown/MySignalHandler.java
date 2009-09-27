@@ -24,29 +24,36 @@ public class MySignalHandler implements SignalHandler {
 
     public void handle(Signal signal) {
         log.fine("Signal handler called for signal " + signal);
+        Win32ShutdownManager.logShutdownMsg(getClass().getName() + ".handle(): signal=" + signal);
         try {
 
             signalAction(signal);
 
             // Chain back to previous handler, if one exists
             if (oldHandler != SIG_DFL && oldHandler != SIG_IGN) {
+                Win32ShutdownManager.logShutdownMsg(getClass().getName() + ".handle(): signal=" + signal + "; CHAINING");
                 oldHandler.handle(signal);
             }
 
         } catch (Exception e) {
             log.log(Level.WARNING, "Signal handler failed", e);
+            Win32ShutdownManager.logShutdownMsg(getClass().getName() + ".handle(): signal=" + signal + ": " + e);
         }
+        Win32ShutdownManager.logShutdownMsg(getClass().getName() + ".handle(): signal=" + signal + "; DONE");
     }
 
     public void signalAction(Signal signal) {
         log.fine("Running runnables...");
+        Win32ShutdownManager.logShutdownMsg(getClass().getName() + ".signalAction(): signal=" + signal);
         for (Runnable run : listToRun) {
             try {
                 run.run();
             } catch (Throwable t) {
                 log.log(Level.WARNING, "Error running runnable", t);
+                Win32ShutdownManager.logShutdownMsg(getClass().getName() + ".signalAction(): signal=" + signal + ": " + t);
             }
         }
+        Win32ShutdownManager.logShutdownMsg(getClass().getName() + ".signalAction(): signal=" + signal + "; END!");
         log.fine("Runnables ran.");
     }
 

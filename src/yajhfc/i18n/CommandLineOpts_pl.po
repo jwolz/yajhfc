@@ -9,7 +9,7 @@ msgstr ""
 
 # Untranslated text: Usage
 msgid "usage"
-msgstr "użycie"
+msgstr "Użycie"
 
 # Untranslated text: Argument description
 msgid "argument-description"
@@ -29,11 +29,11 @@ msgstr "ODBIORCA"
 
 # Untranslated text: Specifies a recipient to send the fax to. You may specify either a fax number or detailed cover page information (see the FAQ for the format in the latter case). You may specify --recipient multiple times for multiple recipients.
 msgid "recipient-desc"
-msgstr "Podaj odbiorcę faksu. Możesz także "
+msgstr "Podaj odbiorcę faksu. Możesz także podać numer faksu lub informacje do strony tytułowej (zapoznaj się z FAQ). Możesz podać odbiorcę faksu wielokrotnie --recipient"
 
 # Untranslated text: Use a cover page for sending a fax.
 msgid "use-cover-desc"
-msgstr "Użyj strony tytułowej przy wysyłanu faksu."
+msgstr "Użyj strony tytułowej przy wysyłaniu faksu."
 
 # Untranslated text: SUBJECT
 msgid "subject-arg"
@@ -53,15 +53,15 @@ msgstr "Komentarz na stronie tytułowej"
 
 # Untranslated text: Read the file to send from standard input.
 msgid "stdin-desc"
-msgstr "Odczyt pliku do wysłania ze standartowego wejścia."
+msgstr "Odczyt pliku do wysłania ze standardowego wejścia."
 
 # Untranslated text: Start up in admin mode.
 msgid "admin-desc"
-msgstr "Urachamianie aplikacji w trybie administratora"
+msgstr "Uruchom aplikację w trybie administratora."
 
 # Untranslated text: Output some debugging information.
 msgid "debug-desc"
-msgstr "Wyświetla informacje 'debug'"
+msgstr "Wyświetl informacje 'debug'"
 
 # Untranslated text: LOGFILE
 msgid "logfile-arg"
@@ -70,8 +70,8 @@ msgstr "PLIK LOG"
 # Untranslated text: The log file to log debug information to (if not specified, use stdout).
 msgid "logfile-desc"
 msgstr ""
-"Plik do którego zostaną zapisane informacje 'debug' (jeżeli nie podanu, "
-"użyte sistanie standardowe wyjście)"
+"Plik, do którego zostaną zapisane informacje 'debug' (jeżeli nie podano, "
+"użyte zostanie standardowe wyjście)."
 
 # Untranslated text: LOGFILE
 msgid "appendlogfile-arg"
@@ -79,20 +79,20 @@ msgstr "PLIK LOG"
 
 # Untranslated text: Append debug information to the given log file.
 msgid "appendlogfile-desc"
-msgstr "Dołącz informacje 'debug' do istniejącego pliku"
+msgstr "Dołącz informacje 'debug' do istniejącego pliku."
 
 # Untranslated text: If there is no already running instance of YajHFC, launch a new instance and terminate this instance (after submitting the fax to send).
 msgid "background-desc"
 msgstr ""
-"Jeżeli nie jest uruchomiona aplikacja YajHFC, uruchom a nastepnie zamknij po "
-"wysłaniu faksu"
+"Jeżeli nie jest uruchomiona aplikacja YajHFC, uruchom a następnie zamknij po "
+"wysłaniu faksu."
 
 # Untranslated text: Do not close YajHFC after submitting the fax.
 msgid "noclose-desc"
-msgstr "Nie zamykaj YajHFC po wysłaniu faksu"
+msgstr "Nie zamykaj YajHFC po wysłaniu faksu."
 
 msgid "showtab-desc"
-msgstr ""
+msgstr "Wyświetl opis"
 
 # Untranslated text: JARFILE
 msgid "loadplugin-arg"
@@ -100,7 +100,7 @@ msgstr "PLIK JAR"
 
 # Untranslated text: Specifies a jar file of a YajHFC plugin to load.
 msgid "loadplugin-desc"
-msgstr "Podaj nazwę pliku będączego wtyczką YajHFC."
+msgstr "Podaj nazwę pliku będącego wtyczką YajHFC."
 
 # Untranslated text: JARFILE
 msgid "loaddriver-arg"
@@ -108,15 +108,15 @@ msgstr "PLIK JAR"
 
 # Untranslated text: Specifies the location of a JDBC driver JAR file to load.
 msgid "loaddriver-desc"
-msgstr "Podaj lokalizację pliku JAR sterownika JDBC, który ma być załadowany"
+msgstr "Podaj lokalizację pliku JAR sterownika JDBC, który ma być załadowany."
 
 # Untranslated text: Disables loading plugins from the plugin.lst file.
 msgid "no-plugins-desc"
-msgstr "Wyłącz ładowanie wtyczek na podstawie pliku lugin.lst"
+msgstr "Wyłącz ładowanie wtyczek zdefiniowanych w pliku lugin.lst"
 
 # Untranslated text: Sends a fax with only a minimal GUI.
 msgid "no-gui-desc"
-msgstr "Wyslij faks z użyciem minimalnego GUI"
+msgstr "Wyślij faks z użyciem minimalnego GUI."
 
 # Untranslated text: DIRECTORY
 msgid "configdir-arg"
@@ -124,7 +124,7 @@ msgstr "KATALOG"
 
 # Untranslated text: Sets the configuration directory to use instead of ~/.yajhfc
 msgid "configdir-desc"
-msgstr "Podaj katalog konfiguracyjny do uzycia zamiast ~/.yajhfc"
+msgstr "Podaj katalog konfiguracyjny zamiast domyślnego ~/.yajhfc"
 
 # Untranslated text: COLUMNS
 msgid "help-arg"
@@ -136,15 +136,15 @@ msgstr "Wyświetl ten tekst."
 
 # Untranslated text: Suppresses the check for the Java version at startup.
 msgid "no-check-desc"
-msgstr "Sprawdzaj wersję Java w trakcie uruchamiania"
+msgstr "Sprawdzaj wersję Javy w trakcie uruchamiania."
 
 # Untranslated text: Do not wait for the send window to be closed by the user. If YajHFC is invoked multiple times before the user closes the send window, the specified documents are added to the list of files there. This option implies --background.
 msgid "no-wait-desc"
 msgstr ""
-"Nie czakaj na zamknięcie okna dialogowego przez uzytkownika. Jeżeli YajHFC "
+"Nie czakaj na zamknięcie okna dialogowego przez użytkownika. Jeżeli YajHFC "
 "został uruchomiony wiele razy przed zamknięciem okna, dokumenty do wysłania "
 "zostały dodane do listy. Opcja wymusza --background."
 
 # Untranslated text: Sets the initial window state of the main window to _N_ormal, _M_aximized, _I_conified (minimized) or minimized to _T_ray.
 msgid "windowstate-desc"
-msgstr ""
+msgstr "Ustaw stan okna aplikacji po starcie _N_ormal - zwykły, _M_aximized - zmaksymalizowany, _I_conified - zminimalizowany lub zminimalizowany do tray _T_ray."

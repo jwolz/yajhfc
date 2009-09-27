@@ -61,6 +61,11 @@ public abstract class MarkupFaxcover extends Faxcover {
     protected String newLineReplacement = "\n";
     
     /**
+     * Set this to the string the apostrophe character (') should be replaced with.
+     */
+    protected String aposReplacement = "&apos;";
+    
+    /**
      * The encoding used for input and output streams
      */
     protected String encoding = "utf-8";
@@ -261,7 +266,7 @@ public abstract class MarkupFaxcover extends Faxcover {
                                         out.write("&quot;");
                                         break;
                                     case '\'':
-                                        out.write("&apos;");
+                                        out.write(aposReplacement);
                                         break;
                                     case '\n':
                                         out.write(newLineReplacement);

@@ -114,7 +114,9 @@ public class SendFileManager {
             toUpdate.stepProgressBar(10);
         }
         
-        if (ffs.size() == 1 && (!createAlwaysTargetFormat || ffs.get(0).format == targetFormat)) {
+        if (ffs.size() == 0) {
+            return null; 
+        } else if (ffs.size() == 1 && (!createAlwaysTargetFormat || ffs.get(0).format == targetFormat)) {
             toUpdate.updateNote(Utils._("Uploading document"));
             FileInputStream fi = new FileInputStream(ffs.get(0).file);
             hyfc.type(HylaFAXClient.TYPE_IMAGE);
@@ -188,7 +190,8 @@ public class SendFileManager {
             if (coverName != null) {
                 job.setProperty("COVER", coverName);
             }
-            job.addDocument(pdfServerName);
+            if (pdfServerName != null)
+                job.addDocument(pdfServerName);
             break;
         case FULL_FAX:
             if (coverFile == null) {
@@ -197,9 +200,12 @@ public class SendFileManager {
                 if (pdfServerName == null) {
                     pdfServerName = putPDFFile(hyfc, toUpdate, coverFile);
                 }
-                job.addDocument(pdfServerName);
+                if (pdfServerName != null)
+                    job.addDocument(pdfServerName);
             } else {
-                job.addDocument(putPDFFile(hyfc, toUpdate, coverFile));
+                String serverName = putPDFFile(hyfc, toUpdate, coverFile);
+                if (serverName != null)
+                    job.addDocument(serverName);
             }
             break;
         }

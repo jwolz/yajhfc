@@ -92,7 +92,7 @@ public class LocalPersistentReadState extends PersistentReadState {
             return;
         
         try {
-            BufferedWriter bOut = new BufferedWriter(new OutputStreamWriter(new TransactFileOutputStream(file)));
+            BufferedWriter bOut = new BufferedWriter(new OutputStreamWriter(new TransactFileOutputStream(file, true)));
             
             bOut.write("# " + Utils.AppShortName + " " + Utils.AppVersion + " configuration file\n");
             bOut.write("# This file contains a list of faxes considered read\n\n");
@@ -159,7 +159,9 @@ public class LocalPersistentReadState extends PersistentReadState {
         }
 
         public PersistentReadState createInstance(String config) {
-            return new LocalPersistentReadState(new File(Utils.getConfigDir(), "recvread"));
+            File recvread = new File(Utils.getConfigDir(), "recvread");
+            TransactFileOutputStream.checkRecovery(recvread);
+            return new LocalPersistentReadState(recvread);
         }
 
         public String getDescription() {
