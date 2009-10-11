@@ -349,18 +349,26 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
     
     private boolean loadFieldNames() {
         if (conn == null /*|| stmt == null*/)
-            return false;
+            return false;            
         
         try {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM " + comboTable.getSelectedItem().toString());
-            ResultSetMetaData rsmd = rs.getMetaData();
-            
-            Vector<String> fieldNames = new Vector<String>(rsmd.getColumnCount() + 1);
-            for (int i = 1; i <= rsmd.getColumnCount(); i++) {
-                fieldNames.add(rsmd.getColumnName(i));
+            Vector<String> fieldNames;
+            if (comboTable.getSelectedItem() != null) {
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT * FROM " + comboTable.getSelectedItem().toString());
+                ResultSetMetaData rsmd = rs.getMetaData();
+
+                fieldNames = new Vector<String>(rsmd.getColumnCount() + 1);
+                for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+                    fieldNames.add(rsmd.getColumnName(i));
+                }
+                Collections.sort(fieldNames);
+                rs.close();
+                stmt.close();
+            } else {
+                fieldNames = new Vector<String>();
             }
-            Collections.sort(fieldNames);
+            
             if (noFieldOK) {
                 fieldNames.add(0, ConnectionSettings.noField_translated);
             }
@@ -371,8 +379,6 @@ public final class ConnectionDialog extends JDialog implements ActionListener {
                     combo.setSelectedItem(o);
             }
             
-            rs.close();
-            stmt.close();
         } catch (Exception e) {
             ExceptionDialog.showExceptionDialog(this, _("Could not get the field names:"), e);
             return false;

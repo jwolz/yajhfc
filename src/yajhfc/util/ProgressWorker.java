@@ -146,7 +146,11 @@ public abstract class ProgressWorker extends Thread{
     
     
     public void startWork(Window parent, String text) {
-        startWorkPriv(parent, text);
+        try {
+            startWorkPriv(parent, text);
+        } catch (Exception e) { 
+            ExceptionDialog.showExceptionDialog(parent, Utils._("Error performing the operation:"), e);
+        } 
     }
     
     private void startWorkPriv(Component parent, String text) {
@@ -172,19 +176,28 @@ public abstract class ProgressWorker extends Thread{
     public final void run() {
         try {
             doWork();
+        } catch (Exception e) { 
+            ExceptionDialog.showExceptionDialog(parent, Utils._("Error performing the operation:"), e);
         } finally {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     
-                    done();
-
+                    try {
+                        done();
+                    } catch (Exception e) { 
+                        ExceptionDialog.showExceptionDialog(parent, Utils._("Error performing the operation:"), e);
+                    } 
                     parent.setEnabled(true);
                     if (closeOnExit) {
                         progressMonitor.close();
                         if (progressMonitor instanceof MyProgressMonitor) {
                             progressMonitor = null;
                         }
-                        pMonClosed();
+                        try {
+                            pMonClosed();
+                        } catch (Exception e) { 
+                            ExceptionDialog.showExceptionDialog(parent, Utils._("Error performing the operation:"), e);
+                        } 
                     }
                 }
             });

@@ -24,6 +24,7 @@ import java.awt.Dialog;
 import java.awt.HeadlessException;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -172,7 +173,9 @@ public class XMLPhoneBook extends PhoneBook {
             return;
         if (wasChanged) {
             try {
-                saveToResult(new StreamResult(new TransactFileOutputStream(new File(settings.fileName))));
+                OutputStream outStream = new TransactFileOutputStream(new File(settings.fileName));
+                saveToResult(new StreamResult(outStream));
+                outStream.close();
             } catch (Exception e) {
                 ExceptionDialog.showExceptionDialog(parentDialog, Utils._("Error saving the phone book: "), e);
             }
