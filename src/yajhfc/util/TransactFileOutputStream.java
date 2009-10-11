@@ -71,7 +71,7 @@ public class TransactFileOutputStream extends FileOutputStream {
             if (oldFile.exists())
                 oldFile.delete();
             
-            if (origFile.renameTo(oldFile)) {
+            if (!origFile.exists() || origFile.renameTo(oldFile)) {
                 if (outFile.renameTo(origFile) && !keepOld)
                     oldFile.delete();
             } else {

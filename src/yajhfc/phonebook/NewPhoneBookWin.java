@@ -292,6 +292,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     void closeAndSaveAllPhonebooks(final boolean disposeAfterClose) {
         commitCurrentEdits();        
         
+        log.fine("Closing all phone books...");
         // Close phone books in a thread:
         ProgressWorker closeWorker = new ProgressWorker() {
             @Override
@@ -300,14 +301,23 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                 pbList.clear();
 
                 for (PhoneBook pb : treeModel.getPhoneBooks()) {
-                    updateNote(pb.toString());
-                    pbList.add(pb.getDescriptor());
-                    pb.close();
+                    try {
+                        if (Utils.debugMode)
+                            log.finest("Closing phone book " + pb.getDescriptor());
+                        updateNote(pb.toString());
+                        pbList.add(pb.getDescriptor());
+                        pb.close();
+                    } catch (Exception e) {
+                        ExceptionDialog.showExceptionDialog(NewPhoneBookWin.this, Utils._("Error saving a phone book:"), e);
+                    }
                 }
             };
             
             @Override
             protected void done() {
+                if (Utils.debugMode)
+                    log.finest("Closed all phone books. pbList=" + Utils.getFaxOptions().phoneBooks);
+                
                 if (disposeAfterClose) {
                     dispose();
                 } else {
@@ -350,7 +360,8 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         String cmd = e.getActionCommand();
         if (cmd.equals("close")) {
             usedSelectButton = false;
-            dispose();
+            //dispose();
+            closeAndSaveAllPhonebooks(true);
         } else if (cmd.equals("descopen")) {
             doDescOpen();
         } else if (cmd.equals("descimport")) {
@@ -829,18 +840,21 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         
         addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosing(WindowEvent e) {
+            public void windowClosed(WindowEvent e) {
                 
-//                Utils.getFaxOptions().lastSelectedPhonebook = tabPhonebooks.getSelectedIndex();
-                Utils.getFaxOptions().phoneWinBounds = getBounds();
-                Utils.getFaxOptions().phonebookDisplayStyle = NameRule.valueOf(nameStyleGroup.getSelectedActionCommand());
-                
-                closeAndSaveAllPhonebooks(true);
-                
+//              Utils.getFaxOptions().lastSelectedPhonebook = tabPhonebooks.getSelectedIndex();
+              Utils.getFaxOptions().phoneWinBounds = getBounds();
+              Utils.getFaxOptions().phonebookDisplayStyle = NameRule.valueOf(nameStyleGroup.getSelectedActionCommand());
+              
                 if (searchWin != null) {
                     searchWin.dispose();
                     searchWin = null;
                 }
+            }
+            
+            @Override
+            public void windowClosing(WindowEvent e) {
+                closeAndSaveAllPhonebooks(true);                
             }
         });
         
@@ -855,11 +869,17 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         }
         
         if (fopts.phoneBooks.size() > 0) {
+            if (Utils.debugMode)
+                log.finest("Phonebooks found: " + fopts.phoneBooks);
+            
             Collections.sort(fopts.phoneBooks); // Bring the phone books in a defined order
             for (String pbdesc : fopts.phoneBooks) {
+                if (Utils.debugMode)
+                    log.finest("Adding phone book: " + pbdesc);
                 addPhoneBook(pbdesc);
             }
         } else {
+            log.finest("No phonebooks found.");
             addPhoneBook(PhoneBookFactory.getDefaultPhonebookDescriptor());
         }
         
@@ -1097,10 +1117,14 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
 //            if (pbType.targetClass.isInstance(phoneBook))
 //                pb = phoneBook;
 //            else
+            if (Utils.debugMode)
+                log.fine("Opening new phone book of type " + pbType);
             pb = pbType.createInstance(NewPhoneBookWin.this);
             
             descriptor = pb.browseForPhoneBook(false);
             if (descriptor != null) {
+                if (Utils.debugMode)
+                    log.fine("Adding phone book " + descriptor);
                 addPhoneBook(descriptor);                
             }
         }
@@ -1152,14 +1176,19 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                 }
             }
             try {
+                if (Utils.debugMode)
+                    log.fine("Opening phone book " + descriptor);
                 phoneBook = PhoneBookFactory.instanceForDescriptor(descriptor, NewPhoneBookWin.this);
+                
                 if (phoneBook == null) {
                     showMessageDialog(Utils._("Unknown phone book type selected."), Utils._("Error"), JOptionPane.ERROR_MESSAGE);
+                    log.info("Unknown phone book type selected.");
                     return;
                 } else {
                     phoneBook.open(descriptor);
                 }
-
+                if (Utils.debugMode)
+                    log.fine("Successfully opened phone book " + descriptor);
             } catch (PhoneBookException e) {
                 if (!e.messageAlreadyDisplayed())
                     showExceptionDialog(Utils._("Error loading the phone book: "), e);
@@ -1171,11 +1200,15 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         protected void done() {
             if (phoneBook != null) {
                 treeModel.addPhoneBook(phoneBook);
+                if (Utils.debugMode)
+                    log.fine("Added phone book to tree: " + descriptor);
             }
             synchronized (NewPhoneBookWin.this) {
                 if (--openCounter == 0) {
                     treeModel.sortPhonebooks();
                     for (PhoneBook pb : treeModel.getPhoneBooks()) {
+                        if (Utils.debugMode)
+                            log.finest("Expanding tree node for phone book " + pb.getDescriptor());
                         phoneBookTree.expandPath(new TreePath(new Object[] { treeModel.rootNode, pb }));
                     }
                     if (phoneBookTree.getSelectionPath() == null) {
