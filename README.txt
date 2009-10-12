@@ -66,6 +66,9 @@ YajHFC was originally written as a first more complicated
 CHANGES
 -------
 
+0.4.2a:
+Fix for a bug which caused settings not being saved when no old settings file exists.
+
 0.4.2:
 - Polish translation added
 - Support to read recipients from text files

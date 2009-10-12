@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-21 10:51+0200\n"
+"POT-Creation-Date: 2009-10-12 11:28+0200\n"
 "PO-Revision-Date: 2009-06-03 20:35+0200\n"
 "Last-Translator: Mesut GÜLER <maxut@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -112,7 +112,7 @@ msgid "Do not remind me again"
 msgstr "Tekrar hatırlatma"
 
 #: ../UpdateChecker.java:97 ../filters/ui/SearchWin.java:166
-#: ../phonebook/NewPhoneBookWin.java:687
+#: ../phonebook/NewPhoneBookWin.java:698
 #: ../phonebook/DistributionListPhonebookPanel.java:327
 msgid "Close"
 msgstr "Kapat"
@@ -417,15 +417,15 @@ msgstr ""
 #: ../options/CoverPanel.java:228 ../options/PathAndViewPanel.java:228
 #: ../options/PathAndViewPanel.java:234 ../options/PathAndViewPanel.java:240
 #: ../options/PathAndViewPanel.java:248 ../options/PathAndViewPanel.java:254
-#: ../phonebook/NewPhoneBookWin.java:391 ../phonebook/NewPhoneBookWin.java:413
-#: ../phonebook/NewPhoneBookWin.java:1157
+#: ../phonebook/NewPhoneBookWin.java:402 ../phonebook/NewPhoneBookWin.java:424
+#: ../phonebook/NewPhoneBookWin.java:1184
 #: ../phonebook/ldap/ConnectionDialog.java:235
 #: ../phonebook/jdbc/JDBCPhoneBook.java:411
 #: ../phonebook/jdbc/JDBCPhoneBook.java:421
 #: ../phonebook/jdbc/JDBCPhoneBook.java:431
 #: ../phonebook/jdbc/ConnectionDialog.java:273
 #: ../phonebook/jdbc/ConnectionDialog.java:277
-#: ../phonebook/jdbc/ConnectionDialog.java:389
+#: ../phonebook/jdbc/ConnectionDialog.java:395
 #: ../util/ExceptionDialog.java:229 ../util/ExceptionDialog.java:250
 #: ../send/SendController.java:133 ../send/SendController.java:138
 msgid "Error"
@@ -436,7 +436,7 @@ msgid "Select a directory to save the faxes in"
 msgstr "Faksları kaydetmek için dizin seç"
 
 #: ../MainWin.java:711 ../MainWin.java:943
-#: ../phonebook/NewPhoneBookWin.java:892
+#: ../phonebook/NewPhoneBookWin.java:912
 msgid "Select"
 msgstr "Seç"
 
@@ -497,7 +497,7 @@ msgstr "Faksları sil"
 msgid "Deleting faxes"
 msgstr "Fakslar siliniyor"
 
-#: ../MainWin.java:831 ../phonebook/NewPhoneBookWin.java:777
+#: ../MainWin.java:831 ../phonebook/NewPhoneBookWin.java:788
 #: ../phonebook/DistributionListPhonebookPanel.java:185
 #: ../util/ClipboardPopup.java:58
 msgid "Delete"
@@ -531,8 +531,8 @@ msgstr "Uygulamdan çık"
 msgid "Shows the about dialog"
 msgstr "hakkında iletişimini göster"
 
-#: ../MainWin.java:884 ../phonebook/NewPhoneBookWin.java:691
-#: ../phonebook/NewPhoneBookWin.java:828
+#: ../MainWin.java:884 ../phonebook/NewPhoneBookWin.java:702
+#: ../phonebook/NewPhoneBookWin.java:839
 msgid "Phone book"
 msgstr "Telefon defteri"
 
@@ -899,7 +899,7 @@ msgid "Cancel"
 msgstr "İptal"
 
 #: ../filters/ui/CustomFilterDialog.java:112
-#: ../phonebook/NewPhoneBookWin.java:739
+#: ../phonebook/NewPhoneBookWin.java:750
 #: ../phonebook/DistributionListPhonebookPanel.java:322
 #: ../send/SimplifiedSendDialog.java:408 ../send/TextFieldList.java:127
 msgid "Add"
@@ -1955,7 +1955,7 @@ msgstr "Şu anki telefon listesi"
 msgid "This phone book has already been added."
 msgstr "Bu telefon defteri zaten eklenmişti."
 
-#: ../phonebook/NewPhoneBookWin.java:233 ../phonebook/NewPhoneBookWin.java:645
+#: ../phonebook/NewPhoneBookWin.java:233 ../phonebook/NewPhoneBookWin.java:656
 msgid "Add to list"
 msgstr "Listeye ekle"
 
@@ -1963,112 +1963,116 @@ msgstr "Listeye ekle"
 msgid "Opening phone books..."
 msgstr "Telefon defteri açılıyor..."
 
-#: ../phonebook/NewPhoneBookWin.java:285 ../phonebook/NewPhoneBookWin.java:403
-#: ../phonebook/NewPhoneBookWin.java:430
-#: ../phonebook/NewPhoneBookWin.java:1165
+#: ../phonebook/NewPhoneBookWin.java:285 ../phonebook/NewPhoneBookWin.java:414
+#: ../phonebook/NewPhoneBookWin.java:441
+#: ../phonebook/NewPhoneBookWin.java:1194
 msgid "Error loading the phone book: "
 msgstr "Telefon defteri yükleme hatası"
 
-#: ../phonebook/NewPhoneBookWin.java:323
+#: ../phonebook/NewPhoneBookWin.java:311
+msgid "Error saving a phone book:"
+msgstr ""
+
+#: ../phonebook/NewPhoneBookWin.java:333
 msgid "Closing phone books..."
 msgstr "Telefon defteri kapatılıyor..."
 
-#: ../phonebook/NewPhoneBookWin.java:365
+#: ../phonebook/NewPhoneBookWin.java:376
 msgid "Please enter the phone book descriptor to open."
 msgstr "Lütfen telefon defterini açmak için tanımlayıcı girin."
 
-#: ../phonebook/NewPhoneBookWin.java:369
+#: ../phonebook/NewPhoneBookWin.java:380
 msgid "Open by descriptor"
 msgstr "Tanımlayıcı ile aç"
 
-#: ../phonebook/NewPhoneBookWin.java:379
+#: ../phonebook/NewPhoneBookWin.java:390
 msgid "Import by descriptor"
 msgstr "Tanımlayıcı ile içe aktar"
 
-#: ../phonebook/NewPhoneBookWin.java:391 ../phonebook/NewPhoneBookWin.java:413
+#: ../phonebook/NewPhoneBookWin.java:402 ../phonebook/NewPhoneBookWin.java:424
 msgid "Unsupported phone book format."
 msgstr "Desteklenmeyen telefon defteri biçimi."
 
-#: ../phonebook/NewPhoneBookWin.java:447
+#: ../phonebook/NewPhoneBookWin.java:458
 msgid "Reset quick search and show all phone book entries."
 msgstr "Hızılı aramayı sıfırla ve tüm telefon defteri girdilerini göster."
 
-#: ../phonebook/NewPhoneBookWin.java:524
+#: ../phonebook/NewPhoneBookWin.java:535
 msgid "Multiple or no phone books selected"
 msgstr "Çoklu telefon defteri seçildi veya hiçbiri seçilmedi"
 
-#: ../phonebook/NewPhoneBookWin.java:643
+#: ../phonebook/NewPhoneBookWin.java:654
 msgid "Import"
 msgstr "İçe aktar"
 
-#: ../phonebook/NewPhoneBookWin.java:647
+#: ../phonebook/NewPhoneBookWin.java:658
 msgid "Export"
 msgstr "Dışa aktar"
 
-#: ../phonebook/NewPhoneBookWin.java:673 ../phonebook/NewPhoneBookWin.java:680
+#: ../phonebook/NewPhoneBookWin.java:684 ../phonebook/NewPhoneBookWin.java:691
 msgid "By descriptor..."
 msgstr "Tanımlayıcı tarafından..."
 
-#: ../phonebook/NewPhoneBookWin.java:705
+#: ../phonebook/NewPhoneBookWin.java:716
 msgid "Entry"
 msgstr "Girdi"
 
-#: ../phonebook/NewPhoneBookWin.java:741
+#: ../phonebook/NewPhoneBookWin.java:752
 msgid "Add new entry"
 msgstr "Yeni girdi ekle"
 
-#: ../phonebook/NewPhoneBookWin.java:756
+#: ../phonebook/NewPhoneBookWin.java:767
 msgid "Add distribution list"
 msgstr "Dağıtım listesine ekle"
 
-#: ../phonebook/NewPhoneBookWin.java:758
+#: ../phonebook/NewPhoneBookWin.java:769
 msgid "Add a new distribution list"
 msgstr "Yeni bir dağıtım listesine ekle"
 
-#: ../phonebook/NewPhoneBookWin.java:766
+#: ../phonebook/NewPhoneBookWin.java:777
 #: ../phonebook/DistributionListPhonebookPanel.java:178
 msgid "Do you want to delete the selected entries?"
 msgstr "Seçilen girdileri silmek istiyor musuz?"
 
-#: ../phonebook/NewPhoneBookWin.java:766
+#: ../phonebook/NewPhoneBookWin.java:777
 #: ../phonebook/DistributionListPhonebookPanel.java:178
 msgid "Delete entries"
 msgstr "Girdileri sil"
 
-#: ../phonebook/NewPhoneBookWin.java:779
+#: ../phonebook/NewPhoneBookWin.java:790
 #: ../phonebook/DistributionListPhonebookPanel.java:187
 msgid "Delete selected entry"
 msgstr "Seçilen girdiyi sil"
 
-#: ../phonebook/NewPhoneBookWin.java:793
+#: ../phonebook/NewPhoneBookWin.java:804
 msgid "Find..."
 msgstr "Bul..."
 
-#: ../phonebook/NewPhoneBookWin.java:795
+#: ../phonebook/NewPhoneBookWin.java:806
 msgid "Search for an entry"
 msgstr "Girdi ara"
 
-#: ../phonebook/NewPhoneBookWin.java:799
+#: ../phonebook/NewPhoneBookWin.java:810
 msgid "Do you want to remove the current phone book from the list?"
 msgstr "Şimdiki telefon defterini listeden silmek istiyor musuz?"
 
-#: ../phonebook/NewPhoneBookWin.java:799 ../phonebook/NewPhoneBookWin.java:804
+#: ../phonebook/NewPhoneBookWin.java:810 ../phonebook/NewPhoneBookWin.java:815
 msgid "Remove from list"
 msgstr "Listeden sil"
 
-#: ../phonebook/NewPhoneBookWin.java:813
+#: ../phonebook/NewPhoneBookWin.java:824
 msgid "Display style"
 msgstr "Görüntü tarzı"
 
-#: ../phonebook/NewPhoneBookWin.java:1059
+#: ../phonebook/NewPhoneBookWin.java:1079
 msgid "Error executing the desired action:"
 msgstr "İstenilen eylemi uygulamada hata:"
 
-#: ../phonebook/NewPhoneBookWin.java:1151
+#: ../phonebook/NewPhoneBookWin.java:1175
 msgid "Loading..."
 msgstr "Yükleniyor..."
 
-#: ../phonebook/NewPhoneBookWin.java:1157
+#: ../phonebook/NewPhoneBookWin.java:1184
 msgid "Unknown phone book type selected."
 msgstr "Bilinmeyen telefon defteri tipi seçildi."
 
@@ -2148,7 +2152,7 @@ msgid "User name (Bind DN):"
 msgstr "Kullanıcı adı (Bind DN):"
 
 #: ../phonebook/ldap/ConnectionDialog.java:173
-#: ../phonebook/xml/XMLPhoneBook.java:351 ../phonebook/csv/CSVDialog.java:122
+#: ../phonebook/xml/XMLPhoneBook.java:354 ../phonebook/csv/CSVDialog.java:122
 #: ../phonebook/jdbc/JDBCPhoneBook.java:94
 msgid "Phone book name to display:"
 msgstr "Görüntülenecek telefon defteri adı:"
@@ -2191,7 +2195,6 @@ msgid "Create new distribution list from selection"
 msgstr "Seçilenden yeni bir dağıtım listesi oluştur"
 
 #: ../phonebook/DistributionListPhonebookPanel.java:125
-#: ../phonebook/PBEntryField.java:30
 msgid "Name"
 msgstr "Ad"
 
@@ -2252,6 +2255,10 @@ msgstr "Yorumlar:"
 msgid "Given name"
 msgstr "Verilen ad"
 
+#: ../phonebook/PBEntryField.java:30
+msgid "Name#(please translate as short form of surname)#"
+msgstr "Ad"
+
 #: ../phonebook/PBEntryField.java:31
 msgid "Title"
 msgstr "Başlık"
@@ -2306,19 +2313,19 @@ msgstr "Yorumlar"
 msgid "<no name>"
 msgstr "<adsız>"
 
-#: ../phonebook/xml/XMLPhoneBook.java:71
+#: ../phonebook/xml/XMLPhoneBook.java:72
 msgid "XML phone book"
 msgstr "XML telefon defteri"
 
-#: ../phonebook/xml/XMLPhoneBook.java:72
+#: ../phonebook/xml/XMLPhoneBook.java:73
 msgid "A phone book saving its entries as a XML file."
 msgstr "Girdileri XML dosyasına kaydeden telefon defteri."
 
-#: ../phonebook/xml/XMLPhoneBook.java:177
+#: ../phonebook/xml/XMLPhoneBook.java:180
 msgid "Error saving the phone book: "
 msgstr "Telefon defteri kaydetme hatası:"
 
-#: ../phonebook/xml/XMLPhoneBook.java:342
+#: ../phonebook/xml/XMLPhoneBook.java:345
 msgid "Phone book files"
 msgstr "Telefon defteri dosyaları"
 
@@ -2483,15 +2490,15 @@ msgstr "Sürücü sınıfı belirtmek zorundasınız."
 msgid "You have to specify a database URL."
 msgstr "Veritabanı URL'si belirtmek zorundasınız."
 
-#: ../phonebook/jdbc/ConnectionDialog.java:377
+#: ../phonebook/jdbc/ConnectionDialog.java:383
 msgid "Could not get the field names:"
 msgstr "Alan adı alınamıyor."
 
-#: ../phonebook/jdbc/ConnectionDialog.java:389
+#: ../phonebook/jdbc/ConnectionDialog.java:395
 msgid "You have to specify a database table."
 msgstr "Veritabanı tablosu belirtmek zorundasınız."
 
-#: ../phonebook/jdbc/ConnectionDialog.java:397
+#: ../phonebook/jdbc/ConnectionDialog.java:403
 msgid "Connection to the database succeeded."
 msgstr "Veritabanına bağlantı başarılı oldu."
 
@@ -2541,7 +2548,7 @@ msgstr ""
 "Lütfen okundu/okunmadı durumunu kaydetmek için gerekli alanları karşılayan "
 "tablo içersindeki alanları seçiniz"
 
-#: ../readstate/LocalPersistentReadState.java:166
+#: ../readstate/LocalPersistentReadState.java:168
 msgid "Local file"
 msgstr "Yerel dosya"
 
@@ -2889,8 +2896,13 @@ msgstr "UNIX döneminden beri geçen saniye"
 msgid "Details"
 msgstr "Ayrıntılar"
 
-#: ../util/ProgressWorker.java:155 ../util/ProgressWorker.java:158
-#: ../util/ProgressWorker.java:161
+#: ../util/ProgressWorker.java:152 ../util/ProgressWorker.java:180
+#: ../util/ProgressWorker.java:188 ../util/ProgressWorker.java:199
+msgid "Error performing the operation:"
+msgstr ""
+
+#: ../util/ProgressWorker.java:159 ../util/ProgressWorker.java:162
+#: ../util/ProgressWorker.java:165
 msgid "Initializing..."
 msgstr "Başlatılıyor..."
 
@@ -3124,7 +3136,7 @@ msgstr "İçinde (zaman süreci)"
 msgid "At (exact time)"
 msgstr "Tam olarak zaman"
 
-#: ../send/SendFileManager.java:64 ../send/SendFileManager.java:132
+#: ../send/SendFileManager.java:64 ../send/SendFileManager.java:134
 #, java-format
 msgid "Uploading {0}"
 msgstr "{0} gönderiliyor"
@@ -3134,11 +3146,11 @@ msgstr "{0} gönderiliyor"
 msgid "Converting {0}"
 msgstr "{0} çeviriliyor"
 
-#: ../send/SendFileManager.java:118
+#: ../send/SendFileManager.java:120
 msgid "Uploading document"
 msgstr "Belge yükleniyor"
 
-#: ../send/SendFileManager.java:127
+#: ../send/SendFileManager.java:129
 #, java-format
 msgid "Creating {0} from documents to send"
 msgstr "Göndermek için belgelerden {0} oluşturuluyor"
