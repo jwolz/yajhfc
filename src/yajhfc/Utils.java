@@ -358,19 +358,36 @@ public final class Utils {
         }
     }
     
+    /**
+     * Returns the translation of key. If no translation is found, the
+     * key is returned.
+     * @param key
+     * @return
+     */
     public static String _(String key) {
+        return _(key, key);
+    }
+    
+    /**
+     * Returns the translation of key. If no translation is found, the
+     * defaultValue is returned.
+     * @param key
+     * @param defaultValue
+     * @return
+     */
+    public static String _(String key, String defaultValue) {
         if (msgs == null)
             if (TriedMsgLoad)
-                return key;
+                return defaultValue;
             else {
                 LoadMessages();
-                return _(key);
+                return _(key, defaultValue);
             }                
         else
             try {
                 return msgs.getString(key);
             } catch (Exception e) {
-                return key;
+                return defaultValue;
             }
     }
     

@@ -27,7 +27,7 @@ import yajhfc.filters.FilterKeyList;
 
 public enum PBEntryField implements FilterKey {
     GivenName(Utils._("Given name"), "givenname", true),
-    Name(Utils._("Name"), "surname", true),
+    Name(Utils._("Name#(please translate as short form of surname)#", "Name"), "surname", true),
     Title(Utils._("Title"), "title", true),
     Company(Utils._("Company"), "company", true),
     Position(Utils._("Position"), "position", true),

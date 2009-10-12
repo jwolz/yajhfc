@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: messages_fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-21 10:51+0200\n"
+"POT-Creation-Date: 2009-10-12 11:28+0200\n"
 "PO-Revision-Date: 2009-06-02 09:45+0100\n"
 "Last-Translator: Olivier VIGAND <ovigand@groupedeschalets.com>\n"
 "Language-Team: Deutsch <de@li.org>\n"
@@ -118,7 +118,7 @@ msgid "Do not remind me again"
 msgstr "Ne pas me rappeller plus tard"
 
 #: ../UpdateChecker.java:97 ../filters/ui/SearchWin.java:166
-#: ../phonebook/NewPhoneBookWin.java:687
+#: ../phonebook/NewPhoneBookWin.java:698
 #: ../phonebook/DistributionListPhonebookPanel.java:327
 msgid "Close"
 msgstr "Fermer"
@@ -425,15 +425,15 @@ msgstr ""
 #: ../options/CoverPanel.java:228 ../options/PathAndViewPanel.java:228
 #: ../options/PathAndViewPanel.java:234 ../options/PathAndViewPanel.java:240
 #: ../options/PathAndViewPanel.java:248 ../options/PathAndViewPanel.java:254
-#: ../phonebook/NewPhoneBookWin.java:391 ../phonebook/NewPhoneBookWin.java:413
-#: ../phonebook/NewPhoneBookWin.java:1157
+#: ../phonebook/NewPhoneBookWin.java:402 ../phonebook/NewPhoneBookWin.java:424
+#: ../phonebook/NewPhoneBookWin.java:1184
 #: ../phonebook/ldap/ConnectionDialog.java:235
 #: ../phonebook/jdbc/JDBCPhoneBook.java:411
 #: ../phonebook/jdbc/JDBCPhoneBook.java:421
 #: ../phonebook/jdbc/JDBCPhoneBook.java:431
 #: ../phonebook/jdbc/ConnectionDialog.java:273
 #: ../phonebook/jdbc/ConnectionDialog.java:277
-#: ../phonebook/jdbc/ConnectionDialog.java:389
+#: ../phonebook/jdbc/ConnectionDialog.java:395
 #: ../util/ExceptionDialog.java:229 ../util/ExceptionDialog.java:250
 #: ../send/SendController.java:133 ../send/SendController.java:138
 msgid "Error"
@@ -444,7 +444,7 @@ msgid "Select a directory to save the faxes in"
 msgstr "Sélectionner le répertoire pour sauvegarder les fax sous "
 
 #: ../MainWin.java:711 ../MainWin.java:943
-#: ../phonebook/NewPhoneBookWin.java:892
+#: ../phonebook/NewPhoneBookWin.java:912
 msgid "Select"
 msgstr "Sélectionner"
 
@@ -505,7 +505,7 @@ msgstr "Supprimer les fax"
 msgid "Deleting faxes"
 msgstr "Suppression des fax en cours"
 
-#: ../MainWin.java:831 ../phonebook/NewPhoneBookWin.java:777
+#: ../MainWin.java:831 ../phonebook/NewPhoneBookWin.java:788
 #: ../phonebook/DistributionListPhonebookPanel.java:185
 #: ../util/ClipboardPopup.java:58
 msgid "Delete"
@@ -539,8 +539,8 @@ msgstr "Sortir du programme "
 msgid "Shows the about dialog"
 msgstr "Afficher la boîte de dialogue"
 
-#: ../MainWin.java:884 ../phonebook/NewPhoneBookWin.java:691
-#: ../phonebook/NewPhoneBookWin.java:828
+#: ../MainWin.java:884 ../phonebook/NewPhoneBookWin.java:702
+#: ../phonebook/NewPhoneBookWin.java:839
 msgid "Phone book"
 msgstr "Agenda Téléphonique "
 
@@ -909,7 +909,7 @@ msgid "Cancel"
 msgstr "Annuler "
 
 #: ../filters/ui/CustomFilterDialog.java:112
-#: ../phonebook/NewPhoneBookWin.java:739
+#: ../phonebook/NewPhoneBookWin.java:750
 #: ../phonebook/DistributionListPhonebookPanel.java:322
 #: ../send/SimplifiedSendDialog.java:408 ../send/TextFieldList.java:127
 msgid "Add"
@@ -1967,7 +1967,7 @@ msgstr "Annuaire courant : "
 msgid "This phone book has already been added."
 msgstr "Cet annuaire téléphonique a déja été ajouté."
 
-#: ../phonebook/NewPhoneBookWin.java:233 ../phonebook/NewPhoneBookWin.java:645
+#: ../phonebook/NewPhoneBookWin.java:233 ../phonebook/NewPhoneBookWin.java:656
 msgid "Add to list"
 msgstr "Ajouter à la liste"
 
@@ -1975,112 +1975,116 @@ msgstr "Ajouter à la liste"
 msgid "Opening phone books..."
 msgstr "Ouverture des carnet d'adresse...."
 
-#: ../phonebook/NewPhoneBookWin.java:285 ../phonebook/NewPhoneBookWin.java:403
-#: ../phonebook/NewPhoneBookWin.java:430
-#: ../phonebook/NewPhoneBookWin.java:1165
+#: ../phonebook/NewPhoneBookWin.java:285 ../phonebook/NewPhoneBookWin.java:414
+#: ../phonebook/NewPhoneBookWin.java:441
+#: ../phonebook/NewPhoneBookWin.java:1194
 msgid "Error loading the phone book: "
 msgstr "Erreur lors du chargement de l'annuaire téléphonique:"
 
-#: ../phonebook/NewPhoneBookWin.java:323
+#: ../phonebook/NewPhoneBookWin.java:311
+msgid "Error saving a phone book:"
+msgstr ""
+
+#: ../phonebook/NewPhoneBookWin.java:333
 msgid "Closing phone books..."
 msgstr "Fermeture des carnet d'adresse...."
 
-#: ../phonebook/NewPhoneBookWin.java:365
+#: ../phonebook/NewPhoneBookWin.java:376
 msgid "Please enter the phone book descriptor to open."
 msgstr "Veuillez écrire une description de l'annuaire téléphonique à ouvrir."
 
-#: ../phonebook/NewPhoneBookWin.java:369
+#: ../phonebook/NewPhoneBookWin.java:380
 msgid "Open by descriptor"
 msgstr "Ouvrir par descripteur"
 
-#: ../phonebook/NewPhoneBookWin.java:379
+#: ../phonebook/NewPhoneBookWin.java:390
 msgid "Import by descriptor"
 msgstr "Importation par descripteur"
 
-#: ../phonebook/NewPhoneBookWin.java:391 ../phonebook/NewPhoneBookWin.java:413
+#: ../phonebook/NewPhoneBookWin.java:402 ../phonebook/NewPhoneBookWin.java:424
 msgid "Unsupported phone book format."
 msgstr "Format d'annuaire téléphonique non supporté."
 
-#: ../phonebook/NewPhoneBookWin.java:447
+#: ../phonebook/NewPhoneBookWin.java:458
 msgid "Reset quick search and show all phone book entries."
 msgstr "Annuler les recherches rapides et afficher tout le carnet d'adresse."
 
-#: ../phonebook/NewPhoneBookWin.java:524
+#: ../phonebook/NewPhoneBookWin.java:535
 msgid "Multiple or no phone books selected"
 msgstr "Plusieurs ou aucun carnet d'adresse sélectionné"
 
-#: ../phonebook/NewPhoneBookWin.java:643
+#: ../phonebook/NewPhoneBookWin.java:654
 msgid "Import"
 msgstr "Importer"
 
-#: ../phonebook/NewPhoneBookWin.java:647
+#: ../phonebook/NewPhoneBookWin.java:658
 msgid "Export"
 msgstr "Export"
 
-#: ../phonebook/NewPhoneBookWin.java:673 ../phonebook/NewPhoneBookWin.java:680
+#: ../phonebook/NewPhoneBookWin.java:684 ../phonebook/NewPhoneBookWin.java:691
 msgid "By descriptor..."
 msgstr "Description"
 
-#: ../phonebook/NewPhoneBookWin.java:705
+#: ../phonebook/NewPhoneBookWin.java:716
 msgid "Entry"
 msgstr "Saisie"
 
-#: ../phonebook/NewPhoneBookWin.java:741
+#: ../phonebook/NewPhoneBookWin.java:752
 msgid "Add new entry"
 msgstr "Ajouter une nouvelle donnée: "
 
-#: ../phonebook/NewPhoneBookWin.java:756
+#: ../phonebook/NewPhoneBookWin.java:767
 msgid "Add distribution list"
 msgstr "Ajouter une liste de diffusion"
 
-#: ../phonebook/NewPhoneBookWin.java:758
+#: ../phonebook/NewPhoneBookWin.java:769
 msgid "Add a new distribution list"
 msgstr "Ajouter une nouvelle liste de diffusion"
 
-#: ../phonebook/NewPhoneBookWin.java:766
+#: ../phonebook/NewPhoneBookWin.java:777
 #: ../phonebook/DistributionListPhonebookPanel.java:178
 msgid "Do you want to delete the selected entries?"
 msgstr "Voulez vous supprimer les entrees selectionnees?"
 
-#: ../phonebook/NewPhoneBookWin.java:766
+#: ../phonebook/NewPhoneBookWin.java:777
 #: ../phonebook/DistributionListPhonebookPanel.java:178
 msgid "Delete entries"
 msgstr "Supprimer une entree"
 
-#: ../phonebook/NewPhoneBookWin.java:779
+#: ../phonebook/NewPhoneBookWin.java:790
 #: ../phonebook/DistributionListPhonebookPanel.java:187
 msgid "Delete selected entry"
 msgstr "Supprimer la sélection:"
 
-#: ../phonebook/NewPhoneBookWin.java:793
+#: ../phonebook/NewPhoneBookWin.java:804
 msgid "Find..."
 msgstr "Recherche..."
 
-#: ../phonebook/NewPhoneBookWin.java:795
+#: ../phonebook/NewPhoneBookWin.java:806
 msgid "Search for an entry"
 msgstr "Recherche par saisie"
 
-#: ../phonebook/NewPhoneBookWin.java:799
+#: ../phonebook/NewPhoneBookWin.java:810
 msgid "Do you want to remove the current phone book from the list?"
 msgstr "Voulez vous enlever cet annuaire téléphonique de la liste?"
 
-#: ../phonebook/NewPhoneBookWin.java:799 ../phonebook/NewPhoneBookWin.java:804
+#: ../phonebook/NewPhoneBookWin.java:810 ../phonebook/NewPhoneBookWin.java:815
 msgid "Remove from list"
 msgstr "Enlever de la liste"
 
-#: ../phonebook/NewPhoneBookWin.java:813
+#: ../phonebook/NewPhoneBookWin.java:824
 msgid "Display style"
 msgstr "Style d'affichage"
 
-#: ../phonebook/NewPhoneBookWin.java:1059
+#: ../phonebook/NewPhoneBookWin.java:1079
 msgid "Error executing the desired action:"
 msgstr "Erreur lors de l'exécution de l'action:"
 
-#: ../phonebook/NewPhoneBookWin.java:1151
+#: ../phonebook/NewPhoneBookWin.java:1175
 msgid "Loading..."
 msgstr "Chargement...."
 
-#: ../phonebook/NewPhoneBookWin.java:1157
+#: ../phonebook/NewPhoneBookWin.java:1184
 msgid "Unknown phone book type selected."
 msgstr "Type d'annuaire téléphonique inconnu."
 
@@ -2161,7 +2165,7 @@ msgid "User name (Bind DN):"
 msgstr "Nom utilisateur (Bind DN):"
 
 #: ../phonebook/ldap/ConnectionDialog.java:173
-#: ../phonebook/xml/XMLPhoneBook.java:351 ../phonebook/csv/CSVDialog.java:122
+#: ../phonebook/xml/XMLPhoneBook.java:354 ../phonebook/csv/CSVDialog.java:122
 #: ../phonebook/jdbc/JDBCPhoneBook.java:94
 msgid "Phone book name to display:"
 msgstr "Nom du carnet d'adresse a afficher:"
@@ -2204,7 +2208,6 @@ msgid "Create new distribution list from selection"
 msgstr "Créer une nouvelle liste de diffusion depuis sélection"
 
 #: ../phonebook/DistributionListPhonebookPanel.java:125
-#: ../phonebook/PBEntryField.java:30
 msgid "Name"
 msgstr "Nom"
 
@@ -2266,6 +2269,10 @@ msgstr "Commentaires:"
 msgid "Given name"
 msgstr "Prénom"
 
+#: ../phonebook/PBEntryField.java:30
+msgid "Name#(please translate as short form of surname)#"
+msgstr "Nom"
+
 #: ../phonebook/PBEntryField.java:31
 msgid "Title"
 msgstr "Titre"
@@ -2320,20 +2327,20 @@ msgstr "Commentaires"
 msgid "<no name>"
 msgstr "<pas de nom>"
 
-#: ../phonebook/xml/XMLPhoneBook.java:71
+#: ../phonebook/xml/XMLPhoneBook.java:72
 msgid "XML phone book"
 msgstr "Annuaire téléphonique XML"
 
-#: ../phonebook/xml/XMLPhoneBook.java:72
+#: ../phonebook/xml/XMLPhoneBook.java:73
 msgid "A phone book saving its entries as a XML file."
 msgstr ""
 "Un agenda téléphonique conservant ses enregistrements dans un fichier XML."
 
-#: ../phonebook/xml/XMLPhoneBook.java:177
+#: ../phonebook/xml/XMLPhoneBook.java:180
 msgid "Error saving the phone book: "
 msgstr "Erreur lors de la sauvegarde de l'annuaire téléphonique: "
 
-#: ../phonebook/xml/XMLPhoneBook.java:342
+#: ../phonebook/xml/XMLPhoneBook.java:345
 msgid "Phone book files"
 msgstr "Fichiers annuaire téléphonique "
 
@@ -2501,15 +2508,15 @@ msgstr "Vous devez saisir une classe pour les drivers. "
 msgid "You have to specify a database URL."
 msgstr "Vous devez saisir une URL pour la base de donnée."
 
-#: ../phonebook/jdbc/ConnectionDialog.java:377
+#: ../phonebook/jdbc/ConnectionDialog.java:383
 msgid "Could not get the field names:"
 msgstr "Impossible d'obtenir le nom de champ:"
 
-#: ../phonebook/jdbc/ConnectionDialog.java:389
+#: ../phonebook/jdbc/ConnectionDialog.java:395
 msgid "You have to specify a database table."
 msgstr "Vous devez renseigner la table base de donnée. "
 
-#: ../phonebook/jdbc/ConnectionDialog.java:397
+#: ../phonebook/jdbc/ConnectionDialog.java:403
 msgid "Connection to the database succeeded."
 msgstr "Connexion à la base de donnée réussie."
 
@@ -2559,7 +2566,7 @@ msgstr ""
 "Selectionnez quel champs de la table correspondent au champs necessaires "
 "pour stocker l'etat lu/non lu"
 
-#: ../readstate/LocalPersistentReadState.java:166
+#: ../readstate/LocalPersistentReadState.java:168
 msgid "Local file"
 msgstr "Fichier local"
 
@@ -2906,8 +2913,13 @@ msgstr "Temps en secondes depuis la reference UNIX"
 msgid "Details"
 msgstr "Détails"
 
-#: ../util/ProgressWorker.java:155 ../util/ProgressWorker.java:158
-#: ../util/ProgressWorker.java:161
+#: ../util/ProgressWorker.java:152 ../util/ProgressWorker.java:180
+#: ../util/ProgressWorker.java:188 ../util/ProgressWorker.java:199
+msgid "Error performing the operation:"
+msgstr ""
+
+#: ../util/ProgressWorker.java:159 ../util/ProgressWorker.java:162
+#: ../util/ProgressWorker.java:165
 msgid "Initializing..."
 msgstr "Initialisation..."
 
@@ -3140,7 +3152,7 @@ msgstr "Dans (duree)"
 msgid "At (exact time)"
 msgstr "A (heure exacte)"
 
-#: ../send/SendFileManager.java:64 ../send/SendFileManager.java:132
+#: ../send/SendFileManager.java:64 ../send/SendFileManager.java:134
 #, java-format
 msgid "Uploading {0}"
 msgstr "Téléchargement {0}"
@@ -3150,11 +3162,11 @@ msgstr "Téléchargement {0}"
 msgid "Converting {0}"
 msgstr "Convertion {0}"
 
-#: ../send/SendFileManager.java:118
+#: ../send/SendFileManager.java:120
 msgid "Uploading document"
 msgstr "Telechargement du document"
 
-#: ../send/SendFileManager.java:127
+#: ../send/SendFileManager.java:129
 #, java-format
 msgid "Creating {0} from documents to send"
 msgstr "Creation de {0} depuis le document a envoyer"
