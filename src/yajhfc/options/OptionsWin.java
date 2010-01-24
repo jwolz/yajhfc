@@ -131,7 +131,7 @@ public class OptionsWin extends JDialog {
     JPanel PanelButtons;
     JButton ButtonOK, ButtonCancel;
     
-    JTextField textNotifyAddress, textHost, textUser, /*textViewer,*/ textPort;
+    JTextField textNotifyAddress, textHost, textUser, /*textViewer,*/ textPort, textFilterFromFaxNr;
     JPasswordField textPassword, textAdminPassword;
     JComboBox comboTZone, comboNotify, comboPaperSize, comboResolution; //, comboNewFaxAction;
     JComboBox comboLang, comboLookAndFeel, comboModem, comboSendWinStyle;
@@ -199,6 +199,7 @@ public class OptionsWin extends JDialog {
         textHost.setText(foEdit.host);
         textPort.setText(String.valueOf(foEdit.port));
         textUser.setText(foEdit.user);
+        textFilterFromFaxNr.setText(foEdit.filterFromFaxNr);
         textPassword.setText(foEdit.pass.getPassword());
         textAdminPassword.setText(foEdit.AdminPassword.getPassword());
 
@@ -402,7 +403,8 @@ public class OptionsWin extends JDialog {
         //PROFILE: long time = System.currentTimeMillis();
         rootNode = new PanelTreeNode(null, null, "root", null);
         List<PanelTreeNode> rootChilds = new ArrayList<PanelTreeNode>();
-
+        rootNode.setChildren(rootChilds);
+        
         rootChilds.add(new PanelTreeNode(rootNode, getPanelCommon(), _("General"), Utils.loadIcon("general/Preferences")));
         //PROFILE: System.out.println("    After panel common: " + (-time + (time = System.currentTimeMillis())));
         
@@ -441,14 +443,40 @@ public class OptionsWin extends JDialog {
         });
         rootChilds.add(tables);
 
+        JLabel advancedLabel = new JLabel(_("These settings normally need not to be changed."));
+        advancedLabel.setHorizontalAlignment(JLabel.CENTER);
+        advancedLabel.setVerticalAlignment(JLabel.CENTER);
+        advancedLabel.setHorizontalTextPosition(JLabel.CENTER);
+        advancedLabel.setVerticalTextPosition(JLabel.CENTER);
+        advancedLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        advancedLabel.setAlignmentY(Component.CENTER_ALIGNMENT);
+
+        PanelTreeNode advancedNode = new PanelTreeNode(rootNode, advancedLabel, _("Advanced settings"), null);
+        advancedNode.setChildren(new ArrayList<PanelTreeNode>());
+        
         for (PluginUI puc : PluginManager.pluginUIs) {
-            PanelTreeNode node = puc.createOptionsPanel(rootNode);
+            PanelTreeNode parent;
+            switch (puc.getOptionsPanelParent()) {
+            case PluginUI.OPTION_PANEL_ADVANCED:
+                parent = advancedNode;
+                break;
+            case PluginUI.OPTION_PANEL_ROOT:
+            default:
+                parent = rootNode;
+                break;                    
+            }
+            
+            PanelTreeNode node = puc.createOptionsPanel(parent);
             if (node != null) {
-                rootChilds.add(node);
+                parent.getChildren().add(node);
             }
         }
         
-        rootNode.setChildren(rootChilds);
+        // Add the "advanced settings" node at the bottom of the list
+        if (advancedNode.getChildCount() > 0) {
+            rootChilds.add(advancedNode);
+        }
+        
         //PROFILE: System.out.println("    After table panels: " + (-time + (time = System.currentTimeMillis())));
     }
     
@@ -818,7 +846,7 @@ public class OptionsWin extends JDialog {
     
     private JPanel getPanelSend() {
         if (panelSend == null) {
-            final int rowCount = 13;
+            final int rowCount = 15;
             double[][] tablelay = {
                     {border,  0.5, border, TableLayout.FILL, border},
                     new double[rowCount]
@@ -834,6 +862,9 @@ public class OptionsWin extends JDialog {
            
             textNotifyAddress = new JTextField();
             textNotifyAddress.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
+            
+            textFilterFromFaxNr = new JTextField();
+            textFilterFromFaxNr.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
             
             comboTZone = new JComboBox(FaxTimezone.values());
             comboNotify = new JComboBox(FaxNotification.values());
@@ -869,9 +900,10 @@ public class OptionsWin extends JDialog {
             addWithLabel(panelSend, comboPaperSize, _("Paper size:"), "1, 8, f, c" );
             addWithLabel(panelSend, spinKillTime, _("Cancel job after (minutes):"), "3, 8, f, c");
             addWithLabel(panelSend, spinMaxDial, _("Maximum dials:"), "1, 10, f, c");
-            addWithLabel(panelSend, spinMaxTry, _("Maximum tries:"), "3, 10, f, c");    
-            panelSend.add(checkArchiveSentFaxes, "1,11,f,c");
-            panelSend.add(buttonJobOption, "3,11,f,c");
+            addWithLabel(panelSend, spinMaxTry, _("Maximum tries:"), "3, 10, f, c");
+            addWithLabel(panelSend, textFilterFromFaxNr, _("Characters filtered from the fax number sent to HylaFAX:"), "1,12,f,c");
+            panelSend.add(checkArchiveSentFaxes, "1,13,f,c");
+            panelSend.add(buttonJobOption, "3,13,f,c");
         }
         return panelSend;
     }
@@ -1031,6 +1063,7 @@ public class OptionsWin extends JDialog {
             foEdit.notifyAddress = textNotifyAddress.getText();
             foEdit.host = textHost.getText();
             foEdit.user = textUser.getText();
+            foEdit.filterFromFaxNr = textFilterFromFaxNr.getText();
             foEdit.pass.setPassword(new String(textPassword.getPassword()));
             foEdit.AdminPassword.setPassword(new String(textAdminPassword.getPassword()));
             

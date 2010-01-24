@@ -21,6 +21,7 @@ package yajhfc;
 import static yajhfc.Utils._;
 
 import java.text.DateFormat;
+import java.text.Format;
 import java.util.Date;
 
 /**
@@ -175,7 +176,7 @@ public enum JobFormat implements FmtItem {
     /**
      * Job kill time
      */
-    k("k", _("Job kill time"), _("Time to give up trying to send job"), Utils.HYLA_TIME_ONLY_FORMAT, DateKind.TIME_ONLY), 
+    k("k", _("Job kill time"), _("Time to give up trying to send job")), // Utils.HYLA_TIME_ONLY_FORMAT, DateKind.TIME_ONLY), 
     /**
      * Page length
      */
@@ -235,7 +236,7 @@ public enum JobFormat implements FmtItem {
     /**
      * Time to send job
      */
-    z("z", _("Time to send job"), Utils.HYLA_TIME_ONLY_FORMAT, DateKind.TIME_ONLY),
+    z("z", _("Time to send job")), // Utils.HYLA_TIME_ONLY_FORMAT, DateKind.TIME_ONLY),
     /**
      * Job state (icon only)
      */
@@ -267,9 +268,16 @@ public enum JobFormat implements FmtItem {
     }
     public DateFormat getHylaDateFormat() {
         return hylaDateFormat;
-    }
+    }    
     public DateFormat getDisplayDateFormat() {
         return DateKind.getInstanceFromKind(displayDateFormat);
+    }
+    public Format getFormat() {
+        if (dataType == Date.class) {
+            return getDisplayDateFormat();
+        } else {
+            return null;
+        }
     }
     
     private JobFormat(String hylaFmt, String description) {

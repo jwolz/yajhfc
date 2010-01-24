@@ -22,6 +22,7 @@ import java.awt.BorderLayout;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,6 +37,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import yajhfc.Utils;
 
@@ -50,7 +53,7 @@ public class PasswordDialog extends JDialog {
     public String returnedPassword = null;
     public String returnedUsername = null;
     
-    private void initialize(String prompt, String userName, boolean editableUserName) {
+    private void initialize(String prompt, String userName, boolean editableUserName, final boolean allowEmptyPassword) {
         final int border = 12;
         jContentFrame = new JPanel(new BorderLayout());
         
@@ -68,7 +71,14 @@ public class PasswordDialog extends JDialog {
         btnOK = new JButton(Utils._("OK"));
         btnOK.addActionListener(new ActionListener() {
            public void actionPerformed(ActionEvent e) {
-               returnedPassword = new String(passField.getPassword());
+               final char[] password = passField.getPassword();
+               
+               if (!allowEmptyPassword && password.length == 0) {
+                   Toolkit.getDefaultToolkit().beep();
+                   return;
+               }
+               
+               returnedPassword = new String(password);
                returnedUsername = userField.getText();
                dispose();
             }             
@@ -83,13 +93,35 @@ public class PasswordDialog extends JDialog {
         JLabel labelPassword = new JLabel(Utils._("Password:"));
         labelUserName.setAlignmentX(JComponent.LEFT_ALIGNMENT);
         
+        if (!allowEmptyPassword) {
+            passField.getDocument().addDocumentListener(new DocumentListener() {
+
+                public void changedUpdate(DocumentEvent e) {
+                    //NOP
+                }
+
+                public void insertUpdate(DocumentEvent e) {
+                    passwordChanged();                    
+                }
+
+                public void removeUpdate(DocumentEvent e) {
+                    passwordChanged();  
+                }
+                
+                private void passwordChanged() {
+                    btnOK.setEnabled(passField.getDocument().getLength() > 0);
+                }
+            });
+            btnOK.setEnabled(false);
+        }
+        
         Dimension boxy = new Dimension(border, border);
         jContentFrame.add(Box.createRigidArea(boxy), BorderLayout.NORTH);
         jContentFrame.add(Box.createRigidArea(boxy), BorderLayout.SOUTH);
         jContentFrame.add(Box.createRigidArea(boxy), BorderLayout.EAST);
         jContentFrame.add(Box.createRigidArea(boxy), BorderLayout.WEST);
         
-        boxy = new Dimension(0, border);
+        boxy = new Dimension(border, border);
         Box box = Box.createVerticalBox();
         box.add(labelPrompt);
         box.add(Box.createRigidArea(boxy));
@@ -130,16 +162,31 @@ public class PasswordDialog extends JDialog {
     
     
 
-    public PasswordDialog(Frame owner, String title, String prompt, String userName, boolean editableUsername)  {
+    public PasswordDialog(Frame owner, String title, String prompt, String userName, boolean editableUsername, boolean allowEmptyPassword)  {
         super(owner, title, true);
-        initialize(prompt, userName, editableUsername);       
+        initialize(prompt, userName, editableUsername, allowEmptyPassword);       
         this.setLocationRelativeTo(owner);
     }
 
-    public PasswordDialog(Dialog owner, String title, String prompt, String userName, boolean editableUsername)  {
+    public PasswordDialog(Dialog owner, String title, String prompt, String userName, boolean editableUsername, boolean allowEmptyPassword)  {
         super(owner, title, true);
-        initialize(prompt, userName, editableUsername);
+        initialize(prompt, userName, editableUsername, allowEmptyPassword);
         this.setLocationRelativeTo(owner);
+    }
+    
+    
+    /**
+     * Shows the password dialog and returns a tuple (username, password)
+     * or null if the user selected cancel.
+     * @param owner
+     * @param title
+     * @param prompt
+     * @param userName
+     * @param editableUsername
+     * @return
+     */
+    public static String[] showPasswordDialog(Window owner, String title, String prompt, String userName, boolean editableUsername) {
+        return showPasswordDialog(owner, title, prompt, userName, editableUsername, true);
     }
     
     /**
@@ -152,13 +199,11 @@ public class PasswordDialog extends JDialog {
      * @param editableUsername
      * @return
      */
-    public static String[] showPasswordDialog(Frame owner, String title, String prompt, String userName, boolean editableUsername) {
-        PasswordDialog pdlg = new PasswordDialog(owner, title, prompt, userName, editableUsername);
-        pdlg.setVisible(true);
-        if (pdlg.returnedPassword != null) {
-            return new String[] { pdlg.returnedUsername, pdlg.returnedPassword };
+    public static String[] showPasswordDialog(Window owner, String title, String prompt, String userName, boolean editableUsername, boolean allowEmptyPassword) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            return showPasswordDialogUnthreaded(owner, title, prompt, userName, editableUsername, allowEmptyPassword);
         } else {
-            return null;
+            return showPasswordDialogThreaded(owner, title, prompt, userName, editableUsername, allowEmptyPassword);
         }
     }
     
@@ -172,8 +217,15 @@ public class PasswordDialog extends JDialog {
      * @param editableUsername
      * @return
      */
-    public static String[] showPasswordDialog(Dialog owner, String title, String prompt, String userName, boolean editableUsername) {
-        PasswordDialog pdlg = new PasswordDialog(owner, title, prompt, userName, editableUsername);
+    static String[] showPasswordDialogUnthreaded(Window owner, String title, String prompt, String userName, boolean editableUsername, boolean allowEmptyPassword) {
+        PasswordDialog pdlg;
+        if (owner instanceof Dialog)
+            pdlg = new PasswordDialog((Dialog)owner, title, prompt, userName, editableUsername, allowEmptyPassword);
+        else if (owner instanceof Frame)
+            pdlg = new PasswordDialog((Frame)owner, title, prompt, userName, editableUsername, allowEmptyPassword);
+        else
+            return null;
+        
         pdlg.setVisible(true);
         if (pdlg.returnedPassword != null) {
             return new String[] { pdlg.returnedUsername, pdlg.returnedPassword };
@@ -191,8 +243,8 @@ public class PasswordDialog extends JDialog {
      * @param editableUsername
      * @return
      */
-    public static String[] showPasswordDialogThreaded(Window owner, String title, String prompt, String userName, boolean editableUsername) {
-        DisplayRunnable runner = new DisplayRunnable(owner, title, prompt, userName, editableUsername);
+    private static String[] showPasswordDialogThreaded(Window owner, String title, String prompt, String userName, boolean editableUsername, boolean allowEmptyPassword) {
+        DisplayRunnable runner = new DisplayRunnable(owner, title, prompt, userName, editableUsername, allowEmptyPassword);
         try {
             SwingUtilities.invokeAndWait(runner);
             return runner.result;
@@ -217,19 +269,15 @@ public class PasswordDialog extends JDialog {
         protected final String prompt;
         protected final boolean editableUsername;
         protected final String userName;
+        protected final boolean allowEmptyPassword;
         
         public String[] result;
         
         public void run() {
-            result = null;
-            if (owner instanceof Dialog) {
-                result = showPasswordDialog((Dialog)owner, title, prompt, userName, editableUsername);
-            } else if (owner instanceof Frame) {
-                result = showPasswordDialog((Frame)owner, title, prompt, userName, editableUsername);
-            }
+            result = showPasswordDialogUnthreaded(owner, title, prompt, userName, editableUsername, allowEmptyPassword);
         }
 
-        public DisplayRunnable(Window owner, String title, String prompt, String userName, boolean editableUsername) {
+        public DisplayRunnable(Window owner, String title, String prompt, String userName, boolean editableUsername, boolean allowEmptyPassword) {
             super();
             this.owner = owner;
             if (!(owner instanceof Frame || owner instanceof Dialog)) {
@@ -239,6 +287,7 @@ public class PasswordDialog extends JDialog {
             this.prompt = prompt;
             this.userName = userName;
             this.editableUsername = editableUsername;
+            this.allowEmptyPassword = allowEmptyPassword;
         }
     }
 }

@@ -1,5 +1,8 @@
 package yajhfc.filters;
 
+import java.text.FieldPosition;
+import java.text.Format;
+
 
 /*
  * YAJHFC - Yet another Java Hylafax client
@@ -25,11 +28,28 @@ public class StringFilter<V extends FilterableObject, K extends FilterKey> exten
     
     protected Object colIdx = null;
     
+    private StringBuffer formatBuffer;
+    private FieldPosition dummyFieldPos;
+    
     public StringFilter(K col, StringFilterOperator operator, String compareValue, boolean caseSensitive) {
         super(operator, compareValue, caseSensitive);
         this.column = col;
     }
 
+    // Cache the StringBuffer and the FieldPosition as matchesFilter is called often
+    protected StringBuffer getFormatBuffer() {
+        if (formatBuffer == null) {
+            formatBuffer = new StringBuffer();
+        }
+        return formatBuffer;
+    }
+    protected FieldPosition getDummyFieldPos() {
+        if (dummyFieldPos == null) {
+            dummyFieldPos = new FieldPosition(0);
+        }
+        return dummyFieldPos;
+    }
+    
     public boolean matchesFilter(V filterObj) {
         if (column == null || colIdx == null)
             return false;
@@ -38,7 +58,14 @@ public class StringFilter<V extends FilterableObject, K extends FilterKey> exten
         if (v == null) {
             value = "";
         } else {
-            value = v.toString();
+            Format colFormat = column.getFormat();
+            if (colFormat == null) {
+                value = v.toString();
+            } else {
+                StringBuffer buf = getFormatBuffer();
+                buf.setLength(0);
+                value = colFormat.format(v, buf, getDummyFieldPos()).toString();
+            }
         }
         return doActualMatch(value);
     }

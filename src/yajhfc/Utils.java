@@ -72,7 +72,7 @@ public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2009 by Jonas Wolz";
-    public static final String AppVersion = "0.4.2a";
+    public static final String AppVersion = "0.4.3beta1";
     public static final String AuthorName = "Jonas Wolz";
     public static final String AuthorEMail = "jwolz@freenet.de";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
@@ -227,6 +227,30 @@ public final class Utils {
         }
         return applicationDir;
     }
+    
+    private static File systemwideConfigDir;
+    private static boolean systemwideConfigDirSet = false;
+    /**
+     * Returns the system wide configuration directory (/etc/yajhfc on Unix)
+     * if it exists or null otherwise
+     * @return
+     */
+    public static File getSystemwideConfigDir() {
+        if (!systemwideConfigDirSet) {
+            if (File.separatorChar == '/' && !IS_WINDOWS) { // Probably some flavor of Unix
+                File configDir = new File("/etc/yajhfc");
+                if (configDir.isDirectory()) {
+                    systemwideConfigDir = configDir;
+                    log.fine("Found system wide config dir at " + configDir);
+                } else {
+                    systemwideConfigDir = null;
+                    log.fine("Did not find system wide config dir at " + configDir);
+                }
+            }
+            systemwideConfigDirSet = true;
+        }
+        return systemwideConfigDir;
+    }
 
     public static String listToString(List<?> l, String delim) {
         StringBuilder s = new StringBuilder();
@@ -295,11 +319,24 @@ public final class Utils {
              * Load the settings properties from the specified files. The files are loaded in the specified
              * order, i.e. settings from "later" files override the earlier ones
              */
-            final File[] files = {
-                    new File(getApplicationDir(), "settings.default"),
-                    defaultConfigFile,
-                    new File(getApplicationDir(), "settings.override")
-            };
+            final File settingsDefault  = new File(getApplicationDir(), "settings.default");
+            final File settingsOverride = new File(getApplicationDir(), "settings.override");
+            final File[] files;
+            if (getSystemwideConfigDir() == null) {
+                files = new File[] {
+                        settingsDefault,
+                        defaultConfigFile,
+                        settingsOverride
+                };
+            } else {
+                files = new File[] {
+                        settingsDefault,
+                        new File(getSystemwideConfigDir(), "settings.default"),
+                        defaultConfigFile,
+                        settingsOverride,
+                        new File(getSystemwideConfigDir(), "settings.override"),
+                };
+            }
 
             Properties p = new Properties();
             for (File file : files) {
@@ -731,14 +768,15 @@ public final class Utils {
     
     /**
      * "Sanitizes" the given input by replacing all characters in forbiddenChars with replacement
-     * @param input
-     * @param forbiddenChars
-     * @param replacement
+     * @param input the input string
+     * @param forbiddenChars chars to filter out
+     * @param replacement char to replace filtered chars with
+     * @param maxLen the maximum allowed length of the output or 0 for unlimited length 
      */
     public static String sanitizeInput(String input, String forbiddenChars, char replacement, int maxLen) {
         if (input == null)
             return null;
-        if (input.length() > maxLen)
+        if (maxLen > 0 && input.length() > maxLen)
             input = input.substring(0, maxLen);
         
         char[] chars = input.toCharArray();

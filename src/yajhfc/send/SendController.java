@@ -224,7 +224,10 @@ public class SendController {
                     for (HylaTFLItem item : files) {
                         updateNote(MessageFormat.format(Utils._("Formatting {0}"), Utils.shortenFileNameForDisplay(item.getText(), FILE_DISPLAY_LEN)));
                         //item.preview(SendController.this.parent, hyfc);
-                        viewFiles.add(item.getPreviewFilename(hyfc));
+                        FormattedFile file = item.getPreviewFilename(hyfc);
+                        if (file != null)
+                            // Only add valid files with supported preview
+                            viewFiles.add(file);
                         stepProgressBar(step);
                     }
                 } finally {
@@ -307,6 +310,7 @@ public class SendController {
                     log.fine("Use modem: " + modem);
                     //Utils.debugOut.println(modem);
                 }
+                final String numberFilterChars = fo.filterFromFaxNr + "\r\n";
                 for (PBEntryFieldContainer numItem : numbers) {
                     updateNote(MessageFormat.format(Utils._("Creating job to {0}"), numItem.getField(PBEntryField.FaxNumber)));
 
@@ -346,7 +350,7 @@ public class SendController {
                                 }
                             }
 
-                            String faxNumber = Utils.sanitizeInput(numItem.getField(PBEntryField.FaxNumber));
+                            String faxNumber = Utils.sanitizeInput(numItem.getField(PBEntryField.FaxNumber), numberFilterChars, ' ', 255);
                             j.setDialstring(faxNumber);
                             //j.setProperty("EXTERNAL", faxNumber); // needed to fix an error while sending multiple jobs
                             j.setMaximumTries(maxTries);

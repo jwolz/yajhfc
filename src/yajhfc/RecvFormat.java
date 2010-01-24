@@ -21,6 +21,7 @@ package yajhfc;
 import static yajhfc.Utils._;
 
 import java.text.DateFormat;
+import java.text.Format;
 import java.util.Date;
 
 /**
@@ -137,6 +138,13 @@ public enum RecvFormat implements FmtItem {
     }
     public DateFormat getDisplayDateFormat() {
         return DateKind.getInstanceFromKind(displayDateFormat);
+    }
+    public Format getFormat() {
+        if (dataType == Date.class) {
+            return getDisplayDateFormat();
+        } else {
+            return null;
+        }
     }
     
     private RecvFormat(String hylaFmt, String description) {

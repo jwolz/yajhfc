@@ -199,8 +199,10 @@ public class WrapperDistributionList extends DefaultPhoneBookEntry implements
      * @return
      */
     public static boolean areDistributionListsSupported(PhoneBook pb) {
+        int commentLen = pb.getMaxLength(PBEntryField.Comment);
+        int signatureLen = pb.getMaxLength(SIGNATURE_FIELD);
         return (pb.isFieldAvailable(PBEntryField.Name) && pb.isFieldAvailable(PBEntryField.Comment) && pb.isFieldAvailable(SIGNATURE_FIELD)) &&
-            (pb.getMaxLength(PBEntryField.Comment) >= MIN_COMMENT_LEN && pb.getMaxLength(SIGNATURE_FIELD) >= SIGNATURE.length());
+            (( commentLen == 0 || commentLen >= MIN_COMMENT_LEN ) && ( signatureLen == 0 || signatureLen >= SIGNATURE.length() ));
     }
     
     /**

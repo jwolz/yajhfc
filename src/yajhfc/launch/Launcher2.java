@@ -161,9 +161,11 @@ public class Launcher2 {
                 launchLog.info("Lock and listener created.");
             }
             ShutdownManager.getInstance().registerShutdownHook(new Runnable() {
-                public void run() {   
+                public void run() {                      
                     if (Utils.debugMode)
                         System.err.println("Doing shutdown work...");
+                    
+                    application.saveWindowSettings();
                     
                     PersistentReadState.getCurrent().persistReadState();
 
@@ -279,7 +281,7 @@ public class Launcher2 {
             sp.addRecipients(opts.recipients);
         }
         if (opts.useStdin) {
-            sp.setInputStream(System.in);
+            sp.setInputStream(System.in, null);
         }
         if (opts.useCover != null) {
             sp.setCover(opts.useCover);
