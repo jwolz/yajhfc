@@ -43,6 +43,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.net.SocketException;
 import java.text.DateFormat;
+import java.text.FieldPosition;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -400,11 +401,13 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             List<String> errorInfo = new ArrayList<String>();
             int[] selRows =  selTable.getSelectedRows();
             sMin = Integer.MAX_VALUE; sMax = Integer.MIN_VALUE;
+            final MessageFormat displayingMsg      = new MessageFormat(_("Displaying fax {0}"));
+            final MessageFormat downloadingMessage = new MessageFormat(Utils._("Downloading {0}"));
             for (int i : selRows) {
                 YajJob<? extends FmtItem> yj = null;
                 try {
                     yj = selTable.getJobForRow(i);
-                    updateNote(MessageFormat.format(_("Displaying fax {0}"), yj.getIDValue()));
+                    updateNote(displayingMsg.format(new Object[] { yj.getIDValue() }));
                     downloadedFiles.clear();
                     errorInfo.clear();
                     
@@ -428,10 +431,9 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                         stepProgressBar(1000);
                     } else {
                         int step = 1000 / serverFiles.size();
-                        MessageFormat format = new MessageFormat(Utils._("Downloading {0}"));
                         downloadedFiles.clear();
                         for(HylaServerFile hsf : serverFiles) {
-                            updateNote(format.format(new Object[] {hsf.getPath()}));
+                            updateNote(downloadingMessage.format(new Object[] {hsf.getPath()}));
                             try {
                                 downloadedFiles.add(hsf.getPreviewFile(hyfc));
                             } catch (Exception e1) {
@@ -1415,13 +1417,17 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     private DefaultTableCellRenderer getHylaDateRenderer() {
         if (hylaDateRenderer == null) {
             hylaDateRenderer = new DefaultTableCellRenderer() {
+                private final StringBuffer formatBuffer = new StringBuffer();
+                private final FieldPosition dummyPos = new FieldPosition(0);
+                
                 @SuppressWarnings("unchecked")
                 @Override
                 public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                     if (value != null) {
                         int realCol = table.getColumnModel().getColumn(column).getModelIndex();
                         MyTableModel<? extends FmtItem> model = ((TooltipJTable<? extends FmtItem>)table).getRealModel();
-                        value = model.columns.get(realCol).getDisplayDateFormat().format(value);
+                        formatBuffer.setLength(0);
+                        value = model.columns.get(realCol).getDisplayDateFormat().format(value, formatBuffer, dummyPos).toString();
                     }
                     return super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
                             row, column);
@@ -1530,21 +1536,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 
                 doLogout();
                 
-                menuViewListener.saveToOptions(myopts);
-                myopts.mainwinLastTab = getTabMain().getSelectedIndex();
-                myopts.mainWinBounds = getBounds();
-                
-                Boolean selVal = (Boolean)actShowRowNumbers.getValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY);
-                myopts.showRowNumbers = (selVal != null && selVal.booleanValue());
-                selVal = (Boolean)actAdjustColumns.getValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY);
-                myopts.adjustColumnWidths = (selVal != null && selVal.booleanValue());
-                myopts.toolbarConfig = ToolbarEditorDialog.saveConfigToString(toolbar);
-                
-                if (actAutoSizeStatus.isSelected()) {
-                    myopts.statusBarSize = -1;
-                } else {
-                    myopts.statusBarSize = statusSplitter.getHeight() - statusSplitter.getDividerLocation();
-                }
+                saveWindowSettings();
             
                 Thread.yield();
                 System.exit(0);
@@ -1575,6 +1567,26 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 PersistentReadState.getCurrent().persistReadState();
             }
         }, READ_PERSIST_INTERVAL, READ_PERSIST_INTERVAL, TimeUnit.MILLISECONDS);
+    }
+    
+    public void saveWindowSettings() {
+        saveTableColumnSettings();
+        
+        menuViewListener.saveToOptions(myopts);
+        myopts.mainwinLastTab = getTabMain().getSelectedIndex();
+        myopts.mainWinBounds = getBounds();
+        
+        Boolean selVal = (Boolean)actShowRowNumbers.getValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY);
+        myopts.showRowNumbers = (selVal != null && selVal.booleanValue());
+        selVal = (Boolean)actAdjustColumns.getValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY);
+        myopts.adjustColumnWidths = (selVal != null && selVal.booleanValue());
+        myopts.toolbarConfig = ToolbarEditorDialog.saveConfigToString(toolbar);
+        
+        if (actAutoSizeStatus.isSelected()) {
+            myopts.statusBarSize = -1;
+        } else {
+            myopts.statusBarSize = statusSplitter.getHeight() - statusSplitter.getDividerLocation();
+        }
     }
     
     void showOrHideTrayIcon() {
@@ -1611,6 +1623,16 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         doLogout(false);
     }
     
+    private void saveTableColumnSettings() {
+        if (clientManager != null) { 
+            myopts.recvColState = getTableRecv().getColumnCfgString();
+            myopts.sentColState = getTableSent().getColumnCfgString();
+            myopts.sendingColState = getTableSending().getColumnCfgString();
+            if (tableArchive != null)
+                myopts.archiveColState = tableArchive.getColumnCfgString();
+        }
+    }
+    
     private void doLogout(boolean immediateReconnect) {
         try {
             log.fine("Logging out...");
@@ -1623,16 +1645,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 statRefresher.cancel();
             
             if (clientManager != null) {                
-                myopts.recvColState = getTableRecv().getColumnCfgString();
-                myopts.sentColState = getTableSent().getColumnCfgString();
-                myopts.sendingColState = getTableSending().getColumnCfgString();
-                if (tableArchive != null)
-                    myopts.archiveColState = tableArchive.getColumnCfgString();
-                
-                //myopts.recvReadState = recvTableModel.getStateString();
-//                if (tableRefresher != null && tableRefresher.didFirstRun ) {
-//                    recvTableModel.storeReadState(PersistentReadState.CURRENT);
-//                }
+                saveTableColumnSettings();
                 
                 recvTableModel.cleanupReadState();
                 
@@ -2797,28 +2810,36 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 return null;
             }
             
-            FmtItem[] filterCols;
-            switch (tableType) {
-            case RECEIVED:
-                filterCols = new FmtItem[] { RecvFormat.e, RecvFormat.f, RecvFormat.s, RecvFormat.i, RecvFormat.j, RecvFormat.o};
-                break;
-            case SENT:
-            case SENDING:
-                filterCols = new FmtItem[] { JobFormat.C, JobFormat.e, JobFormat.j, JobFormat.R, JobFormat.s, JobFormat.v, JobFormat.J, JobFormat.S, JobFormat.o};
-                break;
-            case ARCHIVE:
-                filterCols = new FmtItem[] { QueueFileFormat.company, QueueFileFormat.external, QueueFileFormat.jobid, QueueFileFormat.number, QueueFileFormat.receiver, QueueFileFormat.status, QueueFileFormat.jobtag, QueueFileFormat.sender, QueueFileFormat.owner };
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown table type");
-            }
-            List<? extends FmtItem> availableCols = getColumnsFor(tableType).getCompleteView();
+//            FmtItem[] filterCols;
+//            switch (tableType) {
+//            case RECEIVED:
+//                filterCols = new FmtItem[] { RecvFormat.e, RecvFormat.f, RecvFormat.s, RecvFormat.i, RecvFormat.j, RecvFormat.o, RecvFormat.Y, RecvFormat.Z};
+//                break;
+//            case SENT:
+//            case SENDING:
+//                filterCols = new FmtItem[] { JobFormat.C, JobFormat.e, JobFormat.j, JobFormat.R, JobFormat.s, JobFormat.v, JobFormat.J, JobFormat.S, JobFormat.o, JobFormat.Y, JobFormat.Z};
+//                break;
+//            case ARCHIVE:
+//                filterCols = new FmtItem[] { QueueFileFormat.company, QueueFileFormat.external, QueueFileFormat.jobid, QueueFileFormat.number, QueueFileFormat.receiver, QueueFileFormat.status, QueueFileFormat.jobtag, QueueFileFormat.sender, QueueFileFormat.owner, QueueFileFormat.tts };
+//                break;
+//            default:
+//                throw new IllegalArgumentException("Unknown table type");
+//            }
+//            List<? extends FmtItem> availableCols = getColumnsFor(tableType).getCompleteView();
+//            OrFilter rv = new OrFilter();
+//            
+//            for (FmtItem fi : filterCols) {
+//                if (availableCols.contains(fi)) {
+//                    rv.addChild(new StringFilter(fi, StringFilterOperator.CONTAINS, searchText, false));
+//                }
+//            }
+          
+            // Search on all visible columns
+            List<? extends FmtItem> availableCols = getColumnsFor(tableType);
             OrFilter rv = new OrFilter();
-            
-            for (FmtItem fi : filterCols) {
-                if (availableCols.contains(fi)) {
-                    rv.addChild(new StringFilter(fi, StringFilterOperator.CONTAINS, searchText, false));
-                }
+
+            for (FmtItem col : availableCols) {
+                rv.addChild(new StringFilter(col, StringFilterOperator.CONTAINS, searchText, false));
             }
             return rv;
         }

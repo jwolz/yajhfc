@@ -21,6 +21,7 @@ package yajhfc.faxcover;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -174,12 +175,86 @@ public abstract class Faxcover {
                         break;
                 }
                 bIn.close();
+            } else if (sig[0] == 'M' && sig[1] == 'M' && sig[2] == 0 && sig[3] == 42 ) {
+                // TIFF Big Endian
+                pages = countTIFFPages(psFile, false, sig);
+            } else if (sig[0] == 'I' && sig[1] == 'I' && sig[2] == 42 && sig[3] == 0 ) {
+                // TIFF Little Endian
+                pages = countTIFFPages(psFile, true, sig);
             }
         }        
         pageCount += pages;
         return pages;
     }
     
+    /**
+     * Count the number of TIFF pages by counting the number of IFDs
+     * @param inStream
+     * @param littleEndian
+     * @param buf a 4 byte buffer
+     * @return
+     * @throws IOException
+     */
+    private static int countTIFFPages(InputStream inStream, boolean littleEndian, byte[] buf) throws IOException {
+        int pages = 0;
+        // We assume that we are 4 bytes into the file here, so the next bytes are the first
+        // offset to the IFD
+        long pos = 4;
+        long offsetToIFD;
+        while ((offsetToIFD = readDWord(inStream, littleEndian, buf)) > 0) {
+            pos += 4; // 4 bytes have been read
+            
+            pages++;
+            
+            if (offsetToIFD-pos > 0) {
+                pos += inStream.skip(offsetToIFD-pos); // Skip to beginning of next IFD
+            }
+            int numEntries = readWord(inStream, littleEndian, buf); 
+            pos += 2;
+            pos += inStream.skip(12*numEntries); //Skip over tags
+        } 
+        return pages;
+    }
+    
+    private static int readWord(InputStream inStream, boolean littleEndian, byte[] buf) throws IOException {
+        return (int)readNByteInt(inStream, littleEndian, 2, buf);
+    }
+    
+    private static long readDWord(InputStream inStream, boolean littleEndian, byte[] buf) throws IOException {
+        return readNByteInt(inStream, littleEndian, 4, buf);
+    }
+    
+    /**
+     * Inefficient way to read n byte integers from a stream with varying endianness
+     * @param inStream
+     * @param littleEndian
+     * @param n
+     * @param buf a buffer at least n bytes long
+     * @return
+     * @throws IOException
+     */
+    private static long readNByteInt(InputStream inStream, boolean littleEndian, int n, byte[] buf) throws IOException {
+        int bytesToRead = n;
+        int byteRead;
+        do {
+            byteRead = inStream.read(buf, n-bytesToRead, bytesToRead);
+            if (byteRead < 0)
+                throw new IOException("Premature EOF found.");
+            bytesToRead -= byteRead;
+        } while (bytesToRead > 0);
+        
+        long rv = 0;
+        if (littleEndian) {
+            for (int i=n-1; i >=0; i--) {
+                rv = (rv << 8) | (buf[i] & 0xff);
+            }
+        } else {
+            for (int i=0; i < n; i++) {
+                rv = (rv << 8) | (buf[i] & 0xff);
+            }
+        }
+        return rv;
+    }
     
     private int arrIndexOf(byte[] arr, byte key, int offset) {
         for (int i = offset; i < arr.length; i++) {
@@ -259,10 +334,10 @@ public abstract class Faxcover {
         }
     }
     
-//    // Testing code:
-//    public static void main(String[] args) {
-//        System.out.println("Creating cover page...");
-//        Faxcover cov = new Faxcover();
+    // Testing code:
+    public static void main(String[] args) {
+        System.out.println("Creating cover page...");
+        Faxcover cov = new FaxcoverHyla(null);
 //        cov.coverTemplate = new File("yajhfc/faxcover/faxcover.ps");
 //        
 //        cov.comments = "foo\niniun iunuini uinini ninuin iuniuniu 9889hz h897h789 bnin uibiubui ubuib uibub ubiu bib bib ib uib i \nbar";
@@ -271,18 +346,19 @@ public abstract class Faxcover {
 //        cov.fromLocation = "Bardorf";
 //        cov.fromVoiceNumber = "515616";
 //        
-//        //cov.pageCount = 10;
-//        String[] docs = { "/home/jonas/mozilla.ps", "/home/jonas/nssg.pdf" };
-//        for (int i=0; i<docs.length; i++)
-//            try {
-//                System.out.println(docs[i] + " pages: " + cov.estimatePostscriptPages(new FileInputStream(docs[i])));
-//            } catch (FileNotFoundException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            } catch (IOException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
+        //cov.pageCount = 10;
+        String[] docs = { "/home/jonas/mozilla.ps", 
+                "/home/jonas/nssg.pdf", 
+                "/var/spool/hylafax/recvq/fax000000002.tif", 
+                "/var/spool/hylafax/recvq/fax000000004.tif",
+                "/var/spool/hylafax/recvq/fax000000005.tif"};
+        for (int i=0; i<docs.length; i++)
+            try {
+                System.out.println(docs[i] + " pages: " + cov.estimatePostscriptPages(new FileInputStream(docs[i])));
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
 //        
 //        cov.pageCount = 1;
 //        cov.pageLength = 297;
@@ -305,6 +381,6 @@ public abstract class Faxcover {
 //            // TODO Auto-generated catch block
 //            e.printStackTrace();
 //        }
-//    }
+    }
     
 }

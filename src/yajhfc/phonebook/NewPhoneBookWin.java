@@ -126,6 +126,8 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     
     TreeCellRenderer phoneBookRenderer = new PhoneBookRenderer();
     
+    boolean loadComplete = false;
+    
     private PhonebookPanel lastPanel;
     void writeToTextFields(PhoneBook phoneBook, List<PhoneBookEntry> pbs) {
         PhonebookPanel panel;
@@ -290,6 +292,11 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     }
     
     void closeAndSaveAllPhonebooks(final boolean disposeAfterClose) {
+        if (!loadComplete) {
+            if (disposeAfterClose)
+                dispose();
+            return;
+        }
         commitCurrentEdits();        
         
         log.fine("Closing all phone books...");
@@ -1215,6 +1222,8 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                         phoneBookTree.setSelectionRow(1);
                     }
                     progressMonitor.close();
+                    
+                    loadComplete = true;
                 }
             }
         }

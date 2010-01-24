@@ -59,6 +59,17 @@ public class PluginManager {
     private static final Logger log = Logger.getLogger(PluginManager.class.getName());
     
     /**
+     * A list of classes implementing a plugin's init interface that should
+     * be initialized just like a plug in at start up.
+     * This is used for plug ins integrated into the main tree or otherwise parts of
+     * the program that can be separated from the rest.
+     */
+    private static final Class<?>[] internalPlugins = {
+        yajhfc.printerport.EntryPoint.class        
+    };
+    
+    
+    /**
      * The text of the key used in the jar manifest to set the init class
      * <p>
      * NOTE: This class must contain a method "public static boolean init()".
@@ -245,9 +256,6 @@ public class PluginManager {
         }
     }
     
-    
-    
-    
     /**
      * Loads a YajHFC plugin from the specified jar file
      * @param pluginJar
@@ -271,15 +279,30 @@ public class PluginManager {
             }
             Class<?> initClass = Class.forName(initClassName, true, pluginClassLoader);
             
+            return initializePluginClass(pluginJar, initClass);
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Could not initialize plugin " + pluginJar + ":", e);
+            return false;
+        }
+    }
+
+    /**
+     * Initializes the plugin's init class
+     * @param pluginJar the jar file the class was loaded from or null for internal plugins
+     * @param initClass
+     * @return true if initialized successfully, false otherwise
+     */
+    private static boolean initializePluginClass(File pluginJar, Class<?> initClass) {
+        try {
             Method initMethod = initClass.getMethod("init", new Class[0]);
             Object returnValue = initMethod.invoke(null);
             if (!(returnValue instanceof Boolean && ((Boolean)returnValue).booleanValue())) {
-                log.log(Level.WARNING, "Initialization of plugin " + pluginJar + " failed." );
+                log.log(Level.WARNING, "Initialization of plugin class " + initClass + " (from " + pluginJar + ") failed." );
                 return false;
             }
             return true;
         } catch (Exception e) {
-            log.log(Level.WARNING, "Could not initialize plugin " + pluginJar + ":", e);
+            log.log(Level.WARNING, "Could not initialize plugin class " + initClass + " (from " + pluginJar + "):", e);
             return false;
         }
     }
@@ -365,8 +388,13 @@ public class PluginManager {
      * Loads all known plugins
      */
     public static void loadAllKnownPlugins() {
+        // First, load all internal plugins, then the external ones
+        for (Class <?> plugClass : internalPlugins) {
+            initializePluginClass(null, plugClass);
+        }
+        
         if (knownPlugins.size() == 0) 
-            return; // Nothing to do
+            return; // Nothing else to do
         if (pluginClassLoader != null)
             log.warning("In loadAllKnownPlugins(): Class loader already exists!");
         

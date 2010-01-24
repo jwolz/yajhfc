@@ -18,6 +18,8 @@
  */
 package yajhfc.filters;
 
+import java.text.Format;
+
 /**
  * @author jonas
  *
@@ -28,6 +30,15 @@ public interface FilterKey {
      * @return
      */
     public Class<?> getDataType();
+    
+    /**
+     * Returns a java.text.Format instance that is used to format this column's data 
+     * when the filter needs String data (to make sure a StringFilter filters on
+     * the same data a user would see).
+     * If the return value is null, each data value's toString() method is used instead.
+     * @return
+     */
+    public Format getFormat();
     
     /**
      * A unique name for this filter key which can be used for serializing it to a String

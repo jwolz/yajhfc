@@ -31,6 +31,16 @@ import yajhfc.options.PanelTreeNode;
  *
  */
 public abstract class PluginUI {
+    
+    /**
+     * The options panel should be put at the top level
+     */
+    public static final int OPTION_PANEL_ROOT = 0;
+    /**
+     * The options panel should be put under the advanced panel
+     */
+    public static final int OPTION_PANEL_ADVANCED = 1;
+    
     /**
      * Creates menu items shown in the options menu of MainWin. <br>
      * This method is called in the event dispatching thread when MainWin is constructed.
@@ -38,6 +48,14 @@ public abstract class PluginUI {
      */
     public JMenuItem[] createMenuItems() {
         return null;
+    }
+    
+    /**
+     * Returns below which panel the options panel should be put.
+     * @return one of the OPTION_PANEL constants
+     */
+    public int getOptionsPanelParent() {
+        return OPTION_PANEL_ROOT;
     }
     
     /**

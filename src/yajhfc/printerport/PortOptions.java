@@ -1,6 +1,6 @@
 /*
- * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005-2009 Jonas Wolz
+ * YajHFC - Yet another Java Hylafax client
+ * Copyright (C) 2009 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,23 +16,20 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package yajhfc.launch;
+package yajhfc.printerport;
 
-import java.awt.Frame;
+import yajhfc.AbstractFaxOptions;
 
-import yajhfc.HylaClientManager;
-import yajhfc.MainWin;
-
-/**
- * Interface for the main application frame
- * @author jonas
- *
- */
-public interface MainApplicationFrame {
-    public Frame getFrame();
-    public HylaClientManager getClientManager();
-    public void bringToFront();
-    public void dispose();
-    public MainWin.SendReadyState getSendReadyState();
-    public void saveWindowSettings();
+public class PortOptions extends AbstractFaxOptions {
+    public boolean enabled = false;
+    public int port = 19100;
+    public String bindAddress = "localhost";
+    
+    public boolean enableFIFO = false;
+    public String mkfifo = "mkfifo -m 0622";
+    public String fifoName = "/tmp/yajhfc-%u";
+    
+    public PortOptions() {
+        super("printerport");
+    }
 }

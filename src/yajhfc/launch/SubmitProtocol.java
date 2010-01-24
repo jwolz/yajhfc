@@ -37,8 +37,9 @@ public interface SubmitProtocol {
     /**
      * Sets the input stream for the fax
      * @param stream
+     * @param sourceText a textual description of the stream for user display (may be null)
      */
-    void setInputStream(InputStream stream) throws IOException;
+    void setInputStream(InputStream stream, String sourceText) throws IOException;
     
     /**
      * Adds recipients to use

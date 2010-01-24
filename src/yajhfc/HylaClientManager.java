@@ -108,7 +108,7 @@ public class HylaClientManager {
         }
         if (client == null) {
             if (userName == null) {
-                String[] pwd = PasswordDialog.showPasswordDialogThreaded(owner, Utils._("Log in"), Utils._("Please enter the credentials to log into the HylaFAX server:"), myopts.user, true);
+                String[] pwd = PasswordDialog.showPasswordDialog(owner, Utils._("Log in"), Utils._("Please enter the credentials to log into the HylaFAX server:"), myopts.user, true, true);
                 if (pwd == null) {
                     return null;
                 }
@@ -130,7 +130,7 @@ public class HylaClientManager {
                     while (client.user(userName)) {                
                         if (password == null) {
 
-                            String[] pwd = PasswordDialog.showPasswordDialogThreaded(owner, Utils._("User password"), Utils._("Please enter the user password:"), userName, false);
+                            String[] pwd = PasswordDialog.showPasswordDialog(owner, Utils._("User password"), Utils._("Please enter the user password:"), userName, false, false);
                             if (pwd == null) { // User cancelled
                                 client.quit();
                                 //doErrorCleanup(); // TODO
@@ -156,7 +156,7 @@ public class HylaClientManager {
                         boolean authOK = false;
                         if (adminPassword == null) {
                             do {
-                                String[] pwd = PasswordDialog.showPasswordDialogThreaded(owner, Utils._("Admin password"), Utils._("Please enter the administrative password:"), userName, false);
+                                String[] pwd = PasswordDialog.showPasswordDialog(owner, Utils._("Admin password"), Utils._("Please enter the administrative password:"), userName, false, false);
                                 if (pwd == null) { // User cancelled
                                     break; //Continue in "normal" mode
                                 } else

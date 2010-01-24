@@ -110,7 +110,9 @@ public class SendFileManager {
         MessageFormat format = new MessageFormat(Utils._("Converting {0}"));
         for (HylaTFLItem item : files) {
             toUpdate.updateNote(format.format(new Object[] {Utils.shortenFileNameForDisplay(item.getText(), FILE_DISPLAY_LEN)}));
-            ffs.add(item.getPreviewFilename(hyfc));
+            FormattedFile ff = item.getPreviewFilename(hyfc);
+            if (ff != null) // Only add valid files
+                ffs.add(ff);
             toUpdate.stepProgressBar(10);
         }
         

@@ -18,6 +18,7 @@
  */
 package yajhfc.phonebook;
 
+import java.text.Format;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -80,6 +81,10 @@ public enum PBEntryField implements FilterKey {
     
     public Class<?> getDataType() {
         return String.class;
+    }
+    
+    public Format getFormat() {
+        return null;
     }
     
     /**

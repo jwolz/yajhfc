@@ -127,7 +127,7 @@ sessionLoop:    do {
                         case Lock.CODE_SUBMIT_STREAM:
                             wait = strIn.readBoolean();
                             if (opcode == Lock.CODE_SUBMIT_STREAM) {
-                                submitProto.setInputStream(strIn);
+                                submitProto.setInputStream(strIn, null);
                             }
                             response = waitSubmitOK();
                             

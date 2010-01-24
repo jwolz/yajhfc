@@ -514,6 +514,11 @@ public class FaxOptions extends AbstractFaxOptions {
     public final Map<String,String> customJobOptions = new TreeMap<String,String>();
     
     /**
+     * Characters to filter out from the fax number.
+     */
+    public String filterFromFaxNr = "-/()[]{}";
+    
+    /**
      * Try to use an alternate shutdown method on Windows to work around a Java bug.
      */
     public boolean useWin32ShutdownManager = true;

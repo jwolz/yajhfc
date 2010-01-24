@@ -18,6 +18,9 @@
  */
 package yajhfc.filters;
 
+import java.text.FieldPosition;
+import java.text.Format;
+
 /**
  * @author jonas
  *
@@ -27,6 +30,15 @@ public class ConcatStringFilter<V extends FilterableObject, K extends FilterKey>
     protected Object[] concatVals;
     protected Object[] resolvedConcatVals;
     protected Class<K> keyClass;
+    
+    protected StringBuffer concatBuffer = new StringBuffer();
+    private FieldPosition dummyFieldPos;
+    protected FieldPosition getDummyFieldPos() {
+        if (dummyFieldPos == null) {
+            dummyFieldPos = new FieldPosition(0);
+        }
+        return dummyFieldPos;
+    }
     
     /**
      * Creates a new ConcatStringFilter. When a match is performed the objects specified
@@ -59,16 +71,25 @@ public class ConcatStringFilter<V extends FilterableObject, K extends FilterKey>
     }
 
     public boolean matchesFilter(V filterObj) {
-        StringBuilder matchValue = new StringBuilder();
+        concatBuffer.setLength(0);
         for (int i=0; i < resolvedConcatVals.length; i++) {
+            Object key = concatVals[i];
             Object resolvedKey = resolvedConcatVals[i];
             if (resolvedKey == null) {
-                matchValue.append(concatVals[i]);
+                concatBuffer.append(key);
             } else {
-                matchValue.append(filterObj.getFilterData(resolvedKey));
+                Object v = filterObj.getFilterData(resolvedKey);
+                if (v != null) {
+                    Format colFormat = ((FilterKey)key).getFormat();
+                    if (colFormat == null) {
+                        concatBuffer.append(v);
+                    } else {
+                        colFormat.format(v, concatBuffer, getDummyFieldPos());
+                    }
+                } // else append nothing...
             }
         }
-        return doActualMatch(matchValue.toString());
+        return doActualMatch(concatBuffer.toString());
     }
 
     @SuppressWarnings("unchecked")

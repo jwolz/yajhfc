@@ -143,7 +143,7 @@ public class Lock implements SubmitProtocol {
         checkResponse();
     }
 
-    public void setInputStream(InputStream stream) {
+    public void setInputStream(InputStream stream, String streamSource) {
         if (Utils.debugMode) {
             log.finer("setInputStream: " + stream);
         }

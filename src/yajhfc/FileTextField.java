@@ -36,14 +36,15 @@ import yajhfc.util.SafeJFileChooser;
 //Text field with Button and FileChooser
 public class FileTextField extends JComponent implements ActionListener {
     
-    private JTextField jTextField;
-    private JButton jButton;
+    protected JTextField jTextField;
+    protected JButton jButton;
     private JFileChooser fileChooser;
-    private FileFilter[] fileFilters;
-    private int fileSelectionMode = JFileChooser.FILES_ONLY;
-    private File currentDirectory = null;
+    protected FileFilter[] fileFilters;
+    private boolean filtersChanged = true;
+    protected int fileSelectionMode = JFileChooser.FILES_ONLY;
+    protected File currentDirectory = null;
     
-    private JFileChooser getFileChooser() {
+    protected JFileChooser getFileChooser() {
         if (fileChooser == null) {
             fileChooser = new SafeJFileChooser();
         }
@@ -53,7 +54,20 @@ public class FileTextField extends JComponent implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         JFileChooser jFileChooser = getFileChooser();
 
-        if (fileFilters != null && fileFilters.length > 0) {
+        configureFileChooser(jFileChooser);
+        if (currentDirectory != null) {
+            jFileChooser.setCurrentDirectory(currentDirectory);
+        }
+        
+        jFileChooser.setSelectedFile(new File(readTextFieldFileName()));
+        if (jFileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            currentDirectory = jFileChooser.getCurrentDirectory();
+            handleUserSelection(jFileChooser);
+        }
+    }
+
+    protected void configureFileChooser(JFileChooser jFileChooser) {
+        if (fileFilters != null && fileFilters.length > 0 && filtersChanged) {
             // Apply file filters:
             jFileChooser.resetChoosableFileFilters();
 
@@ -64,18 +78,14 @@ public class FileTextField extends JComponent implements ActionListener {
             jFileChooser.removeChoosableFileFilter(allf);
             jFileChooser.addChoosableFileFilter(allf);
             jFileChooser.setFileFilter(fileFilters[0]);
+            filtersChanged = false;
         }
         
         jFileChooser.setFileSelectionMode(fileSelectionMode);
-        if (currentDirectory != null) {
-            jFileChooser.setCurrentDirectory(currentDirectory);
-        }
-        
-        jFileChooser.setSelectedFile(new File(readTextFieldFileName()));
-        if (jFileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            currentDirectory = jFileChooser.getCurrentDirectory();
-            writeTextFieldFileName(jFileChooser.getSelectedFile().getPath());
-        }
+    }
+
+    protected void handleUserSelection(JFileChooser jFileChooser) {
+        writeTextFieldFileName(jFileChooser.getSelectedFile().getPath());
     }
     
     protected String readTextFieldFileName() {
@@ -136,6 +146,7 @@ public class FileTextField extends JComponent implements ActionListener {
      */
     public void setFileFilters(FileFilter... filters) {
         fileFilters = filters;
+        filtersChanged = true;
     }
     
     public FileTextField() {

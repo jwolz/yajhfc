@@ -48,6 +48,7 @@ public class SendWinSubmitProtocol implements SubmitProtocol, Runnable {
     protected final List<String> recipients = new ArrayList<String>();
     protected final List<String> files = new ArrayList<String>();
     protected InputStream inStream;
+    protected String streamDesc = null;
     protected StreamTFLItem tflInStream;
     
     protected boolean preparedSubmit = false;
@@ -76,11 +77,10 @@ public class SendWinSubmitProtocol implements SubmitProtocol, Runnable {
         this.files.addAll(fileNames);
     }
 
-    /* (non-Javadoc)
-     * @see yajhfc.launch.SubmitProtocol#setInputStream(java.io.InputStream)
-     */
-    public void setInputStream(InputStream stream) {
+    
+    public void setInputStream(InputStream stream, String sourceText) {
         this.inStream = stream;
+        this.streamDesc = sourceText;
     }
 
     /* (non-Javadoc)
@@ -109,7 +109,7 @@ public class SendWinSubmitProtocol implements SubmitProtocol, Runnable {
             return;
 
         if (inStream != null)
-            tflInStream = new StreamTFLItem(inStream);
+            tflInStream = new StreamTFLItem(inStream, streamDesc);
         preparedSubmit = true;
     }
 

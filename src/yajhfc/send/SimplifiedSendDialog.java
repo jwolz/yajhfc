@@ -329,10 +329,24 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         
         ftfFileName = new FileTextField() {
             @Override
-            protected void writeTextFieldFileName(String fName) {
-                super.writeTextFieldFileName(fName);
-                tflFiles.addListItem(fName);
-                Utils.getFaxOptions().lastSendWinPath = getCurrentDirectory().getPath();
+            protected void configureFileChooser(JFileChooser fileChooser) {
+                super.configureFileChooser(fileChooser);
+                fileChooser.setMultiSelectionEnabled(true);
+            }
+            
+            @Override
+            protected void handleUserSelection(JFileChooser fileChooser) {
+                File[] selection = fileChooser.getSelectedFiles();
+                for (File f : selection) {
+                    tflFiles.addListItem(f.getPath()); 
+                }
+                Utils.getFaxOptions().lastSendWinPath = fileChooser.getCurrentDirectory().getPath();
+                
+                if (selection.length == 1) {
+                    writeTextFieldFileName(selection[0].getPath());
+                } else {
+                    writeTextFieldFileName("");
+                }
             }
         };
         ftfFileName.setFileFilters(FormattedFile.getConvertableFileFilters()); 

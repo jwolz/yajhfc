@@ -152,6 +152,10 @@ public class NoGUISender extends JFrame implements ProgressUI, MainApplicationFr
         progressBar.setMaximum(progress);
     }
     
+    public void saveWindowSettings() {
+        // Do nothing
+    }
+    
     public static void startUpWithoutUI(CommandLineOpts opts) {
         if (opts.recipients.size() == 0) {
             System.err.println("In no GUI mode you have to specify at least one recipient.");
@@ -192,7 +196,7 @@ public class NoGUISender extends JFrame implements ProgressUI, MainApplicationFr
             if (opts.comment != null)
                 sendController.setComments(opts.comment);
             if (opts.useStdin) {
-                sendController.getFiles().add(new StreamTFLItem(System.in));
+                sendController.getFiles().add(new StreamTFLItem(System.in, null));
             }
             for (String file : opts.fileNames) {
                 sendController.getFiles().add(new LocalFileTFLItem(file));

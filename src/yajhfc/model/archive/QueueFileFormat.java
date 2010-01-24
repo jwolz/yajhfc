@@ -21,6 +21,7 @@ package yajhfc.model.archive;
 import static yajhfc.Utils._;
 
 import java.text.DateFormat;
+import java.text.Format;
 import java.util.Date;
 
 import yajhfc.DateKind;
@@ -117,6 +118,13 @@ public enum QueueFileFormat implements FmtItem {
         }
         public DateFormat getDisplayDateFormat() {
             return DateKind.getInstanceFromKind(displayDateFormat);
+        }
+        public Format getFormat() {
+            if (dataType == Date.class) {
+                return getDisplayDateFormat();
+            } else {
+                return null;
+            }
         }
         
         private QueueFileFormat(String hylaFmt, String description,

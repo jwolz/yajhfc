@@ -84,14 +84,16 @@ public class StreamTFLItem extends HylaTFLItem {
         throw new IllegalArgumentException("StreamTFLItem is immutable!");
     }
     
+
     /**
      * Creates a new StreamTFLItem by copying the specified stream to a temporary
      * file.
      * @param inStream
+     * @param streamSource textual description of stream source for user display or null for a default text
      * @throws IOException
      * @throws FileNotFoundException
      */
-    public StreamTFLItem(InputStream inStream) throws IOException, FileNotFoundException {
+    public StreamTFLItem(InputStream inStream, String streamSource) throws IOException, FileNotFoundException {
         File tmp;
         // Copy input stream to a temporary file:
         tmp = File.createTempFile("submit", ".ps");
@@ -101,7 +103,9 @@ public class StreamTFLItem extends HylaTFLItem {
         fOut.close();
         
         tempFile = new FormattedFile(tmp);
-        text = Utils._("<stdin>") + " – " + DateKind.TIME_ONLY.getFormat().format(new Date());
+        if (streamSource == null)
+            streamSource = Utils._("<stdin>");
+        text = streamSource + " – " + DateKind.TIME_ONLY.getFormat().format(new Date());
     }
     
 }
