@@ -143,7 +143,7 @@ public class OptionsWin extends JDialog {
     JPanel panelServer, panelSend, panelPaths, panelUI, panelDateFormat;
     
     JPanel panelServerRetrieval, panelNewFaxAction;
-    JCheckBox checkNewFax_Beep, checkNewFax_ToFront, checkNewFax_Open, checkNewFax_MarkAsRead, checkNewFax_BlinkTrayIcon;
+    JCheckBox checkNewFax_Beep, checkNewFax_ToFront, checkNewFax_Open, checkNewFax_MarkAsRead, checkNewFax_BlinkTrayIcon, checkNewFax_TrayNotification;
     JSpinner spinStatusInterval, spinTableInterval;
     
     Action jobOptionAction;
@@ -262,6 +262,7 @@ public class OptionsWin extends JDialog {
         checkNewFax_Open.setSelected((foEdit.newFaxAction & FaxOptions.NEWFAX_VIEWER) != 0);
         checkNewFax_MarkAsRead.setSelected((foEdit.newFaxAction & FaxOptions.NEWFAX_MARKASREAD) != 0);
         checkNewFax_BlinkTrayIcon.setSelected((foEdit.newFaxAction & FaxOptions.NEWFAX_BLINKTRAYICON) != 0);
+        checkNewFax_TrayNotification.setSelected(foEdit.newFaxTrayNotification);
 
         spinMaxDial.setValue(Integer.valueOf(foEdit.maxDial));
         spinMaxTry.setValue(Integer.valueOf(foEdit.maxTry));
@@ -744,7 +745,7 @@ public class OptionsWin extends JDialog {
     
     private JPanel getPanelNewFaxAction() {
         if (panelNewFaxAction == null) {
-            final int rowCount = 7;
+            final int rowCount = 8;
             double[][] tablelay = {
                     {border, 4*border, TableLayout.FILL, border},
                     new double[rowCount]
@@ -769,12 +770,14 @@ public class OptionsWin extends JDialog {
             checkNewFax_MarkAsRead = new JCheckBox(_("And mark as read"));
             checkNewFax_MarkAsRead.setEnabled(false);
             checkNewFax_BlinkTrayIcon = new JCheckBox(_("Show flashing tray icon"));
+            checkNewFax_TrayNotification = new JCheckBox(_("Display tray icon message"));
             
             panelNewFaxAction.add(checkNewFax_Beep, "1,1,2,1");
             panelNewFaxAction.add(checkNewFax_ToFront, "1,2,2,2");
             panelNewFaxAction.add(checkNewFax_Open, "1,3,2,3");
             panelNewFaxAction.add(checkNewFax_MarkAsRead, "2,4");
             panelNewFaxAction.add(checkNewFax_BlinkTrayIcon, "1,5,2,5");
+            panelNewFaxAction.add(checkNewFax_TrayNotification, "1,6,2,6");
         }
         return panelNewFaxAction;
     }
@@ -1114,6 +1117,7 @@ public class OptionsWin extends JDialog {
             if (checkNewFax_BlinkTrayIcon.isSelected())
                 val |= FaxOptions.NEWFAX_BLINKTRAYICON;
             foEdit.newFaxAction = val;
+            foEdit.newFaxTrayNotification = checkNewFax_TrayNotification.isSelected();
             
             foEdit.recvfmt.clear();
             foEdit.recvfmt.addAll(recvfmt);

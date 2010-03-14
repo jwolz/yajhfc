@@ -54,6 +54,7 @@ public class Lock implements SubmitProtocol {
     final static int CODE_USE_COVER = 8;
     final static int CODE_SET_SUBJECT = 9;
     final static int CODE_SET_COMMENT = 10;
+    final static int CODE_SET_MODEM = 11;
     
     public final static int RESPONSE_OK = 0;
     public final static int RESPONSE_NOT_CONNECTED = 10;
@@ -160,6 +161,16 @@ public class Lock implements SubmitProtocol {
         checkResponse();
     }
 
+    public void setModem(String modem) throws IOException {
+        if (Utils.debugMode) {
+            log.finer("setModem: " + modem);
+        }
+        outStream.write(CODE_SET_MODEM);
+        outStream.writeUTF(modem);
+        outStream.flush();
+        checkResponse();
+    }
+    
     /**
      * Bring the old instance to front
      * @throws IOException 

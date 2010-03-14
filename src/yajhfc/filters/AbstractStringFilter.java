@@ -59,6 +59,8 @@ public abstract class AbstractStringFilter<V extends FilterableObject, K extends
             return !value.equals(compareValue);
         case CONTAINS:
             return value.contains((String)compareValue);
+        case CONTAINS_NOT:
+            return !value.contains((String)compareValue);
         case STARTSWITH:
             return value.startsWith((String)compareValue);
         case ENDSWITH:
@@ -77,6 +79,10 @@ public abstract class AbstractStringFilter<V extends FilterableObject, K extends
     
     public StringFilterOperator getOperator() {
         return operator;
+    }
+    
+    public boolean isCaseSensitive() {
+        return caseSensitive;
     }
     
     @Override

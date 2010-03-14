@@ -106,6 +106,10 @@ public class CommandLineOpts { //IMPORTANT!: Do not use Utils here!
      */
     public String comment = null;
     /**
+     * Modem to use. Communicated over socket.
+     */
+    public String modem = null;
+    /**
      * Wait for submit to complete. Communicated over socket.
      */
     public boolean noWait = false;
@@ -133,6 +137,7 @@ public class CommandLineOpts { //IMPORTANT!: Do not use Utils here!
                 new LongOpt("use-cover", LongOpt.OPTIONAL_ARGUMENT, null, 'C'),
                 new LongOpt("subject", LongOpt.REQUIRED_ARGUMENT, null, 's'),
                 new LongOpt("comment", LongOpt.REQUIRED_ARGUMENT, null, 9),
+                new LongOpt("modem", LongOpt.REQUIRED_ARGUMENT, null, 'M'),
                 new LongOpt("stdin", LongOpt.NO_ARGUMENT, null, 1),
                 new LongOpt("admin", LongOpt.NO_ARGUMENT, null, 'A'),
                 new LongOpt("debug", LongOpt.NO_ARGUMENT, null, 'd'),
@@ -153,7 +158,7 @@ public class CommandLineOpts { //IMPORTANT!: Do not use Utils here!
         };
         final String[] argsWork = args.clone();
         
-        Getopt getopt = new Getopt("yajhfc", argsWork, "h::Adc:r:T:l:C::s:", longOpts);
+        Getopt getopt = new Getopt("yajhfc", argsWork, "h::Adc:r:T:l:C::s:M:", longOpts);
         int opt;
         while ((opt = getopt.getopt()) != -1) {
             switch (opt) {
@@ -276,6 +281,9 @@ public class CommandLineOpts { //IMPORTANT!: Do not use Utils here!
                     }
                     break;
                 }
+            case 'M': // modem
+                modem = getopt.getOptarg();
+                break;
             case '?':
                 break;
             default:

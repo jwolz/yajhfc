@@ -21,22 +21,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class AndFilter<V extends FilterableObject, K extends FilterKey> implements Filter<V, K> {
+public class AndFilter<V extends FilterableObject, K extends FilterKey> implements Filter<V, K>, CombinationFilter<V, K> {
 
     protected ArrayList<Filter<V, K> > children = new ArrayList<Filter<V, K> >();
    
+    /* (non-Javadoc)
+     * @see yajhfc.filters.CombinationFilter#addChild(yajhfc.filters.Filter)
+     */
     public void addChild(Filter<V, K>  child) {
         children.add(child);
     }
     
+    /* (non-Javadoc)
+     * @see yajhfc.filters.CombinationFilter#childCount()
+     */
     public int childCount() {
         return children.size();
     }
     
+    /* (non-Javadoc)
+     * @see yajhfc.filters.CombinationFilter#getChild(int)
+     */
     public Filter<V, K>  getChild(int index) {
         return children.get(index);
     }
     
+    /* (non-Javadoc)
+     * @see yajhfc.filters.CombinationFilter#getChildList()
+     */
     public List<Filter<V, K> > getChildList() {
         return children;
     }

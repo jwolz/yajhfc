@@ -145,6 +145,10 @@ public abstract class AbstractQuickSearchHelper implements DocumentListener, Act
     }
     
     public JToolBar getQuickSearchBar(Action searchAction, String quickSearchTooltip, String resetTooltip) {
+        return getQuickSearchBar(quickSearchTooltip, resetTooltip, searchAction);
+    }
+    
+    public JToolBar getQuickSearchBar(String quickSearchTooltip, String resetTooltip, Action... additionalActions) {
         if (quickSearchBar == null) {
             quickSearchBar = new JToolBar();
             
@@ -168,9 +172,11 @@ public abstract class AbstractQuickSearchHelper implements DocumentListener, Act
             quickSearchBar.add(new JLabel(Utils._("Search") + ": "));
             quickSearchBar.add(textQuickSearch);
             quickSearchBar.add(clearQuickSearchButton);
-            if (searchAction != null) {
+            if (additionalActions != null && additionalActions.length > 0) {
                 quickSearchBar.addSeparator();
-                quickSearchBar.add(searchAction);
+                for (Action act : additionalActions) {
+                    quickSearchBar.add(act);
+                }
             }
         }
         return quickSearchBar;

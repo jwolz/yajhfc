@@ -46,6 +46,7 @@ import yajhfc.plugin.PluginManager;
 import yajhfc.plugin.PluginManager.PluginInfo;
 import yajhfc.readstate.PersistentReadState;
 import yajhfc.shutdown.ShutdownManager;
+import yajhfc.splashscreen.YJSplashScreen;
 import yajhfc.util.ExternalProcessExecutor;
 
 /**
@@ -234,6 +235,8 @@ public class Launcher2 {
             
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
+                    Utils.setLookAndFeel(Utils.getFaxOptions().lookAndFeel);
+                    
                     NoGUISender dummyFrame = new NoGUISender();
                     dummyFrame.clientManager = new HylaClientManager(Utils.getFaxOptions());
                     Launcher2.application = dummyFrame;
@@ -291,6 +294,9 @@ public class Launcher2 {
         }
         if (opts.comment != null) {
             sp.setComments(opts.comment);
+        }
+        if (opts.modem != null) {
+            sp.setModem(opts.modem);
         }
     }
     
@@ -481,6 +487,14 @@ public class Launcher2 {
             mainWin.reconnectToServer(loginRunner);
             if (selectedTab >= 0) {
                 mainWin.setSelectedTab(selectedTab);
+            }
+            YJSplashScreen splash = YJSplashScreen.getSplashScreen();
+            if (splash != null && splash.isVisible()) {
+                try {
+                    splash.close();
+                } catch (IllegalStateException e) {
+                    // Ignore errors here...
+                }
             }
         }   
         

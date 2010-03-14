@@ -25,12 +25,14 @@ import gnu.hylafax.Job;
  *
  */
 public enum FaxResolution {
-    HIGH(Utils._("High (196 lpi)"), Job.RESOLUTION_MEDIUM),
-    LOW(Utils._("Low (98 lpi)"), Job.RESOLUTION_LOW)   
+    EXTENDED(Utils._("Extended (> 196 lpi)"), Job.RESOLUTION_MEDIUM, true),
+    HIGH(Utils._("High (196 lpi)"), Job.RESOLUTION_MEDIUM, false),
+    LOW(Utils._("Low (98 lpi)"), Job.RESOLUTION_LOW, false)   
     ;
     
     private final String text;
     private final int resolution;
+    private final boolean useXVRes;
     
     public String getText() {
         return text;
@@ -40,14 +42,19 @@ public enum FaxResolution {
         return resolution;
     }
     
+    public boolean useXVRes() {
+        return useXVRes;
+    }
+    
     @Override
     public String toString() {
         return text;
     }
 
-    private FaxResolution(String text, int resolution) {
+    private FaxResolution(String text, int resolution, boolean useXVRes) {
         this.text = text;
         this.resolution = resolution;
+        this.useXVRes = useXVRes;
     }
 
 }

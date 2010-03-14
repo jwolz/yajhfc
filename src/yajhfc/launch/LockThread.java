@@ -92,6 +92,7 @@ sessionLoop:    do {
                         responseMsg = "OK";
                         switch (opcode = strIn.read()) {
                         case Lock.CODE_ADD_FILES:
+                            log.fine("Got CODE_ADD_FILES");
                             tempList.clear();
                             size = strIn.readInt();
                             for (int i = 0; i < size; i++) {
@@ -100,6 +101,7 @@ sessionLoop:    do {
                             submitProto.addFiles(tempList);
                             break;
                         case Lock.CODE_ADD_RECIPIENTS:
+                            log.fine("Got CODE_ADD_RECIPIENTS");
                             tempList.clear();
                             size = strIn.readInt();
                             for (int i = 0; i < size; i++) {
@@ -108,6 +110,7 @@ sessionLoop:    do {
                             submitProto.addRecipients(tempList);
                             break;
                         case Lock.CODE_BRING_TO_FRONT:
+                            log.fine("Got CODE_BRING_TO_FRONT");
                             SwingUtilities.invokeLater(new Runnable() {
                                 public void run() {
                                     Launcher2.application.bringToFront();
@@ -115,19 +118,29 @@ sessionLoop:    do {
                             });
                             break;
                         case Lock.CODE_SET_COMMENT:
+                            log.fine("Got CODE_SET_COMMENT");
                             submitProto.setComments(strIn.readUTF());
                             break;
                         case Lock.CODE_SET_SUBJECT:
+                            log.fine("Got CODE_SET_SUBJECT");
                             submitProto.setSubject(strIn.readUTF());
                             break;
                         case Lock.CODE_USE_COVER:
+                            log.fine("Got CODE_USE_COVER");
                             submitProto.setCover(strIn.readBoolean());
+                            break;
+                        case Lock.CODE_SET_MODEM:
+                            log.fine("Got CODE_SET_MODEM");
+                            submitProto.setModem(strIn.readUTF());
                             break;
                         case Lock.CODE_SUBMIT:
                         case Lock.CODE_SUBMIT_STREAM:
                             wait = strIn.readBoolean();
                             if (opcode == Lock.CODE_SUBMIT_STREAM) {
+                                log.fine("Got CODE_SUBMIT_STREAM");
                                 submitProto.setInputStream(strIn, null);
+                            } else {
+                                log.fine("Got CODE_SUBMIT");
                             }
                             response = waitSubmitOK();
                             
@@ -136,15 +149,21 @@ sessionLoop:    do {
                             }
                             break;
                         case -1: // Stream closed...
+                            log.fine("Stream closed.");
                             break sessionLoop;
                         default:
+                            log.fine("Got unkown opcode: " + opcode);
                             response = Lock.RESPONSE_UNKNOWN_OPCODE;
                             responseMsg = "Unknown opcode " + opcode;
                             break;
                         }
                     } catch (Exception e) {
+                        log.log(Level.WARNING, "Got exception: ", e);
                         response = Lock.RESPONSE_GOT_EXCEPTION;
                         responseMsg = e.toString();
+                    }
+                    if (Utils.debugMode) {
+                        log.fine("Write response " + response + "; msg: " + responseMsg);
                     }
                     strOut.write(response);
                     strOut.writeUTF(responseMsg);

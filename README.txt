@@ -66,6 +66,15 @@ YajHFC was originally written as a first more complicated
 CHANGES
 -------
 
+0.4.3:
+- Tray notification message can be turned off
+- Filters for Phone book items
+- "Extended resolution" support (i.e. USEXVRES=yes)
+- New command line parameter: --modem
+- Support for TCP/IP and named pipe virtual printer port
+- Support for default/override configuration in /etc/yajhfc
+- Several bug fixes
+
 0.4.2a:
 Fix for a bug which caused settings not being saved when no old settings file exists.
 

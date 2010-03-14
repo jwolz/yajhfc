@@ -99,10 +99,12 @@ public class DistributionListPhonebookPanel extends PhonebookPanel {
         entryTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()) {
-                    int[] selIndices = entryTable.getSelectedRows();
-                    selectedRows.clear();
-                    for (int idx : selIndices) {
-                        selectedRows.add(listToEdit.getEntries().get(idx));
+                    if (listToEdit != null) {
+                        int[] selIndices = entryTable.getSelectedRows();
+                        selectedRows.clear();
+                        for (int idx : selIndices) {
+                            selectedRows.add(listToEdit.getEntries().get(idx));
+                        }
                     }
                     checkEnable();
                 }

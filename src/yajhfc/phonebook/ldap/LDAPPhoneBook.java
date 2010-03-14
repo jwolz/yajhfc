@@ -35,7 +35,7 @@ import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
 import yajhfc.Utils;
-import yajhfc.filters.AndFilter;
+import yajhfc.filters.CombinationFilter;
 import yajhfc.filters.ConcatStringFilter;
 import yajhfc.filters.Filter;
 import yajhfc.filters.OrFilter;
@@ -209,22 +209,22 @@ public class LDAPPhoneBook extends PhoneBook {
     
     protected static final Pattern tokenSplitter = Pattern.compile("(\\s|[,;])+");
     protected void appendLDAPSearchForFilter(StringBuilder appendTo, Filter<PhoneBookEntry,PBEntryField> filter) {
-        if (filter instanceof AndFilter) { 
-            AndFilter<PhoneBookEntry, PBEntryField> andFilter = (AndFilter<PhoneBookEntry, PBEntryField>)filter;
+        if (filter instanceof CombinationFilter<?,?>) { 
+            CombinationFilter<PhoneBookEntry, PBEntryField> andFilter = (CombinationFilter<PhoneBookEntry, PBEntryField>)filter;
             appendTo.append('(');
-            if (filter instanceof OrFilter) {
+            if (filter instanceof OrFilter<?,?>) {
                 appendTo.append('|');
-            } else { // "plain" AndFilter
+            } else { // else assume "plain" AndFilter
                 appendTo.append('&');
             }
             for (Filter<PhoneBookEntry, PBEntryField> child : andFilter.getChildList()) {
                 appendLDAPSearchForFilter(appendTo, child);
             }
             appendTo.append(')');
-        } else if (filter instanceof StringFilter) {
+        } else if (filter instanceof StringFilter<?,?>) {
             StringFilter<PhoneBookEntry, PBEntryField> strFilter = (StringFilter<PhoneBookEntry, PBEntryField>)filter;
             appendStringFilter(appendTo, strFilter.getColumn(), strFilter.getOperator(), strFilter.getCompareValue().toString());
-        } else if (filter instanceof ConcatStringFilter) {
+        } else if (filter instanceof ConcatStringFilter<?,?>) {
             ConcatStringFilter<PhoneBookEntry, PBEntryField> strFilter = (ConcatStringFilter<PhoneBookEntry, PBEntryField>)filter;
             String[] tokens = tokenSplitter.split(strFilter.getCompareValue().toString());
             if (tokens.length > 1) {
@@ -260,6 +260,15 @@ public class LDAPPhoneBook extends PhoneBook {
                 appendTo.append("=*");
                 appendEscaped(appendTo, compVal);
                 appendTo.append('*');
+                break;
+            case CONTAINS_NOT:
+                appendTo.append("!(");
+                // Same as CONTAINS, only inverted
+                appendTo.append(mapping);
+                appendTo.append("=*");
+                appendEscaped(appendTo, compVal);
+                appendTo.append('*');
+                appendTo.append(')');
                 break;
             case ENDSWITH:
                 appendTo.append(mapping);

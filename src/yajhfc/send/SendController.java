@@ -41,7 +41,9 @@ import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
+import yajhfc.FaxNotification;
 import yajhfc.FaxOptions;
+import yajhfc.FaxResolution;
 import yajhfc.HylaClientManager;
 import yajhfc.HylaModem;
 import yajhfc.PaperSize;
@@ -77,8 +79,8 @@ public class SendController {
     protected File customCover = null;
     
     protected int maxTries = Utils.getFaxOptions().maxTry;
-    protected String notificationType = Utils.getFaxOptions().notifyWhen.getType();
-    protected int resolution = Utils.getFaxOptions().resolution.getResolution();
+    protected FaxNotification notificationType = Utils.getFaxOptions().notifyWhen;
+    protected FaxResolution resolution = Utils.getFaxOptions().resolution;
     protected int killTime = Utils.getFaxOptions().killTime;
     // null = "NOW"
     protected Date sendTime = null;
@@ -354,9 +356,10 @@ public class SendController {
                             j.setDialstring(faxNumber);
                             //j.setProperty("EXTERNAL", faxNumber); // needed to fix an error while sending multiple jobs
                             j.setMaximumTries(maxTries);
-                            j.setNotifyType(notificationType);
+                            j.setNotifyType(notificationType.getType());
                             j.setPageDimension(paperSize.getSize());
-                            j.setVerticalResolution(resolution);
+                            j.setVerticalResolution(resolution.getResolution());
+                            j.setProperty("USEXVRES", resolution.useXVRes() ? "YES" : "NO");
                             if (sendTime == null || (sendTime.getTime() - 10000) < System.currentTimeMillis()) {
                                 j.setSendTime("NOW"); // If send time has not been specified or is not at least 10 secs. in the future, send now
                             } else {
@@ -539,19 +542,19 @@ public class SendController {
         this.maxTries = maxTries;
     }
 
-    public String getNotificationType() {
+    public FaxNotification getNotificationType() {
         return notificationType;
     }
 
-    public void setNotificationType(String notificationType) {
+    public void setNotificationType(FaxNotification notificationType) {
         this.notificationType = notificationType;
     }
 
-    public int getResolution() {
+    public FaxResolution getResolution() {
         return resolution;
     }
 
-    public void setResolution(int resolution) {
+    public void setResolution(FaxResolution resolution) {
         this.resolution = resolution;
     }
 

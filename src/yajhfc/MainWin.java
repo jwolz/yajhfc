@@ -37,6 +37,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.print.PrinterException;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -1767,17 +1769,10 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             statusSplitter.setResizeWeight(1); // Table gets all available space
             statusSplitter.setBorder(null);
 
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {                
-                    actAutoSizeStatus.setSelected(myopts.statusBarSize < 0);
-                    if (myopts.statusBarSize >= 0) {
-                        statusSplitter.setDividerLocation(statusSplitter.getHeight() - myopts.statusBarSize);
-                    }
-                    
-                    textStatus.getDocument().addDocumentListener(actAutoSizeStatus);
-                    statusSplitter.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, actAutoSizeStatus);
-                }
-            });
+            textStatus.getDocument().addDocumentListener(actAutoSizeStatus);
+            statusSplitter.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, actAutoSizeStatus);
+            MainWin.this.addWindowListener(actAutoSizeStatus);
+
         }
         return statusSplitter;
     }
@@ -2094,11 +2089,15 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             menuExtras.addSeparator();
             menuExtras.add(new JMenuItem(actAnswerCall));
             if (PluginManager.pluginUIs.size() > 0) {
-                menuExtras.addSeparator();
+                boolean createdSeparator = false;
                 for (PluginUI pmc : PluginManager.pluginUIs) {
                     final JMenuItem[] menuItems = pmc.createMenuItems();
                     if (menuItems != null) {
                         for (JMenuItem item : menuItems) {
+                            if (!createdSeparator) { // Only create a separator if the plugin really adds a menu item 
+                                menuExtras.addSeparator();
+                                createdSeparator = true;
+                            }
                             menuExtras.add(item);
                         }
                     }
@@ -2120,11 +2119,11 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         @SuppressWarnings("unchecked")
         private void setJobFilter(MyTableModel model, Filter filter) {
             currentFilters[model.getTableType().ordinal()] = filter;
-            refreshFilter();
+            refreshFilter(model);
         }
         
         @SuppressWarnings("unchecked")
-        public Filter getFilterFor(TableType tableType) {
+        public Filter<YajJob<? extends FmtItem>,? extends FmtItem> getFilterFor(TableType tableType) {
             return currentFilters[tableType.ordinal()];
         }
         
@@ -2142,8 +2141,12 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                     setJobFilter(model, getOwnFilterFor(model));
                     lastSel[selTab] = menuViewOwn;
                 } else if (cmd.equals("view_custom")) {
-                    CustomFilterDialog cfd = new CustomFilterDialog(MainWin.this, tabMain.getTitleAt(selTab), 
-                            model.columns, (lastSel[selTab] == menuViewCustom) ? model.getJobFilter() : null);
+                    CustomFilterDialog cfd = new CustomFilterDialog(MainWin.this, 
+                            MessageFormat.format(Utils._("Custom filter for table {0}"), tabMain.getTitleAt(selTab)),
+                            Utils._("Only display fax jobs fulfilling:"),
+                            Utils._("You have entered no filtering conditions. Do you want to show all faxes instead?"),
+                            Utils._("Please enter a valid date/time!\n(Hint: Exactly the same format as in the fax job table is expected)"),
+                            model.columns, (lastSel[selTab] == menuViewCustom) ? getFilterFor(model.getTableType()) : null);
                     cfd.setVisible(true);
                     if (cfd.okClicked) {
                         if (cfd.returnValue == null) {
@@ -2249,7 +2252,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                         setJobFilter(model, null);
                     }
                 } else if (lastSel[i] == menuViewCustom) {
-                    if (!model.getJobFilter().validate(model.columns)) {
+                    if (getFilterFor(model.getTableType()) == null || !getFilterFor(model.getTableType()).validate(model.columns)) {
                         lastSel[i] = menuViewAll;
                         setJobFilter(model, null);
                     }
@@ -2298,7 +2301,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 return "O";
             } else if (lastSel[idx] == menuViewCustom) {
                 MyTableModel<? extends FmtItem> model = getTableByIndex(idx).getRealModel();
-                return "C" + FilterCreator.filterToString(model.getJobFilter());
+                return "C" + FilterCreator.filterToString(getFilterFor(model.getTableType()));
             } else
                 return null;
         }
@@ -2758,9 +2761,13 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         return clientManager;
     }
     
-    @SuppressWarnings("unchecked")
+
     void refreshFilter() {
-        MyTableModel selectedModel = getSelectedTable().getRealModel();
+        refreshFilter(getSelectedTable().getRealModel());
+    }
+    
+    @SuppressWarnings("unchecked")
+    void refreshFilter(MyTableModel selectedModel ) {
         TableType selectedTableType = selectedModel.getTableType();
         Filter viewFilter = menuViewListener.getFilterFor(selectedTableType);
         Filter quickSearchFilter = quickSearchHelper.getFilterFor(selectedTableType);
@@ -2879,11 +2886,13 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         }
     }
     
-    class StatusBarResizeAction extends ExcDialogAbstractAction implements DocumentListener, PropertyChangeListener {
+    class StatusBarResizeAction extends ExcDialogAbstractAction implements DocumentListener, PropertyChangeListener, WindowListener {
         /**
          * The maximum value the status bar size may differ from getAutoDividerLocation() to keep it at auto size
          */
         private static final int RESET_THRESHOLD = 2;
+        
+        private boolean firstDisplay = true;
         
         public void actualActionPerformed(ActionEvent e) {
             setSelected(!isSelected());
@@ -2906,6 +2915,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     statusSplitter.setDividerLocation(getAutoDividerLocation());
+                    //System.out.println("makePreferredSize: " + getAutoDividerLocation());
                 }
             });
         }
@@ -2932,15 +2942,47 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         
         private boolean initialAdjustments = true;
         public void propertyChange(PropertyChangeEvent evt) {
+            if (!MainWin.this.isVisible())
+                return;
             
-            if (isSelected() && MainWin.this.isVisible() && 
+            if (isSelected() && 
                     Math.abs((Integer)evt.getNewValue() - getAutoDividerLocation()) > RESET_THRESHOLD) {
                 if (!initialAdjustments) {
                     setSelected(false);
-                    //System.out.println("Reset: " + ((Integer)evt.getNewValue() - getAutoDividerLocation()));
                 }
             } else {
                 initialAdjustments = false;
+            }
+            //System.out.println("Reset: " + ((Integer)evt.getNewValue() - getAutoDividerLocation()));
+        }
+
+        public void windowActivated(WindowEvent e) {
+        }
+
+        public void windowClosed(WindowEvent e) {
+        }
+
+        public void windowClosing(WindowEvent e) {
+        }
+
+        public void windowDeactivated(WindowEvent e) {
+        }
+
+        public void windowDeiconified(WindowEvent e) {
+        }
+
+        public void windowIconified(WindowEvent e) {
+        }
+
+        public void windowOpened(WindowEvent e) {
+            if (firstDisplay) {
+                setSelected(myopts.statusBarSize < 0);
+                if (myopts.statusBarSize >= 0) {
+                    statusSplitter.setDividerLocation(statusSplitter.getHeight() - myopts.statusBarSize);
+                }
+                firstDisplay = false;
+            } else if (isSelected()) {
+                makePreferredSize();
             }
         }
     }
