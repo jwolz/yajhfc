@@ -32,11 +32,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import yajhfc.Utils;
-import yajhfc.filters.ConcatStringFilter;
 import yajhfc.filters.Filter;
-import yajhfc.filters.OrFilter;
-import yajhfc.filters.StringFilter;
-import yajhfc.filters.StringFilterOperator;
 import yajhfc.phonebook.convrules.EntryToStringRule;
 
 /**
@@ -192,24 +188,7 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
         applyFilter((Filter<PhoneBookEntry,PBEntryField>)null);
         fireFilterWasReset();
     }
-    
-    /**
-     * 
-     * @param quickSearchVal
-     */
-    public void applyFilter(String quickSearchVal) {
-        if (quickSearchVal == null || quickSearchVal.length() == 0) {
-            applyFilter((Filter<PhoneBookEntry,PBEntryField>)null);
-        } else {
-            OrFilter<PhoneBookEntry,PBEntryField> filter = new OrFilter<PhoneBookEntry, PBEntryField>();
-            filter.addChild(new ConcatStringFilter<PhoneBookEntry, PBEntryField>(
-                    PBEntryField.class, 
-                    new Object[] { PBEntryField.GivenName, " ", PBEntryField.Name, ", ", PBEntryField.Department, ", ", PBEntryField.Company },
-                    StringFilterOperator.CONTAINS, quickSearchVal, false));
-            filter.addChild(new StringFilter<PhoneBookEntry, PBEntryField>(PBEntryField.FaxNumber, StringFilterOperator.CONTAINS, quickSearchVal, false));
-            applyFilter(filter);
-        }
-    }
+   
     
     /**
      * Applies a filter to this tree model. Specifying null resets the filtering (i.e.

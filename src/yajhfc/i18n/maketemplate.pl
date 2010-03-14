@@ -17,7 +17,7 @@ while (defined(my $line = <>)) {
 		} elsif ($msgstr_mode == 0 && $line =~ /msgstr .*/) {
 			print "msgstr \"\"\n";
 			$msgstr_mode = 2;
-		} elsif ($msgstr_mode == 2 && $line =~ /\s*\".*\"/) {
+		} elsif ($msgstr_mode == 2 && $line =~ /^\s*\".*\"\s*$/) {
 			# Do nothing
 		} elsif ($line =~ m/# *DO NOT translate/i) {
 			$numskip = 3; # Skip the next 3 lines

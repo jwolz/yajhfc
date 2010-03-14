@@ -94,4 +94,10 @@ public interface SendWinControl {
      * @param comment
      */
     public void setComment(String comment);
+    
+    /**
+     * Sets the modem to send
+     * @param modem
+     */
+    public void setModem(String modem);
 }

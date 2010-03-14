@@ -42,6 +42,7 @@ public class SendWinSubmitProtocol implements SubmitProtocol, Runnable {
     
     protected String subject;
     protected String comments;
+    protected String modem;
     protected Boolean useCover;
     protected boolean closeAfterSubmit = false;
     
@@ -95,6 +96,10 @@ public class SendWinSubmitProtocol implements SubmitProtocol, Runnable {
      */
     public void setSubject(String subject) {
         this.subject = subject;
+    }
+    
+    public void setModem(String modem) throws IOException {
+        this.modem = modem;
     }
 
     public void setCloseAfterSubmit(boolean closeAfterSumbit) {
@@ -160,6 +165,9 @@ public class SendWinSubmitProtocol implements SubmitProtocol, Runnable {
         }
         if (comments != null) {
             sw.setComment(comments);
+        }
+        if (modem != null) {
+            sw.setModem(modem);
         }
         if (Launcher2.application.getFrame().isVisible()) {
             Launcher2.application.getFrame().toFront();

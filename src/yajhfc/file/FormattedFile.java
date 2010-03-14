@@ -80,6 +80,24 @@ public class FormattedFile {
         public String[] getPossibleExtensions() {
             return possibleExts;
         }
+        
+        /**
+         * Returns the appropriate HylaFAX file format "code" for the given file format
+         * @param format
+         * @return
+         */
+        public String getHylaFAXFormatString() {
+            switch (this) {
+            case PDF:
+                return "pdf";
+            case PostScript:
+                return "ps";
+            case TIFF:
+                return "tiff";
+            default:
+                return "data";
+            }
+        }
     }
     
     
@@ -315,7 +333,7 @@ public class FormattedFile {
         }
     }
     
-
+    
 //  protected static final FileFormat[] acceptedFormats = {
 //  FileFormat.PostScript, FileFormat.PDF, FileFormat.JPEG, FileFormat.GIF, FileFormat.PNG, FileFormat.TIFF
 //  };

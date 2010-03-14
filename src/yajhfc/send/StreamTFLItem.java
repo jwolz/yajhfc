@@ -56,7 +56,13 @@ public class StreamTFLItem extends HylaTFLItem {
 
     @Override
     public void upload(HylaFAXClient hyfc) throws FileNotFoundException, IOException, ServerResponseException {
-        serverName = hyfc.putTemporary(getInputStream());
+        InputStream inStream = getInputStream();
+        if (inStream == null) {
+            serverName = null;
+        } else { 
+            hyfc.form(tempFile.format.getHylaFAXFormatString());
+            serverName = hyfc.putTemporary(inStream);
+        }
     }
 
     @Override

@@ -24,6 +24,7 @@ public enum StringFilterOperator {
     EQUAL(Utils._("equals")),
     NOTEQUAL(Utils._("not equals")),
     CONTAINS(Utils._("contains")),
+    CONTAINS_NOT(Utils._("contains not")),
     STARTSWITH(Utils._("starts with")),
     ENDSWITH(Utils._("ends with")),
     MATCHES(Utils._("matches"));

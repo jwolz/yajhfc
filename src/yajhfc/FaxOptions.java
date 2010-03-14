@@ -262,6 +262,11 @@ public class FaxOptions extends AbstractFaxOptions {
      * The actions to perform when a new fax is received
      */
     public int newFaxAction = FaxOptions.NEWFAX_BEEP | FaxOptions.NEWFAX_TOFRONT | FaxOptions.NEWFAX_BLINKTRAYICON;
+    
+    /**
+     * Show a tray notification when a new fax is received?
+     */
+    public boolean newFaxTrayNotification = true;
     /**
      * Use the PCL file type bug fix?
      */

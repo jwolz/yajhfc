@@ -32,6 +32,13 @@ public abstract class HylaTFLItem extends TFLItem {
     protected String serverName = "<invalid>";
     protected PaperSize desiredPaperSize = PaperSize.A4;
     
+    /**
+     * Uploads this file. Assumes that hyfc.type(HylaFAXClient.TYPE_IMAGE) has been called before.
+     * @param hyfc
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws ServerResponseException
+     */
     public abstract void upload(HylaFAXClient hyfc) throws FileNotFoundException, IOException, ServerResponseException ;
     
     // May return null!

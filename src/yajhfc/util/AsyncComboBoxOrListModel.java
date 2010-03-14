@@ -40,6 +40,7 @@ public class AsyncComboBoxOrListModel<T> extends AbstractListModel
     private Object selectedItem;
     protected final List<T> elements;
     protected Future<List<T>> future;
+    protected boolean finished = false;
     
     /**
      * Creates a new AsyncComboBoxOrListModel
@@ -75,6 +76,7 @@ public class AsyncComboBoxOrListModel<T> extends AbstractListModel
                         if (runWhenFinished != null) {
                             runWhenFinished.run();
                         }
+                        finished = true;
                     } 
                 });
                 return newElements;
@@ -98,6 +100,10 @@ public class AsyncComboBoxOrListModel<T> extends AbstractListModel
 
     public Object getSelectedItem() {
         return selectedItem;
+    }
+    
+    public boolean hasFinished() {
+        return finished;
     }
 
     public void setSelectedItem(Object selectedItem) {

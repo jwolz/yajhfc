@@ -57,6 +57,8 @@ public interface SubmitProtocol {
     
     void setComments(String comments) throws IOException; 
    
+    void setModem(String modem) throws IOException;
+    
     void setCloseAfterSubmit(boolean closeAfterSumbit) throws IOException, OperationNotSupportedException;
     
     /**

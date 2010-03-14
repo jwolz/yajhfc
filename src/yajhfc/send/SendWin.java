@@ -173,14 +173,7 @@ final class SendWin extends JDialog implements SendWinControl  {
         comboPaperSize.setSelectedItem(fo.paperSize);
         comboNotification.setSelectedItem(fo.notifyWhen);
         
-        Object selModem = fo.defaultModem;
-        for (HylaModem modem : clientManager.getModems()) {
-            if (modem.getInternalName().equals(fo.defaultModem)) {
-                selModem = modem;
-                break;
-            }
-        }
-        comboModem.setSelectedItem(selModem);
+        setModem(fo.defaultModem);
         
         spinMaxTries.setValue(Integer.valueOf(fo.maxTry));
         spinKillTime.setValue(fo.killTime);
@@ -672,6 +665,17 @@ final class SendWin extends JDialog implements SendWinControl  {
     public void setSubject(String subject) {
         textSubject.setText(subject);
     }
+    
+    public void setModem(String modemName) {
+        Object selModem = modemName;
+        for (HylaModem modem : clientManager.getModems()) {
+            if (modem.getInternalName().equals(modemName)) {
+                selModem = modem;
+                break;
+            }
+        }
+        comboModem.setSelectedItem(selModem);
+    }
             
     protected void saveSettingsToSendController() {
         tflFiles.commit();
@@ -681,9 +685,9 @@ final class SendWin extends JDialog implements SendWinControl  {
             sendController.setComments(textToComments.getText());
         sendController.setKillTime((Integer)spinKillTime.getValue());
         sendController.setMaxTries((Integer)spinMaxTries.getValue());
-        sendController.setNotificationType(((FaxNotification)comboNotification.getSelectedItem()).getType());
+        sendController.setNotificationType((FaxNotification)comboNotification.getSelectedItem());
         sendController.setPaperSize((PaperSize)comboPaperSize.getSelectedItem());
-        sendController.setResolution(((FaxResolution)comboResolution.getSelectedItem()).getResolution());
+        sendController.setResolution((FaxResolution)comboResolution.getSelectedItem());
         sendController.setSelectedModem(comboModem.getSelectedItem());
         
         if (textSubject != null)

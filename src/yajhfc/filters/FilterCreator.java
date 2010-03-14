@@ -55,10 +55,6 @@ public class FilterCreator {
         return (dataClass == String.class || dataClass == IconMap.class);
     }
     
-    public static <V extends FilterableObject,K extends FmtItem> Filter<V,K> getFilter(K column, Object selectedOperator, String input) throws ParseException {
-        return getFilter(column,selectedOperator,input,true);
-    }
-    
     public static <V extends FilterableObject,K extends FilterKey> Filter<V,K> getFilter(K column, Object selectedOperator, String input, boolean caseSensitive) throws ParseException {
         Class<?> dataClass = column.getDataType();
         if (dataClass == Integer.class) {
@@ -84,16 +80,16 @@ public class FilterCreator {
     }
     
     public static <V extends FilterableObject,K extends FilterKey> K columnFromFilter(Filter<V,K> filter) {
-        if (filter instanceof ComparableFilter)
+        if (filter instanceof ComparableFilter<?,?>)
             return ((ComparableFilter<V,K>)filter).getColumn();
-        else if (filter instanceof StringFilter) {
+        else if (filter instanceof StringFilter<?,?>) {
             return ((StringFilter<V,K>)filter).getColumn();
         } else
             return null;
     }
      
     public static <V extends FilterableObject,K extends FilterKey> Object operatorFromFilter(Filter<V,K> filter) {
-        if (filter instanceof ComparableFilter) {
+        if (filter instanceof ComparableFilter<?,?>) {
             ComparableFilter<V,K> cf = (ComparableFilter<V,K>)filter;
             if (cf.getColumn().getDataType() != Boolean.class)
                 return cf.getOperator();
@@ -103,47 +99,58 @@ public class FilterCreator {
                 else
                     return booleanOperators[1];
             }
-        } else if (filter instanceof StringFilter) {
+        } else if (filter instanceof StringFilter<?,?>) {
             return ((StringFilter<V,K>)filter).getOperator();
         } else
             return null;
     }
     
-    public static <V extends FilterableObject,K extends FmtItem> String inputFromFilter(Filter<V,K> filter) {
-        if (filter instanceof ComparableFilter) {
+    public static <V extends FilterableObject,K extends FilterKey> String inputFromFilter(Filter<V,K> filter) {
+        if (filter instanceof ComparableFilter<?,?>) {
             ComparableFilter<V,K> cf = (ComparableFilter<V,K>)filter;
-            if (cf.getColumn().getDataType() == Date.class)
-                return cf.getColumn().getDisplayDateFormat().format(cf.getCompareValue());
+            if ((cf.getColumn() instanceof FmtItem) && (cf.getColumn().getDataType() == Date.class))
+                return ((FmtItem)cf.getColumn()).getDisplayDateFormat().format(cf.getCompareValue());
             else if (cf.getColumn().getDataType() == Boolean.class)
                 return "";
             else
                 return cf.getCompareValue().toString();
-        } else if (filter instanceof StringFilter) {
+        } else if (filter instanceof StringFilter<?,?>) {
             return ((StringFilter<V,K>)filter).getCompareValue().toString();
         } else
             return "";
     }
     
+    @SuppressWarnings("unchecked")
+    public static boolean getIsCaseSensitive(Filter<?,?> filter) {
+        if (filter instanceof StringFilter<?,?>) {
+            return ((StringFilter)filter).isCaseSensitive();
+        } else {
+            return false;
+        }
+    }
+    
     /**
      * "Convert" filter (an instance of AndFilter or OrFilter) into a String
      * for storage.
-     * Format: (&|\|)!(c|s)$col$op$val!(c|s)col$op$val...!
+     * Format: (&|\|)!(c|s|S)$col$op$val!(c|s)col$op$val...!
      * @param filter
      * @return
      */
     public static <V extends FilterableObject,T extends FilterKey> String filterToString(Filter<V,T> filter) {
-        if (filter == null || !(filter instanceof AndFilter))
+        if (filter == null || !(filter instanceof CombinationFilter<?,?>))
             return null;
         
         StringBuffer res = new StringBuffer();
-        if (filter instanceof OrFilter) {
+        if (filter instanceof OrFilter<?,?>) {
             res.append('|');
-        } else {
+        } else if (filter instanceof AndFilter<?,?>)  {
             res.append('&');
+        } else {
+            return null; // unsupported filter
         }
         res.append('!');
-        for (Filter<V,T> yjf: ((AndFilter<V,T>)filter).getChildList()) {
-            if (yjf instanceof ComparableFilter) {
+        for (Filter<V,T> yjf: ((CombinationFilter<V, T>)filter).getChildList()) {
+            if (yjf instanceof ComparableFilter<?,?>) {
                 ComparableFilter<V,T> cf = (ComparableFilter<V,T>)yjf;
                 res.append("c$");
                 res.append(cf.getColumn().name()).append('$');
@@ -155,9 +162,13 @@ public class FilterCreator {
                     val = cf.getCompareValue().toString();
                 res.append(Utils.escapeChars(val, "$!", '~')).append('$');
                 res.append('!');
-            } else if (yjf instanceof StringFilter) {
+            } else if (yjf instanceof StringFilter<?,?>) {
                 StringFilter<V,T> sf = (StringFilter<V,T>)yjf;
-                res.append("s$");
+                if (sf.isCaseSensitive())
+                    res.append('s');
+                else
+                    res.append('S');
+                res.append('$');
                 res.append(sf.getColumn().name()).append('$');
                 res.append(sf.getOperator().name()).append('$');
                 res.append(Utils.escapeChars(sf.getCompareValue().toString(), "$!", '~')).append('$');
@@ -172,7 +183,7 @@ public class FilterCreator {
     public static  <V extends FilterableObject,T extends FilterKey> Filter<V,T> stringToFilter(String spec, FilterKeyList<T> columns) {
         String [] flt1 = Utils.fastSplit(spec, '!'); //spec.split("!");
         
-        AndFilter<V,T> af;
+        CombinationFilter<V,T> af;
         if (flt1[0].equals("|")) {
             af = new OrFilter<V,T>();
         } else if (flt1[0].equals("&")) {
@@ -235,9 +246,13 @@ public class FilterCreator {
                     log.log(Level.WARNING, "Exception in stringToFilter: ", e);
                     continue;
                 }
-            } else if (flt2[0].equals("s")) {
+            } else if (flt2[0].equalsIgnoreCase("s")) {
                 try {
-                    af.addChild(new StringFilter<V,T>(col, StringFilterOperator.valueOf(StringFilterOperator.class, flt2[2]), Utils.unEscapeChars(flt2[3], "$!", '~'), true));
+                    // 'S' is not case sensitive, 's' is case sensitive
+                    af.addChild(new StringFilter<V,T>(col,
+                            StringFilterOperator.valueOf(StringFilterOperator.class, flt2[2]),
+                            Utils.unEscapeChars(flt2[3], "$!", '~'),
+                            flt2[0].charAt(0) == 's'));
                 } catch (Exception e) {
                     log.log(Level.WARNING, "Exception in stringToFilter: ",  e);
                     continue;

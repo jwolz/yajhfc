@@ -56,6 +56,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
@@ -77,6 +78,13 @@ import javax.swing.tree.TreeSelectionModel;
 
 import yajhfc.FaxOptions;
 import yajhfc.Utils;
+import yajhfc.filters.AndFilter;
+import yajhfc.filters.ConcatStringFilter;
+import yajhfc.filters.Filter;
+import yajhfc.filters.OrFilter;
+import yajhfc.filters.StringFilter;
+import yajhfc.filters.StringFilterOperator;
+import yajhfc.filters.ui.CustomFilterDialog;
 import yajhfc.phonebook.PhoneBookTreeModel.PBTreeModelListener;
 import yajhfc.phonebook.PhoneBookTreeModel.RootNode;
 import yajhfc.phonebook.convrules.NameRule;
@@ -89,6 +97,10 @@ import yajhfc.util.ProgressPanel;
 import yajhfc.util.ProgressWorker;
 
 public final class NewPhoneBookWin extends JDialog implements ActionListener {
+
+    protected static final String FILTER_ACTION_COMMAND = "filter";
+
+    protected static final String SHOWALL_ACTION_COMMAND = "showall";
 
     static final Logger log = Logger.getLogger(NewPhoneBookWin.class.getName());
     
@@ -107,9 +119,9 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     JPopupMenu treePopup;
     
     Action listRemoveAction, addEntryAction, removeEntryAction, searchEntryAction, selectAction;
-    Action addDistListAction;
+    Action addDistListAction, viewPopupMenuAction;
     
-    MultiButtonGroup nameStyleGroup;
+    MultiButtonGroup nameStyleGroup, viewGroup;
     
     ProgressPanel progressPanel;
     
@@ -460,9 +472,10 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     }
     
     private JToolBar createToolBar() {        
-        return searchHelper.getQuickSearchBar(searchEntryAction,
+        return searchHelper.getQuickSearchBar(
                 null,
-                Utils._("Reset quick search and show all phone book entries."));
+                Utils._("Reset quick search and show all phone book entries."),
+                searchEntryAction, viewPopupMenuAction);
     }
     
     private JSplitPane getSplitPane() {
@@ -733,6 +746,10 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             entryMenu.add(viewMenu);
             entryMenu.add(new JSeparator());
             entryMenu.add(new JMenuItem(searchEntryAction));
+            entryMenu.add(new JSeparator());
+            for (JRadioButtonMenuItem item : viewGroup.createMenuItems()) {
+                entryMenu.add(item);
+            }
         }
         return entryMenu;
     }
@@ -836,6 +853,62 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         }
         nameStyleGroup.setSelectedActionCommand(Utils.getFaxOptions().phonebookDisplayStyle.name());
         
+        viewGroup = new MultiButtonGroup() {
+            @Override
+            protected void actualActionPerformed(ActionEvent e) {
+                String cmd = e.getActionCommand();
+                if (SHOWALL_ACTION_COMMAND.equals(cmd)) {
+                    searchHelper.setUserFilter(null);
+                } else if (FILTER_ACTION_COMMAND.equals(cmd)) {
+                    CustomFilterDialog<PhoneBookEntry, PBEntryField> cfd = 
+                        new CustomFilterDialog<PhoneBookEntry, PBEntryField>(NewPhoneBookWin.this,
+                                Utils._("Filter phone book entries"),
+                                Utils._("Only display phone book items fulfilling:"),
+                                Utils._("You have entered no filtering conditions. Do you want to show all phone book entries instead?"),
+                                Utils._("Please enter a valid date/time!"),
+                                PBEntryField.filterKeyList,
+                                searchHelper.getUserFilter());
+                    cfd.setVisible(true);
+                    if (cfd.okClicked) {
+                        searchHelper.setUserFilter(cfd.returnValue);
+                    } else {
+                        if (searchHelper.getUserFilter() == null) {
+                            setSelectedActionCommand(SHOWALL_ACTION_COMMAND);
+                        }
+                    }
+                }
+            }
+        };
+        
+        viewGroup.addItem(Utils._("Show all entries"), SHOWALL_ACTION_COMMAND);
+        viewGroup.addItem(Utils._("Filter entries") + "...", FILTER_ACTION_COMMAND);
+        viewGroup.setSelectedActionCommand(SHOWALL_ACTION_COMMAND);
+        
+        viewPopupMenuAction = new ExcDialogAbstractAction() {
+            private JPopupMenu popup;
+            
+            private JPopupMenu getPopup() {
+                if (popup == null) {
+                    popup = new JPopupMenu();
+                    for (JMenuItem item : viewGroup.createMenuItems()) {
+                        popup.add(item);
+                    }
+                }
+                return popup;
+            }
+            
+            @Override
+            protected void actualActionPerformed(ActionEvent e) {
+                if (e.getSource() instanceof Component) {
+                    Component sourceComp = (Component)e.getSource();
+                    
+                    getPopup().show(sourceComp, 0, sourceComp.getHeight());
+                } 
+            }
+        };
+        viewPopupMenuAction.putValue(Action.SMALL_ICON, Utils.loadCustomIcon("filter.png"));
+        viewPopupMenuAction.putValue(Action.SHORT_DESCRIPTION, Utils._("Filter phone book items"));
+        
     }
     
     private void initialize() {
@@ -883,6 +956,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             for (String pbdesc : fopts.phoneBooks) {
                 if (Utils.debugMode)
                     log.finest("Adding phone book: " + pbdesc);
+                loadComplete = false;
                 addPhoneBook(pbdesc);
             }
         } else {
@@ -1045,14 +1119,58 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
 
     class SearchHelper extends AbstractQuickSearchHelper implements PBTreeModelListener {
         
+        protected Filter<PhoneBookEntry,PBEntryField> quickSearchFilter;
+        protected Filter<PhoneBookEntry,PBEntryField> userFilter;
+        
+        public void setUserFilter(
+                Filter<PhoneBookEntry, PBEntryField> userFilter) {
+            this.userFilter = userFilter;
+            refreshFilter();
+        }
+        
+        public Filter<PhoneBookEntry, PBEntryField> getUserFilter() {
+            return userFilter;
+        }
+        
+        public Filter<PhoneBookEntry,PBEntryField> createQuickSearchFilter(String quickSearchVal) {
+            if (quickSearchVal == null || quickSearchVal.length() == 0) {
+                return null;
+            } else {
+                OrFilter<PhoneBookEntry,PBEntryField> filter = new OrFilter<PhoneBookEntry, PBEntryField>();
+                filter.addChild(new ConcatStringFilter<PhoneBookEntry, PBEntryField>(
+                        PBEntryField.class, 
+                        new Object[] { PBEntryField.GivenName, " ", PBEntryField.Name, ", ", PBEntryField.Department, ", ", PBEntryField.Company },
+                        StringFilterOperator.CONTAINS, quickSearchVal, false));
+                filter.addChild(new StringFilter<PhoneBookEntry, PBEntryField>(PBEntryField.FaxNumber, StringFilterOperator.CONTAINS, quickSearchVal, false));
+                return filter;
+            }
+        }
+        
+        @SuppressWarnings("unchecked")
+        private void refreshFilter() {
+            if (quickSearchFilter == null) {
+                treeModel.applyFilter(userFilter);
+            } else {
+                if (userFilter == null) {
+                    treeModel.applyFilter(quickSearchFilter);
+                } else {
+                    treeModel.applyFilter(new AndFilter<PhoneBookEntry, PBEntryField>(userFilter, quickSearchFilter));
+                }
+            }
+        }
+        
         protected void performActualQuickSearch() {
-            treeModel.applyFilter(textQuickSearch.getText());
+            quickSearchFilter = createQuickSearchFilter(textQuickSearch.getText());
+            refreshFilter();
         }
         
         public void filterWasReset() {
             eventLock = true;
             textQuickSearch.setText("");
             clearQuickSearchButton.setEnabled(false);
+            viewGroup.setSelectedActionCommand(SHOWALL_ACTION_COMMAND);
+            userFilter = null;
+            quickSearchFilter = null;
             eventLock = false;
         }
         

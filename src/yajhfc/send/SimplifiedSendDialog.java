@@ -130,6 +130,9 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
     
     protected Action actAddNumber, actRemoveNumber, actCustomProps;
     
+    protected AsyncComboBoxOrListModel<HylaModem> modemModel;
+    protected String modemToSet;
+    
     protected boolean isAdvancedView = false;
     protected boolean initiallyHideFiles = false;
     protected boolean modalResult = false;
@@ -567,7 +570,8 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
 
         spinMaxTries = new JSpinner(new SpinnerNumberModel(12, 1, 100, 1));
 
-        final AsyncComboBoxOrListModel<HylaModem> modemModel =
+        modemToSet = fo.defaultModem;
+        modemModel =
             new AsyncComboBoxOrListModel<HylaModem>(
                     HylaModem.defaultModems,
                     new Callable<List<HylaModem>>() {
@@ -578,19 +582,12 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
                     true,
                     new Runnable() {
                         public void run() {
-                            Object selModem = fo.defaultModem;
-                            for (HylaModem modem : clientManager.getModems()) {
-                                if (modem.getInternalName().equals(fo.defaultModem)) {
-                                    selModem = modem;
-                                    break;
-                                }
-                            }
-                            comboModem.setSelectedItem(selModem);
+                            setModemInternal(modemToSet);
                         }
                     });
         comboModem = new JComboBox(modemModel);
         comboModem.setEditable(true);
-        comboModem.setSelectedItem(fo.defaultModem);
+        comboModem.setSelectedItem(modemToSet);
 
         checkArchiveJob = new JCheckBox(Utils._("Archive fax job"));
         
@@ -639,9 +636,9 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         sendController.setComments(textComments.getText());
         sendController.setKillTime((Integer)spinKillTime.getValue());
         sendController.setMaxTries((Integer)spinMaxTries.getValue());
-        sendController.setNotificationType(((FaxNotification)comboNotification.getSelectedItem()).getType());
+        sendController.setNotificationType((FaxNotification)comboNotification.getSelectedItem());
         sendController.setPaperSize((PaperSize)comboPaperSize.getSelectedItem());
-        sendController.setResolution(((FaxResolution)comboResolution.getSelectedItem()).getResolution());
+        sendController.setResolution((FaxResolution)comboResolution.getSelectedItem());
         sendController.setSelectedModem(comboModem.getSelectedItem());
         sendController.setSendTime(ttsEntry.getSelection());
         sendController.setArchiveJob(checkArchiveJob.isSelected());
@@ -765,6 +762,26 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
 
     public void setUseCover(boolean useCover) {
         checkUseCover.setSelected(useCover);
+    }
+    
+    protected void setModemInternal(String modemName) {
+        Object selModem = modemName;
+        for (HylaModem modem : clientManager.getModems()) {
+            if (modem.getInternalName().equals(modemName)) {
+                selModem = modem;
+                break;
+            }
+        }
+        comboModem.setSelectedItem(selModem);
+    }
+    
+    public void setModem(String modem) {
+        if (modemModel.hasFinished()) {
+            setModemInternal(modem);
+        } else {
+            modemToSet = modem;
+            comboModem.setSelectedItem(modem);
+        }
     }
 
     public boolean isPollMode() {

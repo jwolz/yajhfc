@@ -17,38 +17,40 @@ package yajhfc.filters.ui;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+import info.clearthought.layout.TableLayout;
+
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.Format;
 import java.text.ParseException;
-import java.util.Vector;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
 import yajhfc.FmtItem;
-import yajhfc.FmtItemList;
 import yajhfc.FmtItemRenderer;
 import yajhfc.Utils;
 import yajhfc.filters.Filter;
 import yajhfc.filters.FilterCreator;
+import yajhfc.filters.FilterKey;
+import yajhfc.filters.FilterKeyList;
 import yajhfc.filters.FilterableObject;
 import yajhfc.util.ClipboardPopup;
 
-public class FilterPanel<V extends FilterableObject,K extends FmtItem> extends JPanel implements ActionListener {
+public class FilterPanel<V extends FilterableObject,K extends FilterKey> extends JPanel implements ActionListener {
 
     private JComboBox comboColumns, comboOperator;
     private JTextField textValue;
     private JButton buttonDelete;
+    private JCheckBox checkCaseSensitive;
     private DefaultComboBoxModel colModel;
     private Class<?> oldClass;
     
@@ -85,6 +87,11 @@ public class FilterPanel<V extends FilterableObject,K extends FmtItem> extends J
         
         public Format getFormat() {
             return null;
+        }
+        
+        @Override
+        public String toString() {
+            return desc;
         }
     }; 
     private static final String[] comboOperatorDummy = { "                         " };
@@ -123,6 +130,8 @@ public class FilterPanel<V extends FilterableObject,K extends FmtItem> extends J
                     textValue.setText(FilterCreator.inputFromFilter(filter));
                 else
                     textValue.setText("");
+                checkCaseSensitive.setEnabled(FilterCreator.isCaseSensitiveEnabled(col.getDataType()));
+                checkCaseSensitive.setSelected(FilterCreator.getIsCaseSensitive(filter));
             }
         } else
             comboColumns.setSelectedIndex(0);
@@ -130,7 +139,7 @@ public class FilterPanel<V extends FilterableObject,K extends FmtItem> extends J
     
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("columnsel")) {
-            Class<?> colClass = ((FmtItem)comboColumns.getSelectedItem()).getDataType();
+            Class<?> colClass = ((FilterKey)comboColumns.getSelectedItem()).getDataType();
             if (oldClass != colClass) {
                 oldClass = colClass;
                 Object [] ops = FilterCreator.getOperators(colClass);
@@ -141,6 +150,7 @@ public class FilterPanel<V extends FilterableObject,K extends FmtItem> extends J
                     comboOperator.setEnabled(true);
                     comboOperator.setModel(new DefaultComboBoxModel(ops));
                     textValue.setEnabled(FilterCreator.isInputEnabled(colClass));
+                    checkCaseSensitive.setEnabled(FilterCreator.isCaseSensitiveEnabled(colClass));
                 }
             }
         }
@@ -153,7 +163,7 @@ public class FilterPanel<V extends FilterableObject,K extends FmtItem> extends J
     
     @SuppressWarnings("unchecked")
     public Filter<V,K> getFilter() throws ParseException {
-        return FilterCreator.getFilter((K)comboColumns.getSelectedItem(), comboOperator.getSelectedItem(), textValue.getText());
+        return FilterCreator.getFilter((K)comboColumns.getSelectedItem(), comboOperator.getSelectedItem(), textValue.getText(), checkCaseSensitive.isSelected());
     }
     
     @Override
@@ -161,18 +171,26 @@ public class FilterPanel<V extends FilterableObject,K extends FmtItem> extends J
         return new Dimension(Integer.MAX_VALUE, getPreferredSize().height);
     }
     
-    public FilterPanel(FmtItemList<? extends K> columns) {
+    public FilterPanel(FilterKeyList<? extends K> columns) {
         super(null, false);
         
         final int border = 12;
+        double[][] dLay = {
+                { TableLayout.PREFERRED, border, TableLayout.PREFERRED, border, TableLayout.FILL, border, TableLayout.PREFERRED },
+                { TableLayout.PREFERRED, border/2, TableLayout.PREFERRED}
+        };
         
-        setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+        setLayout(new TableLayout(dLay));
         setBorder(BorderFactory.createCompoundBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED), BorderFactory.createEmptyBorder(border, border, border, border)));
         
-        colModel = new DefaultComboBoxModel(new Vector<FmtItem>(columns.getCompleteView()));
+        final K[] availableKeys=columns.getAvailableKeys();
+        colModel = new DefaultComboBoxModel(availableKeys);
         colModel.insertElementAt(voidFmtItem, 0);
         comboColumns = new JComboBox(colModel);
-        comboColumns.setRenderer(new FmtItemRenderer());
+        // Assign a special renderer for FmtItems
+        if (FmtItem.class.isAssignableFrom(availableKeys.getClass().getComponentType())) {
+            comboColumns.setRenderer(new FmtItemRenderer());
+        }
         comboColumns.setActionCommand("columnsel");
         comboColumns.addActionListener(this);
         
@@ -187,21 +205,22 @@ public class FilterPanel<V extends FilterableObject,K extends FmtItem> extends J
         textValue.setEnabled(false);
         textValue.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
         
+        checkCaseSensitive = new JCheckBox(Utils._("Case sensitive"));
+        checkCaseSensitive.setEnabled(false);
+        
         buttonDelete = new JButton(Utils.loadIcon("general/Delete"));
         buttonDelete.setToolTipText(Utils._("Remove this condition"));
         
-        add(comboColumns);
-        add(Box.createHorizontalStrut(border));
-        add(comboOperator);
-        add(Box.createHorizontalStrut(border));
-        add(textValue);
-        add(Box.createHorizontalStrut(border));
-        add(buttonDelete);
+        add(comboColumns,  "0,0,f,f");
+        add(comboOperator, "2,0,f,f");
+        add(textValue,     "4,0,6,0,f,f");
+        add(checkCaseSensitive, "0,2,4,2,f,f");
+        add(buttonDelete,  "6,2,f,f");
         
         comboColumns.setSelectedIndex(0);
     }
 
-    public FilterPanel(FmtItemList<K> columns, Filter<V,K> initValue) {
+    public FilterPanel(FilterKeyList<K> columns, Filter<V,K> initValue) {
         this(columns);
         initFromFilter(initValue);
     }

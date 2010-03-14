@@ -134,17 +134,19 @@ public class YajHFCTrayIcon implements UnreadItemListener, WindowListener {
 
     public void newItemsAvailable(UnreadItemEvent evt) {
         if (trayIcon != null && !evt.isOldDataNull()) {
-            StringBuffer msg = new StringBuffer();
-            new MessageFormat(Utils._("{0} fax(es) received ({1} unread fax(es)):")).format(new Object[] { evt.getItems().size(), recvModel.getNumberOfUnreadFaxes()}, msg, null);
-            int senderIdx = recvModel.columns.getCompleteView().indexOf(RecvFormat.s);
-            if (senderIdx >= 0) {
-                for (RecvYajJob job : evt.getItems()) {
-                    msg.append('\n');
-                    msg.append(job.getStringData(senderIdx));
+            if (Utils.getFaxOptions().newFaxTrayNotification) {
+                StringBuffer msg = new StringBuffer();
+                new MessageFormat(Utils._("{0} fax(es) received ({1} unread fax(es)):")).format(new Object[] { evt.getItems().size(), recvModel.getNumberOfUnreadFaxes()}, msg, null);
+                int senderIdx = recvModel.columns.getCompleteView().indexOf(RecvFormat.s);
+                if (senderIdx >= 0) {
+                    for (RecvYajJob job : evt.getItems()) {
+                        msg.append('\n');
+                        msg.append(job.getStringData(senderIdx));
+                    }
                 }
-            }
 
-            trayIcon.displayMessage(Utils._("New fax received"), msg.toString(), ITrayIcon.MSGTYPE_INFO);
+                trayIcon.displayMessage(Utils._("New fax received"), msg.toString(), ITrayIcon.MSGTYPE_INFO);
+            }
             updateTooltip();
             if ((Utils.getFaxOptions().newFaxAction & FaxOptions.NEWFAX_BLINKTRAYICON) != 0) {
                 startBlinking();
