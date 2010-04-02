@@ -22,6 +22,7 @@ import java.util.Locale;
 
 public enum YajLanguage  {
     SYSTEM_DEFAULT(null),
+    CHINESE(Locale.CHINESE),
     ENGLISH(Locale.ENGLISH),
     FRENCH(Locale.FRENCH),
     GERMAN(Locale.GERMAN),

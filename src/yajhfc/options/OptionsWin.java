@@ -793,8 +793,10 @@ public class OptionsWin extends JDialog {
             
             comboDateFormat = new JComboBox(DateStyle.getAvailableDateStyles());
             comboDateFormat.setEditable(true);
+            ClipboardPopup.DEFAULT_POPUP.addToComponent(comboDateFormat);
             comboTimeFormat = new JComboBox(DateStyle.getAvailableTimeStyles());
             comboTimeFormat.setEditable(true);
+            ClipboardPopup.DEFAULT_POPUP.addToComponent(comboTimeFormat);
             
             addWithLabel(panelDateFormat, comboDateFormat, _("Date format:"), "1,2");
             addWithLabel(panelDateFormat, comboTimeFormat, _("Time format:"), "3,2");

@@ -33,6 +33,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.AbstractList;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -55,6 +56,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ListSelectionEvent;
@@ -88,6 +90,7 @@ import yajhfc.util.ExcDialogAbstractAction;
 import yajhfc.util.ExceptionDialog;
 import yajhfc.util.JTableTABAction;
 import yajhfc.util.LimitedPlainDocument;
+import yajhfc.util.ListComboModel;
 import yajhfc.util.ProgressPanel;
 import yajhfc.util.SafeJFileChooser;
 
@@ -96,6 +99,8 @@ import yajhfc.util.SafeJFileChooser;
  *
  */
 final class SimplifiedSendDialog extends JDialog implements SendWinControl {
+    protected static final int FAXNUMBER_LRU_COUNT = 10;
+    
     HylaClientManager clientManager;
     SendController sendController;
     
@@ -107,7 +112,8 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
     protected JButton buttonAdvanced;
     protected JTable tableNumbers;
     protected PBEntryFieldTableModel numberTableModel;
-    protected JTextField textNumber;
+    protected JComboBox comboNumber;
+    protected ListComboModel<String> comboNumberModel;
     protected Action actSend, actPreview, actPhonebook, actFromFile;
     
     protected JButton buttonCustomProps;
@@ -180,10 +186,13 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
-                Utils.getFaxOptions().sendWinBounds = getBounds();
-                Utils.getFaxOptions().sendWinIsAdvanced = isAdvancedView;
-            }     
-            
+                final FaxOptions faxOptions = Utils.getFaxOptions();
+                faxOptions.sendWinBounds = getBounds();
+                faxOptions.sendWinIsAdvanced = isAdvancedView;
+                List<String> numberLRU = faxOptions.faxNumbersLRU;
+                numberLRU.clear();
+                numberLRU.addAll(comboNumberModel.getList());
+            }            
         });
         
         if (Utils.getFaxOptions().sendWinBounds != null)
@@ -416,10 +425,28 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         
         actAddNumber = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {
-                PBEntryFieldContainer pbe = new DefaultPBEntryFieldContainer("");
-                pbe.setField(PBEntryField.FaxNumber, textNumber.getText());
+                Object selNum = comboNumber.getSelectedItem();
+                if (selNum == null)
+                    selNum = "";
+                
+                PBEntryFieldContainer pbe = new DefaultPBEntryFieldContainer("");                
+                final String faxNumber = selNum.toString();
+                pbe.setField(PBEntryField.FaxNumber, faxNumber);
                 numberTableModel.addRow(pbe);
-                textNumber.setText("");
+                
+                if (faxNumber.length() > 0) {
+                    int index = comboNumberModel.getList().indexOf(faxNumber);
+                    if (index != 0) { // If not already at the right position...
+                        if (index >= 0) {
+                            comboNumberModel.remove(index);
+                        }
+                        comboNumberModel.add(0, faxNumber);
+                        if (comboNumberModel.getSize() > FAXNUMBER_LRU_COUNT) {
+                            comboNumberModel.remove(FAXNUMBER_LRU_COUNT);
+                        }
+                    }
+                }
+                comboNumber.setSelectedItem("");
             }
         };
         actAddNumber.putValue(Action.NAME, Utils._("Add"));
@@ -508,12 +535,18 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         clpNumber.getPopupMenu().addSeparator();
         clpNumber.getPopupMenu().add(actAddNumber);
         
-        textNumber = new JTextField();
-        textNumber.addActionListener(actAddNumber);
-        textNumber.addMouseListener(clpNumber);
+        comboNumberModel = new ListComboModel<String>(new ArrayList<String>(11));
+        comboNumberModel.addAll(Utils.getFaxOptions().faxNumbersLRU);
+        comboNumber = new JComboBox(comboNumberModel);
+        comboNumber.setEditable(true);
+        comboNumber.setMaximumRowCount(FAXNUMBER_LRU_COUNT);
+        JComponent numberEditor = (JComponent)comboNumber.getEditor().getEditorComponent();
+        numberEditor.getActionMap().put("yajhfc-addnum", actAddNumber);
+        numberEditor.getInputMap().put(KeyStroke.getKeyStroke('\n'), "yajhfc-addnum");
+        clpNumber.addToComponent(comboNumber);
         
         tablePanel.add(new JLabel(Utils._("Fax number:")), "0,0,1,0, f,f");
-        tablePanel.add(textNumber, "0,1");
+        tablePanel.add(comboNumber, "0,1");
         tablePanel.add(new JLabel(Utils._("Recipients:")), "0,2,1,2, f,f");
         tablePanel.add(buttonAddNumber, "1,1");
         tablePanel.add(tablePane, "0,3,0,6,f,f");
@@ -588,6 +621,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         comboModem = new JComboBox(modemModel);
         comboModem.setEditable(true);
         comboModem.setSelectedItem(modemToSet);
+        ClipboardPopup.DEFAULT_POPUP.addToComponent(comboModem);
 
         checkArchiveJob = new JCheckBox(Utils._("Archive fax job"));
         
@@ -626,7 +660,8 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         
     protected void saveSettingsToSendController() {
         tflFiles.commit();
-        if (textNumber.getText().length() > 0) {
+        final Object selNumber = comboNumber.getSelectedItem();
+        if (selNumber != null && !"".equals(selNumber)) {
             actAddNumber.actionPerformed(null);
         }
         if (tableNumbers.isEditing()) {

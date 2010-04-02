@@ -54,7 +54,6 @@ public final class EntryPoint {
         PluginManager.pluginUIs.add(new PluginUI() {
             @Override
             public int getOptionsPanelParent() {
-                // TODO Auto-generated method stub
                 return OPTION_PANEL_ADVANCED;
             }
             
