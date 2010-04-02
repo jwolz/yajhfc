@@ -528,6 +528,11 @@ public class FaxOptions extends AbstractFaxOptions {
      */
     public boolean useWin32ShutdownManager = true;
     
+    /**
+     * The list of the least recently used fax numbers
+     */
+    public final List<String> faxNumbersLRU = new ArrayList<String>();
+    
     public FaxOptions() {
         super(null);
         

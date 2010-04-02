@@ -18,6 +18,7 @@ package yajhfc.util;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+import java.awt.Component;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.event.ActionEvent;
@@ -25,6 +26,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.JComboBox;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.text.JTextComponent;
@@ -130,6 +132,28 @@ public class ClipboardPopup implements MouseListener, ActionListener {
         // method stub
     }
 
+    /**
+     * Adds this clipboard popup to the specified component.
+     * @param comp
+     * @return true if the popup was successfully added, false if not (i.e. the component type is not supported)
+     */
+    public boolean addToComponent(Component comp) {
+        if (comp instanceof JTextComponent) {
+            comp.addMouseListener(this);
+            return true;
+        } else if (comp instanceof JComboBox) {
+            JComboBox box = (JComboBox)comp;
+            if (box.isEditable()) {
+                Component editComp = box.getEditor().getEditorComponent();
+                if (editComp instanceof JTextComponent) {
+                    editComp.addMouseListener(this);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
     /**
      * The application wide, shared default popup
      */
