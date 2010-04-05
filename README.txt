@@ -1,4 +1,4 @@
-README for YajHFC 0.4.2
+README for YajHFC 0.4.3
 =======================
 
 ABOUT
@@ -14,7 +14,7 @@ Features:
 * Viewing sent and received faxes
 * Phone book (entries can optionally be read from SQL databases or LDAP directories)
 * Visible table columns may be selected in a dialog
-* Supports nine languages: English, French, German, Greek, Italian, Polish, Russian, Spanish and Turkish
+* Supports ten languages: Chinese, English, French, German, Greek, Italian, Polish, Russian, Spanish and Turkish
 
 Homepage: http://yajhfc.berlios.de/
 email:    Jonas Wolz <jwolz@freenet.de>
@@ -29,9 +29,9 @@ Requirements:
 * Optional: A PostScript viewer (e.g. Ghostview), GhostScript
      and tiff2pdf (from libtiff-utils)
 
-To install YajHFC just download the yajhfc-0_4_2.jar file to some folder on your
+To install YajHFC just download the yajhfc-0_4_3.jar file to some folder on your
 file system.
-To execute it, use: "java -jar yajhfc-0_4_2.jar"
+To execute it, use: "java -jar yajhfc-0_4_3.jar"
 (In Windows you usually can just double click the jar file as well.)
 
 LICENSE
@@ -67,6 +67,7 @@ CHANGES
 -------
 
 0.4.3:
+- "View log" feature for sent faxes
 - Tray notification message can be turned off
 - Filters for Phone book items
 - "Extended resolution" support (i.e. USEXVRES=yes)
@@ -74,6 +75,7 @@ CHANGES
 - Support for TCP/IP and named pipe virtual printer port
 - Support for default/override configuration in /etc/yajhfc
 - Several bug fixes
+- RPM and DEB packages for YajHFC are available now
 
 0.4.2a:
 Fix for a bug which caused settings not being saved when no old settings file exists.

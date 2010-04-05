@@ -46,7 +46,7 @@ public class FormattedFile {
         PNG(Utils._("PNG pictures"),"png"),
         GIF(Utils._("GIF pictures"),"gif"),
         TIFF(Utils._("TIFF pictures"),"tiff", "tif"),
-        PlainText(Utils._("Plain text files"),"txt"),
+        PlainText(Utils._("Text files"),"txt"),
         XML(Utils._("XML documents"), "xml"),
         FOP(Utils._("XSL:FO documents"), "fo", "xml", "fop"),
         ODT(Utils._("OpenDocument text documents"), "odt"),

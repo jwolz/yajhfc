@@ -321,7 +321,8 @@ public enum JobFormat implements FmtItem {
     private static final JobFormat[] requiredFormats = {
         JobFormat.j,
         JobFormat.o,
-        JobFormat.a
+        JobFormat.a,
+        JobFormat.W
         
     };
     public static JobFormat[] getRequiredFormats() {
