@@ -56,14 +56,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
+import javax.swing.filechooser.FileFilter;
 
 import yajhfc.launch.Launcher2;
 import yajhfc.model.archive.QueueFileDateFormat;
 import yajhfc.plugin.PluginManager;
 import yajhfc.plugin.PluginUI;
+import yajhfc.util.ExampleFileFilter;
 import yajhfc.util.ExternalProcessExecutor;
 import yajhfc.util.TransactFileOutputStream;
 
@@ -72,10 +75,15 @@ public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2010 by Jonas Wolz";
-    public static final String AppVersion = "0.4.3beta5";
+    public static final String AppVersion = "0.4.3rc1";
     public static final String AuthorName = "Jonas Wolz";
     public static final String AuthorEMail = "jwolz@freenet.de";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
+    
+    /**
+     * The character encoding used by the HylaFAX server
+     */
+    public static final String HYLAFAX_CHARACTER_ENCODING = "ISO8859-1";
     
     /**
      * Input format for "long" HylaFax dates
@@ -1000,7 +1008,24 @@ public final class Utils {
         
         return lbl; 
     }
-    
+ 
+    /**
+     * Returns the selected file with the file extension appended if the user entered none
+     * @param chooser
+     * @return
+     */
+    public static File getSelectedFileFromSaveChooser(JFileChooser chooser) {
+        File selectedFile = chooser.getSelectedFile();
+        FileFilter ff = chooser.getFileFilter();
+        if (ff instanceof ExampleFileFilter) {
+            String fileName = selectedFile.getName();
+            int idx = fileName.lastIndexOf('.'); // Add the extension if none was specified
+            if (idx < 0) {
+                selectedFile = new File(selectedFile.getParent(), fileName + '.' + ((ExampleFileFilter)ff).getDefaultExtension());
+            }
+        }
+        return selectedFile;
+    }
 }
 
 

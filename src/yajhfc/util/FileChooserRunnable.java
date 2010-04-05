@@ -24,6 +24,8 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
+import yajhfc.Utils;
+
 /**
  * @author jonas
  *
@@ -56,16 +58,18 @@ public class FileChooserRunnable implements Runnable {
         if (selection != null) {
             fileChooser.setSelectedFile(selection);
         }
-        int res;
         if (showOpen) {
-            res = fileChooser.showOpenDialog(parent);
+            if (fileChooser.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION) {
+                selection = fileChooser.getSelectedFile();
+            } else {
+                selection = null;
+            }
         } else {
-            res = fileChooser.showSaveDialog(parent);
-        }
-        if (res == JFileChooser.APPROVE_OPTION) {
-            selection = fileChooser.getSelectedFile();
-        } else {
-            selection = null;
+            if (fileChooser.showSaveDialog(parent) == JFileChooser.APPROVE_OPTION) {
+                selection = Utils.getSelectedFileFromSaveChooser(fileChooser);
+            } else {
+                selection = null;
+            }
         }
     }
 

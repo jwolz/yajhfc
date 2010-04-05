@@ -31,9 +31,7 @@ import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -60,7 +58,9 @@ import java.util.logging.Logger;
 
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
+import javax.swing.InputMap;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -193,7 +193,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     protected StatusRefresher statRefresher = null;
    
     protected MouseListener tblMouseListener;
-    protected KeyListener tblKeyListener;
+    //protected KeyListener tblKeyListener;
     protected DefaultTableCellRenderer hylaDateRenderer;
     
     protected JPopupMenu tblPopup;
@@ -211,7 +211,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     // Actions:
     protected Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward, actAdminMode;
     protected Action actRefresh, actResend, actPrintTable, actSuspend, actResume, actClipCopy, actShowRowNumbers, actAdjustColumns, actReconnect, actEditToolbar;
-    protected Action actSaveAsPDF, actSaveAsTIFF, actUpdateCheck, actAnswerCall, actSearchFax; 
+    protected Action actSaveAsPDF, actSaveAsTIFF, actUpdateCheck, actAnswerCall, actSearchFax, actViewLog; 
     protected StatusBarResizeAction actAutoSizeStatus;
     protected ActionEnabler actChecker;
     protected Map<String,Action> availableActions = new HashMap<String,Action>();
@@ -1276,6 +1276,43 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         actSearchFax.putValue(Action.SMALL_ICON, Utils.loadIcon("general/Find"));
         putAvailableAction("SearchFax", actSearchFax);
         
+        actViewLog = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(java.awt.event.ActionEvent e) {
+                TooltipJTable<? extends FmtItem> selTable = getSelectedTable();
+                
+                if (selTable.getSelectedRowCount() == 0) {
+                    Toolkit.getDefaultToolkit().beep();
+                    return;
+                }
+                
+                TableType tt = selTable.getRealModel().getTableType();
+                switch (tt) {
+                case SENT:
+                case SENDING:
+                    // Supported
+                    break;
+                default:
+                    Toolkit.getDefaultToolkit().beep();
+                    return;
+                }
+                
+                // Collect selected rows:
+                List<YajJob<? extends FmtItem>> jobs = new ArrayList<YajJob<? extends FmtItem>>(selTable.getSelectedRowCount());
+                for (int idx : selTable.getSelectedRows()) {
+                    jobs.add(selTable.getJobForRow(idx));
+                }
+                
+                LogViewWorker worker = new LogViewWorker(jobs, clientManager, tablePanel);
+                worker.setCloseOnExit(true);
+                worker.startWork(MainWin.this, _("Viewing logs"));
+            }
+        };
+        actViewLog.putValue(Action.NAME, _("View log") + "...");
+        actViewLog.putValue(Action.SHORT_DESCRIPTION, _("Displays the communication log of the selected fax"));
+        actViewLog.putValue(Action.SMALL_ICON, Utils.loadIcon("general/History"));
+        putAvailableAction("ViewLog", actViewLog);
+        
+        
         actAutoSizeStatus = new StatusBarResizeAction();
         actAutoSizeStatus.putValue(Action.NAME, _("Auto-size status bar"));
         actAutoSizeStatus.putValue(Action.SHORT_DESCRIPTION, _("Automatically resize the status bar"));
@@ -1318,6 +1355,8 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             tblPopup.add(new JMenuItem(actShow));
             tblPopup.add(new JMenuItem(actFaxSave));
             tblPopup.add(new JMenuItem(actSaveAsPDF));
+            tblPopup.add(new JMenuItem(actSaveAsTIFF));
+            tblPopup.add(new JMenuItem(actViewLog));
             tblPopup.addSeparator();
             tblPopup.add(new JMenuItem(actClipCopy));
             tblPopup.addSeparator();
@@ -1398,24 +1437,24 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         return tblMouseListener;
     }
     
-    private KeyListener getTblKeyListener() {
-        if (tblKeyListener == null) {
-            tblKeyListener = new KeyAdapter() {
-                public void keyPressed(java.awt.event.KeyEvent e) {
-                    switch (e.getKeyCode()) {
-                    case KeyEvent.VK_ENTER:
-                        actShow.actionPerformed(null);
-                        break;
-                    case KeyEvent.VK_DELETE:
-                        actDelete.actionPerformed(null);
-                        break;
-                    }
-                };
-            };            
-        }
-        return tblKeyListener;
-    }
-    
+//    private KeyListener getTblKeyListener() {
+//        if (tblKeyListener == null) {
+//            tblKeyListener = new KeyAdapter() {
+//                public void keyPressed(java.awt.event.KeyEvent e) {
+//                    switch (e.getKeyCode()) {
+//                    case KeyEvent.VK_ENTER:
+//                        actShow.actionPerformed(null);
+//                        break;
+//                    case KeyEvent.VK_DELETE:
+//                        actDelete.actionPerformed(null);
+//                        break;
+//                    }
+//                };
+//            };            
+//        }
+//        return tblKeyListener;
+//    }
+//    
     private DefaultTableCellRenderer getHylaDateRenderer() {
         if (hylaDateRenderer == null) {
             hylaDateRenderer = new DefaultTableCellRenderer() {
@@ -2004,7 +2043,14 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         table.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         table.getSelectionModel().addListSelectionListener(actChecker);
         table.addMouseListener(getTblMouseListener());
-        table.addKeyListener(getTblKeyListener());
+        //table.addKeyListener(getTblKeyListener());
+        
+        table.getActionMap().put("yajhfc-show", actShow);
+        table.getActionMap().put("yajhfc-delete", actDelete);
+        final InputMap im = table.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "yajhfc-show");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "yajhfc-delete");
+        
         table.setDefaultRenderer(Date.class, getHylaDateRenderer());
         table.setDefaultRenderer(IconMap.class, new IconMap.TableCellRenderer());
         
@@ -2060,6 +2106,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             menuFax.add(new JMenuItem(actFaxSave));
             menuFax.add(new JMenuItem(actSaveAsPDF));
             menuFax.add(new JMenuItem(actSaveAsTIFF));
+            menuFax.add(new JMenuItem(actViewLog));
             menuFax.add(new JMenuItem(actDelete));
             menuFax.addSeparator();
             menuFax.add(new JMenuItem(actResume));
@@ -2329,6 +2376,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             boolean faxReadState = false, faxReadSelected = false;
             boolean resendState = false;
             boolean suspResumeState = false;
+            boolean viewLogState = false;
             
             final Component selectedComponent = tabMain.getSelectedComponent();
             if (selectedComponent == scrollRecv) { // Received Table active
@@ -2343,6 +2391,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                     deleteState = true;
                     showState = true;
                     resendState = true;
+                    viewLogState = true;
                 }
             } else if (selectedComponent == scrollSending) { // Sending Table
                 if (tableSending.getSelectedRow() >= 0) {
@@ -2350,6 +2399,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                     showState = true;
                     resendState = true;
                     suspResumeState = true;
+                    viewLogState = true;
                 }
                 // Uncomment for archive support.
             } if (selectedComponent == scrollArchive) { // Archive Table
@@ -2371,6 +2421,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             actSuspend.setEnabled(suspResumeState);
             actResume.setEnabled(suspResumeState);
             actClipCopy.setEnabled(showState);
+            actViewLog.setEnabled(viewLogState);
 
             actFaxRead.putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, faxReadSelected);
         }
