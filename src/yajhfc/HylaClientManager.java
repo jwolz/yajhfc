@@ -128,10 +128,10 @@ public class HylaClientManager {
                     
 
                     while (client.user(userName)) {                
-                        if (password == null) {
+                        if (password == null || password.length() == 0) {
 
                             String[] pwd = PasswordDialog.showPasswordDialog(owner, Utils._("User password"), Utils._("Please enter the user password:"), userName, false, false);
-                            if (pwd == null) { // User cancelled
+                            if (pwd == null || pwd[1].length() == 0) { // User cancelled
                                 client.quit();
                                 //doErrorCleanup(); // TODO
                                 return null;
@@ -154,10 +154,10 @@ public class HylaClientManager {
 
                     if (adminMode) {
                         boolean authOK = false;
-                        if (adminPassword == null) {
+                        if (adminPassword == null || adminPassword.length() == 0) {
                             do {
                                 String[] pwd = PasswordDialog.showPasswordDialog(owner, Utils._("Admin password"), Utils._("Please enter the administrative password:"), userName, false, false);
-                                if (pwd == null) { // User cancelled
+                                if (pwd == null || pwd[1].length() == 0) { // User cancelled
                                     break; //Continue in "normal" mode
                                 } else
                                     try {

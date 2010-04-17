@@ -1,4 +1,4 @@
-LÉEME (README) de YajHFC 0.4.2
+LÉAME (README) de YajHFC 0.4.3
 ==============================
 
 ACERCA DE
@@ -13,8 +13,8 @@ Características:
 * Soporte para generar páginas de portada a partir de plantillas
 * Visualización de faxes enviados y recibidos
 * Agenda telefónica (los datos se pueden leer, de manera opcional, desde bases de datos SQL o directorios LDAP)
-* Selección de columnas visibles (seleccionable desde cuadro de diálogo)
-* Disponible en nueve idiomas: alemán, español, francés, griego, inglés, italiano, polaco, ruso y turco.
+* Selección de columnas visibles (configurable desde cuadro de diálogo)
+* Disponible en diez idiomas: alemán, chino, español, francés, griego, inglés, italiano, polaco, ruso y turco
 
 Página principal: http://yajhfc.berlios.de/
 E-mail: 	  Jonas Wolz <jwolz@freenet.de>
@@ -29,22 +29,22 @@ Requisitos:
 * Opcional: un visor PostScript (por ejemplo, Ghostview), GhostScript
   y tiff2pdf (integrado en libtiff-utils)
 
-Para instalar YajHFC descargue el archivo yajhfc-0_4_2.jar en algún lugar 
+Para instalar YajHFC descargue el archivo yajhfc-0_4_3.jar en algún lugar 
 de su disco.
-Para ejecutarlo, utilice: "java -jar yajhfc-0_4_2.jar"
+Para ejecutarlo, utilice: "java -jar yajhfc-0_4_3.jar"
 (En Windows seguramente sólo sea necesario ejecutarlo pulsando dos veces sobre el archivo).
 
 LICENCIA
 --------
 
 YajHFC es software libre licenciado bajo la GPL.
-Revisa el archivo COPYING para más detalles.
+Consulte el archivo COPYING para más detalles.
 
 CÓDIGO FUENTE
 -------------
 
 Para obtener las instrucciones donde se describe cómo compilar YajHFC desde
-el código fuente, revisa el archivo BUILDING.txt que está en este directorio.
+el código fuente, revise el archivo BUILDING.txt que está en este directorio.
 
 YajHFC utiliza los siguientes paquetes:
 (1) La biblioteca gnu.hylafax (núcleo y paquete inet-ftp)
@@ -66,6 +66,20 @@ de Java (más avanzado que los programas "Hola mundo") utilizando la IDE Eclipse
 CAMBIOS
 -------
 
+0.4.3:
+- Nueva característica "Ver registro" para los faxes enviados
+- Posibilidad de desactivar el mensaje de notificación de la bandeja del sistema
+- Filtros para los elementos de la agenda telefónica
+- Soporte para "resolución ampliada" (p. ej. USEXVRES=yes)
+- Nuevo parámetro en línea de órdenes: --modem
+- Soporte para TCP/IP y puerto virtual de impresión mediante tuberías con nombre (FIFO)
+- Soporte para predeterminar/omitir la configuración en /etc/yajhfc
+- Corrección de varios errores
+- Disponibilidad de paquetes RPM y DEB para YajHFC
+
+0.4.2a:
+Se corrige un error por el cual no se almacenan los ajustes cuando no existe un archivo de configuración antiguo.
+
 0.4.2:
 - Se añade la traducción al polaco
 - Soporte para leer destinatarios desde archivos de texto
@@ -73,7 +87,7 @@ CAMBIOS
 - "Modo sólo envío" que no muestra la ventana principal (cuando se 
   envía un documento y no se especifican los parámetros --background ni --noclose)
 - Posibilidad de especificar opciones arbitrarias de HylaFAX para los nuevos trabajos de fax
-- Solución temporal a un bug de Java que hacía que YajHFC no almacenara sus ajustes cuando estaba en ejecución
+- Solución temporal a un error de Java que hacía que YajHFC no almacenara sus ajustes cuando estaba en ejecución
   mientras el usuario cerraba la sesión en Windows 7, Vista y (a veces) XP. 
 - Página de portada predeterminada en formato HTML para evitar problemas con las codificaciones de caracteres distintas de ISO-8859-1
 - El programa de instalación de Windows ahora ofrece, de manera opcional, instalar tiff2pdf y GhostScript
@@ -143,7 +157,7 @@ CAMBIOS
 - Suspender / Retomar trabajos de fax
 - Se añade la traducción en francés
 - Posibilidad de establecer mediante valor en línea de comandos la pestaña que se muestra al iniciar
-- La librería principal gnu.hylafax se utiliza ahora de forma predeterminada (la cual corrige algunos errores)
+- La biblioteca principal gnu.hylafax se utiliza ahora de forma predeterminada (la cual corrige algunos errores)
 
 0.3.3:
 - Soporte para reenvío de faxes
@@ -166,7 +180,7 @@ CAMBIOS
 - Opción para mostrar los nuevos faxes en el visor de forma automática
 - Opción para cambiar el intervalo de verificación de faxes del servidor HylaFAX
 - Cuadro de diálogo sencillo para buscar en la agenda de teléfonos
-- YajHFC debería ejecutarse ahora con la versión incluida de la librería gnu.hylafax (¡no se ha verificado del todo!)
+- YajHFC debería ejecutarse ahora con la versión incluida de la biblioteca gnu.hylafax (¡no se ha verificado del todo!)
 
 0.3.0:
 - Se añade soporte para convertir las imágenes a PostScript antes de enviar el fax
