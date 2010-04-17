@@ -1,4 +1,4 @@
-LISEZ MOI for YajHFC 0.4.1
+LISEZ MOI for YajHFC 0.4.3
 ==========================
 
 A PROPOS DE
@@ -8,15 +8,15 @@ YajHFC (Yet Another Java HylaFAX Client) est un client pour le serveur de fax Hy
 (http://www.hylafax.org/) ecrit en Java.
 
 Caracteristiques:
-* Faxer des documents au format PostScript ou PDF
+* Faxer des documents au format PostScript ou PDF et de nombreux autres formats
 * Reception de faxes
 * Support de la generation de pages de couvertures depuis des modeles
 * Visualiser les faxs envoyes et recus
-* Carnet d'adresse
+* Carnet d'adresse (les entrée peuvent provenir d'annuaire LDAP ou base SQL)
 * Parametrage des colonnes affichees par boite de dialogue
-* Support de quatres langues : Anglais, Allemand, Espagnol and Francais
+* Support de 10 langues : Chinois,Anglais, Allemand, Espagnol,Francais,Grec,Italien, Polonais, Russe,Turc
 
-Page d'accueil: http://www.yajhfc.de.vu/
+Page d'accueil: http://yajhfc.berlios.de/
 email:    Jonas Wolz <jwolz@freenet.de>
 
 INSTALLATION
@@ -29,7 +29,7 @@ Pres requis:
 * Optionnel: Un visualiseur Postscript (e.g. Ghostview), GhostScript
      et tiff2pdf (librairie libtiff-utils)
 
-Pour Installer YajHFC Telechargez le fichier yajhfc-0_4_1.jar dans un repertoire
+Pour Installer YajHFC Telechargez le fichier yajhfc-0_4_3http://yajhfc.berlios.de/.jar dans un repertoire
 sur votre machine.
 Pour l'executer, utilisez la commande: "java -jar yajhfc-0_4_1.jar"
 (Sous Windows vous pouvez habituellement double cliquer sur le fichier jar.)
@@ -62,6 +62,20 @@ YajHFC a ete originellement ecrit comme un premier projet Java
 
 MODIFICATIONS
 -------------
+
+0.4.3:
+- "Visualiser log" pour les fax envoyés
+- Le message de bas de page peut être inibé
+- Filtres pour le carnet d'adresse
+- Support d'une "resolution Etendue" (i.e. USEXVRES=yes)
+- Nouveaux paramètres de ligne de commande : --modem
+- Support des ports d'imprimante virtuelle TCP/IP et named pipe
+- Support de surcharge de configurations par default dans /etc/yajhfc
+- Quelques corrections de bugs
+- Pacquets RPM et DEB de YajHFC maintenat disponibles
+
+0.4.2a:
+Correction du bug d'enregistrement des options quand aucune ancienne version d'options n'existait.
 
 0.4.2:
 - Traduction polonaise ajouté

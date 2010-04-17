@@ -1,4 +1,4 @@
-LEGGIMI per YajHFC 0.4.2
+LEGGIMI per YajHFC 0.4.3
 ========================
 
 INFORMAZIONI
@@ -14,7 +14,7 @@ Funzionalità:
 * Visualizzazione dei fax inviati e ricevuti
 * Rubrica (le voci possono essere opzionalmente lette da database SQL o directory LDAP)
 * E' possibile selezionare in una apposita finestra le colonne degli elenchi fax da visualizzare
-* Supporto per nove lingue: Inglese, Francese, Tedesco, Greco, Italiano, Polacco, Russo, Spagnolo e Turco
+* Supporto per dieci lingue: Cinese, Inglese, Francese, Tedesco, Greco, Italiano, Polacco, Russo, Spagnolo e Turco
 
 Homepage: http://yajhfc.berlios.de/
 email:    Jonas Wolz <jwolz@freenet.de>
@@ -29,8 +29,8 @@ Requisiti:
 * Opzionale: un visualizzatore PostScript (es. Ghostview), GhostScript
      e tiff2pdf (dal pacchetto libtiff-utils)
 
-Per installare YajHFC basta scaricare il file yajhfc-0_4_2.jar su una cartella del proprio disco.
-Per eseguirlo utilizzare: "java -jar yajhfc-0_4_2.jar"
+Per installare YajHFC basta scaricare il file yajhfc-0_4_3.jar su una cartella del proprio disco.
+Per eseguirlo utilizzare: "java -jar yajhfc-0_4_3.jar"
 (In Windows normalmente è anche possibile cliccare due volte sul file jar.)
 
 LICENZA
@@ -64,6 +64,18 @@ YajHFC originariamente era stato scritto come primo progetto Java più complesso
 
 MODIFICHE
 ---------
+
+0.4.3:
+- Funzionalità "Visualizza Log" per i fax inviati
+- I messaggi nell'area di notifica possono essere disabilitati
+- Filtri per gli elementi della rubrica
+- Supporto per "Risoluzione estesa" (es. USEXVRES=yes)
+- nuovo parametro per la linea di comando: --modem
+- Supporto per porte stampante virtuale TCP/IP e named pipe
+- Supporto per configurazione predefinita/override in /etc/yajhfc
+- Correzioni varie
+- Sono ora disponibili i pacchetti RPM e DEB packages per YajHFC.
+
 
 0.4.2a:
 Corretto un difetto che faceva sì che i settaggi non venissero salvati quando non esisteva un
