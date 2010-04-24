@@ -75,7 +75,7 @@ public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2010 by Jonas Wolz";
-    public static final String AppVersion = "0.4.3";
+    public static final String AppVersion = "0.4.4alpha1";
     public static final String AuthorName = "Jonas Wolz";
     public static final String AuthorEMail = "jwolz@freenet.de";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
@@ -183,11 +183,16 @@ public final class Utils {
      * True if we run under the Windows platform
      */
     public static final boolean IS_WINDOWS;
+    /**
+     * True if we run under Mac OS X
+     */
+    public static final boolean IS_MACOSX;
     private static final boolean buggyLocationByPlatform;
     static {
         final String osname = System.getProperty("os.name").toLowerCase();
         IS_WINDOWS = osname.contains("windows");
-        
+        IS_MACOSX = osname.startsWith("mac os x");
+
         // Do we have a buggy Java/Windows combination?
         buggyLocationByPlatform = (IS_WINDOWS && (osname.equals("windows 95") || osname.equals("windows 98") || osname.equals("windows me")));
     }
@@ -452,7 +457,16 @@ public final class Utils {
         }
         
         //XXX: Move somewhere else?
+        initializeUIProperties();
+    }
+    
+    public static void initializeUIProperties() {
         UIManager.getDefaults().addResourceBundle("yajhfc.i18n.UIDefaults");
+        
+        if (IS_MACOSX) {
+            System.setProperty("apple.laf.useScreenMenuBar", "true");
+            System.setProperty("com.apple.mrj.application.apple.menu.about.name", AppShortName);
+        }
     }
     
     public static String minutesToHylaTime(int mins) {
@@ -933,7 +947,7 @@ public final class Utils {
                 startCmd += " /C start \"Viewer\" \"%s\"";
 
                 systemViewer = startCmd;
-            } else if (System.getProperty("os.name").startsWith("Mac OS X")) {
+            } else if (IS_MACOSX) {
                 systemViewer = "open \"%s\"";
             } else { // Assume Unix
                 String kde = System.getenv("KDE_FULL_SESSION");
