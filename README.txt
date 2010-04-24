@@ -66,7 +66,11 @@ YajHFC was originally written as a first more complicated
 CHANGES
 -------
 
+0.4.4:
+- Improved MAC OS support (mostly cosmetic changes)
+
 0.4.3:
+- Chinese translation added
 - "View log" feature for sent faxes
 - Tray notification message can be turned off
 - Filters for Phone book items

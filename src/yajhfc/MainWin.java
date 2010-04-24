@@ -2113,8 +2113,10 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             menuFax.add(new JMenuItem(actSuspend));
             menuFax.addSeparator();
             menuFax.add(new ActionJCheckBoxMenuItem(actFaxRead));
-            menuFax.addSeparator();
-            menuFax.add(new JMenuItem(actExit));
+            if (!Utils.IS_MACOSX) {
+                menuFax.addSeparator();
+                menuFax.add(new JMenuItem(actExit));
+            }
         }
         return menuFax;
     }
