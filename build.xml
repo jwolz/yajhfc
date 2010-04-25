@@ -97,7 +97,7 @@
 				<pathelement path="${classpath}"/>
 				<pathelement location="${gnu.hylafax.classFileLocation}"/>
 				<pathelement location="${jar-extra}"/>
-				<pathelement location="${src}"/>
+				<pathelement location="${build}"/>
 			</classpath>
 		</javac>
 
@@ -108,12 +108,23 @@
 				<pathelement path="${classpath}"/>
 				<pathelement location="${gnu.hylafax.classFileLocation}"/>
 				<pathelement location="${jar-extra}"/>
-				<pathelement location="${src}"/>
+				<pathelement location="${build}"/>
 			</classpath>
 		</javac>
 
 	</target>
 
+	<target name="compile-mac" depends="compile" description="compile the Mac OS X specific source code" >
+			<!-- Compile the java code from ${src} into ${build} -->
+			<javac srcdir="${src}/mac-src" includes="**/*.java" destdir="${src}/mac-src" source="1.5" target="1.5" encoding="utf-8" debug="true" debuglevel="lines,source">
+				<classpath>
+					<pathelement path="${classpath}"/>
+					<pathelement location="${gnu.hylafax.classFileLocation}"/>
+					<pathelement location="${jar-extra}"/>
+					<pathelement location="${build}"/>
+				</classpath>
+			</javac>
+	</target>
 	<!--
 	<target name="i18n" depends="init" description="Compiles and/or copies the translations">
 		<antcall target="i18n.msgfmt"/>
@@ -138,6 +149,7 @@
 		<jar jarfile="${jar-output}" manifest="${jar-extra}/manifest.txt">
 			<fileset dir="${build}" includes="yajhfc/**,gnu/**,au/**"/>
 			<fileset dir="${src}/src" includes="yajhfc/i18n/*.class,**/*.properties"/>
+			<fileset dir="${src}/mac-src" includes="yajhfc/**/*.class"/>
 			<fileset dir="${jar-extra}" includes="info/**/*.class,toolbarButtonGraphics/**/*.gif,org/**/*.class"/>
 			<fileset dir="${gnu.hylafax.classFileLocation}" includes="**/*.class"/>
 			<fileset dir="${src}" includes="COPYING,README*.txt,doc/*.html,doc/*.css,doc/*.png"/>

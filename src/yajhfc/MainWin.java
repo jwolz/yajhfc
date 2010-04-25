@@ -103,6 +103,7 @@ import yajhfc.filters.StringFilterOperator;
 import yajhfc.filters.ui.CustomFilterDialog;
 import yajhfc.launch.Launcher2;
 import yajhfc.launch.MainApplicationFrame;
+import yajhfc.macosx.MacOSXSupport;
 import yajhfc.model.MyTableModel;
 import yajhfc.model.RecvYajJob;
 import yajhfc.model.SendingYajJob;
@@ -223,6 +224,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         Ready, NeedToWait, NotReady;
     }
     protected SendReadyState sendReady = SendReadyState.NeedToWait;
+    boolean hideMenusForMac = false;
     
     // Worker classes:
     private class DeleteWorker extends ProgressWorker {
@@ -1563,6 +1565,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         myopts = Utils.getFaxOptions();
         
         createActions(adminState);
+        initializePlatformSpecifics();
         
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setJMenuBar(getJJMenuBar());
@@ -1628,6 +1631,17 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         } else {
             myopts.statusBarSize = statusSplitter.getHeight() - statusSplitter.getDividerLocation();
         }
+    }
+    
+    void initializePlatformSpecifics() {
+    	if (Utils.IS_MACOSX) {
+    		MacOSXSupport macSup = MacOSXSupport.getInstance();
+    		if (macSup != null) {
+    			macSup.setApplicationMenuActions(actOptions, actAbout, actExit);
+    			hideMenusForMac = true;
+    			macSup.setDockIconImage(Toolkit.getDefaultToolkit().getImage(MainWin.class.getResource("logo-large.png")));
+    		}
+    	}
     }
     
     void showOrHideTrayIcon() {
@@ -1839,7 +1853,9 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             helpMenu.add(new JMenuItem(actReadme));
             helpMenu.addSeparator();
             helpMenu.add(new JMenuItem(actUpdateCheck));
-            helpMenu.add(new JMenuItem(actAbout));
+            if (!hideMenusForMac) {
+            	helpMenu.add(new JMenuItem(actAbout));
+            }
         }
         return helpMenu;
     }
@@ -2113,7 +2129,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             menuFax.add(new JMenuItem(actSuspend));
             menuFax.addSeparator();
             menuFax.add(new ActionJCheckBoxMenuItem(actFaxRead));
-            if (!Utils.IS_MACOSX) {
+            if (!hideMenusForMac) {
                 menuFax.addSeparator();
                 menuFax.add(new JMenuItem(actExit));
             }
@@ -2130,7 +2146,9 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             menuExtras.add(new JMenuItem(actPrintTable));
             menuExtras.add(new JMenuItem(actSearchFax));
             menuExtras.addSeparator();
-            menuExtras.add(new JMenuItem(actOptions));
+            if (!hideMenusForMac) {
+            	menuExtras.add(new JMenuItem(actOptions));
+            }
             menuExtras.add(new JMenuItem(actEditToolbar));
             menuExtras.addSeparator();
             menuExtras.add(new JMenuItem(actReconnect));
