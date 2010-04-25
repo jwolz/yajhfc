@@ -63,6 +63,7 @@ import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 
 import yajhfc.launch.Launcher2;
+import yajhfc.macosx.MacOSXSupport;
 import yajhfc.model.archive.QueueFileDateFormat;
 import yajhfc.plugin.PluginManager;
 import yajhfc.plugin.PluginUI;
@@ -455,18 +456,15 @@ public final class Utils {
                 msgs = null;
             }
         }
-        
-        //XXX: Move somewhere else?
-        initializeUIProperties();
+        UIManager.getDefaults().addResourceBundle("yajhfc.i18n.UIDefaults");
     }
     
     public static void initializeUIProperties() {
-        UIManager.getDefaults().addResourceBundle("yajhfc.i18n.UIDefaults");
-        
         if (IS_MACOSX) {
-            System.setProperty("apple.laf.useScreenMenuBar", "true");
-            System.setProperty("com.apple.mrj.application.apple.menu.about.name", AppShortName);
+            MacOSXSupport.setUIProperties();
         }
+        
+        setLookAndFeel(getFaxOptions().lookAndFeel);
     }
     
     public static String minutesToHylaTime(int mins) {
@@ -640,6 +638,18 @@ public final class Utils {
                 target.removeWindowListener(this);
             }
         });
+        if (IS_MACOSX) {
+        	makeWinAndOwnersVisible(target.getOwner());
+        }
+    }
+    
+    public static void makeWinAndOwnersVisible(Window win) {
+    	if (win == null)
+    		return;
+    	
+    	if (!win.isVisible())
+    		win.setVisible(true);
+    	makeWinAndOwnersVisible(win.getOwner());
     }
     
     public static void setWaitCursor(Dialog dlgToSet) {

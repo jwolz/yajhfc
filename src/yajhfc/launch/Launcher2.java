@@ -109,6 +109,7 @@ public class Launcher2 {
             }
         }
         
+        Utils.initializeUIProperties();
         if (opts.noGUI) {
             noGUIStartup(opts);
         } else {
@@ -235,7 +236,7 @@ public class Launcher2 {
             
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
-                    Utils.setLookAndFeel(Utils.getFaxOptions().lookAndFeel);
+                    //Utils.initializeUIProperties();
                     
                     NoGUISender dummyFrame = new NoGUISender();
                     dummyFrame.clientManager = new HylaClientManager(Utils.getFaxOptions());
@@ -466,7 +467,7 @@ public class Launcher2 {
         
         public void run() {
             boolean setVisible = true;
-            Utils.setLookAndFeel(Utils.getFaxOptions().lookAndFeel);
+            //Utils.initializeUIProperties();
             
             MainWin mainWin = new MainWin(adminMode);
             Launcher2.application = mainWin;
