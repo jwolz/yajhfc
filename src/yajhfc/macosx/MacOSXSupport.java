@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 import javax.swing.Action;
 
 import yajhfc.Utils;
+import yajhfc.launch.MainApplicationFrame;
 
 /**
  * @author jonas
@@ -64,7 +65,7 @@ public abstract class MacOSXSupport {
 	 * @param actAbout
 	 * @param actQuit
 	 */
-	public abstract void setApplicationMenuActions(Action actPreferences, Action actAbout, Action actQuit);
+	public abstract void setApplicationMenuActions(MainApplicationFrame mainWindow, Action actPreferences, Action actAbout, Action actQuit);
 	
 	/**
 	 * Sets the dock icon image

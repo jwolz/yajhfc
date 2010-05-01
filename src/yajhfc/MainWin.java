@@ -1637,10 +1637,11 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     	if (Utils.IS_MACOSX) {
     		MacOSXSupport macSup = MacOSXSupport.getInstance();
     		if (macSup != null) {
-    			macSup.setApplicationMenuActions(actOptions, actAbout, actExit);
+    			macSup.setApplicationMenuActions(this, actOptions, actAbout, actExit);
     			hideMenusForMac = myopts.adjustMenusForMacOSX;
     			macSup.setDockIconImage(Toolkit.getDefaultToolkit().getImage(MainWin.class.getResource("logo-large.png")));
     		}
+    		getRootPane().putClientProperty("apple.awt.brushMetalLook", Boolean.TRUE);
     	}
     }
     

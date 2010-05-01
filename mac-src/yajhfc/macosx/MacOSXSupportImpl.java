@@ -18,10 +18,13 @@
  */
 package yajhfc.macosx;
 
+import java.awt.Frame;
 import java.awt.Image;
 import java.awt.PopupMenu;
 
 import javax.swing.Action;
+
+import yajhfc.launch.MainApplicationFrame;
 
 import com.apple.eawt.Application;
 import com.apple.eawt.ApplicationAdapter;
@@ -35,6 +38,7 @@ import com.apple.eawt.ApplicationListener;
 public class MacOSXSupportImpl extends MacOSXSupport {
 	private ApplicationListener appListener = null;
 	
+	protected MainApplicationFrame mainWindow;
 	protected Action actPreferences;
 	protected Action actAbout;
 	protected Action actQuit;
@@ -43,7 +47,7 @@ public class MacOSXSupportImpl extends MacOSXSupport {
 	 * @see yajhfc.macosx.MacOSXSupport#setApplicationMenuActions(javax.swing.Action, javax.swing.Action, javax.swing.Action)
 	 */
 	@Override
-	public void setApplicationMenuActions(Action preferencesAction,
+	public void setApplicationMenuActions(MainApplicationFrame mainWin, Action preferencesAction,
 			Action aboutAction, Action quitAction) {
 		Application app = Application.getApplication();
 		if (appListener == null) {
@@ -71,9 +75,17 @@ public class MacOSXSupportImpl extends MacOSXSupport {
 						arg0.setHandled(true);
 					}
 				}
+				
+				@Override
+				public void handleReOpenApplication(ApplicationEvent arg0) {
+					if (mainWindow != null) {
+						mainWindow.bringToFront();
+					}
+				}
 			};
 			app.addApplicationListener(appListener);
 		}
+		this.mainWindow = mainWin;
 		this.actAbout = aboutAction;
 		app.setEnabledAboutMenu(aboutAction != null);
 		this.actPreferences = preferencesAction;
