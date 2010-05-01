@@ -533,6 +533,11 @@ public class FaxOptions extends AbstractFaxOptions {
      */
     public final List<String> faxNumbersLRU = new ArrayList<String>();
     
+    /**
+     * Determines if certain menu entries (Quit, Options, About) are removed on Mac OS X
+     */
+    public boolean adjustMenusForMacOSX = true;
+    
     public FaxOptions() {
         super(null);
         
