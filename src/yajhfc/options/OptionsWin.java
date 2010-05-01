@@ -870,6 +870,7 @@ public class OptionsWin extends JDialog {
             
             textFilterFromFaxNr = new JTextField();
             textFilterFromFaxNr.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
+            textFilterFromFaxNr.setToolTipText( _("Characters filtered from the fax number sent to HylaFAX:"));
             
             comboTZone = new JComboBox(FaxTimezone.values());
             comboNotify = new JComboBox(FaxNotification.values());
@@ -906,7 +907,7 @@ public class OptionsWin extends JDialog {
             addWithLabel(panelSend, spinKillTime, _("Cancel job after (minutes):"), "3, 8, f, c");
             addWithLabel(panelSend, spinMaxDial, _("Maximum dials:"), "1, 10, f, c");
             addWithLabel(panelSend, spinMaxTry, _("Maximum tries:"), "3, 10, f, c");
-            addWithLabel(panelSend, textFilterFromFaxNr, _("Characters filtered from the fax number sent to HylaFAX:"), "1,12,f,c");
+            addWithLabel(panelSend, textFilterFromFaxNr, _("Filter from fax number:"), "1,12,f,c");
             panelSend.add(checkArchiveSentFaxes, "1,13,f,c");
             panelSend.add(buttonJobOption, "3,13,f,c");
         }
