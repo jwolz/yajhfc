@@ -38,9 +38,6 @@ import yajhfc.file.FormattedFile.FileFormat;
 public class SentYajJob extends YajJob<JobFormat> {
     private static final Logger log = Logger.getLogger(SentYajJob.class.getName());
     
-    protected int statusCol;
-    protected int jobIDCol;
-    
     public static final char JOBSTATE_UNDEFINED = '?';
     public static final char JOBSTATE_FAILED = 'F';
     public static final char JOBSTATE_SUSPENDED = 'T';
@@ -60,7 +57,7 @@ public class SentYajJob extends YajJob<JobFormat> {
     }
     
     public Job getJob(HylaFAXClient hyfc) throws ServerResponseException, IOException {
-        return hyfc.getJob((Integer)getData(jobIDCol));
+        return hyfc.getJob((Integer)getData(JobFormat.j));
     }
     
     @Override
@@ -175,11 +172,11 @@ public class SentYajJob extends YajJob<JobFormat> {
     
     @Override
     public Object getIDValue() {
-        return getData(jobIDCol);
+        return getData(JobFormat.j);
     }
 
     public char getJobState() {
-        String state = getStringData(statusCol);
+        String state = getStringData(JobFormat.a);
         if (state != null && state.length() > 0) {
             return state.charAt(0);
         } else {
@@ -188,11 +185,18 @@ public class SentYajJob extends YajJob<JobFormat> {
     }
     
     @Override
-    public void setColumns(FmtItemList<JobFormat> columns) {
-        jobIDCol = columns.getCompleteView().indexOf(JobFormat.j);
-        statusCol = columns.getCompleteView().indexOf(JobFormat.a);
-        
+    public void setColumns(FmtItemList<JobFormat> columns) {        
         super.setColumns(columns);
+    }
+    
+    @Override
+    public HylaServerFile getCommunicationsLog() {
+        String commID = getStringData(JobFormat.W);
+        if (commID == null || commID.length() == 0) {
+            return null;
+        } else {
+            return new HylaServerFile("log/c" + commID, FileFormat.PlainText);
+        }
     }
     
     public SentYajJob(FmtItemList<JobFormat> cols, String[] stringData) {

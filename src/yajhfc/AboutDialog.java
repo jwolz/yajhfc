@@ -152,7 +152,7 @@ public class AboutDialog extends JDialog implements HyperlinkListener {
     private JScrollPane addSysPropTxt() {
         JTextArea text = new JTextArea();
         text.setEditable(false);
-        text.setFont(new Font("DialogInput", java.awt.Font.PLAIN, 12));
+        text.setFont(new Font("Monospaced", Font.PLAIN, 12));
         text.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
 
         Properties sp = System.getProperties();

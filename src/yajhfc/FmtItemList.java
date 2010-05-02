@@ -21,7 +21,10 @@ package yajhfc;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,6 +41,8 @@ public class FmtItemList<T extends FmtItem> extends ArrayList<T> implements Filt
     protected T[] availableItems;
     protected T[] obligateItems;
     protected List<T> completeView;
+    protected Map<T,Integer> itemIndices;
+    protected boolean haveItemMap = false;
 
     /**
      * Returns a view of this list that has the obligateItems appended to the end if necessary.
@@ -45,11 +50,24 @@ public class FmtItemList<T extends FmtItem> extends ArrayList<T> implements Filt
      */
     public List<T> getCompleteView() {
         if (completeView == null) {
-            List<T> completeView = new ArrayList<T>(size() + obligateItems.length);
+            itemIndices.clear();
+            // Rebuild map
+            for (int i = 0; i < size(); i++) {
+                itemIndices.put(get(i), Integer.valueOf(i));
+            }
+            haveItemMap = true;
+            
+            List<T> completeView = new ArrayList<T>(size() + obligateItems.length) {
+                @Override
+                public int indexOf(Object elem) {
+                    return indexOfFromMap(elem);
+                }
+            };
             completeView.addAll(this);
             for (T fi : obligateItems) {
                 if (!this.contains(fi)) {
                     completeView.add(fi);
+                    itemIndices.put(fi, completeView.size()-1);
                 }
             }
             if (completeView.size() > size()) {
@@ -135,56 +153,90 @@ public class FmtItemList<T extends FmtItem> extends ArrayList<T> implements Filt
     // Override methods modifying the list to reset the complete view
     @Override
     public boolean add(T o) {
-        completeView = null;
+        resetCompleteView();
         return super.add(o);
     }
 
     @Override
     public void add(int index, T element) {
-        completeView = null;
+        resetCompleteView();
         super.add(index, element);
     }
 
     @Override
     public boolean addAll(Collection<? extends T> c) {
-        completeView = null;
+        resetCompleteView();
         return super.addAll(c);
     }
 
     @Override
     public boolean addAll(int index, Collection<? extends T> c) {
-        completeView = null;
+        resetCompleteView();
         return super.addAll(index, c);
     }
 
     @Override
     public void clear() {
-        completeView = null;
+        resetCompleteView();
         super.clear();
     }
 
     @Override
     public T remove(int index) {
-        completeView = null;
+        resetCompleteView();
         return super.remove(index);
     }
 
     @Override
     public boolean remove(Object o) {
-        completeView = null;
+        resetCompleteView();
         return super.remove(o);
     }
 
     @Override
     public T set(int index, T element) {
-        completeView = null;
+        resetCompleteView();
         return super.set(index, element);
     }
 
+    protected void resetCompleteView() {
+        completeView = null;
+        itemIndices.clear();
+        haveItemMap = false;
+    }
+
+    protected int indexOfFromMap(Object elem) {
+        if (!haveItemMap) {
+            getCompleteView(); // Build the mapping
+        }
+        Integer mapping = itemIndices.get(elem);
+        if (mapping == null)
+            return -1;
+        else
+            return mapping.intValue();
+    }
+    
+    @Override
+    public int indexOf(Object elem) {
+        int index = indexOfFromMap(elem);
+        if (index >= size()) // Only in complete view
+            return -1;
+        else
+            return index;
+    }
+    
+    @SuppressWarnings("unchecked")
     public FmtItemList(T[] allItems, T[] obligateItems) {
         super();
         this.availableItems = allItems;
         this.obligateItems = obligateItems;
+        
+        Class<T> itemClass = getItemClass();
+        if (Enum.class.isAssignableFrom(itemClass)) {
+            itemIndices = new EnumMap(itemClass);
+        } else {
+            itemIndices = new HashMap<T,Integer>();
+        }
     }
     
 //    protected class CompleteView extends AbstractList<T> {
@@ -223,9 +275,14 @@ public class FmtItemList<T extends FmtItem> extends ArrayList<T> implements Filt
     public Object translateKey(T key) {
         return getCompleteView().indexOf(key);
     }
-    
+        
     @SuppressWarnings("unchecked")
     private T[] newArray(int size) {
-        return (T[])Array.newInstance(availableItems.getClass().getComponentType(), size);
+        return (T[])Array.newInstance(getItemClass(), size);
+    }
+    
+    @SuppressWarnings("unchecked")
+    private Class<T> getItemClass() {
+        return (Class<T>)availableItems.getClass().getComponentType();
     }
 }

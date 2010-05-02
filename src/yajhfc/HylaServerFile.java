@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import yajhfc.file.FormattedFile;
 import yajhfc.file.FormattedFile.FileFormat;
@@ -42,15 +43,38 @@ public class HylaServerFile {
         return type;
     }
     
-    public void download(HylaFAXClient hyfc, File target) 
-        throws IOException, FileNotFoundException, ServerResponseException {
-        FileOutputStream out = new FileOutputStream(target);
-        
+    /**
+     * Copy this file's content into the specified stream.
+     * @param hyfc
+     * @param target
+     * @throws IOException
+     * @throws ServerResponseException
+     */
+    public void downloadToStream(HylaFAXClient hyfc, OutputStream target) throws IOException, ServerResponseException {
         synchronized (hyfc) {
             hyfc.type(gnu.inet.ftp.FtpClientProtocol.TYPE_IMAGE);
-            hyfc.get(path, out);
+            hyfc.get(path, target);
         }
-        out.close();
+    }
+    
+    /**
+     * Download this file to the specified local file.
+     * The default implementation just opens a FileOutputStream and then calls downloadToStream()
+     * @param hyfc
+     * @param target
+     * @throws IOException
+     * @throws FileNotFoundException
+     * @throws ServerResponseException
+     */
+    public void download(HylaFAXClient hyfc, File target) throws IOException, FileNotFoundException, ServerResponseException {
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(target);
+            downloadToStream(hyfc, out);
+        } finally {
+            if (out != null)
+                out.close();
+        }
     }
     
     public String getDefaultExtension() {

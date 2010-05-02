@@ -54,6 +54,15 @@ public abstract class YajJob<T extends FmtItem> implements FilterableObject {
         }
     }
     
+    public String getStringData(T col) {
+        int index = columns.getCompleteView().indexOf(col);
+        if (index < 0) {
+            return null;
+        } else {
+            return getStringData(index);
+        }
+    }
+    
     public String getStringData(int col) {
         if (col >= stringData.length && col < columns.getCompleteView().size())
             return "";
@@ -61,6 +70,15 @@ public abstract class YajJob<T extends FmtItem> implements FilterableObject {
             throw new ArrayIndexOutOfBoundsException(col);
         else
             return stringData[col];
+    }
+    
+    public Object getData(T col) {
+        int index = columns.getCompleteView().indexOf(col);
+        if (index < 0) {
+            return null;
+        } else {
+            return getData(index);
+        }
     }
     
     public Object getData(int col) {
@@ -183,6 +201,14 @@ public abstract class YajJob<T extends FmtItem> implements FilterableObject {
      * Returns a value that can be used as a identifier for this Job.
      */ 
     public abstract Object getIDValue();
+    
+    /**
+     * Returns the communications log for this job or null if no such log exists.
+     * @return
+     */
+    public HylaServerFile getCommunicationsLog() {
+        return null;
+    }
     
     public YajJob(FmtItemList<T> cols, String[] stringData) {
         setColumns(cols);

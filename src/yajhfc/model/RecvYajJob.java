@@ -31,15 +31,13 @@ import yajhfc.RecvFormat;
 import yajhfc.file.FormattedFile.FileFormat;
 
 public class RecvYajJob extends YajJob<RecvFormat> {
-    protected int fileNameCol;
-    protected int errorCol;
-    protected int progressCol;
     protected boolean read;
     protected UnReadMyTableModel tableModel;
     
     @Override
     public boolean isError() {
         // Also update MainWin.MenuViewListener if this is changed!
+        int errorCol = columns.getCompleteView().indexOf(RecvFormat.e);
         if (errorCol >= 0) {
             String errorDesc = getStringData(errorCol);
             return (errorDesc != null) && (errorDesc.length() > 0);
@@ -61,19 +59,16 @@ public class RecvYajJob extends YajJob<RecvFormat> {
     }
     
     public boolean isInProgress() {
-        return (Boolean)getData(progressCol);
+        return (Boolean)getData(RecvFormat.z);
     }
     
     @Override
     public void setColumns(FmtItemList<RecvFormat> columns) {
         super.setColumns(columns);
-        fileNameCol = columns.getCompleteView().indexOf(RecvFormat.f);
-        errorCol = columns.getCompleteView().indexOf(RecvFormat.e);
-        progressCol = columns.getCompleteView().indexOf(RecvFormat.z);
     }
     
     public String getServerTIF() {
-        return stringData[fileNameCol];
+        return getStringData(RecvFormat.f);
     }
     
     @Override
@@ -88,7 +83,7 @@ public class RecvYajJob extends YajJob<RecvFormat> {
     
     @Override
     public Object getIDValue() {
-        return stringData[fileNameCol];
+        return getStringData(RecvFormat.f);
     }
     
     public RecvYajJob(FmtItemList<RecvFormat> cols, String[] stringData, UnReadMyTableModel tableModel) {

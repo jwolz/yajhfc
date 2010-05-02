@@ -159,8 +159,8 @@ public enum QueueFileFormat implements FmtItem {
 
         private static final QueueFileFormat[] requiredFormats = {
             QueueFileFormat.owner,
-            QueueFileFormat.state
-            
+            QueueFileFormat.state,
+            QueueFileFormat.commid
         };
         public static QueueFileFormat[] getRequiredFormats() {
             return requiredFormats;
