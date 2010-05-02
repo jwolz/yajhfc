@@ -35,6 +35,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.print.PrinterException;
@@ -103,6 +104,7 @@ import yajhfc.filters.StringFilterOperator;
 import yajhfc.filters.ui.CustomFilterDialog;
 import yajhfc.launch.Launcher2;
 import yajhfc.launch.MainApplicationFrame;
+import yajhfc.logconsole.LogConsole;
 import yajhfc.macosx.MacOSXSupport;
 import yajhfc.model.MyTableModel;
 import yajhfc.model.RecvYajJob;
@@ -212,7 +214,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     // Actions:
     protected Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward, actAdminMode;
     protected Action actRefresh, actResend, actPrintTable, actSuspend, actResume, actClipCopy, actShowRowNumbers, actAdjustColumns, actReconnect, actEditToolbar;
-    protected Action actSaveAsPDF, actSaveAsTIFF, actUpdateCheck, actAnswerCall, actSearchFax, actViewLog; 
+    protected Action actSaveAsPDF, actSaveAsTIFF, actUpdateCheck, actAnswerCall, actSearchFax, actViewLog, actLogConsole; 
     protected StatusBarResizeAction actAutoSizeStatus;
     protected ActionEnabler actChecker;
     protected Map<String,Action> availableActions = new HashMap<String,Action>();
@@ -1280,6 +1282,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         
         actViewLog = new ExcDialogAbstractAction() {
             public void actualActionPerformed(java.awt.event.ActionEvent e) {
+                Utils.setWaitCursor(null);
                 TooltipJTable<? extends FmtItem> selTable = getSelectedTable();
                 
                 if (selTable.getSelectedRowCount() == 0) {
@@ -1291,6 +1294,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 switch (tt) {
                 case SENT:
                 case SENDING:
+                case ARCHIVE:
                     // Supported
                     break;
                 default:
@@ -1307,6 +1311,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 LogViewWorker worker = new LogViewWorker(jobs, clientManager, tablePanel);
                 worker.setCloseOnExit(true);
                 worker.startWork(MainWin.this, _("Viewing logs"));
+                Utils.unsetWaitCursor(null);
             }
         };
         actViewLog.putValue(Action.NAME, _("View log") + "...");
@@ -1314,6 +1319,28 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         actViewLog.putValue(Action.SMALL_ICON, Utils.loadIcon("general/History"));
         putAvailableAction("ViewLog", actViewLog);
         
+        actLogConsole = new ExcDialogAbstractAction() {
+            LogConsole logCons;
+            
+            public void actualActionPerformed(java.awt.event.ActionEvent e) {
+                if (logCons == null) {
+                    Utils.setWaitCursor(null);
+                    logCons = new LogConsole();
+                    logCons.addWindowListener(new WindowAdapter() {
+                        public void windowClosed(WindowEvent e) {
+                            logCons = null;
+                        };
+                    });
+                    Utils.unsetWaitCursorOnOpen(null, logCons);
+                    logCons.setVisible(true);
+                } else {
+                    logCons.toFront();
+                }
+            }
+        };
+        actLogConsole.putValue(Action.NAME, _("Log console") + "...");
+        actLogConsole.putValue(Action.SHORT_DESCRIPTION, _("Displays the YajHFC log in real time"));
+        putAvailableAction("LogConsole", actLogConsole);
         
         actAutoSizeStatus = new StatusBarResizeAction();
         actAutoSizeStatus.putValue(Action.NAME, _("Auto-size status bar"));
@@ -1854,6 +1881,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             helpMenu.add(new JMenuItem(actReadme));
             helpMenu.addSeparator();
             helpMenu.add(new JMenuItem(actUpdateCheck));
+            helpMenu.add(new JMenuItem(actLogConsole));
             if (!hideMenusForMac) {
             	helpMenu.add(new JMenuItem(actAbout));
             }
@@ -2428,6 +2456,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                     deleteState = true;
                     showState = true;
                     resendState = false;
+                    viewLogState = true;
                 }
             } 
             

@@ -49,9 +49,7 @@ public class ArchiveYajJob extends YajJob<QueueFileFormat> {
     protected String queueNr;
     protected List<HylaServerFile> files;
     protected HylaDirAccessor hyda;
-    
-    protected int statusCol;
-    
+
     // From man doneq:
     // state: The job scheduling state.  Recognized values are:
     // 1 (suspended, not being scheduled),
@@ -126,7 +124,7 @@ public class ArchiveYajJob extends YajJob<QueueFileFormat> {
     }
     
     public int getJobState() {
-        String status = getStringData(statusCol);
+        String status = getStringData(QueueFileFormat.state);
         if (status == null || status.length() == 0) {
             return STATE_UNKNOWN;
         } else {
@@ -138,19 +136,22 @@ public class ArchiveYajJob extends YajJob<QueueFileFormat> {
             }
         }
     }
-    
-    @Override
-    public void setColumns(FmtItemList<QueueFileFormat> columns) {
-        statusCol = columns.getCompleteView().indexOf(QueueFileFormat.state);
         
-        super.setColumns(columns);
-    }
-    
     @Override
     public boolean isError() {
         // Also update MainWin.MenuViewListener if this is changed!
         int status = getJobState();
         return (status == STATE_FAILED);
+    }
+    
+    @Override
+    public HylaServerFile getCommunicationsLog() {
+        String commID = getStringData(QueueFileFormat.commid);
+        if (commID == null || commID.length() == 0) {
+            return null;
+        } else {
+            return new ArchiveHylaServerFile(hyda, queueNr + "/c" + commID, FileFormat.PlainText);
+        }
     }
     
     public static char mapArchiveStatusToOneCharCode(int intState) {
@@ -266,9 +267,10 @@ public class ArchiveYajJob extends YajJob<QueueFileFormat> {
             return Collections.emptyList();
         
         List<ArchiveYajJob> resultList = new ArrayList<ArchiveYajJob>(files.length);
-        Map<String,int[]> desiredItems = new HashMap<String,int[]>(cols.size());
-        for (int i = 0; i < cols.size(); i++) {
-            String hylaFmt = cols.get(i).getHylaFmt();
+        List<QueueFileFormat> archiveCols = cols.getCompleteView();
+        Map<String,int[]> desiredItems = new HashMap<String,int[]>(archiveCols.size());
+        for (int i = 0; i < archiveCols.size(); i++) {
+            String hylaFmt = archiveCols.get(i).getHylaFmt();
             
             int[] oldVal = desiredItems.get(hylaFmt);
             int[] val;

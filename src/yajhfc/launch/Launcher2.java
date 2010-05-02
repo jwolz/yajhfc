@@ -42,6 +42,7 @@ import yajhfc.HylaClientManager;
 import yajhfc.MainWin;
 import yajhfc.NoGUISender;
 import yajhfc.Utils;
+import yajhfc.logconsole.SwingLogHandler;
 import yajhfc.plugin.PluginManager;
 import yajhfc.plugin.PluginManager.PluginInfo;
 import yajhfc.readstate.PersistentReadState;
@@ -64,6 +65,7 @@ public class Launcher2 {
     public static String cmdLineConfDir = null;
     
     public static MainApplicationFrame application;
+    public static SwingLogHandler swingLogHandler;
     
     /**
      * The main method
@@ -76,8 +78,11 @@ public class Launcher2 {
         // IMPORTANT: Don't access Utils before this line!
         Utils.debugMode = opts.debugMode;
         
+        Logger rootLogger = LogManager.getLogManager().getLogger("");
+        swingLogHandler = new SwingLogHandler();
+        rootLogger.addHandler(swingLogHandler);
+        
         if (opts.debugMode) {
-            Logger rootLogger = LogManager.getLogManager().getLogger("");
             Handler theHandler;
             if (opts.logFile != null) {
                 try {

@@ -41,7 +41,6 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -89,31 +88,24 @@ public class LogViewWorker extends ProgressWorker {
         
         MessageFormat processingX = new MessageFormat(Utils._("Getting log for {0}"));
         MessageFormat jobX = new MessageFormat(Utils._("Fax job {0} ({1})"));
-        int commidCol = jobs.get(0).getColumns().getCompleteView().indexOf(JobFormat.W);
-        if (commidCol < 0) {
-            // Should never happen...
-            this.showMessageDialog("Displaying logs is not supported for this kind of fax jobs.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
         
         logList = new ArrayList<Log>(jobs.size());
         
         HylaFAXClient hyfc = clientManager.beginServerTransaction(SwingUtilities.windowForComponent(parent));
         try {
             synchronized (hyfc) {
-                hyfc.type(HylaFAXClient.TYPE_ASCII);
+                ByteArrayOutputStream logStream = new ByteArrayOutputStream(4000);
                 for (YajJob<?> job : jobs) {
                     updateNote(processingX.format(new Object[] { job.getIDValue() } ));
 
-                    String commID = job.getStringData(commidCol);
-                    if (commID == null || commID.length() == 0) {
+                    HylaServerFile hsf = job.getCommunicationsLog();
+                    if (hsf == null) {
                         logList.add(new Log(jobX.format(new Object[] { job.getIDValue(), Utils._("<none>")} ), Utils._("There is no log file available for this fax job.")));
                     } else {
-                        String fileName = "log/c" + commID;
-                        String caption = jobX.format(new Object[] { job.getIDValue(), fileName } );
+                        String caption = jobX.format(new Object[] { job.getIDValue(), hsf.getPath() } );
                         try {
-                            ByteArrayOutputStream logStream = new ByteArrayOutputStream(4000);
-                            hyfc.get(fileName, logStream);
+                            logStream.reset();
+                            hsf.downloadToStream(hyfc, logStream);
                             String logText = logStream.toString(Utils.HYLAFAX_CHARACTER_ENCODING);
                             logList.add(new Log(caption, logText));
                         } catch (Exception e) {
@@ -190,7 +182,7 @@ public class LogViewWorker extends ProgressWorker {
         private void addLog(Log log) {
             JTextArea textDisplay = new JTextArea(log.log);
             textDisplay.setEditable(false);
-            textDisplay.setFont(new Font("DialogInput", java.awt.Font.PLAIN, 12));
+            textDisplay.setFont(new Font("Monospaced", Font.PLAIN, 12));
             ClipboardPopup.DEFAULT_POPUP.addToComponent(textDisplay);
 
             tabs.addTab(log.caption, 

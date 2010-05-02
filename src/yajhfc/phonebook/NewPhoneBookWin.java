@@ -802,9 +802,9 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                     PhoneBookEntry[] entries = selectedItems.toArray(new PhoneBookEntry[selectedItems.size()]);
                     
                     for (PhoneBookEntry pbe : entries) {
-                        selectedItems.clear();
                         pbe.delete();
                     }
+                    selectedItems.clear();
                     writeToTextFields(null, null);
                 }
             }
@@ -934,7 +934,11 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             
             @Override
             public void windowClosing(WindowEvent e) {
-                closeAndSaveAllPhonebooks(true);                
+                try {
+                    closeAndSaveAllPhonebooks(true);
+                } catch (Exception e1) {
+                    ExceptionDialog.showExceptionDialog(NewPhoneBookWin.this, Utils._("Error closing the phone books:"), e1);
+                }                
             }
         });
         

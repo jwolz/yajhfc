@@ -34,6 +34,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.MessageFormat;
@@ -729,6 +731,13 @@ public class OptionsWin extends JDialog {
             //checkMinimizeToTray.setToolTipText(_("Minimize to system tray (works only with Java 6 or higher)"));
 
             checkMinimizeToTrayOnMainWinClose = new JCheckBox("<html>" + _("Minimize to tray when main window is closed") + "</html>");
+            checkMinimizeToTrayOnMainWinClose.addPropertyChangeListener("enabled", new PropertyChangeListener() {
+                public void propertyChange(PropertyChangeEvent evt) {
+                    checkMinimizeToTrayOnMainWinClose.setForeground((Boolean)evt.getNewValue() ? 
+                            UIManager.getColor("CheckBox.foreground") :
+                            UIManager.getColor("CheckBox.disabledText"));
+                }
+            });
             checkMinimizeToTrayOnMainWinClose.setEnabled(false);
             
             addWithLabel(panelUI, comboLang, _("Language:"), "1, 1, 1, 1, f, c");

@@ -6,10 +6,8 @@ package yajhfc.model.archive;
 import gnu.hylafax.HylaFAXClient;
 import gnu.inet.ftp.ServerResponseException;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import yajhfc.HylaServerFile;
 import yajhfc.file.FormattedFile.FileFormat;
@@ -31,16 +29,9 @@ public class ArchiveHylaServerFile extends HylaServerFile {
     }
 
     @Override
-    public void download(HylaFAXClient hyfc, File target) throws IOException,
-            FileNotFoundException, ServerResponseException {
-
-        FileOutputStream outStream =  null;
-        try {
-            outStream =new FileOutputStream(target);
-            hyda.copyFile(path, outStream);
-        } finally {
-            if (outStream != null)
-                outStream.close();
-        }
+    public void downloadToStream(HylaFAXClient hyfc, OutputStream target)
+            throws IOException, ServerResponseException {
+        hyda.copyFile(path, target);
     }
+    
 }
