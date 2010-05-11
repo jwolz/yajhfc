@@ -37,6 +37,7 @@ public abstract class ProgressWorker extends Thread{
     protected int progress;
     protected Component parent;
     protected boolean closeOnExit = true;
+    protected boolean working = false;
  
     /**
      * Does the actual work. Is run in a separate thread.
@@ -150,10 +151,12 @@ public abstract class ProgressWorker extends Thread{
             startWorkPriv(parent, text);
         } catch (Exception e) { 
             ExceptionDialog.showExceptionDialog(parent, Utils._("Error performing the operation:"), e);
+            working = false;
         } 
     }
     
     private void startWorkPriv(Component parent, String text) {
+        working = true;
         initialize();
         if (progressMonitor == null) {
             progressMonitor = new MyProgressMonitor(parent, text, Utils._("Initializing..."), 0, calculateMaxProgress());
@@ -181,27 +184,34 @@ public abstract class ProgressWorker extends Thread{
         } finally {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
-                    
                     try {
-                        done();
-                    } catch (Exception e) { 
-                        ExceptionDialog.showExceptionDialog(parent, Utils._("Error performing the operation:"), e);
-                    } 
-                    parent.setEnabled(true);
-                    if (closeOnExit) {
-                        progressMonitor.close();
-                        if (progressMonitor instanceof MyProgressMonitor) {
-                            progressMonitor = null;
-                        }
                         try {
-                            pMonClosed();
+                            done();
                         } catch (Exception e) { 
                             ExceptionDialog.showExceptionDialog(parent, Utils._("Error performing the operation:"), e);
-                        } 
+                        }
+                        parent.setEnabled(true);
+                        if (closeOnExit) {
+                            progressMonitor.close();
+                            if (progressMonitor instanceof MyProgressMonitor) {
+                                progressMonitor = null;
+                            }
+                            try {
+                                pMonClosed();
+                            } catch (Exception e) { 
+                                ExceptionDialog.showExceptionDialog(parent, Utils._("Error performing the operation:"), e);
+                            } 
+                        }
+                    } finally {
+                        working = false;
                     }
                 }
             });
         }
+    }
+    
+    public boolean isWorking() {
+        return working;
     }
     
     private static class MsgDlgDisplayer implements Runnable {

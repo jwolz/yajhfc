@@ -275,6 +275,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         actCustomProps.putValue(Action.NAME, Utils._("Job properties") + "...");
         
         buttonCustomProps = new JButton(actCustomProps);
+        buttonCustomProps.setVisible(false);
         
         CancelAction actCancel = new CancelAction(this);
         buttonCancel = actCancel.createCancelButton();

@@ -100,7 +100,7 @@ public class AboutDialog extends JDialog implements HyperlinkListener {
         
         URL txtURL;
         if (useLocalized && !Utils.getLocale().equals(Locale.ENGLISH))
-            txtURL = Utils.getLocalizedFile(resName, false);
+            txtURL = Utils.getYajHFCLanguage().getLocalizedFile(resName, false);
         else
             txtURL = AboutDialog.class.getResource(resName);
         

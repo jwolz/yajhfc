@@ -76,7 +76,7 @@ public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2010 by Jonas Wolz";
-    public static final String AppVersion = "0.4.4alpha1";
+    public static final String AppVersion = "0.4.4beta1";
     public static final String AuthorName = "Jonas Wolz";
     public static final String AuthorEMail = "jwolz@freenet.de";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
@@ -102,67 +102,7 @@ public final class Utils {
      */
     public static final RegExDateFormat HYLA_TIME_ONLY_FORMAT = new RegExDateFormat("(\\d{1,2})[\\.:/](\\d{1,2})(?:[\\.:/](\\d{1,2}))?",
             Calendar.HOUR_OF_DAY, Calendar.MINUTE, Calendar.SECOND);  
-//    /**
-//     * Input format for short HylaFax dates
-//     */
-//    public static final DateFormat HYLA_SHORT_DATE_FORMAT = new SimpleDateFormat("ddMMMyy", Locale.US) {
-//        private final String[] weekdays = new DateFormatSymbols(Locale.US).getShortWeekdays();
-//        
-//        public java.util.Date parse(String text, java.text.ParsePosition pos) {
-//            Date result = super.parse(text, pos);
-//            if (result == null) {
-//                // Recognize Strings of the form "Mon03PM"
-//                int startIndex = pos.getIndex();
-//                if (text.length() < startIndex + 7)
-//                    return null;
-//                
-//                String weekday = text.substring(startIndex, startIndex+3);
-//                String hour = text.substring(startIndex+3, startIndex+5);
-//                String am_pm = text.substring(startIndex+5, startIndex+7);
-//                
-//                calendar.setTimeInMillis(System.currentTimeMillis());
-//                int iWeekday = indexOfArray(weekdays, weekday);
-//                if (iWeekday >= 0) {
-//                    calendar.set(Calendar.DAY_OF_WEEK, iWeekday);
-////                    int curWeekday = calendar.get(Calendar.DAY_OF_WEEK);
-////                    int weekdayDiff = iWeekday - curWeekday;
-////                    if (weekdayDiff > 0) { // The weekdays meant are always in the past
-////                        weekdayDiff-=7;
-////                    }
-////                    calendar.add(Calendar.DAY_OF_MONTH, weekdayDiff);
-//                } else {
-//                    return null;
-//                }
-//                
-//                try {
-//                    int iHour = Integer.parseInt(hour);
-//                    calendar.set(Calendar.HOUR, iHour-1);
-//                } catch (NumberFormatException e) {
-//                    log.log(Level.INFO, "Cannot parse hour: ", e);
-//                    return null;
-//                }
-//                calendar.set(Calendar.MINUTE, 0);
-//                calendar.set(Calendar.SECOND, 0);
-//                calendar.set(Calendar.MILLISECOND, 0);
-//                
-//                if (am_pm.equalsIgnoreCase("AM")) {
-//                    calendar.set(Calendar.AM_PM, Calendar.AM);
-//                } else if (am_pm.equalsIgnoreCase("PM")) {
-//                    calendar.set(Calendar.AM_PM, Calendar.PM);
-//                }
-//                long resultMillis = calendar.getTimeInMillis();
-//                if (resultMillis >= System.currentTimeMillis()) {
-//                    resultMillis -= (7 * 24 * 3600 * 1000); // If the date is in the future, subtract one week
-//                }
-//                
-//                result = new Date(resultMillis);
-//                
-//                pos.setIndex(startIndex + 7);
-//            }
-//            return result;
-//        }
-//    };
-//    
+
     /**
      * Date format for "milliseconds since epoch" with server-side time zone correction
      */
@@ -202,7 +142,7 @@ public final class Utils {
     
     private static FaxOptions theoptions = null;
     private static ResourceBundle msgs = null;
-    private static boolean TriedMsgLoad = false;
+    private static boolean triedMsgLoad = false;
     private static File configDir = null;
     
     private static File applicationDir;
@@ -291,22 +231,23 @@ public final class Utils {
      */
     public static final Locale DEFAULT_LOCALE = Locale.getDefault();
     
-    private static Locale myLocale = null;
     public static Locale getLocale() {
-        if (myLocale == null) {
+        return getYajHFCLanguage().getLocale();
+    }
+   
+    private static YajLanguage yajhfcLang;
+    public static YajLanguage getYajHFCLanguage() {
+        if (yajhfcLang == null) {
             // Need to load locale setting manually to avoid a
             // chicken-egg problem with the initialization of enum descriptions
             Properties prop = getSettingsProperties();
             String locale = prop.getProperty("locale", "auto");
-            if (locale.equals("auto")) {
-                myLocale = DEFAULT_LOCALE;
-            } else {
-                myLocale = new Locale(locale);
-                Locale.setDefault(myLocale);
-            }
+            yajhfcLang = YajLanguage.languageFromLangCode(locale);
+            Locale.setDefault(yajhfcLang.getLocale());
         }
-        return myLocale;
+        return yajhfcLang;
     }
+    
     
     public static File getDefaultConfigFile() {
         return new File(getConfigDir(), "settings");
@@ -355,7 +296,7 @@ public final class Utils {
             Properties p = new Properties();
             for (File file : files) {
                 if (Utils.debugMode) {
-                    log.info("Loading prefs from " + file);
+                    log.fine("Loading prefs from " + file);
                 }
                 try {
                     if (file.exists()) {
@@ -428,10 +369,10 @@ public final class Utils {
      */
     public static String _(String key, String defaultValue) {
         if (msgs == null)
-            if (TriedMsgLoad)
+            if (triedMsgLoad)
                 return defaultValue;
             else {
-                LoadMessages();
+                loadMessages();
                 return _(key, defaultValue);
             }                
         else
@@ -442,20 +383,9 @@ public final class Utils {
             }
     }
     
-    private static void LoadMessages() {
-        TriedMsgLoad = true;
-        
-        // Use special handling for english locale as we don't use
-        // a ResourceBundle for it
-        if (getLocale().equals(Locale.ENGLISH)) {
-            msgs = null;
-        } else {
-            try {
-                msgs = ResourceBundle.getBundle("yajhfc.i18n.Messages", getLocale());
-            } catch (Exception e) {
-                msgs = null;
-            }
-        }
+    private static void loadMessages() {
+        triedMsgLoad = true;
+        msgs = getYajHFCLanguage().getMessagesResourceBundle();
         UIManager.getDefaults().addResourceBundle("yajhfc.i18n.UIDefaults");
     }
     
@@ -592,41 +522,7 @@ public final class Utils {
             return false;
         }
     }
-    
-    public static URL getLocalizedFile(String path) {
-        return getLocalizedFile(path, true);
-    }
-    public static URL getLocalizedFile(String path, boolean intlVersionValid) {
-        String prefix;
-        String suffix;
-        Locale loc = Utils.getLocale();
-        int pos = path.lastIndexOf('.');
         
-        if (pos < 0) {
-            prefix = path;
-            suffix = "";
-        } else {
-            prefix = path.substring(0, pos);
-            suffix = path.substring(pos);
-        }
-        
-        String[] tryList = {
-                prefix + "_" + loc.getLanguage() + "_" + loc.getCountry() + "_" + loc.getVariant() + suffix,
-                prefix + "_" + loc.getLanguage() + "_" + loc.getCountry() + suffix,
-                prefix + "_" + loc.getLanguage() + suffix
-        };
-        URL lURL = null;
-        for (int i = 0; i < tryList.length; i++) {
-            lURL = Utils.class.getResource(tryList[i]);
-            if (lURL != null)
-                return lURL;
-        }
-        if (intlVersionValid)
-            return Utils.class.getResource(path);
-        else
-            return null;
-    }
-    
     public static void unsetWaitCursorOnOpen(final Dialog dlgToSet, final Window target) {
         target.addWindowListener(new WindowAdapter() {
             //private final long creationTime = System.currentTimeMillis();

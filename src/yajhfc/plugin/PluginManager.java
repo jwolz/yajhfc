@@ -294,6 +294,9 @@ public class PluginManager {
      */
     private static boolean initializePluginClass(File pluginJar, Class<?> initClass) {
         try {
+            if (Utils.debugMode) {
+                log.fine("Initializing class " + initClass.getName() + " from plugin jar " + pluginJar);
+            }
             Method initMethod = initClass.getMethod("init", new Class[0]);
             Object returnValue = initMethod.invoke(null);
             if (!(returnValue instanceof Boolean && ((Boolean)returnValue).booleanValue())) {
@@ -351,6 +354,7 @@ public class PluginManager {
      */
     public static void readPluginList(File pluginLst) {
         try {
+            log.fine("Reading plugin list from " + pluginLst);
             BufferedReader lstReader = new BufferedReader(new FileReader(pluginLst));
             String line = lstReader.readLine();
             while (line != null) {
@@ -388,6 +392,8 @@ public class PluginManager {
      * Loads all known plugins
      */
     public static void loadAllKnownPlugins() {
+        log.fine("Loading all plugins...");
+        
         // First, load all internal plugins, then the external ones
         for (Class <?> plugClass : internalPlugins) {
             initializePluginClass(null, plugClass);

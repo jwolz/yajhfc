@@ -698,7 +698,7 @@ public class OptionsWin extends JDialog {
             
             //comboNewFaxAction = new JComboBox(Utils.newFaxActions);
             
-            comboLang = new JComboBox(YajLanguage.values());
+            comboLang = new JComboBox(new Vector<YajLanguage>(YajLanguage.supportedLanguages));
             
             lookAndFeels = LF_Entry.getLookAndFeelList();
             comboLookAndFeel = new JComboBox(lookAndFeels);
