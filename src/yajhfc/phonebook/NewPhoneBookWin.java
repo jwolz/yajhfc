@@ -138,7 +138,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     
     TreeCellRenderer phoneBookRenderer = new PhoneBookRenderer();
     
-    boolean loadComplete = false;
+    boolean allowSavePhonebooks = false;
     
     private PhonebookPanel lastPanel;
     void writeToTextFields(PhoneBook phoneBook, List<PhoneBookEntry> pbs) {
@@ -303,17 +303,22 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         }
     }
     
+    ProgressWorker closeWorker;
     void closeAndSaveAllPhonebooks(final boolean disposeAfterClose) {
-        if (!loadComplete) {
+        if (closeWorker != null && closeWorker.isWorking())
+            return;
+        
+        if (!allowSavePhonebooks) {
             if (disposeAfterClose)
                 dispose();
             return;
         }
         commitCurrentEdits();        
         
+        allowSavePhonebooks = false;
         log.fine("Closing all phone books...");
         // Close phone books in a thread:
-        ProgressWorker closeWorker = new ProgressWorker() {
+        closeWorker = new ProgressWorker() {
             @Override
             public void doWork() {
                 List<String> pbList = Utils.getFaxOptions().phoneBooks;
@@ -342,6 +347,8 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                 } else {
                     checkMenuEnable();
                 }
+                allowSavePhonebooks = true;
+                closeWorker = null;
             }
             
         };
@@ -919,26 +926,35 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         setTitle(Utils._("Phone book"));
         
         addWindowListener(new WindowAdapter() {
+            private boolean saved = false;
+
             @Override
             public void windowClosed(WindowEvent e) {
-                
-//              Utils.getFaxOptions().lastSelectedPhonebook = tabPhonebooks.getSelectedIndex();
-              Utils.getFaxOptions().phoneWinBounds = getBounds();
-              Utils.getFaxOptions().phonebookDisplayStyle = NameRule.valueOf(nameStyleGroup.getSelectedActionCommand());
-              
+                if (!saved) {
+                    savePhonebooks();
+                }
+                    
+                Utils.getFaxOptions().phoneWinBounds = getBounds();
+                Utils.getFaxOptions().phonebookDisplayStyle = NameRule.valueOf(nameStyleGroup.getSelectedActionCommand());
+
                 if (searchWin != null) {
                     searchWin.dispose();
                     searchWin = null;
                 }
             }
             
-            @Override
-            public void windowClosing(WindowEvent e) {
+            private void savePhonebooks() {
                 try {
                     closeAndSaveAllPhonebooks(true);
+                    saved = true;
                 } catch (Exception e1) {
                     ExceptionDialog.showExceptionDialog(NewPhoneBookWin.this, Utils._("Error closing the phone books:"), e1);
-                }                
+                }    
+            }
+            
+            @Override
+            public void windowClosing(WindowEvent e) {
+                savePhonebooks();
             }
         });
         
@@ -960,7 +976,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             for (String pbdesc : fopts.phoneBooks) {
                 if (Utils.debugMode)
                     log.finest("Adding phone book: " + pbdesc);
-                loadComplete = false;
+                allowSavePhonebooks = false;
                 addPhoneBook(pbdesc);
             }
         } else {
@@ -1345,7 +1361,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                     }
                     progressMonitor.close();
                     
-                    loadComplete = true;
+                    allowSavePhonebooks = true;
                 }
             }
         }

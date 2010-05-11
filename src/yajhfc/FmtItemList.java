@@ -62,6 +62,11 @@ public class FmtItemList<T extends FmtItem> extends ArrayList<T> implements Filt
                 public int indexOf(Object elem) {
                     return indexOfFromMap(elem);
                 }
+                
+                @Override
+                public boolean contains(Object elem) {
+                    return itemIndices.containsKey(elem);
+                }
             };
             completeView.addAll(this);
             for (T fi : obligateItems) {
@@ -120,9 +125,7 @@ public class FmtItemList<T extends FmtItem> extends ArrayList<T> implements Filt
             if (res == null) {
                 log.log(Level.WARNING, "FmtItem for " + fields[i] + "not found.");
             } else {
-                if (!this.contains(res)) {
-                    this.add(res);
-                }
+                this.add(res);
             }
         }
     }
@@ -238,31 +241,6 @@ public class FmtItemList<T extends FmtItem> extends ArrayList<T> implements Filt
             itemIndices = new HashMap<T,Integer>();
         }
     }
-    
-//    protected class CompleteView extends AbstractList<T> {
-//        protected List<T> additionalItems;
-//        
-//        @Override
-//        public T get(int index) {
-//            int additionalIdx = index - FmtItemList.this.size();
-//            if (additionalIdx < 0) {
-//                return FmtItemList.this.get(index);
-//            } else if (additionalIdx < additionalItems.size()){
-//                return additionalItems.get(additionalIdx);
-//            } else {
-//                throw new ArrayIndexOutOfBoundsException(index);
-//            }
-//        }
-//
-//        @Override
-//        public int size() {
-//            return FmtItemList.this.size() + additionalItems.size();
-//        }
-//        
-//        public CompleteView(List<T> additionalItems) {
-//            this.additionalItems = additionalItems;
-//        }
-//    }
 
     public boolean containsKey(T key) {
         return getCompleteView().contains(key);

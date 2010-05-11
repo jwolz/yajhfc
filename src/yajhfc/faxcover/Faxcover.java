@@ -292,7 +292,7 @@ public abstract class Faxcover {
         URL coverURL;
         
         if (coverTemplate == null) {
-            coverURL = Utils.getLocalizedFile(DEFAULT_FAXCOVER_NAME);
+            coverURL = Utils.getYajHFCLanguage().getLocalizedFile(DEFAULT_FAXCOVER_NAME, true);
             if (coverURL == null) {
                 throw new IOException("Default cover page not found!");
             }

@@ -165,9 +165,7 @@ public class NoGUISender extends JFrame implements ProgressUI, MainApplicationFr
             System.err.println("In no GUI mode you have to specify at least one file to send or --stdin.");
             System.exit(1);
         }
-        
-        Launcher2.initializePlugins(opts.plugins, opts.noPlugins);
-        
+                
         NoGUISender progressFrame = new NoGUISender();
         Launcher2.application = progressFrame;
         progressFrame.showIndeterminateProgress(Utils._("Logging in..."), null);

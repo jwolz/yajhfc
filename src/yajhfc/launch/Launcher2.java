@@ -114,6 +114,7 @@ public class Launcher2 {
             }
         }
         
+        initializePlugins(opts.plugins, opts.noPlugins);
         Utils.initializeUIProperties();
         if (opts.noGUI) {
             noGUIStartup(opts);
@@ -144,7 +145,6 @@ public class Launcher2 {
                 launchLog.info("No old instance found, creating lock...");
             }
             Lock.createLock();
-            initializePlugins(opts.plugins, opts.noPlugins);
             
             SendWinSubmitProtocol submitProto;
             if (needSubmitProtocol(opts)) {
@@ -232,9 +232,7 @@ public class Launcher2 {
         if (Utils.debugMode) {
             launchLog.info("Send only startup...");
         }
-        try {
-            initializePlugins(opts.plugins, opts.noPlugins);
-            
+        try {            
             final SendWinSubmitProtocol submitProto = new SendWinSubmitProtocol();
             fillSubmitProtocol(submitProto, opts);
             submitProto.setCloseAfterSubmit(true);
@@ -308,6 +306,7 @@ public class Launcher2 {
     
     
     public static void initializePlugins(List<PluginInfo> plugins, boolean noPluginLst) {
+        launchLog.fine("Initializing plugins...");
         // Load plugins:
         if (!noPluginLst) {
             PluginManager.readPluginList();
