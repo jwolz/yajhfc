@@ -43,13 +43,14 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.logging.Level;
@@ -254,6 +255,12 @@ public final class Utils {
     }
     
     private static Properties settingsProperties;
+    private static Properties settingsPropertiesNoOverride;
+    /**
+     * Settings that should not be saved.
+     * The actually saved values are taken from settingsPropertiesNoOverride
+     */
+    private static Set<Object> settingsNoSave;
     /**
      * Returns the Properties from which the settings are loaded. This is primarily
      * useful for plugins storing their own settings there. 
@@ -318,6 +325,21 @@ public final class Utils {
                     continue;
                 }
             }
+            settingsPropertiesNoOverride = p; // Properties before overrides are applied
+            
+            if (Launcher2.overrideSettings != null) {
+                p = new Properties(p);
+                
+                if (Utils.debugMode) {
+                    log.config("---- Override settings found:");
+                    dumpProperties(Launcher2.overrideSettings, log);    
+                    log.config("---- End override settings");
+                }
+                p.putAll(Launcher2.overrideSettings);
+                settingsNoSave = Launcher2.overrideSettings.keySet();
+            } else {
+                settingsNoSave = null;
+            }
             if (Utils.debugMode) {
                 log.config("---- BEGIN preferences dump");
                 Utils.dumpProperties(p, log, "pass", "AdminPassword", "pass-obfuscated", "AdminPassword-obfuscated");
@@ -340,6 +362,14 @@ public final class Utils {
             }
             theoptions.storeToProperties(p);
             
+            if (settingsNoSave != null) {
+                // Remove the settings that should not be saved
+                for (Object key : settingsNoSave) {
+                    String value = settingsPropertiesNoOverride.getProperty((String)key);
+                    if (value != null)
+                        p.put(key, value);
+                }
+            }
             try {
                 FileOutputStream filout = new TransactFileOutputStream(file, true);
                 p.store(filout, Utils.AppShortName + " " + Utils.AppVersion + " configuration file");
@@ -629,19 +659,24 @@ public final class Utils {
      * @param prop
      * @param out
      */
-    public static void dumpProperties(Map<Object, ?> prop, Logger out, Object... censorKeys) {
-        Object keys[] = prop.keySet().toArray();
-        Arrays.sort(keys);
+    public static void dumpProperties(Properties prop, Logger out, Object... censorKeys) {
+        List<String> keys = new ArrayList<String>(prop.size());
+        Enumeration<?> keyEnum = prop.propertyNames();
+        while (keyEnum.hasMoreElements()) {
+            keys.add(keyEnum.nextElement().toString());
+        }
+        Collections.sort(keys);
+        
         StringBuilder s = new StringBuilder();
         final String newLine = System.getProperty("line.separator", "\n");
         
-        for (Object key : keys) {
+        for (String key : keys) {
             //s.setLength(0);
             s.append(key).append('=');
             if (indexOfArray(censorKeys, key) == -1) {
-                s.append(prop.get(key));
+                s.append(prop.getProperty(key));
             } else {
-                Object val = prop.get(key);
+                Object val = prop.getProperty(key);
                 if (val == null) {
                     s.append("null");
                 } else {

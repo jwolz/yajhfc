@@ -29,6 +29,7 @@ import java.awt.HeadlessException;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -40,6 +41,7 @@ import java.util.concurrent.Callable;
 
 import javax.swing.Action;
 import javax.swing.Box;
+import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -523,6 +525,10 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
                 }
             }          
         });
+        tableNumbers.getActionMap().put("yajhfc-delete", actRemoveNumber);
+        final InputMap im = tableNumbers.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "yajhfc-delete");
+        
         Font boldFont = tableNumbers.getFont().deriveFont(Font.BOLD);
         TableColumn firstCol = tableNumbers.getColumnModel().getColumn(0);
         firstCol.setCellRenderer(new BoldCellRenderer(tableNumbers.getDefaultRenderer(String.class), boldFont));

@@ -93,6 +93,7 @@ import yajhfc.FaxResolution;
 import yajhfc.FaxTimezone;
 import yajhfc.FmtItemDescComparator;
 import yajhfc.FmtItemRenderer;
+import yajhfc.HylaClientManager;
 import yajhfc.HylaModem;
 import yajhfc.IconMap;
 import yajhfc.JobFormat;
@@ -100,6 +101,7 @@ import yajhfc.PaperSize;
 import yajhfc.RecvFormat;
 import yajhfc.Utils;
 import yajhfc.YajLanguage;
+import yajhfc.launch.Launcher2;
 import yajhfc.plugin.PluginManager;
 import yajhfc.plugin.PluginTableModel;
 import yajhfc.plugin.PluginType;
@@ -420,7 +422,8 @@ public class OptionsWin extends JDialog {
         PanelTreeNode deliveryNode = new PanelTreeNode(rootNode, getPanelSend(), _("Delivery"), Utils.loadIcon("general/SendMail"));
         //PROFILE: System.out.println("    After send panel: " + (-time + (time = System.currentTimeMillis())));
         deliveryNode.setChildren(new PanelTreeNode[] {
-                new PanelTreeNode(deliveryNode, new CoverPanel(), _("Cover page"), Utils.loadIcon("general/ComposeMail"))
+                new PanelTreeNode(deliveryNode, new CoverPanel(), _("Cover page"), Utils.loadIcon("general/ComposeMail")),
+                new PanelTreeNode(deliveryNode, new ModemsPanel(), _("Modems"), Utils.loadCustomIcon("modem.png")),
         });
         rootChilds.add(deliveryNode);
         //PROFILE: System.out.println("    After cover panel: " + (-time + (time = System.currentTimeMillis())));
@@ -944,10 +947,16 @@ public class OptionsWin extends JDialog {
         return PanelSentFmt;
     }
     
-    public OptionsWin(FaxOptions foEdit, Frame owner, List<HylaModem> availableModems) {
+    public OptionsWin(FaxOptions foEdit, Frame owner) {
         super(owner);
         this.foEdit = foEdit;
-        this.availableModems = availableModems;
+        
+        HylaClientManager clientManager = Launcher2.application.getClientManager();
+        if (clientManager != null)
+            this.availableModems = clientManager.getModems();
+        else 
+            this.availableModems = HylaModem.defaultModems;
+        
         recvfmt = new ArrayList<RecvFormat>(foEdit.recvfmt);
         sentfmt = new ArrayList<JobFormat>(foEdit.sentfmt);
         sendingfmt = new ArrayList<JobFormat>(foEdit.sendingfmt);

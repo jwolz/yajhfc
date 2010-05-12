@@ -45,6 +45,7 @@ import javax.swing.event.ListSelectionListener;
 import yajhfc.Utils;
 import yajhfc.util.CancelAction;
 import yajhfc.util.ExcDialogAbstractAction;
+import yajhfc.util.JTableTABAction;
 import yajhfc.util.MapTableModel;
 
 /**
@@ -165,6 +166,7 @@ public class JobPropsEditorDialog extends JDialog {
         mapTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(keyCombo));
         mapTable.getActionMap().put(deleteAction.getClass().getName(), deleteAction);
         mapTable.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), deleteAction.getClass().getName());
+        JTableTABAction.wrapDefTabAction(mapTable);
         
         JPanel contentPane = new JPanel(new BorderLayout(6,6));
         

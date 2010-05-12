@@ -53,6 +53,10 @@ public class CommandLineOpts { //IMPORTANT!: Do not use Utils here!
      */
     public final List<PluginInfo> plugins = new ArrayList<PluginInfo>();
     /**
+     * Overridden settings. Communicated over command line.
+     */
+    public final StringBuilder overrideSettings = new StringBuilder();
+    /**
      * Submit file from stdin. Communicated over socket.
      */
     public boolean useStdin = false;
@@ -150,6 +154,7 @@ public class CommandLineOpts { //IMPORTANT!: Do not use Utils here!
                 new LongOpt("windowstate", LongOpt.REQUIRED_ARGUMENT, null, 11),
                 new LongOpt("loadplugin", LongOpt.REQUIRED_ARGUMENT, null, 4),
                 new LongOpt("loaddriver", LongOpt.REQUIRED_ARGUMENT, null, 5),
+                new LongOpt("override-setting", LongOpt.REQUIRED_ARGUMENT, null, 12),
                 new LongOpt("no-plugins", LongOpt.NO_ARGUMENT, null, 7),
                 new LongOpt("no-gui", LongOpt.NO_ARGUMENT, null, 8),
                 new LongOpt("no-check", LongOpt.NO_ARGUMENT, null, -2),
@@ -160,6 +165,7 @@ public class CommandLineOpts { //IMPORTANT!: Do not use Utils here!
         
         Getopt getopt = new Getopt("yajhfc", argsWork, "h::Adc:r:T:l:C::s:M:", longOpts);
         int opt;
+        String optarg;
         while ((opt = getopt.getopt()) != -1) {
             switch (opt) {
             case -2: // no-check (in general: ignore)
@@ -226,8 +232,25 @@ public class CommandLineOpts { //IMPORTANT!: Do not use Utils here!
                     }
                 }
                 break;
+            case 12: // override-setting
+                optarg = getopt.getOptarg();
+                for (int i = 0; i < optarg.length(); i++) {
+                    char c = optarg.charAt(i);
+                    if (c < 128) {
+                        overrideSettings.append(c);
+                    } else {
+                        // Escape non-ASCII chars
+                        overrideSettings.append("\\u")
+                                        .append(Character.digit((c >> 12) & 0xf, 16))
+                                        .append(Character.digit((c >>  8) & 0xf, 16))
+                                        .append(Character.digit((c >>  4) & 0xf, 16))
+                                        .append(Character.digit( c        & 0xf, 16));
+                    }
+                }
+                overrideSettings.append('\n');
+                break;
             case 'C': // use-cover
-                String optarg = getopt.getOptarg();
+                optarg = getopt.getOptarg();
                 if (optarg == null || optarg.equals("") || Character.toLowerCase(optarg.charAt(0)) == 'y' || optarg.equals("true")) {
                     useCover = Boolean.TRUE;
                 } else {

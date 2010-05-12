@@ -538,6 +538,16 @@ public class FaxOptions extends AbstractFaxOptions {
      */
     public boolean adjustMenusForMacOSX = true;
     
+    /**
+     * Use custom (user-specified) modems?
+     */
+    public boolean useCustomModems = false;
+    
+    /**
+     * The list of custom modems
+     */
+    public final List<String> customModems = new ArrayList<String>();
+    
     public FaxOptions() {
         super(null);
         

@@ -6,6 +6,7 @@ import gnu.inet.ftp.ServerResponseException;
 import java.awt.Window;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -22,6 +23,7 @@ public class HylaClientManager {
     protected String adminPassword;
     protected String userName;
     protected int transactionCounter;
+    protected List<HylaModem> realModems = null;
     protected List<HylaModem> modems = null;
     
     protected static final String modemListFormat = "$$$|%m|%n";
@@ -38,6 +40,7 @@ public class HylaClientManager {
     public void optionsChanged() {
         forceLogout();
         
+        realModems = null;
         modems = null;
         
         if (!myopts.askPassword)
@@ -228,10 +231,25 @@ public class HylaClientManager {
     
     public synchronized List<HylaModem> getModems() {
         if (modems == null) {
+            modems = new ArrayList<HylaModem>();
+            if (myopts.useCustomModems) {
+                for (String modemString : myopts.customModems) {
+                    modems.add(new HylaModem(modemString));
+                }
+            } else {
+                modems.addAll(HylaModem.defaultModems);
+                modems.addAll(getRealModems());
+            }
+        }
+        return modems;
+    }
+        
+    public synchronized List<HylaModem> getRealModems() {
+        if (realModems == null) {
             HylaFAXClient hyfc = beginServerTransaction(null);
             if (hyfc == null) {
-                modems = HylaModem.defaultModems;
-                return modems;
+                realModems = Collections.emptyList();
+                return realModems;
             }
             
             Vector<?> status;
@@ -246,14 +264,13 @@ public class HylaClientManager {
                 }
             } catch (Exception e) {
                 log.log(Level.WARNING, "Error fetching modem list: ", e);
-                modems = HylaModem.defaultModems;
-                return modems;
+                realModems = Collections.emptyList();
+                return realModems;
             } finally {
                 endServerTransaction();
             }
             
-            modems = new ArrayList<HylaModem>();
-            modems.addAll(HylaModem.defaultModems);
+            realModems = new ArrayList<HylaModem>();
             for (Object o : status) {
                 String line = (String)o;
                 if (line.startsWith(modemListPrefix)) { // Is a line describing a modem
@@ -261,12 +278,12 @@ public class HylaClientManager {
                     if (fields.length < 2) {
                         log.log(Level.WARNING, "Invalid modem \"" + line + "\".");                            
                     } else {
-                        modems.add(new HylaModem(fields[1], fields.length >= 3 ? fields[2] : ""));
+                        realModems.add(new HylaModem(fields[1], fields.length >= 3 ? fields[2] : ""));
                     }
                 }
             }
         }
-        return modems;
+        return realModems;
     }
     
     public String getUser() {

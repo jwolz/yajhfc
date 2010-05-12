@@ -43,7 +43,12 @@ public class HylaModem {
     }
 
     public HylaModem(String internalName, String number) {
-        this(internalName, number, internalName + " (" + number + ")");
+        this(internalName, number, generateDescription(internalName, number));
+    }
+    
+    public HylaModem(String serializedForm) {
+        super();
+        loadFromString(serializedForm);
     }
 
     public String getInternalName() {
@@ -63,5 +68,29 @@ public class HylaModem {
     @Override
     public String toString() {
         return description;
+    }
+    
+    public String saveToString() {
+        return Utils.escapeChars(internalName==null?"":internalName, "|", '~') + "|" + 
+            Utils.escapeChars(number==null?"":number, "|", '~') + "|" + 
+            Utils.escapeChars(description==null?"":description, "|", '~');
+    }
+    
+    protected void loadFromString(String input) {
+        String[] splitted = Utils.fastSplit(input, '|');
+        if (splitted.length >= 1) {
+            internalName = Utils.unEscapeChars(splitted[0], "|", '~');
+        }
+        if (splitted.length >= 2) {
+            number = Utils.unEscapeChars(splitted[1], "|", '~');
+        }
+        if (splitted.length >= 3) {
+            description = Utils.unEscapeChars(splitted[2], "|", '~');
+        }
+    }
+    
+    protected static String generateDescription(String internalName,
+            String number) {
+        return internalName + " (" + number + ")";
     }
 }

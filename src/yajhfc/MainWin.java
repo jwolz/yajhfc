@@ -751,23 +751,9 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 
                 SendReadyState oldState = sendReady;
                 sendReady = SendReadyState.NeedToWait;
-                
-                List<HylaModem> modems;
-                if (clientManager != null) {
-                    try {
-                        modems = clientManager.getModems();
-                        if (modems == null) {
-                            modems = HylaModem.defaultModems;
-                        }
-                    } catch (Exception ex) {
-                        modems = HylaModem.defaultModems;
-                    }
-                } else {
-                    modems = HylaModem.defaultModems;
-                }
-                
+                                
                 //PROFILE: long time = System.currentTimeMillis();
-                OptionsWin ow = new OptionsWin(myopts, MainWin.this, modems);
+                OptionsWin ow = new OptionsWin(myopts, MainWin.this);
                 //PROFILE: System.out.println("After OptionsWin constructor: " + (-time + (time = System.currentTimeMillis())));
                 ow.setModal(true);
                 Utils.unsetWaitCursorOnOpen(null, ow);
@@ -1226,7 +1212,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             public void actualActionPerformed(java.awt.event.ActionEvent e) {
                 if (clientManager.isAdminMode()) {
                     List<HylaModem> modems = new ArrayList<HylaModem>();
-                    for (HylaModem modem : clientManager.getModems()) {
+                    for (HylaModem modem : clientManager.getRealModems()) {
                         if (!modem.getInternalName().equals("any")) {
                             modems.add(modem);
                         }
