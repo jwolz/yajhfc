@@ -19,6 +19,7 @@
 package yajhfc.launch;
 
 import java.awt.Frame;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -27,6 +28,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -60,9 +62,16 @@ public class Launcher2 {
 
     static final Logger launchLog = Logger.getLogger(Launcher2.class.getName());
     
-    // Configuration directory as set on the command line
-    // Needs to be set *before* Utils initializes in order to have an effect!
+    /** 
+     * Configuration directory as set on the command line
+     *  Needs to be set *before* Utils initializes in order to have an effect!
+     */
     public static String cmdLineConfDir = null;
+    /** 
+     * Settings to override
+     *  Needs to be set *before* Utils initializes in order to have an effect!
+     */
+    public static Properties overrideSettings = null;
     
     public static MainApplicationFrame application;
     public static SwingLogHandler swingLogHandler;
@@ -74,6 +83,16 @@ public class Launcher2 {
     public static void main(String[] args) {
         CommandLineOpts opts = new CommandLineOpts(args);
         cmdLineConfDir = opts.configDir;
+        if (opts.overrideSettings.length() > 0) {
+            overrideSettings = new Properties();
+            try {
+                ByteArrayInputStream settingsInput = new ByteArrayInputStream(
+                        opts.overrideSettings.toString().getBytes("ISO8859-1"));
+                overrideSettings.load(settingsInput);
+            } catch (Exception ex) {
+                launchLog.log(Level.WARNING, "Error loading override settings", ex);
+            }
+        }
         
         // IMPORTANT: Don't access Utils before this line!
         Utils.debugMode = opts.debugMode;
@@ -398,6 +417,13 @@ public class Launcher2 {
                     break;
                 }
                 launchArgs.add("--windowstate="+winState);
+            }
+            if (opts.overrideSettings.length() > 0) {
+                String[] settings = Utils.fastSplit(opts.overrideSettings.toString(), '\n');
+                for (String s : settings) {
+                    launchArgs.add("--override-setting");
+                    launchArgs.add(s);
+                }
             }
             
             if (Utils.debugMode) {
