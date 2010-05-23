@@ -21,11 +21,11 @@ package yajhfc;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
 import yajhfc.model.SentYajJob;
-import yajhfc.model.archive.QueueFileFormat;
 import yajhfc.model.archive.ArchiveYajJob;
+import yajhfc.model.archive.QueueFileFormat;
 
 /**
  * A default implementation for the IconMap interface
@@ -34,13 +34,13 @@ import yajhfc.model.archive.ArchiveYajJob;
  */
 public class DefaultIconMap implements IconMap {
     protected String text;
-    protected Icon displayIcon;
+    protected ImageIcon displayIcon;
     protected String description;
     
     public String getText() {
         return text;
     }
-    public Icon getDisplayIcon() {
+    public ImageIcon getDisplayIcon() {
         return displayIcon;
     }
     
@@ -53,7 +53,7 @@ public class DefaultIconMap implements IconMap {
         return text;
     }
     
-    public DefaultIconMap(String text, Icon displayIcon, String description) {
+    public DefaultIconMap(String text, ImageIcon displayIcon, String description) {
         super();
         this.text = text;
         this.displayIcon = displayIcon;

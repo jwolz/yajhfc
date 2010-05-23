@@ -22,6 +22,7 @@ import java.awt.Component;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JTable;
@@ -49,7 +50,7 @@ public interface IconMap {
      * The icon that should be displayed.
      * @return
      */
-    public Icon getDisplayIcon();
+    public ImageIcon getDisplayIcon();
     
     /**
      * Defines a table cell renderer that can be used to display icon and text for an IconMap.

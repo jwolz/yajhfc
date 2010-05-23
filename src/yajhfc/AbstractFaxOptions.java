@@ -20,6 +20,11 @@ package yajhfc;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Iterator;
@@ -112,6 +117,10 @@ public abstract class AbstractFaxOptions {
                         res.append(key).append('=').append(value).append(';');
                     }
                     p.setProperty(propertyName, res.toString());
+                } else if (val instanceof Serializable) {
+                    // As a "last resort" use Java object serialization
+                    String sVal = serializeObjectToString(val);
+                    p.setProperty(propertyName, sVal);
                 } else {
                     log.log(Level.WARNING, "Unknown field type " + val.getClass().getName());
                 }
@@ -198,6 +207,12 @@ public abstract class AbstractFaxOptions {
                                     log.warning("Unknown map entry in " + propertyName + ": " + entry);
                                 }
                             }
+                        } else if (Serializable.class.isAssignableFrom(fcls)) {
+                            // As a "last resort" use Java object serialization
+                            Object obj = deserializeObjectFromString(val);
+                            if (obj != null) {
+                                f.set(this, obj);
+                            }
                         } else {
                             log.log(Level.WARNING, "Unknown field type " + fcls);
                         }
@@ -207,5 +222,49 @@ public abstract class AbstractFaxOptions {
                 log.log(Level.WARNING, "Couldn't load setting for " + f + ": ", e1);
             }
         }
+    }
+    
+    protected String serializeObjectToString(Object obj) {
+        try {
+            ByteArrayOutputStream byteStream = new ByteArrayOutputStream(1000);
+            ObjectOutputStream oos = new ObjectOutputStream(byteStream);
+            oos.writeObject(obj);
+            oos.close();
+            
+            // Use a primitive "bin-hex" encoding of the data
+            byte[] data = byteStream.toByteArray();
+            char[] stringData = new char[data.length*2];
+            for (int i=0; i < data.length; i++) {
+                byte d = data[i];
+                stringData[2*i  ] = Character.forDigit((d >> 4) & 0xf, 16);
+                stringData[2*i+1] = Character.forDigit( d       & 0xf, 16);
+            }
+            return new String(stringData);
+        } catch (Exception e) {
+            log.log(Level.SEVERE, "Error serializing " + obj, e);
+            return null;
+        }
+    }
+    
+    protected Object deserializeObjectFromString(String serializedForm) {
+        try {
+            char[] stringData = serializedForm.toCharArray();
+            if (stringData.length % 2 != 0)
+                throw new IllegalArgumentException("String data length is not even!");
+            byte[] byteData = new byte[stringData.length/2];
+            for (int i=0; i < byteData.length; i++) {
+                byteData[i] = (byte)((Character.digit(stringData[2*i  ], 16) << 4) |
+                                      Character.digit(stringData[2*i+1], 16));
+            }
+            
+            ByteArrayInputStream byteStream = new ByteArrayInputStream(byteData);
+            ObjectInputStream ooi = new ObjectInputStream(byteStream);
+            Object rv = ooi.readObject();
+            ooi.close();
+            return rv;
+        } catch (Exception e) {
+            log.log(Level.SEVERE, "Error deserializing", e);
+            return null;
+        } 
     }
 }

@@ -25,7 +25,6 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.table.AbstractTableModel;
 
@@ -160,7 +159,7 @@ public class PluginTableModel extends AbstractTableModel {
     }
     
     public static class Entry extends PluginInfo implements IconMap {
-        public final Icon icon;
+        public final ImageIcon icon;
         public final String fileName;
         
         public Entry(File file, PluginType type, boolean persistent, boolean loaded) {
@@ -174,7 +173,7 @@ public class PluginTableModel extends AbstractTableModel {
             return null;
         }
 
-        public Icon getDisplayIcon() {
+        public ImageIcon getDisplayIcon() {
             return icon;
         }
 
