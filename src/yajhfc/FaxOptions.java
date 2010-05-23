@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 
+import javax.print.attribute.Attribute;
+
 import yajhfc.file.FormattedFile.FileFormat;
 import yajhfc.model.archive.QueueFileFormat;
 import yajhfc.options.MultiFileMode;
@@ -173,8 +175,6 @@ public class FaxOptions extends AbstractFaxOptions {
      * The socket timeout in milliseconds
      */
     public int socketTimeout = 90000;
-    
-    //public String lastPhonebook;
     
     /**
      * The sender's fax number for the cover page
@@ -547,6 +547,11 @@ public class FaxOptions extends AbstractFaxOptions {
      * The list of custom modems
      */
     public final List<String> customModems = new ArrayList<String>();
+    
+    /**
+     * The attributes used for printing
+     */
+    public Attribute[] printAttributes = null;
     
     public FaxOptions() {
         super(null);

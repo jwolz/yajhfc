@@ -171,7 +171,7 @@ public class OptionsWin extends JDialog {
     JLabel treeSelLabel;
     JPanel tabPanel;
 
-    FaxOptions foEdit = null;
+    FaxOptions foToEdit = null;
     List<RecvFormat> recvfmt;
     List<JobFormat> sentfmt, sendingfmt;
     Vector<LF_Entry> lookAndFeels;
@@ -198,6 +198,45 @@ public class OptionsWin extends JDialog {
         //PROFILE: System.out.println("  After getJContentPane: " + (-time + (time = System.currentTimeMillis())));
         modalResult = false;
 
+        loadSettings(foToEdit);
+
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                foToEdit.optWinBounds = getBounds();
+
+                if (changedLF && !modalResult) {
+                    Utils.setLookAndFeel(foToEdit.lookAndFeel);
+                }
+            }
+        });
+
+        
+        if (foToEdit.optWinBounds != null) {
+            this.setBounds(foToEdit.optWinBounds);
+        } else {
+            //this.setLocationByPlatform(true);
+            this.pack();
+            Dimension size = this.getSize();
+            if (size.width > 900) {
+                size.width = 900;
+                setSize(size);
+            }
+            Utils.setDefWinPos(this);
+        }
+
+        // Small special handling for new users
+        if (foToEdit.host.length() == 0) {
+            //TabMain.setSelectedIndex(1);
+            mainTree.setSelectionPath(new TreePath(new Object[] { rootNode, serverSettingsNode }));
+        } else {
+            mainTree.setSelectionRow(0);
+        }
+        //PROFILE: System.out.println("  After load settings: " + (-time + (time = System.currentTimeMillis())));
+        //PROFILE: System.out.println("  After pack: " + (-time + (time = System.currentTimeMillis())));
+    }
+
+    public void loadSettings(FaxOptions foEdit) {
         // Load values
         textNotifyAddress.setText(foEdit.notifyAddress);
         textHost.setText(foEdit.host);
@@ -280,44 +319,13 @@ public class OptionsWin extends JDialog {
 
         customProperties = new TreeMap<String,String>(foEdit.customJobOptions);
         
+        PanelSentFmt.setNewSelection(foEdit.sentfmt);
+        PanelSendingFmt.setNewSelection(foEdit.sendingfmt);
+        PanelRecvFmt.setNewSelection(foEdit.recvfmt);
+        
         for (OptionsPage page : optionsPages) {
             page.loadSettings(foEdit);
         }
-
-        this.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosed(WindowEvent e) {
-                foEdit.optWinBounds = getBounds();
-
-                if (changedLF && !modalResult) {
-                    Utils.setLookAndFeel(foEdit.lookAndFeel);
-                }
-            }
-        });
-
-        
-        if (foEdit.optWinBounds != null) {
-            this.setBounds(foEdit.optWinBounds);
-        } else {
-            //this.setLocationByPlatform(true);
-            this.pack();
-            Dimension size = this.getSize();
-            if (size.width > 900) {
-                size.width = 900;
-                setSize(size);
-            }
-            Utils.setDefWinPos(this);
-        }
-
-        // Small special handling for new users
-        if (foEdit.host.length() == 0) {
-            //TabMain.setSelectedIndex(1);
-            mainTree.setSelectionPath(new TreePath(new Object[] { rootNode, serverSettingsNode }));
-        } else {
-            mainTree.setSelectionRow(0);
-        }
-        //PROFILE: System.out.println("  After load settings: " + (-time + (time = System.currentTimeMillis())));
-        //PROFILE: System.out.println("  After pack: " + (-time + (time = System.currentTimeMillis())));
     }
     
     private JPanel getJContentPane() {
@@ -350,7 +358,7 @@ public class OptionsWin extends JDialog {
             ButtonOK = new JButton(_("OK"));
             ButtonOK.addActionListener(new ActionListener() {
                public void actionPerformed(ActionEvent e) {
-                   if (saveSettings(foEdit)) {
+                   if (saveSettings(foToEdit)) {
                        modalResult = true;
                        dispose();
                    }
@@ -458,7 +466,9 @@ public class OptionsWin extends JDialog {
         advancedLabel.setAlignmentY(Component.CENTER_ALIGNMENT);
 
         PanelTreeNode advancedNode = new PanelTreeNode(rootNode, advancedLabel, _("Advanced settings"), null);
-        advancedNode.setChildren(new ArrayList<PanelTreeNode>());
+        List<PanelTreeNode> advancedNodeChildren = new ArrayList<PanelTreeNode>();
+        advancedNode.setChildren(advancedNodeChildren);
+        advancedNodeChildren.add(new PanelTreeNode(advancedNode, new AdminSettingsPage(this), _("Administrative settings"), Utils.loadCustomIcon("adminsettings.gif")));
         
         for (PluginUI puc : PluginManager.pluginUIs) {
             PanelTreeNode parent;
@@ -708,7 +718,7 @@ public class OptionsWin extends JDialog {
             comboLookAndFeel.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     LF_Entry sel = (LF_Entry)comboLookAndFeel.getSelectedItem();
-                    if (changedLF || !sel.className.equals(foEdit.lookAndFeel)) {
+                    if (changedLF || !sel.className.equals(foToEdit.lookAndFeel)) {
                         Utils.setLookAndFeel(sel.className);
                         
                         SwingUtilities.updateComponentTreeUI(OptionsWin.this);
@@ -949,7 +959,7 @@ public class OptionsWin extends JDialog {
     
     public OptionsWin(FaxOptions foEdit, Frame owner) {
         super(owner);
-        this.foEdit = foEdit;
+        this.foToEdit = foEdit;
         
         HylaClientManager clientManager = Launcher2.application.getClientManager();
         if (clientManager != null)
@@ -957,9 +967,9 @@ public class OptionsWin extends JDialog {
         else 
             this.availableModems = HylaModem.defaultModems;
         
-        recvfmt = new ArrayList<RecvFormat>(foEdit.recvfmt);
-        sentfmt = new ArrayList<JobFormat>(foEdit.sentfmt);
-        sendingfmt = new ArrayList<JobFormat>(foEdit.sendingfmt);
+        recvfmt = new ArrayList<RecvFormat>();
+        sentfmt = new ArrayList<JobFormat>();
+        sendingfmt = new ArrayList<JobFormat>();
         
         initialize();
     }

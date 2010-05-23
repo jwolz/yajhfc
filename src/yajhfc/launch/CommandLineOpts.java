@@ -241,10 +241,10 @@ public class CommandLineOpts { //IMPORTANT!: Do not use Utils here!
                     } else {
                         // Escape non-ASCII chars
                         overrideSettings.append("\\u")
-                                        .append(Character.digit((c >> 12) & 0xf, 16))
-                                        .append(Character.digit((c >>  8) & 0xf, 16))
-                                        .append(Character.digit((c >>  4) & 0xf, 16))
-                                        .append(Character.digit( c        & 0xf, 16));
+                                        .append(Character.forDigit((c >> 12) & 0xf, 16))
+                                        .append(Character.forDigit((c >>  8) & 0xf, 16))
+                                        .append(Character.forDigit((c >>  4) & 0xf, 16))
+                                        .append(Character.forDigit( c        & 0xf, 16));
                     }
                 }
                 overrideSettings.append('\n');

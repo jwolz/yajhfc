@@ -618,6 +618,18 @@ public final class Utils {
      * @return
      */
     public static String[] fastSplit(String str, char splitChar) {
+        List<String> resList = fastSplitToList(str, splitChar);
+        return resList.toArray(new String[resList.size()]);
+    }
+    
+    /**
+     * Splits the String at the locations of splitChar (just like String.split()).
+     * This should be much faster than String.split(), however.
+     * @param str
+     * @param splitChar
+     * @return
+     */
+    public static List<String> fastSplitToList(String str, char splitChar) {
         ArrayList<String> resList = new ArrayList<String>();
         
         int pos = 0;
@@ -632,9 +644,8 @@ public final class Utils {
             resList.add(str.substring(pos));
         }
         
-        return resList.toArray(new String[resList.size()]);
+        return resList;
     }
-    
     
     /**
      * Strips quotes (" or ') at the beginning and end of the specified String

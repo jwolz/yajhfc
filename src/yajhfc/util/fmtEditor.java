@@ -303,7 +303,8 @@ public class fmtEditor<T> extends JPanel
     public fmtEditor(Collection<T> avail, List<T> selected, Collection<T> dontDelete, ListCellRenderer listRenderer, Comparator<T> comparator, T separator, String selCaption, String deselCaption) {
         super(false);
         List<T> deselectedFmts = new ArrayList<T>(avail);
-        deselectedFmts.removeAll(selected);
+        if (selected.size() > 0)
+            deselectedFmts.removeAll(selected);
         if (separator != null) {
             deselectedFmts.add(separator);
         }

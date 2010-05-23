@@ -43,7 +43,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.net.SocketException;
-import java.text.DateFormat;
 import java.text.FieldPosition;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -57,6 +56,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.print.attribute.Attribute;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.attribute.standard.OrientationRequested;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
 import javax.swing.InputMap;
@@ -82,7 +85,6 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.UIManager;
-import javax.swing.JTable.PrintMode;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
@@ -142,7 +144,11 @@ import yajhfc.util.ProgressPanel;
 import yajhfc.util.ProgressWorker;
 import yajhfc.util.SafeJFileChooser;
 import yajhfc.util.SelectedActionPropertyChangeListener;
+import yajhfc.util.StatusDialogPrintable;
 import yajhfc.util.ToolbarEditorDialog;
+import yajhfc.util.tableprint.Alignment;
+import yajhfc.util.tableprint.IconMapCellRenderer;
+import yajhfc.util.tableprint.TablePrintable;
 
 @SuppressWarnings("serial")
 public final class MainWin extends JFrame implements MainApplicationFrame {
@@ -1075,11 +1081,26 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             public void actualActionPerformed(ActionEvent e) {
                 TooltipJTable<? extends FmtItem> selTable = getSelectedTable();
                 try {
-                    MessageFormat header = new MessageFormat(tabMain.getToolTipTextAt(tabMain.getSelectedIndex()));
-                    Date now = new Date();
-                    MessageFormat footer = new MessageFormat("'" + DateFormat.getDateInstance(DateFormat.SHORT, Utils.getLocale()).format(now) + " " + DateFormat.getTimeInstance(DateFormat.SHORT, Utils.getLocale()).format(now) + "' - " + Utils._("page {0}"));
+//                    MessageFormat header = new MessageFormat(tabMain.getToolTipTextAt(tabMain.getSelectedIndex()));
+//                    Date now = new Date();
+//                    MessageFormat footer = new MessageFormat("'" + DateFormat.getDateInstance(DateFormat.SHORT, Utils.getLocale()).format(now) + " " + DateFormat.getTimeInstance(DateFormat.SHORT, Utils.getLocale()).format(now) + "' - " + Utils._("page {0}"));
+//                    selTable.print(PrintMode.FIT_WIDTH, header, footer);
                     
-                    selTable.print(PrintMode.FIT_WIDTH, header, footer);
+                    TablePrintable tp = new TablePrintable(selTable.getModel());
+                    tp.getPageHeader().put(Alignment.CENTER, new MessageFormat("'" + tabMain.getToolTipTextAt(tabMain.getSelectedIndex()) + "'"));
+                    tp.getRendererMap().put(IconMap.class, new IconMapCellRenderer());
+                    
+                    PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
+                    if (myopts.printAttributes == null) {
+                        pras.add(OrientationRequested.LANDSCAPE);
+                    } else {
+                        for (Attribute attr : myopts.printAttributes) {
+                            pras.add(attr);
+                        }
+                    }
+                    if (StatusDialogPrintable.printWithDialog(MainWin.this, tp, pras)) {
+                        myopts.printAttributes = pras.toArray();
+                    }
                 } catch (PrinterException pe) {
                     ExceptionDialog.showExceptionDialog(MainWin.this, Utils._("Error printing the table:"), pe);
                 }

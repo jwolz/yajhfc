@@ -20,7 +20,7 @@ package yajhfc;
 
 import gnu.hylafax.Job;
 
-import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
 /**
  * @author jonas
@@ -33,7 +33,7 @@ public enum FaxNotification implements IconMap {
     DONE_AND_REQUEUE(Utils._("Delivered or requeued"), Job.NOTIFY_ALL, Utils.loadCustomIcon("notify_ALL.png"))
     ;
     private final String text;
-    private final Icon icon;
+    private final ImageIcon icon;
     private final String type;
     
     
@@ -41,7 +41,7 @@ public enum FaxNotification implements IconMap {
         return null;
     }
 
-    public Icon getDisplayIcon() {
+    public ImageIcon getDisplayIcon() {
         return icon;
     }
 
@@ -58,7 +58,7 @@ public enum FaxNotification implements IconMap {
         return text;
     }
     
-    private FaxNotification(String text, String type, Icon icon) {
+    private FaxNotification(String text, String type, ImageIcon icon) {
         this.icon = icon;
         this.text = text;
         this.type = type;
