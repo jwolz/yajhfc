@@ -16,33 +16,28 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package yajhfc.util.tableprint;
-
-import java.awt.Color;
-import java.awt.Font;
-
-import javax.swing.table.TableModel;
+package yajhfc.print.tableprint;
 
 /**
+ * Possible text Alignments
+ * 
  * @author jonas
  *
  */
-public interface CellFormatModel {
-    /**
-     * Returns the background color for the specified cell 
-     * @param col
-     * @param model
-     * @param rowIndex
-     * @return
-     */
-    public Color getCellBackgroundColor(TablePrintColumn col, TableModel model, int rowIndex);
+public enum Alignment {
+    LEFT,
+    CENTER,
+    RIGHT;
     
-    /**
-     * Returnd the font for the specified cell
-     * @param col
-     * @param model
-     * @param rowIndex
-     * @return
-     */
-    public Font getCellFont(TablePrintColumn col, TableModel model, int rowIndex);
+    public double calculateX(double x, double contentWidth, double cellWidth, double spaceX) {
+        switch (this) {
+        case LEFT:
+        default:
+            return (x+spaceX);
+        case RIGHT:
+            return (x+cellWidth-spaceX-contentWidth);
+        case CENTER:
+            return (x+(cellWidth-contentWidth)/2);
+        }
+    }
 }

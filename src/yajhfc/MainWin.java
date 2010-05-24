@@ -38,7 +38,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.awt.print.PrinterException;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -56,10 +55,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.print.attribute.Attribute;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttributeSet;
-import javax.print.attribute.standard.OrientationRequested;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
 import javax.swing.InputMap;
@@ -123,10 +118,11 @@ import yajhfc.model.archive.FileHylaDirAccessor;
 import yajhfc.model.archive.HylaDirAccessor;
 import yajhfc.model.archive.QueueFileFormat;
 import yajhfc.options.OptionsWin;
-import yajhfc.phonebook.NewPhoneBookWin;
 import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
+import yajhfc.phonebook.ui.NewPhoneBookWin;
 import yajhfc.plugin.PluginManager;
 import yajhfc.plugin.PluginUI;
+import yajhfc.print.FaxTablePrinter;
 import yajhfc.readstate.PersistentReadState;
 import yajhfc.send.SendController;
 import yajhfc.send.SendWinControl;
@@ -144,11 +140,7 @@ import yajhfc.util.ProgressPanel;
 import yajhfc.util.ProgressWorker;
 import yajhfc.util.SafeJFileChooser;
 import yajhfc.util.SelectedActionPropertyChangeListener;
-import yajhfc.util.StatusDialogPrintable;
 import yajhfc.util.ToolbarEditorDialog;
-import yajhfc.util.tableprint.Alignment;
-import yajhfc.util.tableprint.IconMapCellRenderer;
-import yajhfc.util.tableprint.TablePrintable;
 
 @SuppressWarnings("serial")
 public final class MainWin extends JFrame implements MainApplicationFrame {
@@ -1080,30 +1072,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         actPrintTable = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {
                 TooltipJTable<? extends FmtItem> selTable = getSelectedTable();
-                try {
-//                    MessageFormat header = new MessageFormat(tabMain.getToolTipTextAt(tabMain.getSelectedIndex()));
-//                    Date now = new Date();
-//                    MessageFormat footer = new MessageFormat("'" + DateFormat.getDateInstance(DateFormat.SHORT, Utils.getLocale()).format(now) + " " + DateFormat.getTimeInstance(DateFormat.SHORT, Utils.getLocale()).format(now) + "' - " + Utils._("page {0}"));
-//                    selTable.print(PrintMode.FIT_WIDTH, header, footer);
-                    
-                    TablePrintable tp = new TablePrintable(selTable.getModel());
-                    tp.getPageHeader().put(Alignment.CENTER, new MessageFormat("'" + tabMain.getToolTipTextAt(tabMain.getSelectedIndex()) + "'"));
-                    tp.getRendererMap().put(IconMap.class, new IconMapCellRenderer());
-                    
-                    PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
-                    if (myopts.printAttributes == null) {
-                        pras.add(OrientationRequested.LANDSCAPE);
-                    } else {
-                        for (Attribute attr : myopts.printAttributes) {
-                            pras.add(attr);
-                        }
-                    }
-                    if (StatusDialogPrintable.printWithDialog(MainWin.this, tp, pras)) {
-                        myopts.printAttributes = pras.toArray();
-                    }
-                } catch (PrinterException pe) {
-                    ExceptionDialog.showExceptionDialog(MainWin.this, Utils._("Error printing the table:"), pe);
-                }
+                FaxTablePrinter.printFaxTable(MainWin.this, selTable, tabMain.getToolTipTextAt(tabMain.getSelectedIndex()));
             };
         };
         actPrintTable.putValue(Action.NAME, _("Print table..."));

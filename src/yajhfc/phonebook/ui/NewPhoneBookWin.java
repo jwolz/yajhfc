@@ -1,4 +1,4 @@
-package yajhfc.phonebook;
+package yajhfc.phonebook.ui;
 /*
  * YAJHFC - Yet another Java Hylafax client
  * Copyright (C) 2005 Jonas Wolz
@@ -85,6 +85,15 @@ import yajhfc.filters.OrFilter;
 import yajhfc.filters.StringFilter;
 import yajhfc.filters.StringFilterOperator;
 import yajhfc.filters.ui.CustomFilterDialog;
+import yajhfc.phonebook.DistributionList;
+import yajhfc.phonebook.PBEntryField;
+import yajhfc.phonebook.PhoneBook;
+import yajhfc.phonebook.PhoneBookEntry;
+import yajhfc.phonebook.PhoneBookEntryList;
+import yajhfc.phonebook.PhoneBookException;
+import yajhfc.phonebook.PhoneBookFactory;
+import yajhfc.phonebook.PhoneBookTreeModel;
+import yajhfc.phonebook.PhoneBookType;
 import yajhfc.phonebook.PhoneBookTreeModel.PBTreeModelListener;
 import yajhfc.phonebook.PhoneBookTreeModel.RootNode;
 import yajhfc.phonebook.convrules.NameRule;
@@ -775,7 +784,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                     return;
                 
                 PhoneBookEntry pbe = currentPhonebook.addNewEntry();
-                phoneBookTree.setSelectionPath(new TreePath(new Object[] { treeModel.rootNode, currentPhonebook, pbe }));
+                phoneBookTree.setSelectionPath(new TreePath(new Object[] { treeModel.getRootNode(), currentPhonebook, pbe }));
             }
         };
         addEntryAction.putValue(Action.NAME, Utils._("Add"));
@@ -792,7 +801,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                 if (selectedItems.size() > 1) {
                     dl.addEntries(resolveDistributionLists(selectedItems));
                 }
-                phoneBookTree.setSelectionPath(new TreePath(new Object[] { treeModel.rootNode, currentPhonebook, dl }));
+                phoneBookTree.setSelectionPath(new TreePath(new Object[] { treeModel.getRootNode(), currentPhonebook, dl }));
             }
         };
         addDistListAction.putValue(Action.NAME, Utils._("Add distribution list"));
@@ -1354,7 +1363,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                     for (PhoneBook pb : treeModel.getPhoneBooks()) {
                         if (Utils.debugMode)
                             log.finest("Expanding tree node for phone book " + pb.getDescriptor());
-                        phoneBookTree.expandPath(new TreePath(new Object[] { treeModel.rootNode, pb }));
+                        phoneBookTree.expandPath(new TreePath(new Object[] { treeModel.getRootNode(), pb }));
                     }
                     if (phoneBookTree.getSelectionPath() == null) {
                         phoneBookTree.setSelectionRow(1);

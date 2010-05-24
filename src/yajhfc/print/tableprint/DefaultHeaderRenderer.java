@@ -16,28 +16,23 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package yajhfc.util.tableprint;
+package yajhfc.print.tableprint;
 
-/**
- * Possible text Alignments
- * 
- * @author jonas
- *
- */
-public enum Alignment {
-    LEFT,
-    CENTER,
-    RIGHT;
+import java.text.Format;
+
+public class DefaultHeaderRenderer extends DefaultCellRenderer {
+    @Override
+    protected Alignment getAlignment(TablePrintColumn col) {
+        return col.getHeaderAlignment();
+    }
     
-    public double calculateX(double x, double contentWidth, double cellWidth, double spaceX) {
-        switch (this) {
-        case LEFT:
-        default:
-            return (x+spaceX);
-        case RIGHT:
-            return (x+cellWidth-spaceX-contentWidth);
-        case CENTER:
-            return (x+(cellWidth-contentWidth)/2);
-        }
+    @Override
+    protected Format getFormat(TablePrintColumn col) {
+        return null;
+    }
+    
+    @Override
+    protected boolean isWordWrap(TablePrintColumn column) {
+        return column.isHeaderWordWrap();
     }
 }

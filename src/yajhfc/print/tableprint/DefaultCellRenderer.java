@@ -16,10 +16,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package yajhfc.util.tableprint;
+package yajhfc.print.tableprint;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
@@ -101,8 +100,8 @@ public class DefaultCellRenderer implements TableCellRenderer {
     
     @SuppressWarnings("unchecked")
     public double drawCell(Graphics2D graphics, double x, double y, 
-            Object value, TablePrintColumn column, Font colFont,
-            Color background, double spaceX, double spaceY, double maxY, boolean pageContinuation, ColumnPageData pageData) {         
+            Object value, TablePrintColumn column, Color background,
+            double spaceX, double spaceY, double maxY, boolean pageContinuation, ColumnPageData pageData) {         
         List<String> lines;
         if (pageContinuation) {
             if (pageData.remainingData == null) {
@@ -114,13 +113,12 @@ public class DefaultCellRenderer implements TableCellRenderer {
             lines = Utils.fastSplitToList(valueToString(getFormat(column), value), '\n');
         }
         
-        graphics.setFont(colFont);
         FontMetrics fm = graphics.getFontMetrics();
         List<Rectangle2D> boxes = new ArrayList<Rectangle2D>(lines.size());
         for (int i=0; i<lines.size(); i++) {
             Rectangle2D box = fm.getStringBounds(lines.get(i), graphics);
             boxes.add(box);
-            if (column.isWordWrap() && 
+            if (isWordWrap(column) && 
                     box.getWidth() > column.getEffectiveColumnWidth() - 2*spaceX) {
                 i = wordWrapText(lines, boxes, i, graphics, column.getEffectiveColumnWidth()-2*spaceX, fm);
             }
@@ -175,6 +173,10 @@ public class DefaultCellRenderer implements TableCellRenderer {
         }
         graphics.setClip(oldClip);
         return rv;
+    }
+
+    protected boolean isWordWrap(TablePrintColumn column) {
+        return column.isWordWrap();
     }
     
     public double getPreferredWidth(Graphics2D graphics, Object value,

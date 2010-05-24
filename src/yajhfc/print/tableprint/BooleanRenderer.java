@@ -16,10 +16,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package yajhfc.util.tableprint;
+package yajhfc.print.tableprint;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
@@ -118,14 +117,13 @@ public class BooleanRenderer implements TableCellRenderer {
     }
     
     public double drawCell(Graphics2D graphics, double x, double y,
-            Object value, TablePrintColumn column, Font colFont,
-            Color background, double spaceX, double spaceY, double maxY,
-            boolean pageContinuation, ColumnPageData pageData) {
+            Object value, TablePrintColumn column, Color background,
+            double spaceX, double spaceY, double maxY, boolean pageContinuation,
+            ColumnPageData pageData) {
         if (pageContinuation) {
             return DRAWCELL_NOTHING_REMAINED;
         }
         
-        graphics.setFont(colFont);
         FontMetrics fm = graphics.getFontMetrics();
         double cellHeight = fm.getHeight() + 2*spaceY;
         if (y+cellHeight > maxY) { // Need a pagebreak

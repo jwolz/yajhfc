@@ -16,10 +16,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package yajhfc.util.tableprint;
+package yajhfc.print.tableprint;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
@@ -40,12 +39,12 @@ public class IconMapCellRenderer implements TableCellRenderer {
     private static final double ICON_SPACING = 0.25;
 
     /* (non-Javadoc)
-     * @see yajhfc.util.tableprint.TableCellRenderer#drawCell(java.awt.Graphics2D, double, double, java.lang.Object, yajhfc.util.tableprint.TablePrintColumn, java.awt.Font, java.awt.Color, double, double, double, boolean)
+     * @see yajhfc.print.tableprint.TableCellRenderer#drawCell(java.awt.Graphics2D, double, double, java.lang.Object, yajhfc.print.tableprint.TablePrintColumn, java.awt.Font, java.awt.Color, double, double, double, boolean)
      */
     public double drawCell(Graphics2D graphics, double x, double y,
-            Object value, TablePrintColumn column, Font colFont,
-            Color background, double spaceX, double spaceY, double maxY,
-            boolean pageContinuation, ColumnPageData pageData) {
+            Object value, TablePrintColumn column, Color background,
+            double spaceX, double spaceY, double maxY, boolean pageContinuation,
+            ColumnPageData pageData) {
         if (pageContinuation) {
             return DRAWCELL_NOTHING_REMAINED;
         }
@@ -53,7 +52,6 @@ public class IconMapCellRenderer implements TableCellRenderer {
         IconMap im = (IconMap)value;
         String text = im.getText();
         
-        graphics.setFont(colFont);
         FontMetrics fm = graphics.getFontMetrics();
         Rectangle2D box = fm.getStringBounds(text, graphics);
         double cellHeight = box.getHeight() + 2*spaceY;
@@ -87,7 +85,7 @@ public class IconMapCellRenderer implements TableCellRenderer {
     }
 
     /* (non-Javadoc)
-     * @see yajhfc.util.tableprint.TableCellRenderer#getPreferredWidth(java.awt.Graphics2D, java.lang.Object, java.awt.FontMetrics, java.text.Format, yajhfc.util.tableprint.TablePrintColumn)
+     * @see yajhfc.print.tableprint.TableCellRenderer#getPreferredWidth(java.awt.Graphics2D, java.lang.Object, java.awt.FontMetrics, java.text.Format, yajhfc.print.tableprint.TablePrintColumn)
      */
     public double getPreferredWidth(Graphics2D graphics, Object value,
             FontMetrics fm, Format format, TablePrintColumn column) {

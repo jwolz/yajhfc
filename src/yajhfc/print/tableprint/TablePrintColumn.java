@@ -16,7 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package yajhfc.util.tableprint;
+package yajhfc.print.tableprint;
 
 import java.awt.Font;
 import java.text.Format;
@@ -42,6 +42,7 @@ public class TablePrintColumn {
     protected float width = WIDTH_PREFERRED;
     protected Alignment alignment;
     protected boolean wordWrap = false;
+    protected boolean headerWordWrap = true;
     protected Alignment headerAlignment = Alignment.CENTER;
     
     protected Format columnFormat = null;
@@ -230,6 +231,16 @@ public class TablePrintColumn {
         this.effectiveColumnWidth = effectiveColumnWidth;
     }
     
+    
+    
+    public boolean isHeaderWordWrap() {
+        return headerWordWrap;
+    }
+
+    public void setHeaderWordWrap(boolean headerWordWrap) {
+        this.headerWordWrap = headerWordWrap;
+    }
+
     protected TablePrintColumn(TablePrintable parent, int index) {
         super();
         this.parent = parent;

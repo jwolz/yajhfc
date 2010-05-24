@@ -16,7 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package yajhfc.util.tableprint;
+package yajhfc.print.tableprint;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -29,7 +29,7 @@ import javax.swing.table.TableModel;
  */
 public class DefaultCellFormatModel implements CellFormatModel {    
     /* (non-Javadoc)
-     * @see yajhfc.util.tableprint.CellFormatModel#getCellBackgroundColor(yajhfc.util.tableprint.TablePrintColumn, javax.swing.table.TableModel, int)
+     * @see yajhfc.print.tableprint.CellFormatModel#getCellBackgroundColor(yajhfc.print.tableprint.TablePrintColumn, javax.swing.table.TableModel, int)
      */
     public Color getCellBackgroundColor(TablePrintColumn col, TableModel model,
             int rowIndex) {
@@ -42,7 +42,7 @@ public class DefaultCellFormatModel implements CellFormatModel {
     }
 
     /* (non-Javadoc)
-     * @see yajhfc.util.tableprint.CellFormatModel#getCellFont(yajhfc.util.tableprint.TablePrintColumn, javax.swing.table.TableModel, int)
+     * @see yajhfc.print.tableprint.CellFormatModel#getCellFont(yajhfc.print.tableprint.TablePrintColumn, javax.swing.table.TableModel, int)
      */
     public Font getCellFont(TablePrintColumn col, TableModel model, int rowIndex) {
         return col.getEffectiveFont();

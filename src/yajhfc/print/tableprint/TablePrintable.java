@@ -16,7 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package yajhfc.util.tableprint;
+package yajhfc.print.tableprint;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -44,7 +44,7 @@ import javax.swing.table.TableModel;
 
 import yajhfc.DateKind;
 import yajhfc.Utils;
-import yajhfc.util.tableprint.TableCellRenderer.ColumnPageData;
+import yajhfc.print.tableprint.TableCellRenderer.ColumnPageData;
 
 /**
  * @author jonas
@@ -256,9 +256,10 @@ public class TablePrintable implements Printable {
             x = tableLeft;
             final TablePrintColumn[] headerLayout = columnLayout.getHeaderLayout();
             for (int i=0; i < headerLayout.length; i++) {
-                TablePrintColumn column = headerLayout[i];                
+                TablePrintColumn column = headerLayout[i];    
+                graphics.setFont(column.getEffectiveHeaderFont());
                 double h = headerRenderer.drawCell(graphics, x, y, column.getHeaderText(), column,
-                        column.getEffectiveHeaderFont(), headerBackground, spaceX, spaceY, maxHeight, false, null);
+                        headerBackground, spaceX, spaceY, maxHeight, false, null);
                 lineHeights[i] = h;
                 if (h > lineHeight)
                     lineHeight = h;
@@ -345,9 +346,10 @@ public class TablePrintable implements Printable {
                         pd = new ColumnPageData();                      
                 }
 
+                graphics.setFont(formatModel.getCellFont(column, model, currentRow));
                 double h = column.getEffectiveRenderer().drawCell(graphics, x, y, column.getData(currentRow),
-                         column, formatModel.getCellFont(column, model, currentRow), formatModel.getCellBackgroundColor(column, model, currentRow),
-                         spaceX, spaceY, maxHeight, pageContinuation, pd);
+                         column, formatModel.getCellBackgroundColor(column, model, currentRow), spaceX,
+                         spaceY, maxHeight, pageContinuation, pd);
                 newPageData[col] = pd;
                 if (h == TableCellRenderer.DRAWCELL_NOTHING) {
                     needPagebreak = true;

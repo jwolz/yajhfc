@@ -16,10 +16,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package yajhfc.util.tableprint;
+package yajhfc.print.tableprint;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.text.Format;
@@ -42,13 +41,12 @@ public interface TableCellRenderer {
     
     
     /**
-     * Draw the specified cell
+     * Draw the specified cell with the currently set font
      * @param graphics Graphics context to draw in
      * @param x horizontal position
      * @param y vertical position
      * @param value the value to draw
      * @param column the column to draw
-     * @param colFont the font to use for drawing (may be different from the column font)
      * @param background the background color for this cell
      * @param spaceX the horizontal cell inset
      * @param spaceY the vertical cell inset
@@ -59,7 +57,7 @@ public interface TableCellRenderer {
      * @return the cell's height, 0.0 if nothing fit on this page or -(drawn height) if this cell was partially drawn
      */
     double drawCell(Graphics2D graphics, double x, double y, 
-            Object value, TablePrintColumn column, Font colFont, Color background, double spaceX, double spaceY, double maxY, boolean pageContinuation, ColumnPageData pageData);
+            Object value, TablePrintColumn column, Color background, double spaceX, double spaceY, double maxY, boolean pageContinuation, ColumnPageData pageData);
     
     /**
      * Returns the preferred width (usually the text width) for the given value
