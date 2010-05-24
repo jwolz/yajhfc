@@ -419,7 +419,14 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
         rootNode = new RootNode(Utils._("All phone books"));
     }
 
-    protected static class RootNode {
+    /**
+     * @return the rootNode
+     */
+    public RootNode getRootNode() {
+        return rootNode;
+    }
+
+    public static class RootNode {
         private String caption;
         
         @Override

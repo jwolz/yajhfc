@@ -16,7 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package yajhfc.phonebook;
+package yajhfc.phonebook.ui;
 
 import info.clearthought.layout.TableLayout;
 
@@ -47,8 +47,11 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import yajhfc.Utils;
+import yajhfc.phonebook.DistributionList;
+import yajhfc.phonebook.PBEntryField;
+import yajhfc.phonebook.PhoneBook;
+import yajhfc.phonebook.PhoneBookEntry;
 import yajhfc.phonebook.convrules.PBEntryFieldContainer;
-import yajhfc.send.PBEntryFieldTableModel;
 import yajhfc.util.CancelAction;
 import yajhfc.util.ExcDialogAbstractAction;
 import yajhfc.util.JTableTABAction;

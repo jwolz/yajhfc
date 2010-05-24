@@ -16,7 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package yajhfc.phonebook;
+package yajhfc.phonebook.ui;
 
 import info.clearthought.layout.TableLayout;
 import info.clearthought.layout.TableLayoutConstraints;
@@ -32,6 +32,9 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.text.JTextComponent;
 
 import yajhfc.Utils;
+import yajhfc.phonebook.PBEntryField;
+import yajhfc.phonebook.PhoneBook;
+import yajhfc.phonebook.PhoneBookEntry;
 import yajhfc.util.ClipboardPopup;
 import yajhfc.util.LimitedPlainDocument;
 

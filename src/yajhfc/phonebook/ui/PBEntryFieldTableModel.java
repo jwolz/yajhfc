@@ -1,4 +1,4 @@
-package yajhfc.send;
+package yajhfc.phonebook.ui;
 /*
  * YAJHFC - Yet another Java Hylafax client
  * Copyright (C) 2005-2008 Jonas Wolz

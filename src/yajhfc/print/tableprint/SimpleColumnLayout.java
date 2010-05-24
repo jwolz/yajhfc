@@ -16,7 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package yajhfc.util.tableprint;
+package yajhfc.print.tableprint;
 
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -34,7 +34,7 @@ public class SimpleColumnLayout implements ColumnLayout {
     protected double tableWidth = -1;
     
     /* (non-Javadoc)
-     * @see yajhfc.util.tableprint.ColumnLayout#calculateColumnWidths(java.awt.Graphics2D, double, double)
+     * @see yajhfc.print.tableprint.ColumnLayout#calculateColumnWidths(java.awt.Graphics2D, double, double)
      */
     public void calculateColumnWidths(Graphics2D graphics, double width,
             double insetX) {
@@ -103,21 +103,21 @@ public class SimpleColumnLayout implements ColumnLayout {
     }
 
     /* (non-Javadoc)
-     * @see yajhfc.util.tableprint.ColumnLayout#getHeaderLayout()
+     * @see yajhfc.print.tableprint.ColumnLayout#getHeaderLayout()
      */
     public TablePrintColumn[] getHeaderLayout() {
         return tableColumns;
     }
 
     /* (non-Javadoc)
-     * @see yajhfc.util.tableprint.ColumnLayout#getLayoutForRow(int)
+     * @see yajhfc.print.tableprint.ColumnLayout#getLayoutForRow(int)
      */
     public TablePrintColumn[] getLayoutForRow(int row) {
         return tableColumns;
     }
 
     /* (non-Javadoc)
-     * @see yajhfc.util.tableprint.ColumnLayout#getTableWidth()
+     * @see yajhfc.print.tableprint.ColumnLayout#getTableWidth()
      */
     public double getTableWidth() {
         return tableWidth;
@@ -128,7 +128,7 @@ public class SimpleColumnLayout implements ColumnLayout {
     }
 
     /* (non-Javadoc)
-     * @see yajhfc.util.tableprint.ColumnLayout#intializeLayout(yajhfc.util.tableprint.TablePrintable, javax.swing.table.TableModel)
+     * @see yajhfc.print.tableprint.ColumnLayout#intializeLayout(yajhfc.print.tableprint.TablePrintable, javax.swing.table.TableModel)
      */
     public void initializeLayout(TablePrintable parent, TableModel model) {
         this.parent = parent;

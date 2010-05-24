@@ -16,7 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package yajhfc.phonebook;
+package yajhfc.phonebook.ui;
 
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
@@ -28,6 +28,9 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import yajhfc.phonebook.PBEntryField;
+import yajhfc.phonebook.PhoneBook;
+import yajhfc.phonebook.PhoneBookEntry;
 import yajhfc.util.ClipboardPopup;
 import yajhfc.util.LimitedPlainDocument;
 

@@ -1,4 +1,3 @@
-package yajhfc.util.tableprint;
 /*
  * YAJHFC - Yet another Java Hylafax client
  * Copyright (C) 2005-2010 Jonas Wolz
@@ -17,12 +16,33 @@ package yajhfc.util.tableprint;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+package yajhfc.print.tableprint;
+
+import java.awt.Color;
+import java.awt.Font;
+
+import javax.swing.table.TableModel;
 
 /**
- * Print modes of the table header.
+ * @author jonas
+ *
  */
-public enum HeaderPrintMode {
-    PRINT_ALWAYS,
-    PRINT_ON_FIRST_PAGE,
-    PRINT_NEVER;
+public interface CellFormatModel {
+    /**
+     * Returns the background color for the specified cell 
+     * @param col
+     * @param model
+     * @param rowIndex
+     * @return
+     */
+    public Color getCellBackgroundColor(TablePrintColumn col, TableModel model, int rowIndex);
+    
+    /**
+     * Returnd the font for the specified cell
+     * @param col
+     * @param model
+     * @param rowIndex
+     * @return
+     */
+    public Font getCellFont(TablePrintColumn col, TableModel model, int rowIndex);
 }

@@ -1,3 +1,4 @@
+package yajhfc.print.tableprint;
 /*
  * YAJHFC - Yet another Java Hylafax client
  * Copyright (C) 2005-2010 Jonas Wolz
@@ -16,18 +17,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package yajhfc.util.tableprint;
 
-import java.text.Format;
-
-public class DefaultHeaderRenderer extends DefaultCellRenderer {
-    @Override
-    protected Alignment getAlignment(TablePrintColumn col) {
-        return col.getHeaderAlignment();
-    }
-    
-    @Override
-    protected Format getFormat(TablePrintColumn col) {
-        return null;
-    }
+/**
+ * Print modes of the table header.
+ */
+public enum HeaderPrintMode {
+    PRINT_ALWAYS,
+    PRINT_ON_FIRST_PAGE,
+    PRINT_NEVER;
 }

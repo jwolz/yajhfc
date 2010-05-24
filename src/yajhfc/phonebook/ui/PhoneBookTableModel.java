@@ -16,13 +16,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package yajhfc.phonebook;
+package yajhfc.phonebook.ui;
 
 import java.util.Collection;
 import java.util.Collections;
 
+import yajhfc.phonebook.PhoneBookEntryList;
+import yajhfc.phonebook.PhonebookEvent;
+import yajhfc.phonebook.PhonebookEventListener;
 import yajhfc.phonebook.convrules.PBEntryFieldContainer;
-import yajhfc.send.PBEntryFieldTableModel;
 
 /**
  * @author jonas
@@ -47,7 +49,7 @@ public class PhoneBookTableModel extends PBEntryFieldTableModel implements
     public void elementsAdded(PhonebookEvent e) {
         int startIdx = -2;
         int endIdx = -2;
-        for (int idx : e.indices) {
+        for (int idx : e.getIndices()) {
             //Try to find continuous intervals
             if ((idx - endIdx) > 1) {
                 if (endIdx >= 0) {
@@ -69,7 +71,7 @@ public class PhoneBookTableModel extends PBEntryFieldTableModel implements
     public void elementsChanged(PhonebookEvent e) {
         int startIdx = -2;
         int endIdx = -2;
-        for (int idx : e.indices) {
+        for (int idx : e.getIndices()) {
             //Try to find continuous intervals
             if ((idx - endIdx) > 1) {
                 if (endIdx >= 0) {
@@ -91,7 +93,7 @@ public class PhoneBookTableModel extends PBEntryFieldTableModel implements
     public void elementsRemoved(PhonebookEvent e) {
         int startIdx = -2;
         int endIdx = -2;
-        for (int idx : e.indices) {
+        for (int idx : e.getIndices()) {
             //Try to find continuous intervals
             if ((idx - endIdx) > 1) {
                 if (endIdx >= 0) {

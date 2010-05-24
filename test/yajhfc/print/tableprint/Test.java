@@ -1,4 +1,4 @@
-package yajhfc.util.tableprint;
+package yajhfc.print.tableprint;
 
 import java.awt.HeadlessException;
 import java.awt.print.PrinterException;
@@ -15,7 +15,11 @@ import javax.swing.table.TableModel;
 
 import yajhfc.FaxNotification;
 import yajhfc.IconMap;
-import yajhfc.util.StatusDialogPrintable;
+import yajhfc.print.StatusDialogPrintable;
+import yajhfc.print.tableprint.Alignment;
+import yajhfc.print.tableprint.IconMapCellRenderer;
+import yajhfc.print.tableprint.TablePrintColumn;
+import yajhfc.print.tableprint.TablePrintable;
 
 public class Test extends AbstractTableModel {
 
@@ -127,6 +131,7 @@ public class Test extends AbstractTableModel {
         
         tp.getColumnLayout().getHeaderLayout()[6].setWordWrap(true);
         tp.getColumnLayout().getHeaderLayout()[6].setWidth(0.25f);
+        tp.getColumnLayout().getHeaderLayout()[7].setAlignment(Alignment.RIGHT);
         tp.getColumnLayout().getHeaderLayout()[7].setWordWrap(true);
         tp.getColumnLayout().getHeaderLayout()[7].setWidth(TablePrintColumn.WIDTH_FILL);
         

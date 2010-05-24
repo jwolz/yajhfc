@@ -1,4 +1,4 @@
-package yajhfc.phonebook;
+package yajhfc.phonebook.ui;
 /*
  * YAJHFC - Yet another Java Hylafax client
  * Copyright (C) 2007 Jonas Wolz
@@ -26,6 +26,9 @@ import javax.swing.tree.TreePath;
 import yajhfc.Utils;
 import yajhfc.filters.Filter;
 import yajhfc.filters.ui.SearchWin;
+import yajhfc.phonebook.PBEntryField;
+import yajhfc.phonebook.PhoneBook;
+import yajhfc.phonebook.PhoneBookEntry;
 
 public final class NewSearchWin extends SearchWin<PhoneBookEntry,PBEntryField> {
     private NewPhoneBookWin owner;
