@@ -56,7 +56,7 @@ public class TablePrintable implements Printable {
     protected Font tableFont;
     protected Font headerFont;
     protected HeaderPrintMode headerPrintMode = HeaderPrintMode.PRINT_ALWAYS;
-    protected boolean shrinkLargeTables = true;
+    protected ResizeMode resizeMode = ResizeMode.RESIZE_SHRINK_ONLY;
     
     protected final Map<Alignment,MessageFormat> pageHeader = new EnumMap<Alignment, MessageFormat>(Alignment.class);
     protected final Map<Alignment,MessageFormat> pageFooter = new EnumMap<Alignment, MessageFormat>(Alignment.class);
@@ -79,7 +79,7 @@ public class TablePrintable implements Printable {
     protected Color headerBackground = new Color(240,240,240);
     protected Color[] cellBackground = null;
     
-    protected ColumnLayout columnLayout = new SimpleColumnLayout();
+    protected ColumnLayout columnLayout;
     protected CellFormatModel formatModel = new DefaultCellFormatModel();
     
     // Status variables
@@ -89,6 +89,12 @@ public class TablePrintable implements Printable {
     protected final List<ColumnPageData[]> pageData = new ArrayList<ColumnPageData[]>();
     
     public TablePrintable(TableModel model) {
+    	this(model, new SimpleColumnLayout());
+    }
+    
+    public TablePrintable(TableModel model, ColumnLayout colLayout) {
+    	this.columnLayout = colLayout;
+    	
         pageFooter.put(Alignment.LEFT, new MessageFormat("'" + DateKind.DATE_AND_TIME.getFormat().format(new Date()) + "'"));
         pageFooter.put(Alignment.RIGHT, new MessageFormat(Utils._("page {0}")));
         
@@ -102,7 +108,8 @@ public class TablePrintable implements Printable {
         //formatMap.put(Boolean.class, new BooleanFormat());
         rendererMap.put(Boolean.class, new BooleanRenderer());
         
-        setModel(model);
+        if (model != null)
+        	setModel(model);
     }
     
     /* (non-Javadoc)
@@ -122,7 +129,15 @@ public class TablePrintable implements Printable {
             g2d.setFont(pageFooterFont);
             imageableArea.height -= drawHeaderOrFooter(g2d, pageFooter, imageableArea, pageIndex, true) + pageFooterFont.getSize2D();
         }
-            
+        double maxLineWidth = Math.max(lineWidth, headerLineWidth);
+        if (maxLineWidth <= 0) 
+        	maxLineWidth = 1;
+        else
+        	maxLineWidth += 1;
+        
+        imageableArea.height -= maxLineWidth;
+        imageableArea.width -= maxLineWidth;
+        
         if (pageIndex == 0) { // First page
             currentRow = 0;
             lastStartRow = 0;
@@ -218,15 +233,33 @@ public class TablePrintable implements Printable {
         double tableWidth = columnLayout.getTableWidth();
         double maxHeight = drawArea.getHeight();
         double tableLeft;
-        if (tableWidth < drawArea.getWidth()) {
-            tableLeft = (drawArea.getWidth() - tableWidth) / 2;
+        boolean resizeTable;
+        switch (resizeMode) {
+        case RESIZE_NEVER:
+        default:
+        	resizeTable = false;
+        	break;
+        case RESIZE_SHRINK_ONLY:
+        	resizeTable = (tableWidth > drawArea.getWidth());
+        	break;
+        case RESIZE_GROW_ONLY:
+        	resizeTable = (tableWidth < drawArea.getWidth());
+        	break;
+        case RESIZE_GROW_AND_SHRINK:
+        	resizeTable = (tableWidth != drawArea.getWidth());
+        	break;
+        }
+        
+        double sf = 1.0;
+        if (resizeTable) {
+        	tableLeft = 0;
+        	sf = drawArea.getWidth() / tableWidth;
+        	graphics.scale(sf, sf);
+        	maxHeight /= sf; // If we shrink the page, more lines fit on the page
+        } else if (tableWidth < drawArea.getWidth()) {
+        	tableLeft = (drawArea.getWidth() - tableWidth) / 2;
         } else {
-            tableLeft = 0;
-            if (shrinkLargeTables && tableWidth > drawArea.getWidth()) {
-                double sf = drawArea.getWidth() / tableWidth;
-                graphics.scale(sf, sf);
-                maxHeight /= sf; // If we shrink the page, more lines fit on the page
-            }
+        	tableLeft = 0;
         }
         double x = tableLeft; double y = 0;
         Line2D.Double line = new Line2D.Double();
@@ -371,7 +404,7 @@ public class TablePrintable implements Printable {
             
             // Fill the parts of the columns that have less height than the maximum:
             x = tableLeft;
-            for (int i=0; i<lineHeights.length; i++) {
+            for (int i=0; i<columns.length; i++) {
                 final TablePrintColumn column = columns[i];
                 if (lineHeights[i] < lineHeight) {
                     Color background = formatModel.getCellBackgroundColor(column, model, currentRow);
@@ -429,7 +462,7 @@ public class TablePrintable implements Printable {
             graphics.draw(line);
         }
         
-        return (currentRow >= model.getRowCount()) ? y : -y;
+        return ((currentRow >= model.getRowCount()) ? y : -y) * sf;
     }
     
     protected boolean gridLinesEnabled() {
@@ -440,43 +473,80 @@ public class TablePrintable implements Printable {
         return (headerLineWidth >= 0.0f);
     }
     
+    /**
+     * The table model the data comes from. The TablePrintable does *not* listen for
+     * TableModelEvents, so it is your responsibility to make sure the structure of the table model
+     * does not change between calling setModel and the actual printout.
+     * @return
+     */
     public TableModel getModel() {
         return model;
     }
-
+    
+    /**
+     * The table model the data comes from. The TablePrintable does *not* listen for
+     * TableModelEvents, so it is your responsibility to make sure the structure of the table model
+     * does not change between calling setModel and the actual printout.
+     * @return
+     */
     public void setModel(TableModel model) {
         this.model = model;
         columnLayout.initializeLayout(this, model);
     }
 
+    /**
+     * The default font to use for table cells
+     * @return
+     */
     public Font getTableFont() {
         return tableFont;
     }
-
+    /**
+     * The default font to use for table cells
+     */
     public void setTableFont(Font tableFont) {
         this.tableFont = tableFont;
     }
 
+    /**
+     * The default font to use for the table header
+     * @return
+     */
     public Font getHeaderFont() {
         return headerFont;
     }
 
+    /**
+     * The default font to use for the table header
+     */
     public void setHeaderFont(Font headerFont) {
         this.headerFont = headerFont;
     }
-
+    
+    /**
+     * The font to use for the page header
+     */
     public Font getPageHeaderFont() {
         return pageHeaderFont;
     }
-
+    /**
+     * The font to use for the page header
+     */
     public void setPageHeaderFont(Font pageHeaderFont) {
         this.pageHeaderFont = pageHeaderFont;
     }
 
+    /**
+     * The font to use for the page footer
+     * @return
+     */
     public Font getPageFooterFont() {
         return pageFooterFont;
     }
 
+    /**
+     * The font to use for the page footer
+     */
     public void setPageFooterFont(Font pageFooterFont) {
         this.pageFooterFont = pageFooterFont;
     }
@@ -497,43 +567,66 @@ public class TablePrintable implements Printable {
         this.lineWidth = lineWidth;
     }
 
-    public int getCurrentRow() {
-        return currentRow;
-    }
-
-    public void setCurrentRow(int currentRow) {
-        this.currentRow = currentRow;
-    }
-
+    /**
+     * Returns a map to set the formatters to use to format data of the specified data type.
+     * @return
+     */
     public Map<Class<?>, Format> getFormatMap() {
         return formatMap;
     }
 
+    /**
+     * Returns a map to set the renderers to use to render data of the specified data type.
+     * @return
+     */
     public Map<Class<?>, TableCellRenderer> getRendererMap() {
         return rendererMap;
     }
     
+    /**
+     * Returns a map to set MessageFormat instances to create a page footer.
+     * The MessageFormats are given a single Integer parameter specifying the page number.
+     * @return
+     */
     public Map<Alignment, MessageFormat> getPageFooter() {
         return pageFooter;
     }
     
+    /**
+     * Returns a map to set MessageFormat instances to create a page header.
+     * The MessageFormats are given a single Integer parameter specifying the page number.
+     * @return
+     */
     public Map<Alignment, MessageFormat> getPageHeader() {
         return pageHeader;
     }
     
+    /**
+     * When to print a page header
+     */
     public void setHeaderPrintMode(HeaderPrintMode headerPrintMode) {
         this.headerPrintMode = headerPrintMode;
     }
     
+    /**
+     * When to print a page header
+     * @return
+     */
     public HeaderPrintMode getHeaderPrintMode() {
         return headerPrintMode;
     }
     
-    
+    /**
+     * The background color of the table header
+     */
     public Color getHeaderBackground() {
         return headerBackground;
     }
     
+    /**
+     * The background color of the table header
+     * @param headerBackground
+     */
     public void setHeaderBackground(Color headerBackground) {
         this.headerBackground = headerBackground;
     }
@@ -557,23 +650,40 @@ public class TablePrintable implements Printable {
     public void setCellBackground(Color[] cellBackground) {
         this.cellBackground = cellBackground;
     }
-       
-    public boolean isShrinkLargeTables() {
-        return shrinkLargeTables;
-    }
+    
+    /**
+     * How to resize tables larger or smaller than the page
+     * @return
+     */
+    public ResizeMode getResizeMode() {
+		return resizeMode;
+	}
+    
+    /**
+     * How to resize tables larger or smaller than the page
+     * @return
+     */
+    public void setResizeMode(ResizeMode resizeMode) {
+		this.resizeMode = resizeMode;
+	}
 
+    /**
+     * The renderer used to paint the table header cells
+     */
     public TableCellRenderer getHeaderRenderer() {
         return headerRenderer;
     }
 
-    public void setShrinkLargeTables(boolean shrinkLargeTables) {
-        this.shrinkLargeTables = shrinkLargeTables;
-    }
-
+    /**
+     * The renderer used to paint the table header cells
+     */
     public void setHeaderRenderer(TableCellRenderer headerRenderer) {
         this.headerRenderer = headerRenderer;
     }
 
+    /**
+     * The column layout for this table
+     */
     public void setColumnLayout(ColumnLayout columnLayout) {
         this.columnLayout = columnLayout;
         if (model != null) {
@@ -581,34 +691,69 @@ public class TablePrintable implements Printable {
         }
     }
     
+    /**
+     * The column layout for this table
+     */
     public ColumnLayout getColumnLayout() {
         return columnLayout;
     }
     
+    /**
+     * The default cell renderer to use when no special renderer can be found
+     */
     public TableCellRenderer getDefaultRenderer() {
         return defaultRenderer;
     }
     
+    /**
+     * The default cell renderer to use when no special renderer can be found
+     */
     public void setDefaultRenderer(TableCellRenderer defaultRenderer) {
         this.defaultRenderer = defaultRenderer;
     }
 
+    /**
+     * The width of the lines around the column header. Negative values disable the lines.
+     */
     public float getHeaderLineWidth() {
         return headerLineWidth;
     }
-
+    
+    /**
+     * The horizontal cell inset.
+     * Positive values give absolute insets, negative values parts of the line height
+     */
     public float getCellInsetX() {
         return cellInsetX;
     }
-
+    
+    /**
+     * The vertical cell inset.
+     * Positive values give absolute insets, negative values parts of the line height
+     */
     public float getCellInsetY() {
         return cellInsetY;
     }
 
+    /**
+     * The format model to format the individual cells
+     * @return
+     */
     public CellFormatModel getFormatModel() {
         return formatModel;
     }
+    
+    /**
+     * The format model to format the individual cells
+     */
+    public void setFormatModel(CellFormatModel formatModel) {
+        this.formatModel = formatModel;
+    }
 
+    /**
+     * The width of the lines around the column header. Negative values disable the lines.
+     * @param headerLineWidth
+     */
     public void setHeaderLineWidth(float headerLineWidth) {
         this.headerLineWidth = headerLineWidth;
     }
@@ -630,10 +775,5 @@ public class TablePrintable implements Printable {
     public void setCellInsetY(float cellInsetY) {
         this.cellInsetY = cellInsetY;
     }
-
-    public void setFormatModel(CellFormatModel formatModel) {
-        this.formatModel = formatModel;
-    }
-    
-    
+   
 }

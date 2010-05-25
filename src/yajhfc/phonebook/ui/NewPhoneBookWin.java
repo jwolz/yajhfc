@@ -18,6 +18,7 @@ package yajhfc.phonebook.ui;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+import static yajhfc.Utils._;
 import info.clearthought.layout.TableLayout;
 
 import java.awt.BorderLayout;
@@ -92,11 +93,11 @@ import yajhfc.phonebook.PhoneBookEntry;
 import yajhfc.phonebook.PhoneBookEntryList;
 import yajhfc.phonebook.PhoneBookException;
 import yajhfc.phonebook.PhoneBookFactory;
-import yajhfc.phonebook.PhoneBookTreeModel;
 import yajhfc.phonebook.PhoneBookType;
-import yajhfc.phonebook.PhoneBookTreeModel.PBTreeModelListener;
-import yajhfc.phonebook.PhoneBookTreeModel.RootNode;
 import yajhfc.phonebook.convrules.NameRule;
+import yajhfc.phonebook.ui.PhoneBookTreeModel.PBTreeModelListener;
+import yajhfc.phonebook.ui.PhoneBookTreeModel.RootNode;
+import yajhfc.print.PhonebooksPrinter;
 import yajhfc.util.AbstractQuickSearchHelper;
 import yajhfc.util.ClipboardPopup;
 import yajhfc.util.ExcDialogAbstractAction;
@@ -128,7 +129,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     JPopupMenu treePopup;
     
     Action listRemoveAction, addEntryAction, removeEntryAction, searchEntryAction, selectAction;
-    Action addDistListAction, viewPopupMenuAction;
+    Action addDistListAction, viewPopupMenuAction, printAction;
     
     MultiButtonGroup nameStyleGroup, viewGroup;
     
@@ -740,6 +741,8 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             pbMenu.add(importMenu);
             pbMenu.add(exportMenu);
             pbMenu.add(new JSeparator());
+            pbMenu.add(printAction);
+            pbMenu.add(new JSeparator());
             pbMenu.add(new JMenuItem(listRemoveAction));
             pbMenu.add(new JSeparator());
             pbMenu.add(closeWinMenu);
@@ -925,6 +928,14 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         viewPopupMenuAction.putValue(Action.SMALL_ICON, Utils.loadCustomIcon("filter.png"));
         viewPopupMenuAction.putValue(Action.SHORT_DESCRIPTION, Utils._("Filter phone book items"));
         
+        printAction = new ExcDialogAbstractAction() {
+			@Override
+			protected void actualActionPerformed(ActionEvent e) {
+				PhonebooksPrinter.printPhonebooks(NewPhoneBookWin.this, treeModel.getPhoneBooks(), selectedItems, treeModel.isShowingFilteredResults());
+			}
+		};
+		printAction.putValue(Action.NAME, _("Print phone books") + "...");
+		printAction.putValue(Action.SMALL_ICON, Utils.loadIcon("general/Print"));
     }
     
     private void initialize() {

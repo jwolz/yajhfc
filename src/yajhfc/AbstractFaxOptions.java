@@ -35,6 +35,24 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Class useable for options.
+ * All public non-static fields are loaded/saved by loadFromProperties/saveToProperties.
+ * 
+ * Supported data types:
+ * - String
+ * - boolean
+ * - int
+ * - long
+ * - YajLanguage
+ * - FmtItemList
+ * - Rectangle
+ * - Point 
+ * - List<String>
+ * - Enum
+ * - Password
+ * - Map<String,String>
+ * - Serializable
+ * 
  * @author jonas
  *
  */

@@ -16,7 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package yajhfc.phonebook;
+package yajhfc.phonebook.ui;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,6 +33,11 @@ import javax.swing.tree.TreePath;
 
 import yajhfc.Utils;
 import yajhfc.filters.Filter;
+import yajhfc.phonebook.PBEntryField;
+import yajhfc.phonebook.PhoneBook;
+import yajhfc.phonebook.PhoneBookEntry;
+import yajhfc.phonebook.PhonebookEvent;
+import yajhfc.phonebook.PhonebookEventListener;
 import yajhfc.phonebook.convrules.EntryToStringRule;
 
 /**
@@ -426,7 +431,11 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
         return rootNode;
     }
 
-    public static class RootNode {
+    public boolean isShowingFilteredResults() {
+		return showFilteredResults;
+	}
+
+	public static class RootNode {
         private String caption;
         
         @Override

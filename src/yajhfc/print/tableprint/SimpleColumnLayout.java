@@ -32,13 +32,25 @@ public class SimpleColumnLayout implements ColumnLayout {
     protected TablePrintable parent;
     protected TablePrintColumn[] tableColumns;
     protected double tableWidth = -1;
+    protected double minFillColsWidth = 0;
     
     /* (non-Javadoc)
      * @see yajhfc.print.tableprint.ColumnLayout#calculateColumnWidths(java.awt.Graphics2D, double, double)
      */
     public void calculateColumnWidths(Graphics2D graphics, double width,
             double insetX) {
-        tableWidth = calculateColumnWidth(graphics, tableColumns, width, insetX);
+        tableWidth = calculateColumnWidth(graphics, getTableColumns(), width, insetX);
+    }
+    
+    /**
+     * Returns if the specified row should be included in the preferred width calculation of
+     * the specified column
+     * @param column
+     * @param row
+     * @return
+     */
+    protected boolean useForPreferredWidth(TablePrintColumn column, int row) {
+    	return true;
     }
 
     /**
@@ -67,10 +79,12 @@ public class SimpleColumnLayout implements ColumnLayout {
                 fm = graphics.getFontMetrics(column.getEffectiveFont());
                 TableCellRenderer rend = column.getEffectiveRenderer();
                 for (int j = 0; j < parent.getModel().getRowCount(); j++) {
-                    double prefW = rend.getPreferredWidth(graphics, column.getData(j), fm, column.getEffectiveFormat(), column);
-                    if (prefW > maxWidth) {
-                        maxWidth = prefW;
-                    }
+                	if (useForPreferredWidth(column, j)) {
+                		double prefW = rend.getPreferredWidth(graphics, column.getData(j), fm, column.getEffectiveFormat(), column);
+                		if (prefW > maxWidth) {
+                			maxWidth = prefW;
+                		}
+                	}
                 }
                 widthSum += column.effectiveColumnWidth = maxWidth + 2*insetX;
             } else if (w == TablePrintColumn.WIDTH_FILL) {
@@ -84,9 +98,9 @@ public class SimpleColumnLayout implements ColumnLayout {
             }
         }
         
-        if (numFillCols > 0 && widthSum < width) {
+        if (numFillCols > 0 && (widthSum < width || minFillColsWidth > 0)) {
             // Second "pass" to set fillColumns to the rest of the available space
-            double fillColWidth = (width - widthSum) / (double)numFillCols;
+            double fillColWidth = Math.max(width - widthSum, minFillColsWidth) / (double)numFillCols;
             for (int i=0; i < columnCount; i++) {
                 final TablePrintColumn column = columns[i];
                 if (column.getWidth() == TablePrintColumn.WIDTH_FILL) {
@@ -102,18 +116,26 @@ public class SimpleColumnLayout implements ColumnLayout {
         return totalWidth;
     }
 
+    /**
+     * Returns the default array of table columns
+     * @return
+     */
+    public TablePrintColumn[] getTableColumns() {
+        return tableColumns;
+    }
+    
     /* (non-Javadoc)
      * @see yajhfc.print.tableprint.ColumnLayout#getHeaderLayout()
      */
     public TablePrintColumn[] getHeaderLayout() {
-        return tableColumns;
+        return getTableColumns();
     }
 
     /* (non-Javadoc)
      * @see yajhfc.print.tableprint.ColumnLayout#getLayoutForRow(int)
      */
     public TablePrintColumn[] getLayoutForRow(int row) {
-        return tableColumns;
+        return getTableColumns();
     }
 
     /* (non-Javadoc)
@@ -124,8 +146,24 @@ public class SimpleColumnLayout implements ColumnLayout {
     }
     
     public int getMaximumColumnCount() {
-        return tableColumns.length;
+        return getTableColumns().length;
     }
+    
+    /**
+     * The minimum width all "fill" columns will be assigned.
+     * @return
+     */
+    public void setMinFillColsWidth(double minFillColsWidth) {
+		this.minFillColsWidth = minFillColsWidth;
+	}
+    
+    /**
+     * The minimum width all "fill" columns will be assigned.
+     * @return
+     */
+    public double getMinFillColsWidth() {
+		return minFillColsWidth;
+	}
 
     /* (non-Javadoc)
      * @see yajhfc.print.tableprint.ColumnLayout#intializeLayout(yajhfc.print.tableprint.TablePrintable, javax.swing.table.TableModel)
