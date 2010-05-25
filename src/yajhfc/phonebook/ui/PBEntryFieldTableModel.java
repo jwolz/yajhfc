@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
+import yajhfc.Utils;
 import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
 import yajhfc.phonebook.convrules.PBEntryFieldContainer;
@@ -115,4 +116,17 @@ public class PBEntryFieldTableModel extends AbstractTableModel {
     public PBEntryFieldContainer getRow(int index) {
         return list.get(index);
     }
+    
+    public PBEntryField getColumn(int index) {
+    	return columns[index];
+    }
+    
+    public int indexOfField(PBEntryField field) {
+    	return Utils.indexOfArray(columns, field);
+    }
+    
+    public void setList(List<PBEntryFieldContainer> list) {
+		this.list = list;
+		fireTableDataChanged();
+	}
 }

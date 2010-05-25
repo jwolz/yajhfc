@@ -115,27 +115,31 @@ public final class StatusDialogPrintable implements Printable {
             final PageFormat pageFormat,
             final int pageIndex) throws PrinterException {
 
-        // We'll use this Runnable
-        Runnable runnable = new Runnable() {
-            public void run() {
-                try {
-                    if (statusLabel != null) {
-                        // set the status message on the JOptionPane with
-                        // the current page number
-                        Object[] pageNumber = new Object[]{
-                                Integer.valueOf(pageIndex + 1)};
-                        statusLabel.setText(statusFormat.format(pageNumber));
-                    }
-                } catch (Throwable throwable) {
-                    log.log(Level.WARNING, "Error showing status dialog", throwable);
-                }
-            }
-        };   
-        // call into the EDT
-        SwingUtilities.invokeLater(runnable);
-        
-        // call into the delegate and save the return value
-        return printDelegate.print(graphics, pageFormat, pageIndex);     
+        try {
+			// We'll use this Runnable
+			Runnable runnable = new Runnable() {
+			    public void run() {
+			        try {
+			            if (statusLabel != null) {
+			                // set the status message on the JOptionPane with
+			                // the current page number
+			                Object[] pageNumber = new Object[]{
+			                        Integer.valueOf(pageIndex + 1)};
+			                statusLabel.setText(statusFormat.format(pageNumber));
+			            }
+			        } catch (Throwable throwable) {
+			            log.log(Level.WARNING, "Error showing status dialog", throwable);
+			        }
+			    }
+			};   
+			// call into the EDT
+			SwingUtilities.invokeLater(runnable);
+			
+			// call into the delegate and save the return value
+			return printDelegate.print(graphics, pageFormat, pageIndex);
+		} catch (Exception e) {
+			throw (PrinterException)new PrinterException().initCause(e);
+		}     
     }
 
     

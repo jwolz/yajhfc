@@ -46,6 +46,7 @@ public class TablePrintColumn {
     protected Alignment headerAlignment = Alignment.CENTER;
     
     protected Format columnFormat = null;
+    protected TableCellRenderer renderer = null;
 
     /**
      * Saves the effective column width in device units. Set by
@@ -170,6 +171,28 @@ public class TablePrintColumn {
         this.headerAlignment = headerAlignment;
     }
 
+    /**
+     * The cell renderer to use for this column. 
+     * If null, the renderer for the column class or the global default renderer is used. 
+     * @return
+     */
+    public TableCellRenderer getRenderer() {
+		return renderer;
+	}
+    
+    /**
+     * The cell renderer to use for this column. 
+     * If null, the renderer for the column class or the global default renderer is used. 
+     * @return
+     */
+    public void setRenderer(TableCellRenderer renderer) {
+		this.renderer = renderer;
+	}
+    
+    /**
+     * The TablePrintable this column belongs to.
+     * @return
+     */
     public TablePrintable getParent() {
         return parent;
     }
@@ -182,14 +205,30 @@ public class TablePrintColumn {
         return index;
     }
 
+    /**
+     * Returns the effective font to use for this column.
+     * If the font is set, it is returned, else the TablePrintable's default cell font.
+     * @return
+     */
     public Font getEffectiveFont() {
         return (getFont() == null) ? parent.getTableFont() : getFont();
     }
     
+    /**
+     * Returns the effective header font to use for this column.
+     * If the header font is set, it is returned, else the TablePrintable's default header font.
+     * @return
+     */
     public Font getEffectiveHeaderFont() {
         return (getHeaderFont() == null) ? parent.getHeaderFont() : getHeaderFont();
     }
     
+    /**
+     * Returns the Format instance to use for this column.
+     * If a special format is set, it is returned, else the default format is used. 
+     *
+     * @return
+     */
     public Format getEffectiveFormat() {
         if (getColumnFormat() != null) { 
             return getColumnFormat();
@@ -198,21 +237,38 @@ public class TablePrintColumn {
         }
     }
 
+    /**
+     * Returns the header caption for this column
+     * @return
+     */
     public String getHeaderText() {
         return parent.getModel().getColumnName(index);
     }
     
+    /**
+     * Returns the data in this column for the specified row
+     * @param rowIndex
+     * @return
+     */
     public Object getData(int rowIndex) {
         return parent.getModel().getValueAt(rowIndex, index);
     }
     
+    /**
+     * Returns the data type of the data for this column
+     * @return
+     */
     protected Class<?> getColumnClass() {
         return parent.getModel().getColumnClass(index);
     }
     
     public TableCellRenderer getEffectiveRenderer() {
-        TableCellRenderer rv = parent.getRendererMap().get(getColumnClass());
-        return (rv == null) ? parent.getDefaultRenderer() : rv;
+    	if (renderer != null) {
+    		return renderer;
+    	} else {
+    		TableCellRenderer rv = parent.getRendererMap().get(getColumnClass());
+    		return (rv == null) ? parent.getDefaultRenderer() : rv;
+    	}
     }
     
     /**
@@ -231,17 +287,23 @@ public class TablePrintColumn {
         this.effectiveColumnWidth = effectiveColumnWidth;
     }
     
-    
-    
+    /**
+     * If the header text is word wrapped.
+     * @return
+     */
     public boolean isHeaderWordWrap() {
         return headerWordWrap;
     }
-
+    
+    /**
+     * If the header text is word wrapped.
+     * @return
+     */
     public void setHeaderWordWrap(boolean headerWordWrap) {
         this.headerWordWrap = headerWordWrap;
     }
 
-    protected TablePrintColumn(TablePrintable parent, int index) {
+    public TablePrintColumn(TablePrintable parent, int index) {
         super();
         this.parent = parent;
         this.index = index;

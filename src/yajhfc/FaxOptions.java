@@ -553,6 +553,20 @@ public class FaxOptions extends AbstractFaxOptions {
      */
     public Attribute[] printAttributes = null;
     
+    /**
+     * Use the same column widths as on screen in the printout
+     */
+    public boolean faxprintColumnWidthAsOnScreen = true;
+    /**
+     * Mark error faxes as on screen
+     */
+    public boolean faxprintMarkErrors = true;
+    /**
+     * Mark unread faxes as on screen
+     */
+    public boolean faxprintMarkUnread = true;
+    
+    
     public FaxOptions() {
         super(null);
         

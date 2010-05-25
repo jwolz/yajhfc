@@ -73,7 +73,7 @@ public abstract class PhoneBook implements PhoneBookEntryList {
      * Field for internal use by the PhoneBookTreeModel to save the result of
      * the last filtering operation
      */
-    List<PhoneBookEntry> lastFilterResult = null;
+    public List<PhoneBookEntry> lastFilterResult = null;
     
     public String getDescriptor() {
         return strDescriptor;
