@@ -20,8 +20,11 @@ package yajhfc.util;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.Collection;
 
 import javax.swing.table.AbstractTableModel;
+
+import yajhfc.Utils;
 
 /**
  * @author jonas
@@ -69,6 +72,7 @@ public class SelectionTableModel<T> extends AbstractTableModel {
 		default:
 			throw new UnsupportedOperationException("Not editable");
 		}
+		fireTableCellUpdated(rowIndex, columnIndex);
 	}
 	
 	@Override
@@ -129,6 +133,16 @@ public class SelectionTableModel<T> extends AbstractTableModel {
 			selected[idx] = true;
 		}
 		fireTableDataChanged();
+	}
+	
+	public void setSelectedObjects(Collection<T> selObjects) {
+	    Arrays.fill(selected, false);
+	    for (T obj : selObjects) {
+	        int idx = Utils.indexOfArray(items, obj);
+	        if (idx >= 0)
+	            selected[idx] = true;
+	    }
+	    fireTableDataChanged();
 	}
 	
 	public void selectAll(boolean state) {

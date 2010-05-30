@@ -186,21 +186,21 @@ public final class StatusDialogPrintable implements Printable {
 
         // prepare the status JOptionPane
         String progressTitle =
-            UIManager.getString("PrintingDialog.titleProgressText");
+            getUIManagerString("PrintingDialog.titleProgressText");
 
         String dialogInitialContent =
-            UIManager.getString("PrintingDialog.contentInitialText");
+            getUIManagerString("PrintingDialog.contentInitialText");
 
         // this one's a MessageFormat since it must include the page
         // number in its text
         MessageFormat statusFormat =
             new MessageFormat(
-                UIManager.getString("PrintingDialog.contentProgressText"));
+                getUIManagerString("PrintingDialog.contentProgressText"));
 
         String abortText =
-            UIManager.getString("PrintingDialog.abortButtonText");
+            getUIManagerString("PrintingDialog.abortButtonText");
         String abortTooltip =
-            UIManager.getString("PrintingDialog.abortButtonToolTipText");
+            getUIManagerString("PrintingDialog.abortButtonToolTipText");
         int abortMnemonic =
             UIManager.getInt("PrintingDialog.abortButtonMnemonic");
         int abortMnemonicIndex =
@@ -241,9 +241,9 @@ public final class StatusDialogPrintable implements Printable {
                     // update the status dialog to indicate aborting
                     abortButton.setEnabled(false);
                     abortDialog.setTitle(
-                        UIManager.getString("PrintingDialog.titleAbortingText"));
+                        getUIManagerString("PrintingDialog.titleAbortingText"));
                     statusLabel.setText(
-                        UIManager.getString("PrintingDialog.contentAbortingText"));
+                        getUIManagerString("PrintingDialog.contentAbortingText"));
 
                     // we don't want the aborting status message to be clobbered
                     wrappedPrintable.stopUpdatingStatus();
@@ -340,5 +340,14 @@ public final class StatusDialogPrintable implements Printable {
         }
 
         return true;
+    }
+    
+    /**
+     * Indirection so that gettext does not recognize the IDs as translatable
+     * @param key
+     * @return
+     */
+    static String getUIManagerString(Object key) {
+        return UIManager.getString(key);
     }
 }

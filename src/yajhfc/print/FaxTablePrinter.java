@@ -45,6 +45,7 @@ import javax.swing.table.TableModel;
 
 import yajhfc.FaxOptions;
 import yajhfc.FmtItem;
+import yajhfc.IconMap;
 import yajhfc.TableType;
 import yajhfc.Utils;
 import yajhfc.model.MyTableModel;
@@ -53,6 +54,7 @@ import yajhfc.model.TooltipJTable;
 import yajhfc.model.YajJob;
 import yajhfc.print.tableprint.Alignment;
 import yajhfc.print.tableprint.DefaultCellFormatModel;
+import yajhfc.print.tableprint.IconMapCellRenderer;
 import yajhfc.print.tableprint.TablePrintColumn;
 import yajhfc.print.tableprint.TablePrintable;
 import yajhfc.util.CancelAction;
@@ -77,7 +79,7 @@ public class FaxTablePrinter extends JDialog {
 	boolean modalResult = false;
 	
     protected FaxTablePrinter(Frame owner, TooltipJTable<? extends FmtItem> selTable, String caption, boolean showUnreadOptions) {
-        super(owner, MessageFormat.format("Print {0}", new Object[] { caption }), true);
+        super(owner, MessageFormat.format(_("Print {0}"), new Object[] { caption }), true);
         this.showUnreadOptions = showUnreadOptions;
         initialize();
     }
@@ -175,6 +177,7 @@ public class FaxTablePrinter extends JDialog {
     			  tp.getColumnLayout().getHeaderLayout()[i].setColumnFormat(fi.getDisplayDateFormat());
     		  }
           }
+          tp.getRendererMap().put(IconMap.class, new IconMapCellRenderer());
           
           PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
           if (myopts.printAttributes == null) {

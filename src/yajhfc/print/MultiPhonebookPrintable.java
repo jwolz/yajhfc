@@ -25,10 +25,12 @@ import java.awt.geom.Rectangle2D;
 import java.awt.print.PageFormat;
 import java.awt.print.PrinterException;
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.Map;
 
 import yajhfc.phonebook.PhoneBook;
-import yajhfc.phonebook.ui.PhoneBookTableModel;
+import yajhfc.phonebook.convrules.PBEntryFieldContainer;
+import yajhfc.phonebook.ui.PBEntryFieldTableModel;
 import yajhfc.print.tableprint.Alignment;
 import yajhfc.print.tableprint.TablePrintable;
 
@@ -41,7 +43,8 @@ public class MultiPhonebookPrintable extends TablePrintable {
 	protected int pbNumber;
 	protected int pageOffset;
 	protected PhoneBook[] phoneBooks;
-	protected PhoneBookTableModel model;
+	protected PBEntryFieldTableModel model;
+	protected int lastPageIndex = -1;
 	
 	/**
 	 * @param model
@@ -49,7 +52,7 @@ public class MultiPhonebookPrintable extends TablePrintable {
 	public MultiPhonebookPrintable(PhoneBook[] phoneBooks) {
 		super(null);
 		this.phoneBooks = phoneBooks;
-		setModel(model = new PhoneBookTableModel(null));
+		setModel(model = new PBEntryFieldTableModel(null));
 	}
 
 	@Override
@@ -60,18 +63,20 @@ public class MultiPhonebookPrintable extends TablePrintable {
 	}
 	
 	private void setNewPhonebook() {
-		model.setPhoneBook(phoneBooks[pbNumber]);
+		model.setList(Collections.<PBEntryFieldContainer>unmodifiableList(phoneBooks[pbNumber].getEntries()));
 		pageHeader.put(Alignment.CENTER, new MessageFormat("'" + phoneBooks[pbNumber] + "'")); 
 	}
 	
 	@Override
 	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex)
 			throws PrinterException {
-		if (pageIndex == 0) {
+		if (pageIndex == 0 && lastPageIndex != 0) {
 			pbNumber = 0;
 			pageOffset = 0;
 			setNewPhonebook();
 		}
+		lastPageIndex = pageIndex;
+		
 		AffineTransform origTrans = ((Graphics2D)graphics).getTransform();
 		int rv = super.print(graphics, pageFormat, pageIndex-pageOffset);
 		if (rv == PAGE_EXISTS)
@@ -84,7 +89,7 @@ public class MultiPhonebookPrintable extends TablePrintable {
 		((Graphics2D)graphics).setTransform(origTrans);
 		pageOffset = pageIndex;
 		setNewPhonebook();
-		graphics.clearRect(0, 0, (int)pageFormat.getWidth(), (int)pageFormat.getHeight());
+		graphics.clearRect(0, 0, (int)Math.ceil(pageFormat.getWidth()), (int)Math.ceil(pageFormat.getHeight()));
 		return print(graphics, pageFormat, pageIndex);
 	}
 }

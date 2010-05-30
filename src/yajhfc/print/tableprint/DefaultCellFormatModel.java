@@ -33,6 +33,9 @@ public class DefaultCellFormatModel implements CellFormatModel {
      */
     public Color getCellBackgroundColor(TablePrintColumn col, TableModel model,
             int rowIndex) {
+        if (col.getBackgroundColor() != null)
+            return col.getBackgroundColor();
+        
         Color[] cellBackground = col.getParent().getCellBackground();
         if (cellBackground == null || cellBackground.length == 0) {
             return null;

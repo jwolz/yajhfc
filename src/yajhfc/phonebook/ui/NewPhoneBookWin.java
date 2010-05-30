@@ -931,7 +931,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         printAction = new ExcDialogAbstractAction() {
 			@Override
 			protected void actualActionPerformed(ActionEvent e) {
-				PhonebooksPrinter.printPhonebooks(NewPhoneBookWin.this, treeModel.getPhoneBooks(), selectedItems, treeModel.isShowingFilteredResults());
+				PhonebooksPrinter.printPhonebooks(NewPhoneBookWin.this, treeModel.getPhoneBooks(), currentPhonebook, selectedItems, treeModel.isShowingFilteredResults());
 			}
 		};
 		printAction.putValue(Action.NAME, _("Print phone books") + "...");

@@ -27,6 +27,8 @@ import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -175,8 +177,19 @@ public class LogViewWorker extends ProgressWorker {
             setTitle(Utils._("View log"));
             setIconImage(Utils.loadIcon("general/History").getImage());
             setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-            Utils.setDefWinPos(this);
-            pack();
+            
+            if (Utils.getFaxOptions().logViewerBounds != null) {
+                setBounds(Utils.getFaxOptions().logViewerBounds);
+            } else {
+                pack();
+                Utils.setDefWinPos(this);
+            }
+            addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    Utils.getFaxOptions().logViewerBounds = getBounds();
+                }
+            });
         }
         
         private void addLog(Log log) {

@@ -26,6 +26,7 @@ import java.awt.geom.Rectangle2D;
 import java.text.FieldPosition;
 import java.text.Format;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import yajhfc.Utils;
@@ -35,12 +36,15 @@ public class DefaultCellRenderer implements TableCellRenderer {
     private FieldPosition fpos = new FieldPosition(0);
     
     protected String valueToString(Format format, Object value) {
+        if (value == null)
+            return "";
+        
         if (format != null) {
             sbuf.setLength(0);
             format.format(value, sbuf, fpos);
             return sbuf.toString();
         } else {
-            return (value == null) ? "" : value.toString();
+            return value.toString();
         }
     }
     
@@ -110,7 +114,12 @@ public class DefaultCellRenderer implements TableCellRenderer {
                 lines = (List<String>)pageData.remainingData;
             }
         } else {
-            lines = Utils.fastSplitToList(valueToString(getFormat(column), value), '\n');
+            String text = valueToString(getFormat(column), value);
+            if (text == null || text.equals("")) {
+                lines = Collections.singletonList(" ");
+            } else {
+                lines = Utils.fastSplitToList(text, '\n');
+            }
         }
         
         FontMetrics fm = graphics.getFontMetrics();

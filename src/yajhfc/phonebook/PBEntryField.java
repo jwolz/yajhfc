@@ -34,7 +34,7 @@ public enum PBEntryField implements FilterKey {
     Position(Utils._("Position"), "position", true),
     Department(Utils._("Department"), "department", true),
     Street(Utils._("Street"), "street", false),
-    Location(Utils._("Location"), "location", true),
+    Location(Utils._("City"), "location", true),
     Country(Utils._("Country"), "country", true),
     ZIPCode(Utils._("ZIP code"), "zipcode", true),
     State(Utils._("State/Region"), "state", true),

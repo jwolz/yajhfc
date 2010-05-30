@@ -28,6 +28,8 @@ import java.awt.event.ActionEvent;
 import java.awt.print.PrinterException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.print.attribute.Attribute;
@@ -45,6 +47,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 
 import yajhfc.FaxOptions;
 import yajhfc.Utils;
@@ -77,16 +81,16 @@ public class PhonebooksPrinter extends JDialog {
 	boolean modalResult = false;
 	
 	
-	public PhonebooksPrinter(Dialog owner, List<PhoneBook> phonebooks, boolean allowSelection) {
+	public PhonebooksPrinter(Dialog owner, List<PhoneBook> phonebooks, PhoneBook currentPhonebook, boolean allowSelection) {
 		super(owner, Utils._("Print phone books"), true);
-		initialize(phonebooks, allowSelection);
+		initialize(phonebooks, currentPhonebook, allowSelection);
 	}
 	
-	private void initialize(List<PhoneBook> phonebooks, boolean allowSelection) {
+	private void initialize(List<PhoneBook> phonebooks, PhoneBook currentPhonebook, boolean allowSelection) {
     	okAction = new ExcDialogAbstractAction(_("Print")) {
 			@Override
 			protected void actualActionPerformed(ActionEvent e) {
-				if (radUserSel.isSelected() && pbModel.countNumberOfSelectedItems() == 0) {
+				if (radUserSel.isSelected() && pbModel.countNumberOfSelectedItems() == 0 || colsModel.countNumberOfSelectedItems() == 0) {
 					Toolkit.getDefaultToolkit().beep();
 					return;
 				}
@@ -96,7 +100,8 @@ public class PhonebooksPrinter extends JDialog {
 			}
 		};
 		CancelAction cancelAct = new CancelAction(this);
-    	
+    	FaxOptions fo = Utils.getFaxOptions();
+		
     	JPanel contentPane = new JPanel();
     	contentPane.setLayout(new TableLayout(new double[][] { 
     			{border, TableLayout.FILL, TableLayout.PREFERRED, border, TableLayout.PREFERRED, TableLayout.FILL, border},
@@ -104,37 +109,63 @@ public class PhonebooksPrinter extends JDialog {
     	}));
 
     	radAll = new JRadioButton(_("All phone books"));
-    	radSelItems = new JRadioButton(_("Selected phone book items"));
+    	radSelItems = new JRadioButton(_("Selected phone book entries"));
     	radSelItems.setEnabled(allowSelection);
-    	radUserSel = new JRadioButton(_("Only the following phone books"));
+    	radUserSel = new JRadioButton(_("Only the following phone book(s):"));
     	ButtonGroup pbGroup = new ButtonGroup();
     	pbGroup.add(radAll);
     	pbGroup.add(radSelItems);
     	pbGroup.add(radUserSel);
     	
+        pbModel = new SelectionTableModel<PhoneBook>(phonebooks.toArray(new PhoneBook[phonebooks.size()]));
+    	
     	if (allowSelection) {
     		radSelItems.setSelected(true);
+            pbModel.selectAll(true);
+    	} else if (currentPhonebook != null) {
+    	    radUserSel.setSelected(true);
+    	    pbModel.setSelectedObjects(Collections.singleton(currentPhonebook));
     	} else {
     		radAll.setSelected(true);
+            pbModel.selectAll(true);
     	}
     	
-    	pbModel = new SelectionTableModel<PhoneBook>(phonebooks.toArray(new PhoneBook[phonebooks.size()]));
-    	pbModel.selectAll(true);
     	
     	colsModel = new SelectionTableModel<PBEntryField>(PBEntryField.values());
-    	colsModel.selectAll(true);
+    	if (fo.pbprintPrintColumns.size() == 0) {
+    	    colsModel.selectAll(true);
+    	} else {
+    	    colsModel.setSelectedObjects(fo.pbprintPrintColumns);
+    	}
     	
     	JTable pbTable = createSelectionTable(pbModel);
+    	pbModel.addTableModelListener(new TableModelListener() {
+            public void tableChanged(TableModelEvent e) {
+                radUserSel.setSelected(true);
+                checkEnabled();
+            }
+        });
+    	JScrollPane pbScroller = new JScrollPane(pbTable);
+    	pbScroller.getViewport().setBackground(pbTable.getBackground());
+    	pbScroller.getViewport().setOpaque(true);
     	
     	JTable colsTable = createSelectionTable(colsModel);
+        colsModel.addTableModelListener(new TableModelListener() {
+            public void tableChanged(TableModelEvent e) {
+                checkEnabled();
+            }
+        });
+    	JScrollPane colsScroller = new JScrollPane(colsTable);
+    	colsScroller.getViewport().setBackground(colsTable.getBackground());
+    	colsScroller.getViewport().setOpaque(true);
     	
     	contentPane.add(radAll, "1,1,2,1");
     	contentPane.add(radSelItems, "1,3,2,3");
     	contentPane.add(radUserSel, "1,5,2,5");
-    	contentPane.add(new JScrollPane(pbTable), "1,6,2,6");
+    	contentPane.add(pbScroller, "1,6,2,6");
     	
     	contentPane.add(new JLabel(_("Columns to print:")), "4,1,5,1");
-    	contentPane.add(new JScrollPane(colsTable), "4,2,5,6");
+    	contentPane.add(colsScroller, "4,2,5,6");
     	
         contentPane.add(new JSeparator(), "0,8,6,8");
         contentPane.add(new JButton(okAction), "2,10");
@@ -142,7 +173,7 @@ public class PhonebooksPrinter extends JDialog {
         
         setContentPane(contentPane);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        pack();
+        setSize(640, 480);
         Utils.setDefWinPos(this);
 	}
 	
@@ -156,9 +187,20 @@ public class PhonebooksPrinter extends JDialog {
 		return res;
 	}
 	
-	public static void printPhonebooks(Dialog owner, List<PhoneBook> phonebooks, List<PhoneBookEntry> selection, boolean printFilteredResults) {
-		PhonebooksPrinter printDlg = new PhonebooksPrinter(owner, phonebooks, (selection != null && selection.size() > 1));
+	void checkEnabled() {
+	    boolean enablePrint = (!radUserSel.isSelected() || pbModel.countNumberOfSelectedItems() > 0) && colsModel.countNumberOfSelectedItems() > 0;
+	    okAction.setEnabled(enablePrint);
+	}
+	
+	public static void printPhonebooks(Dialog owner, List<PhoneBook> phonebooks, PhoneBook currentPhonebook, List<PhoneBookEntry> selection, boolean printFilteredResults) {
+		PhonebooksPrinter printDlg = new PhonebooksPrinter(owner, phonebooks, currentPhonebook, (selection != null && selection.size() > 1));
 		printDlg.setVisible(true);
+		if (!printDlg.modalResult)
+		    return;
+		final PBEntryField[] selectedColumns = printDlg.colsModel.getSelectedObjects();
+        FaxOptions myopts = Utils.getFaxOptions();
+        myopts.pbprintPrintColumns.clear();
+        myopts.pbprintPrintColumns.addAll(Arrays.asList(selectedColumns));
 		
 		TablePrintable tp;
 		if (printDlg.radAll.isSelected()) {
@@ -169,14 +211,14 @@ public class PhonebooksPrinter extends JDialog {
 		} else {
 			tp = new MultiPhonebookPrintable(printDlg.pbModel.getSelectedObjects());
 		}
-		setColumnLayout(printDlg.colsModel.getSelectedObjects(), tp);
+        setColumnLayout(selectedColumns, tp);
 		
 		DistributionListCellRenderer distlistRenderer = new DistributionListCellRenderer();
-		setColumnLayout(printDlg.colsModel.getSelectedObjects(), tp);
+		setColumnLayout(selectedColumns, distlistRenderer);
+		distlistRenderer.setHeaderFont(tp.getHeaderFont().deriveFont(Font.ITALIC));
 		tp.getRendererMap().put(DistributionList.class, distlistRenderer);
 		
 		try {
-			FaxOptions myopts = Utils.getFaxOptions();
 			PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
 			if (myopts.printAttributes == null) {
 				pras.add(OrientationRequested.LANDSCAPE);
@@ -193,11 +235,16 @@ public class PhonebooksPrinter extends JDialog {
 		}
 	}
 
-	protected static void setColumnLayout(PBEntryField[] columns, TablePrintable tp) {
+	private static void setColumnLayout(PBEntryField[] columns, TablePrintable tp) {
 		PhoneBookColumnLayout colLayout = new PhoneBookColumnLayout();
 		colLayout.setMinFillColsWidth(100);
 		colLayout.applyFilter(columns);
 		tp.setColumnLayout(colLayout);
+		
+		TablePrintColumn distlistHeader = colLayout.getDistListColumn(true);
+		distlistHeader.setFont(tp.getTableFont().deriveFont(Font.ITALIC));
+		distlistHeader.setBackgroundColor(tp.getHeaderBackground());
+		
 		TablePrintColumn commentsCol = colLayout.getColumnFor(PBEntryField.Comment);
 		commentsCol.setWordWrap(true);
 		commentsCol.setWidth(TablePrintColumn.WIDTH_FILL);

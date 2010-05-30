@@ -78,6 +78,10 @@ public class PhoneBookColumnLayout extends SimpleColumnLayout {
 		return this.tableColumns[model.indexOfField(field)];
 	}
 	
+	public TablePrintColumn getDistListColumn(boolean header) {
+	    return distListColumns[header ? 0 : 1];
+	}
+	
 	@Override
 	public TablePrintColumn[] getTableColumns() {
 		return filteredColumns;
