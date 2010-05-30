@@ -66,7 +66,7 @@ public class AdminSettingsPage extends JPanel implements OptionsPage {
     
     private void initialize() {
         double[][] dLay = {
-                {border, 0.75, border, TableLayout.FILL, border},
+                {border, TableLayout.FILL, border, TableLayout.PREFERRED, border},
                 {border, TableLayout.PREFERRED, border*2, TableLayout.FILL, border}
         };
         setLayout(new TableLayout(dLay));

@@ -18,6 +18,7 @@
  */
 package yajhfc.print.tableprint;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.text.Format;
 
@@ -30,6 +31,8 @@ public class TablePrintColumn {
     protected final int index;
     protected Font font = null;
     protected Font headerFont = null;
+    
+    protected Color background = null;
     
     public static final float WIDTH_PREFERRED = -1f;
     public static final float WIDTH_FILL = -2f;
@@ -303,6 +306,21 @@ public class TablePrintColumn {
         this.headerWordWrap = headerWordWrap;
     }
 
+    /**
+     * The background color of this column
+     * @return
+     */
+    public Color getBackgroundColor() {
+        return background;
+    }
+    
+    /**
+     * The background color of this column
+    */
+    public void setBackgroundColor(Color background) {
+        this.background = background;
+    }
+    
     public TablePrintColumn(TablePrintable parent, int index) {
         super();
         this.parent = parent;

@@ -566,6 +566,15 @@ public class FaxOptions extends AbstractFaxOptions {
      */
     public boolean faxprintMarkUnread = true;
     
+    /**
+     * The phone book fields to print
+     */
+    public final List<PBEntryField> pbprintPrintColumns = new ArrayList<PBEntryField>();
+    
+    /**
+     * The position and size of the log viewer window
+     */
+    public Rectangle logViewerBounds =  null;
     
     public FaxOptions() {
         super(null);

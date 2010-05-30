@@ -52,6 +52,8 @@ import yajhfc.print.tableprint.TableCellRenderer.ColumnPageData;
  */
 public class TablePrintable implements Printable {
     
+    private static final String DEFAULT_FONT_NAME = "sans-serif";
+    
     protected TableModel model;
     protected Font tableFont;
     protected Font headerFont;
@@ -98,14 +100,13 @@ public class TablePrintable implements Printable {
         pageFooter.put(Alignment.LEFT, new MessageFormat("'" + DateKind.DATE_AND_TIME.getFormat().format(new Date()) + "'"));
         pageFooter.put(Alignment.RIGHT, new MessageFormat(Utils._("page {0}")));
         
-        tableFont  = new Font("sans-serif", Font.PLAIN, 10);
-        headerFont = new Font("sans-serif", Font.BOLD, 10);
+        tableFont  = new Font(DEFAULT_FONT_NAME, Font.PLAIN, 10);
+        headerFont = new Font(DEFAULT_FONT_NAME, Font.BOLD, 10);
         
-        pageHeaderFont = new Font("sans-serif", Font.BOLD, 11);
-        pageFooterFont = new Font("sans-serif", Font.PLAIN, 9);
+        pageHeaderFont = new Font(DEFAULT_FONT_NAME, Font.BOLD, 11);
+        pageFooterFont = new Font(DEFAULT_FONT_NAME, Font.PLAIN, 9);
         
         formatMap.put(Date.class, DateKind.DATE_AND_TIME.getFormat());
-        //formatMap.put(Boolean.class, new BooleanFormat());
         rendererMap.put(Boolean.class, new BooleanRenderer());
         
         if (model != null)
@@ -379,27 +380,38 @@ public class TablePrintable implements Printable {
                         pd = new ColumnPageData();                      
                 }
 
-                graphics.setFont(formatModel.getCellFont(column, model, currentRow));
-                double h = column.getEffectiveRenderer().drawCell(graphics, x, y, column.getData(currentRow),
-                         column, formatModel.getCellBackgroundColor(column, model, currentRow), spaceX,
-                         spaceY, maxHeight, pageContinuation, pd);
-                newPageData[col] = pd;
-                if (h == TableCellRenderer.DRAWCELL_NOTHING) {
-                    needPagebreak = true;
-                } else if (h == TableCellRenderer.DRAWCELL_NOTHING_REMAINED) {
-                    // Do nothing
-                } else if (h < 0.0) {
-                    needPagebreak = true;
-                    lineHeights[col] = -h;
-                    if (-h > lineHeight)
-                        lineHeight = -h;
-                } else {
-                    lineHeights[col] = h;
-                    if (h > lineHeight)
-                        lineHeight = h;
+                // Only draw if this is not a page continuation or if there is anything to draw left
+                if (!pageContinuation || pd.lastDrawState != ColumnPageData.LASTDRAW_COMPLETE) {
+                    graphics.setFont(formatModel.getCellFont(column, model, currentRow));
+                    double h = column.getEffectiveRenderer().drawCell(graphics, x, y, column.getData(currentRow),
+                            column, formatModel.getCellBackgroundColor(column, model, currentRow), spaceX,
+                            spaceY, maxHeight, pageContinuation && (pd.lastDrawState != ColumnPageData.LASTDRAW_NOTHING), pd);
+                    newPageData[col] = pd;
+                    if (h == TableCellRenderer.DRAWCELL_NOTHING) {
+                        needPagebreak = true;
+                        pd.lastDrawState = ColumnPageData.LASTDRAW_NOTHING;
+                    } else if (h == TableCellRenderer.DRAWCELL_NOTHING_REMAINED) {
+                        // Do nothing
+                        pd.lastDrawState = ColumnPageData.LASTDRAW_COMPLETE;
+                    } else if (h < 0.0) {
+                        needPagebreak = true;
+
+                        lineHeights[col] = -h;
+                        if (-h > lineHeight)
+                            lineHeight = -h;
+                        pd.lastDrawState = ColumnPageData.LASTDRAW_PARTIAL;
+                    } else {
+                        lineHeights[col] = h;
+                        if (h > lineHeight)
+                            lineHeight = h;
+                        pd.lastDrawState = ColumnPageData.LASTDRAW_COMPLETE;
+                    }
                 }
                 x += column.effectiveColumnWidth;
             }
+            if (needPagebreak && lineHeight == 0.0)
+                break; // If the line was to small for all cells, do not draw any lines
+            
             double newY = y + lineHeight;
             
             // Fill the parts of the columns that have less height than the maximum:

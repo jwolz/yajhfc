@@ -69,8 +69,6 @@ public class SimpleColumnLayout implements ColumnLayout {
             float w = column.getWidth();
             
             if (w == TablePrintColumn.WIDTH_PREFERRED) {
-                if (column.wordWrap)
-                    throw new IllegalArgumentException("Column " + i + ": WordWrap together width WIDTH_PREFERRED not supported");
                 // Measure header
                 FontMetrics fm = graphics.getFontMetrics(column.getEffectiveHeaderFont());
                 double maxWidth = parent.getDefaultRenderer().getPreferredWidth(graphics, column.getHeaderText(), fm, null, column);

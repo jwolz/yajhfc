@@ -50,7 +50,12 @@ public final class EntryPoint {
         return options;
     }
     
-    public static boolean init() {
+    public static boolean init(int mode) {
+        if (mode != PluginManager.STARTUP_MODE_NORMAL) {
+            log.fine("Not loading for startup mode " + mode);
+            return false;
+        }
+        
         PluginManager.pluginUIs.add(new PluginUI() {
             @Override
             public int getOptionsPanelParent() {

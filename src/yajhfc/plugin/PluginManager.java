@@ -56,6 +56,11 @@ import yajhfc.util.TransactFileOutputStream;
  */
 public class PluginManager {
     
+    public static final int STARTUP_MODE_NORMAL = 0;
+    public static final int STARTUP_MODE_NO_GUI = 1;
+    public static final int STARTUP_MODE_SEND_ONLY = 2;
+    public static final int STARTUP_MODE_LOAD_WHILE_RUNNING = 3;
+    
     private static final Logger log = Logger.getLogger(PluginManager.class.getName());
     
     /**
@@ -131,7 +136,12 @@ public class PluginManager {
                         addJARToClassPath(info.file);
                         return info.loaded = true;
                     case PLUGIN:
-                        return info.loaded = addPlugin(info.file, true);
+                        info.initClass = loadInitClass(info.file, true);
+                        if (info.initClass != null) {
+                            return info.loaded = initializePluginClass(info.file, info.initClass, STARTUP_MODE_LOAD_WHILE_RUNNING);
+                        } else {
+                            return info.loaded = false;
+                        }
                     }
                 } catch (IOException e) {
                     log.log(Level.WARNING, "Can not load plugin " + info.file, e);
@@ -262,12 +272,12 @@ public class PluginManager {
      * @throws IOException 
      * @returns true if the plugin loaded successfully
      */    
-    private static boolean addPlugin(File pluginJar, boolean addToClassPath) throws IOException {
+    private static Class<?> loadInitClass(File pluginJar, boolean addToClassPath) throws IOException {
         String initClassName = extractInitClassName(pluginJar);
         
         if (initClassName == null) {
             log.log(Level.WARNING, pluginJar.toString() + " is not a valid YajHFC Plugin.");
-            return false;
+            return null;
         }
         
         try {
@@ -277,12 +287,10 @@ public class PluginManager {
             if (addToClassPath) {
                 addJARToClassPath(pluginJar);
             }
-            Class<?> initClass = Class.forName(initClassName, true, pluginClassLoader);
-            
-            return initializePluginClass(pluginJar, initClass);
+            return Class.forName(initClassName, true, pluginClassLoader);
         } catch (Exception e) {
             log.log(Level.WARNING, "Could not initialize plugin " + pluginJar + ":", e);
-            return false;
+            return null;
         }
     }
 
@@ -292,13 +300,26 @@ public class PluginManager {
      * @param initClass
      * @return true if initialized successfully, false otherwise
      */
-    private static boolean initializePluginClass(File pluginJar, Class<?> initClass) {
+    private static boolean initializePluginClass(File pluginJar, Class<?> initClass, int startupMode) {        
         try {
             if (Utils.debugMode) {
-                log.fine("Initializing class " + initClass.getName() + " from plugin jar " + pluginJar);
+                log.fine("Initializing " + initClass + " from plugin jar " + pluginJar);
             }
-            Method initMethod = initClass.getMethod("init", new Class[0]);
-            Object returnValue = initMethod.invoke(null);
+            
+            Method initMethod;
+            Object[] args;
+            try {
+                initMethod = initClass.getMethod("init", new Class[] { Integer.TYPE });
+                args = new Object[] { startupMode };
+            } catch (NoSuchMethodException nme) {
+                if (Utils.debugMode) {
+                    log.log(Level.FINER, "init(int) not found, trying init()...", nme);
+                }
+                initMethod = initClass.getMethod("init", new Class[0]);
+                args = null;
+            } 
+                        
+            Object returnValue = initMethod.invoke(null, args);
             if (!(returnValue instanceof Boolean && ((Boolean)returnValue).booleanValue())) {
                 log.log(Level.WARNING, "Initialization of plugin class " + initClass + " (from " + pluginJar + ") failed." );
                 return false;
@@ -389,16 +410,12 @@ public class PluginManager {
     }
     
     /**
-     * Loads all known plugins
+     * Loads all known plugins (i.e. add to class path and load the init class, but do
+     * not call the init() method).
      */
     public static void loadAllKnownPlugins() {
         log.fine("Loading all plugins...");
-        
-        // First, load all internal plugins, then the external ones
-        for (Class <?> plugClass : internalPlugins) {
-            initializePluginClass(null, plugClass);
-        }
-        
+
         if (knownPlugins.size() == 0) 
             return; // Nothing else to do
         if (pluginClassLoader != null)
@@ -422,7 +439,7 @@ public class PluginManager {
                     info.loaded = true;
                     break;
                 case PLUGIN:
-                    info.loaded = addPlugin(info.file, false);
+                    info.initClass = loadInitClass(info.file, false);
                     break;
                 }
             } catch (IOException e) {
@@ -431,9 +448,28 @@ public class PluginManager {
         }
     }
     
+    /**
+     * Initializes all known plugins. 
+     * loadAllKnownPlugins must have been called at some point of time before calling this method.
+     */
+    public static void initializeAllKnownPlugins(int startupMode) {
+        log.fine("Initializing all plugins...");
+        
+        // First, initialize all internal plugins, then the external ones
+        for (Class <?> plugClass : internalPlugins) {
+            initializePluginClass(null, plugClass, startupMode);
+        }
+        for (PluginInfo info : knownPlugins.values()) {
+            if (info.initClass != null) {
+                info.loaded = initializePluginClass(info.file, info.initClass, startupMode);
+            }
+        }
+    }
+    
     public static class PluginInfo {
         public final File file;
         public final PluginType type;
+        Class<?> initClass;
         public boolean persistent;
         public boolean loaded;
         

@@ -27,6 +27,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -115,10 +117,26 @@ public abstract class AbstractFaxOptions {
                     Point pval = (Point)val;
                     p.setProperty(propertyName, "" + pval.x + sep + pval.y);
                 } else if (val instanceof List) {
-                    List lst = (List)val;
-                    int idx = 0;
-                    for (Object o : lst) {
-                        p.setProperty(propertyName + '.' + (++idx), (String)o);
+                    Class<?>[] typeParams = resolveTypeParameters(List.class, f[i]);
+                    if (typeParams == null || typeParams.length != 1) {
+                        log.warning("Could not resolve type params for " + f[i]);
+                        continue;
+                    }
+                    if (typeParams[0] == String.class) {
+                        List lst = (List)val;
+                        int idx = 0;
+                        for (Object o : lst) {
+                            p.setProperty(propertyName + '.' + (++idx), (String)o);
+                        }
+                    } else if (Enum.class.isAssignableFrom(typeParams[0])){
+                        StringBuilder res = new StringBuilder();
+                        List<? extends Enum> lst = (List<? extends Enum>)val;
+                        for (Enum e : lst) {
+                            res.append(e.name()).append(sep);
+                        }
+                        p.setProperty(propertyName, res.toString());
+                    } else {
+                        log.warning("Invalid list content type " + typeParams[0] + " for field " + f[i]);
                     }
                 } else if (val instanceof Enum) {
                     p.setProperty(propertyName, ((Enum)val).name());
@@ -166,14 +184,36 @@ public abstract class AbstractFaxOptions {
                 
                 if (List.class.isAssignableFrom(fcls) 
                         && (!FmtItemList.class.isAssignableFrom(fcls))) {
-                    final List<String> list = (List<String>)f.get(this);
-                    list.clear();
+                    Class<?>[] typeParams = resolveTypeParameters(List.class, f);
+                    if (typeParams == null || typeParams.length != 1) {
+                        log.warning("Could not resolve type params for " + f);
+                        continue;
+                    }
+                    if (typeParams[0] == String.class) {
+                        final List<String> list = (List<String>)f.get(this);
+                        list.clear();
 
-                    int i = 1;
-                    String val;
-                    while ((val = p.getProperty(propertyName + '.' + i)) != null) {
-                        list.add(val);
-                        i++;
+                        int i = 1;
+                        String val;
+                        while ((val = p.getProperty(propertyName + '.' + i)) != null) {
+                            list.add(val);
+                            i++;
+                        }
+                    } else if (Enum.class.isAssignableFrom(typeParams[0])){
+                        String val = p.getProperty(propertyName);
+                        if (val != null) {
+                            List<Enum> lst = (List<Enum>)f.get(this);
+                            lst.clear();
+                            if (val.length() > 0) {
+                                String[] items = Utils.fastSplit(val, sep);
+
+                                for (String item : items) {
+                                    lst.add(Enum.valueOf((Class<? extends Enum>)typeParams[0], item));
+                                }
+                            }
+                        }
+                    } else {
+                        log.warning("Invalid list content type " + typeParams[0] + " for field " + f);
                     }
                 } else if (Password.class.isAssignableFrom(fcls)) {
                     Password pwd = (Password)f.get(this);
@@ -284,5 +324,45 @@ public abstract class AbstractFaxOptions {
             log.log(Level.SEVERE, "Error deserializing", e);
             return null;
         } 
+    }
+    
+    /**
+     * Resolves the type parameters of the given field (e.g. for List<String>).
+     * Does not handle stuff like "class MyList extends ArrayList<Field>"
+     * Returns null if the resolving fails (e.g. for a List<List<String>>)
+     * @param f
+     * @return
+     */
+    protected Class<?>[] resolveTypeParameters(Class<?> iface, Field f) {
+        Type genType = f.getGenericType();
+        if (genType instanceof Class<?>) {
+            for (Type t : ((Class<?>)genType).getGenericInterfaces()) {
+                if (t instanceof ParameterizedType) {
+                    ParameterizedType pt = (ParameterizedType)t;
+                    if (pt.getRawType().equals(iface)) {
+                        genType = pt;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        if (genType instanceof ParameterizedType) {
+            ParameterizedType pt = (ParameterizedType)genType;
+            Type[] typeArgs = pt.getActualTypeArguments();
+            Class<?>[] result = new Class[typeArgs.length];
+            for (int i=0; i<typeArgs.length; i++) {
+                if (typeArgs[i] instanceof Class<?>) {
+                    result[i] = (Class<?>)typeArgs[i];
+                } else {
+                    log.fine("Need more levels of resolving for type " + typeArgs[i] + " for field " + f );
+                    return null;
+                }
+            }
+            return result;
+        } else {
+            log.fine("Not a parameterized type: " + genType + " for field " + f);
+            return null;
+        }
     }
 }

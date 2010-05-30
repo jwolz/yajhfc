@@ -22,7 +22,6 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import yajhfc.Utils;
 import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
 import yajhfc.phonebook.convrules.PBEntryFieldContainer;
@@ -30,7 +29,8 @@ import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 public class PBEntryFieldTableModel extends AbstractTableModel {
     protected List<PBEntryFieldContainer> list;
     protected boolean editable = true;
-    
+
+    private static int[] columnIndexMap;    
     protected static final PBEntryField[] columns;
     static {
         PBEntryField[] vals = PBEntryField.values();
@@ -42,6 +42,17 @@ public class PBEntryFieldTableModel extends AbstractTableModel {
                 columns[ptr++] = field;
             }
         }
+    }
+    
+    protected static int indexOfColumn(PBEntryField column) {
+        if (columnIndexMap == null) {
+            // Assumes that columns contains all PBEntryField values
+            columnIndexMap = new int[columns.length];
+            for (int i=0; i<columns.length; i++) {
+                columnIndexMap[columns[i].ordinal()] = i;
+            }
+        }
+        return columnIndexMap[column.ordinal()];
     }
     
     public PBEntryFieldTableModel(List<PBEntryFieldContainer> backingList) {
@@ -122,7 +133,7 @@ public class PBEntryFieldTableModel extends AbstractTableModel {
     }
     
     public int indexOfField(PBEntryField field) {
-    	return Utils.indexOfArray(columns, field);
+    	return indexOfColumn(field);
     }
     
     public void setList(List<PBEntryFieldContainer> list) {

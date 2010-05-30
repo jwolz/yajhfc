@@ -17,11 +17,13 @@ copyfile() {
   	LANG=${PO##*_}
   	LANG=${LANG%.po}
 	
+	PREFIX=${PO%%_*}
+	
 	if [ ! -d $TARGETDIR/$LANG ]; then
 	  mkdir $TARGETDIR/$LANG 
 	fi
 
-	cp $PO $TARGETDIR/$LANG/
+	cp $PO $TARGETDIR/$LANG/$PREFIX.po
 }
 
 for PO in messages_*.po CommandLineOpts_*.po UIDefaults_*.po ; do
@@ -32,7 +34,7 @@ if [ ! -d $TARGETDIR/templates ]; then
   mkdir $TARGETDIR/templates
 fi
 cp messages.po $TARGETDIR/templates/messages.pot
-cp UIDefaults.po $TARGETDIR/templates/UIDefaults.pot
+#cp UIDefaults.po $TARGETDIR/templates/UIDefaults.pot
 perl maketemplate.pl < CommandLineOpts.po > $TARGETDIR/templates/CommandLineOpts.pot
 
 if [ ! -d $TARGETDIR/en ]; then

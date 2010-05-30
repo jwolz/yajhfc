@@ -51,7 +51,7 @@ public interface TableCellRenderer {
      * @param spaceX the horizontal cell inset
      * @param spaceY the vertical cell inset
      * @param maxY  the maximum y value usable before a page break should be requested
-     * @param pageContinuation true if this row was already partially drawn on the previous page (NOTE: for this column it may already have been completed)
+     * @param pageContinuation true if this row was already partially drawn on the previous page
      * @param pageData 
      * @param format the formatter to use to convert the value to String or null to use the toString() method
      * @return the cell's height, 0.0 if nothing fit on this page or -(drawn height) if this cell was partially drawn
@@ -77,6 +77,11 @@ public interface TableCellRenderer {
      */
     public static class ColumnPageData implements Cloneable {
         public Object remainingData;
+        int lastDrawState;
+        
+        static final int LASTDRAW_COMPLETE = 0;
+        static final int LASTDRAW_PARTIAL = 1;
+        static final int LASTDRAW_NOTHING = 2;
         
         @Override
         public Object clone() {
@@ -90,6 +95,7 @@ public interface TableCellRenderer {
         
         public void clear() {
             remainingData = null;
+            lastDrawState = LASTDRAW_COMPLETE;
         }
     }
 }
