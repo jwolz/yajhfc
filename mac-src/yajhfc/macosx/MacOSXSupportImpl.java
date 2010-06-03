@@ -64,7 +64,7 @@ public class MacOSXSupportImpl extends MacOSXSupport {
 				public void handleQuit(ApplicationEvent arg0) {
 					if (actQuit != null) {
 						actQuit.actionPerformed(null);
-						arg0.setHandled(true);
+						//arg0.setHandled(true);
 					}
 				}
 				
