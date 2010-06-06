@@ -38,69 +38,6 @@ import yajhfc.Utils;
 import yajhfc.util.ExampleFileFilter;
 
 public class FormattedFile {
-    public enum FileFormat {
-        PostScript(Utils._("Postscript documents"), "ps"),
-        PDF(Utils._("PDF documents"), "pdf"),
-        PCL(Utils._("PCL files"), "pcl"),
-        JPEG(Utils._("JPEG pictures"), "jpeg", "jpg"),
-        PNG(Utils._("PNG pictures"),"png"),
-        GIF(Utils._("GIF pictures"),"gif"),
-        TIFF(Utils._("TIFF pictures"),"tiff", "tif"),
-        PlainText(Utils._("Text files"),"txt"),
-        XML(Utils._("XML documents"), "xml"),
-        FOP(Utils._("XSL:FO documents"), "fo", "xml", "fop"),
-        ODT(Utils._("OpenDocument text documents"), "odt"),
-        HTML(Utils._("HTML documents"), "html", "htm"),
-        RTF(Utils._("RTF documents"), "rtf"),
-        Unknown(Utils._("Unknown files"), "");
-        
-        private String defaultExt;
-        private String[] possibleExts;
-        private String description;
-        
-        private FileFormat(String description, String... possibleExts) {
-            this(description, possibleExts[0], possibleExts);
-        }
-        
-        private FileFormat(String description, String defaultExt, String[] possibleExts) {
-            this.defaultExt = defaultExt;
-            this.possibleExts = possibleExts;
-            this.description = description;
-        }
-        
-        public String getDefaultExtension() {
-            return defaultExt;
-        }
-        
-        public String getDescription() {
-            return description;
-            //return MessageFormat.format(Utils._("{0} files"), toString());
-        }
-        
-        public String[] getPossibleExtensions() {
-            return possibleExts;
-        }
-        
-        /**
-         * Returns the appropriate HylaFAX file format "code" for the given file format
-         * @param format
-         * @return
-         */
-        public String getHylaFAXFormatString() {
-            switch (this) {
-            case PDF:
-                return "pdf";
-            case PostScript:
-                return "ps";
-            case TIFF:
-                return "tiff";
-            default:
-                return "data";
-            }
-        }
-    }
-    
-    
     public final File file;
     public FileFormat format = FileFormat.Unknown;
 
@@ -127,6 +64,7 @@ public class FormattedFile {
 
         switch (format) {
         case TIFF:
+        case TIFF_DITHER:
             execCmd = Utils.getFaxOptions().faxViewer;
             break;
         case PostScript:
@@ -160,7 +98,9 @@ public class FormattedFile {
     static {
         fileConverters.put(FileFormat.PostScript, FileConverter.IDENTITY_CONVERTER);
         fileConverters.put(FileFormat.PDF, FileConverter.IDENTITY_CONVERTER);
-        fileConverters.put(FileFormat.TIFF, new TIFFLibConverter());
+        final TIFFLibConverter tiffConv = new TIFFLibConverter();
+        fileConverters.put(FileFormat.TIFF, tiffConv);
+        fileConverters.put(FileFormat.TIFF_DITHER, tiffConv);
         
         fileConverters.put(FileFormat.PNG, new PrintServiceFileConverter(DocFlavor.URL.PNG));
         fileConverters.put(FileFormat.GIF, new PrintServiceFileConverter(DocFlavor.URL.GIF));
@@ -325,6 +265,7 @@ public class FormattedFile {
     public static boolean canViewFormat(FileFormat format) {
         switch (format) {
         case TIFF:
+        case TIFF_DITHER:
         case PostScript:
         case PDF:
             return true;

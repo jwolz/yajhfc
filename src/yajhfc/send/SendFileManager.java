@@ -32,11 +32,11 @@ import java.util.List;
 
 import yajhfc.PaperSize;
 import yajhfc.Utils;
+import yajhfc.file.FileFormat;
 import yajhfc.file.FormattedFile;
 import yajhfc.file.MultiFileConverter;
 import yajhfc.file.UnknownFormatException;
 import yajhfc.file.FileConverter.ConversionException;
-import yajhfc.file.FormattedFile.FileFormat;
 import yajhfc.options.MultiFileMode;
 import yajhfc.util.ProgressWorker;
 

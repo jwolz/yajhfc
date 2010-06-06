@@ -20,7 +20,6 @@ import javax.print.event.PrintJobListener;
 
 import yajhfc.PaperSize;
 import yajhfc.Utils;
-import yajhfc.file.FormattedFile.FileFormat;
 import yajhfc.util.ReplacerOutputStream;
 
 /*

@@ -35,7 +35,7 @@ import java.util.logging.Logger;
 import yajhfc.FmtItemList;
 import yajhfc.HylaServerFile;
 import yajhfc.Utils;
-import yajhfc.file.FormattedFile.FileFormat;
+import yajhfc.file.FileFormat;
 import yajhfc.model.SentYajJob;
 import yajhfc.model.YajJob;
 

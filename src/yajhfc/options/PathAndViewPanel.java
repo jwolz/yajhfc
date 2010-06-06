@@ -39,8 +39,8 @@ import javax.swing.JPanel;
 import yajhfc.FaxOptions;
 import yajhfc.FileTextField;
 import yajhfc.Utils;
+import yajhfc.file.FileFormat;
 import yajhfc.file.MultiFileConverter;
-import yajhfc.file.FormattedFile.FileFormat;
 import yajhfc.util.ClipboardPopup;
 
 /**

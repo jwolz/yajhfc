@@ -28,7 +28,7 @@ import java.util.List;
 import yajhfc.FmtItemList;
 import yajhfc.HylaServerFile;
 import yajhfc.RecvFormat;
-import yajhfc.file.FormattedFile.FileFormat;
+import yajhfc.file.FileFormat;
 
 public class RecvYajJob extends YajJob<RecvFormat> {
     protected boolean read;

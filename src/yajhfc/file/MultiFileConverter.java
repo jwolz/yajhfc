@@ -31,7 +31,6 @@ import yajhfc.FaxOptions;
 import yajhfc.PaperSize;
 import yajhfc.Utils;
 import yajhfc.file.FileConverter.ConversionException;
-import yajhfc.file.FormattedFile.FileFormat;
 import yajhfc.options.MultiFileMode;
 
 /**
@@ -97,6 +96,7 @@ public abstract class MultiFileConverter {
         targetFormats.put(FileFormat.PDF, new PDFMultiFileConverter());
         targetFormats.put(FileFormat.PostScript, new PSMultiFileConverter());
         targetFormats.put(FileFormat.TIFF, new TIFFMultiFileConverter());
+        targetFormats.put(FileFormat.TIFF_DITHER, new TIFFDitherMultiFileConverter());
     }
     
     /**

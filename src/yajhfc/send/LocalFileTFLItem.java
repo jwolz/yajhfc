@@ -34,8 +34,8 @@ import java.util.logging.Logger;
 import yajhfc.PaperSize;
 import yajhfc.Utils;
 import yajhfc.file.FileConverter;
+import yajhfc.file.FileFormat;
 import yajhfc.file.FormattedFile;
-import yajhfc.file.FormattedFile.FileFormat;
 import yajhfc.launch.Launcher2;
 import yajhfc.util.ExceptionDialog;
 

@@ -19,7 +19,6 @@
 package yajhfc.file;
 
 import yajhfc.PaperSize;
-import yajhfc.file.FormattedFile.FileFormat;
 
 /**
  * @author jonas
@@ -27,9 +26,11 @@ import yajhfc.file.FormattedFile.FileFormat;
  */
 public class TIFFMultiFileConverter extends PDFMultiFileConverter {
 
-    private static final String[] additionalGSParams = {
+    protected static final String[] additionalGSParams = {
         "-dAdjustWidth=1"
     };
+    
+    private final String gsDevice;
     
     @Override
     public FileFormat getTargetFormat() {
@@ -53,7 +54,16 @@ public class TIFFMultiFileConverter extends PDFMultiFileConverter {
     
     @Override
     protected String getGSDevice() {
-        return "tiffg4";
+        return gsDevice;
+    }
+    
+    public TIFFMultiFileConverter() {
+        this("tiffg4");
+    }
+
+    public TIFFMultiFileConverter(String gsDevice) {
+        super();
+        this.gsDevice = gsDevice;
     }
     
 }

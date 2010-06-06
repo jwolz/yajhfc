@@ -1,6 +1,6 @@
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005-2008 Jonas Wolz
+ * Copyright (C) 2005-2010 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,27 +18,33 @@
  */
 package yajhfc.file;
 
-
 /**
  * @author jonas
  *
  */
-public class PSMultiFileConverter extends PDFMultiFileConverter {
-    private static final String[] additionalGSParams = {
-    };
-    
-    @Override
-    public FileFormat getTargetFormat() {
-        return FileFormat.PostScript;
+public class TIFFDitherMultiFileConverter extends TIFFMultiFileConverter {
+
+    private static final String[] altAdditionalGSParams;
+    static {
+        // Build the gs params by appending "our" params to that of the super class
+        String[] myargs = {
+                "stocht.ps",
+                "-c",
+                "<< /HalftoneMode 1 >> setuserparams",
+        };
+        altAdditionalGSParams = new String[myargs.length+additionalGSParams.length];
+        for (int i=0; i<altAdditionalGSParams.length; i++) {
+            int j = i-additionalGSParams.length;
+            if (j<0) {
+                altAdditionalGSParams[i] = additionalGSParams[i];
+            } else {
+                altAdditionalGSParams[i] = myargs[j];
+            }
+        }
     }
     
     @Override
     protected String[] getAdditionalGSParams() {
-        return additionalGSParams;
-    }
-    
-    @Override
-    protected String getGSDevice() {
-        return "pswrite";
+        return altAdditionalGSParams;
     }
 }
