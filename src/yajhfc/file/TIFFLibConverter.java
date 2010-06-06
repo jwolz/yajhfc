@@ -30,7 +30,6 @@ import java.util.logging.Logger;
 
 import yajhfc.PaperSize;
 import yajhfc.Utils;
-import yajhfc.file.FormattedFile.FileFormat;
 import yajhfc.util.ExternalProcessExecutor;
 
 /**

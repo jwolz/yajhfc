@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 
 import javax.print.attribute.Attribute;
 
-import yajhfc.file.FormattedFile.FileFormat;
+import yajhfc.file.FileFormat;
 import yajhfc.model.archive.QueueFileFormat;
 import yajhfc.options.MultiFileMode;
 import yajhfc.phonebook.PBEntryField;

@@ -47,7 +47,6 @@ import javax.swing.text.html.HTMLEditorKit.HTMLFactory;
 
 import yajhfc.PaperSize;
 import yajhfc.Utils;
-import yajhfc.file.FormattedFile.FileFormat;
 
 /**
  * @author jonas

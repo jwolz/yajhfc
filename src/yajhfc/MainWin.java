@@ -89,9 +89,9 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import yajhfc.file.FileFormat;
 import yajhfc.file.FormattedFile;
 import yajhfc.file.MultiFileConverter;
-import yajhfc.file.FormattedFile.FileFormat;
 import yajhfc.filters.AndFilter;
 import yajhfc.filters.Filter;
 import yajhfc.filters.FilterCreator;

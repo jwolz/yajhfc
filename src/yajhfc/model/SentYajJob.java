@@ -33,7 +33,7 @@ import yajhfc.FmtItemList;
 import yajhfc.HylaServerFile;
 import yajhfc.JobFormat;
 import yajhfc.Utils;
-import yajhfc.file.FormattedFile.FileFormat;
+import yajhfc.file.FileFormat;
 
 public class SentYajJob extends YajJob<JobFormat> {
     private static final Logger log = Logger.getLogger(SentYajJob.class.getName());

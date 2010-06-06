@@ -26,7 +26,6 @@ import java.io.OutputStream;
 
 import yajhfc.PaperSize;
 import yajhfc.Utils;
-import yajhfc.file.FormattedFile.FileFormat;
 
 /**
  * Interface for File Converters

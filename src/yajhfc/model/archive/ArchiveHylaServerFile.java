@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import yajhfc.HylaServerFile;
-import yajhfc.file.FormattedFile.FileFormat;
+import yajhfc.file.FileFormat;
 
 /**
  * @author jonas

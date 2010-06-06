@@ -50,7 +50,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
-import yajhfc.file.FormattedFile.FileFormat;
+import yajhfc.file.FileFormat;
 import yajhfc.model.YajJob;
 import yajhfc.util.CancelAction;
 import yajhfc.util.ClipboardPopup;

@@ -114,6 +114,20 @@ public class ExceptionDialog extends JDialog implements ActionListener {
         StringWriter stringBuf = new StringWriter();
         exc.printStackTrace(new PrintWriter(stringBuf));
         
+        //Append some system info:
+        stringBuf.append("\n\n");
+        stringBuf.append(Utils.AppShortName).append(' ').append(Utils.AppVersion).append('\n');
+        stringBuf.append("Java ")
+            .append(System.getProperty("java.version")).append(" (")
+            .append(System.getProperty("java.vendor")).append(")\n")
+            .append(System.getProperty("java.runtime.name")).append(' ')
+            .append(System.getProperty("java.runtime.version")).append('\n')
+            .append(System.getProperty("java.vm.name")).append('\n');
+        stringBuf
+            .append(System.getProperty("os.name")).append(' ')
+            .append(System.getProperty("os.version")).append(" (")
+            .append(System.getProperty("os.arch")).append(")\n");
+        
         String stacktrace = stringBuf.toString();
         
         StringBuilder sb = new StringBuilder();

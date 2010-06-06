@@ -39,8 +39,8 @@ import javax.swing.filechooser.FileFilter;
 
 import yajhfc.DateKind;
 import yajhfc.Utils;
+import yajhfc.file.FileFormat;
 import yajhfc.file.FormattedFile;
-import yajhfc.file.FormattedFile.FileFormat;
 import yajhfc.phonebook.convrules.CompanyRule;
 import yajhfc.phonebook.convrules.EntryToStringRule;
 import yajhfc.phonebook.convrules.NameRule;

@@ -53,7 +53,7 @@ import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileFilter;
 
 import yajhfc.Utils;
-import yajhfc.file.FormattedFile.FileFormat;
+import yajhfc.file.FileFormat;
 import yajhfc.launch.Launcher2;
 import yajhfc.logconsole.SwingLogHandler.LogListener;
 import yajhfc.util.CancelAction;
