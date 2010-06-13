@@ -22,6 +22,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 
@@ -441,7 +442,16 @@ public class FaxOptions extends AbstractFaxOptions {
      */
     public boolean createSingleFilesForViewing = false;
     /**
-     * View/send faxes always in this format?
+     * View faxes always in this format?
+     */
+    public boolean alwaysCreateTargetFormatForViewing = false;
+    /**
+     * Format for viewing
+     */
+    public FileFormat singleFileFormatForViewing = FileFormat.PDF;
+    
+    /**
+     * Send faxes always in this format?
      */
     public boolean alwaysCreateTargetFormat = false;
     /**
@@ -449,7 +459,7 @@ public class FaxOptions extends AbstractFaxOptions {
      */
     public MultiFileMode multiFileSendMode = MultiFileMode.NONE;
     /**
-     * Format for viewing/sending
+     * Format for sending
      */
     public FileFormat singleFileFormat = FileFormat.PDF;
     /**
@@ -575,6 +585,7 @@ public class FaxOptions extends AbstractFaxOptions {
      * The position and size of the log viewer window
      */
     public Rectangle logViewerBounds =  null;
+        
     
     public FaxOptions() {
         super(null);
@@ -671,6 +682,37 @@ public class FaxOptions extends AbstractFaxOptions {
         useCover = false;
         useCustomCover = false;
         CustomCover = "";
+    }
+    
+    /**
+     * An array of arrays specifying settings whose defaults should be copied from other
+     * settings when a config file is loaded that does contain the specified settings but not
+     * the other ones (i.e. when either both or none are present, nothing is done)
+     * 
+     * Format of the "sub-arrays": { setting_to_copy_from, copyto1, copyto2, ...}
+     */
+    private static final String[][] copyDefaultSettings = {
+    	{"alwaysCreateTargetFormat", "alwaysCreateTargetFormatForViewing"},
+    	{"singleFileFormat",         "singleFileFormatForViewing"},
+    };
+    @Override
+    public void loadFromProperties(Properties p) {
+    	Properties p2 = null;
+    	for (String[] sub : copyDefaultSettings) {
+    		String defValue = p.getProperty(sub[0]);
+    		if (defValue != null) {
+    			for (int i=1; i<sub.length; i++) {
+    				String prop = sub[i];
+    				if (p.getProperty(prop) == null) {
+    					if (p2==null) {
+    						p2 = new Properties(p);
+    					}
+    					p2.setProperty(prop, defValue);
+    				}
+    			}
+    		}
+    	}
+    	super.loadFromProperties(p2 == null ? p : p2);
     }
     
     private final PBEntryFieldContainer coverFrom = new PBEntryFieldContainer() {

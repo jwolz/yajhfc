@@ -108,15 +108,30 @@ public abstract class MultiFileConverter {
      */
     public static void viewMultipleFiles(List<FormattedFile> files, PaperSize paperSize, boolean isPreview) throws IOException, UnknownFormatException, ConversionException {
         final FaxOptions faxOptions = Utils.getFaxOptions();
-        if (faxOptions.createSingleFilesForViewing ||
-                (isPreview &&  faxOptions.multiFileSendMode != MultiFileMode.NONE)) {
-            if (files.size() == 1 && 
-                    (files.get(0).format == faxOptions.singleFileFormat || !faxOptions.alwaysCreateTargetFormat)) {
+        boolean alwaysCreateTargetFormat;
+        FileFormat singleFileFormat;
+        boolean createSingleFile;
+        //boolean createSingleFile = faxOptions.createSingleFilesForViewing ||
+        //        (isPreview &&  faxOptions.multiFileSendMode != MultiFileMode.NONE);
+        if (isPreview) {
+        	alwaysCreateTargetFormat = faxOptions.alwaysCreateTargetFormat;
+        	singleFileFormat = faxOptions.singleFileFormat;
+        	createSingleFile = faxOptions.multiFileSendMode != MultiFileMode.NONE;
+        } else {
+           	alwaysCreateTargetFormat = faxOptions.alwaysCreateTargetFormatForViewing;
+        	singleFileFormat = faxOptions.singleFileFormatForViewing;
+        	createSingleFile = faxOptions.createSingleFilesForViewing;
+        }
+        
+        
+		if (createSingleFile) {
+			if (files.size() == 1 && 
+                    (files.get(0).format == singleFileFormat || !alwaysCreateTargetFormat)) {
                 files.get(0).view();
             } else {
-                File tmpFile = File.createTempFile("view", "." + faxOptions.singleFileFormat.getDefaultExtension());
+                File tmpFile = File.createTempFile("view", "." + singleFileFormat.getDefaultExtension());
                 tmpFile.deleteOnExit();
-                FormattedFile ff = convertMultipleFilesToSingleFile(files, tmpFile, faxOptions.singleFileFormat, paperSize);
+                FormattedFile ff = convertMultipleFilesToSingleFile(files, tmpFile, singleFileFormat, paperSize);
                 ff.view();
             }
         } else {

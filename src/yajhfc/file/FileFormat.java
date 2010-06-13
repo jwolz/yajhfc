@@ -28,7 +28,7 @@ public enum FileFormat {
     PNG(Utils._("PNG pictures"),"png"),
     GIF(Utils._("GIF pictures"),"gif"),
     TIFF(Utils._("TIFF pictures"),"tiff", "tif"),
-    TIFF_DITHER(Utils._("TIFF pictures"),"tiff", "tif"),
+    TIFF_DITHER(Utils._("TIFF pictures"), "TIFF (dithered)", "tiff", new String[] { "tiff", "tif" }),
     PlainText(Utils._("Text files"),"txt"),
     XML(Utils._("XML documents"), "xml"),
     FOP(Utils._("XSL:FO documents"), "fo", "xml", "fop"),
@@ -40,15 +40,17 @@ public enum FileFormat {
     private String defaultExt;
     private String[] possibleExts;
     private String description;
+    private String shortDesc;
     
     private FileFormat(String description, String... possibleExts) {
-        this(description, possibleExts[0], possibleExts);
+        this(description, null, possibleExts[0], possibleExts);
     }
     
-    private FileFormat(String description, String defaultExt, String[] possibleExts) {
+    private FileFormat(String description, String shortDesc, String defaultExt, String[] possibleExts) {
         this.defaultExt = defaultExt;
         this.possibleExts = possibleExts;
         this.description = description;
+        this.shortDesc = shortDesc;
     }
     
     public String getDefaultExtension() {
@@ -62,6 +64,15 @@ public enum FileFormat {
     
     public String[] getPossibleExtensions() {
         return possibleExts;
+    }
+    
+    @Override
+    public String toString() {
+    	if (shortDesc != null) {
+    		return shortDesc;
+    	} else {
+    		return super.toString();
+    	}
     }
     
     /**

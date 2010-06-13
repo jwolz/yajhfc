@@ -56,21 +56,23 @@ public class PathAndViewPanel extends JPanel implements OptionsPage {
     
     FileTextField ftfFaxViewer, ftfPSViewer;
     FileTextField ftfPDFViewer, ftfGSLocation, ftfTIFF2PDFLocation;
-    JCheckBox checkPDFSameAsPS, checkCreateSingleFile, checkCreateAlwaysAsTargetFormat;
-    JComboBox comboSendMode, comboTargetFormat;
+    JCheckBox checkPDFSameAsPS, checkCreateSingleFile, checkCreateAlwaysAsTargetFormat, checkCreateAlwaysAsTargetFormatView;
+    JComboBox comboSendMode, comboTargetFormat, comboTargetFormatView;
     
     public PathAndViewPanel() {
         super(false);
         setLayout(new TableLayout(new double[][] {
-                {OptionsWin.border, TableLayout.FILL, OptionsWin.border},
-                {OptionsWin.border, 0.7, OptionsWin.border, TableLayout.FILL, OptionsWin.border}
+                {OptionsWin.border, 0.5, OptionsWin.border, TableLayout.FILL, OptionsWin.border},
+                {OptionsWin.border, TableLayout.FILL, OptionsWin.border, TableLayout.PREFERRED, OptionsWin.border}
         }));
         
         JPanel panelPaths = createPanelPaths();
         JPanel panelView = createPanelView();
+        JPanel panelSend = createPanelSend();
 
-        add(panelPaths, "1,1,f,f");
+        add(panelPaths, "1,1,3,1,f,f");
         add(panelView, "1,3,f,f");
+        add(panelSend, "3,3,f,f");
     }
 
     private JPanel createPanelPaths() {
@@ -135,9 +137,9 @@ public class PathAndViewPanel extends JPanel implements OptionsPage {
     }
 
     private JPanel createPanelView() {
-        final int rowCount = 5;
+        final int rowCount = 7;
         double[][] dLay =  {
-                {OptionsWin.border, 0.5, OptionsWin.border, TableLayout.FILL, OptionsWin.border},
+                {OptionsWin.border, TableLayout.FILL, OptionsWin.border},
                 new double[rowCount]
         };
         final double rowH = 2.0/(rowCount-1);
@@ -149,13 +151,12 @@ public class PathAndViewPanel extends JPanel implements OptionsPage {
         
         JPanel panelView = new JPanel(false);
         panelView.setLayout(new TableLayout(dLay));
-        panelView.setBorder(BorderFactory.createTitledBorder(_("View and send settings")));
+        panelView.setBorder(BorderFactory.createTitledBorder(_("View settings")));
         
-        checkCreateSingleFile = new JCheckBox(_("View faxes as single file (needs GhostScript+tiff2pdf)"));
-        checkCreateAlwaysAsTargetFormat = new JCheckBox(_("View/send faxes always in this format"));
+        checkCreateSingleFile = new JCheckBox("<html>" + _("View faxes as single file (needs GhostScript+tiff2pdf)") + "</html>");
+        checkCreateAlwaysAsTargetFormatView = new JCheckBox(_("View faxes always in this format"));
         
-        comboTargetFormat = new JComboBox(MultiFileConverter.targetFormats.keySet().toArray());
-        comboSendMode = new JComboBox(MultiFileMode.values());
+        comboTargetFormatView = new JComboBox(MultiFileConverter.targetFormats.keySet().toArray());
         
         ActionListener panelViewListener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -163,19 +164,58 @@ public class PathAndViewPanel extends JPanel implements OptionsPage {
             }  
         };
         checkCreateSingleFile.addActionListener(panelViewListener);
-        comboSendMode.addActionListener(panelViewListener);
         
-        Utils.addWithLabel(panelView, comboSendMode, _("Send multiple files as:"), "1,1,f,c");
-        panelView.add(checkCreateSingleFile, "3,1,f,c");
-        Utils.addWithLabel(panelView, comboTargetFormat, _("Format for viewing/sending:"), "1,3,f,c");
-        panelView.add(checkCreateAlwaysAsTargetFormat, "3,3,f,c");
+        panelView.add(checkCreateSingleFile, "1,0,1,1,f,c");
+        Utils.addWithLabel(panelView, comboTargetFormatView, _("Format for viewing:"), "1,3,f,c");
+        panelView.add(checkCreateAlwaysAsTargetFormatView, "1,4,f,c");
         
         return panelView;
     }
     
+    private JPanel createPanelSend() {
+        final int rowCount = 7;
+        double[][] dLay =  {
+                {OptionsWin.border, TableLayout.FILL, OptionsWin.border},
+                new double[rowCount]
+        };
+        final double rowH = 2.0/(rowCount-1);
+        dLay[1][rowCount-1] = OptionsWin.border;
+        for (int i=0; i < rowCount-1; i++) {
+            dLay[1][i] = ((i%2) == 0) ? rowH : TableLayout.PREFERRED; 
+        }
+        dLay[1][rowCount-3] = TableLayout.FILL;
+        
+        JPanel panelSend = new JPanel(false);
+        panelSend.setLayout(new TableLayout(dLay));
+        panelSend.setBorder(BorderFactory.createTitledBorder(_("Send settings")));
+        
+        checkCreateAlwaysAsTargetFormat = new JCheckBox(_("Send faxes always in this format"));
+        
+        comboTargetFormat = new JComboBox(MultiFileConverter.targetFormats.keySet().toArray());
+        comboSendMode = new JComboBox(MultiFileMode.values());
+        
+        ActionListener panelSendListener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+              checkPanelSendEnabled();
+            }  
+        };
+        comboSendMode.addActionListener(panelSendListener);
+        
+        Utils.addWithLabel(panelSend, comboSendMode, _("Send multiple files as:"), "1,1,f,c");
+        Utils.addWithLabel(panelSend, comboTargetFormat, _("Format for sending:"), "1,3,f,c");
+        panelSend.add(checkCreateAlwaysAsTargetFormat, "1,4,f,c");
+        
+        return panelSend;
+    }
+    
     void checkPanelViewEnabled() {
-        boolean enable = (checkCreateSingleFile.isSelected() || 
-                comboSendMode.getSelectedItem() != MultiFileMode.NONE);
+        boolean enable = (checkCreateSingleFile.isSelected());
+        checkCreateAlwaysAsTargetFormatView.setEnabled(enable);
+        comboTargetFormatView.setEnabled(enable);
+    }
+    
+    void checkPanelSendEnabled() {
+        boolean enable = (comboSendMode.getSelectedItem() != MultiFileMode.NONE);
         checkCreateAlwaysAsTargetFormat.setEnabled(enable);
         comboTargetFormat.setEnabled(enable);
     }
@@ -191,13 +231,16 @@ public class PathAndViewPanel extends JPanel implements OptionsPage {
         ftfTIFF2PDFLocation.setText(foEdit.tiff2PDFLocation);
         
         checkCreateAlwaysAsTargetFormat.setSelected(foEdit.alwaysCreateTargetFormat);
+        checkCreateAlwaysAsTargetFormatView.setSelected(foEdit.alwaysCreateTargetFormatForViewing);
         checkCreateSingleFile.setSelected(foEdit.createSingleFilesForViewing);
         checkPDFSameAsPS.setSelected(foEdit.viewPDFAsPS);
         
         comboSendMode.setSelectedItem(foEdit.multiFileSendMode);
         comboTargetFormat.setSelectedItem(foEdit.singleFileFormat);
+        comboTargetFormatView.setSelectedItem(foEdit.singleFileFormatForViewing);
         
         checkPanelViewEnabled();
+        checkPanelSendEnabled();
         ftfPDFViewer.setEnabled(!foEdit.viewPDFAsPS);
     }
 
@@ -212,11 +255,13 @@ public class PathAndViewPanel extends JPanel implements OptionsPage {
         foEdit.tiff2PDFLocation = ftfTIFF2PDFLocation.getText();
 
         foEdit.alwaysCreateTargetFormat = checkCreateAlwaysAsTargetFormat.isSelected();
+        foEdit.alwaysCreateTargetFormatForViewing = checkCreateAlwaysAsTargetFormatView.isSelected();
         foEdit.createSingleFilesForViewing = checkCreateSingleFile.isSelected();
         foEdit.viewPDFAsPS = checkPDFSameAsPS.isSelected();
 
         foEdit.multiFileSendMode = (MultiFileMode)comboSendMode.getSelectedItem();
         foEdit.singleFileFormat = (FileFormat)comboTargetFormat.getSelectedItem();
+        foEdit.singleFileFormatForViewing = (FileFormat)comboTargetFormatView.getSelectedItem();
     }
 
     /* (non-Javadoc)
