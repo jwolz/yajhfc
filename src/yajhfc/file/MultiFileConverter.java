@@ -23,9 +23,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 
 import yajhfc.FaxOptions;
 import yajhfc.PaperSize;
@@ -57,7 +55,7 @@ public abstract class MultiFileConverter {
         
         File[] target = new File[files.size()];
 
-        for (int i=0; i< files.size(); i++) {
+        for (int i=0; i<files.size(); i++) {
             FormattedFile ff = files.get(i);
             switch (ff.format) {
             case PDF:
@@ -73,8 +71,28 @@ public abstract class MultiFileConverter {
                     tmpFile.deleteOnExit();
                     
                     FileOutputStream out = new FileOutputStream(tmpFile);
-                    conv.convertToHylaFormat(ff.file, out, paperSize, getTargetFormat());
+                    FileFormat targetFormat = getTargetFormat();
+                    switch (targetFormat) {
+                    case PDF:
+                    case PostScript:
+                        break;
+                    default:
+                        // We always need PDF or PS here since the output may be fed to GS
+                        targetFormat = FileFormat.PDF;
+                        break;
+                    }
+                    conv.convertToHylaFormat(ff.file, out, paperSize, targetFormat);
                     out.close();
+                    
+                    FileFormat tempFmt = FormattedFile.detectFileFormat(tmpFile);
+                    switch (tempFmt) {
+                    case PDF:
+                    case PostScript:
+                        break;
+                    default:
+                        throw new ConversionException("Converter output for file " + ff.file + " has an unsupported file format " + tempFmt + " (converter=" + conv + ")");
+                    }
+                    
                     target[i] = tmpFile;
                 }
             }
@@ -91,14 +109,6 @@ public abstract class MultiFileConverter {
         }
     }
     
-    public static final Map<FileFormat,MultiFileConverter> targetFormats = new EnumMap<FileFormat,MultiFileConverter>(FileFormat.class);
-    static {
-        targetFormats.put(FileFormat.PDF, new PDFMultiFileConverter());
-        targetFormats.put(FileFormat.PostScript, new PSMultiFileConverter());
-        targetFormats.put(FileFormat.TIFF, new TIFFMultiFileConverter());
-        targetFormats.put(FileFormat.TIFF_DITHER, new TIFFDitherMultiFileConverter());
-    }
-    
     /**
      * Views multiple files
      * @param files
@@ -109,7 +119,7 @@ public abstract class MultiFileConverter {
     public static void viewMultipleFiles(List<FormattedFile> files, PaperSize paperSize, boolean isPreview) throws IOException, UnknownFormatException, ConversionException {
         final FaxOptions faxOptions = Utils.getFaxOptions();
         boolean alwaysCreateTargetFormat;
-        FileFormat singleFileFormat;
+        MultiFileConvFormat singleFileFormat;
         boolean createSingleFile;
         //boolean createSingleFile = faxOptions.createSingleFilesForViewing ||
         //        (isPreview &&  faxOptions.multiFileSendMode != MultiFileMode.NONE);
@@ -126,10 +136,10 @@ public abstract class MultiFileConverter {
         
 		if (createSingleFile) {
 			if (files.size() == 1 && 
-                    (files.get(0).format == singleFileFormat || !alwaysCreateTargetFormat)) {
+                    (files.get(0).format == singleFileFormat.getFileFormat() || !alwaysCreateTargetFormat)) {
                 files.get(0).view();
             } else {
-                File tmpFile = File.createTempFile("view", "." + singleFileFormat.getDefaultExtension());
+                File tmpFile = File.createTempFile("view", "." + singleFileFormat.getFileFormat().getDefaultExtension());
                 tmpFile.deleteOnExit();
                 FormattedFile ff = convertMultipleFilesToSingleFile(files, tmpFile, singleFileFormat, paperSize);
                 ff.view();
@@ -151,8 +161,8 @@ public abstract class MultiFileConverter {
      * @throws UnknownFormatException 
      * @throws IOException 
      */
-    public static FormattedFile convertMultipleFilesToSingleFile(List<FormattedFile> files, File targetName, FileFormat targetFormat, PaperSize paperSize) throws IOException, UnknownFormatException, ConversionException {
-        MultiFileConverter conv = targetFormats.get(targetFormat);
+    public static FormattedFile convertMultipleFilesToSingleFile(List<FormattedFile> files, File targetName, MultiFileConvFormat targetFormat, PaperSize paperSize) throws IOException, UnknownFormatException, ConversionException {
+        MultiFileConverter conv = targetFormat.getConverter();
         if (conv == null) {
             throw new UnknownFormatException("Unsupported target format: " + targetFormat);
         } else {
@@ -169,12 +179,12 @@ public abstract class MultiFileConverter {
         });
         
         File out = new File("/tmp/out.pdf");
-        convertMultipleFilesToSingleFile(files, out, FileFormat.PDF, PaperSize.A4);
+        convertMultipleFilesToSingleFile(files, out, MultiFileConvFormat.PDF, PaperSize.A4);
         
         Runtime.getRuntime().exec(new String[] {"kpdf", out.getPath()});
         
         out = new File("/tmp/out.ps");
-        convertMultipleFilesToSingleFile(files, out, FileFormat.PostScript, PaperSize.A4);
+        convertMultipleFilesToSingleFile(files, out, MultiFileConvFormat.PostScript, PaperSize.A4);
         
         Runtime.getRuntime().exec(new String[] {"gv", out.getPath()});
     }

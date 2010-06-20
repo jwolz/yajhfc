@@ -46,6 +46,12 @@ public interface FileConverter {
     public void convertToHylaFormat(File inFile, OutputStream destination, PaperSize paperSize, FileFormat desiredFormat) throws ConversionException, IOException;
     
     /**
+     * Returns if this FileConverter may be replaced by a user defined one
+     * @return
+     */
+    public boolean isOverridable();
+    
+    /**
      * A dummy file converter that just copies the input to the output
      */
     public static final FileConverter IDENTITY_CONVERTER = new FileConverter() {
@@ -55,6 +61,10 @@ public interface FileConverter {
             Utils.copyStream(in, destination);
             in.close();
         }  
+      
+      public boolean isOverridable() {
+            return false;
+        }
     };
     
     public static class ConversionException extends Exception {

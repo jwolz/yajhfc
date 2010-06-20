@@ -34,6 +34,7 @@ import yajhfc.PaperSize;
 import yajhfc.Utils;
 import yajhfc.file.FileFormat;
 import yajhfc.file.FormattedFile;
+import yajhfc.file.MultiFileConvFormat;
 import yajhfc.file.MultiFileConverter;
 import yajhfc.file.UnknownFormatException;
 import yajhfc.file.FileConverter.ConversionException;
@@ -51,7 +52,7 @@ public class SendFileManager {
     protected String coverName;
     
     protected final MultiFileMode mode;
-    protected final FileFormat targetFormat;
+    protected final MultiFileConvFormat targetFormat;
     protected final boolean createAlwaysTargetFormat;
     protected final PaperSize paperSize;
     
@@ -118,7 +119,7 @@ public class SendFileManager {
         
         if (ffs.size() == 0) {
             return null; 
-        } else if (ffs.size() == 1 && (!createAlwaysTargetFormat || ffs.get(0).format == targetFormat)) {
+        } else if (ffs.size() == 1 && (!createAlwaysTargetFormat || ffs.get(0).format == targetFormat.getFileFormat())) {
             toUpdate.updateNote(Utils._("Uploading document"));
             FileInputStream fi = new FileInputStream(ffs.get(0).file);
             hyfc.type(HylaFAXClient.TYPE_IMAGE);
@@ -130,14 +131,14 @@ public class SendFileManager {
             return serverName;
         } else {
             toUpdate.updateNote(MessageFormat.format(Utils._("Creating {0} from documents to send"), targetFormat));
-            File pdfFile = File.createTempFile("submit", "." + targetFormat.getDefaultExtension());
+            File pdfFile = File.createTempFile("submit", "." + targetFormat.getFileFormat().getDefaultExtension());
             MultiFileConverter.convertMultipleFilesToSingleFile(ffs, pdfFile, targetFormat, paperSize);
 
             toUpdate.stepProgressBar(50);
             toUpdate.updateNote((MessageFormat.format(Utils._("Uploading {0}"), targetFormat)));
             FileInputStream fi = new FileInputStream(pdfFile);
             hyfc.type(HylaFAXClient.TYPE_IMAGE);
-            hyfc.form(targetFormat.getHylaFAXFormatString());
+            hyfc.form(targetFormat.getFileFormat().getHylaFAXFormatString());
             String serverName = hyfc.putTemporary(fi);
             fi.close();
             pdfFile.delete();
@@ -227,7 +228,7 @@ public class SendFileManager {
         this(Utils.getFaxOptions().multiFileSendMode, Utils.getFaxOptions().singleFileFormat, Utils.getFaxOptions().alwaysCreateTargetFormat, paperSize, files);
     }
     
-    public SendFileManager(MultiFileMode mode, FileFormat targetFormat, boolean createAlwaysPDF, PaperSize paperSize, List<HylaTFLItem> files) {
+    public SendFileManager(MultiFileMode mode, MultiFileConvFormat targetFormat, boolean createAlwaysPDF, PaperSize paperSize, List<HylaTFLItem> files) {
         this.mode = mode;
         this.targetFormat = targetFormat;
         this.files = files;

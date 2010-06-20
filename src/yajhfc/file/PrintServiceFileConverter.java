@@ -61,6 +61,10 @@ public class PrintServiceFileConverter implements PrintJobListener, FileConverte
         }
     }
     
+    public boolean isOverridable() {
+        return true;
+    }
+    
     private static final byte[] jdk16PSToReplace;
     private static final byte[] jdk16PSReplacement;
     static {

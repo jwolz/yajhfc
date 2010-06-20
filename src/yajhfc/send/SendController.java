@@ -235,8 +235,10 @@ public class SendController {
                 } finally {
                     clientManager.endServerTransaction();                    
                 }
-                updateNote(Utils._("Launching viewer"));
-                MultiFileConverter.viewMultipleFiles(viewFiles, paperSize, true);
+                if (viewFiles.size() > 0) {
+                    updateNote(Utils._("Launching viewer"));
+                    MultiFileConverter.viewMultipleFiles(viewFiles, paperSize, true);
+                }
             } catch (Exception e1) {
                 showExceptionDialog(Utils._("Error previewing the documents:"), e1);
             } 

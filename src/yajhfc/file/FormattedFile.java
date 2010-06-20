@@ -25,7 +25,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
@@ -64,7 +63,6 @@ public class FormattedFile {
 
         switch (format) {
         case TIFF:
-        case TIFF_DITHER:
             execCmd = Utils.getFaxOptions().faxViewer;
             break;
         case PostScript:
@@ -98,9 +96,7 @@ public class FormattedFile {
     static {
         fileConverters.put(FileFormat.PostScript, FileConverter.IDENTITY_CONVERTER);
         fileConverters.put(FileFormat.PDF, FileConverter.IDENTITY_CONVERTER);
-        final TIFFLibConverter tiffConv = new TIFFLibConverter();
-        fileConverters.put(FileFormat.TIFF, tiffConv);
-        fileConverters.put(FileFormat.TIFF_DITHER, tiffConv);
+        fileConverters.put(FileFormat.TIFF, new TIFFLibConverter());
         
         fileConverters.put(FileFormat.PNG, new PrintServiceFileConverter(DocFlavor.URL.PNG));
         fileConverters.put(FileFormat.GIF, new PrintServiceFileConverter(DocFlavor.URL.GIF));
@@ -109,6 +105,41 @@ public class FormattedFile {
         fileConverters.put(FileFormat.HTML, EditorPaneFileConverter.HTML_CONVERTER);
         // Doesn't work very well
         //fileConverters.put(FileFormat.RTF, new EditorPaneFileConverter("text/rtf"));
+        
+        loadCustomConverters(Utils.getFaxOptions().customFileConverters);
+    }
+    
+    public static void loadCustomConverters(Map<String,String> converters) {
+        for (FileFormat format : FileFormat.values()) {
+            FileConverter oldConv = fileConverters.get(format);
+            FileConverter defaultConverter;
+            if (oldConv instanceof ExternalProcessConverter) {
+                ExternalProcessConverter epc = (ExternalProcessConverter)oldConv;
+                if (epc.isUserDefined()) {
+                    defaultConverter = epc.getInternalConverter();
+                } else {
+                    defaultConverter = oldConv;
+                }
+            } else {
+                defaultConverter = oldConv;
+            }
+            // Ignore non-overridable converters
+            if (oldConv != null && !oldConv.isOverridable())
+                continue;
+            
+            String customConv = converters.get(format.name());
+            if (customConv != null && customConv.length() > 0) {
+                fileConverters.put(format, new ExternalProcessConverter(customConv, defaultConverter));
+            } else {
+                if (oldConv != defaultConverter) {
+                    if (defaultConverter == null)
+                        fileConverters.remove(format);
+                    else
+                        fileConverters.put(format, defaultConverter);
+                }
+            }
+        }
+        fileConvertersChanged();
     }
     
     //private static final short[] JPEGSignature = { 0xff, 0xd8, 0xff, 0xe0, -1, -1, 'J', 'F', 'I', 'F', 0 };
@@ -225,10 +256,10 @@ public class FormattedFile {
                 int b = data[i] & 0xff;
 
                 if (b == 127)
-                    return FileFormat.Unknown;
+                    return FileFormat.Any;
                 if (b < 32) {
                     if (b != 10 && b != 13 && b != 9)
-                        return FileFormat.Unknown;
+                        return FileFormat.Any;
                 }
             }
             return FileFormat.PlainText;
@@ -265,7 +296,6 @@ public class FormattedFile {
     public static boolean canViewFormat(FileFormat format) {
         switch (format) {
         case TIFF:
-        case TIFF_DITHER:
         case PostScript:
         case PDF:
             return true;
@@ -281,18 +311,19 @@ public class FormattedFile {
     protected static FileFilter[] acceptedFilters;
 
     public static FileFilter[] createFileFiltersFromFormats(Collection<FileFormat> formats) {
-        ArrayList<String> allExts = new ArrayList<String>();
+        ExampleFileFilter allSupported = new ExampleFileFilter((String)null, Utils._("All supported file formats"));
+        allSupported.setExtensionListInDescription(false);
+        
         FileFilter[] filters = new FileFilter[formats.size() + 1];
+        filters[0] = allSupported;
+        
         int i = 0;
         for (FileFormat ff : formats) {
             for (String ext : ff.getPossibleExtensions()) {
-                allExts.add(ext);
+                allSupported.addExtension(ext);
             }
             filters[++i] = new ExampleFileFilter(ff.getPossibleExtensions(), ff.getDescription());
         }
-        ExampleFileFilter allSupported = new ExampleFileFilter(allExts.toArray(new String[allExts.size()]), Utils._("All supported file formats"));
-        allSupported.setExtensionListInDescription(false);
-        filters[0] = allSupported;
         
         return filters;
     }
@@ -304,6 +335,14 @@ public class FormattedFile {
         return acceptedFilters;
     }
 
+    /**
+     * Called to notify this class that the file converter map changed and
+     * any information computed from that map should be refreshed
+     */
+    public static void fileConvertersChanged() {
+        acceptedFilters = null;
+    }
+    
     public static void main(String[] args) throws Exception {
         for (String file : args) {
             System.out.println(file + ": " + detectFileFormat(file));

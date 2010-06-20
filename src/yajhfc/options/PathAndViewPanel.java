@@ -39,8 +39,7 @@ import javax.swing.JPanel;
 import yajhfc.FaxOptions;
 import yajhfc.FileTextField;
 import yajhfc.Utils;
-import yajhfc.file.FileFormat;
-import yajhfc.file.MultiFileConverter;
+import yajhfc.file.MultiFileConvFormat;
 import yajhfc.util.ClipboardPopup;
 
 /**
@@ -156,7 +155,7 @@ public class PathAndViewPanel extends JPanel implements OptionsPage {
         checkCreateSingleFile = new JCheckBox("<html>" + _("View faxes as single file (needs GhostScript+tiff2pdf)") + "</html>");
         checkCreateAlwaysAsTargetFormatView = new JCheckBox(_("View faxes always in this format"));
         
-        comboTargetFormatView = new JComboBox(MultiFileConverter.targetFormats.keySet().toArray());
+        comboTargetFormatView = new JComboBox(MultiFileConvFormat.values());
         
         ActionListener panelViewListener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -191,7 +190,7 @@ public class PathAndViewPanel extends JPanel implements OptionsPage {
         
         checkCreateAlwaysAsTargetFormat = new JCheckBox(_("Send faxes always in this format"));
         
-        comboTargetFormat = new JComboBox(MultiFileConverter.targetFormats.keySet().toArray());
+        comboTargetFormat = new JComboBox(MultiFileConvFormat.values());
         comboSendMode = new JComboBox(MultiFileMode.values());
         
         ActionListener panelSendListener = new ActionListener() {
@@ -260,8 +259,8 @@ public class PathAndViewPanel extends JPanel implements OptionsPage {
         foEdit.viewPDFAsPS = checkPDFSameAsPS.isSelected();
 
         foEdit.multiFileSendMode = (MultiFileMode)comboSendMode.getSelectedItem();
-        foEdit.singleFileFormat = (FileFormat)comboTargetFormat.getSelectedItem();
-        foEdit.singleFileFormatForViewing = (FileFormat)comboTargetFormatView.getSelectedItem();
+        foEdit.singleFileFormat = (MultiFileConvFormat)comboTargetFormat.getSelectedItem();
+        foEdit.singleFileFormatForViewing = (MultiFileConvFormat)comboTargetFormatView.getSelectedItem();
     }
 
     /* (non-Javadoc)
@@ -315,8 +314,9 @@ public class PathAndViewPanel extends JPanel implements OptionsPage {
     
     static class ExeFileTextField extends FileTextField {
         protected String readTextFieldFileName() {
-            return this.getText().replaceAll("(\")?%s(\")?", "").trim();
-        };
+            //return this.getText().replaceAll("(\")?%s(\")?", "").trim();
+            return Utils.extractExecutableFromCmdLine(getText());
+        }
         
         @Override
         protected void writeTextFieldFileName(String fName) {

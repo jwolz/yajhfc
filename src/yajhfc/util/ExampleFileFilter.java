@@ -68,6 +68,7 @@ import javax.swing.filechooser.FileFilter;
  */
 public class ExampleFileFilter extends FileFilter {
 
+    public static final String ANY_EXTENSION = "/any\\";
     /*private static String TYPE_UNKNOWN = "Type Unknown";
     private static String HIDDEN_FILE = "Hidden File";*/
 
@@ -76,6 +77,7 @@ public class ExampleFileFilter extends FileFilter {
     private String fullDescription = null;
     private boolean useExtensionsInDescription = true;
     private String defaultExtension;
+    private boolean acceptAnyFile = false;
     
     /**
      * Creates a file filter. If no filters are added, then all
@@ -156,6 +158,9 @@ public class ExampleFileFilter extends FileFilter {
             if(f.isDirectory()) {
                 return true;
             }
+            if (acceptAnyFile)
+                return true;
+            
             String extension = getExtension(f);
             if(extension != null && filters.contains(getExtension(f))) {
                 return true;
@@ -176,7 +181,8 @@ public class ExampleFileFilter extends FileFilter {
             int i = filename.lastIndexOf('.');
             if(i>0 && i<filename.length()-1) {
                 return filename.substring(i+1).toLowerCase();
-            };
+            }
+            return ""; // No extension
         }
         return null;
     }
@@ -203,6 +209,11 @@ public class ExampleFileFilter extends FileFilter {
         // Use the first added extension as default if not specified otherwise
         if (defaultExtension == null)
             defaultExtension = extension;
+        
+        if (ANY_EXTENSION.equals(extension)) {
+            acceptAnyFile = true;
+            useExtensionsInDescription = false;
+        }
     }
 
 
