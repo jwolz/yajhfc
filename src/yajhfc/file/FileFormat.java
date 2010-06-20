@@ -19,6 +19,7 @@
 package yajhfc.file;
 
 import yajhfc.Utils;
+import yajhfc.util.ExampleFileFilter;
 
 public enum FileFormat {
     PostScript(Utils._("Postscript documents"), "ps"),
@@ -28,13 +29,13 @@ public enum FileFormat {
     PNG(Utils._("PNG pictures"),"png"),
     GIF(Utils._("GIF pictures"),"gif"),
     TIFF(Utils._("TIFF pictures"),"tiff", "tif"),
-    TIFF_DITHER(Utils._("TIFF pictures"), "TIFF (dithered)", "tiff", new String[] { "tiff", "tif" }),
     PlainText(Utils._("Text files"),"txt"),
     XML(Utils._("XML documents"), "xml"),
     FOP(Utils._("XSL:FO documents"), "fo", "xml", "fop"),
     ODT(Utils._("OpenDocument text documents"), "odt"),
     HTML(Utils._("HTML documents"), "html", "htm"),
     RTF(Utils._("RTF documents"), "rtf"),
+    Any(Utils._("Any files"), "dat", ExampleFileFilter.ANY_EXTENSION),
     Unknown(Utils._("Unknown files"), "");
     
     private String defaultExt;
@@ -87,7 +88,6 @@ public enum FileFormat {
         case PostScript:
             return "ps";
         case TIFF:
-        case TIFF_DITHER:
             return "tiff";
         default:
             return "data";

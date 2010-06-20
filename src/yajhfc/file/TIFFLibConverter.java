@@ -145,4 +145,7 @@ public class TIFFLibConverter implements FileConverter {
         return commandLine;
     }
 
+    public boolean isOverridable() {
+        return true;
+    }
 }

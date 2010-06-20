@@ -89,8 +89,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import yajhfc.file.FileFormat;
 import yajhfc.file.FormattedFile;
+import yajhfc.file.MultiFileConvFormat;
 import yajhfc.file.MultiFileConverter;
 import yajhfc.filters.AndFilter;
 import yajhfc.filters.Filter;
@@ -597,7 +597,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         private int fileCounter;
         private JFileChooser fileChooser;
         private boolean askForEveryFile;
-        private final FileFormat desiredFormat;
+        private final MultiFileConvFormat desiredFormat;
         
         @Override
         protected int calculateMaxProgress() {
@@ -641,7 +641,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                                     filePrefix = filePrefix.substring(0, pos);
                             }
                             
-                            File target = new File(targetDir, filePrefix + '.' + desiredFormat.getDefaultExtension());
+                            File target = new File(targetDir, filePrefix + '.' + desiredFormat.getFileFormat().getDefaultExtension());
                             if (askForEveryFile) {
                                 FileChooserRunnable runner = new FileChooserRunnable(MainWin.this, fileChooser, MessageFormat.format(_("File name to save fax {0}"), yj.getIDValue()), null, target, false);
                                 SwingUtilities.invokeAndWait(runner);
@@ -675,7 +675,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 }
                 fileChooser = new SafeJFileChooser();
                 fileChooser.resetChoosableFileFilters();
-                FileFilter pdfFilter = new ExampleFileFilter(desiredFormat.getPossibleExtensions(), desiredFormat.getDescription());
+                FileFilter pdfFilter = new ExampleFileFilter(desiredFormat.getFileFormat().getPossibleExtensions(), desiredFormat.getFileFormat().getDescription());
                 fileChooser.addChoosableFileFilter(pdfFilter);
                 fileChooser.setFileFilter(pdfFilter);
             } 
@@ -688,7 +688,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             }
         }
         
-        public SaveToFormatWorker(TooltipJTable<? extends FmtItem> selTable, File targetDir, boolean askForEveryFile, FileFormat desiredFormat) {
+        public SaveToFormatWorker(TooltipJTable<? extends FmtItem> selTable, File targetDir, boolean askForEveryFile, MultiFileConvFormat desiredFormat) {
             this.selTable = selTable;
             this.targetDir = targetDir;
             this.progressMonitor = tablePanel;
@@ -698,7 +698,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         }
     }
     private class SaveToFormatAction extends ExcDialogAbstractAction {
-        private final FileFormat desiredFormat;
+        private final MultiFileConvFormat desiredFormat;
 
         public void actualActionPerformed(ActionEvent e) {
             TooltipJTable<? extends FmtItem> selTable = getSelectedTable();
@@ -730,7 +730,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             }
         }
 
-        public SaveToFormatAction(FileFormat desiredFormat) {
+        public SaveToFormatAction(MultiFileConvFormat desiredFormat) {
             super();
             this.desiredFormat = desiredFormat;
             
@@ -1323,10 +1323,10 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         actAutoSizeStatus.putValue(Action.SHORT_DESCRIPTION, _("Automatically resize the status bar"));
         putAvailableAction("AutoSizeStatus", actAutoSizeStatus);
         
-        actSaveAsPDF = new SaveToFormatAction(FileFormat.PDF);
+        actSaveAsPDF = new SaveToFormatAction(MultiFileConvFormat.PDF);
         putAvailableAction("SaveAsPDF", actSaveAsPDF);
         
-        actSaveAsTIFF = new SaveToFormatAction(FileFormat.TIFF);
+        actSaveAsTIFF = new SaveToFormatAction(MultiFileConvFormat.TIFF);
         putAvailableAction("SaveAsTIFF", actSaveAsTIFF);
         
         actChecker = new ActionEnabler();

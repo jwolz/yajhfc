@@ -821,6 +821,8 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                     PhoneBookEntry[] entries = selectedItems.toArray(new PhoneBookEntry[selectedItems.size()]);
                     
                     for (PhoneBookEntry pbe : entries) {
+                        // Clear selection to prevent saving of the current edits
+                        selectedItems.clear();
                         pbe.delete();
                     }
                     selectedItems.clear();

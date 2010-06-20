@@ -36,6 +36,7 @@ import yajhfc.Utils;
 import yajhfc.file.FileConverter;
 import yajhfc.file.FileFormat;
 import yajhfc.file.FormattedFile;
+import yajhfc.file.FileConverter.ConversionException;
 import yajhfc.launch.Launcher2;
 import yajhfc.util.ExceptionDialog;
 
@@ -56,6 +57,13 @@ public class LocalFileTFLItem extends HylaTFLItem {
             outStream.close();
             
             preparedFile = new FormattedFile(tempFile);
+            switch (preparedFile.format) {
+            case PDF:
+            case PostScript:
+                break;
+            default:
+                throw new ConversionException("Converter output for file " + fileName + " has an unsupported file format " + preparedFile.format + " (converter=" + fconv + ")");
+            }
         }  catch (Exception e) {
             ExceptionDialog.showExceptionDialog(Launcher2.application.getFrame(), MessageFormat.format(Utils._("The document {0} could not be converted to PostScript, PDF or TIFF. Reason:"), getText()), e);
         }        

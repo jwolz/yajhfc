@@ -469,6 +469,7 @@ public class OptionsWin extends JDialog {
         List<PanelTreeNode> advancedNodeChildren = new ArrayList<PanelTreeNode>();
         advancedNode.setChildren(advancedNodeChildren);
         advancedNodeChildren.add(new PanelTreeNode(advancedNode, new AdminSettingsPage(this), _("Administrative settings"), Utils.loadCustomIcon("adminsettings.gif")));
+        advancedNodeChildren.add(new PanelTreeNode(advancedNode, new ConvertersPage(), _("File converters"), Utils.loadCustomIcon("customfilters.png")));
         
         for (PluginUI puc : PluginManager.pluginUIs) {
             PanelTreeNode parent;

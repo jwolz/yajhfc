@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 
 import javax.print.attribute.Attribute;
 
-import yajhfc.file.FileFormat;
+import yajhfc.file.MultiFileConvFormat;
 import yajhfc.model.archive.QueueFileFormat;
 import yajhfc.options.MultiFileMode;
 import yajhfc.phonebook.PBEntryField;
@@ -448,7 +448,7 @@ public class FaxOptions extends AbstractFaxOptions {
     /**
      * Format for viewing
      */
-    public FileFormat singleFileFormatForViewing = FileFormat.PDF;
+    public MultiFileConvFormat singleFileFormatForViewing = MultiFileConvFormat.PDF;
     
     /**
      * Send faxes always in this format?
@@ -461,7 +461,7 @@ public class FaxOptions extends AbstractFaxOptions {
     /**
      * Format for sending
      */
-    public FileFormat singleFileFormat = FileFormat.PDF;
+    public MultiFileConvFormat singleFileFormat = MultiFileConvFormat.PDF;
     /**
      * Location of the GhostScript executable
      */
@@ -585,7 +585,12 @@ public class FaxOptions extends AbstractFaxOptions {
      * The position and size of the log viewer window
      */
     public Rectangle logViewerBounds =  null;
-        
+   
+    
+    /**
+     * Custom file converters.
+     */
+    public final Map<String,String> customFileConverters = new TreeMap<String,String>();
     
     public FaxOptions() {
         super(null);
