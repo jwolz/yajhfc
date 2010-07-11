@@ -47,8 +47,10 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimerTask;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
@@ -1024,40 +1026,49 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                     return;
                 
                 Utils.setWaitCursor(null);
-                SentYajJob job = (SentYajJob)selTable.getJobForRow(selTable.getSelectedRow());
-                
-                List<HylaServerFile> files;
-                String number, voiceNumber, company, name, location, subject;
+                SendWinControl sw = SendController.createSendWindow(MainWin.this, clientManager, false, true);
+                Set<HylaServerFile> files = new HashSet<HylaServerFile>();
+                String subject = null;
                 HylaFAXClient hyfc = clientManager.beginServerTransaction(MainWin.this);
                 
                 try {
-                    synchronized (hyfc) {
-                        files = job.getServerFilenames(hyfc);
+                    for (int row : selTable.getSelectedRows()) {
+                        SentYajJob job = (SentYajJob)selTable.getJobForRow(row);
+                        String number, voiceNumber, company, name, location;
+                        List<HylaServerFile> jobFiles;
                         
-                        Job hyJob = job.getJob(hyfc);
-                        number = hyJob.getDialstring();
-                        name = hyJob.getProperty("TOUSER");
-                        company = hyJob.getProperty("TOCOMPANY");
-                        location = hyJob.getProperty("TOLOCATION");
-                        voiceNumber = hyJob.getProperty("TOVOICE");
-                        subject = hyJob.getProperty("REGARDING");
+                        synchronized (hyfc) {
+                            jobFiles = job.getServerFilenames(hyfc);
+
+                            Job hyJob = job.getJob(hyfc);
+                            number = hyJob.getDialstring();
+                            name = hyJob.getProperty("TOUSER");
+                            company = hyJob.getProperty("TOCOMPANY");
+                            location = hyJob.getProperty("TOLOCATION");
+                            voiceNumber = hyJob.getProperty("TOVOICE");
+                            if (subject == null || subject.length() == 0) {
+                                // Simply take the first non-empty subject
+                                subject = hyJob.getProperty("REGARDING").trim();
+                            }
+                        }
+                        
+                        for (HylaServerFile hysf : jobFiles) {
+                            if (!files.contains(hysf)) {
+                                sw.addServerFile(hysf);
+                                files.add(hysf);
+                            }
+                        }
+                        sw.getRecipients().add(new DefaultPBEntryFieldContainer(number, name, company, location, voiceNumber));
                     }
                 } catch (Exception e1) {
-                    //JOptionPane.showMessageDialog(MainWin.this, _("Couldn't get a filename for the fax:\n") + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
                     Utils.unsetWaitCursor(null);
                     ExceptionDialog.showExceptionDialog(MainWin.this, _("Could not get all of the job information necessary to resend the fax:"), e1);
                     return;
                 } finally {
                     clientManager.endServerTransaction();
                 }
-                
-                SendWinControl sw = SendController.createSendWindow(MainWin.this, clientManager, false, true);
-                
-                for (HylaServerFile hysf : files) {
-                    sw.addServerFile(hysf);
-                }
-                sw.getRecipients().add(new DefaultPBEntryFieldContainer(number, name, company, location, voiceNumber));
-                sw.setSubject(subject);
+                if (subject != null)
+                    sw.setSubject(subject);
                 
                 Utils.unsetWaitCursorOnOpen(null, sw.getWindow());
                 sw.setVisible(true);

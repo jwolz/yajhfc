@@ -174,6 +174,18 @@ public class SendController {
         } else {
             cov.toData = new DefaultPBEntryFieldContainer("");
         }
+        if (numbers.size() > 1) {
+            PBEntryFieldContainer[] cc = new PBEntryFieldContainer[numbers.size()-1];
+            int idx = 0;
+            for (PBEntryFieldContainer pbe : numbers) {
+                if (!pbe.equals(to) && idx < cc.length) {
+                    cc[idx++] = pbe;
+                }
+            }
+            cov.ccData = cc;
+        } else {
+            cov.ccData = null;
+        }
 
         // Create cover:
         coverFile = File.createTempFile("cover", ".ps");
@@ -361,7 +373,10 @@ public class SendController {
                             j.setNotifyType(notificationType.getType());
                             j.setPageDimension(paperSize.getSize());
                             j.setVerticalResolution(resolution.getResolution());
-                            j.setProperty("USEXVRES", resolution.useXVRes() ? "YES" : "NO");
+                            if (resolution.useXVRes()) {
+                                j.setProperty("USEXVRES", "YES");
+                            }
+                            //j.setProperty("USEXVRES", resolution.useXVRes() ? "YES" : "NO");
                             if (sendTime == null || (sendTime.getTime() - 10000) < System.currentTimeMillis()) {
                                 j.setSendTime("NOW"); // If send time has not been specified or is not at least 10 secs. in the future, send now
                             } else {
