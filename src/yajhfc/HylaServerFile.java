@@ -110,6 +110,18 @@ public class HylaServerFile {
         return previewFile;
     }
     
+    @Override
+    public int hashCode() {
+        return path.hashCode();
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof HylaServerFile))
+            return false;
+        
+        return path.equals(((HylaServerFile)obj).path);
+    }
     
     @Override
     public String toString() {

@@ -68,6 +68,7 @@ import yajhfc.macosx.MacOSXSupport;
 import yajhfc.model.archive.QueueFileDateFormat;
 import yajhfc.plugin.PluginManager;
 import yajhfc.plugin.PluginUI;
+import yajhfc.util.AWTExceptionLogger;
 import yajhfc.util.ExampleFileFilter;
 import yajhfc.util.ExternalProcessExecutor;
 import yajhfc.util.TransactFileOutputStream;
@@ -77,7 +78,7 @@ public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2010 by Jonas Wolz";
-    public static final String AppVersion = "0.4.4beta4";
+    public static final String AppVersion = "0.4.4rc";
     public static final String AuthorName = "Jonas Wolz";
     public static final String AuthorEMail = "jwolz@freenet.de";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
@@ -423,6 +424,7 @@ public final class Utils {
         if (IS_MACOSX) {
             MacOSXSupport.setUIProperties();
         }
+        AWTExceptionLogger.register();
         
         setLookAndFeel(getFaxOptions().lookAndFeel);
     }

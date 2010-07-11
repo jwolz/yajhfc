@@ -527,52 +527,56 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                 private TreePath[] oldSelection = null;
 
                 public void valueChanged(TreeSelectionEvent e) {
-                    TreePath[] paths = phoneBookTree.getSelectionPaths();
-                    if (treePathsEqual(oldSelection, paths)) {
-                        return;
-                    }
+                    try {
+                        TreePath[] paths = phoneBookTree.getSelectionPaths();
+                        if (treePathsEqual(oldSelection, paths)) {
+                            return;
+                        }
 
-                    commitCurrentEdits();
+                        commitCurrentEdits();
 
-                    // Read out selection:
-                    selectedItems.clear();
-                    currentPhonebook = null;
+                        // Read out selection:
+                        selectedItems.clear();
+                        currentPhonebook = null;
 
-                    if (paths != null && paths.length > 0) {
-                        PhoneBook currentPB = null;
-                        boolean haveAtMostOnePB = true;
-                        for (TreePath tp : paths) {
-                            if (tp.getPathCount() > 1) {
-                                if (currentPB == null) {
-                                    currentPB = (PhoneBook)tp.getPathComponent(1);
+                        if (paths != null && paths.length > 0) {
+                            PhoneBook currentPB = null;
+                            boolean haveAtMostOnePB = true;
+                            for (TreePath tp : paths) {
+                                if (tp.getPathCount() > 1) {
+                                    if (currentPB == null) {
+                                        currentPB = (PhoneBook)tp.getPathComponent(1);
+                                    } else {
+                                        haveAtMostOnePB = haveAtMostOnePB && (currentPB == tp.getPathComponent(1));
+                                    }
+
+                                    if (tp.getPathCount() == 3) {
+                                        selectedItems.add((PhoneBookEntry)tp.getPathComponent(2));
+                                    }
                                 } else {
-                                    haveAtMostOnePB = haveAtMostOnePB && (currentPB == tp.getPathComponent(1));
+                                    haveAtMostOnePB = false;
                                 }
+                            }
 
-                                if (tp.getPathCount() == 3) {
-                                    selectedItems.add((PhoneBookEntry)tp.getPathComponent(2));
-                                }
-                            } else {
-                                haveAtMostOnePB = false;
+                            if (haveAtMostOnePB) {
+                                currentPhonebook = currentPB;
                             }
                         }
 
-                        if (haveAtMostOnePB) {
-                            currentPhonebook = currentPB;
+                        checkMenuEnable();
+                        writeToTextFields(currentPhonebook, selectedItems);
+
+                        if (currentPhonebook != null) {
+                            textDescriptor.setText(currentPhonebook.getDescriptor());
+                            textDescriptor.setCaretPosition(0);
+                        } else {
+                            textDescriptor.setText("<" + Utils._("Multiple or no phone books selected") + ">");
                         }
-                    }
 
-                    checkMenuEnable();
-                    writeToTextFields(currentPhonebook, selectedItems);
-                    
-                    if (currentPhonebook != null) {
-                        textDescriptor.setText(currentPhonebook.getDescriptor());
-                        textDescriptor.setCaretPosition(0);
-                    } else {
-                        textDescriptor.setText("<" + Utils._("Multiple or no phone books selected") + ">");
+                        oldSelection = paths;
+                    } catch (Exception ex) {
+                        ExceptionDialog.showExceptionDialog(phoneBookTree, "", ex);
                     }
-
-                    oldSelection = paths;
                 } 
             });
             phoneBookTree.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "RemoveEntry");

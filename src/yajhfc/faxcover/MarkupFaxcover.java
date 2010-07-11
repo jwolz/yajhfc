@@ -41,6 +41,7 @@ import yajhfc.Utils;
 import yajhfc.file.FileConverter.ConversionException;
 import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.convrules.EntryToStringRule;
+import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 
 /**
  * @author jonas
@@ -189,6 +190,28 @@ public abstract class MarkupFaxcover extends Faxcover {
             public String getValue(Faxcover arg0, List<ConditionState> conditionStack, String param) {
                 return String.valueOf(arg0.pageCount+1);
             }
+        });
+        availableTags.put("ccnameandfax", new Tag() {
+           @Override
+            public String getValue(Faxcover instance,
+                    List<ConditionState> conditionStack, String param) {
+               if (instance.ccData == null || instance.ccData.length == 0)
+                   return "";
+               
+               StringBuilder res = new StringBuilder();
+               for (PBEntryFieldContainer pbe : instance.ccData) {
+                   if (pbe != null) {
+                       instance.nameRule.applyRule(pbe, res);
+                       res.append(" <");
+                       res.append(pbe.getField(PBEntryField.FaxNumber));
+                       res.append(">; ");
+                   }
+               }
+               if (res.length() > 2)
+                   return res.substring(0, res.length() - 2);
+               else
+                   return "";
+            } 
         });
         
         // Conditionals:

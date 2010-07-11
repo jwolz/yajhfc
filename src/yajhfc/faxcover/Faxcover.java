@@ -29,7 +29,6 @@ import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.text.DateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.EnumMap;
 import java.util.regex.Matcher;
@@ -77,6 +76,10 @@ public abstract class Faxcover {
     
     public PBEntryFieldContainer fromData;
     public PBEntryFieldContainer toData;
+    /**
+     * The recipients also receiving this fax as "carbon copy". May be null.
+     */
+    public PBEntryFieldContainer[] ccData;
     public EntryToStringRule nameRule = NameRule.TITLE_GIVENNAME_NAME_JOBTITLE;
     public EntryToStringRule locationRule = ZIPCodeRule.ZIPCODE_LOCATION;
     public EntryToStringRule companyRule = CompanyRule.DEPARTMENT_COMPANY;
@@ -88,8 +91,6 @@ public abstract class Faxcover {
     protected URL coverTemplate;
    
     public abstract void makeCoverSheet(OutputStream out) throws IOException; 
-    
-    final static byte[] PDF_Signature = "%PDF".getBytes();
     
     /**
      * Estimates the number of pages in the given PostScript or PDF stream and
@@ -122,7 +123,7 @@ public abstract class Faxcover {
                 else
                     pages = nPage;
                 rIn.close();
-            } else if (Arrays.equals(sig, PDF_Signature)) {
+            } else if (sig[0] == '%' && sig[1] == 'P' && sig[2] == 'D' && sig[3] == 'F') {
                 BufferedInputStream bIn = new BufferedInputStream(psFile);
                 byte[] buf = new byte[4000];
                 final byte[] search1 = "/Type".getBytes();

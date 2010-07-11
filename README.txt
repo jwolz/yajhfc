@@ -68,6 +68,17 @@ CHANGES
 
 0.4.4:
 - Improved MAC OS support (mostly cosmetic changes)
+- Support to enter custom file converters
+- Access to advanced settings over UI
+- Support to print phone books
+- Improved printing of faxes
+- Support for @CCNameAndFax@ Tag in HTML cover pages
+- Resend fax for multiple recipients
+- Log console to view the log live
+- Separation of view and send format for faxes
+- User-editable list of modems
+- new "override-setting" command line parameter
+- Several bug fixes
 
 0.4.3:
 - Chinese translation added

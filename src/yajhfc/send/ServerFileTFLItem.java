@@ -73,6 +73,11 @@ public class ServerFileTFLItem extends HylaTFLItem {
     public boolean isMutable() {
         return false;
     }
+    
+    @Override
+    public boolean isDeletable() {
+        return true;
+    }
 
     @Override
     public void setText(String newText) {
