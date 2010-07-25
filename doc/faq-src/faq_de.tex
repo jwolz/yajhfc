@@ -163,6 +163,7 @@ Beginnend mit Version 0.4.0, sind die folgenden zusätzlichen Felder verfügbar (b
 \ttfamily @@FromEMail@@ & Die E-Mail-Adresse des Senders\\\hline
 \ttfamily @@FromWebSite@@ & Die Website des Senders\\\hline
 \ttfamily @@TotalPageCount@@ & Die Seitenanzahl \textit{inklusive} des Deckblatts \\\hline
+\ttfamily @@CCNameAndFax@@ & Die Namen und Faxnummern der anderen Empfänger dieses Faxes im Format \textit{Name1 <Faxnummer1>; Name2 <Faxnummer2>; ...} (nur Versionen > 0.4.4)\\\hline
 \end{tabular}
 \end{center}
 
@@ -215,60 +216,76 @@ für den Effekt des \verb#?#-Wildcards \verb#.#.
 
 \subsection{Welche Kommandozeilenargumente werden von YajHFC unterstützt?}
 
+Ausgabe von \verb#java -jar yajhfc.jar --help# (Version 0.4.4):
 \begin{verbatim}
 Aufruf:
 java -jar yajhfc.jar [OPTIONEN]... [ZU SENDENDE DATEIEN]...
 
 Argumentbeschreibung:
--r, --recipient=EMPFÄNGER    Gibt einen Faxempfänger an. Sie können entweder
-                             eine Faxnummer oder detaillierte
-                             Deckblattinformationen angeben (siehe die FAQ für
-                             das Format im letzteren Fall). Sie können
-                             --recipient mehrmals angeben für mehrere
-                             Empfänger.
--C, --use-cover[=yes|no]     Benutze ein Deckblatt beim Versendes des Faxes.
--s, --subject=BETREFF        Der Betreff des Faxes für das Deckblatt.
-    --comment=KOMMENTAR      Der Kommentar für das Deckblatt.
-    --stdin                  Lese die zu sendende Datei von der
-                             Standardeingabe.
--A, --admin                  Starte im Admin-Modus.
--d, --debug                  Gib einige Debugging-Informationen aus.
--l, --logfile=LOGDATEI       Die Logdatei, in die die Debugginginformationen
-                             ausgeben (falls nicht angegeben, benutze die
-                             Standardausgabe).
-    --appendlogfile=LOGDATEI Hänge die Debugginginformationen an die angegebene
-                             Logdatei an.
-    --background             Falls noch keine Instanz von YajHFC läuft,
-                             erstelle eine neue Instanz und beende diese
-                             Instanz (nachdem das zu sendende Fax abgeschickt
-                             wurde)
-    --noclose                YajHFC nach Absenden des Faxes nicht schließen.
-    --no-wait                Warte nicht darauf, dass der Sendedialog
-                             geschlossen wird. Wenn YajHFC mehrfach aufgerufen
-                             wird, bevor der Benutzer den Sendedialog schließt,
-                             werden die angegebenen Dokumente zur Liste der
-                             Dateien hinzugefügt. Diese Option impliziert
-                             --background.
--T, --showtab=0|R|1|S|2|T    Setzt den beim Start anzuzeigenden Tab. Geben Sie
-                             0 oder R für den Tab "Empfangen", 1 oder S für
-                             "Gesendet" oder 2 oder T für "Sendend" an.
-    --windowstate=N|M|I|T    Setzt den anfänglichen Status des Hauptfensters
-                             auf _N_ormal, _M_aximiert, als _I_con (minimiert)
-                             oder minimiert in die System-_T_ray.
-    --loadplugin=JARDATEI    Gibt die JAR-Datei eines zu ladenden
-                             YajHFC-Plugins an.
-    --loaddriver=JARDATEI    Gibt die JAR-Datei eines zu ladenden JDBC-Treibers
-                             an.
-    --no-plugins             Deaktiviert das Laden von Plugins aus der
-                             plugin.lst-Datei.
-    --no-gui                 Sende ein Fax mit einer nur minimalen graphischen
-                             Oberfläche.
-    --no-check               Unterdrückt die Prüfung der Javaversion beim
-                             Start.
--c, --configdir=VERZEICHNIS  Setzt ein anstatt von ~/.yajhfc zu verwendendes
-                             Konfigurationsverzeichnis.
--h, --help[=SPALTEN]         Zeigt diesen Text (ggf. formatiert für SPALTEN
-                             Spalten) an.
+-r, --recipient=EMPFÄNGER             Gibt einen Faxempfänger an. Sie können
+                                      entweder eine Faxnummer oder detaillierte
+                                      Deckblattinformationen angeben (siehe die
+                                      FAQ für das Format im letzteren Fall).
+                                      Sie können --recipient mehrmals angeben
+                                      für mehrere Empfänger.
+-C, --use-cover[=yes|no]              Benutze ein Deckblatt beim Versendes des
+                                      Faxes.
+-s, --subject=BETREFF                 Der Betreff des Faxes für das Deckblatt.
+    --comment=KOMMENTAR               Der Kommentar für das Deckblatt.
+-M, --modem=MODEM                     Setzt das zum Senden des Faxes zu
+                                      verwendende Modem. Geben Sie entweder den
+                                      Namen des Modems (z.B. ttyS0) an oder
+                                      "any", um ein beliebiges Modem zu
+                                      verwenden.
+    --stdin                           Lese die zu sendende Datei von der
+                                      Standardeingabe.
+-A, --admin                           Starte im Admin-Modus.
+-d, --debug                           Gib einige Debugging-Informationen aus.
+-l, --logfile=LOGDATEI                Die Logdatei, in die die
+                                      Debugginginformationen ausgeben (falls
+                                      nicht angegeben, benutze die
+                                      Standardausgabe).
+    --appendlogfile=LOGDATEI          Hänge die Debugginginformationen an die
+                                      angegebene Logdatei an.
+    --background                      Falls noch keine Instanz von YajHFC
+                                      läuft, erstelle eine neue Instanz und
+                                      beende diese Instanz (nachdem das zu
+                                      sendende Fax abgeschickt wurde)
+    --noclose                         YajHFC nach Absenden des Faxes nicht
+                                      schließen.
+    --no-wait                         Warte nicht darauf, dass der Sendedialog
+                                      geschlossen wird. Wenn YajHFC mehrfach
+                                      aufgerufen wird, bevor der Benutzer den
+                                      Sendedialog schließt, werden die
+                                      angegebenen Dokumente zur Liste der
+                                      Dateien hinzugefügt. Diese Option
+                                      impliziert --background.
+-T, --showtab=0|R|1|S|2|T             Setzt den beim Start anzuzeigenden Tab.
+                                      Geben Sie 0 oder R für den Tab
+                                      "Empfangen", 1 oder S für "Gesendet" oder
+                                      2 oder T für "Sendend" an.
+    --windowstate=N|M|I|T             Setzt den anfänglichen Status des
+                                      Hauptfensters auf _N_ormal, _M_aximiert,
+                                      als _I_con (minimiert) oder minimiert in
+                                      die System-_T_ray.
+    --loadplugin=JARDATEI             Gibt die JAR-Datei eines zu ladenden
+                                      YajHFC-Plugins an.
+    --loaddriver=JARDATEI             Gibt die JAR-Datei eines zu ladenden
+                                      JDBC-Treibers an.
+    --override-setting=SCHLÜSSEL=WERT Überschreibt den Wert der angegebenen
+                                      Einstellung für diese Sitzung. Die
+                                      überschriebene Einstellung wird nicht
+                                      gespeichert.
+    --no-plugins                      Deaktiviert das Laden von Plugins aus der
+                                      plugin.lst-Datei.
+    --no-gui                          Sende ein Fax mit einer nur minimalen
+                                      graphischen Oberfläche.
+    --no-check                        Unterdrückt die Prüfung der Javaversion
+                                      beim Start.
+-c, --configdir=VERZEICHNIS           Setzt ein anstatt von ~/.yajhfc zu
+                                      verwendendes Konfigurationsverzeichnis.
+-h, --help[=SPALTEN]                  Zeigt diesen Text (ggf. formatiert für
+                                      SPALTEN Spalten) an.
 \end{verbatim}
 
 

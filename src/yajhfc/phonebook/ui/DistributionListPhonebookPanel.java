@@ -223,6 +223,9 @@ public class DistributionListPhonebookPanel extends PhonebookPanel {
      */
     @Override
     public void readFromTextFields(PhoneBookEntry pb, boolean updateOnly) {
+        if (pb.getParent().isReadOnly())
+            return;
+        
         if (pb != listToEdit) {
             log.warning("pb != listToEdit");
         }

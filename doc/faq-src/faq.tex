@@ -153,6 +153,7 @@ Starting with version 0.4.0 the following additional fields are available (note 
 \ttfamily @@FromEMail@@ & The sender's  e-mail address\\\hline
 \ttfamily @@FromWebSite@@ & The sender's website\\\hline
 \ttfamily @@TotalPageCount@@ & The number of pages \textit{including} the cover page \\\hline
+\ttfamily @@CCNameAndFax@@ & The names and fax numbers of the other recipients of this fax in the format \textit{Name1 <faxnumber1>; Name2 <faxnumber2>; ...} (versions > 0.4.4 only)\\\hline
 \end{tabular}
 \end{center}
 
@@ -203,52 +204,64 @@ for the effect of the wildcard \verb#?# use \verb#.#.
 
 \subsection{Which command line arguments does YajHFC understand?}
 
-Output from \verb#java -jar yajhfc.jar --help# (version 0.4.2):
+Output from \verb#java -jar yajhfc.jar --help# (version 0.4.4):
 \begin{verbatim}
 Usage:
 java -jar yajhfc.jar [OPTIONS]... [FILES TO SEND]...
 
 Argument description:
--r, --recipient=RECIPIENT   Specifies a recipient to send the fax to. You may
-                            specify either a fax number or detailed cover page
-                            information (see the FAQ for the format in the
-                            latter case). You may specify --recipient multiple
-                            times for multiple recipients.
--C, --use-cover[=yes|no]    Use a cover page for sending a fax.
--s, --subject=SUBJECT       The fax subject for the cover page.
-    --comment=COMMENT       The comment for the cover page.
-    --stdin                 Read the file to send from standard input.
--A, --admin                 Start up in admin mode.
--d, --debug                 Output some debugging information.
--l, --logfile=LOGFILE       The log file to log debug information to (if not
-                            specified, use stdout).
-    --appendlogfile=LOGFILE Append debug information to the given log file.
-    --background            If there is no already running instance of YajHFC,
-                            launch a new instance and terminate this instance
-                            (after submitting the fax to send).
-    --noclose               Do not close YajHFC after submitting the fax.
-    --no-wait               Do not wait for the send window to be closed by the
-                            user. If YajHFC is invoked multiple times before
-                            the user closes the send window, the specified
-                            documents are added to the list of files there.
-                            This option implies --background.
--T, --showtab=0|R|1|S|2|T   Sets the tab to display on startup. Specify 0 or R
-                            for the "Received", 1 or S for the "Sent" or 2 or T
-                            for the "Transmitting" tab.
-    --windowstate=N|M|I|T   Sets the initial window state of the main window to
-                            _N_ormal, _M_aximized, _I_conified (minimized) or
-                            minimized to _T_ray.
-    --loadplugin=JARFILE    Specifies a jar file of a YajHFC plugin to load.
-    --loaddriver=JARFILE    Specifies the location of a JDBC driver JAR file to
-                            load.
-    --no-plugins            Disables loading plugins from the plugin.lst file.
-    --no-gui                Sends a fax with only a minimal GUI.
-    --no-check              Suppresses the check for the Java version at
-                            startup.
--c, --configdir=DIRECTORY   Sets the configuration directory to use instead of
-                            ~/.yajhfc
--h, --help[=COLUMNS]        Displays this text (formatted for COLUMNS columns
-                            if given).
+-r, --recipient=RECIPIENT        Specifies a recipient to send the fax to. You
+                                 may specify either a fax number or detailed
+                                 cover page information (see the FAQ for the
+                                 format in the latter case). You may specify
+                                 --recipient multiple times for multiple
+                                 recipients.
+-C, --use-cover[=yes|no]         Use a cover page for sending a fax.
+-s, --subject=SUBJECT            The fax subject for the cover page.
+    --comment=COMMENT            The comment for the cover page.
+-M, --modem=MODEM                Sets the modem to send the fax. Specify either
+                                 the modem's name (e.g. ttyS0) or "any" to use
+                                 any modem.
+    --stdin                      Read the file to send from standard input.
+-A, --admin                      Start up in admin mode.
+-d, --debug                      Output some debugging information.
+-l, --logfile=LOGFILE            The log file to log debug information to (if
+                                 not specified, use stdout).
+    --appendlogfile=LOGFILE      Append debug information to the given log
+                                 file.
+    --background                 If there is no already running instance of
+                                 YajHFC, launch a new instance and terminate
+                                 this instance (after submitting the fax to
+                                 send).
+    --noclose                    Do not close YajHFC after submitting the fax.
+    --no-wait                    Do not wait for the send window to be closed
+                                 by the user. If YajHFC is invoked multiple
+                                 times before the user closes the send window,
+                                 the specified documents are added to the list
+                                 of files there. This option implies
+                                 --background.
+-T, --showtab=0|R|1|S|2|T        Sets the tab to display on startup. Specify 0
+                                 or R for the "Received", 1 or S for the "Sent"
+                                 or 2 or T for the "Transmitting" tab.
+    --windowstate=N|M|I|T        Sets the initial window state of the main
+                                 window to _N_ormal, _M_aximized, _I_conified
+                                 (minimized) or minimized to _T_ray.
+    --loadplugin=JARFILE         Specifies a jar file of a YajHFC plugin to
+                                 load.
+    --loaddriver=JARFILE         Specifies the location of a JDBC driver JAR
+                                 file to load.
+    --override-setting=KEY=VALUE Overrides the value of the specified setting
+                                 for this session. The overridden setting is
+                                 not saved.
+    --no-plugins                 Disables loading plugins from the plugin.lst
+                                 file.
+    --no-gui                     Sends a fax with only a minimal GUI.
+    --no-check                   Suppresses the check for the Java version at
+                                 startup.
+-c, --configdir=DIRECTORY        Sets the configuration directory to use
+                                 instead of ~/.yajhfc
+-h, --help[=COLUMNS]             Displays this text (formatted for COLUMNS
+                                 columns if given).
 \end{verbatim}
 
 \subsection{How can I give cover page information using the \texttt{-{-}recipient} switch?}

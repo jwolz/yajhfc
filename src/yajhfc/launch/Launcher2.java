@@ -354,6 +354,8 @@ public class Launcher2 {
             launchArgs.add(System.getProperty("java.home") + File.separatorChar + "bin" + File.separatorChar + "java");
             launchArgs.add("-classpath");
             launchArgs.add(System.getProperty("java.class.path"));
+            // Pass the user.home property to the new instance
+            launchArgs.add("-Duser.home=" + System.getProperty("user.home"));
             launchArgs.add(Launcher2.class.getCanonicalName());
 
 
