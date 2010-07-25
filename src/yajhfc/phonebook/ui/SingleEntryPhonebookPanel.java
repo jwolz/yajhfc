@@ -139,14 +139,15 @@ public class SingleEntryPhonebookPanel extends PhonebookPanel {
     }
     
     public void readFromTextFields(PhoneBookEntry pb, boolean updateOnly) {
-        if (pb == null)
+        if (pb == null || pb.getParent().isReadOnly())
            return; 
         
         for (Map.Entry<PBEntryField, JTextComponent> entry : entryFields.entrySet()) {
-            JTextComponent comp = entry.getValue();
             PBEntryField field = entry.getKey();
-            
-            pb.setField(field, comp.getText());
+            if (pb.getParent().isFieldAvailable(field)) {
+                JTextComponent comp = entry.getValue();            
+                pb.setField(field, comp.getText());
+            }
         }
 
         if (updateOnly)
