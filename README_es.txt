@@ -1,4 +1,4 @@
-LÉAME (README) de YajHFC 0.4.3
+LÉAME (README) de YajHFC 0.4.4
 ==============================
 
 ACERCA DE
@@ -65,6 +65,20 @@ de Java (más avanzado que los programas "Hola mundo") utilizando la IDE Eclipse
 
 CAMBIOS
 -------
+
+0.4.4:
+- Soporte mejorado para MacOS (cambios de diseño, principalmente)
+- Soporte para introducir conversores de archivo personalizados
+- Acceso a los ajustes avanzados desde la interfaz gráfica
+- Soporte para la impresión de agendas telefónicas
+- Impresión de faxes mejorada
+- Soporte para la etiqueta @CCNameAndFax@ en las páginas de portada HTML
+- Reenvío de faxes a múltiples destinatarios
+- Consola de registros para ver los eventos en tiempo real
+- Separación del formato utilizado para la visualización y el envío de faxes
+- Lista de módems editable por el usuario
+- Nuevo parámetro en línea de comandos ("override-setting")
+- Corrección de varios errores
 
 0.4.3:
 - Nueva característica "Ver registro" para los faxes enviados

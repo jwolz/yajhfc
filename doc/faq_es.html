@@ -413,7 +413,7 @@ Desde la versión 0.4.0 se encuentran disponibles los siguientes campos adiciona
 <TD ALIGN="LEFT" VALIGN="TOP" WIDTH=350>Número de páginas <I>incluyendo</I> la página de portada</TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT>@@CCNameAndFax@@ </TT></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=350>The names and fax numbers of the other recipients of this fax in the format <I>Name1 &lt;faxnumber1&gt;; Name2 &lt;faxnumber2&gt;; ...</I> (versions &gt; 0.4.4 only)</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=350>Nombres y números de fax de los destinatarios adicionales de este fax en formato <I>Nombre1 &lt;numdefax1&gt;; Nombre2 &lt;numdefax2&gt;; ...</I> (sólo para versiones &gt; 0.4.4)</TD>
 </TR>
 </TABLE>
 </DIV>
@@ -526,6 +526,10 @@ Descripción de los argumentos:
 -s, --subject=ASUNTO                    El asunto del fax para la página de
                                         portada.
     --comment=COMENTARIO                Comentario para la página de portada.
+-M, --modem=MÓDEM                       Establece el módem a utilizar para
+                                        enviar el fax. Especificar el nombre
+                                        del módem (p. ej. ttyS0) o "any" para
+                                        usar cualquier módem.
     --stdin                             Leer el archivo para enviar desde una
                                         entrada estándar.
 -A, --admin                             Iniciar en modo administrador.
@@ -564,12 +568,15 @@ Descripción de los argumentos:
     --loaddriver=ARCHIVO JAR            Especifica la ubicación de un archivo
                                         jar para el controlador JDBC para
                                         cargar.
+    --override-setting=CLAVE=VALOR      Sustituye el valor del ajuste
+                                        especificado para esta sesión. El
+                                        ajuste sustituido no se guardará.
     --no-plugins                        Desactiva la carga de los complementos
                                         desde el archivo plugins.lst.
     --no-gui                            Envía un fax utilizando una interfaz de
                                         usuario mínima.
-    --no-check                          Elimina la comprobación de la versión
-                                        de Java al inicio.
+    --no-check                          Omite la comprobación de la versión de
+                                        Java al inicio.
 -c, --configdir=DIRECTORIO              Define la configuración del directorio
                                         para utilizar en lugar de ~/.yajhfc
 -h, --help[=COLUMNAS]                   Muestra este texto.
@@ -962,7 +969,7 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>-no_subdir -split 0 -html_version 3.2,unicode -no_navigation -prefix faq_es faq_es.tex</TT>
 <P>
-The translation was initiated by Jonas Wolz on 2010-07-25
+The translation was initiated by Jonas Wolz on 2010-07-27
 <BR><HR><H4>Notas al pie</H4>
 <DL>
 <DT><A NAME="foot206">...\{user.home\}</A><A
@@ -975,7 +982,7 @@ The translation was initiated by Jonas Wolz on 2010-07-25
 <BR><HR>
 <ADDRESS>
 Jonas Wolz
-2010-07-25
+2010-07-27
 </ADDRESS>
 </BODY>
 </HTML>

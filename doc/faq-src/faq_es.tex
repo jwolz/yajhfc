@@ -153,7 +153,7 @@ Desde la versión 0.4.0 se encuentran disponibles los siguientes campos adiciona
 \ttfamily @@FromEMail@@ & Dirección de correo electrónico del remitente\\\hline
 \ttfamily @@FromWebSite@@ & Página web del remitente\\\hline
 \ttfamily @@TotalPageCount@@ & Número de páginas \textit{incluyendo} la página de portada \\\hline
-\ttfamily @@CCNameAndFax@@ & The names and fax numbers of the other recipients of this fax in the format \textit{Name1 <faxnumber1>; Name2 <faxnumber2>; ...} (versions > 0.4.4 only)\\\hline
+\ttfamily @@CCNameAndFax@@ & Nombres y números de fax de los destinatarios adicionales de este fax en formato \textit{Nombre1 <numdefax1>; Nombre2 <numdefax2>; ...} (sólo para versiones > 0.4.4)\\\hline
 \end{tabular}
 \end{center}
 
@@ -222,6 +222,10 @@ Descripción de los argumentos:
 -s, --subject=ASUNTO                    El asunto del fax para la página de
                                         portada.
     --comment=COMENTARIO                Comentario para la página de portada.
+-M, --modem=MÓDEM                       Establece el módem a utilizar para
+                                        enviar el fax. Especificar el nombre
+                                        del módem (p. ej. ttyS0) o "any" para
+                                        usar cualquier módem.
     --stdin                             Leer el archivo para enviar desde una
                                         entrada estándar.
 -A, --admin                             Iniciar en modo administrador.
@@ -260,12 +264,15 @@ Descripción de los argumentos:
     --loaddriver=ARCHIVO JAR            Especifica la ubicación de un archivo
                                         jar para el controlador JDBC para
                                         cargar.
+    --override-setting=CLAVE=VALOR      Sustituye el valor del ajuste
+                                        especificado para esta sesión. El
+                                        ajuste sustituido no se guardará.
     --no-plugins                        Desactiva la carga de los complementos
                                         desde el archivo plugins.lst.
     --no-gui                            Envía un fax utilizando una interfaz de
                                         usuario mínima.
-    --no-check                          Elimina la comprobación de la versión
-                                        de Java al inicio.
+    --no-check                          Omite la comprobación de la versión de
+                                        Java al inicio.
 -c, --configdir=DIRECTORIO              Define la configuración del directorio
                                         para utilizar en lugar de ~/.yajhfc
 -h, --help[=COLUMNAS]                   Muestra este texto.
