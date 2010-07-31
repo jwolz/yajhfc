@@ -1,4 +1,4 @@
-LEGGIMI per YajHFC 0.4.3
+LEGGIMI per YajHFC 0.4.4
 ========================
 
 INFORMAZIONI
@@ -65,7 +65,22 @@ YajHFC originariamente era stato scritto come primo progetto Java più complesso
 MODIFICHE
 ---------
 
+0.4.4:
+- Migliorato il supporto per Mac OS (principalmente modifiche estetiche)
+- Supporto per l'utilizzo di convertitori di file personalizzati
+- Accesso a impostazioni avanzate attraverso l'interfaccia grafica
+- Supporto per la stampa delle rubriche
+- Migliorata la stampa dei fax
+- Supporto per il tag @CCNameAndFax@ nelle copertine HTML
+- Reinvio dei fax a destinatari multipli
+- Log console per visualizzare il log in tempo reale
+- Separazione del formato per la visualizzazione e invio dei fax
+- Lista dei modem modificabile dall'utente
+- Nuovo parametro di linea di comando "override-setting"
+- Correzioni varie
+
 0.4.3:
+- Aggiunta la traduzione cinese
 - Funzionalità "Visualizza Log" per i fax inviati
 - I messaggi nell'area di notifica possono essere disabilitati
 - Filtri per gli elementi della rubrica

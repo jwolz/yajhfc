@@ -156,7 +156,7 @@ A partire dalla versione 0.4.0 sono disponibili i seguenti campi addizionali (no
 \ttfamily @@FromEMail@@ & Indirizzo e-mail del mittente\\\hline
 \ttfamily @@FromWebSite@@ & Sito Web del mittente\\\hline
 \ttfamily @@TotalPageCount@@ & Numero di pagine \textit{inclusa} la copertina \\\hline
-\ttfamily @@CCNameAndFax@@ & The names and fax numbers of the other recipients of this fax in the format \textit{Name1 <faxnumber1>; Name2 <faxnumber2>; ...} (versions > 0.4.4 only)\\\hline
+\ttfamily @@CCNameAndFax@@ & Nomi e numeri fax degli altri destinatari del fax nel formato \textit{Nome1 <numerofax1>; Nome2 <numerofax2>; ...} (solo per versioni > 0.4.4)\\\hline
 \end{tabular}
 \end{center}
 
@@ -207,60 +207,75 @@ per l'effetto della wildcard \verb#?# usa \verb#.#.
 
 \subsection{Quali parametri da riga di comando sono accettati da YajHFC?}
 
-Output di \verb#java -jar yajhfc.jar --help# (versione 0.4.2):
+Output di \verb#java -jar yajhfc.jar --help# (versione 0.4.4):
 \begin{verbatim}
 Sintassi:
 java -jar yajhfc.jar [OPZIONI]... [FILE DA INVIARE]...
 
 Descrizione parametri:
--r, --recipient=DESTINATARIO    Specifica un destinatario a cui inviare il fax.
-                                Si può specificare un numero fax o informazioni
-                                dettagliate per la copertina (vedere la FAQ per
-                                il formato nel secondo caso). Si può 
-                                specificare --recipient più volte per 
-                                destinatari multipli. 
--C, --use-cover[=yes|no]        Usa una copertina per l'invio fax. 
--s, --subject=OGGETTO           Oggetto fax per la copertina. 
-    --comment=COMMENTO          Commento/nota per la copertina. 
-    --stdin                     Legge il file da inviare dallo standard input. 
--A, --admin                     Avvia in modalità amministratore. 
--d, --debug                     Produce informazioni di debug. 
--l, --logfile=FILE_DI_LOG       Il file di log su cui scrivere le informazioni 
-                                di debug (se non specificato, usa standard 
-                                output). 
-    --appendlogfile=FILE_DI_LOG Accoda le informazioni di debug al file di log 
-                                specificato. 
-    --background                Se non esiste già una istanza attiva di YajHFC,
-                                lancia una nuova istanza e quindi la termina 
-                                (dopo aver accodato il fax per l'invio). 
-    --noclose                   Non chiude YajHFC dopo aver accodato il fax. 
-    --no-wait                   Non attende che la finestra di invio fax sia 
-                                chiusa dall'utente. Se YajHFC è invocato più 
-                                volte prima che l'utente chiuda la finestra di 
-                                invio fax, i documenti specificati sono 
-                                aggiunti alla lista file in quella finestra. 
-                                Questa opzione implica l'opzione --background. 
--T, --showtab=0|R|1|S|2|T       Seleziona il tipo di elenco fax da evidenziare 
-                                all'avvio. Specificare 0 o R per "Ricevuti", 1 
-                                o S per "Inviati", 2 o T per "In uscita". 
-    --windowstate=N|M|I|T       Imposta lo stato iniziale della finestra 
-                                principale a _N_ormale, _M_assimizzata, ridotta
-                                a _I_cona (minimizzata) o minimizzata nell'area
-                                di no_T_ifica. 
-    --loadplugin=FILE_JAR       Specifica un file jar di un plugin YajHFC da 
-                                caricare. 
-    --loaddriver=FILE_JAR       Specifica il percorso di un file JAR di un 
-                                driver JDBC da caricare. 
-    --no-plugins                Disabilita il caricamento di plugin dal file 
-                                plugin.lst. 
-    --no-gui                    Invia un fax con solo una GUI (interfaccia 
-                                grafica) minimale. 
-    --no-check                  Sopprime il controllo della versione di Java 
-                                all'avvio. 
--c, --configdir=DIRECTORY       Imposta la directory di configurazione da 
-                                utilizzare al posto di ~/.yajhfc. 
--h, --help[=COLONNE]            Evidenzia questo testo (formattato per un 
-                                numero COLONNE di colonne se impostato). 
+-r, --recipient=DESTINATARIO            Specifica un destinatario a cui inviare
+                                        il fax. Si possono specificare il
+                                        numero fax o informazioni dettagliate
+                                        per la copertina (vedere la FAQ per il
+                                        formato nel secondo caso). Si può
+                                        specificare --recipient più volte per
+                                        destinatari multipli.
+-C, --use-cover[=yes|no]                Usa una copertina per l'invio fax.
+-s, --subject=OGGETTO                   Oggetto fax per la copertina.
+    --comment=COMMENTO                  Commento/nota per la copertina.
+-M, --modem=MODEM                       Imposta il modem da usare per l'invio
+                                        fax. Specificare il nome del modem (es:
+                                        ttyS0) o "any" per usare qualsiasi
+                                        modem.
+    --stdin                             Legge il file da inviare dallo standard
+                                        input.
+-A, --admin                             Avvia in modalità amministratore.
+-d, --debug                             Produce informazioni di debug.
+-l, --logfile=FILE_DI_LOG               Il file di log su cui scrivere le
+                                        informazioni di debug (se non
+                                        specificato, usa standard output).
+    --appendlogfile=FILE_DI_LOG         Accoda le informazioni di debug al file
+                                        di log specificato.
+    --background                        Se non esiste già una istanza attiva di
+                                        YajHFC, lancia una nuova istanza e
+                                        quindi la termina (dopo aver accodato
+                                        il fax per l'invio).
+    --noclose                           Non chiude YajHFC dopo aver accodato il
+                                        fax.
+    --no-wait                           Non attende che la finestra di invio
+                                        fax sia chiusa dall'utente. Se YajHFC è
+                                        invocato più volte prima che l'utente
+                                        chiuda la finestra di invio fax, i
+                                        documenti specificati sono aggiunti
+                                        alla lista file in quella finestra.
+                                        Questa opzione implica l'opzione
+                                        --background.
+-T, --showtab=0|R|1|S|2|T               Seleziona il tipo di elenco fax da
+                                        evidenziare all'avvio. Specificare 0 o
+                                        R per "Ricevuti", 1 o S per "Inviati",
+                                        2 o T per "In uscita".
+    --windowstate=N|M|I|T               Imposta lo stato iniziale della
+                                        finestra principale a _N_ormale,
+                                        _M_assimizzata, ridotta a _I_cona
+                                        (minimizzata) o minimizzata nell'area
+                                        di no_T_ifica.
+    --loadplugin=FILE_JAR               Specifica un file jar di un plugin
+                                        YajHFC da caricare.
+    --loaddriver=FILE_JAR               Specifica il percorso di un file JAR di
+                                        un driver JDBC da caricare.
+    --override-setting=PARAMETRO=VALORE Forza il valore del parametro
+                                        selezionato per questa sessione. Il
+                                        parametro forzato non viene salvato.
+    --no-plugins                        Disabilita il caricamento di plugin dal
+                                        file plugin.lst.
+    --no-gui                            Invia un fax usando una interfaccia
+                                        grafica semplificata.
+    --no-check                          Sopprime il controllo della versione di
+                                        Java all'avvio.
+-c, --configdir=DIRECTORY               Imposta la directory di configurazione
+                                        da utilizzare al posto di ~/.yajhfc.
+-h, --help[=COLONNE]                    Mostra questo testo (usando le COLONNE
+                                        specificate).
 \end{verbatim}
 
 \subsection{Come posso dare le informazioni per la copertina utilizzando il parametro \texttt{-{-}recipient} ?}
