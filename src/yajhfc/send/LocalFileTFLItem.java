@@ -126,7 +126,8 @@ public class LocalFileTFLItem extends HylaTFLItem {
         if (inStream == null) {
             serverName = null;
         } else { 
-            hyfc.form(preparedFile.format.getHylaFAXFormatString());
+            if (Utils.getFaxOptions().sendFORMCommand)
+                hyfc.form(preparedFile.format.getHylaFAXFormatString());
             serverName = hyfc.putTemporary(inStream);
         }
     }

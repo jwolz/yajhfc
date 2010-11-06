@@ -586,6 +586,10 @@ public class FaxOptions extends AbstractFaxOptions {
      */
     public Rectangle logViewerBounds =  null;
    
+    /**
+     * Whether to use the FORM HylaFAX command or not.
+     */
+    public boolean sendFORMCommand = true;
     
     /**
      * Custom file converters.

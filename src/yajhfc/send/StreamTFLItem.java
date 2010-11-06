@@ -60,7 +60,8 @@ public class StreamTFLItem extends HylaTFLItem {
         if (inStream == null) {
             serverName = null;
         } else { 
-            hyfc.form(tempFile.format.getHylaFAXFormatString());
+            if (Utils.getFaxOptions().sendFORMCommand)
+                hyfc.form(tempFile.format.getHylaFAXFormatString());
             serverName = hyfc.putTemporary(inStream);
         }
     }
