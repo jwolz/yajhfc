@@ -123,7 +123,8 @@ public class SendFileManager {
             toUpdate.updateNote(Utils._("Uploading document"));
             FileInputStream fi = new FileInputStream(ffs.get(0).file);
             hyfc.type(HylaFAXClient.TYPE_IMAGE);
-            hyfc.form(ffs.get(0).format.getHylaFAXFormatString());
+            if (Utils.getFaxOptions().sendFORMCommand)
+                hyfc.form(ffs.get(0).format.getHylaFAXFormatString());
             String serverName = hyfc.putTemporary(fi);
             fi.close();
             
@@ -138,7 +139,8 @@ public class SendFileManager {
             toUpdate.updateNote((MessageFormat.format(Utils._("Uploading {0}"), targetFormat)));
             FileInputStream fi = new FileInputStream(pdfFile);
             hyfc.type(HylaFAXClient.TYPE_IMAGE);
-            hyfc.form(targetFormat.getFileFormat().getHylaFAXFormatString());
+            if (Utils.getFaxOptions().sendFORMCommand)
+                hyfc.form(targetFormat.getFileFormat().getHylaFAXFormatString());
             String serverName = hyfc.putTemporary(fi);
             fi.close();
             pdfFile.delete();
@@ -155,7 +157,8 @@ public class SendFileManager {
             if (coverFile != null) {
                 hyfc.type(HylaFAXClient.TYPE_IMAGE);
                 FileInputStream fi = new FileInputStream(coverFile);
-                hyfc.form(FileFormat.PostScript.getHylaFAXFormatString());
+                if (Utils.getFaxOptions().sendFORMCommand)
+                    hyfc.form(FileFormat.PostScript.getHylaFAXFormatString());
                 coverName = hyfc.putTemporary(fi);
                 fi.close();
 
