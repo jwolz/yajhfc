@@ -60,6 +60,7 @@ public class HelpPrinter {
      * @param out
      * @throws IOException 
      */
+    @SuppressWarnings("fallthrough")
     public static void printHelp(PrintWriter out, LongOpt[] options, String cols) {
         int screenWidth = 80;
         if (cols != null) {

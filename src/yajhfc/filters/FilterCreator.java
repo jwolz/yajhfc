@@ -24,9 +24,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import yajhfc.DateKind;
-import yajhfc.FmtItem;
-import yajhfc.IconMap;
 import yajhfc.Utils;
+import yajhfc.model.FmtItem;
+import yajhfc.model.IconMap;
 
 public class FilterCreator {
     private static final Logger log = Logger.getLogger(FilterCreator.class.getName());

@@ -31,8 +31,10 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimerTask;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -151,7 +153,7 @@ public class JDBCPersistentReadState extends PersistentReadState {
                         Map<String,Boolean> newReadStateMap = loadReadState();
                         Map<String,Boolean> oldReadStateMap = getReadStateMap();
                         
-                        List<String> changedFaxes = new ArrayList<String>();
+                        Set<String> changedFaxes = new HashSet<String>();
                         for (Map.Entry<String, Boolean> newEntry : newReadStateMap.entrySet()) {
                             Boolean oldRead = oldReadStateMap.get(newEntry.getKey());
                             if (oldRead == null || oldRead != newEntry.getValue()) {
@@ -297,7 +299,7 @@ public class JDBCPersistentReadState extends PersistentReadState {
         listeners.add(listener);
     }
 
-    protected void fireReadStateChanged(Collection<String> changedFaxes) {
+    protected void fireReadStateChanged(Set<String> changedFaxes) {
         log.fine("fireReadStateChanged: " + changedFaxes);
         for (ReadStateChangedListener rscl : listeners) {
             rscl.readStateChanged(this, changedFaxes);

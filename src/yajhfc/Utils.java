@@ -65,7 +65,7 @@ import javax.swing.filechooser.FileFilter;
 
 import yajhfc.launch.Launcher2;
 import yajhfc.macosx.MacOSXSupport;
-import yajhfc.model.archive.QueueFileDateFormat;
+import yajhfc.model.jobq.QueueFileDateFormat;
 import yajhfc.plugin.PluginManager;
 import yajhfc.plugin.PluginUI;
 import yajhfc.util.AWTExceptionLogger;
@@ -120,7 +120,7 @@ public final class Utils {
     /**
      * Returns an executor service which may be used for various non time critical asynchronous computations
      */
-    public static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+    public static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(2);
     
     /**
      * True if we run under the Windows platform

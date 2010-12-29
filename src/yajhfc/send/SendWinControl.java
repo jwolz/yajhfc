@@ -21,7 +21,7 @@ package yajhfc.send;
 import java.awt.Window;
 import java.util.Collection;
 
-import yajhfc.HylaServerFile;
+import yajhfc.model.servconn.FaxDocument;
 import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 
 /**
@@ -55,7 +55,7 @@ public interface SendWinControl {
      * Adds a file on the fax server to the list of files to send
      * @param serverFile
      */
-    public void addServerFile(HylaServerFile serverFile);
+    public void addServerFile(FaxDocument serverFile);
 //    /**
 //     * Adds the specified recipient to list of recipients
 //     * @param recipient

@@ -36,6 +36,8 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import yajhfc.model.FmtItemList;
+
 /**
  * Class useable for options.
  * All public non-static fields are loaded/saved by loadFromProperties/saveToProperties.

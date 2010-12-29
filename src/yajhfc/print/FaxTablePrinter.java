@@ -44,14 +44,13 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import yajhfc.FaxOptions;
-import yajhfc.FmtItem;
-import yajhfc.IconMap;
-import yajhfc.TableType;
 import yajhfc.Utils;
-import yajhfc.model.MyTableModel;
-import yajhfc.model.RecvYajJob;
-import yajhfc.model.TooltipJTable;
-import yajhfc.model.YajJob;
+import yajhfc.model.FmtItem;
+import yajhfc.model.IconMap;
+import yajhfc.model.TableType;
+import yajhfc.model.servconn.FaxJob;
+import yajhfc.model.table.FaxListTableModel;
+import yajhfc.model.ui.TooltipJTable;
 import yajhfc.print.tableprint.Alignment;
 import yajhfc.print.tableprint.DefaultCellFormatModel;
 import yajhfc.print.tableprint.IconMapCellRenderer;
@@ -141,7 +140,7 @@ public class FaxTablePrinter extends JDialog {
 //          selTable.print(PrintMode.FIT_WIDTH, header, footer);
           FaxOptions myopts = Utils.getFaxOptions();
           TableModel model = selTable.getModel();
-          MyTableModel<? extends FmtItem> realModel = selTable.getRealModel();
+          FaxListTableModel<? extends FmtItem> realModel = selTable.getRealModel();
           boolean showUnreadOptions = realModel.getTableType() == TableType.RECEIVED;
           FaxTablePrinter ftpDlg = new FaxTablePrinter(owner, selTable, caption, showUnreadOptions);
           ftpDlg.setVisible(true);
@@ -154,7 +153,7 @@ public class FaxTablePrinter extends JDialog {
           if (myopts.faxprintMarkErrors || (showUnreadOptions && myopts.faxprintMarkUnread)) {
         	  Color errorBackground = null;
         	  if (myopts.faxprintMarkErrors) {
-        		  errorBackground = realModel.errorColor;
+        		  errorBackground = realModel.getErrorColor();
         	  }
         	  Font unreadFont = null;
         	  if (showUnreadOptions && myopts.faxprintMarkUnread) {
@@ -172,7 +171,7 @@ public class FaxTablePrinter extends JDialog {
           }
           for (int i=0; i<selTable.getColumnCount(); i++) {
         	  int realCol = selTable.getColumnModel().getColumn(i).getModelIndex();
-    		  FmtItem fi = realModel.columns.get(realCol);
+    		  FmtItem fi = realModel.getColumns().get(realCol);
     		  if (fi.getDataType() == Date.class) {
     			  tp.getColumnLayout().getHeaderLayout()[i].setColumnFormat(fi.getDisplayDateFormat());
     		  }
@@ -200,14 +199,14 @@ public class FaxTablePrinter extends JDialog {
     	protected Font unreadFont;
     	
     	@SuppressWarnings("unchecked")
-		protected YajJob<? extends FmtItem> getJob(TableModel model, int rowIndex) {
-    		MyTableModel<? extends FmtItem> realModel;
+		protected FaxJob<? extends FmtItem> getJob(TableModel model, int rowIndex) {
+    		FaxListTableModel<? extends FmtItem> realModel;
     		if (model instanceof TableSorter) {
     			TableSorter sorter = (TableSorter)model;
-    			realModel = (MyTableModel<? extends FmtItem>)sorter.getTableModel();
+    			realModel = (FaxListTableModel<? extends FmtItem>)sorter.getTableModel();
     			rowIndex = sorter.modelIndex(rowIndex);
-    		} else if (model instanceof MyTableModel) {
-    			realModel = (MyTableModel<? extends FmtItem>)model;
+    		} else if (model instanceof FaxListTableModel) {
+    			realModel = (FaxListTableModel<? extends FmtItem>)model;
     		} else {
     			return null;
     		}
@@ -218,7 +217,7 @@ public class FaxTablePrinter extends JDialog {
     	public Color getCellBackgroundColor(TablePrintColumn col,
     			TableModel model, int rowIndex) {
     		if (errorBackground != null) {
-    			YajJob<? extends FmtItem> job = getJob(model, rowIndex);
+    			FaxJob<? extends FmtItem> job = getJob(model, rowIndex);
     			if (job.isError())
     				return errorBackground;
     		}
@@ -226,15 +225,13 @@ public class FaxTablePrinter extends JDialog {
     	}
     	@Override
     	public Font getCellFont(TablePrintColumn col, TableModel model,
-    			int rowIndex) {
-    		if (unreadFont != null) {
-    			YajJob<? extends FmtItem> job = getJob(model, rowIndex);
-    			if (job instanceof RecvYajJob) {
-    				if (!((RecvYajJob) job).isRead()) {
-    					return unreadFont;
-    				}
-    			}
-    		}
+    	        int rowIndex) {
+    	    if (unreadFont != null) {
+    	        FaxJob<? extends FmtItem> job = getJob(model, rowIndex);
+    	        if (job.isRead()) {
+    	            return unreadFont;
+    	        }
+    	    }
     		return super.getCellFont(col, model, rowIndex);
     	}
     	

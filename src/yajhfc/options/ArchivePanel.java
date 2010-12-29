@@ -35,10 +35,10 @@ import javax.swing.JPanel;
 
 import yajhfc.FaxOptions;
 import yajhfc.FileTextField;
-import yajhfc.FmtItemDescComparator;
-import yajhfc.FmtItemRenderer;
 import yajhfc.Utils;
-import yajhfc.model.archive.QueueFileFormat;
+import yajhfc.model.FmtItemDescComparator;
+import yajhfc.model.jobq.QueueFileFormat;
+import yajhfc.model.ui.FmtItemRenderer;
 import yajhfc.util.ClipboardPopup;
 import yajhfc.util.fmtEditor;
 

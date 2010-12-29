@@ -14,7 +14,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 import yajhfc.FaxNotification;
-import yajhfc.IconMap;
+import yajhfc.model.IconMap;
 import yajhfc.print.StatusDialogPrintable;
 import yajhfc.print.tableprint.Alignment;
 import yajhfc.print.tableprint.IconMapCellRenderer;

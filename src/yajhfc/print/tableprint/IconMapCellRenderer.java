@@ -28,7 +28,7 @@ import java.text.Format;
 
 import javax.swing.ImageIcon;
 
-import yajhfc.IconMap;
+import yajhfc.model.IconMap;
 
 /**
  * @author jonas
