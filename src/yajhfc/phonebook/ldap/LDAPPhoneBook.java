@@ -248,6 +248,7 @@ public class LDAPPhoneBook extends PhoneBook {
         }
     }
     
+    @SuppressWarnings("fallthrough")
     protected void appendStringFilter(StringBuilder appendTo, PBEntryField field, StringFilterOperator operator, String compVal) {
         String mapping = settings.getMappingFor(field);
         if (LDAPSettings.isNoField(mapping)) {

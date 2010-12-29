@@ -28,8 +28,8 @@ import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.table.AbstractTableModel;
 
-import yajhfc.IconMap;
 import yajhfc.Utils;
+import yajhfc.model.IconMap;
 import yajhfc.plugin.PluginManager.PluginInfo;
 
 

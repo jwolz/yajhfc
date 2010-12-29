@@ -35,14 +35,14 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
-import yajhfc.FmtItem;
-import yajhfc.FmtItemRenderer;
 import yajhfc.Utils;
 import yajhfc.filters.Filter;
 import yajhfc.filters.FilterCreator;
 import yajhfc.filters.FilterKey;
 import yajhfc.filters.FilterKeyList;
 import yajhfc.filters.FilterableObject;
+import yajhfc.model.FmtItem;
+import yajhfc.model.ui.FmtItemRenderer;
 import yajhfc.util.ClipboardPopup;
 
 public class FilterPanel<V extends FilterableObject,K extends FilterKey> extends JPanel implements ActionListener {

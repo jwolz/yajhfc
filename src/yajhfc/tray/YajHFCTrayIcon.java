@@ -40,13 +40,13 @@ import javax.swing.Timer;
 
 import yajhfc.FaxOptions;
 import yajhfc.MainWin;
-import yajhfc.RecvFormat;
 import yajhfc.Utils;
 import yajhfc.launch.Launcher2;
-import yajhfc.model.RecvYajJob;
-import yajhfc.model.UnReadMyTableModel;
-import yajhfc.model.UnreadItemEvent;
-import yajhfc.model.UnreadItemListener;
+import yajhfc.model.RecvFormat;
+import yajhfc.model.servconn.FaxJob;
+import yajhfc.model.table.ReadStateFaxListTableModel;
+import yajhfc.model.table.UnreadItemEvent;
+import yajhfc.model.table.UnreadItemListener;
 import yajhfc.util.ExcDialogAbstractAction;
 
 /**
@@ -54,7 +54,7 @@ import yajhfc.util.ExcDialogAbstractAction;
  * @author jonas
  *
  */
-public class YajHFCTrayIcon implements UnreadItemListener, WindowListener {
+public class YajHFCTrayIcon implements UnreadItemListener<RecvFormat>, WindowListener {
 
     private static final int BLINK_INTERVAL = 500;
     
@@ -63,7 +63,7 @@ public class YajHFCTrayIcon implements UnreadItemListener, WindowListener {
     Action showAction;
     boolean connected = false;
     boolean minimizeToTray = false;
-    UnReadMyTableModel recvModel;
+    ReadStateFaxListTableModel<RecvFormat> recvModel;
     
     Image faxIcon, emptyImage;
     Timer blinkTimer;
@@ -76,7 +76,7 @@ public class YajHFCTrayIcon implements UnreadItemListener, WindowListener {
      * @param recvModel
      * @param actions the actions to add to the popup menu. Specify null to include a separator
      */
-    public YajHFCTrayIcon(MainWin mainw, UnReadMyTableModel recvModel, Action... actions) {
+    public YajHFCTrayIcon(MainWin mainw, ReadStateFaxListTableModel<RecvFormat> recvModel, Action... actions) {
         this.mainw = mainw;
         this.recvModel = recvModel;
         
@@ -132,16 +132,16 @@ public class YajHFCTrayIcon implements UnreadItemListener, WindowListener {
         updateTooltip();
     }   
 
-    public void newItemsAvailable(UnreadItemEvent evt) {
+    public void newItemsAvailable(UnreadItemEvent<RecvFormat> evt) {
         if (trayIcon != null && !evt.isOldDataNull()) {
             if (Utils.getFaxOptions().newFaxTrayNotification) {
                 StringBuffer msg = new StringBuffer();
                 new MessageFormat(Utils._("{0} fax(es) received ({1} unread fax(es)):")).format(new Object[] { evt.getItems().size(), recvModel.getNumberOfUnreadFaxes()}, msg, null);
-                int senderIdx = recvModel.columns.getCompleteView().indexOf(RecvFormat.s);
+                int senderIdx = recvModel.getColumns().getCompleteView().indexOf(RecvFormat.s);
                 if (senderIdx >= 0) {
-                    for (RecvYajJob job : evt.getItems()) {
+                    for (FaxJob<RecvFormat> job : evt.getItems()) {
                         msg.append('\n');
-                        msg.append(job.getStringData(senderIdx));
+                        msg.append(job.getData(senderIdx));
                     }
                 }
 

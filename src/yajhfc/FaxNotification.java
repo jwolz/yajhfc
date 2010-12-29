@@ -22,19 +22,22 @@ import gnu.hylafax.Job;
 
 import javax.swing.ImageIcon;
 
+import yajhfc.model.IconMap;
+
 /**
  * @author jonas
  *
  */
 public enum FaxNotification implements IconMap {
-    NEVER(Utils._("Never"), Job.NOTIFY_NONE, Utils.loadCustomIcon("notify_NONE.png")),
-    DONE(Utils._("Delivered"), Job.NOTIFY_DONE, Utils.loadCustomIcon("notify_DONE.png")),
-    REQUEUE(Utils._("Requeued"), Job.NOTIFY_REQUEUE, Utils.loadCustomIcon("notify_REQUEUE.png")),
-    DONE_AND_REQUEUE(Utils._("Delivered or requeued"), Job.NOTIFY_ALL, Utils.loadCustomIcon("notify_ALL.png"))
+    NEVER(Utils._("Never"), Job.NOTIFY_NONE, "notify_NONE.png"),
+    DONE(Utils._("Delivered"), Job.NOTIFY_DONE, "notify_DONE.png"),
+    REQUEUE(Utils._("Requeued"), Job.NOTIFY_REQUEUE, "notify_REQUEUE.png"),
+    DONE_AND_REQUEUE(Utils._("Delivered or requeued"), Job.NOTIFY_ALL, "notify_ALL.png")
     ;
     private final String text;
-    private final ImageIcon icon;
+    private ImageIcon icon = null;
     private final String type;
+    private final String fileName;
     
     
     public String getDescription() {
@@ -42,6 +45,9 @@ public enum FaxNotification implements IconMap {
     }
 
     public ImageIcon getDisplayIcon() {
+        if (icon == null) {
+            icon = Utils.loadCustomIcon(fileName);
+        }
         return icon;
     }
 
@@ -58,8 +64,8 @@ public enum FaxNotification implements IconMap {
         return text;
     }
     
-    private FaxNotification(String text, String type, ImageIcon icon) {
-        this.icon = icon;
+    private FaxNotification(String text, String type, String fileName) {
+        this.fileName = fileName;
         this.text = text;
         this.type = type;
     }

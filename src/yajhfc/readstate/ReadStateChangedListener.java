@@ -18,7 +18,7 @@
  */
 package yajhfc.readstate;
 
-import java.util.Collection;
+import java.util.Set;
 
 /**
  * Interface for listeners that are notified when the read state
@@ -34,5 +34,5 @@ public interface ReadStateChangedListener {
      * NOTE: This might be called from outside the event dispatching thread!
      * @param changedFaxes
      */
-    public void readStateChanged(PersistentReadState sender, Collection<String> changedFaxes);
+    public void readStateChanged(PersistentReadState sender, Set<String> changedFaxes);
 }

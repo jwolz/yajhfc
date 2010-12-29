@@ -4,7 +4,6 @@ import gnu.hylafax.HylaFAXClient;
 import gnu.inet.ftp.ServerResponseException;
 
 import java.awt.Window;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -206,10 +205,7 @@ public class HylaClientManager {
         if (client != null) {
             try {
                 client.quit();
-            } catch (IOException e) {
-                if (Utils.debugMode)
-                    log.log(Level.INFO, "On client.quit():", e);
-            } catch (ServerResponseException e) {
+            } catch (Exception e) {
                 if (Utils.debugMode)
                     log.log(Level.INFO, "On client.quit():", e);
             }

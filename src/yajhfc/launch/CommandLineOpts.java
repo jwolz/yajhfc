@@ -304,6 +304,7 @@ public class CommandLineOpts { //IMPORTANT!: Do not use Utils here!
                     }
                     break;
                 }
+                break;
             case 'M': // modem
                 modem = getopt.getOptarg();
                 break;

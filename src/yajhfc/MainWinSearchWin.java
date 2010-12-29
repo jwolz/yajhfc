@@ -25,15 +25,17 @@ import javax.swing.table.TableModel;
 
 import yajhfc.filters.Filter;
 import yajhfc.filters.ui.SearchWin;
-import yajhfc.model.TooltipJTable;
-import yajhfc.model.YajJob;
+import yajhfc.model.FmtItem;
+import yajhfc.model.servconn.FaxJob;
+import yajhfc.model.ui.FmtItemRenderer;
+import yajhfc.model.ui.TooltipJTable;
 
 /**
  * @author jonas
  *
  */
 public class MainWinSearchWin extends
-        SearchWin<YajJob<FmtItem>, FmtItem> implements ChangeListener {
+        SearchWin<FaxJob<FmtItem>, FmtItem> implements ChangeListener {
 
     private MainWin parent;
     private static final FmtItem[] nullArray = new FmtItem[0];
@@ -47,7 +49,7 @@ public class MainWinSearchWin extends
         if (parent == null) {
             return nullArray;
         } else {
-            return parent.getSelectedTable().getRealModel().columns.getCompleteView().toArray(nullArray);
+            return parent.getSelectedTable().getRealModel().getColumns().getCompleteView().toArray(nullArray);
         }
     }
 
@@ -56,7 +58,7 @@ public class MainWinSearchWin extends
      */
     @SuppressWarnings("unchecked")
     @Override
-    protected void performSearch(Filter<YajJob<FmtItem>, FmtItem> selectedFilter,
+    protected void performSearch(Filter<FaxJob<FmtItem>, FmtItem> selectedFilter,
             boolean searchBackwards, boolean wrapAroundSearch) {
        
         TooltipJTable selTable = parent.getSelectedTable();
@@ -66,7 +68,7 @@ public class MainWinSearchWin extends
         if (searchBackwards && selectedIndex == -1) {
             selectedIndex = model.getRowCount();
         }
-        selectedFilter.initFilter(selTable.getRealModel().columns);
+        selectedFilter.initFilter(selTable.getRealModel().getColumns());
         
         boolean didWrapAround = false;
         boolean found = false;
@@ -93,7 +95,7 @@ public class MainWinSearchWin extends
                 }
             }
            
-            YajJob job = selTable.getJobForRow(selectedIndex);
+            FaxJob job = selTable.getJobForRow(selectedIndex);
             if (selectedFilter.matchesFilter(job)) {
                 found = true;
                 break;

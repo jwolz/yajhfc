@@ -62,12 +62,12 @@ import yajhfc.FaxResolution;
 import yajhfc.FileTextField;
 import yajhfc.HylaClientManager;
 import yajhfc.HylaModem;
-import yajhfc.HylaServerFile;
-import yajhfc.IconMap;
 import yajhfc.PaperSize;
 import yajhfc.Utils;
 import yajhfc.faxcover.Faxcover;
 import yajhfc.file.FormattedFile;
+import yajhfc.model.IconMap;
+import yajhfc.model.servconn.FaxDocument;
 import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.PhoneBookEntry;
 import yajhfc.phonebook.convrules.PBEntryFieldContainer;
@@ -624,7 +624,7 @@ final class SendWin extends JDialog implements SendWinControl  {
         tflFiles.addListItem(fileName);
     }
     
-    public void addServerFile(HylaServerFile serverFile) {
+    public void addServerFile(FaxDocument serverFile) {
         tflFiles.model.add(new ServerFileTFLItem(serverFile));
     }
     

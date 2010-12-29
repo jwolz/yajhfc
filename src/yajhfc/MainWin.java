@@ -20,7 +20,6 @@ package yajhfc;
 
 import static yajhfc.Utils._;
 import gnu.hylafax.HylaFAXClient;
-import gnu.hylafax.Job;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -41,18 +40,17 @@ import java.awt.event.WindowListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.net.SocketException;
+import java.io.FileOutputStream;
 import java.text.FieldPosition;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TimerTask;
-import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -105,20 +103,27 @@ import yajhfc.launch.Launcher2;
 import yajhfc.launch.MainApplicationFrame;
 import yajhfc.logconsole.LogConsole;
 import yajhfc.macosx.MacOSXSupport;
-import yajhfc.model.MyTableModel;
-import yajhfc.model.RecvYajJob;
-import yajhfc.model.SendingYajJob;
-import yajhfc.model.SentYajJob;
-import yajhfc.model.TooltipJTable;
-import yajhfc.model.UnReadMyTableModel;
-import yajhfc.model.UnreadItemEvent;
-import yajhfc.model.UnreadItemListener;
-import yajhfc.model.YajJob;
-import yajhfc.model.archive.ArchiveTableModel;
-import yajhfc.model.archive.ArchiveYajJob;
-import yajhfc.model.archive.FileHylaDirAccessor;
-import yajhfc.model.archive.HylaDirAccessor;
-import yajhfc.model.archive.QueueFileFormat;
+import yajhfc.model.FmtItem;
+import yajhfc.model.FmtItemList;
+import yajhfc.model.IconMap;
+import yajhfc.model.JobFormat;
+import yajhfc.model.RecvFormat;
+import yajhfc.model.TableType;
+import yajhfc.model.jobq.QueueFileFormat;
+import yajhfc.model.servconn.ConnectionState;
+import yajhfc.model.servconn.FaxDocument;
+import yajhfc.model.servconn.FaxJob;
+import yajhfc.model.servconn.FaxListConnection;
+import yajhfc.model.servconn.FaxListConnectionFactory;
+import yajhfc.model.servconn.FaxListConnectionListener;
+import yajhfc.model.servconn.FaxListConnectionType;
+import yajhfc.model.servconn.JobState;
+import yajhfc.model.servconn.defimpl.SwingFaxListConnectionListener;
+import yajhfc.model.table.FaxListTableModel;
+import yajhfc.model.table.ReadStateFaxListTableModel;
+import yajhfc.model.table.UnreadItemEvent;
+import yajhfc.model.table.UnreadItemListener;
+import yajhfc.model.ui.TooltipJTable;
 import yajhfc.options.OptionsWin;
 import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
 import yajhfc.phonebook.ui.NewPhoneBookWin;
@@ -143,6 +148,7 @@ import yajhfc.util.ProgressWorker;
 import yajhfc.util.SafeJFileChooser;
 import yajhfc.util.SelectedActionPropertyChangeListener;
 import yajhfc.util.ToolbarEditorDialog;
+import yajhfc.util.ProgressWorker.ProgressUI;
 
 @SuppressWarnings("serial")
 public final class MainWin extends JFrame implements MainApplicationFrame {
@@ -168,9 +174,9 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     protected TooltipJTable<JobFormat> tableSent = null;
     protected TooltipJTable<JobFormat> tableSending = null;
     
-    protected UnReadMyTableModel recvTableModel = null;  
-    protected MyTableModel<JobFormat> sentTableModel = null;  
-    protected MyTableModel<JobFormat> sendingTableModel = null; 
+    protected ReadStateFaxListTableModel<RecvFormat> recvTableModel = null;  
+    protected FaxListTableModel<JobFormat> sentTableModel = null;  
+    protected FaxListTableModel<JobFormat> sendingTableModel = null; 
     
     protected NumberRowViewport recvRowNumbers, sentRowNumbers, sendingRowNumbers;
     
@@ -190,11 +196,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     protected ButtonGroup viewGroup;
     
     protected FaxOptions myopts = null;
-      
-    protected java.util.Timer utmrTable;
-    protected TableRefresher tableRefresher = null;
-    protected StatusRefresher statRefresher = null;
-   
+
     protected MouseListener tblMouseListener;
     //protected KeyListener tblKeyListener;
     protected DefaultTableCellRenderer hylaDateRenderer;
@@ -208,7 +210,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     // Uncomment for archive support.
     protected TooltipJTable<QueueFileFormat> tableArchive;
     protected JScrollPane scrollArchive;
-    protected ArchiveTableModel archiveTableModel;
+    protected FaxListTableModel<QueueFileFormat> archiveTableModel;
     protected NumberRowViewport archiveRowNumbers;
     
     // Actions:
@@ -220,13 +222,15 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     protected Map<String,Action> availableActions = new HashMap<String,Action>();
     protected YajHFCTrayIcon trayIcon = null;
     
-    protected HylaClientManager clientManager;
+    protected FaxListConnection connection;
     
     public enum SendReadyState {
         Ready, NeedToWait, NotReady;
     }
     protected SendReadyState sendReady = SendReadyState.NeedToWait;
     boolean hideMenusForMac = false;
+    
+    protected boolean userInitiatedLogout = false;
     
     // Worker classes:
     private class DeleteWorker extends ProgressWorker {
@@ -236,37 +240,43 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         protected int calculateMaxProgress() {
             return 20 + 10*selTable.getSelectedRowCount();
         }
-        
+
         @Override
         public void doWork() {
-            HylaFAXClient hyfc = clientManager.beginServerTransaction(MainWin.this);
-            if (hyfc == null) {
-                return;
-            }
-            int[] selRows =  selTable.getSelectedRows();
-
-            for (int i : selRows) {
-                YajJob<? extends FmtItem> yj = null;
+            try {
+                connection.beginMultiOperation();
                 try {
-                    yj = selTable.getJobForRow(i);
-                    updateNote(MessageFormat.format(_("Deleting fax {0}"), yj.getIDValue()));
-                    
-                    yj.delete(hyfc);
-                    
-                    stepProgressBar(10);
-                } catch (Exception e1) {
-                    String msgText;
-                    if (yj == null)
-                        msgText = _("Error deleting a fax:\n");
-                    else
-                        msgText = MessageFormat.format(_("Error deleting the fax \"{0}\":\n"), yj.getIDValue());
-                    //JOptionPane.showMessageDialog(MainWin.this, msgText + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
-                    showExceptionDialog(msgText, e1);
+
+                    int[] selRows =  selTable.getSelectedRows();
+
+                    for (int i : selRows) {
+                        FaxJob<? extends FmtItem> yj = null;
+                        try {
+                            yj = selTable.getJobForRow(i);
+                            updateNote(MessageFormat.format(_("Deleting fax {0}"), yj.getIDValue()));
+
+                            yj.delete();
+
+                            stepProgressBar(10);
+                        } catch (Exception e1) {
+                            String msgText;
+                            if (yj == null)
+                                msgText = _("Error deleting a fax:\n");
+                            else
+                                msgText = MessageFormat.format(_("Error deleting the fax \"{0}\":\n"), yj.getIDValue());
+                            //JOptionPane.showMessageDialog(MainWin.this, msgText + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                            showExceptionDialog(msgText, e1);
+                        }
+                    }
+
+                } finally {
+                    connection.endMultiOperation();
                 }
+            } catch (Exception ex) {
+                showExceptionDialog(_("Error deleting faxes: "), ex);
             }
-            
-            clientManager.endServerTransaction();
         }
+        
         @Override
         protected void done() {
             refreshTables();
@@ -293,73 +303,77 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         @Override
         public void doWork() {
             fileCounter = 0;
-            HylaFAXClient hyfc = clientManager.beginServerTransaction(MainWin.this);
-            if (hyfc == null) {
-                return;
-            }
             try {
-                int[] selRows =  selTable.getSelectedRows();
-                List<String> errorInfo = new ArrayList<String>();
-                for (int i : selRows) {
-                    YajJob<? extends FmtItem> yj = null;
-                    try {
-                        yj = selTable.getJobForRow(i);
-                        errorInfo.clear();
-                        List<HylaServerFile> hsfs = yj.getServerFilenames(hyfc, errorInfo);
-                        if (hsfs.size() == 0) {
-                            if (askForEveryFile) {
-                                StringBuffer res = new StringBuffer();
-                                new MessageFormat(_("No accessible document files are available for the fax \"{0}\".")).format(new Object[] {yj.getIDValue()}, res, null);
-                                if (errorInfo.size() > 0) {
-                                    res.append("\n\n");
-                                    res.append(_("The following files were inaccessible:"));
-                                    res.append('\n');
-                                    for (String info : errorInfo) {
-                                        res.append(info).append('\n');
-                                    }
-                                }
-                                showMessageDialog(res.toString(), _("Save fax"), JOptionPane.INFORMATION_MESSAGE);
-                            } 
-                        } else {
-                            updateNote(MessageFormat.format(_("Saving fax {0}"), yj.getIDValue()));
-                            for (HylaServerFile hsf : hsfs) {
-                                try {
-                                    String filename = hsf.getPath();
-                                    int seppos = filename.lastIndexOf('/');
-                                    if (seppos < 0)
-                                        seppos = filename.lastIndexOf(File.separatorChar);
-                                    if (seppos >= 0)
-                                        filename = filename.substring(seppos + 1);
-
-                                    File target = new File(targetDir, filename);
-                                    if (askForEveryFile) {
-                                        FileFilter[] ffs = { new ExampleFileFilter(hsf.getType().getDefaultExtension(), hsf.getType().getDescription()) };
-                                        FileChooserRunnable runner = new FileChooserRunnable(MainWin.this, fileChooser, MessageFormat.format(_("Save {0} to"), hsf.getPath()), ffs, target, false);
-                                        SwingUtilities.invokeAndWait(runner);
-                                        if (runner.getSelection() == null) {
-                                            return;
+                connection.beginMultiOperation();
+                try {
+                    int[] selRows =  selTable.getSelectedRows();
+                    List<String> errorInfo = new ArrayList<String>();
+                    for (int i : selRows) {
+                        FaxJob<? extends FmtItem> yj = null;
+                        try {
+                            yj = selTable.getJobForRow(i);
+                            errorInfo.clear();
+                            Collection<FaxDocument> hsfs = yj.getDocuments(errorInfo);
+                            if (hsfs.size() == 0) {
+                                if (askForEveryFile) {
+                                    StringBuffer res = new StringBuffer();
+                                    new MessageFormat(_("No accessible document files are available for the fax \"{0}\".")).format(new Object[] {yj.getIDValue()}, res, null);
+                                    if (errorInfo.size() > 0) {
+                                        res.append("\n\n");
+                                        res.append(_("The following files were inaccessible:"));
+                                        res.append('\n');
+                                        for (String info : errorInfo) {
+                                            res.append(info).append('\n');
                                         }
-                                        target = runner.getSelection();
-                                        targetDir = target.getParentFile();
                                     }
-                                    hsf.download(hyfc, target);
-                                    fileCounter++;
-                                } catch (Exception e1) {
-                                    //JOptionPane.showMessageDialog(MainWin.this, MessageFormat.format(_("An error occured saving the file {0} (job {1}):\n"), hsf.getPath(), yj.getIDValue()) + e1.getMessage() , _("Error"), JOptionPane.ERROR_MESSAGE);
-                                    showExceptionDialog(MessageFormat.format(_("An error occured saving the file {0} (job {1}):"), hsf.getPath(), yj.getIDValue()), e1);
+                                    showMessageDialog(res.toString(), _("Save fax"), JOptionPane.INFORMATION_MESSAGE);
+                                } 
+                            } else {
+                                updateNote(MessageFormat.format(_("Saving fax {0}"), yj.getIDValue()));
+                                for (FaxDocument hsf : hsfs) {
+                                    try {
+                                        String filename = hsf.getPath();
+                                        int seppos = filename.lastIndexOf('/');
+                                        if (seppos < 0)
+                                            seppos = filename.lastIndexOf(File.separatorChar);
+                                        if (seppos >= 0)
+                                            filename = filename.substring(seppos + 1);
+
+                                        File target = new File(targetDir, filename);
+                                        if (askForEveryFile) {
+                                            FileFilter[] ffs = { new ExampleFileFilter(hsf.getType().getDefaultExtension(), hsf.getType().getDescription()) };
+                                            FileChooserRunnable runner = new FileChooserRunnable(MainWin.this, fileChooser, MessageFormat.format(_("Save {0} to"), hsf.getPath()), ffs, target, false);
+                                            SwingUtilities.invokeAndWait(runner);
+                                            if (runner.getSelection() == null) {
+                                                return;
+                                            }
+                                            target = runner.getSelection();
+                                            targetDir = target.getParentFile();
+                                        }
+                                        FileOutputStream outStream = new FileOutputStream(target);
+                                        hsf.downloadToStream(outStream);
+                                        outStream.close();
+                                        fileCounter++;
+                                    } catch (Exception e1) {
+                                        //JOptionPane.showMessageDialog(MainWin.this, MessageFormat.format(_("An error occured saving the file {0} (job {1}):\n"), hsf.getPath(), yj.getIDValue()) + e1.getMessage() , _("Error"), JOptionPane.ERROR_MESSAGE);
+                                        showExceptionDialog(MessageFormat.format(_("An error occured saving the file {0} (job {1}):"), hsf.getPath(), yj.getIDValue()), e1);
+                                    }
                                 }
                             }
+                            if (targetDir != null)
+                                Utils.getFaxOptions().lastSavePath = targetDir.getAbsolutePath();
+                        } catch (Exception e1) {
+                            //JOptionPane.showMessageDialog(MainWin.this, _("An error occured saving the fax:\n") + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                            showExceptionDialog(_("An error occured saving the fax:"), e1);
                         }
-                        if (targetDir != null)
-                            Utils.getFaxOptions().lastSavePath = targetDir.getAbsolutePath();
-                    } catch (Exception e1) {
-                        //JOptionPane.showMessageDialog(MainWin.this, _("An error occured saving the fax:\n") + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
-                        showExceptionDialog(_("An error occured saving the fax:"), e1);
+                        stepProgressBar(1000);
                     }
-                    stepProgressBar(1000);
+
+                } finally {
+                    connection.endMultiOperation();
                 }
-            } finally {
-                clientManager.endServerTransaction();
+            } catch (Exception ex) {
+                showExceptionDialog(_("Error saving faxes: "), ex);
             }
         }
         
@@ -399,73 +413,75 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         
         @Override
         public void doWork() {
-            HylaFAXClient hyfc = clientManager.beginServerTransaction(MainWin.this);
-            if (hyfc == null) {
-                return;
-            }
-            List<FormattedFile> downloadedFiles = new ArrayList<FormattedFile>();
-            List<String> errorInfo = new ArrayList<String>();
-            int[] selRows =  selTable.getSelectedRows();
-            sMin = Integer.MAX_VALUE; sMax = Integer.MIN_VALUE;
-            final MessageFormat displayingMsg      = new MessageFormat(_("Displaying fax {0}"));
-            final MessageFormat downloadingMessage = new MessageFormat(Utils._("Downloading {0}"));
-            for (int i : selRows) {
-                YajJob<? extends FmtItem> yj = null;
+            try {
+                connection.beginMultiOperation();
                 try {
-                    yj = selTable.getJobForRow(i);
-                    updateNote(displayingMsg.format(new Object[] { yj.getIDValue() }));
-                    downloadedFiles.clear();
-                    errorInfo.clear();
-                    
-                    //System.out.println("" + i + ": " + yj.getIDValue().toString());
-                    List<HylaServerFile> serverFiles = yj.getServerFilenames(hyfc, errorInfo);
-                    
-                    stepProgressBar(100);
-                    if (serverFiles.size() == 0) {
-                        StringBuffer res = new StringBuffer();
-                        new MessageFormat(_("No accessible document files are available for the fax \"{0}\".")).format(new Object[] {yj.getIDValue()}, res, null);
-                        if (errorInfo.size() > 0) {
-                            res.append("\n\n");
-                            res.append(_("The following files were inaccessible:"));
-                            res.append('\n');
-                            for (String info : errorInfo) {
-                                res.append(info).append('\n');
-                            }
-                        }
-                        showMessageDialog(res.toString(), _("Display fax"), JOptionPane.INFORMATION_MESSAGE);
+                    List<FormattedFile> downloadedFiles = new ArrayList<FormattedFile>();
+                    List<String> errorInfo = new ArrayList<String>();
+                    int[] selRows =  selTable.getSelectedRows();
+                    sMin = Integer.MAX_VALUE; sMax = Integer.MIN_VALUE;
+                    final MessageFormat displayingMsg      = new MessageFormat(_("Displaying fax {0}"));
+                    final MessageFormat downloadingMessage = new MessageFormat(Utils._("Downloading {0}"));
+                    for (int i : selRows) {
+                        FaxJob<? extends FmtItem> yj = null;
+                        try {
+                            yj = selTable.getJobForRow(i);
+                            updateNote(displayingMsg.format(new Object[] { yj.getIDValue() }));
+                            downloadedFiles.clear();
+                            errorInfo.clear();
 
-                        stepProgressBar(1000);
-                    } else {
-                        int step = 1000 / serverFiles.size();
-                        downloadedFiles.clear();
-                        for(HylaServerFile hsf : serverFiles) {
-                            updateNote(downloadingMessage.format(new Object[] {hsf.getPath()}));
-                            try {
-                                downloadedFiles.add(hsf.getPreviewFile(hyfc));
-                            } catch (Exception e1) {
-                                showExceptionDialog(MessageFormat.format(_("An error occured displaying the file {0} (job {1}):\n"), hsf.getPath(), yj.getIDValue()), e1);
+                            //System.out.println("" + i + ": " + yj.getIDValue().toString());
+                            Collection<FaxDocument> serverFiles = yj.getDocuments(errorInfo);
+
+                            stepProgressBar(100);
+                            if (serverFiles.size() == 0) {
+                                StringBuffer res = new StringBuffer();
+                                new MessageFormat(_("No accessible document files are available for the fax \"{0}\".")).format(new Object[] {yj.getIDValue()}, res, null);
+                                if (errorInfo.size() > 0) {
+                                    res.append("\n\n");
+                                    res.append(_("The following files were inaccessible:"));
+                                    res.append('\n');
+                                    for (String info : errorInfo) {
+                                        res.append(info).append('\n');
+                                    }
+                                }
+                                showMessageDialog(res.toString(), _("Display fax"), JOptionPane.INFORMATION_MESSAGE);
+
+                                stepProgressBar(1000);
+                            } else {
+                                int step = 1000 / serverFiles.size();
+                                downloadedFiles.clear();
+                                for(FaxDocument hsf : serverFiles) {
+                                    updateNote(downloadingMessage.format(new Object[] {hsf.getPath()}));
+                                    try {
+                                        downloadedFiles.add(hsf.getDocument());
+                                    } catch (Exception e1) {
+                                        showExceptionDialog(MessageFormat.format(_("An error occured displaying the file {0} (job {1}):\n"), hsf.getPath(), yj.getIDValue()), e1);
+                                    }
+                                    stepProgressBar(step);
+                                }
+                                updateNote(Utils._("Launching viewer"));
+                                if (downloadedFiles.size() > 0) {
+                                    MultiFileConverter.viewMultipleFiles(downloadedFiles, myopts.paperSize, false);
+                                }
+                                stepProgressBar(100);
                             }
-                            stepProgressBar(step);
+                            yj.setRead(true);
+                            if (i < sMin)
+                                sMin = i;
+                            if (i > sMax)
+                                sMax = i;
+                        } catch (Exception e1) {
+                            //JOptionPane.showMessageDialog(MainWin.this, MessageFormat.format(_("An error occured displaying the fax \"{0}\":\n"), yj.getIDValue()) + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                            showExceptionDialog(MessageFormat.format(_("An error occured displaying the fax \"{0}\":"), yj.getIDValue()), e1);
                         }
-                        updateNote(Utils._("Launching viewer"));
-                        if (downloadedFiles.size() > 0) {
-                            MultiFileConverter.viewMultipleFiles(downloadedFiles, myopts.paperSize, false);
-                        }
-                        stepProgressBar(100);
                     }
-                    if (yj instanceof RecvYajJob) {
-                        ((RecvYajJob)yj).setRead(true);
-                        if (i < sMin)
-                            sMin = i;
-                        if (i > sMax)
-                            sMax = i;
-                    }
-                } catch (Exception e1) {
-                    //JOptionPane.showMessageDialog(MainWin.this, MessageFormat.format(_("An error occured displaying the fax \"{0}\":\n"), yj.getIDValue()) + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
-                    showExceptionDialog(MessageFormat.format(_("An error occured displaying the fax \"{0}\":"), yj.getIDValue()), e1);
+                } finally {
+                    connection.endMultiOperation();
                 }
+            } catch (Exception ex) {
+                showExceptionDialog(_("Error displaying faxes: "), ex);
             }
-            clientManager.endServerTransaction();
         }
         
         @Override
@@ -493,39 +509,43 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         
         @Override
         public void doWork() {
-            HylaFAXClient hyfc = clientManager.beginServerTransaction(MainWin.this);
-            if (hyfc == null) {
-                return;
-            }
-            int[] selRows =  selTable.getSelectedRows();
-
-            for (int i : selRows) {
-                SendingYajJob yj = null;
+            try {
+                connection.beginMultiOperation();
                 try {
-                    yj = (SendingYajJob)selTable.getJobForRow(i);
-                    updateNote(MessageFormat.format(_("Suspending job {0}"), yj.getIDValue()));
-                    
-                    char jobstate = yj.getJobState();
-                    if (jobstate == SentYajJob.JOBSTATE_RUNNING) {
-                        if (showConfirmDialog(MessageFormat.format(_("Suspending the currently running job {0} may block until it is done (or switch to another \"non running state\"). Try to suspend it anyway?") , yj.getIDValue()),
-                                _("Suspend fax job"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-                            yj.suspend(hyfc);
+                    int[] selRows =  selTable.getSelectedRows();
+
+                    for (int i : selRows) {
+                        FaxJob<? extends FmtItem> yj = null;
+                        try {
+                            yj = selTable.getJobForRow(i);
+                            updateNote(MessageFormat.format(_("Suspending job {0}"), yj.getIDValue()));
+
+                            JobState jobstate = yj.getJobState();
+                            if (jobstate == JobState.RUNNING) {
+                                if (showConfirmDialog(MessageFormat.format(_("Suspending the currently running job {0} may block until it is done (or switch to another \"non running state\"). Try to suspend it anyway?") , yj.getIDValue()),
+                                        _("Suspend fax job"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                                    yj.suspend();
+                                }
+                            } else {
+                                yj.suspend();
+                            }
+
+                            stepProgressBar(10);
+                        } catch (Exception e1) {
+                            String msgText;
+                            if (yj == null)
+                                msgText = _("Error suspending a fax job:\n");
+                            else
+                                msgText = MessageFormat.format(_("Error suspending the fax job \"{0}\":\n"), yj.getIDValue());
+                            showExceptionDialog(msgText, e1);
                         }
-                    } else {
-                        yj.suspend(hyfc);
                     }
-                    
-                    stepProgressBar(10);
-                } catch (Exception e1) {
-                    String msgText;
-                    if (yj == null)
-                        msgText = _("Error suspending a fax job:\n");
-                    else
-                        msgText = MessageFormat.format(_("Error suspending the fax job \"{0}\":\n"), yj.getIDValue());
-                    showExceptionDialog(msgText, e1);
+                } finally {
+                    connection.endMultiOperation();
                 }
+            } catch (Exception ex) {
+                showExceptionDialog(_("Error suspending faxes: "), ex);
             }
-            clientManager.endServerTransaction();
         }
         @Override
         protected void done() {
@@ -549,38 +569,42 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         
         @Override
         public void doWork() {
-            HylaFAXClient hyfc = clientManager.beginServerTransaction(MainWin.this);
-            if (hyfc == null) {
-                return;
-            }
-            int[] selRows =  selTable.getSelectedRows();
-
-            for (int i : selRows) {
-                SendingYajJob yj = null;
+            try {
+                connection.beginMultiOperation();
                 try {
-                    yj = (SendingYajJob)selTable.getJobForRow(i);
-                    updateNote(MessageFormat.format(_("Resuming job {0}"), yj.getIDValue()));
-                    char jobstate = yj.getJobState();
-                    if (jobstate != SentYajJob.JOBSTATE_SUSPENDED) {
-                        if (showConfirmDialog(MessageFormat.format(_("Job {0} is not in state \"Suspended\" so resuming it probably will not work. Try to resume it anyway?") , yj.getIDValue()),
-                                _("Resume fax job"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-                            yj.resume(hyfc);
+                    int[] selRows =  selTable.getSelectedRows();
+
+                    for (int i : selRows) {
+                        FaxJob<? extends FmtItem> yj = null;
+                        try {
+                            yj = selTable.getJobForRow(i);
+                            updateNote(MessageFormat.format(_("Resuming job {0}"), yj.getIDValue()));
+                            JobState jobstate = yj.getJobState();
+                            if (jobstate != JobState.SUSPENDED) {
+                                if (showConfirmDialog(MessageFormat.format(_("Job {0} is not in state \"Suspended\" so resuming it probably will not work. Try to resume it anyway?") , yj.getIDValue()),
+                                        _("Resume fax job"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                                    yj.resume();
+                                }
+                            } else {
+                                yj.resume();
+                            }
+
+                            stepProgressBar(10);
+                        } catch (Exception e1) {
+                            String msgText;
+                            if (yj == null)
+                                msgText = _("Error resuming a fax job:\n");
+                            else
+                                msgText = MessageFormat.format(_("Error resuming the fax job \"{0}\":\n"), yj.getIDValue());
+                            showExceptionDialog(msgText, e1);
                         }
-                    } else {
-                        yj.resume(hyfc);
                     }
-                    
-                    stepProgressBar(10);
-                } catch (Exception e1) {
-                    String msgText;
-                    if (yj == null)
-                        msgText = _("Error resuming a fax job:\n");
-                    else
-                        msgText = MessageFormat.format(_("Error resuming the fax job \"{0}\":\n"), yj.getIDValue());
-                    showExceptionDialog(msgText, e1);
+                } finally {
+                    connection.endMultiOperation();
                 }
+            } catch (Exception ex) {
+                showExceptionDialog(_("Error resuming faxes: "), ex);
             }
-            clientManager.endServerTransaction();
         }
         @Override
         protected void done() {
@@ -610,62 +634,63 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         public void doWork() {
             try {
                 fileCounter = 0;
-                HylaFAXClient hyfc = clientManager.beginServerTransaction(MainWin.this);
-                if (hyfc == null) {
-                    return;
-                }
-                int[] selRows =  selTable.getSelectedRows();
-                List<FormattedFile> ffs = new ArrayList<FormattedFile>();
+                connection.beginMultiOperation();
+                try {
+                    int[] selRows =  selTable.getSelectedRows();
+                    List<FormattedFile> ffs = new ArrayList<FormattedFile>();
 
-                for (int i : selRows) {
-                    YajJob<? extends FmtItem> yj = null;
-                    try {
-                        yj = selTable.getJobForRow(i);
-                        updateNote(MessageFormat.format(_("Saving fax {0}"), yj.getIDValue()));
-                        ffs.clear();
-                        for(HylaServerFile hsf : yj.getServerFilenames(hyfc)) {
-                            try {
-                                ffs.add(hsf.getPreviewFile(hyfc));
-                            } catch (Exception e1) {
-                                //JOptionPane.showMessageDialog(MainWin.this, MessageFormat.format(_("An error occured saving the file {0} (job {1}):\n"), hsf.getPath(), yj.getIDValue()) + e1.getMessage() , _("Error"), JOptionPane.ERROR_MESSAGE);
-                                showExceptionDialog(MessageFormat.format(_("An error occured saving the file {0} (job {1}):"), hsf.getPath(), yj.getIDValue()), e1);
-                            }
-                        }
-                        if (ffs.size() > 0) {
-                            Object idVal = yj.getIDValue();
-                            String filePrefix;
-                            if (idVal instanceof Integer) {
-                                filePrefix = "fax" + ((Integer)idVal).intValue();
-                            } else {
-                                filePrefix = idVal.toString();
-                                int pos = filePrefix.lastIndexOf('.');
-                                if (pos >= 0)
-                                    filePrefix = filePrefix.substring(0, pos);
-                            }
-                            
-                            File target = new File(targetDir, filePrefix + '.' + desiredFormat.getFileFormat().getDefaultExtension());
-                            if (askForEveryFile) {
-                                FileChooserRunnable runner = new FileChooserRunnable(MainWin.this, fileChooser, MessageFormat.format(_("File name to save fax {0}"), yj.getIDValue()), null, target, false);
-                                SwingUtilities.invokeAndWait(runner);
-                                if (runner.getSelection() == null) {
-                                    return;
+                    for (int i : selRows) {
+                        FaxJob<? extends FmtItem> yj = null;
+                        try {
+                            yj = selTable.getJobForRow(i);
+                            updateNote(MessageFormat.format(_("Saving fax {0}"), yj.getIDValue()));
+                            ffs.clear();
+                            for(FaxDocument hsf : yj.getDocuments()) {
+                                try {
+                                    ffs.add(hsf.getDocument());
+                                } catch (Exception e1) {
+                                    //JOptionPane.showMessageDialog(MainWin.this, MessageFormat.format(_("An error occured saving the file {0} (job {1}):\n"), hsf.getPath(), yj.getIDValue()) + e1.getMessage() , _("Error"), JOptionPane.ERROR_MESSAGE);
+                                    showExceptionDialog(MessageFormat.format(_("An error occured saving the file {0} (job {1}):"), hsf.getPath(), yj.getIDValue()), e1);
                                 }
-                                target = runner.getSelection();
-                                targetDir = target.getParentFile();
                             }
-                            MultiFileConverter.convertMultipleFilesToSingleFile(ffs, target, desiredFormat, myopts.paperSize);
-                            fileCounter++;
+                            if (ffs.size() > 0) {
+                                Object idVal = yj.getIDValue();
+                                String filePrefix;
+                                if (idVal instanceof Integer) {
+                                    filePrefix = "fax" + ((Integer)idVal).intValue();
+                                } else {
+                                    filePrefix = idVal.toString();
+                                    int pos = filePrefix.lastIndexOf('.');
+                                    if (pos >= 0)
+                                        filePrefix = filePrefix.substring(0, pos);
+                                }
+
+                                File target = new File(targetDir, filePrefix + '.' + desiredFormat.getFileFormat().getDefaultExtension());
+                                if (askForEveryFile) {
+                                    FileChooserRunnable runner = new FileChooserRunnable(MainWin.this, fileChooser, MessageFormat.format(_("File name to save fax {0}"), yj.getIDValue()), null, target, false);
+                                    SwingUtilities.invokeAndWait(runner);
+                                    if (runner.getSelection() == null) {
+                                        return;
+                                    }
+                                    target = runner.getSelection();
+                                    targetDir = target.getParentFile();
+                                }
+                                MultiFileConverter.convertMultipleFilesToSingleFile(ffs, target, desiredFormat, myopts.paperSize);
+                                fileCounter++;
+                            }
+                        } catch (Exception e1) {
+                            //JOptionPane.showMessageDialog(MainWin.this, _("An error occured saving the fax:\n") + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+                            showExceptionDialog(_("An error occured saving the fax:"), e1);
                         }
-                    } catch (Exception e1) {
-                        //JOptionPane.showMessageDialog(MainWin.this, _("An error occured saving the fax:\n") + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
-                        showExceptionDialog(_("An error occured saving the fax:"), e1);
+                        stepProgressBar(1000);
                     }
-                    stepProgressBar(1000);
+                    if (targetDir != null)
+                        Utils.getFaxOptions().lastSavePath = targetDir.getAbsolutePath();
+                } finally {
+                    connection.endMultiOperation();
                 }
-                if (targetDir != null)
-                    Utils.getFaxOptions().lastSavePath = targetDir.getAbsolutePath();
-            } finally {
-                clientManager.endServerTransaction();
+            } catch (Exception ex) {
+                showExceptionDialog(_("Error resuming faxes: "), ex);
             }
         }
         
@@ -759,9 +784,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 Utils.unsetWaitCursorOnOpen(null, ow);
                 ow.setVisible(true);
                 if (ow.getModalResult()) {
-                    showOrHideTrayIcon();
-                    addOrRemoveArchiveTab();
-                    reconnectToServer(null);
+                    optionsChanged();
                     Utils.storeOptionsToFile();
                 } else {
                     sendReady = oldState;
@@ -777,7 +800,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         actSend = new ExcDialogAbstractAction() {
             public void actualActionPerformed(java.awt.event.ActionEvent e) {
                 Utils.setWaitCursor(null);
-                SendWinControl sw = SendController.createSendWindow(MainWin.this, clientManager, false, false);
+                SendWinControl sw = SendController.createSendWindow(MainWin.this, connection.getClientManager(), false, false);
 
                 Utils.unsetWaitCursorOnOpen(null, sw.getWindow());
                 sw.setVisible(true);
@@ -794,7 +817,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         actPoll = new ExcDialogAbstractAction() {
             public void actualActionPerformed(java.awt.event.ActionEvent e) {
                 Utils.setWaitCursor(null);
-                SendWinControl sw = SendController.createSendWindow(MainWin.this, clientManager, true, true);
+                SendWinControl sw = SendController.createSendWindow(MainWin.this, connection.getClientManager(), true, true);
                 Utils.unsetWaitCursorOnOpen(null, sw.getWindow());
                 sw.setVisible(true);
             }
@@ -906,7 +929,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 if (tabMain.getSelectedComponent() == scrollRecv) { // TableRecv
                     int sMin = Integer.MAX_VALUE, sMax = Integer.MIN_VALUE;
                     for (int i:tableRecv.getSelectedRows()) {
-                        ((RecvYajJob)tableRecv.getJobForRow(i)).setRead(newState);
+                        tableRecv.getJobForRow(i).setRead(newState);
                         if (i < sMin)
                             sMin = i;
                         if (i > sMax)
@@ -960,23 +983,24 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 if (tabMain.getSelectedComponent() != scrollRecv || tableRecv.getSelectedRow() < 0)
                     return;
                 
-                HylaFAXClient hyfc = clientManager.beginServerTransaction(MainWin.this);
-                HylaServerFile file;
+                List<FaxDocument> files = new ArrayList<FaxDocument>();
                 try {
-                    file = tableRecv.getJobForRow(tableRecv.getSelectedRow()).getServerFilenames(hyfc).get(0);
+                    for (int row : tableRecv.getSelectedRows()) {
+                        files.addAll(tableRecv.getJobForRow(row).getDocuments());
+                    }
                 } catch (Exception e1) {
                     //JOptionPane.showMessageDialog(MainWin.this, _("Couldn't get a filename for the fax:\n") + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
                     ExceptionDialog.showExceptionDialog(MainWin.this, _("Couldn't get a filename for the fax:"), e1);
-                    clientManager.endServerTransaction();
                     return;
                 }
                 
-                SendWinControl sw = SendController.createSendWindow(MainWin.this, clientManager, false, true);
-                sw.addServerFile(file);
+                SendWinControl sw = SendController.createSendWindow(MainWin.this, connection.getClientManager(), false, true);
+                for (FaxDocument doc : files) {
+                    sw.addServerFile(doc);
+                }
                 sw.setVisible(true);
                 refreshTables();
                 
-                clientManager.endServerTransaction();
             }
         };
         actForward.putValue(Action.NAME, _("Forward fax..."));
@@ -996,7 +1020,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
 
                 putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, newState);
                 
-                reconnectToServer(null);
+                doLogout(true);
                 Utils.unsetWaitCursor(null);
             };
         };
@@ -1018,58 +1042,61 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         actRefresh.putValue(Action.SMALL_ICON, Utils.loadIcon("general/Refresh"));
         actRefresh.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
         putAvailableAction("Refresh", actRefresh);
-        
+
         actResend = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {                
                 TooltipJTable<? extends FmtItem> selTable = getSelectedTable();
                 if (selTable != tableSent || selTable.getSelectedRow() < 0)
                     return;
-                
-                Utils.setWaitCursor(null);
-                SendWinControl sw = SendController.createSendWindow(MainWin.this, clientManager, false, true);
-                Set<HylaServerFile> files = new HashSet<HylaServerFile>();
-                String subject = null;
-                HylaFAXClient hyfc = clientManager.beginServerTransaction(MainWin.this);
-                
-                try {
-                    for (int row : selTable.getSelectedRows()) {
-                        SentYajJob job = (SentYajJob)selTable.getJobForRow(row);
-                        String number, voiceNumber, company, name, location;
-                        List<HylaServerFile> jobFiles;
-                        
-                        synchronized (hyfc) {
-                            jobFiles = job.getServerFilenames(hyfc);
 
-                            Job hyJob = job.getJob(hyfc);
-                            number = hyJob.getDialstring();
-                            name = hyJob.getProperty("TOUSER");
-                            company = hyJob.getProperty("TOCOMPANY");
-                            location = hyJob.getProperty("TOLOCATION");
-                            voiceNumber = hyJob.getProperty("TOVOICE");
-                            if (subject == null || subject.length() == 0) {
-                                // Simply take the first non-empty subject
-                                subject = hyJob.getProperty("REGARDING").trim();
+                Utils.setWaitCursor(null);
+                SendWinControl sw = SendController.createSendWindow(MainWin.this, connection.getClientManager(), false, true);
+                Set<FaxDocument> files = new HashSet<FaxDocument>();
+                String subject = null;
+
+                try {
+                    connection.beginMultiOperation();
+                    try {
+                        for (int row : selTable.getSelectedRows()) {
+                            FaxJob<? extends FmtItem> job = selTable.getJobForRow(row);
+                            String number, voiceNumber, company, name, location;
+                            Collection<FaxDocument> jobFiles;
+
+                            jobFiles = job.getDocuments();
+                            
+                            Map<String,String> props = job.getJobProperties("DIALSTRING", "TOUSER", "TOCOMPANY", "TOLOCATION", "TOVOICE", "REGARDING");
+                            if (props != null && props.size() > 0) {
+                                number = props.get("DIALSTRING");
+                                name = props.get("TOUSER");
+                                company = props.get("TOCOMPANY");
+                                location = props.get("TOLOCATION");
+                                voiceNumber = props.get("TOVOICE");
+                                if (subject == null || subject.length() == 0) {
+                                    // Simply take the first non-empty subject
+                                    subject = props.get("REGARDING").trim();
+                                }
+                                sw.getRecipients().add(new DefaultPBEntryFieldContainer(number, name, company, location, voiceNumber));
+                            }
+                            for (FaxDocument hysf : jobFiles) {
+                                if (!files.contains(hysf)) {
+                                    sw.addServerFile(hysf);
+                                    files.add(hysf);
+                                }
                             }
                         }
-                        
-                        for (HylaServerFile hysf : jobFiles) {
-                            if (!files.contains(hysf)) {
-                                sw.addServerFile(hysf);
-                                files.add(hysf);
-                            }
-                        }
-                        sw.getRecipients().add(new DefaultPBEntryFieldContainer(number, name, company, location, voiceNumber));
+                    } catch (Exception e1) {
+                        Utils.unsetWaitCursor(null);
+                        ExceptionDialog.showExceptionDialog(MainWin.this, _("Could not get all of the job information necessary to resend the fax:"), e1);
+                        return;
+                    } finally {
+                        connection.endMultiOperation();
                     }
-                } catch (Exception e1) {
-                    Utils.unsetWaitCursor(null);
-                    ExceptionDialog.showExceptionDialog(MainWin.this, _("Could not get all of the job information necessary to resend the fax:"), e1);
-                    return;
-                } finally {
-                    clientManager.endServerTransaction();
+                } catch (Exception ex) {
+                    ExceptionDialog.showExceptionDialog(MainWin.this, _("Error resending faxes: "), ex);
                 }
                 if (subject != null)
                     sw.setSubject(subject);
-                
+
                 Utils.unsetWaitCursorOnOpen(null, sw.getWindow());
                 sw.setVisible(true);
                 refreshTables();
@@ -1176,8 +1203,8 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             @Override
             protected void actualActionPerformed(ActionEvent e) {
                 Utils.setWaitCursor(null);
-                if (clientManager != null) {
-                    doLogout();
+                if (connection.getConnectionState() != ConnectionState.DISCONNECTED) {
+                    doLogout(false);
                 } else {
                     reconnectToServer(null);
                 }
@@ -1211,6 +1238,11 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         
         actAnswerCall = new ExcDialogAbstractAction() {
             public void actualActionPerformed(java.awt.event.ActionEvent e) {
+                HylaClientManager clientManager = connection.getClientManager();
+                if (clientManager == null) {
+                    JOptionPane.showMessageDialog(MainWin.this, _("Answering a phone call requires a direct connection to the HylaFAX server which is not available."), _("Answer call"), JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
                 if (clientManager.isAdminMode()) {
                     List<HylaModem> modems = new ArrayList<HylaModem>();
                     for (HylaModem modem : clientManager.getRealModems()) {
@@ -1290,12 +1322,12 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 }
                 
                 // Collect selected rows:
-                List<YajJob<? extends FmtItem>> jobs = new ArrayList<YajJob<? extends FmtItem>>(selTable.getSelectedRowCount());
+                List<FaxJob<? extends FmtItem>> jobs = new ArrayList<FaxJob<? extends FmtItem>>(selTable.getSelectedRowCount());
                 for (int idx : selTable.getSelectedRows()) {
                     jobs.add(selTable.getJobForRow(idx));
                 }
                 
-                LogViewWorker worker = new LogViewWorker(jobs, clientManager, tablePanel);
+                LogViewWorker worker = new LogViewWorker(connection, jobs, tablePanel);
                 worker.setCloseOnExit(true);
                 worker.startWork(MainWin.this, _("Viewing logs"));
                 Utils.unsetWaitCursor(null);
@@ -1387,20 +1419,23 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     }
     
     public void refreshTables() {
-        if (tableRefresher == null)
-            return;
-        
         tablePanel.showIndeterminateProgress(_("Fetching fax list..."));
         
-        tableRefresher.hideProgress = true;
-        utmrTable.schedule(new TimerTaskWrapper(tableRefresher), 0);
+        connection.addFaxListConnectionListener(new RefreshCompleteHider(tablePanel, connection));
+        //tableRefresher.hideProgress = true;
+        Utils.executorService.submit(new Runnable() {
+            public void run() {
+                connection.refreshFaxLists();
+             } 
+         });
     }
     
     public void refreshStatus() {
-        if (statRefresher == null)
-            return;
-        
-        utmrTable.schedule(new TimerTaskWrapper(statRefresher), 0);
+        Utils.executorService.submit(new Runnable() {
+           public void run() {
+               connection.refreshStatus();
+            } 
+        });
     }
     
     public SendReadyState getSendReadyState() {
@@ -1482,9 +1517,9 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                     if (value != null) {
                         int realCol = table.getColumnModel().getColumn(column).getModelIndex();
-                        MyTableModel<? extends FmtItem> model = ((TooltipJTable<? extends FmtItem>)table).getRealModel();
+                        FaxListTableModel<? extends FmtItem> model = ((TooltipJTable<? extends FmtItem>)table).getRealModel();
                         formatBuffer.setLength(0);
-                        value = model.columns.get(realCol).getDisplayDateFormat().format(value, formatBuffer, dummyPos).toString();
+                        value = model.getColumns().get(realCol).getDisplayDateFormat().format(value, formatBuffer, dummyPos).toString();
                     }
                     return super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
                             row, column);
@@ -1579,6 +1614,9 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         myopts = Utils.getFaxOptions();
         
         createActions(adminState);
+        
+        createFaxListConnection();
+        
         initializePlatformSpecifics();
         
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -1592,17 +1630,18 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             public void windowClosed(java.awt.event.WindowEvent e) {
                 sendReady = SendReadyState.NotReady;
                 
-                doLogout();
-                
                 saveWindowSettings();
-            
-                Thread.yield();
-                System.exit(0);
+                
+                doLogout(false, new Runnable() {
+                   public void run() {
+                       Thread.yield();
+                       System.exit(0);
+                    } 
+                });
             }
         });
         setIconImage(Toolkit.getDefaultToolkit().getImage(MainWin.class.getResource("icon.png")));
         
-        utmrTable = new java.util.Timer("RefreshTimer", true);
         reloadTableColumnSettings();
         menuViewListener.loadFromOptions(myopts);
         
@@ -1616,6 +1655,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         actChecker.doEnableCheck();
         
         showOrHideTrayIcon();
+        setDisconnectedUI();
         if (myopts.automaticallyCheckForUpdate) {
             UpdateChecker.startSilentUpdateCheck();
         }
@@ -1681,20 +1721,9 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         return (trayIcon != null);
     }
     
-    void invokeLogoutThreaded() {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                doLogout();
-            } 
-        });
-    }
-    
-    void doLogout() {
-        doLogout(false);
-    }
     
     private void saveTableColumnSettings() {
-        if (clientManager != null) { 
+        if (connection.getConnectionState() == ConnectionState.CONNECTED) { 
             myopts.recvColState = getTableRecv().getColumnCfgString();
             myopts.sentColState = getTableSent().getColumnCfgString();
             myopts.sendingColState = getTableSending().getColumnCfgString();
@@ -1703,76 +1732,98 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         }
     }
     
-    private void doLogout(boolean immediateReconnect) {
+    /**
+     * Disconnects from the server asynchronously. If immediateReconnect is true,
+     * calls reconnectToServer after the disconnect has completed.
+     */
+    void doLogout(final boolean immediateReconnect) {
+        doLogout(immediateReconnect, null);
+    }
+    /**
+     * Disconnects from the server asnynchronously. If immediateReconnect is true,
+     * calls reconnectToServer after the disconnect has completed.
+     * If intermediateAction != null, the Runnable is run after the disconnect completed,
+     * (but before the reconnect is started when requested).
+     */
+    void doLogout(final boolean immediateReconnect, final Runnable intermediateAction) {
         try {
             log.fine("Logging out...");
             sendReady = immediateReconnect ? SendReadyState.NeedToWait : SendReadyState.NotReady;
             
-            tablePanel.showIndeterminateProgress(_("Logging out..."));
-            if (tableRefresher != null)
-                tableRefresher.cancel();
-            if (statRefresher != null)
-                statRefresher.cancel();
-            
-            if (clientManager != null) {                
+            if (connection.getConnectionState() == ConnectionState.CONNECTED) {                
                 saveTableColumnSettings();
                 
                 recvTableModel.cleanupReadState();
                 
-                utmrTable.schedule(new AsyncLogoutTask(clientManager), 0);
-                clientManager = null;
+                tablePanel.showIndeterminateProgress(_("Logging out..."));
+                
+                userInitiatedLogout = true;
+                Utils.executorService.submit(new Runnable() {
+                   public void run() {
+                       connection.disconnect();
+                       if (intermediateAction != null)
+                           intermediateAction.run();
+                       SwingUtilities.invokeLater(new Runnable() {
+                           public void run() {
+                               if (immediateReconnect) {
+                                   reconnectToServer(null);
+                               } else {
+                                   tablePanel.hideProgress();
+                               }
+                           }
+                       });
+                    } 
+                });
+            } else {
+                setDisconnectedUI();
+                if (immediateReconnect) {
+                    reconnectToServer(null);
+                }
             }
-            //tmrStat.stop();
-            //tmrTable.stop();
-
             
-            getRecvTableModel().setData(null);
-            getSentTableModel().setData(null);
-            getSendingTableModel().setData(null);
-            if (myopts.showArchive) {
-                getArchiveTableModel().setData((List<ArchiveYajJob>)null);
-            }
-            
-            getTextStatus().setBackground(getDefStatusBackground());
-            getTextStatus().setText(_("Disconnected."));
-            
-            actSend.setEnabled(false);
-            actPoll.setEnabled(false);
-            menuView.setEnabled(false);
-            actAnswerCall.setEnabled(false);
-            
-            setActReconnectState(true);
-            this.setTitle("Disconnected - " + Utils.AppName);
-            if (trayIcon != null) {
-                trayIcon.setConnectedState(false);
-            }
             log.fine("Successfully logged out");
         } catch (Exception e) {
             log.log(Level.WARNING, "Error logging out:", e);
             // do nothing
         }
-        tablePanel.hideProgress();
+    }
+    
+    protected void setDisconnectedUI() {
+        getTextStatus().setBackground(getDefStatusBackground());
+        getTextStatus().setText(_("Disconnected."));
+        
+        actSend.setEnabled(false);
+        actPoll.setEnabled(false);
+        menuView.setEnabled(false);
+        actAnswerCall.setEnabled(false);
+        
+        setActReconnectState(true);
+        this.setTitle("Disconnected - " + Utils.AppName);
+        if (trayIcon != null) {
+            trayIcon.setConnectedState(false);
+        }
+        this.setEnabled(true);
     }
     
     void reloadTableColumnSettings() {
-        UnReadMyTableModel tm = getRecvTableModel();
-        tm.columns = myopts.recvfmt;
-        tm.fireTableStructureChanged();
-        
-        MyTableModel<JobFormat> tm2 = getSentTableModel();
-        tm2.columns = myopts.sentfmt;
-        tm2.fireTableStructureChanged();
-
-        tm2 = getSendingTableModel();
-        tm2.columns = myopts.sendingfmt;
-        tm2.fireTableStructureChanged();
-        
-        // Uncomment for archive support.
-        if (myopts.showArchive) {
-            ArchiveTableModel tm3 = getArchiveTableModel();
-            tm3.columns = myopts.archiveFmt;
-            tm3.fireTableStructureChanged();
-        }
+//        getRecvTableModel().;
+//        tm.columns = myopts.recvfmt;
+//        tm.fireTableStructureChanged();
+//        
+//        MyTableModel<JobFormat> tm2 = getSentTableModel();
+//        tm2.columns = myopts.sentfmt;
+//        tm2.fireTableStructureChanged();
+//
+//        tm2 = getSendingTableModel();
+//        tm2.columns = myopts.sendingfmt;
+//        tm2.fireTableStructureChanged();
+//        
+//        // Uncomment for archive support.
+//        if (myopts.showArchive) {
+//            ArchiveTableModel tm3 = getArchiveTableModel();
+//            tm3.columns = myopts.archiveFmt;
+//            tm3.fireTableStructureChanged();
+//        }
         
         tableRecv.setColumnCfgString(myopts.recvColState);
         tableSent.setColumnCfgString(myopts.sentColState);
@@ -1783,7 +1834,10 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     }
     
     public void reconnectToServer(Runnable loginAction) {        
-        doLogout(true);
+        if (reconnectTimer != null && reconnectTimer.isRunning()) {
+            reconnectTimer.stop();
+            reconnectTimer = null;
+        }
         
         if (myopts.host.length() == 0) { // Prompt for server if not set
             actOptions.actionPerformed(null);
@@ -1793,6 +1847,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         this.setEnabled(false);
         tablePanel.showIndeterminateProgress(_("Logging in..."));
         
+        userInitiatedLogout = false;
         Utils.executorService.submit(new LoginThread((Boolean)actAdminMode.getValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY), loginAction));
         
     }
@@ -1920,7 +1975,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             tableRecv = new TooltipJTable<RecvFormat>(getRecvTableModel());
             doCommonTableSetup(tableRecv);
             
-            recvTableModel.unreadFont = tableRecv.getFont().deriveFont(Font.BOLD);
+            recvTableModel.setUnreadFont(tableRecv.getFont().deriveFont(Font.BOLD));
         }
         return tableRecv;
     }
@@ -1968,11 +2023,11 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         toFront();
     }
     
-    private UnReadMyTableModel getRecvTableModel() {
+    ReadStateFaxListTableModel<RecvFormat> getRecvTableModel() {
         if (recvTableModel == null) {
-            recvTableModel = new UnReadMyTableModel(PersistentReadState.getCurrent());
-            recvTableModel.addUnreadItemListener(new UnreadItemListener() {
-                public void newItemsAvailable(UnreadItemEvent evt) {
+            recvTableModel = new ReadStateFaxListTableModel<RecvFormat>(connection.getReceivedJobs(), PersistentReadState.getCurrent());
+            recvTableModel.addUnreadItemListener(new UnreadItemListener<RecvFormat>() {
+                public void newItemsAvailable(UnreadItemEvent<RecvFormat> evt) {
                     if (evt.isOldDataNull())
                         return;
                     
@@ -1983,26 +2038,30 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                         Toolkit.getDefaultToolkit().beep();
                     }
                     if ((myopts.newFaxAction & FaxOptions.NEWFAX_VIEWER) != 0) {
-                        HylaFAXClient hyfc = clientManager.beginServerTransaction(MainWin.this);
-                        if (hyfc == null) {
-                            return;
-                        }
-                        for (RecvYajJob j : evt.getItems()) {
-                            for (HylaServerFile hsf : j.getServerFilenames(hyfc, null)) {
-                                try {
-                                    hsf.getPreviewFile(hyfc).view();
-                                } catch (Exception e) {
-                                    if (Utils.debugMode) {
-                                        log.log(Level.WARNING, "Exception while trying to view new faxes:", e);
-                                        //e.printStackTrace(Utils.debugOut);
+                        try {
+                            connection.beginMultiOperation();
+                            try {
+                                for (FaxJob<RecvFormat> j : evt.getItems()) {
+                                    for (FaxDocument hsf : j.getDocuments()) {
+                                        try {
+                                            hsf.getDocument().view();
+                                        } catch (Exception e) {
+                                            if (Utils.debugMode) {
+                                                log.log(Level.WARNING, "Exception while trying to view new faxes:", e);
+                                                //e.printStackTrace(Utils.debugOut);
+                                            }
+                                        }
+                                    }
+                                    if ((myopts.newFaxAction & FaxOptions.NEWFAX_MARKASREAD) != 0) {
+                                        j.setRead(true);
                                     }
                                 }
+                            } finally {
+                                connection.endMultiOperation();
                             }
-                            if ((myopts.newFaxAction & FaxOptions.NEWFAX_MARKASREAD) != 0) {
-                                j.setRead(true);
-                            }
+                        } catch (Exception ex) {
+                            ExceptionDialog.showExceptionDialog(MainWin.this, "Exception while trying to view new faxes:", ex);
                         }
-                        clientManager.endServerTransaction();
                     }
                 }
                 
@@ -2034,19 +2093,9 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         return tableSent;
     }
 
-    private MyTableModel<JobFormat> getSentTableModel() {
+    FaxListTableModel<JobFormat> getSentTableModel() {
         if (sentTableModel == null) {
-            sentTableModel = new MyTableModel<JobFormat>() {
-                @Override
-                protected YajJob<JobFormat> createYajJob(String[] data) {
-                    return new SentYajJob(this.columns, data);
-                }
-                
-                @Override
-                public TableType getTableType() {
-                    return TableType.SENT;
-                }
-            };
+            sentTableModel = new FaxListTableModel<JobFormat>(connection.getSentJobs());
         }
         return sentTableModel;
     }
@@ -2089,27 +2138,16 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         JTableTABAction.replaceTABWithNextRow(table);
     }
     
-    private MyTableModel<JobFormat> getSendingTableModel() {
+    FaxListTableModel<JobFormat> getSendingTableModel() {
         if (sendingTableModel == null) {
-            sendingTableModel = new MyTableModel<JobFormat>() {
-                @Override
-                protected YajJob<JobFormat> createYajJob(String[] data) {
-                    return new SendingYajJob(this.columns, data);
-                }
-                
-                @Override
-                public TableType getTableType() {
-                    return TableType.SENDING;
-                }
-            };
+            sendingTableModel = new FaxListTableModel<JobFormat>(connection.getSendingJobs());
         }
         return sendingTableModel;
     }
 
-    // Uncomment for archive support.
-    private ArchiveTableModel getArchiveTableModel() {
+    FaxListTableModel<QueueFileFormat> getArchiveTableModel() {
         if (archiveTableModel == null) {
-            archiveTableModel = new ArchiveTableModel();
+            archiveTableModel = new FaxListTableModel<QueueFileFormat>(connection.getArchivedJobs());
         }
         return archiveTableModel;
     }
@@ -2200,13 +2238,13 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         private Filter[] currentFilters = new Filter[TableType.TABLE_COUNT];
         
         @SuppressWarnings("unchecked")
-        private void setJobFilter(MyTableModel model, Filter filter) {
+        private void setJobFilter(FaxListTableModel model, Filter filter) {
             currentFilters[model.getTableType().ordinal()] = filter;
             refreshFilter(model);
         }
         
         @SuppressWarnings("unchecked")
-        public Filter<YajJob<? extends FmtItem>,? extends FmtItem> getFilterFor(TableType tableType) {
+        public Filter<FaxJob<? extends FmtItem>,? extends FmtItem> getFilterFor(TableType tableType) {
             return currentFilters[tableType.ordinal()];
         }
         
@@ -2214,7 +2252,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         public void actionPerformed(ActionEvent e) {
             try {
                 String cmd = e.getActionCommand();
-                MyTableModel model = getSelectedTable().getRealModel();
+                FaxListTableModel model = getSelectedTable().getRealModel();
                 int selTab = tabMain.getSelectedIndex();
 
                 if (cmd.equals("view_all")) {
@@ -2229,7 +2267,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                             Utils._("Only display fax jobs fulfilling:"),
                             Utils._("You have entered no filtering conditions. Do you want to show all faxes instead?"),
                             Utils._("Please enter a valid date/time!\n(Hint: Exactly the same format as in the fax job table is expected)"),
-                            model.columns, (lastSel[selTab] == menuViewCustom) ? getFilterFor(model.getTableType()) : null);
+                            model.getColumns(), (lastSel[selTab] == menuViewCustom) ? getFilterFor(model.getTableType()) : null);
                     cfd.setVisible(true);
                     if (cfd.okClicked) {
                         if (cfd.returnValue == null) {
@@ -2269,7 +2307,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         }
         
         public void stateChanged(ChangeEvent e) {
-            MyTableModel<? extends FmtItem> model = getSelectedTable().getRealModel();
+            FaxListTableModel<? extends FmtItem> model = getSelectedTable().getRealModel();
             boolean viewOwnState  = ownFilterOK(model);
             boolean markErrorState = canMarkError(model);
             
@@ -2282,27 +2320,16 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             }
         }
         
-        private Filter<YajJob<? extends FmtItem>,? extends FmtItem> getOwnFilterFor(MyTableModel<? extends FmtItem> model) {
-            final String user = (clientManager != null) ? clientManager.getUser() : myopts.user;
-            return new StringFilter<YajJob<? extends FmtItem>,FmtItem>(getOwnerColumn(model), StringFilterOperator.EQUAL, user, true);
+        private Filter<FaxJob<? extends FmtItem>,? extends FmtItem> getOwnFilterFor(FaxListTableModel<? extends FmtItem> model) {
+            final String user = (connection.getClientManager() != null) ? connection.getClientManager().getUser() : myopts.user;
+            return new StringFilter<FaxJob<? extends FmtItem>,FmtItem>(getOwnerColumn(model), StringFilterOperator.EQUAL, user, true);
         }
         
-        private boolean canMarkError(MyTableModel<? extends FmtItem> model) {
-            List<? extends FmtItem> columns = model.columns.getCompleteView();
-            switch (model.getTableType()) {
-            case RECEIVED:
-                return columns.contains(RecvFormat.e);
-            case SENT:
-            case SENDING:
-                return columns.contains(JobFormat.a) || columns.contains(JobFormat.s);
-            case ARCHIVE:
-                return columns.contains(QueueFileFormat.state);
-            default:
-                return false;
-            }
+        private boolean canMarkError(FaxListTableModel<? extends FmtItem> model) {
+            return model.getJobs().isShowingErrorsSupported();
         }
         
-        private FmtItem getOwnerColumn(MyTableModel<? extends FmtItem> model) {
+        private FmtItem getOwnerColumn(FaxListTableModel<? extends FmtItem> model) {
             switch (model.getTableType()) {
             case RECEIVED:
                 return RecvFormat.o;
@@ -2316,9 +2343,9 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             }
         }
         
-        private boolean ownFilterOK(MyTableModel<? extends FmtItem> model) {
+        private boolean ownFilterOK(FaxListTableModel<? extends FmtItem> model) {
             final FmtItem ownerItem = getOwnerColumn(model);
-            return (ownerItem != null && model.columns.getCompleteView().contains(ownerItem));
+            return (ownerItem != null && model.getColumns().getCompleteView().contains(ownerItem));
         }
         /**
          * Re-validates the filters on reconnection
@@ -2326,7 +2353,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         @SuppressWarnings("unchecked")
         public void reConnected() {
             for (int i = 0; i < tabMain.getTabCount(); i++) {
-                MyTableModel model = getTableByIndex(i).getRealModel();
+                FaxListTableModel model = getTableByIndex(i).getRealModel();
                 if (lastSel[i] == menuViewOwn) {
                     if (ownFilterOK(model)) 
                         setJobFilter(model, getOwnFilterFor(model));
@@ -2335,7 +2362,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                         setJobFilter(model, null);
                     }
                 } else if (lastSel[i] == menuViewCustom) {
-                    if (getFilterFor(model.getTableType()) == null || !getFilterFor(model.getTableType()).validate(model.columns)) {
+                    if (getFilterFor(model.getTableType()) == null || !getFilterFor(model.getTableType()).validate(model.getColumns())) {
                         lastSel[i] = menuViewAll;
                         setJobFilter(model, null);
                     }
@@ -2354,8 +2381,8 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             } else if (data.equals("O")) {
                 lastSel[idx] = menuViewOwn;
             } else if (data.startsWith("C")) {
-                MyTableModel model = getTableByIndex(idx).getRealModel();
-                Filter<YajJob,FmtItem> yjf = FilterCreator.stringToFilter(data.substring(1), model.columns);
+                FaxListTableModel model = getTableByIndex(idx).getRealModel();
+                Filter<FaxJob,FmtItem> yjf = FilterCreator.stringToFilter(data.substring(1), model.getColumns());
                 if (yjf == null) {
                     lastSel[idx] = menuViewAll;
                 } else {
@@ -2383,7 +2410,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             } else if (lastSel[idx] == menuViewOwn) {
                 return "O";
             } else if (lastSel[idx] == menuViewCustom) {
-                MyTableModel<? extends FmtItem> model = getTableByIndex(idx).getRealModel();
+                FaxListTableModel<? extends FmtItem> model = getTableByIndex(idx).getRealModel();
                 return "C" + FilterCreator.filterToString(getFilterFor(model.getTableType()));
             } else
                 return null;
@@ -2420,7 +2447,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                     showState = true;
                     deleteState = true;
                     faxReadState = true;
-                    faxReadSelected = ((RecvYajJob)tableRecv.getJobForRow(tableRecv.getSelectedRow())).isRead();
+                    faxReadSelected = tableRecv.getJobForRow(tableRecv.getSelectedRow()).isRead();
                 }
             } else if (selectedComponent == scrollSent) { // Sent Table
                 if (tableSent.getSelectedRow() >= 0) {
@@ -2463,360 +2490,101 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             actFaxRead.putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, faxReadSelected);
         }
     }
-
-    class StatusRefresher extends TimerTask {
-        String oldText = "";
-
-        public synchronized void run() {
-            try {
-                String newText;
-                HylaFAXClient hyfc = clientManager.beginServerTransaction(MainWin.this);
-                if (hyfc == null) {
-                    newText = Utils._("Could not log in");
-                    cancel();
-                    invokeLogoutThreaded();
-                    return;
-                } else {
-                    try {
-                        Vector<?> status;
-                        synchronized (hyfc) {
-                            log.finest("In hyfc monitor");
-                            status = hyfc.getList("status");
-                        }
-                        log.finest("Out of hyfc monitor");
-                        newText = Utils.listToString(status, "\n");
-                    } catch (SocketException se) {
-                        log.log(Level.WARNING, "Error refreshing the status, logging out.", se);
-                        cancel();
-                        invokeLogoutThreaded();
-                        return;
-                    } catch (Exception e) {
-                        newText = _("Error refreshing the status:") + " " + e;
-                        log.log(Level.WARNING, "Error refreshing the status:", e);
-                    }
-                }
-                if (!newText.equals(oldText)) {
-                    oldText = newText;
-
-                    SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                            textStatus.setText(oldText);
-                        } 
-                    });
-                }
-                if (clientManager != null)
-                    clientManager.endServerTransaction();
-            } catch (Exception ex) {
-                log.log(Level.SEVERE, "Error refreshing the status:", ex);
-            }
-        }
-    };
     
-    class TableRefresher extends TimerTask {
-        String sentfmt, sendingfmt;
-        Vector<?> lastRecvList = null, lastSentList = null, lastSendingList = null;
-        // Uncomment for archive support.
-        long lastArchiveModification = -1;
-        HylaDirAccessor hyda;
-        boolean cancelled = false;
-        /**
-         * Whether to hide the progress panel on the next run
-         */
-        public boolean hideProgress = false;
+    static class RefreshCompleteHider extends SwingFaxListConnectionListener {
+        final ProgressUI progressUI;
+        final FaxListConnection parent;
         
         @Override
-        public boolean cancel() {
-            cancelled = true;
-            return super.cancel();
-        }
-        
-        public synchronized void run() {
-            try {
-                log.fine("Begin table refresh");
-                
-                HylaFAXClient hyfc = clientManager.beginServerTransaction(MainWin.this);
-                if (hyfc == null) {
-                    return;
-                }
-                Vector<?> lst;
-                try {
-                    //System.out.println(System.currentTimeMillis() + ": Getting list...");
-                    synchronized (hyfc) {
-                        lst = hyfc.getList("recvq");
-                    }
-                    //System.out.println(System.currentTimeMillis() + ": Got list...");
-                    if ((lastRecvList == null) || !lst.equals(lastRecvList)) {
-                        String[][] data = new String[lst.size()][];
-                        for (int i = 0; i < lst.size(); i++) {
-                            //data[i] = ((String)lst.get(i)).split("\\|");
-                            data[i] = Utils.fastSplit((String)lst.get(i), '|');
-                        }
-                        SwingUtilities.invokeLater(new TableDataRunner(recvTableModel, data));
-                        lastRecvList = lst;
-
-                        //                    if (!didFirstRun) {
-                        //                        // Read the read/unread status *after* the table contents has been set 
-                        //                        SwingUtilities.invokeLater(new Runnable() {
-                        //                            public void run() {
-                        //                                recvTableModel.loadReadState(PersistentReadState.CURRENT);
-                        //                                tableRecv.repaint();
-                        //                            }
-                        //                        });
-                        //                        didFirstRun = true;
-                        //                    }
-                        //System.out.println(System.currentTimeMillis() + ": Did invokeLater()");
-                    }
-                } catch (SocketException se) {
-                    log.log(Level.WARNING, "A socket error occured refreshing the tables, logging out.", se);
-                    cancel();
-                    invokeLogoutThreaded();
-                    return;
-                } catch (Exception e) {
-                    log.log(Level.WARNING, "An error occured refreshing the tables: ", e);
-                    //                if (Utils.debugMode) {
-                    //                    Utils.debugOut.println("An error occured refreshing the tables: ");
-                    //                    e.printStackTrace(Utils.debugOut);
-                    //                }
-                }        
-
-                log.fine("recvq complete");
-                if (cancelled) {
-                    log.fine("Already cancelled");
-                    return;
-                }
-                
-                try {
-                    synchronized (hyfc) {
-                        hyfc.jobfmt(sentfmt);
-                        lst = hyfc.getList("doneq");
-                    }
-                    if ((lastSentList == null) || !lst.equals(lastSentList)) {
-                        String[][] data = new String[lst.size()][];
-                        for (int i = 0; i < lst.size(); i++) {
-                            //data[i] = ((String)lst.get(i)).split("\\|");
-                            data[i] = Utils.fastSplit((String)lst.get(i), '|');
-                        }
-                        SwingUtilities.invokeLater(new TableDataRunner(sentTableModel, data));
-                        lastSentList = lst;
-                    }
-                } catch (SocketException se) {
-                    log.log(Level.WARNING, "A socket error occured refreshing the tables, logging out.", se);
-                    cancel();
-                    invokeLogoutThreaded();
-                    return;
-                } catch (Exception e) {
-                    log.log(Level.WARNING, "An error occured refreshing the tables: ", e);
-                    //                if (Utils.debugMode) {
-                    //                    Utils.debugOut.println("An error occured refreshing the tables: ");
-                    //                    e.printStackTrace(Utils.debugOut);
-                    //                }
-                }
-
-                log.fine("doneq complete");
-                if (cancelled) {
-                    log.fine("Already cancelled");
-                    return;
-                }
-                
-                try {
-                    synchronized (hyfc) {
-                        hyfc.jobfmt(sendingfmt);
-                        lst = hyfc.getList("sendq");
-                    }
-                    if ((lastSendingList == null) || !lst.equals(lastSendingList)) {
-                        String[][] data = new String[lst.size()][];
-                        for (int i = 0; i < lst.size(); i++) {
-                            //data[i] = ((String)lst.get(i)).split("\\|");
-                            data[i] = Utils.fastSplit((String)lst.get(i), '|');
-                        }
-                        SwingUtilities.invokeLater(new TableDataRunner(sendingTableModel, data));
-                        lastSendingList = lst;
-                    }
-                } catch (SocketException se) {
-                    log.log(Level.WARNING, "A socket error occured refreshing the tables, logging out.", se);
-                    cancel();
-                    invokeLogoutThreaded();
-                    return;
-                } catch (Exception e) {
-                    log.log(Level.WARNING, "An error occured refreshing the tables: ", e);
-                    //                if (Utils.debugMode) {
-                    //                    Utils.debugOut.println("An error occured refreshing the tables: ");
-                    //                    e.printStackTrace(Utils.debugOut);
-                    //                }
-                }
-                
-                log.fine("sendq complete");
-
-                if (cancelled) {
-                    log.fine("Already cancelled");
-                    return;
-                }
-                // Uncomment for archive support.
-                if (myopts.showArchive) {
-                    try {                        
-                        long modificationTime = hyda.getLastModified();
-                        if (lastArchiveModification == -1 || lastArchiveModification != modificationTime) {
-                            final List<ArchiveYajJob> archiveJobs = ArchiveYajJob.getArchiveFiles(hyda, archiveTableModel.columns);
-                            SwingUtilities.invokeLater(new Runnable() {
-                                public void run() {
-                                    archiveTableModel.setData(archiveJobs);
-                                } 
-                            });
-                            lastArchiveModification = modificationTime;
-                        }
-                    } catch (Exception e) {
-                        log.log(Level.WARNING, "An error occured refreshing the tables: ", e);
-                    }
-                    log.fine("archive complete");
-                }
-
-                if (hideProgress && tablePanel.isShowingProgress()) {
-                    log.fine("Hiding progress...");
-                    SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                            if (cancelled) {
-                                log.fine("Already cancelled");
-                                return;
-                            }
-                            tablePanel.hideProgress();
-                            log.fine("Progress hidden");
-                        }
-                    });
-                    hideProgress = false;
-                }
-                if (clientManager != null)
-                    clientManager.endServerTransaction();
-                log.fine("Tables refresh complete");
-            } catch (Exception ex) {
-                log.log(Level.SEVERE, "Error refreshing the tables:", ex);
+        protected void refreshCompleteSwing(RefreshKind refreshKind, boolean success) {
+            if (refreshKind != RefreshKind.STATUS) {
+                progressUI.close();
+                parent.removeFaxListConnectionListener(this);
             }
         }
         
-        public TableRefresher(String sentfmt, String sendingfmt) {
-            this.sentfmt = sentfmt;
-            this.sendingfmt = sendingfmt; 
-            
-            if (myopts.showArchive) {
-                    hyda = new FileHylaDirAccessor(new File(myopts.archiveLocation));
-            }
-        }
-        
-        class TableDataRunner implements Runnable {
-            private String[][] data = null;
-            private MyTableModel<? extends FmtItem> tm;
-                    
-            public void run() {
-                if (cancelled) {
-                    log.fine("Already cancelled");
-                    return;
-                }
-                //System.out.println(System.currentTimeMillis() + ": About to set data...");
-                tm.setData(data);         
-                //System.out.println(System.currentTimeMillis() + ": Set data.");
-            }
-            
-            public TableDataRunner(MyTableModel<? extends FmtItem> tm, String[][] data) {
-                this.tm = tm;
-                this.data = data;
-            }
-        }
-    }
-    
-    static class TimerTaskWrapper extends TimerTask {
-        protected Runnable wrapped;
-        
-        @Override
-        public void run() {
-            wrapped.run();
-        }
-        
-        public TimerTaskWrapper(Runnable wrapped) {
-            this.wrapped = wrapped;
+        public RefreshCompleteHider(ProgressUI progressUI, FaxListConnection parent) {
+            super(false,false,true);
+            this.progressUI = progressUI;
+            this.parent = parent;
         }
     }
     
     class LoginThread implements Runnable {
         protected boolean wantAdmin;
         protected Runnable loginAction;
+        protected boolean refreshComplete = false;
+        
         
         public void run() {  
             try {
                 
-                if (Utils.debugMode) {
-                    log.info("Begin login (wantAdmin=" + wantAdmin + ")");
-                }
-                clientManager = new HylaClientManager(myopts);
-                clientManager.setAdminMode(wantAdmin);
-                if (clientManager.beginServerTransaction(MainWin.this) == null) {
-                    doErrorCleanup();
-                    return;
-                }
-                if (Utils.debugMode) {
-                    log.info("Login succeeded. -- begin init work.");
-                }
-                
                 PersistentReadState persistentReadState = PersistentReadState.getCurrent();
                 recvTableModel.setPersistentReadState(persistentReadState);
-                
-                // Multi-threaded implementation of the periodic refreshes.
-                // I hope I didn't introduce too many race conditions/deadlocks this way
-                statRefresher = new StatusRefresher();
-
-                tableRefresher = new TableRefresher(myopts.sentfmt.getFormatString(), myopts.sendingfmt.getFormatString());
-                tableRefresher.hideProgress = true;
                 
                 // Read the read/unread status *after* the table contents has been set 
 
                 persistentReadState.prepareReadStates();
                 
+                if (Utils.debugMode) {
+                    log.info("Begin login (wantAdmin=" + wantAdmin + ")");
+                }
+                connection.addFaxListConnectionListener(new RefreshCompleteHider(tablePanel, connection));
+                if (!connection.connect(wantAdmin)) {
+                    log.info("Login failed, bailing out");
+                    doErrorCleanup();
+                    return;
+                }
+                
+                if (Utils.debugMode) {
+                    log.info("Login succeeded. -- begin init work.");
+                }
+                
                 // Final UI updates:
                 SwingUtilities.invokeLater(new Runnable() {
-                   public void run() {
-                       MainWin.this.setTitle(clientManager.getUser() + "@" + myopts.host + (clientManager.isAdminMode() ? " (admin)" : "") + " - " +Utils.AppName);
-                       if (trayIcon != null) {
-                           trayIcon.setConnectedState(true);
-                       }
-                       
-                       actAdminMode.putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, clientManager.isAdminMode());
-                       if (clientManager.isAdminMode()) {
-                           // A reddish gray
-                           Color defStatusBackground = getDefStatusBackground();
-                           textStatus.setBackground(new Color(Math.min(defStatusBackground.getRed() + 40, 255), defStatusBackground.getGreen(), defStatusBackground.getBlue()));
-                       } 
-                       
-                       reloadTableColumnSettings();
-                       
-                       menuView.setEnabled(true);
-                       // Re-check menu View state:
-                       menuViewListener.reConnected();
-                       
-                       tablePanel.showIndeterminateProgress(_("Fetching fax list..."));
-                       
-                       utmrTable.schedule(statRefresher, 0, myopts.statusUpdateInterval);
-                       utmrTable.schedule(tableRefresher, 0, myopts.tableUpdateInterval);
-                       
-                       actSend.setEnabled(true);
-                       actPoll.setEnabled(true);
-                       actAnswerCall.setEnabled(true);
-                       
-                       setActReconnectState(false);
-                       
-                       sendReady = SendReadyState.Ready;
-                       MainWin.this.setEnabled(true);
-                       
-                       if (Utils.debugMode) {
-                           log.info("Finished init work!");
-                       }
-                       if (loginAction != null) {
-                           if (Utils.debugMode) {
-                               log.info("Doing login action: " + loginAction.getClass().getName());
-                           }
-                           loginAction.run();
-                           if (Utils.debugMode) {
-                               log.info("Finished login action.");
-                           }
-                       }
-                       clientManager.endServerTransaction();
+                    public void run() {
+                        if (tablePanel.isShowingProgress())
+                            tablePanel.showIndeterminateProgress(_("Fetching fax list..."));
+                        
+                        MainWin.this.setTitle(connection.getClientManager().getUser() + "@" + myopts.host + (connection.getClientManager().isAdminMode() ? " (admin)" : "") + " - " +Utils.AppName);
+                        if (trayIcon != null) {
+                            trayIcon.setConnectedState(true);
+                        }
+
+                        actAdminMode.putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, connection.getClientManager().isAdminMode());
+                        if (connection.getClientManager().isAdminMode()) {
+                            // A reddish gray
+                            Color defStatusBackground = getDefStatusBackground();
+                            textStatus.setBackground(new Color(Math.min(defStatusBackground.getRed() + 40, 255), defStatusBackground.getGreen(), defStatusBackground.getBlue()));
+                        } 
+
+                        reloadTableColumnSettings();
+
+                        menuView.setEnabled(true);
+                        // Re-check menu View state:
+                        menuViewListener.reConnected();
+
+                        actSend.setEnabled(true);
+                        actPoll.setEnabled(true);
+                        actAnswerCall.setEnabled(true);
+
+                        setActReconnectState(false);
+
+                        sendReady = SendReadyState.Ready;
+                        MainWin.this.setEnabled(true);
+
+                        if (Utils.debugMode) {
+                            log.info("Finished init work!");
+                        }
+                        if (loginAction != null) {
+                            if (Utils.debugMode) {
+                                log.info("Doing login action: " + loginAction.getClass().getName());
+                            }
+                            loginAction.run();
+                            if (Utils.debugMode) {
+                                log.info("Finished login action.");
+                            }
+                        }
                     } 
                 });
             } catch (Exception e) {
@@ -2829,7 +2597,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             if (Utils.debugMode) {
                 log.info("Login failed! -- doing cleanup.");
             }
-            clientManager = null;
+            connection.disconnect();
             sendReady = SendReadyState.NotReady;
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
@@ -2843,19 +2611,14 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             this.wantAdmin = wantAdmin;
             this.loginAction = loginAction;
         }
-    }
-
-    public HylaClientManager getClientManager() {
-        return clientManager;
-    }
-    
+    }    
 
     void refreshFilter() {
         refreshFilter(getSelectedTable().getRealModel());
     }
     
     @SuppressWarnings("unchecked")
-    void refreshFilter(MyTableModel selectedModel ) {
+    void refreshFilter(FaxListTableModel selectedModel ) {
         TableType selectedTableType = selectedModel.getTableType();
         Filter viewFilter = menuViewListener.getFilterFor(selectedTableType);
         Filter quickSearchFilter = quickSearchHelper.getFilterFor(selectedTableType);
@@ -2877,25 +2640,97 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         selectedModel.setJobFilter(modelFilter);
     }
     
-    private static class AsyncLogoutTask extends TimerTask {
-        private HylaClientManager clientManager;
-
-        @Override
-        public void run() {
-            try {
-                clientManager.forceLogout();
-            } catch (Exception e) {
-                log.log(Level.WARNING, "Error logging out:", e);
-            }
-        }
-
-        public AsyncLogoutTask(HylaClientManager clientManager) {
-            super();
-            this.clientManager = clientManager;
-        }
-        
+    public HylaClientManager getClientManager() {
+        return connection.getClientManager();
     }
     
+    protected void optionsChanged() {
+        showOrHideTrayIcon();
+        addOrRemoveArchiveTab();
+        doLogout(true, new Runnable() {
+            public void run() {
+                if (FaxListConnectionFactory.isConnectionTypeStillValid(connection, myopts)) {
+                    connection.reloadSettings();
+                    getRecvTableModel().fireTableStructureChanged();
+                    getSentTableModel().fireTableStructureChanged();
+                    getSendingTableModel().fireTableStructureChanged();
+                    if (myopts.showArchive) {
+                        getArchiveTableModel().fireTableStructureChanged();
+                    }
+                } else {
+                    createFaxListConnection();
+                    getRecvTableModel().setJobs(connection.getReceivedJobs());
+                    getSentTableModel().setJobs(connection.getSentJobs());
+                    getSendingTableModel().setJobs(connection.getSendingJobs());
+                    if (myopts.showArchive) {
+                        getArchiveTableModel().setJobs(connection.getArchivedJobs());
+                    }
+                }
+            }
+        });
+    }
+
+    private final FaxListConnectionListener connListener = new SwingFaxListConnectionListener(true, true, false) {        
+        @Override
+        protected void serverStatusChangedSwing(String statusText) {
+            textStatus.setText(statusText);
+        }
+        
+        @Override
+        protected void connectionStateChangeSwing(ConnectionState oldState,
+                ConnectionState newState) {
+            if (newState == ConnectionState.DISCONNECTED) {
+                setDisconnectedUI();
+                if (tablePanel.isShowingProgress())
+                    tablePanel.hideProgress();
+                if (!userInitiatedLogout && myopts.autoReconnect) {
+                    setupReconnectTimer();
+                }
+                userInitiatedLogout = false;
+            }
+        }
+    };
+    void createFaxListConnection()  {
+        try {
+            if (connection != null)
+                connection.removeFaxListConnectionListener(connListener);
+            connection = FaxListConnectionFactory.getFaxListConnection(myopts, this, tablePanel);
+            connection.addFaxListConnectionListener(connListener);
+        } catch (Exception e) {
+            if (myopts.faxListConnectionType == FaxListConnectionType.HYLAFAX) {
+                ExceptionDialog.showExceptionDialog(MainWin.this, "Error creating FaxListConnection, exiting YajHFC.", e);
+                System.exit(1);
+            } else {
+                ExceptionDialog.showExceptionDialog(MainWin.this, "Error creating FaxListConnection, fallling back to default.", e);
+                myopts.faxListConnectionType = FaxListConnectionType.HYLAFAX;
+                createFaxListConnection();
+            }
+        }
+    }
+    
+    private static final int RECONNECT_DELAY = 30;
+    javax.swing.Timer reconnectTimer;
+    protected void setupReconnectTimer() {
+        reconnectTimer = new javax.swing.Timer(1000, null);
+        reconnectTimer.setInitialDelay(0);
+        reconnectTimer.addActionListener(new ActionListener() {
+            private int counter = RECONNECT_DELAY;
+            MessageFormat reconnectFmt = new MessageFormat(_("Disconnected, will try to reconnect in {0} seconds..."));
+            
+            public void actionPerformed(ActionEvent e) {
+                textStatus.setText(reconnectFmt.format(new Object[] {counter}));
+                if (counter > 0) {
+                    counter--;
+                } else {
+                    reconnectTimer.stop();
+                    reconnectTimer = null;
+                    reconnectToServer(null);
+                }
+            }
+        });
+        reconnectTimer.start();
+    }
+
     class QuickSearchHelper extends AbstractQuickSearchHelper implements ChangeListener {
         
         @SuppressWarnings("unchecked")
@@ -2942,13 +2777,13 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         private FmtItemList<? extends FmtItem> getColumnsFor(TableType tableType) {
             switch (tableType) {
             case RECEIVED:
-                return recvTableModel.columns;
+                return recvTableModel.getColumns();
             case SENT:
-                return sentTableModel.columns;
+                return sentTableModel.getColumns();
             case SENDING:
-                return sendingTableModel.columns;
+                return sendingTableModel.getColumns();
             case ARCHIVE:
-                return archiveTableModel.columns;
+                return archiveTableModel.getColumns();
             default:
                 throw new IllegalArgumentException("Unknown table type");
             }
@@ -3074,6 +2909,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             }
         }
     }
+    
 }  
 
 

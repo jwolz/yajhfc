@@ -29,7 +29,11 @@ import java.util.logging.Logger;
 import javax.print.attribute.Attribute;
 
 import yajhfc.file.MultiFileConvFormat;
-import yajhfc.model.archive.QueueFileFormat;
+import yajhfc.model.FmtItemList;
+import yajhfc.model.JobFormat;
+import yajhfc.model.RecvFormat;
+import yajhfc.model.jobq.QueueFileFormat;
+import yajhfc.model.servconn.FaxListConnectionType;
 import yajhfc.options.MultiFileMode;
 import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.convrules.CompanyRule;
@@ -596,6 +600,21 @@ public class FaxOptions extends AbstractFaxOptions {
      */
     public final Map<String,String> customFileConverters = new TreeMap<String,String>();
     
+    /**
+     * Automatically reconnect after connection loss
+     */
+    public boolean autoReconnect = true;
+    
+    /**
+     * Use a cache for the fax jobs lists
+     */
+    public boolean useFaxListCache = true;
+    
+    /**
+     * The type of fax list connection used.
+     */
+    public FaxListConnectionType faxListConnectionType = FaxListConnectionType.HYLAFAX;
+    
     public FaxOptions() {
         super(null);
         
@@ -725,6 +744,7 @@ public class FaxOptions extends AbstractFaxOptions {
     }
     
     private final PBEntryFieldContainer coverFrom = new PBEntryFieldContainer() {
+        @SuppressWarnings("fallthrough")
         public String getField(PBEntryField field) {
             switch (field) {
             case Company:
@@ -765,6 +785,7 @@ public class FaxOptions extends AbstractFaxOptions {
             }
         }
         
+        @SuppressWarnings("fallthrough")
         public void setField(PBEntryField field, String value) {
             switch (field) {
             case Company:

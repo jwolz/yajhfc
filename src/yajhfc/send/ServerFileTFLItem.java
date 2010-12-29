@@ -25,11 +25,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import yajhfc.HylaServerFile;
 import yajhfc.file.FormattedFile;
+import yajhfc.model.servconn.FaxDocument;
 
 public class ServerFileTFLItem extends HylaTFLItem {
-    private HylaServerFile hysf;
+    private FaxDocument hysf;
     
     @Override
     public InputStream getInputStream() throws FileNotFoundException {
@@ -44,7 +44,7 @@ public class ServerFileTFLItem extends HylaTFLItem {
     @Override
     public FormattedFile getPreviewFilename(HylaFAXClient hyfc) throws IOException {
         try {
-            return hysf.getPreviewFile(hyfc);
+            return hysf.getDocument();
         } catch (ServerResponseException e) {
             IOException ioEx = new IOException(e.getMessage());
             ioEx.initCause(e);
@@ -84,7 +84,7 @@ public class ServerFileTFLItem extends HylaTFLItem {
         throw new IllegalArgumentException("ServerFileTFLItem is immutable!");
     }
     
-    public ServerFileTFLItem(HylaServerFile serverFile) {
+    public ServerFileTFLItem(FaxDocument serverFile) {
         this.hysf = serverFile;
         this.serverName = serverFile.getPath();
     }

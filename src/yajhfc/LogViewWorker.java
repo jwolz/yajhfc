@@ -18,8 +18,6 @@
  */
 package yajhfc;
 
-import gnu.hylafax.HylaFAXClient;
-
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -47,11 +45,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
 import yajhfc.file.FileFormat;
-import yajhfc.model.YajJob;
+import yajhfc.model.FmtItem;
+import yajhfc.model.servconn.FaxDocument;
+import yajhfc.model.servconn.FaxJob;
+import yajhfc.model.servconn.FaxListConnection;
 import yajhfc.util.CancelAction;
 import yajhfc.util.ClipboardPopup;
 import yajhfc.util.ExampleFileFilter;
@@ -65,14 +65,14 @@ import yajhfc.util.SafeJFileChooser;
  *
  */
 public class LogViewWorker extends ProgressWorker {
-    protected List<YajJob<? extends FmtItem>> jobs;
-    protected HylaClientManager clientManager;
+    protected List<FaxJob<? extends FmtItem>> jobs;
     protected List<Log> logList;
+    protected FaxListConnection connection;
     
-    public LogViewWorker(List<YajJob<? extends FmtItem>> jobs, HylaClientManager clientManager, ProgressUI progressMonitor) {
+    public LogViewWorker(FaxListConnection connection, List<FaxJob<? extends FmtItem>> jobs, ProgressUI progressMonitor) {
         this.jobs = jobs;
         this.progressMonitor = progressMonitor;
-        this.clientManager = clientManager;
+        this.connection = connection;
     }
 
     @Override
@@ -87,27 +87,27 @@ public class LogViewWorker extends ProgressWorker {
     public void doWork() {
         if (jobs.size() == 0)
             return;
-        
+
         MessageFormat processingX = new MessageFormat(Utils._("Getting log for {0}"));
         MessageFormat jobX = new MessageFormat(Utils._("Fax job {0} ({1})"));
-        
+
         logList = new ArrayList<Log>(jobs.size());
-        
-        HylaFAXClient hyfc = clientManager.beginServerTransaction(SwingUtilities.windowForComponent(parent));
+
         try {
-            synchronized (hyfc) {
+            connection.beginMultiOperation();
+            try {
                 ByteArrayOutputStream logStream = new ByteArrayOutputStream(4000);
-                for (YajJob<?> job : jobs) {
+                for (FaxJob<?> job : jobs) {
                     updateNote(processingX.format(new Object[] { job.getIDValue() } ));
 
-                    HylaServerFile hsf = job.getCommunicationsLog();
+                    FaxDocument hsf = job.getCommunicationsLog();
                     if (hsf == null) {
                         logList.add(new Log(jobX.format(new Object[] { job.getIDValue(), Utils._("<none>")} ), Utils._("There is no log file available for this fax job.")));
                     } else {
                         String caption = jobX.format(new Object[] { job.getIDValue(), hsf.getPath() } );
                         try {
                             logStream.reset();
-                            hsf.downloadToStream(hyfc, logStream);
+                            hsf.downloadToStream(logStream);
                             String logText = logStream.toString(Utils.HYLAFAX_CHARACTER_ENCODING);
                             logList.add(new Log(caption, logText));
                         } catch (Exception e) {
@@ -117,12 +117,12 @@ public class LogViewWorker extends ProgressWorker {
                     }
                     stepProgressBar(100);
                 }
+            } finally {
+                connection.endMultiOperation();
             }
         } catch (Exception e) {
             showExceptionDialog(Utils._("Error retrieving the log:"), e);
-        } finally {
-            clientManager.endServerTransaction();
-        }
+        } 
     }
     
     @Override

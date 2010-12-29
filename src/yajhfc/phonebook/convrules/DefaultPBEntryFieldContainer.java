@@ -54,6 +54,7 @@ public class DefaultPBEntryFieldContainer extends EnumMap<PBEntryField, String>
         }
     }    
     
+    @SuppressWarnings("fallthrough")
     public DefaultPBEntryFieldContainer parseFromString(final String numberOrFullFields) {
         setAllFieldsTo("");
         // If it contains no : or ;, assume it's a fax number
