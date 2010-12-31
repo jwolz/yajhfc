@@ -136,7 +136,7 @@ public class ArchivePanel extends AbstractOptionsPanel {
         if (checkUseArchive.isSelected()) {
             File archiveDir = new File(ftfArchiveLocation.getText());
             if (!archiveDir.exists()) {
-                JOptionPane.showMessageDialog(this, MessageFormat.format(Utils._("Directory {0} does not exist!"), archiveDir), Utils._("Archive location"), JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, MessageFormat.format(Utils._("Directory {0} does not exist!"), archiveDir), Utils._("Archive directory"), JOptionPane.ERROR_MESSAGE);
                 optionsWin.focusComponent(ftfArchiveLocation.getJTextField());
                 return false;
             }

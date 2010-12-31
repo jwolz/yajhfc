@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-11 10:25+0200\n"
+"POT-Creation-Date: 2010-12-31 15:53+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,15 +37,15 @@ msgid "$LANGUAGE$ translation by {0}"
 msgstr "$LANGUAGE$ γλώσσας από {0}"
 
 #: ../AboutDialog.java:243 ../filters/ui/CustomFilterDialog.java:86
-#: ../options/OptionsWin.java:358 ../phonebook/ldap/ConnectionDialog.java:156
-#: ../phonebook/csv/CSVDialog.java:131
+#: ../options/OptionsWin.java:166 ../phonebook/ldap/ConnectionDialog.java:156
+#: ../phonebook/csv/CSVDialog.java:126
 #: ../phonebook/jdbc/ConnectionDialog.java:197 ../util/ExceptionDialog.java:80
 #: ../util/ToolbarEditorDialog.java:122 ../util/PasswordDialog.java:71
 #: ../send/JobPropsEditorDialog.java:150
 msgid "OK"
 msgstr ""
 
-#: ../AboutDialog.java:287 ../MainWin.java:864
+#: ../AboutDialog.java:287 ../MainWin.java:894
 msgid "About"
 msgstr "Σχετικά"
 
@@ -62,7 +62,7 @@ msgstr "Ιδιότητες συστήματος"
 msgid "About {0}"
 msgstr "Σχετικά {0}"
 
-#: ../AboutDialog.java:304 ../MainWin.java:892
+#: ../AboutDialog.java:304 ../MainWin.java:922
 msgid "Documentation"
 msgstr "Τεκμηρίωση"
 
@@ -70,11 +70,11 @@ msgstr "Τεκμηρίωση"
 msgid "There already is a running instance!"
 msgstr "Μία υπόδειξη εκτελείται ήδη!"
 
-#: ../launch/Launcher2.java:451
+#: ../launch/Launcher2.java:453
 msgid "The new instance did not start after 20 seconds."
 msgstr "Η νέα υπόδειξη απέτυχε να ξεκινήσει μετά απο 2 δευτ."
 
-#: ../launch/Launcher2.java:466
+#: ../launch/Launcher2.java:468
 msgid ""
 "Cannot launch new program instance, continuing with the existing one!\n"
 "Reason: "
@@ -109,11 +109,11 @@ msgstr ""
 #: ../UpdateChecker.java:97 ../LogViewWorker.java:158
 #: ../logconsole/LogConsole.java:131 ../filters/ui/SearchWin.java:166
 #: ../phonebook/ui/NewPhoneBookWin.java:739
-#: ../phonebook/ui/DistributionListPhonebookPanel.java:332
+#: ../phonebook/ui/DistributionListPhonebookPanel.java:335
 msgid "Close"
 msgstr "Κλείσιμο"
 
-#: ../UpdateChecker.java:101 ../UpdateChecker.java:228 ../MainWin.java:1207
+#: ../UpdateChecker.java:101 ../UpdateChecker.java:228 ../MainWin.java:1272
 msgid "Check for update"
 msgstr ""
 
@@ -137,61 +137,62 @@ msgstr ""
 msgid "Printer port"
 msgstr ""
 
-#: ../printerport/PortOptionsPanel.java:80
+#: ../printerport/PortOptionsPanel.java:70
 msgid ""
 "YajHFC supports listening for new PostScript documents to send on a TCP port "
 "or a named pipe."
 msgstr ""
 
-#: ../printerport/PortOptionsPanel.java:81
+#: ../printerport/PortOptionsPanel.java:71
 msgid ""
 "The TCP port can be used as <i>AppSocket</i> port (<i>socket:</i> protocol) "
 "in CUPS or <i>standard TCP/IP port</i> in Windows to create a virtual fax "
 "printer."
 msgstr ""
 
-#: ../printerport/PortOptionsPanel.java:82
+#: ../printerport/PortOptionsPanel.java:72
 msgid ""
 "The named pipe is especially useful on Unix, where it can be used together "
 "with a special CUPS backend to get fax printer support for multiple "
 "simultaneously logged in users."
 msgstr ""
 
-#: ../printerport/PortOptionsPanel.java:85
+#: ../printerport/PortOptionsPanel.java:75
 msgid "Enable TCP/IP printer port for YajHFC"
 msgstr ""
 
-#: ../printerport/PortOptionsPanel.java:97
+#: ../printerport/PortOptionsPanel.java:87
 msgid "Enable FIFO/named pipe printer port for YajHFC"
 msgstr ""
 
-#: ../printerport/PortOptionsPanel.java:124
+#: ../printerport/PortOptionsPanel.java:114
 msgid "Bind address:"
 msgstr ""
 
-#: ../printerport/PortOptionsPanel.java:125 ../options/OptionsWin.java:676
+#: ../printerport/PortOptionsPanel.java:115
+#: ../options/ServerSettingsPanel.java:344
 #: ../phonebook/ldap/ConnectionDialog.java:164
 msgid "Port:"
 msgstr "Θύρα:"
 
-#: ../printerport/PortOptionsPanel.java:128
+#: ../printerport/PortOptionsPanel.java:118
 msgid "Name of named pipe (%u is replaced with user name):"
 msgstr ""
 
-#: ../printerport/PortOptionsPanel.java:129
+#: ../printerport/PortOptionsPanel.java:119
 msgid "mkfifo command:"
 msgstr ""
 
-#: ../printerport/PortOptionsPanel.java:204
-#: ../printerport/PortOptionsPanel.java:209
+#: ../printerport/PortOptionsPanel.java:194
+#: ../printerport/PortOptionsPanel.java:199
 msgid "Please enter a number between 1 and 65536 as port number!"
 msgstr ""
 
-#: ../printerport/PortOptionsPanel.java:219
+#: ../printerport/PortOptionsPanel.java:209
 msgid "Invalid bind address: "
 msgstr ""
 
-#: ../printerport/PortOptionsPanel.java:229
+#: ../printerport/PortOptionsPanel.java:219
 msgid "The mkfifo command entered cannot be found."
 msgstr ""
 
@@ -225,7 +226,7 @@ msgstr "Αποσυνδέθηκε"
 msgid "Print phone books"
 msgstr ""
 
-#: ../print/PhonebooksPrinter.java:90 ../print/FaxTablePrinter.java:88
+#: ../print/PhonebooksPrinter.java:90 ../print/FaxTablePrinter.java:87
 msgid "Print"
 msgstr ""
 
@@ -246,32 +247,32 @@ msgstr ""
 msgid "Columns to print:"
 msgstr ""
 
-#: ../print/PhonebooksPrinter.java:234 ../print/FaxTablePrinter.java:194
+#: ../print/PhonebooksPrinter.java:234 ../print/FaxTablePrinter.java:193
 msgid "Error printing the table:"
 msgstr "Σφάλμα στην εκτύπωση του πίνακα"
 
-#: ../print/FaxTablePrinter.java:70
+#: ../print/FaxTablePrinter.java:69
 msgid "Fit to contents"
 msgstr ""
 
-#: ../print/FaxTablePrinter.java:71
+#: ../print/FaxTablePrinter.java:70
 msgid "Same as on screen"
 msgstr ""
 
-#: ../print/FaxTablePrinter.java:82
+#: ../print/FaxTablePrinter.java:81
 #, java-format
 msgid "Print {0}"
 msgstr ""
 
-#: ../print/FaxTablePrinter.java:114
+#: ../print/FaxTablePrinter.java:113
 msgid "Use a bold font for unread faxes"
 msgstr ""
 
-#: ../print/FaxTablePrinter.java:117 ../MainWin.java:1539
+#: ../print/FaxTablePrinter.java:116 ../MainWin.java:1612
 msgid "Mark failed jobs"
 msgstr "Σημείωσε τις αποτυχημένες προσπάθειες"
 
-#: ../print/FaxTablePrinter.java:120
+#: ../print/FaxTablePrinter.java:119
 msgid "Column widths:"
 msgstr ""
 
@@ -299,11 +300,11 @@ msgstr "<κανένα>"
 msgid "There is no log file available for this fax job."
 msgstr ""
 
-#: ../LogViewWorker.java:115 ../LogViewWorker.java:122
+#: ../LogViewWorker.java:115 ../LogViewWorker.java:124
 msgid "Error retrieving the log:"
 msgstr ""
 
-#: ../LogViewWorker.java:177 ../MainWin.java:1304
+#: ../LogViewWorker.java:177 ../MainWin.java:1374
 msgid "View log"
 msgstr ""
 
@@ -320,7 +321,7 @@ msgid "Save"
 msgstr ""
 
 #: ../LogViewWorker.java:247 ../logconsole/LogConsole.java:97
-#: ../MainWin.java:1124 ../util/ExceptionDialog.java:84
+#: ../MainWin.java:1189 ../util/ExceptionDialog.java:84
 #: ../util/ClipboardPopup.java:56
 msgid "Copy"
 msgstr "Αντιγραφή"
@@ -424,95 +425,120 @@ msgstr ""
 msgid "An error occured while converting the document to PostScript."
 msgstr "Σφάλμα προέκυψε κατά την μετατροπή αρχείου σε PostScript."
 
-#: ../MainWin.java:252
+#: ../MainWin.java:254
 #, java-format
 msgid "Deleting fax {0}"
 msgstr "Διαγραφή ΦΑΞ {0}"
 
-#: ../MainWin.java:260
+#: ../MainWin.java:265
 msgid "Error deleting a fax:\n"
 msgstr "Σφάλμα στην διαγραφή ΦΑΞ:\n"
 
-#: ../MainWin.java:262
+#: ../MainWin.java:267
 #, java-format
 msgid "Error deleting the fax \"{0}\":\n"
 msgstr "Σφάλμα στην διαγραφή ΦΑΞ \"{0}\":\n"
 
-#: ../MainWin.java:312 ../MainWin.java:426
-#, java-format
-msgid "No accessible document files are available for the fax \"{0}\"."
+#: ../MainWin.java:277
+msgid "Error deleting faxes:"
 msgstr ""
 
-#: ../MainWin.java:315 ../MainWin.java:429
-msgid "The following files were inaccessible:"
-msgstr ""
-
-#: ../MainWin.java:321
-msgid "Save fax"
-msgstr ""
-
-#: ../MainWin.java:324 ../MainWin.java:624
+#: ../MainWin.java:311 ../MainWin.java:647
 #, java-format
 msgid "Saving fax {0}"
 msgstr "Αποθήκευση ΦΑΞ {0}"
 
-#: ../MainWin.java:337
+#: ../MainWin.java:319 ../MainWin.java:439
+#, java-format
+msgid "No accessible document files are available for the fax \"{0}\"."
+msgstr ""
+
+#: ../MainWin.java:322 ../MainWin.java:442
+msgid "The following files were inaccessible:"
+msgstr ""
+
+#: ../MainWin.java:328
+msgid "Save fax"
+msgstr ""
+
+#: ../MainWin.java:344
 #, java-format
 msgid "Save {0} to"
 msgstr "Αποθήκευσε {0} σε"
 
-#: ../MainWin.java:349 ../MainWin.java:631
+#: ../MainWin.java:357 ../MainWin.java:459 ../MainWin.java:656
+#, java-format
+msgid ""
+"While downloading the file {0} (job {1}), the server gave back an error code:"
+msgstr ""
+
+#: ../MainWin.java:359 ../MainWin.java:461 ../MainWin.java:658
+#, java-format
+msgid ""
+"The file {0} (job {1}) could not be opened for reading (probably you lack "
+"the necessary access permissions):"
+msgstr ""
+
+#: ../MainWin.java:362 ../MainWin.java:660
 #, java-format
 msgid "An error occured saving the file {0} (job {1}):"
 msgstr "Προέκυψε σφάλμα κατά την αποθήκευση του αρχείου {0} (job {1}):"
 
-#: ../MainWin.java:357 ../MainWin.java:661
+#: ../MainWin.java:370 ../MainWin.java:690
 msgid "An error occured saving the fax:"
 msgstr "Σφάλμα προέκυψε κατά την αποθήκευση του ΦΑΞ:"
 
-#: ../MainWin.java:379 ../MainWin.java:689
+#: ../MainWin.java:379 ../MainWin.java:700
+msgid "Error saving faxes:"
+msgstr ""
+
+#: ../MainWin.java:396 ../MainWin.java:721
 #, java-format
 msgid "{0} files saved to directory {1}."
 msgstr "{0} αρχεία αποθηκεύτηκαν στον κατάλογο {1}."
 
-#: ../MainWin.java:379 ../MainWin.java:689
+#: ../MainWin.java:396 ../MainWin.java:721
 msgid "Faxes saved"
 msgstr "ΦΑΞ αποθηκεύτηκαν"
 
-#: ../MainWin.java:410
+#: ../MainWin.java:425
 #, java-format
 msgid "Displaying fax {0}"
 msgstr "Προβολή ΦΑΞ {0}"
 
-#: ../MainWin.java:411
+#: ../MainWin.java:426
 #, java-format
 msgid "Downloading {0}"
 msgstr ""
 
-#: ../MainWin.java:435
+#: ../MainWin.java:448
 msgid "Display fax"
 msgstr "Προβολή ΦΑΞ"
 
-#: ../MainWin.java:446
+#: ../MainWin.java:463
 #, java-format
 msgid "An error occured displaying the file {0} (job {1}):\n"
 msgstr "Προέκυψε σφάλμα κατά την προβολή του αρχείου {0} (εργασία {1}):\n"
 
-#: ../MainWin.java:450 ../send/SendController.java:251
+#: ../MainWin.java:467 ../send/SendController.java:251
 msgid "Launching viewer"
 msgstr ""
 
-#: ../MainWin.java:465
+#: ../MainWin.java:476
 #, java-format
 msgid "An error occured displaying the fax \"{0}\":"
 msgstr "Προέκυψε σφάλμα κατά την προβολή του ΦΑΞ \"{0}\":"
 
-#: ../MainWin.java:506
+#: ../MainWin.java:483
+msgid "Error displaying faxes:"
+msgstr ""
+
+#: ../MainWin.java:527
 #, java-format
 msgid "Suspending job {0}"
 msgstr "Αδρανοποίηση της εργασίας {0}"
 
-#: ../MainWin.java:510
+#: ../MainWin.java:534
 #, java-format
 msgid ""
 "Suspending the currently running job {0} may block until it is done (or "
@@ -522,25 +548,29 @@ msgstr ""
 "να ολοκληρωθεί (ή να αλλάξει σε μια άλλη \"αδρανή κατάσταση\"). Προσπάθεια "
 "αναστολής ούτως ή άλλως΄;"
 
-#: ../MainWin.java:511
+#: ../MainWin.java:535
 msgid "Suspend fax job"
 msgstr "Αδρανοποίηση της εργασίας ΦΑΞ"
 
-#: ../MainWin.java:522
+#: ../MainWin.java:546
 msgid "Error suspending a fax job:\n"
 msgstr "Σφάλμα στην αδρανοποίηση της της εργασίας ΦΑΞ:\n"
 
-#: ../MainWin.java:524
+#: ../MainWin.java:548
 #, java-format
 msgid "Error suspending the fax job \"{0}\":\n"
 msgstr "Σφάλμα στην αδρανοποίηση της της εργασίας ΦΑΞ \"{0}\":\n"
 
-#: ../MainWin.java:562
+#: ../MainWin.java:556
+msgid "Error suspending faxes:"
+msgstr ""
+
+#: ../MainWin.java:584
 #, java-format
 msgid "Resuming job {0}"
 msgstr "Συνέχιση της εργασίας {0}"
 
-#: ../MainWin.java:565
+#: ../MainWin.java:591
 #, java-format
 msgid ""
 "Job {0} is not in state \"Suspended\" so resuming it probably will not work. "
@@ -549,25 +579,29 @@ msgstr ""
 "Εργασία {0} αδρανής \"ανεστάλη\" Άρα η συνέχιση της πιθανώς δε θα "
 "λειτουργήσει. Προσπάθεια να συνεχιστεί ούτως ή άλλως;"
 
-#: ../MainWin.java:566
+#: ../MainWin.java:592
 msgid "Resume fax job"
 msgstr "Συνέχιση της εργασίας ΦΑΞ"
 
-#: ../MainWin.java:577
+#: ../MainWin.java:603
 msgid "Error resuming a fax job:\n"
 msgstr "Σφάλμα στην συνέχιση της εργασίας:\n"
 
-#: ../MainWin.java:579
+#: ../MainWin.java:605
 #, java-format
 msgid "Error resuming the fax job \"{0}\":\n"
 msgstr "Σφάλμα στην συνέχιση της εργασίας ΦΑΞ \"{0}\":\n"
 
-#: ../MainWin.java:648
+#: ../MainWin.java:613
+msgid "Error resuming faxes:"
+msgstr ""
+
+#: ../MainWin.java:677
 #, java-format
 msgid "File name to save fax {0}"
 msgstr ""
 
-#: ../MainWin.java:712
+#: ../MainWin.java:744
 #, java-format
 msgid ""
 "Save to {0} needs GhostScript and tiff2pdf.\n"
@@ -575,14 +609,15 @@ msgid ""
 "FAQ for download locations)."
 msgstr ""
 
-#: ../MainWin.java:712 ../filters/ui/CustomFilterDialog.java:219
-#: ../filters/ui/CustomFilterDialog.java:223 ../options/OptionsWin.java:1204
-#: ../options/OptionsWin.java:1210 ../options/OptionsWin.java:1228
-#: ../options/OptionsWin.java:1237 ../options/OptionsWin.java:1245
-#: ../options/CoverPanel.java:228 ../options/PathAndViewPanel.java:272
-#: ../options/PathAndViewPanel.java:278 ../options/PathAndViewPanel.java:284
-#: ../options/PathAndViewPanel.java:292 ../options/PathAndViewPanel.java:298
-#: ../phonebook/ldap/ConnectionDialog.java:235
+#: ../MainWin.java:744 ../filters/ui/CustomFilterDialog.java:219
+#: ../filters/ui/CustomFilterDialog.java:223
+#: ../options/ServerSettingsPanel.java:240
+#: ../options/ServerSettingsPanel.java:246
+#: ../options/ServerSettingsPanel.java:264 ../options/CoverPanel.java:238
+#: ../options/PathAndViewPanel.java:276 ../options/PathAndViewPanel.java:282
+#: ../options/PathAndViewPanel.java:288 ../options/PathAndViewPanel.java:296
+#: ../options/PathAndViewPanel.java:302 ../options/CommonPanel.java:391
+#: ../options/CommonPanel.java:399 ../phonebook/ldap/ConnectionDialog.java:235
 #: ../phonebook/ui/NewPhoneBookWin.java:438
 #: ../phonebook/ui/NewPhoneBookWin.java:460
 #: ../phonebook/ui/NewPhoneBookWin.java:1355
@@ -597,396 +632,421 @@ msgstr ""
 msgid "Error"
 msgstr "Σφάλμα"
 
-#: ../MainWin.java:718 ../MainWin.java:936
+#: ../MainWin.java:750 ../MainWin.java:966
 msgid "Select a directory to save the faxes in"
 msgstr "Διάλεξε έναν φάκελο για να αποθηκεύσεις τα ΦΑΞ"
 
-#: ../MainWin.java:719 ../MainWin.java:937
+#: ../MainWin.java:751 ../MainWin.java:967
 #: ../phonebook/ui/NewPhoneBookWin.java:1039
 msgid "Select"
 msgstr "Επιλογή"
 
-#: ../MainWin.java:726 ../MainWin.java:731 ../MainWin.java:944
-#: ../MainWin.java:949
+#: ../MainWin.java:758 ../MainWin.java:763 ../MainWin.java:974
+#: ../MainWin.java:979
 msgid "Saving faxes"
 msgstr "Αποθήκευση των ΦΑΞ"
 
-#: ../MainWin.java:739
+#: ../MainWin.java:771
 #, java-format
 msgid "Save fax as {0}..."
 msgstr ""
 
-#: ../MainWin.java:740
+#: ../MainWin.java:772
 #, java-format
 msgid "Saves the selected fax(es) as single {0} file"
 msgstr ""
 
-#: ../MainWin.java:772 ../options/OptionsWin.java:195
-#: ../options/OptionsWin.java:1124
+#: ../MainWin.java:802 ../options/OptionsWin.java:96
+#: ../options/CommonPanel.java:358
 msgid "Options"
 msgstr "Επιλογές"
 
-#: ../MainWin.java:773
+#: ../MainWin.java:803
 msgid "Shows the Options dialog"
 msgstr "Εμφανίζει το παράθυρο επιλογών"
 
-#: ../MainWin.java:789 ../send/SendWin.java:518
+#: ../MainWin.java:819 ../send/SendWin.java:518
 #: ../send/SimplifiedSendDialog.java:235
 msgid "Send"
 msgstr "Αποστολή"
 
-#: ../MainWin.java:790
+#: ../MainWin.java:820
 msgid "Shows the send fax dialog"
 msgstr "Εμφανίζει τον φάκελο αποστολής ΦΑΞ"
 
-#: ../MainWin.java:802 ../send/SendWin.java:515
+#: ../MainWin.java:832 ../send/SendWin.java:515
 msgid "Poll"
 msgstr ""
 
-#: ../MainWin.java:803
+#: ../MainWin.java:833
 msgid "Shows the poll fax dialog"
 msgstr ""
 
-#: ../MainWin.java:814
+#: ../MainWin.java:844
 msgid "Do you really want to cancel the selected fax jobs?"
 msgstr "Θέλετε σίγουρα να ακυρώσετε τα επιλεγμένα φαξ;"
 
-#: ../MainWin.java:816
+#: ../MainWin.java:846
 msgid "Do you really want to delete the selected faxes?"
 msgstr "Είστε σίγουρες οτι θέλετε να διαγράψετε τα επιλεγμένα ΦΑΞ;"
 
-#: ../MainWin.java:818
+#: ../MainWin.java:848
 msgid "Delete faxes"
 msgstr "Διαγραφή ΦΑΞ"
 
-#: ../MainWin.java:820
+#: ../MainWin.java:850
 msgid "Deleting faxes"
 msgstr "Τα ΦΑΞ διαγράφονται"
 
-#: ../MainWin.java:825 ../phonebook/ui/NewPhoneBookWin.java:837
+#: ../MainWin.java:855 ../phonebook/ui/NewPhoneBookWin.java:837
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:190
 #: ../util/ClipboardPopup.java:60
 msgid "Delete"
 msgstr "Διαγραφή"
 
-#: ../MainWin.java:826
+#: ../MainWin.java:856
 msgid "Deletes the selected fax"
 msgstr "Διαγράφει τα επιλεγμένα ΦΑΞ"
 
-#: ../MainWin.java:835
+#: ../MainWin.java:865
 msgid "Viewing faxes"
 msgstr "Προβάλει τα ΦΑΞ"
 
-#: ../MainWin.java:838
+#: ../MainWin.java:868
 msgid "Show"
 msgstr "Εμφάνιση"
 
-#: ../MainWin.java:839
+#: ../MainWin.java:869
 msgid "Displays the selected fax"
 msgstr "Εμφανίζει τα επιλεγμένα ΦΑΞ"
 
-#: ../MainWin.java:849
+#: ../MainWin.java:879
 msgid "Exit"
 msgstr "Έξοδος"
 
-#: ../MainWin.java:850
+#: ../MainWin.java:880
 msgid "Exits the application"
 msgstr "Έξοδος από την εφαρμογή"
 
-#: ../MainWin.java:865
+#: ../MainWin.java:895
 msgid "Shows the about dialog"
 msgstr "Εμφανίζει το παράθυρο σχετικά"
 
-#: ../MainWin.java:878 ../phonebook/ui/NewPhoneBookWin.java:743
+#: ../MainWin.java:908 ../phonebook/ui/NewPhoneBookWin.java:743
 #: ../phonebook/ui/NewPhoneBookWin.java:952
 msgid "Phone book"
 msgstr "Τηλεφωνικός Κατάλογος"
 
-#: ../MainWin.java:879
+#: ../MainWin.java:909
 msgid "Display/edit the phone book"
 msgstr "Εμφάνισε/τροποποίησε τον τηλεφωνικό κατάλογο"
 
-#: ../MainWin.java:893
+#: ../MainWin.java:923
 msgid "Shows the README files"
 msgstr "Εμφανίζει τα README αρχεία"
 
-#: ../MainWin.java:921
+#: ../MainWin.java:951
 msgid "Marked as read"
 msgstr "Μάρκαρε ως αναγνωσμένα"
 
-#: ../MainWin.java:922
+#: ../MainWin.java:952
 msgid "Marks the selected fax as read/unread"
 msgstr "Μάρκαρε τα επιλεγμένα ως ΦΑΞ αναγνωσμένα/μη αναγνωσμένα"
 
-#: ../MainWin.java:953
+#: ../MainWin.java:983
 msgid "Save fax..."
 msgstr "Αποθήκευση ΦΑΞ..."
 
-#: ../MainWin.java:954
+#: ../MainWin.java:984
 msgid "Saves the selected fax on disk"
 msgstr "Αποθηκεύει τα επιλεγμένα ΦΑΞ στον δίσκο"
 
-#: ../MainWin.java:969
+#: ../MainWin.java:1000
 msgid "Couldn't get a filename for the fax:"
 msgstr "Δεν μπορεί να βρεθεί ένα όνομα αρχείου για το ΦΑΞ:"
 
-#: ../MainWin.java:982
+#: ../MainWin.java:1013
 msgid "Forward fax..."
 msgstr "Προώθηση ΦΑΞ..."
 
-#: ../MainWin.java:983
+#: ../MainWin.java:1014
 msgid "Forwards the fax"
 msgstr "Προώθησε το ΦΑΞ"
 
-#: ../MainWin.java:1003
+#: ../MainWin.java:1034
 msgid "Admin mode"
 msgstr "Εφαρμογή διαχειριστή"
 
-#: ../MainWin.java:1004
+#: ../MainWin.java:1035
 msgid "Connect to the server in admin mode (e.g. to delete faxes)"
 msgstr "Συνδέσου στον σέρβερ ώς διαχειριστής (π.χ. για διαγραφή ΦΑΞ"
 
-#: ../MainWin.java:1016
+#: ../MainWin.java:1047
 msgid "Refresh"
 msgstr "Ανανέωση"
 
-#: ../MainWin.java:1017
+#: ../MainWin.java:1048
 msgid "Refresh tables and server status"
 msgstr "Ανανέωση πινάκων και κατάστασης σερβερ"
 
-#: ../MainWin.java:1065
+#: ../MainWin.java:1072
+#, java-format
+msgid "Getting information for job {0}..."
+msgstr ""
+
+#: ../MainWin.java:1103
+msgid "Opening send dialog..."
+msgstr ""
+
+#: ../MainWin.java:1107
 msgid "Could not get all of the job information necessary to resend the fax:"
 msgstr ""
 "Αδυναμία λήψης όλων των απαραίτητων πληροφοριών για επαναποστολή του φαξ"
 
-#: ../MainWin.java:1078
+#: ../MainWin.java:1113
+msgid "Error resending faxes:"
+msgstr ""
+
+#: ../MainWin.java:1140
+msgid "Resending fax..."
+msgstr ""
+
+#: ../MainWin.java:1143
 msgid "Resend fax..."
 msgstr "Επαναποστολή του ΦΑΞ..."
 
-#: ../MainWin.java:1079
+#: ../MainWin.java:1144
 msgid "Resend the fax"
 msgstr "Επαναποστολή του ΦΑΞ"
 
-#: ../MainWin.java:1089
+#: ../MainWin.java:1154
 msgid "Print table..."
 msgstr "Εκτύπωση πινάκων..."
 
-#: ../MainWin.java:1090
+#: ../MainWin.java:1155
 msgid "Prints the currently displayed table"
 msgstr "Εκτυπώνει τους πίνακες πού προβάλλονται"
 
-#: ../MainWin.java:1098
+#: ../MainWin.java:1163
 msgid "Suspending jobs"
 msgstr "Αδρανοποιέι τις εργασίες"
 
-#: ../MainWin.java:1101
+#: ../MainWin.java:1166
 msgid "Suspend"
 msgstr "Αδρανοποίηση"
 
-#: ../MainWin.java:1102
+#: ../MainWin.java:1167
 msgid "Suspends the transfer of the selected fax"
 msgstr "Αδρανοποιεί την μεταφορά των επιλεγμένων ΦΑΞ"
 
-#: ../MainWin.java:1110
+#: ../MainWin.java:1175
 msgid "Resuming jobs"
 msgstr "Συνέχιση των εργασιών"
 
-#: ../MainWin.java:1113
+#: ../MainWin.java:1178
 msgid "Resume"
 msgstr "Συνέχιση"
 
-#: ../MainWin.java:1114
+#: ../MainWin.java:1179
 msgid "Resumes the transfer of the selected fax"
 msgstr "Συνεχίζει τη μεταφορά των επιλεγμένων φαξ"
 
-#: ../MainWin.java:1125
+#: ../MainWin.java:1190
 msgid "Copies the selected table items to the clipboard"
 msgstr "Αντιγράφει τα επιλεγμένα στοιχεία του πίνακα στο σημειωματάριο"
 
-#: ../MainWin.java:1145 ../MainWin.java:1146
+#: ../MainWin.java:1210 ../MainWin.java:1211
 msgid "Show row numbers"
 msgstr "Προβολή αλληλουχίας αριθμών"
 
-#: ../MainWin.java:1170
+#: ../MainWin.java:1235
 msgid "Adjust column widths"
 msgstr "Προσαρμογή πλάτους στήλης"
 
-#: ../MainWin.java:1171
+#: ../MainWin.java:1236
 msgid "Adjust column widths to fit the window size"
 msgstr "Προσαρμογή πλάτους στήλης για να ταιριάζει στο μέγεθος του παραθύρου"
 
-#: ../MainWin.java:1187
+#: ../MainWin.java:1252
 msgid "Connect or disconnect to the HylaFAX server"
 msgstr "Σύνδεση ή αποσύνδεση στο HylaFAX σέρβερ"
 
-#: ../MainWin.java:1197 ../util/ToolbarEditorDialog.java:100
+#: ../MainWin.java:1262 ../util/ToolbarEditorDialog.java:100
 msgid "Customize toolbar"
 msgstr "Προσαρμογή της γραμμής εργαλείων"
 
-#: ../MainWin.java:1198
+#: ../MainWin.java:1263
 msgid "Customize the toolbar"
 msgstr ""
 
-#: ../MainWin.java:1208
+#: ../MainWin.java:1273
 msgid "Checks if there is a newer version of YajHFC available"
 msgstr ""
 
-#: ../MainWin.java:1224
-msgid "No valid modem found."
+#: ../MainWin.java:1281
+msgid ""
+"Answering a phone call requires a direct connection to the HylaFAX server "
+"which is not available."
 msgstr ""
 
-#: ../MainWin.java:1224 ../MainWin.java:1229 ../MainWin.java:1246
-#: ../MainWin.java:1250
+#: ../MainWin.java:1281 ../MainWin.java:1294 ../MainWin.java:1299
+#: ../MainWin.java:1316 ../MainWin.java:1320
 msgid "Answer call"
 msgstr ""
 
-#: ../MainWin.java:1229
+#: ../MainWin.java:1294
+msgid "No valid modem found."
+msgstr ""
+
+#: ../MainWin.java:1299
 msgid "Please select which modem shall answer a phone call:"
 msgstr ""
 
-#: ../MainWin.java:1241
+#: ../MainWin.java:1311
 msgid "Error answering the phone call:"
 msgstr ""
 
-#: ../MainWin.java:1246
+#: ../MainWin.java:1316
 msgid ""
 "Answering a phone call requires administrative privileges.\n"
 "Please enable admin mode first."
 msgstr ""
 
-#: ../MainWin.java:1251
+#: ../MainWin.java:1321
 msgid "Manually answer a phone call with a modem"
 msgstr ""
 
-#: ../MainWin.java:1265 ../MainWinSearchWin.java:106
-#: ../MainWinSearchWin.java:126
+#: ../MainWin.java:1335 ../MainWinSearchWin.java:108
+#: ../MainWinSearchWin.java:128
 msgid "Search fax"
 msgstr ""
 
-#: ../MainWin.java:1266
+#: ../MainWin.java:1336
 msgid "Searches for a fax"
 msgstr ""
 
-#: ../MainWin.java:1300
+#: ../MainWin.java:1370
 msgid "Viewing logs"
 msgstr ""
 
-#: ../MainWin.java:1305
+#: ../MainWin.java:1375
 msgid "Displays the communication log of the selected fax"
 msgstr ""
 
-#: ../MainWin.java:1328
+#: ../MainWin.java:1398
 msgid "Log console"
 msgstr ""
 
-#: ../MainWin.java:1329
+#: ../MainWin.java:1399
 msgid "Displays the YajHFC log in real time"
 msgstr ""
 
-#: ../MainWin.java:1333
+#: ../MainWin.java:1403
 msgid "Auto-size status bar"
 msgstr ""
 
-#: ../MainWin.java:1334
+#: ../MainWin.java:1404
 msgid "Automatically resize the status bar"
 msgstr ""
 
-#: ../MainWin.java:1363
+#: ../MainWin.java:1433
 msgid "Connect"
 msgstr "Σύνδεση"
 
-#: ../MainWin.java:1363
+#: ../MainWin.java:1433
 msgid "Disconnect"
 msgstr "Αποσύνδεση"
 
-#: ../MainWin.java:1370 ../MainWin.java:2131
+#: ../MainWin.java:1440 ../MainWin.java:2209
 msgid "Fax"
 msgstr ""
 
-#: ../MainWin.java:1393 ../MainWin.java:2793
+#: ../MainWin.java:1460 ../MainWin.java:2587
 msgid "Fetching fax list..."
 msgstr "Αναζήτηση της λίστας φαξ"
 
-#: ../MainWin.java:1519
+#: ../MainWin.java:1592
 msgid "View"
 msgstr "Προβολή"
 
-#: ../MainWin.java:1523
+#: ../MainWin.java:1596
 msgid "All faxes"
 msgstr "Όλα τα φαξ"
 
-#: ../MainWin.java:1529
+#: ../MainWin.java:1602
 msgid "Only own faxes"
 msgstr "Μόνο τα δικά σου φαξ"
 
-#: ../MainWin.java:1534
+#: ../MainWin.java:1607
 msgid "Custom filter..."
 msgstr "παραμετροποιημένο φίλτρο"
 
-#: ../MainWin.java:1711
+#: ../MainWin.java:1805
 msgid "Logging out..."
 msgstr "Αποσύνδεση χρήστη.."
 
-#: ../MainWin.java:1737
+#: ../MainWin.java:1840
+#: ../model/servconn/hylafax/HylaFaxListConnection.java:195
 msgid "Disconnected."
 msgstr "Αποσυνδεδεμένο."
 
-#: ../MainWin.java:1794 ../NoGUISender.java:171
+#: ../MainWin.java:1892 ../options/ServerSettingsPanel.java:88
+#: ../NoGUISender.java:98
 msgid "Logging in..."
 msgstr "Σύνδεση..."
 
-#: ../MainWin.java:1867
+#: ../MainWin.java:1965
 msgid "Help"
 msgstr "Βοήθεια"
 
-#: ../MainWin.java:1882 ../options/OptionsWin.java:453
+#: ../MainWin.java:1980 ../options/OptionsWin.java:226
 msgid "Received"
 msgstr "Ελήφθη"
 
-#: ../MainWin.java:1882
+#: ../MainWin.java:1980
 msgid "Received faxes"
 msgstr "Φαξ που παρελήφθησαν"
 
-#: ../MainWin.java:1883 ../options/OptionsWin.java:454
+#: ../MainWin.java:1981 ../options/OptionsWin.java:227
 msgid "Sent"
 msgstr "Εστάλη"
 
-#: ../MainWin.java:1883
+#: ../MainWin.java:1981
 msgid "Sent faxes"
 msgstr "Απεσταλμένα φαξ"
 
-#: ../MainWin.java:1884 ../options/OptionsWin.java:455
+#: ../MainWin.java:1982 ../options/OptionsWin.java:228
 msgid "Transmitting"
 msgstr "Εκπομπή"
 
-#: ../MainWin.java:1884
+#: ../MainWin.java:1982
 msgid "Faxes in the output queue"
 msgstr "Φαξ σε σειρά προτεραιότητας εξόδου"
 
-#: ../MainWin.java:1898 ../options/OptionsWin.java:456
+#: ../MainWin.java:1996 ../options/OptionsWin.java:229
 msgid "Archive"
 msgstr ""
 
-#: ../MainWin.java:2158
+#: ../MainWin.java:2236
 msgid "Extras"
 msgstr "Πρόσθετα"
 
-#: ../MainWin.java:2228
+#: ../MainWin.java:2306
 #, java-format
 msgid "Custom filter for table {0}"
 msgstr "Όρισε φίλτρο για τον πίνακα {0}"
 
-#: ../MainWin.java:2229
+#: ../MainWin.java:2307
 msgid "Only display fax jobs fulfilling:"
 msgstr "Δείξε μόνο τα φαξ που ανταποκρίνοντα/πληρούν τις προϋποθέσεις:"
 
-#: ../MainWin.java:2230
+#: ../MainWin.java:2308
 msgid ""
 "You have entered no filtering conditions. Do you want to show all faxes "
 "instead?"
 msgstr ""
 
-#: ../MainWin.java:2231
+#: ../MainWin.java:2309
 msgid ""
 "Please enter a valid date/time!\n"
 "(Hint: Exactly the same format as in the fax job table is expected)"
@@ -994,30 +1054,27 @@ msgstr ""
 "(Υπόδειξη:Ακριβώς την ίδια προετοιμασία για χρήση/διαμόρφωση με αυτήν που "
 "αναμένεται στον πίνακα εργασιών του φαξ"
 
-#: ../MainWin.java:2260 ../util/MultiButtonGroup.java:66
+#: ../MainWin.java:2338 ../util/MultiButtonGroup.java:66
 #: ../util/ExcDialogAbstractAction.java:75
 msgid "An Error occurred executing the desired action:"
 msgstr "Σφάλμα προέκυψε κατά την εκτέλεση της επιθυμητής ενέργειας:"
 
-#: ../MainWin.java:2475
-msgid "Could not log in"
-msgstr "Σύνδεση αδύνατη"
-
-#: ../MainWin.java:2494
-msgid "Error refreshing the status:"
-msgstr "Σφάλμα ανανέωσης της κατάστασης:"
-
-#: ../MainWin.java:2823 ../HylaClientManager.java:189
+#: ../MainWin.java:2631 ../HylaClientManager.java:206
 msgid "An error occured connecting to the server:"
 msgstr "Σφάλμα στην σύνδεση με τον σερβερ:"
 
-#: ../MainWin.java:2972
+#: ../MainWin.java:2759
+#, java-format
+msgid "Disconnected, will try to reconnect in {0} seconds..."
+msgstr ""
+
+#: ../MainWin.java:2857
 msgid ""
 "Type here parts of the sender, recipient or file name in order to search for "
 "a fax."
 msgstr ""
 
-#: ../MainWin.java:2973
+#: ../MainWin.java:2858
 msgid "Reset quick search and show all faxes."
 msgstr ""
 
@@ -1029,19 +1086,19 @@ msgstr "(Ορισμός συστήματος)"
 msgid "Choose a file using a dialog"
 msgstr "Επέλεξε ένα αρχείο χρησιμοποιώντας..."
 
-#: ../FaxNotification.java:30
+#: ../FaxNotification.java:32
 msgid "Never"
 msgstr "Ποτέ"
 
-#: ../FaxNotification.java:31
+#: ../FaxNotification.java:33
 msgid "Delivered"
 msgstr "Παραδόθηκε"
 
-#: ../FaxNotification.java:32
+#: ../FaxNotification.java:34
 msgid "Requeued"
 msgstr "Επανατοποθέτηση σε σειρά προτεραιότητας"
 
-#: ../FaxNotification.java:33
+#: ../FaxNotification.java:35
 msgid "Delivered or requeued"
 msgstr "Παραδόθηκε ή επανατοποθετήθηκε σε σειρά προτεραιότητας"
 
@@ -1084,12 +1141,13 @@ msgid "Please enter a valid number!"
 msgstr "Παρακαλώ εισάγετε έναν έγκυρο αριθμό!"
 
 #: ../filters/ui/CustomFilterDialog.java:99 ../util/CancelAction.java:40
+#: ../util/ProgressDialog.java:60
 msgid "Cancel"
 msgstr "Άκυρο"
 
-#: ../filters/ui/CustomFilterDialog.java:115 ../options/ModemsPanel.java:85
+#: ../filters/ui/CustomFilterDialog.java:115 ../options/ModemsPanel.java:83
 #: ../phonebook/ui/NewPhoneBookWin.java:797
-#: ../phonebook/ui/DistributionListPhonebookPanel.java:327
+#: ../phonebook/ui/DistributionListPhonebookPanel.java:330
 #: ../send/SimplifiedSendDialog.java:456 ../send/TextFieldList.java:127
 msgid "Add"
 msgstr "Πρόσθεσε"
@@ -1106,7 +1164,7 @@ msgstr "Όλες οι παρακάτω προϋποθέσεις"
 msgid "Question"
 msgstr ""
 
-#: ../filters/ui/FilterPanel.java:58 ../options/ConvertersPage.java:264
+#: ../filters/ui/FilterPanel.java:58 ../options/ConvertersPage.java:268
 msgid "(none)"
 msgstr "(κανένα)"
 
@@ -1166,447 +1224,40 @@ msgstr "τελειώνει με"
 msgid "matches"
 msgstr "ταιριάζει"
 
-#: ../JobFormat.java:35 ../model/archive/QueueFileFormat.java:85
-#: ../RecvFormat.java:39
-msgid "SubAddress"
-msgstr "Διεύθυνση"
-
-#: ../JobFormat.java:35 ../model/archive/QueueFileFormat.java:85
-msgid "Destination SubAddress"
-msgstr "Διεύθυνση προορισμού"
-
-#: ../JobFormat.java:39 ../model/archive/QueueFileFormat.java:73
-msgid "Password"
-msgstr "Κωδικός"
-
-#: ../JobFormat.java:39 ../model/archive/QueueFileFormat.java:73
-msgid "Destination Password"
-msgstr "Κωδικός προορισμού"
-
-#: ../JobFormat.java:43 ../phonebook/PBEntryField.java:33
-#: ../model/archive/QueueFileFormat.java:39
-msgid "Company"
-msgstr "Εταιρεία"
-
-#: ../JobFormat.java:43 ../model/archive/QueueFileFormat.java:39
-msgid "Destination company name"
-msgstr "Όνομα εταιρείας προορισμού"
-
-#: ../JobFormat.java:47
-msgid "Dials: total/max."
-msgstr "Κλήσεις: σύνολο/μέγιστες."
-
-#: ../JobFormat.java:47
-msgid "Total # dials/maximum # dials"
-msgstr "Σύνολο # κλήσεις/μέγιστες # κλήσεις"
-
-#: ../JobFormat.java:51 ../model/archive/QueueFileFormat.java:82
-#: ../RecvFormat.java:43
-msgid "Speed"
-msgstr "Ταχύτητα"
-
-#: ../JobFormat.java:51
-msgid "Desired signalling rate"
-msgstr "Επιθυμητή ισχύς σήματος"
-
-#: ../JobFormat.java:55 ../model/archive/QueueFileFormat.java:86
-msgid "Tagline format"
-msgstr "Tagline δομή"
-
-#: ../JobFormat.java:55 ../model/archive/QueueFileFormat.java:86
-msgid "Client-specific tagline format string"
-msgstr ""
-
-#: ../JobFormat.java:59 ../model/archive/QueueFileFormat.java:46
-msgid "Desired min-scanline time"
-msgstr ""
-
-#: ../JobFormat.java:59 ../model/archive/QueueFileFormat.java:46
-msgid "Desired minimum scanline time"
-msgstr ""
-
-#: ../JobFormat.java:63 ../model/archive/QueueFileFormat.java:44
-msgid "Desired data format"
-msgstr "Επιθυμητή διαμόρφωση δεδομένων"
-
-#: ../JobFormat.java:67 ../model/archive/QueueFileFormat.java:75
-msgid "Priority"
-msgstr "Προτεραιότητα"
-
-#: ../JobFormat.java:67 ../model/archive/QueueFileFormat.java:75
-msgid "Client-specified scheduling priority"
-msgstr "Προγραμματισμένη προτεραιότητα οριζόμενη απο τον πελάτη "
-
-#: ../JobFormat.java:71 ../model/archive/QueueFileFormat.java:53
-msgid "Tag string"
-msgstr ""
-
-#: ../JobFormat.java:71 ../model/archive/QueueFileFormat.java:53
-msgid "Client-specified job tag string"
-msgstr ""
-
-#: ../JobFormat.java:75
-msgid "Use ECM?"
-msgstr "Χρήση ECM?"
-
-#: ../JobFormat.java:75
-msgid "Desired use of ECM (one-character symbol)"
-msgstr "Επιθυμητή χρήση ECM (σύμβολο ενός χαρακτήρα)"
-
-#: ../JobFormat.java:79 ../model/archive/QueueFileFormat.java:56
-msgid "Location"
-msgstr "Τοποθεσία"
-
-#: ../JobFormat.java:79 ../model/archive/QueueFileFormat.java:56
-msgid "Destination geographic location"
-msgstr "Προορισμός γεωγραφικής τοποθεσίας"
-
-#: ../JobFormat.java:83 ../model/archive/QueueFileFormat.java:57
-msgid "Sender e-mail"
-msgstr "Αποστολέας e-mail"
-
-#: ../JobFormat.java:83
-msgid "Notification e-mail address"
-msgstr "Γνωστοποίηση διεύθυνσης e-mail"
-
-#: ../JobFormat.java:87
-msgid "Private Tagline?"
-msgstr "Ιδιωτική/Ιδιαίτερη Tagline?"
-
-#: ../JobFormat.java:87
-msgid "Desired use of private tagline (one-character symbol)"
-msgstr "Επιθυμητή χρήση ιδιωτικής/ιδιαίτερης tagline (σύμβολο ενός χαρακτήρα)"
-
-#: ../JobFormat.java:91 ../model/archive/QueueFileFormat.java:91
-msgid "Use continuation cover"
-msgstr "Χρήση συνεχούς κάλυψης"
-
-#: ../JobFormat.java:91
-msgid "Whether to use continuation cover page (one-character symbol)"
-msgstr "Να γίνει χρήση συνεχούς εξωφύλλου (σύμβολο ενός χαρακτήρα)"
-
-#: ../JobFormat.java:95
-msgid "Pages done/total"
-msgstr "Σελίδες ολοκληρώθηκαν/πλήρεις"
-
-#: ../JobFormat.java:95
-msgid "# pages transmitted/total # pages to transmit"
-msgstr "# Σελίδες μεταφέρθηκαν,εστάλησαν/πλήρως # σελίδες για μεταφορά"
-
-#: ../JobFormat.java:99
-msgid "Minimal signalling rate"
-msgstr "Ελάχιστος ρυθμός εκπομπής"
-
-#: ../JobFormat.java:99
-msgid "Client-specified minimum acceptable signalling rate"
-msgstr "Ελάχιστος αποδεκτός ρυθμός εκπομπής οριζόμενος από τον πελάτη"
-
-#: ../JobFormat.java:103 ../model/archive/QueueFileFormat.java:76
-msgid "Receiver"
-msgstr "Παραλήπτης"
-
-#: ../JobFormat.java:103 ../model/archive/QueueFileFormat.java:76
-msgid "Destination person (receiver)"
-msgstr "Πρόσωπο προορισμού (παραλήπτης)"
-
-#: ../JobFormat.java:107 ../model/archive/QueueFileFormat.java:81
-#: ../RecvFormat.java:99
-msgid "Sender"
-msgstr "Αποστολέας"
-
-#: ../JobFormat.java:107 ../model/archive/QueueFileFormat.java:81
-msgid "Sender's identity"
-msgstr "Ταυτότητα αποστολέα"
-
-#: ../JobFormat.java:111
-msgid "Tries: done/max."
-msgstr "Προσπάθειες:Ολοκληρώθηκαν/στο μέγιστο."
-
-#: ../JobFormat.java:111
-msgid "Total # tries/maximum # tries"
-msgstr "Συνολικές # προσπάθειες/μέγιστες # προσπάθειες"
-
-#: ../JobFormat.java:115 ../model/archive/QueueFileFormat.java:37
-msgid "Page chopping threshold (inches)"
-msgstr "Αποκοπή περιθωρίων σελίδας (inches)"
-
-#: ../JobFormat.java:119 ../model/archive/QueueFileFormat.java:48
-msgid "Job done operation"
-msgstr "Ολοκλήρωση χειρισμού εργασίας"
-
-#: ../JobFormat.java:119 ../model/archive/QueueFileFormat.java:48
-msgid "Operation to perform when job is done"
-msgstr ""
-
-#: ../JobFormat.java:123
-msgid "Communication identifier"
-msgstr "Εντοπιστής επικοινωνίας"
-
-#: ../JobFormat.java:127 ../model/archive/QueueFileFormat.java:54
-msgid "Job type"
-msgstr "Τύπος εργασίας"
-
-#: ../JobFormat.java:127
-msgid "Job type (one-character symbol)"
-msgstr "Τύπος εργασίας (σύμβολο ενός χαρακτήρα)"
-
-#: ../JobFormat.java:131
-msgid "Scheduled time"
-msgstr "Προγραμματισμένη ώρα"
-
-#: ../JobFormat.java:131
-msgid "Scheduled date and time"
-msgstr "Προγραμματισμένη ημερομηνία και ώρα"
-
-#: ../JobFormat.java:135
-msgid "Scheduled time (UNIX)"
-msgstr ""
-
-#: ../JobFormat.java:135
-msgid "Scheduled time in seconds since the UNIX epoch"
-msgstr "προγραμματισμένη ώρα σε δευτερόλεπτα από την εποχή του UNIX"
-
-#: ../JobFormat.java:139 ../model/archive/QueueFileFormat.java:83
-msgid "Job state"
-msgstr "Κατάσταση εργασίας"
-
-#: ../JobFormat.java:139
-msgid "Job state (one-character symbol)"
-msgstr "Κατάσταση Εργασίας (Ε)"
-
-#: ../JobFormat.java:143 ../model/archive/QueueFileFormat.java:62
-msgid "# consecutive failed tries"
-msgstr "# αλλεπάλληλες αποτυχημένες προσπάθειες"
-
-#: ../JobFormat.java:143 ../model/archive/QueueFileFormat.java:62
-msgid "Number of consecutive failed attempts to place call"
-msgstr ""
-
-#: ../JobFormat.java:147
-msgid "Client machine name"
-msgstr "Όνομα μηχανής πελάτη"
-
-#: ../JobFormat.java:151 ../model/archive/QueueFileFormat.java:87
-msgid "Total # dials"
-msgstr "Σύνολο # κλήσεων "
-
-#: ../JobFormat.java:151 ../model/archive/QueueFileFormat.java:87
-msgid "Total number of phone calls"
-msgstr ""
-
-#: ../JobFormat.java:155 ../model/archive/QueueFileFormat.java:49
-msgid "Number"
-msgstr "Αριθμός"
-
-#: ../JobFormat.java:155 ../model/archive/QueueFileFormat.java:49
-msgid "Public (external) format of dialstring"
-msgstr "Εξωτερική διαμόρφωση κλήσεων"
-
-#: ../JobFormat.java:159
-msgid "# consecutive failed dials"
-msgstr "# αλλεπάλληλες αποτυχημένες κλήσεις"
-
-#: ../JobFormat.java:163 ../model/archive/QueueFileFormat.java:51
-msgid "Group identifier"
-msgstr "Εντοπιστής ομάδας"
-
-#: ../JobFormat.java:167 ../model/archive/QueueFileFormat.java:69
-msgid "Page chop handling"
-msgstr "χειρισμός οριοθέτησης σελίδας"
-
-#: ../JobFormat.java:167 ../model/archive/QueueFileFormat.java:69
-msgid "Whitespace truncation handling"
-msgstr ""
-
-#: ../JobFormat.java:171 ../model/archive/QueueFileFormat.java:80
-msgid "Scheduling priority"
-msgstr "προγραμματισμένη προτεραιότητα"
-
-#: ../JobFormat.java:171 ../model/archive/QueueFileFormat.java:80
-msgid "Current scheduling priority"
-msgstr "Τρέχουσα προγραμματισμένη προτεραιότητα"
-
-#: ../JobFormat.java:175 ../model/archive/QueueFileFormat.java:52
-msgid "ID"
-msgstr ""
-
-#: ../JobFormat.java:175
-msgid "Job identifier"
-msgstr "Αναγνωριστικό εργασίας"
-
-#: ../JobFormat.java:179 ../model/archive/QueueFileFormat.java:55
-msgid "Job kill time"
-msgstr "Χρόνος τερματισμού εργασίας"
-
-#: ../JobFormat.java:179 ../model/archive/QueueFileFormat.java:55
-msgid "Time to give up trying to send job"
-msgstr ""
-
-#: ../JobFormat.java:183 ../model/archive/QueueFileFormat.java:71
-#: ../RecvFormat.java:71
-msgid "Page length"
-msgstr "Μήκος σελίδων"
-
-#: ../JobFormat.java:183 ../model/archive/QueueFileFormat.java:71
-#: ../RecvFormat.java:71
-msgid "Page length in mm"
-msgstr "Μήκος σελίδων σε χιλιοστά"
-
-#: ../JobFormat.java:187 ../model/archive/QueueFileFormat.java:61
-msgid "Modem"
-msgstr "διαμορφωτης-αποδιαμορφωτής"
-
-#: ../JobFormat.java:187
-msgid "Assigned modem"
-msgstr "Καθορισμένο modem"
-
-#: ../JobFormat.java:191 ../model/archive/QueueFileFormat.java:63
-msgid "Notification"
-msgstr "Γνωστοποίηση"
-
-#: ../JobFormat.java:191
-msgid "E-mail notification handling (one-character symbol)"
-msgstr "Χειρισμόςγνωστοποίησης E-mail (σύμβολο ενός χαρακτήρα)"
-
-#: ../JobFormat.java:195 ../model/archive/QueueFileFormat.java:67
-#: ../RecvFormat.java:83
-msgid "Owner"
-msgstr "Κάτοχος"
-
-#: ../JobFormat.java:195 ../model/archive/QueueFileFormat.java:67
-msgid "Job owner"
-msgstr "Κάτοχος εργασίας"
-
-#: ../JobFormat.java:199 ../model/archive/QueueFileFormat.java:64
-msgid "# pages"
-msgstr "# σελίδες"
-
-#: ../JobFormat.java:199 ../model/archive/QueueFileFormat.java:64
-msgid "Number of pages transmitted"
-msgstr ""
-
-#: ../JobFormat.java:203 ../model/archive/QueueFileFormat.java:78
-msgid "Retry time"
-msgstr "Χρόνος επαναπροσπάθειας"
-
-#: ../JobFormat.java:203
-msgid "Job retry time"
-msgstr ""
-
-#: ../JobFormat.java:207 ../model/archive/QueueFileFormat.java:77
-#: ../RecvFormat.java:95
-msgid "Resolution"
-msgstr "Ανάλυση/ευκρίνεια"
-
-#: ../JobFormat.java:207 ../model/archive/QueueFileFormat.java:77
-msgid "Document resolution in lines/inch"
-msgstr "Ευκρίνεια εγγράφου σε γραμμές"
-
-#: ../JobFormat.java:211 ../model/archive/QueueFileFormat.java:84
-msgid "Status"
-msgstr "Κατάσταση"
-
-#: ../JobFormat.java:211 ../model/archive/QueueFileFormat.java:84
-msgid "Job status information from last failure"
-msgstr "Κατάσταση εργασίας απο την τελευταία αποτυχία"
-
-#: ../JobFormat.java:215 ../model/archive/QueueFileFormat.java:89
-msgid "Tries"
-msgstr "Προσπάθειες"
-
-#: ../JobFormat.java:215 ../model/archive/QueueFileFormat.java:89
-msgid "Total number of attempts to send job"
-msgstr ""
-
-#: ../JobFormat.java:219 ../model/archive/QueueFileFormat.java:59
-msgid "Max. tries"
-msgstr "Μέγιστες.προσπάθειες"
-
-#: ../JobFormat.java:219 ../model/archive/QueueFileFormat.java:59
-msgid "Maximum number of attempts to send job"
-msgstr ""
-
-#: ../JobFormat.java:223 ../model/archive/QueueFileFormat.java:66
-msgid "Specified number"
-msgstr "Εξειδικευμένος αριθμός"
-
-#: ../JobFormat.java:223 ../model/archive/QueueFileFormat.java:66
-msgid "Client-specified dialstring"
-msgstr "Κλήση οριζόμενη απο τον πελάτη"
-
-#: ../JobFormat.java:227 ../model/archive/QueueFileFormat.java:72
-#: ../RecvFormat.java:107
-msgid "Page width"
-msgstr "Πλάτος σελίδας"
-
-#: ../JobFormat.java:227 ../model/archive/QueueFileFormat.java:72
-#: ../RecvFormat.java:107
-msgid "Page width in mm"
-msgstr "Πλάτος σελίδας σε χιλιοστά"
-
-#: ../JobFormat.java:231 ../model/archive/QueueFileFormat.java:58
-msgid "Maximum # dials"
-msgstr "Μέγιστος αριθμός # κλήσεων"
-
-#: ../JobFormat.java:231 ../model/archive/QueueFileFormat.java:58
-msgid "Maximum number of times to dial"
-msgstr ""
-
-#: ../JobFormat.java:235 ../model/archive/QueueFileFormat.java:88
-#: ../RecvFormat.java:87
-msgid "Pages"
-msgstr "Σελίδες"
-
-#: ../JobFormat.java:235 ../model/archive/QueueFileFormat.java:88
-msgid "Total # pages to transmit"
-msgstr "Συνολικές # σελίδες για μεταφορά"
-
-#: ../JobFormat.java:239 ../model/archive/QueueFileFormat.java:90
-msgid "Time to send job"
-msgstr "Χρόνος αποστολής εργασίας"
-
-#: ../JobFormat.java:243 ../model/archive/QueueFileFormat.java:93
-msgid "State"
-msgstr "Κατάσταση"
-
-#: ../JobFormat.java:243 ../model/archive/QueueFileFormat.java:93
-msgid "Job state (long description)"
-msgstr ""
-
-#: ../JobFormat.java:247 ../model/archive/QueueFileFormat.java:94
-msgid "Notification when"
-msgstr ""
-
-#: ../JobFormat.java:247 ../model/archive/QueueFileFormat.java:94
-msgid "E-mail notification handling (long description)"
-msgstr ""
-
-#: ../HylaClientManager.java:114
+#: ../HylaClientManager.java:115
 msgid "Log in"
 msgstr ""
 
-#: ../HylaClientManager.java:114
+#: ../HylaClientManager.java:115
 msgid "Please enter the credentials to log into the HylaFAX server:"
 msgstr ""
 
-#: ../HylaClientManager.java:136
+#: ../HylaClientManager.java:138
 msgid "User password"
 msgstr "Κωδικός Χρήστη"
 
-#: ../HylaClientManager.java:136
+#: ../HylaClientManager.java:138
 msgid "Please enter the user password:"
 msgstr ""
 
-#: ../HylaClientManager.java:149 ../HylaClientManager.java:171
+#: ../HylaClientManager.java:151 ../HylaClientManager.java:173
 msgid "An error occured in response to the password:"
 msgstr "Σφάλμα προέκυψε στην ανταπόκριση του κωδικού για τον χρήστη:"
 
-#: ../HylaClientManager.java:162
+#: ../HylaClientManager.java:164
 msgid "Admin password"
 msgstr "Κωδικός διαχειριστή"
 
-#: ../HylaClientManager.java:162
+#: ../HylaClientManager.java:164
 msgid "Please enter the administrative password:"
+msgstr ""
+
+#: ../HylaClientManager.java:192
+msgid "The HylaFAX server responded with an error:"
+msgstr ""
+
+#: ../HylaClientManager.java:199
+msgid "The server's host name was not found:"
 msgstr ""
 
 #: ../plugin/PluginTableModel.java:43
@@ -1633,186 +1284,167 @@ msgstr "Οδηγός JDBC"
 msgid "Plugin"
 msgstr "Σύνδεση"
 
-#: ../options/OptionsWin.java:421 ../options/CoverPanel.java:81
+#: ../options/OptionsWin.java:199 ../options/CoverPanel.java:85
 #: ../send/SendWin.java:457
 msgid "General"
 msgstr "Γενικός"
 
-#: ../options/OptionsWin.java:424
+#: ../options/OptionsWin.java:202
 msgid "Paths and viewers"
 msgstr ""
 
-#: ../options/OptionsWin.java:427
+#: ../options/OptionsWin.java:205
 msgid "Server"
 msgstr ""
 
-#: ../options/OptionsWin.java:430
+#: ../options/OptionsWin.java:208
 msgid "Delivery"
 msgstr "Παράδοση"
 
-#: ../options/OptionsWin.java:433 ../send/SendWin.java:458
+#: ../options/OptionsWin.java:211 ../send/SendWin.java:458
 msgid "Cover page"
 msgstr "Εξώφυλλο"
 
-#: ../options/OptionsWin.java:434
+#: ../options/OptionsWin.java:212
 msgid "Modems"
 msgstr ""
 
-#: ../options/OptionsWin.java:439 ../options/OptionsWin.java:1185
+#: ../options/OptionsWin.java:217 ../options/PluginPanel.java:76
 msgid "Plugins & JDBC"
 msgstr ""
 
-#: ../options/OptionsWin.java:442
+#: ../options/OptionsWin.java:221
 msgid "Please select on the left which table you want to edit."
 msgstr ""
 "Παρακαλώ διαλέξτε στα αριστερά τον πίνακα που θέλετε να επεξεργαστείτε."
 
-#: ../options/OptionsWin.java:450
+#: ../options/OptionsWin.java:222
 msgid "Tables"
 msgstr "Πίνακες"
 
-#: ../options/OptionsWin.java:451
+#: ../options/OptionsWin.java:223
 #, java-format
 msgid "Table \"{0}\""
 msgstr "Πίνακας \"{0}\""
 
-#: ../options/OptionsWin.java:460
+#: ../options/OptionsWin.java:225
+msgid "General settings"
+msgstr ""
+
+#: ../options/OptionsWin.java:234
 msgid "These settings normally need not to be changed."
 msgstr ""
 
-#: ../options/OptionsWin.java:468 ../options/AdminSettingsPage.java:84
+#: ../options/OptionsWin.java:235 ../options/AdminSettingsPage.java:84
 msgid "Advanced settings"
 msgstr ""
 
-#: ../options/OptionsWin.java:471
+#: ../options/OptionsWin.java:238
 msgid "Administrative settings"
 msgstr ""
 
-#: ../options/OptionsWin.java:472
+#: ../options/OptionsWin.java:239
 msgid "File converters"
 msgstr ""
 
-#: ../options/OptionsWin.java:613
-msgid "Update check"
+#: ../options/OptionsWin.java:395
+msgid "Error saving the settings:"
+msgstr "Σφάλμα στην αποθήκευση των ρυθμίσεων:"
+
+#: ../options/ConvertersPage.java:84
+msgid "For information on how to use this page, please see the Wiki at:"
 msgstr ""
 
-#: ../options/OptionsWin.java:615
-msgid "Automatically check for updates"
+#: ../options/ConvertersPage.java:137
+msgid "File format"
 msgstr ""
 
-#: ../options/OptionsWin.java:635
+#: ../options/ConvertersPage.java:138
+msgid "Converter"
+msgstr ""
+
+#: ../options/ConvertersPage.java:230
+#, java-format
+msgid "(internal {0})"
+msgstr ""
+
+#: ../options/ServerSettingsPanel.java:79
+#: ../options/ServerSettingsPanel.java:96
+#: ../options/ServerSettingsPanel.java:329
+#: ../phonebook/ldap/ConnectionDialog.java:159
+#: ../phonebook/jdbc/ConnectionDialog.java:200
+msgid "Test connection"
+msgstr "Δοκιμαστική σύνδεση"
+
+#: ../options/ServerSettingsPanel.java:83
+#, java-format
+msgid "Testing connection to {0}"
+msgstr ""
+
+#: ../options/ServerSettingsPanel.java:92
+msgid "Login successful, logging out."
+msgstr ""
+
+#: ../options/ServerSettingsPanel.java:96
+msgid "Connection to the HylaFAX server successful."
+msgstr ""
+
+#: ../options/ServerSettingsPanel.java:240
+msgid "Please enter a host name."
+msgstr "Παρακαλώ εισάγετε ένα όνομα οικοδεσπότη."
+
+#: ../options/ServerSettingsPanel.java:246
+msgid "Please enter a user name."
+msgstr "Παρακαλώ εισάγετε ένα όνομα χρήστη."
+
+#: ../options/ServerSettingsPanel.java:264
+msgid "Please enter a valid port number."
+msgstr "Παρακαλώ εισάγετε έναν έγκυρο αριθμό θύρας."
+
+#: ../options/ServerSettingsPanel.java:289
 msgid "Connection settings:"
 msgstr "Ρυθμίσεις σύνδεσης:"
 
-#: ../options/OptionsWin.java:646 ../options/OptionsWin.java:652
-#: ../options/OptionsWin.java:658 ../phonebook/ldap/ConnectionDialog.java:125
+#: ../options/ServerSettingsPanel.java:300
+#: ../options/ServerSettingsPanel.java:306
+#: ../options/ServerSettingsPanel.java:312
+#: ../phonebook/ldap/ConnectionDialog.java:125
 #: ../phonebook/jdbc/ConnectionDialog.java:187
 msgid "Always ask"
 msgstr "Να γίνεται πάντα ερώτηση"
 
-#: ../options/OptionsWin.java:673
+#: ../options/ServerSettingsPanel.java:327
 msgid "Use passive mode to fetch faxes"
 msgstr "Χρησιμοποίησε παθητικό τρόπο για να λάβεις τα φαξ"
 
-#: ../options/OptionsWin.java:675
+#: ../options/ServerSettingsPanel.java:343
 msgid "Host name:"
 msgstr "Όνομα οικοδεσπότη:"
 
-#: ../options/OptionsWin.java:677 ../phonebook/jdbc/ConnectionDialog.java:208
-#: ../util/PasswordDialog.java:90
+#: ../options/ServerSettingsPanel.java:345
+#: ../phonebook/jdbc/ConnectionDialog.java:208 ../util/PasswordDialog.java:90
 msgid "Username:"
 msgstr "Όνομα χρήστη:"
 
-#: ../options/OptionsWin.java:680 ../phonebook/ldap/ConnectionDialog.java:169
+#: ../options/ServerSettingsPanel.java:347
+#: ../phonebook/ldap/ConnectionDialog.java:169
 #: ../phonebook/jdbc/ConnectionDialog.java:211 ../util/PasswordDialog.java:93
 msgid "Password:"
 msgstr "Σύνθημα:"
 
-#: ../options/OptionsWin.java:682
+#: ../options/ServerSettingsPanel.java:349
 msgid "Admin Password:"
 msgstr "Σύνθημα χρήστη:"
 
-#: ../options/OptionsWin.java:711
-msgid "User interface"
-msgstr "Διασυνδετικό στοιχείο χρήστη"
-
-#: ../options/OptionsWin.java:733
-msgid "Show tray icon"
-msgstr ""
-
-#: ../options/OptionsWin.java:734
-msgid "Show a system tray icon (works only with Java 6 or higher)"
-msgstr ""
-
-#: ../options/OptionsWin.java:743
-msgid "Minimize to tray"
-msgstr "Ελαχιστοποίησε στον πίνακα"
-
-#: ../options/OptionsWin.java:747
-msgid "Minimize to tray when main window is closed"
-msgstr ""
-
-#: ../options/OptionsWin.java:757
-msgid "Language:"
-msgstr "Γλώσσα:"
-
-#: ../options/OptionsWin.java:758
-msgid "Look and Feel:"
-msgstr "Όψη και αίσθηση:"
-
-#: ../options/OptionsWin.java:759
-msgid "Style of send dialog:"
-msgstr "Στιλ του σταλμένου παραθύρου διαλόγου:"
-
-#: ../options/OptionsWin.java:783
-msgid "Actions after receiving a new fax:"
-msgstr "Ενέργειες μετά τη λήψη ενός νέου φαξ:"
-
-#: ../options/OptionsWin.java:785
-msgid "Beep"
-msgstr ";Hxoς σήματος"
-
-#: ../options/OptionsWin.java:786
-msgid "Bring to front"
-msgstr "Φέρε μπροστά"
-
-#: ../options/OptionsWin.java:787
-msgid "Open in viewer"
-msgstr "Άνοιξε στην οθόνη"
-
-#: ../options/OptionsWin.java:793
-msgid "And mark as read"
-msgstr "Και σημείωσε το σαν διαβασμένο"
-
-#: ../options/OptionsWin.java:795
-msgid "Show flashing tray icon"
-msgstr ""
-
-#: ../options/OptionsWin.java:796
-msgid "Display tray icon message"
-msgstr ""
-
-#: ../options/OptionsWin.java:815
-msgid "Date and Time Format:"
-msgstr ""
-
-#: ../options/OptionsWin.java:824
-msgid "Date format:"
-msgstr ""
-
-#: ../options/OptionsWin.java:825
-msgid "Time format:"
-msgstr ""
-
-#: ../options/OptionsWin.java:846
+#: ../options/ServerSettingsPanel.java:383
 msgid "General settings:"
 msgstr "Γενικές ρυθμίσεις:"
 
-#: ../options/OptionsWin.java:848
+#: ../options/ServerSettingsPanel.java:385
 msgid "Use PCL file type bugfix"
 msgstr "Χρησιμοποίησε PCL αρχείο τύπου bugfix"
 
-#: ../options/OptionsWin.java:854
+#: ../options/ServerSettingsPanel.java:391
 msgid ""
 "The maximum time to wait for a interaction with the server to complete. "
 "Values below 5 are not recommended; 0 disables this timeout."
@@ -1820,11 +1452,11 @@ msgstr ""
 "Ο μέγιστος χρόνος αναμονής για την ολοκλήρωση αλληλεπίδρασης με τον σερβερ. "
 "Τιμές κάτω του 5 δεν συνιστώνται, 0 απενεργοποιεί αυτό το χρονικό όριο."
 
-#: ../options/OptionsWin.java:859
+#: ../options/ServerSettingsPanel.java:396
 msgid "Create new session for every action"
 msgstr "Δημιουργήστε νέα περίοδο για κάθε ενέργεια"
 
-#: ../options/OptionsWin.java:860
+#: ../options/ServerSettingsPanel.java:397
 msgid ""
 "Connect to the server and log in for every action (e.g. view a fax, update "
 "tables, ...) and disconnect afterwards. This impairs performance but might "
@@ -1834,11 +1466,11 @@ msgstr ""
 "φαξ, αναβάθμιση πινάκων, ...) και έπειτα αποσυνδεθείτε. Αυτό φθείρει/"
 "εξασθενήσει την απόδοση μα μπορεί να φθάσει/καταλήξει σε κάποιους ιούς."
 
-#: ../options/OptionsWin.java:862
+#: ../options/ServerSettingsPanel.java:403
 msgid "Date/Time offset:"
 msgstr "Ημερομηνία/Αντιστάθμισμα/Διαφορά ώρας:"
 
-#: ../options/OptionsWin.java:863
+#: ../options/ServerSettingsPanel.java:404
 msgid ""
 "Offset to be added to dates received from the HylaFAX server before "
 "displaying them."
@@ -1846,257 +1478,112 @@ msgstr ""
 "Αντιστάθμισμα να προστεθεί στις ημερομηνίες που έχουν παραληφθεί από τον "
 "HylaFAX σέρβερ πριν από τη"
 
-#: ../options/OptionsWin.java:868
+#: ../options/ServerSettingsPanel.java:409
 msgid "Table refresh interval (secs.):"
 msgstr "Διάλειμμα ανανέωσης πίνακα (secs.):"
 
-#: ../options/OptionsWin.java:869
+#: ../options/ServerSettingsPanel.java:410
 msgid "Server status refresh interval (secs.):"
 msgstr "Διάλειμμα ανανέωσης κατάστασης σέρβερ(secs.):"
 
-#: ../options/OptionsWin.java:870
+#: ../options/ServerSettingsPanel.java:411
 msgid "Server socket timeout (secs):"
 msgstr "Διάλειμμα υποδοχής σέρβερ (secs):"
 
-#: ../options/OptionsWin.java:889
-msgid "Delivery settings"
-msgstr "Ρυθμίσεις παραλαβής"
-
-#: ../options/OptionsWin.java:896
-msgid "Characters filtered from the fax number sent to HylaFAX:"
+#: ../options/ServerSettingsPanel.java:412
+msgid "Character set"
 msgstr ""
 
-#: ../options/OptionsWin.java:912
-msgid "Archive sent fax jobs"
-msgstr ""
-
-#: ../options/OptionsWin.java:921 ../send/JobPropsEditorDialog.java:123
-#: ../send/SimplifiedSendDialog.java:278
-msgid "Job properties"
-msgstr ""
-
-#: ../options/OptionsWin.java:924
-msgid "E-mail address for notifications:"
-msgstr "Διεύθυνση E-mail για γνωστοποιήσεις:"
-
-#: ../options/OptionsWin.java:925 ../send/SendWin.java:443
-#: ../send/SimplifiedSendDialog.java:643
-msgid "Notify when:"
-msgstr "Γνωστοποίηση όταν:"
-
-#: ../options/OptionsWin.java:926 ../send/SendWin.java:444
-#: ../send/SimplifiedSendDialog.java:644
-msgid "Modem:"
-msgstr ""
-
-#: ../options/OptionsWin.java:927
-msgid "Time zone:"
-msgstr "Ζώνη ώρας:"
-
-#: ../options/OptionsWin.java:928 ../send/SendWin.java:445
-#: ../send/SimplifiedSendDialog.java:645
-msgid "Resolution:"
-msgstr "Ευκρίνεια:"
-
-#: ../options/OptionsWin.java:929 ../send/SendWin.java:446
-#: ../send/SimplifiedSendDialog.java:646
-msgid "Paper size:"
-msgstr "Μέγεθος χαρτιού:"
-
-#: ../options/OptionsWin.java:930 ../send/SendWin.java:447
-#: ../send/SimplifiedSendDialog.java:647
-msgid "Cancel job after (minutes):"
-msgstr "Ακύρωση εργασίας μετα από (λεπτά):"
-
-#: ../options/OptionsWin.java:931
-msgid "Maximum dials:"
-msgstr "Mέγιστος αριθμός κλήσεων:"
-
-#: ../options/OptionsWin.java:932 ../send/SendWin.java:448
-#: ../send/SimplifiedSendDialog.java:648
-msgid "Maximum tries:"
-msgstr "Mέγιστος αριθμός προσπαθειών:"
-
-#: ../options/OptionsWin.java:933
-msgid "Filter from fax number:"
-msgstr ""
-
-#: ../options/OptionsWin.java:942 ../options/OptionsWin.java:949
-#: ../options/OptionsWin.java:956 ../options/ArchivePanel.java:77
-msgid "Selected columns:"
-msgstr "Επιλεγμένες στήλες:"
-
-#: ../options/OptionsWin.java:942 ../options/OptionsWin.java:949
-#: ../options/OptionsWin.java:956 ../options/ArchivePanel.java:77
-msgid "Available columns:"
-msgstr "Διαθέσιμες στήλες:"
-
-#: ../options/OptionsWin.java:1010
-msgid "(System native)"
-msgstr "Μητρικό σύστημα"
-
-#: ../options/OptionsWin.java:1011
-msgid "(Crossplatform)"
-msgstr ""
-
-#: ../options/OptionsWin.java:1124
-msgid ""
-"You must restart the program for the change of the language to take effect."
-msgstr ""
-"Πρέπει να γίνει επανεκκίνηση του προγράμματος για να γίνει χρήση της αλλαγής "
-"γλώσσας."
-
-#: ../options/OptionsWin.java:1185
-msgid ""
-"You will need to restart the program for the changes to the list of plugins "
-"and JDBC drivers to take full effect."
-msgstr ""
-
-#: ../options/OptionsWin.java:1190
-msgid "Error saving the settings:"
-msgstr "Σφάλμα στην αποθήκευση των ρυθμίσεων:"
-
-#: ../options/OptionsWin.java:1204
-msgid "Please enter a host name."
-msgstr "Παρακαλώ εισάγετε ένα όνομα οικοδεσπότη."
-
-#: ../options/OptionsWin.java:1210
-msgid "Please enter a user name."
-msgstr "Παρακαλώ εισάγετε ένα όνομα χρήστη."
-
-#: ../options/OptionsWin.java:1228
-msgid "Please enter a valid port number."
-msgstr "Παρακαλώ εισάγετε έναν έγκυρο αριθμό θύρας."
-
-#: ../options/OptionsWin.java:1237
-msgid "Please enter a valid date format:"
-msgstr ""
-
-#: ../options/OptionsWin.java:1245
-msgid "Please enter a valid time format."
-msgstr ""
-
-#: ../options/OptionsWin.java:1294
+#: ../options/ServerSettingsPanel.java:424
 msgid "Read/Unread state of faxes"
 msgstr "Αναγνωσμένα/Μη αναγνωσμένα κατάσταση των φαξ"
 
-#: ../options/OptionsWin.java:1328
+#: ../options/ServerSettingsPanel.java:458
 msgid "Configure..."
 msgstr "Συντονίζει..."
 
-#: ../options/OptionsWin.java:1332
+#: ../options/ServerSettingsPanel.java:462
 msgid "Save location:"
 msgstr "Αποθήκευση τοποθεσίας:"
 
-#: ../options/OptionsWin.java:1387
-msgid "JAR files"
-msgstr "JAR αρχεία"
+#: ../options/FmtEditorPanel.java:59 ../options/ArchivePanel.java:80
+msgid "Selected columns:"
+msgstr "Επιλεγμένες στήλες:"
 
-#: ../options/OptionsWin.java:1400 ../options/OptionsWin.java:1424
-msgid "Add JDBC driver"
-msgstr "Προσθήκη JDBC οδηγού"
+#: ../options/FmtEditorPanel.java:59 ../options/ArchivePanel.java:80
+msgid "Available columns:"
+msgstr "Διαθέσιμες στήλες:"
 
-#: ../options/OptionsWin.java:1406 ../options/OptionsWin.java:1411
-#: ../options/OptionsWin.java:1427
-msgid "Add plugin"
-msgstr "Προσθήκη plugin"
-
-#: ../options/OptionsWin.java:1411
-#, java-format
-msgid "The file {0} is not a valid YajHFC plugin!"
-msgstr "Tο αρχείο {0} δεν είναι έγκυρο YajHFC plugin!"
-
-#: ../options/OptionsWin.java:1430
-msgid "Remove item"
-msgstr "Μετακίνηση στοιχείου"
-
-#: ../options/ConvertersPage.java:79
-msgid "For information on how to use this page, please see the Wiki at:"
-msgstr ""
-
-#: ../options/ConvertersPage.java:133
-msgid "File format"
-msgstr ""
-
-#: ../options/ConvertersPage.java:134
-msgid "Converter"
-msgstr ""
-
-#: ../options/ConvertersPage.java:226
-#, java-format
-msgid "(internal {0})"
-msgstr ""
-
-#: ../options/CoverPanel.java:84
+#: ../options/CoverPanel.java:88
 msgid "Use a custom default cover page:"
 msgstr ""
 
-#: ../options/CoverPanel.java:108
+#: ../options/CoverPanel.java:112
 msgid "Name format:"
 msgstr "Διαμόρφωση ονόματος:"
 
-#: ../options/CoverPanel.java:110
+#: ../options/CoverPanel.java:114
 msgid "Company format:"
 msgstr "Διαμόρφωση εταιρείας:"
 
-#: ../options/CoverPanel.java:112
+#: ../options/CoverPanel.java:116
 msgid "Location format:"
 msgstr "Διαμόρφωση τοποθεσίας:"
 
-#: ../options/CoverPanel.java:114
+#: ../options/CoverPanel.java:118
 msgid "ZIP code format:"
 msgstr "ZIP κωδικός διαμόρφωσης:"
 
-#: ../options/CoverPanel.java:167
+#: ../options/CoverPanel.java:177
 msgid "Sender data"
 msgstr "Αποστολέας δεδομένων"
 
-#: ../options/CoverPanel.java:228
+#: ../options/CoverPanel.java:238
 msgid "The selected default cover page can not be read."
 msgstr "Το εξ'ορισμού επιλεγμένο εξώφυλλο δεν μπορεί να διαβαστεί."
 
-#: ../options/ModemsPanel.java:98 ../send/SimplifiedSendDialog.java:473
+#: ../options/ModemsPanel.java:96 ../send/SimplifiedSendDialog.java:473
 #: ../send/TextFieldList.java:149
 msgid "Remove"
 msgstr "Μετακινεί"
 
-#: ../options/ModemsPanel.java:114 ../util/fmtEditor.java:110
+#: ../options/ModemsPanel.java:112 ../util/fmtEditor.java:110
 #: ../send/TextFieldList.java:83
 msgid "Up"
 msgstr "Επάνω"
 
-#: ../options/ModemsPanel.java:129 ../util/fmtEditor.java:131
+#: ../options/ModemsPanel.java:127 ../util/fmtEditor.java:131
 #: ../send/TextFieldList.java:108
 msgid "Down"
 msgstr "Κάτω"
 
-#: ../options/ModemsPanel.java:135
+#: ../options/ModemsPanel.java:133
 msgid "Reset the list of modems?"
 msgstr ""
 
-#: ../options/ModemsPanel.java:135 ../options/ModemsPanel.java:140
+#: ../options/ModemsPanel.java:133 ../options/ModemsPanel.java:138
 #: ../util/AbstractQuickSearchHelper.java:166
 #: ../util/ToolbarEditorDialog.java:130
 msgid "Reset"
 msgstr "Επανεκκίνηση"
 
-#: ../options/ModemsPanel.java:166
+#: ../options/ModemsPanel.java:165
 msgid "Automatically get the list of modems"
 msgstr ""
 
-#: ../options/ModemsPanel.java:169
+#: ../options/ModemsPanel.java:168
 msgid "Use the following list of modems:"
 msgstr ""
 
-#: ../options/ModemsPanel.java:305
+#: ../options/ModemsPanel.java:304
 msgid "HylaFAX name"
 msgstr ""
 
-#: ../options/ModemsPanel.java:306
+#: ../options/ModemsPanel.java:305
 msgid "Number/Description"
 msgstr ""
 
-#: ../options/ModemsPanel.java:307
+#: ../options/ModemsPanel.java:306
 msgid "Full Description"
 msgstr ""
 
@@ -2112,30 +1599,79 @@ msgstr ""
 msgid "Complete fax as single file (needs GhostScript+tiff2pdf)"
 msgstr ""
 
-#: ../options/ArchivePanel.java:65
+#: ../options/ArchivePanel.java:68
 msgid "Location of archive directory:"
 msgstr ""
 
-#: ../options/ArchivePanel.java:67
+#: ../options/ArchivePanel.java:70
 msgid "Show archive table"
 msgstr ""
 
-#: ../options/PathAndViewPanel.java:81
+#: ../options/ArchivePanel.java:139
+#: ../options/GeneralTableSettingsPanel.java:179
+#, java-format
+msgid "Directory {0} does not exist!"
+msgstr ""
+
+#: ../options/ArchivePanel.java:139
+msgid "Archive directory"
+msgstr ""
+
+#: ../options/GeneralTableSettingsPanel.java:104
+msgid "Fax lists"
+msgstr ""
+
+#: ../options/GeneralTableSettingsPanel.java:106
+msgid "Access method for the fax lists"
+msgstr ""
+
+#: ../options/GeneralTableSettingsPanel.java:107
+msgid ""
+"Location of spool directory for direct access (must contain recvq, doneq and "
+"docq)"
+msgstr ""
+
+#: ../options/GeneralTableSettingsPanel.java:113
+#, java-format
+msgid "{0} KB"
+msgstr ""
+
+#: ../options/GeneralTableSettingsPanel.java:117
+msgid "Clear cache"
+msgstr ""
+
+#: ../options/GeneralTableSettingsPanel.java:126
+msgid "Locally cache fax lists"
+msgstr ""
+
+#: ../options/GeneralTableSettingsPanel.java:134
+msgid "Cache settings"
+msgstr ""
+
+#: ../options/GeneralTableSettingsPanel.java:136
+msgid "Current Cache size:"
+msgstr ""
+
+#: ../options/GeneralTableSettingsPanel.java:179
+msgid "Invalid spool directory"
+msgstr ""
+
+#: ../options/PathAndViewPanel.java:85
 msgid "Path settings"
 msgstr "Pυθμίσεις διαδρομής"
 
-#: ../options/PathAndViewPanel.java:98
+#: ../options/PathAndViewPanel.java:102
 msgid "Same as PostScript viewer"
 msgstr ""
 
-#: ../options/PathAndViewPanel.java:106
+#: ../options/PathAndViewPanel.java:110
 msgid ""
 "Command line for fax viewer: (insert %s as a placeholder for the filename)"
 msgstr ""
 "Γραμμή εντολής για τον αναγνώστη του φαξ: (εισάγετε %s as a placeholder για "
 "το όνομα του αρχείου )"
 
-#: ../options/PathAndViewPanel.java:108
+#: ../options/PathAndViewPanel.java:112
 msgid ""
 "Command line for Postscript viewer: (insert %s as a placeholder for the "
 "filename)"
@@ -2143,71 +1679,265 @@ msgstr ""
 "Γραμμή εντολής για τον αναγνώστη του υστερόγραφου: (εισάγετε %s as a "
 "placeholder για το  όνομα του αρχείου)"
 
-#: ../options/PathAndViewPanel.java:110
+#: ../options/PathAndViewPanel.java:114
 msgid ""
 "Command line for PDF viewer: (insert %s as a placeholder for the filename)"
 msgstr ""
 
-#: ../options/PathAndViewPanel.java:112
+#: ../options/PathAndViewPanel.java:116
 msgid "Location of GhostScript executable (optional):"
 msgstr ""
 
-#: ../options/PathAndViewPanel.java:114
+#: ../options/PathAndViewPanel.java:118
 msgid "Location of tiff2pdf executable (optional):"
 msgstr ""
 
-#: ../options/PathAndViewPanel.java:153
+#: ../options/PathAndViewPanel.java:157
 msgid "View settings"
 msgstr ""
 
-#: ../options/PathAndViewPanel.java:155
+#: ../options/PathAndViewPanel.java:159
 msgid "View faxes as single file (needs GhostScript+tiff2pdf)"
 msgstr ""
 
-#: ../options/PathAndViewPanel.java:156
+#: ../options/PathAndViewPanel.java:160
 msgid "View faxes always in this format"
 msgstr ""
 
-#: ../options/PathAndViewPanel.java:168
+#: ../options/PathAndViewPanel.java:172
 msgid "Format for viewing:"
 msgstr ""
 
-#: ../options/PathAndViewPanel.java:189
+#: ../options/PathAndViewPanel.java:193
 msgid "Send settings"
 msgstr ""
 
-#: ../options/PathAndViewPanel.java:191
+#: ../options/PathAndViewPanel.java:195
 msgid "Send faxes always in this format"
 msgstr ""
 
-#: ../options/PathAndViewPanel.java:203
+#: ../options/PathAndViewPanel.java:207
 msgid "Send multiple files as:"
 msgstr ""
 
-#: ../options/PathAndViewPanel.java:204
+#: ../options/PathAndViewPanel.java:208
 msgid "Format for sending:"
 msgstr ""
 
-#: ../options/PathAndViewPanel.java:272
+#: ../options/PathAndViewPanel.java:276
 msgid "Please enter the command line for the fax viewer."
 msgstr "Παρακαλώ εισάγετε τη γραμμή εντολής για τον αναγνώστη του φαξ."
 
-#: ../options/PathAndViewPanel.java:278
+#: ../options/PathAndViewPanel.java:282
 msgid "Please enter the command line for the PostScript viewer."
 msgstr ""
 "Παρακαλώ εισάγετε τη γραμμή εντολής για τον αναγνώστη του υστερόγραφου."
 
-#: ../options/PathAndViewPanel.java:284
+#: ../options/PathAndViewPanel.java:288
 msgid "Please enter the command line for the PDF viewer."
 msgstr ""
 
-#: ../options/PathAndViewPanel.java:292
+#: ../options/PathAndViewPanel.java:296
 msgid "Please enter the location of the GhostScript executable."
 msgstr ""
 
-#: ../options/PathAndViewPanel.java:298
+#: ../options/PathAndViewPanel.java:302
 msgid "Please enter the location of the tiff2pdf executable."
 msgstr ""
+
+#: ../options/SendPanel.java:109
+msgid "Delivery settings"
+msgstr "Ρυθμίσεις παραλαβής"
+
+#: ../options/SendPanel.java:116
+msgid "Characters filtered from the fax number sent to HylaFAX:"
+msgstr ""
+
+#: ../options/SendPanel.java:132
+msgid "Archive sent fax jobs"
+msgstr ""
+
+#: ../options/SendPanel.java:141 ../send/JobPropsEditorDialog.java:123
+#: ../send/SimplifiedSendDialog.java:278
+msgid "Job properties"
+msgstr ""
+
+#: ../options/SendPanel.java:144
+msgid "E-mail address for notifications:"
+msgstr "Διεύθυνση E-mail για γνωστοποιήσεις:"
+
+#: ../options/SendPanel.java:145 ../send/SendWin.java:443
+#: ../send/SimplifiedSendDialog.java:643
+msgid "Notify when:"
+msgstr "Γνωστοποίηση όταν:"
+
+#: ../options/SendPanel.java:146 ../send/SendWin.java:444
+#: ../send/SimplifiedSendDialog.java:644
+msgid "Modem:"
+msgstr ""
+
+#: ../options/SendPanel.java:147
+msgid "Time zone:"
+msgstr "Ζώνη ώρας:"
+
+#: ../options/SendPanel.java:148 ../send/SendWin.java:445
+#: ../send/SimplifiedSendDialog.java:645
+msgid "Resolution:"
+msgstr "Ευκρίνεια:"
+
+#: ../options/SendPanel.java:149 ../send/SendWin.java:446
+#: ../send/SimplifiedSendDialog.java:646
+msgid "Paper size:"
+msgstr "Μέγεθος χαρτιού:"
+
+#: ../options/SendPanel.java:150 ../send/SendWin.java:447
+#: ../send/SimplifiedSendDialog.java:647
+msgid "Cancel job after (minutes):"
+msgstr "Ακύρωση εργασίας μετα από (λεπτά):"
+
+#: ../options/SendPanel.java:151
+msgid "Maximum dials:"
+msgstr "Mέγιστος αριθμός κλήσεων:"
+
+#: ../options/SendPanel.java:152 ../send/SendWin.java:448
+#: ../send/SimplifiedSendDialog.java:648
+msgid "Maximum tries:"
+msgstr "Mέγιστος αριθμός προσπαθειών:"
+
+#: ../options/SendPanel.java:153
+msgid "Filter from fax number:"
+msgstr ""
+
+#: ../options/CommonPanel.java:100
+msgid "(System native)"
+msgstr "Μητρικό σύστημα"
+
+#: ../options/CommonPanel.java:101
+msgid "(Crossplatform)"
+msgstr ""
+
+#: ../options/CommonPanel.java:155
+msgid "Update check"
+msgstr ""
+
+#: ../options/CommonPanel.java:157
+msgid "Automatically check for updates"
+msgstr ""
+
+#: ../options/CommonPanel.java:185
+msgid "User interface"
+msgstr "Διασυνδετικό στοιχείο χρήστη"
+
+#: ../options/CommonPanel.java:209
+msgid "Show tray icon"
+msgstr ""
+
+#: ../options/CommonPanel.java:210
+msgid "Show a system tray icon (works only with Java 6 or higher)"
+msgstr ""
+
+#: ../options/CommonPanel.java:219
+msgid "Minimize to tray"
+msgstr "Ελαχιστοποίησε στον πίνακα"
+
+#: ../options/CommonPanel.java:223
+msgid "Minimize to tray when main window is closed"
+msgstr ""
+
+#: ../options/CommonPanel.java:233
+msgid "Language:"
+msgstr "Γλώσσα:"
+
+#: ../options/CommonPanel.java:234
+msgid "Look and Feel:"
+msgstr "Όψη και αίσθηση:"
+
+#: ../options/CommonPanel.java:235
+msgid "Style of send dialog:"
+msgstr "Στιλ του σταλμένου παραθύρου διαλόγου:"
+
+#: ../options/CommonPanel.java:259
+msgid "Actions after receiving a new fax:"
+msgstr "Ενέργειες μετά τη λήψη ενός νέου φαξ:"
+
+#: ../options/CommonPanel.java:261
+msgid "Beep"
+msgstr ";Hxoς σήματος"
+
+#: ../options/CommonPanel.java:262
+msgid "Bring to front"
+msgstr "Φέρε μπροστά"
+
+#: ../options/CommonPanel.java:263
+msgid "Open in viewer"
+msgstr "Άνοιξε στην οθόνη"
+
+#: ../options/CommonPanel.java:269
+msgid "And mark as read"
+msgstr "Και σημείωσε το σαν διαβασμένο"
+
+#: ../options/CommonPanel.java:271
+msgid "Show flashing tray icon"
+msgstr ""
+
+#: ../options/CommonPanel.java:272
+msgid "Display tray icon message"
+msgstr ""
+
+#: ../options/CommonPanel.java:291
+msgid "Date and Time Format:"
+msgstr ""
+
+#: ../options/CommonPanel.java:300
+msgid "Date format:"
+msgstr ""
+
+#: ../options/CommonPanel.java:301
+msgid "Time format:"
+msgstr ""
+
+#: ../options/CommonPanel.java:358
+msgid ""
+"You must restart the program for the change of the language to take effect."
+msgstr ""
+"Πρέπει να γίνει επανεκκίνηση του προγράμματος για να γίνει χρήση της αλλαγής "
+"γλώσσας."
+
+#: ../options/CommonPanel.java:391
+msgid "Please enter a valid date format:"
+msgstr ""
+
+#: ../options/CommonPanel.java:399
+msgid "Please enter a valid time format."
+msgstr ""
+
+#: ../options/PluginPanel.java:76
+msgid ""
+"You will need to restart the program for the changes to the list of plugins "
+"and JDBC drivers to take full effect."
+msgstr ""
+
+#: ../options/PluginPanel.java:132
+msgid "JAR files"
+msgstr "JAR αρχεία"
+
+#: ../options/PluginPanel.java:145 ../options/PluginPanel.java:169
+msgid "Add JDBC driver"
+msgstr "Προσθήκη JDBC οδηγού"
+
+#: ../options/PluginPanel.java:151 ../options/PluginPanel.java:156
+#: ../options/PluginPanel.java:172
+msgid "Add plugin"
+msgstr "Προσθήκη plugin"
+
+#: ../options/PluginPanel.java:156
+#, java-format
+msgid "The file {0} is not a valid YajHFC plugin!"
+msgstr "Tο αρχείο {0} δεν είναι έγκυρο YajHFC plugin!"
+
+#: ../options/PluginPanel.java:175
+msgid "Remove item"
+msgstr "Μετακίνηση στοιχείου"
 
 #: ../options/AdminSettingsPage.java:74
 msgid ""
@@ -2236,27 +1966,31 @@ msgstr ""
 msgid "Remove application menu entries from normal menu on Mac OS X"
 msgstr ""
 
-#: ../options/AdminSettingsPage.java:115 ../options/AdminSettingsPage.java:119
+#: ../options/AdminSettingsPage.java:92
+msgid "Send FORM command"
+msgstr ""
+
+#: ../options/AdminSettingsPage.java:118 ../options/AdminSettingsPage.java:122
 msgid "Import settings"
 msgstr ""
 
-#: ../options/AdminSettingsPage.java:131
+#: ../options/AdminSettingsPage.java:134
 msgid "Settings imported successfully."
 msgstr ""
 
-#: ../options/AdminSettingsPage.java:133
+#: ../options/AdminSettingsPage.java:136
 msgid "Error importing settings:"
 msgstr ""
 
-#: ../options/AdminSettingsPage.java:139 ../options/AdminSettingsPage.java:143
+#: ../options/AdminSettingsPage.java:142 ../options/AdminSettingsPage.java:146
 msgid "Export settings"
 msgstr ""
 
-#: ../options/AdminSettingsPage.java:161
+#: ../options/AdminSettingsPage.java:164
 msgid "Error exporting settings:"
 msgstr ""
 
-#: ../options/AdminSettingsPage.java:172
+#: ../options/AdminSettingsPage.java:175
 msgid "Import/Export"
 msgstr ""
 
@@ -2320,11 +2054,6 @@ msgstr ""
 "Εάν έγινε έλεγχος, όλες οι καταχωρήσεις στον κατάλογο φορτώνονται όταν ο "
 "τηλεφωνικός κατάλογος είνα"
 
-#: ../phonebook/ldap/ConnectionDialog.java:159
-#: ../phonebook/jdbc/ConnectionDialog.java:200
-msgid "Test connection"
-msgstr "Δοκιμαστική σύνδεση"
-
 #: ../phonebook/ldap/ConnectionDialog.java:163
 msgid "Server name:"
 msgstr "Όνομα εξυπηρετητή:"
@@ -2338,7 +2067,7 @@ msgid "User name (Bind DN):"
 msgstr "Όνομα χρήστη (Δέσμευση DN):"
 
 #: ../phonebook/ldap/ConnectionDialog.java:173
-#: ../phonebook/xml/XMLPhoneBook.java:354 ../phonebook/csv/CSVDialog.java:122
+#: ../phonebook/xml/XMLPhoneBook.java:354 ../phonebook/csv/CSVDialog.java:117
 #: ../phonebook/jdbc/JDBCPhoneBook.java:94
 msgid "Phone book name to display:"
 msgstr "Όνομα τηλεφωνικού καταλόγου για προβολή:"
@@ -2381,8 +2110,8 @@ msgid "[Location with ZIP code]"
 msgstr "[Τοποθεσία/Θέση με ZIP κωδικό]"
 
 #: ../phonebook/PBEntryField.java:30
-msgid "First Name"
-msgstr "Όνομα που δόθηκε"
+msgid "First name"
+msgstr ""
 
 #: ../phonebook/PBEntryField.java:31
 msgid "Last Name#(please translate as short form of surname)#"
@@ -2391,6 +2120,11 @@ msgstr ""
 #: ../phonebook/PBEntryField.java:32
 msgid "Title"
 msgstr "Tίτλος"
+
+#: ../phonebook/PBEntryField.java:33 ../model/jobq/QueueFileFormat.java:39
+#: ../model/JobFormat.java:46
+msgid "Company"
+msgstr "Εταιρεία"
 
 #: ../phonebook/PBEntryField.java:34
 msgid "Position"
@@ -2464,43 +2198,43 @@ msgstr "Σφάλμα στην αποθήκευση του τηλεφωνικού
 msgid "Phone book files"
 msgstr "Αρχεία τηλεφωνικού καταλόγου"
 
-#: ../phonebook/csv/CSVDialog.java:80
+#: ../phonebook/csv/CSVDialog.java:79
 #, java-format
 msgid "Open CSV file {0}"
 msgstr ""
 
-#: ../phonebook/csv/CSVDialog.java:112
+#: ../phonebook/csv/CSVDialog.java:107
 msgid "First line contains headers"
 msgstr ""
 
-#: ../phonebook/csv/CSVDialog.java:114
+#: ../phonebook/csv/CSVDialog.java:109
 msgid "Charset:"
 msgstr ""
 
-#: ../phonebook/csv/CSVDialog.java:115
+#: ../phonebook/csv/CSVDialog.java:110
 msgid "Separator:"
 msgstr ""
 
-#: ../phonebook/csv/CSVDialog.java:116
+#: ../phonebook/csv/CSVDialog.java:111
 msgid "Quote character:"
 msgstr ""
 
-#: ../phonebook/csv/CSVDialog.java:256
+#: ../phonebook/csv/CSVDialog.java:251
 #, java-format
 msgid "Column {0}"
 msgstr ""
 
-#: ../phonebook/csv/CSVDialog.java:283
+#: ../phonebook/csv/CSVDialog.java:278
 msgid "Error previewing your settings:"
 msgstr ""
 
-#: ../phonebook/csv/CSVDialog.java:314 ../send/SendWin.java:545
+#: ../phonebook/csv/CSVDialog.java:309 ../send/SendWin.java:545
 #: ../send/SendWin.java:550 ../send/SimplifiedSendDialog.java:248
 #: ../send/SimplifiedSendDialog.java:267
 msgid "Preview"
 msgstr "Προεπισκόπηση"
 
-#: ../phonebook/csv/CSVDialog.java:316
+#: ../phonebook/csv/CSVDialog.java:311
 msgid ""
 "Please select which columns in the CSV file represent the phone book fields:"
 msgstr ""
@@ -2708,27 +2442,27 @@ msgstr ""
 msgid "Add an existing phone book entry to the distribution list"
 msgstr ""
 
-#: ../phonebook/ui/DistributionListPhonebookPanel.java:270
+#: ../phonebook/ui/DistributionListPhonebookPanel.java:273
 msgid "Items in the distribution list:"
 msgstr ""
 
-#: ../phonebook/ui/DistributionListPhonebookPanel.java:271
+#: ../phonebook/ui/DistributionListPhonebookPanel.java:274
 msgid "Items in the current selection:"
 msgstr ""
 
-#: ../phonebook/ui/DistributionListPhonebookPanel.java:293
+#: ../phonebook/ui/DistributionListPhonebookPanel.java:296
 msgid "Current selection"
 msgstr ""
 
-#: ../phonebook/ui/DistributionListPhonebookPanel.java:306
+#: ../phonebook/ui/DistributionListPhonebookPanel.java:309
 msgid "Items to add"
 msgstr ""
 
-#: ../phonebook/ui/DistributionListPhonebookPanel.java:329
+#: ../phonebook/ui/DistributionListPhonebookPanel.java:332
 msgid "Add the selected entry to the distribution list"
 msgstr ""
 
-#: ../phonebook/ui/DistributionListPhonebookPanel.java:338
+#: ../phonebook/ui/DistributionListPhonebookPanel.java:341
 msgid "Please select the items to add to the distribution list:"
 msgstr ""
 
@@ -2786,13 +2520,13 @@ msgstr "Δεν μπορεί να φορτώσει την ορισμένη κατ
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:260
 #: ../phonebook/jdbc/ConnectionDialog.java:301
-#: ../readstate/JDBCPersistentReadState.java:88
+#: ../readstate/JDBCPersistentReadState.java:90
 msgid "Database password"
 msgstr "Συνθηματικό βάσης δεδομένων"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:260
 #: ../phonebook/jdbc/ConnectionDialog.java:301
-#: ../readstate/JDBCPersistentReadState.java:88
+#: ../readstate/JDBCPersistentReadState.java:90
 #, java-format
 msgid "Please enter the database password (database: {0}):"
 msgstr ""
@@ -2874,15 +2608,15 @@ msgstr "Υψηλή (196 lpi)"
 msgid "Low (98 lpi)"
 msgstr "Χαμηλή (98 lpi)"
 
-#: ../readstate/JDBCPersistentReadState.java:75
+#: ../readstate/JDBCPersistentReadState.java:77
 msgid "Fax filename:"
 msgstr "Όνομα αρχείου φαξ:"
 
-#: ../readstate/JDBCPersistentReadState.java:76
+#: ../readstate/JDBCPersistentReadState.java:78
 msgid "Read/Unread State:"
 msgstr "Αναγνωσμένο/Μη αναγνωσμένο:"
 
-#: ../readstate/JDBCPersistentReadState.java:145
+#: ../readstate/JDBCPersistentReadState.java:147
 msgid ""
 "Could not open the database table to store the read/unread state. The "
 "current read/unread state will not be saved.\n"
@@ -2893,15 +2627,15 @@ msgstr ""
 "δεν μπορεί να αποθηκευτεί.\n"
 " Αιτία:"
 
-#: ../readstate/JDBCPersistentReadState.java:383
+#: ../readstate/JDBCPersistentReadState.java:385
 msgid "Database table"
 msgstr "Πίνακας δεδομένων"
 
-#: ../readstate/JDBCPersistentReadState.java:397
+#: ../readstate/JDBCPersistentReadState.java:399
 msgid "JDBC settings to save read/unread state"
 msgstr "JDBC ρυθμίσεις για να αποθηκευτεί ως αναγνωσμενο/μη αναγνωσμένο"
 
-#: ../readstate/JDBCPersistentReadState.java:398
+#: ../readstate/JDBCPersistentReadState.java:400
 msgid ""
 "Please select which fields in the table correspond to the necessary fields "
 "to save the read/unread state"
@@ -2913,31 +2647,613 @@ msgstr ""
 msgid "Local file"
 msgstr "Τοπικό αρχείο"
 
-#: ../NoGUISender.java:207
+#: ../NoGUISender.java:134
 msgid "Error sending the fax:"
 msgstr ""
 
-#: ../model/SentYajJob.java:215
-msgid "Blocked (by concurrent activity to the same destination)"
-msgstr "Μπλόκαρε (από ταυτόχρονη δραστηριότητα με τον ίδιο προορισμο)"
+#: ../model/jobq/QueueFileFormat.java:37 ../model/JobFormat.java:118
+msgid "Page chopping threshold (inches)"
+msgstr "Αποκοπή περιθωρίων σελίδας (inches)"
 
-#: ../model/SentYajJob.java:217 ../model/SentYajJob.java:248
-msgid "Done"
-msgstr "Πραγματοποιήθηκε"
+#: ../model/jobq/QueueFileFormat.java:38
+msgid "Communication identifier for last call"
+msgstr ""
 
-#: ../model/SentYajJob.java:219 ../model/SentYajJob.java:250
+#: ../model/jobq/QueueFileFormat.java:39 ../model/JobFormat.java:46
+msgid "Destination company name"
+msgstr "Όνομα εταιρείας προορισμού"
+
+#: ../model/jobq/QueueFileFormat.java:40
+msgid "Host that submitted the job"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:41
+msgid "Continuation coverpage file"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:42
+msgid "Data format used to transmit a facsimile"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:43
+msgid "Desired transmit speed"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:44 ../model/JobFormat.java:66
+msgid "Desired data format"
+msgstr "Επιθυμητή διαμόρφωση δεδομένων"
+
+#: ../model/jobq/QueueFileFormat.java:45
+msgid "ECM"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:45
+msgid "Desired use of Error Correction Mode (ECM)"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:46 ../model/JobFormat.java:62
+msgid "Desired min-scanline time"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:46 ../model/JobFormat.java:62
+msgid "Desired minimum scanline time"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:47
+msgid "Tagline"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:47
+msgid "Whether or not to use tagline parameter"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:48 ../model/JobFormat.java:122
+msgid "Job done operation"
+msgstr "Ολοκλήρωση χειρισμού εργασίας"
+
+#: ../model/jobq/QueueFileFormat.java:48 ../model/JobFormat.java:122
+msgid "Operation to perform when job is done"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:49 ../model/JobFormat.java:158
+msgid "Number"
+msgstr "Αριθμός"
+
+#: ../model/jobq/QueueFileFormat.java:49 ../model/JobFormat.java:158
+msgid "Public (external) format of dialstring"
+msgstr "Εξωτερική διαμόρφωση κλήσεων"
+
+#: ../model/jobq/QueueFileFormat.java:50
+msgid "Ready"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:50
+msgid "Document ready for transmission"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:51 ../model/JobFormat.java:166
+msgid "Group identifier"
+msgstr "Εντοπιστής ομάδας"
+
+#: ../model/jobq/QueueFileFormat.java:51
+msgid "HylaFAX job group identifier"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:52 ../model/JobFormat.java:178
+msgid "ID"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:52
+msgid "HylaFAX job identifier"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:53 ../model/JobFormat.java:74
+msgid "Tag string"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:53 ../model/JobFormat.java:74
+msgid "Client-specified job tag string"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:54 ../model/JobFormat.java:130
+msgid "Job type"
+msgstr "Τύπος εργασίας"
+
+#: ../model/jobq/QueueFileFormat.java:54
+msgid "Job type identification string"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:55 ../model/JobFormat.java:182
+msgid "Job kill time"
+msgstr "Χρόνος τερματισμού εργασίας"
+
+#: ../model/jobq/QueueFileFormat.java:55 ../model/JobFormat.java:182
+msgid "Time to give up trying to send job"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:56 ../model/JobFormat.java:82
+msgid "Location"
+msgstr "Τοποθεσία"
+
+#: ../model/jobq/QueueFileFormat.java:56 ../model/JobFormat.java:82
+msgid "Destination geographic location"
+msgstr "Προορισμός γεωγραφικής τοποθεσίας"
+
+#: ../model/jobq/QueueFileFormat.java:57 ../model/JobFormat.java:86
+msgid "Sender e-mail"
+msgstr "Αποστολέας e-mail"
+
+#: ../model/jobq/QueueFileFormat.java:57
+msgid "Email address of sender"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:58 ../model/JobFormat.java:234
+msgid "Maximum # dials"
+msgstr "Μέγιστος αριθμός # κλήσεων"
+
+#: ../model/jobq/QueueFileFormat.java:58 ../model/JobFormat.java:234
+msgid "Maximum number of times to dial"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:59 ../model/JobFormat.java:222
+msgid "Max. tries"
+msgstr "Μέγιστες.προσπάθειες"
+
+#: ../model/jobq/QueueFileFormat.java:59 ../model/JobFormat.java:222
+msgid "Maximum number of attempts to send job"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:60
+msgid "Minimum speed"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:60
+msgid "Minimum required transmit speed"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:61 ../model/JobFormat.java:190
+msgid "Modem"
+msgstr "διαμορφωτης-αποδιαμορφωτής"
+
+#: ../model/jobq/QueueFileFormat.java:61
+msgid "Outgoing modem to use"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:62 ../model/JobFormat.java:146
+msgid "# consecutive failed tries"
+msgstr "# αλλεπάλληλες αποτυχημένες προσπάθειες"
+
+#: ../model/jobq/QueueFileFormat.java:62 ../model/JobFormat.java:146
+msgid "Number of consecutive failed attempts to place call"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:63 ../model/JobFormat.java:194
+msgid "Notification"
+msgstr "Γνωστοποίηση"
+
+#: ../model/jobq/QueueFileFormat.java:63
+msgid "Email notification specification"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:64 ../model/JobFormat.java:202
+msgid "# pages"
+msgstr "# σελίδες"
+
+#: ../model/jobq/QueueFileFormat.java:64 ../model/JobFormat.java:202
+msgid "Number of pages transmitted"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:65
+msgid "Tries (current page)"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:65
+msgid "Number of attempts to send current page"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:66 ../model/JobFormat.java:226
+msgid "Specified number"
+msgstr "Εξειδικευμένος αριθμός"
+
+#: ../model/jobq/QueueFileFormat.java:66 ../model/JobFormat.java:226
+msgid "Client-specified dialstring"
+msgstr "Κλήση οριζόμενη απο τον πελάτη"
+
+#: ../model/jobq/QueueFileFormat.java:67 ../model/JobFormat.java:198
+#: ../model/RecvFormat.java:86
+msgid "Owner"
+msgstr "Κάτοχος"
+
+#: ../model/jobq/QueueFileFormat.java:67 ../model/JobFormat.java:198
+msgid "Job owner"
+msgstr "Κάτοχος εργασίας"
+
+#: ../model/jobq/QueueFileFormat.java:68
+msgid "Page PIN"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:68
+msgid "PIN in a page operation"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:69 ../model/JobFormat.java:170
+msgid "Page chop handling"
+msgstr "χειρισμός οριοθέτησης σελίδας"
+
+#: ../model/jobq/QueueFileFormat.java:69 ../model/JobFormat.java:170
+msgid "Whitespace truncation handling"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:70
+msgid "Page handling"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:70
+msgid "Page analysis information"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:71 ../model/JobFormat.java:186
+#: ../model/RecvFormat.java:74
+msgid "Page length"
+msgstr "Μήκος σελίδων"
+
+#: ../model/jobq/QueueFileFormat.java:71 ../model/JobFormat.java:186
+#: ../model/RecvFormat.java:74
+msgid "Page length in mm"
+msgstr "Μήκος σελίδων σε χιλιοστά"
+
+#: ../model/jobq/QueueFileFormat.java:72 ../model/JobFormat.java:230
+#: ../model/RecvFormat.java:110
+msgid "Page width"
+msgstr "Πλάτος σελίδας"
+
+#: ../model/jobq/QueueFileFormat.java:72 ../model/JobFormat.java:230
+#: ../model/RecvFormat.java:110
+msgid "Page width in mm"
+msgstr "Πλάτος σελίδας σε χιλιοστά"
+
+#: ../model/jobq/QueueFileFormat.java:73 ../model/JobFormat.java:42
+msgid "Password"
+msgstr "Κωδικός"
+
+#: ../model/jobq/QueueFileFormat.java:73 ../model/JobFormat.java:42
+msgid "Destination Password"
+msgstr "Κωδικός προορισμού"
+
+#: ../model/jobq/QueueFileFormat.java:74
+msgid "Polling request"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:75 ../model/JobFormat.java:70
+msgid "Priority"
+msgstr "Προτεραιότητα"
+
+#: ../model/jobq/QueueFileFormat.java:75 ../model/JobFormat.java:70
+msgid "Client-specified scheduling priority"
+msgstr "Προγραμματισμένη προτεραιότητα οριζόμενη απο τον πελάτη "
+
+#: ../model/jobq/QueueFileFormat.java:76 ../model/JobFormat.java:106
+msgid "Receiver"
+msgstr "Παραλήπτης"
+
+#: ../model/jobq/QueueFileFormat.java:76 ../model/JobFormat.java:106
+msgid "Destination person (receiver)"
+msgstr "Πρόσωπο προορισμού (παραλήπτης)"
+
+#: ../model/jobq/QueueFileFormat.java:77 ../model/JobFormat.java:210
+#: ../model/RecvFormat.java:98
+msgid "Resolution"
+msgstr "Ανάλυση/ευκρίνεια"
+
+#: ../model/jobq/QueueFileFormat.java:77 ../model/JobFormat.java:210
+msgid "Document resolution in lines/inch"
+msgstr "Ευκρίνεια εγγράφου σε γραμμές"
+
+#: ../model/jobq/QueueFileFormat.java:78 ../model/JobFormat.java:206
+msgid "Retry time"
+msgstr "Χρόνος επαναπροσπάθειας"
+
+#: ../model/jobq/QueueFileFormat.java:78
+msgid "Time to use between job retries"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:79
+msgid "Returned status"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:79
+msgid "Indicates status return value for the job"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:80 ../model/JobFormat.java:174
+msgid "Scheduling priority"
+msgstr "προγραμματισμένη προτεραιότητα"
+
+#: ../model/jobq/QueueFileFormat.java:80 ../model/JobFormat.java:174
+msgid "Current scheduling priority"
+msgstr "Τρέχουσα προγραμματισμένη προτεραιότητα"
+
+#: ../model/jobq/QueueFileFormat.java:81 ../model/JobFormat.java:110
+#: ../model/RecvFormat.java:102
+msgid "Sender"
+msgstr "Αποστολέας"
+
+#: ../model/jobq/QueueFileFormat.java:81 ../model/JobFormat.java:110
+msgid "Sender's identity"
+msgstr "Ταυτότητα αποστολέα"
+
+#: ../model/jobq/QueueFileFormat.java:82 ../model/JobFormat.java:54
+#: ../model/RecvFormat.java:46
+msgid "Speed"
+msgstr "Ταχύτητα"
+
+#: ../model/jobq/QueueFileFormat.java:82
+msgid "Signalling rate at which a facsimile was sent"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:83 ../model/JobFormat.java:142
+msgid "Job state"
+msgstr "Κατάσταση εργασίας"
+
+#: ../model/jobq/QueueFileFormat.java:84 ../model/JobFormat.java:214
+msgid "Status"
+msgstr "Κατάσταση"
+
+#: ../model/jobq/QueueFileFormat.java:84 ../model/JobFormat.java:214
+msgid "Job status information from last failure"
+msgstr "Κατάσταση εργασίας απο την τελευταία αποτυχία"
+
+#: ../model/jobq/QueueFileFormat.java:85 ../model/JobFormat.java:38
+#: ../model/RecvFormat.java:42
+msgid "SubAddress"
+msgstr "Διεύθυνση"
+
+#: ../model/jobq/QueueFileFormat.java:85 ../model/JobFormat.java:38
+msgid "Destination SubAddress"
+msgstr "Διεύθυνση προορισμού"
+
+#: ../model/jobq/QueueFileFormat.java:86 ../model/JobFormat.java:58
+msgid "Tagline format"
+msgstr "Tagline δομή"
+
+#: ../model/jobq/QueueFileFormat.java:86 ../model/JobFormat.java:58
+msgid "Client-specific tagline format string"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:87 ../model/JobFormat.java:154
+msgid "Total # dials"
+msgstr "Σύνολο # κλήσεων "
+
+#: ../model/jobq/QueueFileFormat.java:87 ../model/JobFormat.java:154
+msgid "Total number of phone calls"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:88 ../model/JobFormat.java:238
+#: ../model/RecvFormat.java:90
+msgid "Pages"
+msgstr "Σελίδες"
+
+#: ../model/jobq/QueueFileFormat.java:88 ../model/JobFormat.java:238
+msgid "Total # pages to transmit"
+msgstr "Συνολικές # σελίδες για μεταφορά"
+
+#: ../model/jobq/QueueFileFormat.java:89 ../model/JobFormat.java:218
+msgid "Tries"
+msgstr "Προσπάθειες"
+
+#: ../model/jobq/QueueFileFormat.java:89 ../model/JobFormat.java:218
+msgid "Total number of attempts to send job"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:90 ../model/JobFormat.java:242
+msgid "Time to send job"
+msgstr "Χρόνος αποστολής εργασίας"
+
+#: ../model/jobq/QueueFileFormat.java:91 ../model/JobFormat.java:94
+msgid "Use continuation cover"
+msgstr "Χρήση συνεχούς κάλυψης"
+
+#: ../model/jobq/QueueFileFormat.java:91
+msgid "Whether or not to use a continuation cover page"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:92
+msgid "Use max. vertical resolution"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:92
+msgid "Whether or not to use highest vertical resolution"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:93 ../model/JobFormat.java:246
+msgid "State"
+msgstr "Κατάσταση"
+
+#: ../model/jobq/QueueFileFormat.java:93 ../model/JobFormat.java:246
+msgid "Job state (long description)"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:94 ../model/JobFormat.java:250
+msgid "Notification when"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:94 ../model/JobFormat.java:250
+msgid "E-mail notification handling (long description)"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:96
+msgid "Recipient phone"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:96
+msgid "Recipient's telephone (voice) number"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:97
+msgid "Subject"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:97
+msgid "Subject (\"Regarding\") of the fax"
+msgstr ""
+
+#: ../model/JobFormat.java:50
+msgid "Dials: total/max."
+msgstr "Κλήσεις: σύνολο/μέγιστες."
+
+#: ../model/JobFormat.java:50
+msgid "Total # dials/maximum # dials"
+msgstr "Σύνολο # κλήσεις/μέγιστες # κλήσεις"
+
+#: ../model/JobFormat.java:54
+msgid "Desired signalling rate"
+msgstr "Επιθυμητή ισχύς σήματος"
+
+#: ../model/JobFormat.java:78
+msgid "Use ECM?"
+msgstr "Χρήση ECM?"
+
+#: ../model/JobFormat.java:78
+msgid "Desired use of ECM (one-character symbol)"
+msgstr "Επιθυμητή χρήση ECM (σύμβολο ενός χαρακτήρα)"
+
+#: ../model/JobFormat.java:86
+msgid "Notification e-mail address"
+msgstr "Γνωστοποίηση διεύθυνσης e-mail"
+
+#: ../model/JobFormat.java:90
+msgid "Private Tagline?"
+msgstr "Ιδιωτική/Ιδιαίτερη Tagline?"
+
+#: ../model/JobFormat.java:90
+msgid "Desired use of private tagline (one-character symbol)"
+msgstr "Επιθυμητή χρήση ιδιωτικής/ιδιαίτερης tagline (σύμβολο ενός χαρακτήρα)"
+
+#: ../model/JobFormat.java:94
+msgid "Whether to use continuation cover page (one-character symbol)"
+msgstr "Να γίνει χρήση συνεχούς εξωφύλλου (σύμβολο ενός χαρακτήρα)"
+
+#: ../model/JobFormat.java:98
+msgid "Pages done/total"
+msgstr "Σελίδες ολοκληρώθηκαν/πλήρεις"
+
+#: ../model/JobFormat.java:98
+msgid "# pages transmitted/total # pages to transmit"
+msgstr "# Σελίδες μεταφέρθηκαν,εστάλησαν/πλήρως # σελίδες για μεταφορά"
+
+#: ../model/JobFormat.java:102
+msgid "Minimal signalling rate"
+msgstr "Ελάχιστος ρυθμός εκπομπής"
+
+#: ../model/JobFormat.java:102
+msgid "Client-specified minimum acceptable signalling rate"
+msgstr "Ελάχιστος αποδεκτός ρυθμός εκπομπής οριζόμενος από τον πελάτη"
+
+#: ../model/JobFormat.java:114
+msgid "Tries: done/max."
+msgstr "Προσπάθειες:Ολοκληρώθηκαν/στο μέγιστο."
+
+#: ../model/JobFormat.java:114
+msgid "Total # tries/maximum # tries"
+msgstr "Συνολικές # προσπάθειες/μέγιστες # προσπάθειες"
+
+#: ../model/JobFormat.java:126
+msgid "Communication identifier"
+msgstr "Εντοπιστής επικοινωνίας"
+
+#: ../model/JobFormat.java:130
+msgid "Job type (one-character symbol)"
+msgstr "Τύπος εργασίας (σύμβολο ενός χαρακτήρα)"
+
+#: ../model/JobFormat.java:134
+msgid "Scheduled time"
+msgstr "Προγραμματισμένη ώρα"
+
+#: ../model/JobFormat.java:134
+msgid "Scheduled date and time"
+msgstr "Προγραμματισμένη ημερομηνία και ώρα"
+
+#: ../model/JobFormat.java:138
+msgid "Scheduled time (UNIX)"
+msgstr ""
+
+#: ../model/JobFormat.java:138
+msgid "Scheduled time in seconds since the UNIX epoch"
+msgstr "προγραμματισμένη ώρα σε δευτερόλεπτα από την εποχή του UNIX"
+
+#: ../model/JobFormat.java:142
+msgid "Job state (one-character symbol)"
+msgstr "Κατάσταση Εργασίας (Ε)"
+
+#: ../model/JobFormat.java:150
+msgid "Client machine name"
+msgstr "Όνομα μηχανής πελάτη"
+
+#: ../model/JobFormat.java:162
+msgid "# consecutive failed dials"
+msgstr "# αλλεπάλληλες αποτυχημένες κλήσεις"
+
+#: ../model/JobFormat.java:178
+msgid "Job identifier"
+msgstr "Αναγνωριστικό εργασίας"
+
+#: ../model/JobFormat.java:190
+msgid "Assigned modem"
+msgstr "Καθορισμένο modem"
+
+#: ../model/JobFormat.java:194
+msgid "E-mail notification handling (one-character symbol)"
+msgstr "Χειρισμόςγνωστοποίησης E-mail (σύμβολο ενός χαρακτήρα)"
+
+#: ../model/JobFormat.java:206
+msgid "Job retry time"
+msgstr ""
+
+#: ../model/JobFormat.java:252
+msgid "Use XVRES?"
+msgstr ""
+
+#: ../model/JobFormat.java:252
+msgid "Use extended resolution?"
+msgstr ""
+
+#: ../model/servconn/FaxListConnectionType.java:31
+msgid "Using the HylaFAX protocol"
+msgstr ""
+
+#: ../model/servconn/FaxListConnectionType.java:32
+msgid "Directly accessing the spool area (experimental)"
+msgstr ""
+
+#: ../model/servconn/JobState.java:31
+msgid "Undefined"
+msgstr "Μη ορισμένο"
+
+#: ../model/servconn/JobState.java:32
 msgid "Failed"
 msgstr "Απέτυχε"
 
-#: ../model/SentYajJob.java:221
+#: ../model/servconn/JobState.java:33
+msgid "Suspended"
+msgstr ""
+
+#: ../model/servconn/JobState.java:33
+msgid "Suspended (not being scheduled)"
+msgstr "Αναβλήθηκε (δεν είχε προγραμματιστεί)"
+
+#: ../model/servconn/JobState.java:34
+msgid "Pending"
+msgstr ""
+
+#: ../model/servconn/JobState.java:34
 msgid "Pending (waiting for the time to send to arrive)"
 msgstr "Σε αναμονή (αναμονή για να έρθει η στιγμή της αποστολής)"
 
-#: ../model/SentYajJob.java:223 ../model/SentYajJob.java:254
-msgid "Running"
-msgstr "Τρέχει/Σε εξέλιξη"
+#: ../model/servconn/JobState.java:35
+msgid "Sleeping"
+msgstr ""
 
-#: ../model/SentYajJob.java:225
+#: ../model/servconn/JobState.java:35
 msgid ""
 "Sleeping (waiting for a scheduled timeout such as a delay between attempts "
 "to send)"
@@ -2945,171 +3261,171 @@ msgstr ""
 "Κοιμάται (αναμονή για ένα προγραμματισμένο διάλειμμα όπως μια καθυστέρηση "
 "μεταξύ των προσπαθειών για αποστολή)"
 
-#: ../model/SentYajJob.java:227
-msgid "Suspended (not being scheduled)"
-msgstr "Αναβλήθηκε (δεν είχε προγραμματιστεί)"
-
-#: ../model/SentYajJob.java:229 ../model/SentYajJob.java:260
-msgid "Undefined"
-msgstr "Μη ορισμένο"
-
-#: ../model/SentYajJob.java:231
-msgid "Waiting (for resources such as a free modem)"
-msgstr "Αναμονή (για πηγές όπως ένα ελεύθερο modem )"
-
-#: ../model/SentYajJob.java:246
+#: ../model/servconn/JobState.java:36
 msgid "Blocked"
 msgstr ""
 
-#: ../model/SentYajJob.java:252
-msgid "Pending"
-msgstr ""
+#: ../model/servconn/JobState.java:36
+msgid "Blocked (by concurrent activity to the same destination)"
+msgstr "Μπλόκαρε (από ταυτόχρονη δραστηριότητα με τον ίδιο προορισμο)"
 
-#: ../model/SentYajJob.java:256
-msgid "Sleeping"
-msgstr ""
-
-#: ../model/SentYajJob.java:258
-msgid "Suspended"
-msgstr ""
-
-#: ../model/SentYajJob.java:262
+#: ../model/servconn/JobState.java:37
 msgid "Waiting"
 msgstr ""
 
-#: ../model/archive/QueueFileFormat.java:38
-msgid "Communication identifier for last call"
+#: ../model/servconn/JobState.java:37
+msgid "Waiting (for resources such as a free modem)"
+msgstr "Αναμονή (για πηγές όπως ένα ελεύθερο modem )"
+
+#: ../model/servconn/JobState.java:38
+msgid "Running"
+msgstr "Τρέχει/Σε εξέλιξη"
+
+#: ../model/servconn/JobState.java:39
+msgid "Done"
+msgstr "Πραγματοποιήθηκε"
+
+#: ../model/servconn/hylafax/HylaFaxListConnection.java:157
+msgid "Connecting..."
 msgstr ""
 
-#: ../model/archive/QueueFileFormat.java:40
-msgid "Host that submitted the job"
+#: ../model/servconn/hylafax/HylaFaxListConnection.java:399
+msgid "Could not log in"
+msgstr "Σύνδεση αδύνατη"
+
+#: ../model/servconn/hylafax/HylaFaxListConnection.java:419
+msgid "Error refreshing the status:"
+msgstr "Σφάλμα ανανέωσης της κατάστασης:"
+
+#: ../model/RecvFormat.java:38
+msgid "Time/Date"
+msgstr "ώρα/ημερομηνία"
+
+#: ../model/RecvFormat.java:38
+msgid "Extended representation of the time when the receive happened"
+msgstr "Παρατεταμένη παρουσίαση του χρόνου που συνέβει η λήψη"
+
+#: ../model/RecvFormat.java:42
+msgid "SubAddress received from sender (if any)"
+msgstr "Υποδιεύθυνση ελήφθη από τον αποστολέα (εάν υπάρχει)"
+
+#: ../model/RecvFormat.java:46
+msgid "Signalling rate used during receive"
+msgstr "Ρυθμός εκπομπής που χρησιμοποιήθηκε κατά τη διάρκεια της λήψης"
+
+#: ../model/RecvFormat.java:50
+msgid "Format"
+msgstr "Διαμόρφωση"
+
+#: ../model/RecvFormat.java:50
+msgid "Data format used during receive"
+msgstr "Διαμόρφωση δεδομένων που χρησιμοποιήθηκαν κατά τη διάρκεια της λήψης"
+
+#: ../model/RecvFormat.java:54
+msgid "Error description"
+msgstr "περιγραφή σφάλματος"
+
+#: ../model/RecvFormat.java:54
+msgid "Error description if an error occurred during receive"
+msgstr "Περιγραφή σφάλματος εάν ένα σφάλμα προκύψει κατά τη διάρκεια της λήψης"
+
+#: ../model/RecvFormat.java:58
+msgid "Filename"
+msgstr "Όνομα αρχείου"
+
+#: ../model/RecvFormat.java:58
+msgid "Document filename (relative to the recvq directory)"
+msgstr "Όνομα αρχείου εγγράφου (σχετικό με τον recvq κατάλογο )"
+
+#: ../model/RecvFormat.java:62
+msgid "Time to receive"
+msgstr "Χρόνος λήψης"
+
+#: ../model/RecvFormat.java:62
+msgid "Time spent receiving document (HH:MM:SS)"
+msgstr "Χρόνος που καταναλώθηκε κατά τη λήψη εγγράφου (HH:MM:SS)"
+
+#: ../model/RecvFormat.java:66
+msgid "CIDName"
 msgstr ""
 
-#: ../model/archive/QueueFileFormat.java:41
-msgid "Continuation coverpage file"
+#: ../model/RecvFormat.java:66
+msgid "CIDName value for received fax"
 msgstr ""
 
-#: ../model/archive/QueueFileFormat.java:42
-msgid "Data format used to transmit a facsimile"
+#: ../model/RecvFormat.java:70
+msgid "CIDNumber"
 msgstr ""
 
-#: ../model/archive/QueueFileFormat.java:43
-msgid "Desired transmit speed"
+#: ../model/RecvFormat.java:70
+msgid "CIDNumber value for received fax"
 msgstr ""
 
-#: ../model/archive/QueueFileFormat.java:45
-msgid "ECM"
+#: ../model/RecvFormat.java:78
+msgid "Fax Protection"
+msgstr "Προστασία φαξ"
+
+#: ../model/RecvFormat.java:78
+msgid "Fax-style protection mode string (``-rwxrwx'')"
 msgstr ""
 
-#: ../model/archive/QueueFileFormat.java:45
-msgid "Desired use of Error Correction Mode (ECM)"
+#: ../model/RecvFormat.java:82
+msgid "File size"
+msgstr "Μέγεθος αρχείου"
+
+#: ../model/RecvFormat.java:82
+msgid "File size (number of bytes)"
+msgstr "Μέγεθος αρχείου (αριθμός byte)"
+
+#: ../model/RecvFormat.java:86
+msgid "File owner"
+msgstr "Ιδιοκτήτης αρχείου"
+
+#: ../model/RecvFormat.java:90
+msgid "Number of pages in document"
+msgstr "Αριθμός σελίδων στο έγγραφο"
+
+#: ../model/RecvFormat.java:94
+msgid "Protection"
+msgstr "Προστασία"
+
+#: ../model/RecvFormat.java:94
+msgid "UNIX-style protection flags"
+msgstr "UNIX-style ενδείξεις προστασίας"
+
+#: ../model/RecvFormat.java:98
+msgid "Resolution of received data"
+msgstr "Ευκρίνεια των δεδομένων που ελήφθησαν"
+
+#: ../model/RecvFormat.java:102
+msgid "Sender identity (TSI)"
+msgstr "Ταυτότητα αποστολέα (TSI)"
+
+#: ../model/RecvFormat.java:106
+msgid "Date"
+msgstr "Ημερομηνία"
+
+#: ../model/RecvFormat.java:106
+msgid "Compact representation of the time when the receive happened"
+msgstr "Συμπιεσμένη παρουσίαση της ώρας όταν συνέβει η λήψη"
+
+#: ../model/RecvFormat.java:114
+msgid "In progress"
+msgstr "Σε εξέλιξη"
+
+#: ../model/RecvFormat.java:114
+msgid "A ``*'' if receive is going on; otherwise `` '' (space)"
+msgstr "A ``*'' αν η λήψη συνεχιστεί; διαφορετικά `` '' (κενό)"
+
+#: ../model/RecvFormat.java:118
+msgid "Time/Date (UNIX)"
 msgstr ""
 
-#: ../model/archive/QueueFileFormat.java:47
-msgid "Tagline"
+#: ../model/RecvFormat.java:118
+msgid "Time in seconds since the UNIX epoch"
 msgstr ""
 
-#: ../model/archive/QueueFileFormat.java:47
-msgid "Whether or not to use tagline parameter"
-msgstr ""
-
-#: ../model/archive/QueueFileFormat.java:50
-msgid "Ready"
-msgstr ""
-
-#: ../model/archive/QueueFileFormat.java:50
-msgid "Document ready for transmission"
-msgstr ""
-
-#: ../model/archive/QueueFileFormat.java:51
-msgid "HylaFAX job group identifier"
-msgstr ""
-
-#: ../model/archive/QueueFileFormat.java:52
-msgid "HylaFAX job identifier"
-msgstr ""
-
-#: ../model/archive/QueueFileFormat.java:54
-msgid "Job type identification string"
-msgstr ""
-
-#: ../model/archive/QueueFileFormat.java:57
-msgid "Email address of sender"
-msgstr ""
-
-#: ../model/archive/QueueFileFormat.java:60
-msgid "Minimum speed"
-msgstr ""
-
-#: ../model/archive/QueueFileFormat.java:60
-msgid "Minimum required transmit speed"
-msgstr ""
-
-#: ../model/archive/QueueFileFormat.java:61
-msgid "Outgoing modem to use"
-msgstr ""
-
-#: ../model/archive/QueueFileFormat.java:63
-msgid "Email notification specification"
-msgstr ""
-
-#: ../model/archive/QueueFileFormat.java:65
-msgid "Tries (current page)"
-msgstr ""
-
-#: ../model/archive/QueueFileFormat.java:65
-msgid "Number of attempts to send current page"
-msgstr ""
-
-#: ../model/archive/QueueFileFormat.java:68
-msgid "Page PIN"
-msgstr ""
-
-#: ../model/archive/QueueFileFormat.java:68
-msgid "PIN in a page operation"
-msgstr ""
-
-#: ../model/archive/QueueFileFormat.java:70
-msgid "Page handling"
-msgstr ""
-
-#: ../model/archive/QueueFileFormat.java:70
-msgid "Page analysis information"
-msgstr ""
-
-#: ../model/archive/QueueFileFormat.java:74
-msgid "Polling request"
-msgstr ""
-
-#: ../model/archive/QueueFileFormat.java:78
-msgid "Time to use between job retries"
-msgstr ""
-
-#: ../model/archive/QueueFileFormat.java:79
-msgid "Returned status"
-msgstr ""
-
-#: ../model/archive/QueueFileFormat.java:79
-msgid "Indicates status return value for the job"
-msgstr ""
-
-#: ../model/archive/QueueFileFormat.java:82
-msgid "Signalling rate at which a facsimile was sent"
-msgstr ""
-
-#: ../model/archive/QueueFileFormat.java:91
-msgid "Whether or not to use a continuation cover page"
-msgstr ""
-
-#: ../model/archive/QueueFileFormat.java:92
-msgid "Use max. vertical resolution"
-msgstr ""
-
-#: ../model/archive/QueueFileFormat.java:92
-msgid "Whether or not to use highest vertical resolution"
-msgstr ""
-
-#: ../MainWinSearchWin.java:106
+#: ../MainWinSearchWin.java:108
 msgid "No matching fax found."
 msgstr ""
 
@@ -3123,134 +3439,6 @@ msgstr ""
 
 #: ../DateStyle.java:105
 msgid "HH:mm:ss"
-msgstr ""
-
-#: ../RecvFormat.java:35
-msgid "Time/Date"
-msgstr "ώρα/ημερομηνία"
-
-#: ../RecvFormat.java:35
-msgid "Extended representation of the time when the receive happened"
-msgstr "Παρατεταμένη παρουσίαση του χρόνου που συνέβει η λήψη"
-
-#: ../RecvFormat.java:39
-msgid "SubAddress received from sender (if any)"
-msgstr "Υποδιεύθυνση ελήφθη από τον αποστολέα (εάν υπάρχει)"
-
-#: ../RecvFormat.java:43
-msgid "Signalling rate used during receive"
-msgstr "Ρυθμός εκπομπής που χρησιμοποιήθηκε κατά τη διάρκεια της λήψης"
-
-#: ../RecvFormat.java:47
-msgid "Format"
-msgstr "Διαμόρφωση"
-
-#: ../RecvFormat.java:47
-msgid "Data format used during receive"
-msgstr "Διαμόρφωση δεδομένων που χρησιμοποιήθηκαν κατά τη διάρκεια της λήψης"
-
-#: ../RecvFormat.java:51
-msgid "Error description"
-msgstr "περιγραφή σφάλματος"
-
-#: ../RecvFormat.java:51
-msgid "Error description if an error occurred during receive"
-msgstr "Περιγραφή σφάλματος εάν ένα σφάλμα προκύψει κατά τη διάρκεια της λήψης"
-
-#: ../RecvFormat.java:55
-msgid "Filename"
-msgstr "Όνομα αρχείου"
-
-#: ../RecvFormat.java:55
-msgid "Document filename (relative to the recvq directory)"
-msgstr "Όνομα αρχείου εγγράφου (σχετικό με τον recvq κατάλογο )"
-
-#: ../RecvFormat.java:59
-msgid "Time to receive"
-msgstr "Χρόνος λήψης"
-
-#: ../RecvFormat.java:59
-msgid "Time spent receiving document (HH:MM:SS)"
-msgstr "Χρόνος που καταναλώθηκε κατά τη λήψη εγγράφου (HH:MM:SS)"
-
-#: ../RecvFormat.java:63
-msgid "CIDName"
-msgstr ""
-
-#: ../RecvFormat.java:63
-msgid "CIDName value for received fax"
-msgstr ""
-
-#: ../RecvFormat.java:67
-msgid "CIDNumber"
-msgstr ""
-
-#: ../RecvFormat.java:67
-msgid "CIDNumber value for received fax"
-msgstr ""
-
-#: ../RecvFormat.java:75
-msgid "Fax Protection"
-msgstr "Προστασία φαξ"
-
-#: ../RecvFormat.java:75
-msgid "Fax-style protection mode string (``-rwxrwx'')"
-msgstr ""
-
-#: ../RecvFormat.java:79
-msgid "File size"
-msgstr "Μέγεθος αρχείου"
-
-#: ../RecvFormat.java:79
-msgid "File size (number of bytes)"
-msgstr "Μέγεθος αρχείου (αριθμός byte)"
-
-#: ../RecvFormat.java:83
-msgid "File owner"
-msgstr "Ιδιοκτήτης αρχείου"
-
-#: ../RecvFormat.java:87
-msgid "Number of pages in document"
-msgstr "Αριθμός σελίδων στο έγγραφο"
-
-#: ../RecvFormat.java:91
-msgid "Protection"
-msgstr "Προστασία"
-
-#: ../RecvFormat.java:91
-msgid "UNIX-style protection flags"
-msgstr "UNIX-style ενδείξεις προστασίας"
-
-#: ../RecvFormat.java:95
-msgid "Resolution of received data"
-msgstr "Ευκρίνεια των δεδομένων που ελήφθησαν"
-
-#: ../RecvFormat.java:99
-msgid "Sender identity (TSI)"
-msgstr "Ταυτότητα αποστολέα (TSI)"
-
-#: ../RecvFormat.java:103
-msgid "Date"
-msgstr "Ημερομηνία"
-
-#: ../RecvFormat.java:103
-msgid "Compact representation of the time when the receive happened"
-msgstr "Συμπιεσμένη παρουσίαση της ώρας όταν συνέβει η λήψη"
-
-#: ../RecvFormat.java:111
-msgid "In progress"
-msgstr "Σε εξέλιξη"
-
-#: ../RecvFormat.java:111
-msgid "A ``*'' if receive is going on; otherwise `` '' (space)"
-msgstr "A ``*'' αν η λήψη συνεχιστεί; διαφορετικά `` '' (κενό)"
-
-#: ../RecvFormat.java:115
-msgid "Time/Date (UNIX)"
-msgstr ""
-
-#: ../RecvFormat.java:115
-msgid "Time in seconds since the UNIX epoch"
 msgstr ""
 
 #: ../util/ExceptionDialog.java:82 ../util/ExceptionDialog.java:220
@@ -3454,7 +3642,7 @@ msgstr ""
 msgid "Time to send:"
 msgstr ""
 
-#: ../send/StreamTFLItem.java:113
+#: ../send/StreamTFLItem.java:114
 msgid "<stdin>"
 msgstr ""
 
@@ -3477,7 +3665,7 @@ msgstr ""
 msgid "At (exact time)"
 msgstr ""
 
-#: ../send/SendFileManager.java:65 ../send/SendFileManager.java:138
+#: ../send/SendFileManager.java:65 ../send/SendFileManager.java:139
 #, java-format
 msgid "Uploading {0}"
 msgstr "Ανεβάζει {0}"
@@ -3491,7 +3679,7 @@ msgstr ""
 msgid "Uploading document"
 msgstr ""
 
-#: ../send/SendFileManager.java:133
+#: ../send/SendFileManager.java:134
 #, java-format
 msgid "Creating {0} from documents to send"
 msgstr ""
@@ -3609,6 +3797,9 @@ msgstr "Αναβαθμίζει τα επιλεγμένα στοιχεία της
 #: ../send/MinutesFormatter.java:62
 msgid "minutes"
 msgstr ""
+
+#~ msgid "First Name"
+#~ msgstr "Όνομα που δόθηκε"
 
 #~ msgid "Plain text files"
 #~ msgstr "Αρχεία κειμένου"

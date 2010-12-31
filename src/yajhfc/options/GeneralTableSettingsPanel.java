@@ -101,10 +101,10 @@ public class GeneralTableSettingsPanel extends AbstractOptionsPanel {
                 {border, TableLayout.PREFERRED, TableLayout.PREFERRED, border, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.FILL, border}
         };
         JPanel connTypePanel = new JPanel(new TableLayout(dLay), false);
-        connTypePanel.setBorder(BorderFactory.createTitledBorder(_("Fax list connection")));
+        connTypePanel.setBorder(BorderFactory.createTitledBorder(_("Fax lists")));
         
         Utils.addWithLabel(connTypePanel, comboConnectionType, _("Access method for the fax lists"), "1,2");
-        labelSpoolLocation = Utils.addWithLabel(connTypePanel, ftfSpoolLocation, _("Location of spool area for direct access"), "1,5");
+        labelSpoolLocation = Utils.addWithLabel(connTypePanel, ftfSpoolLocation, _("Location of spool directory for direct access (must contain recvq, doneq and docq)"), "1,5");
         return connTypePanel;
     }
     

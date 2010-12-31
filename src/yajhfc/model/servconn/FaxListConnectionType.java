@@ -29,7 +29,7 @@ import yajhfc.model.servconn.hylafax.HylaFaxListConnection;
  */
 public enum FaxListConnectionType {
     HYLAFAX(Utils._("Using the HylaFAX protocol"), HylaFaxListConnection.class),
-    DIRECTACCESS(Utils._("Directly accessing the spool area"), DirectAccessFaxListConnection.class);
+    DIRECTACCESS(Utils._("Directly accessing the spool area (experimental)"), DirectAccessFaxListConnection.class);
     
     private final Class<? extends FaxListConnection> implementingClass;
     private final String description;

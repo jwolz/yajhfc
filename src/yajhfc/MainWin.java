@@ -41,6 +41,7 @@ import java.awt.event.WindowListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.text.FieldPosition;
 import java.text.MessageFormat;
@@ -273,7 +274,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                     connection.endMultiOperation();
                 }
             } catch (Exception ex) {
-                showExceptionDialog(_("Error deleting faxes: "), ex);
+                showExceptionDialog(_("Error deleting faxes:"), ex);
             }
         }
         
@@ -354,6 +355,8 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                                         fileCounter++;
                                     } catch (ServerResponseException sre) {
                                         showExceptionDialog(MessageFormat.format(_("While downloading the file {0} (job {1}), the server gave back an error code:"), hsf.getPath(), yj.getIDValue()), sre);
+                                    } catch (FileNotFoundException fnfe) { 
+                                        showExceptionDialog(MessageFormat.format(_("The file {0} (job {1}) could not be opened for reading (probably you lack the necessary access permissions):"), hsf.getPath(), yj.getIDValue()), fnfe);
                                     } catch (Exception e1) {
                                         //JOptionPane.showMessageDialog(MainWin.this, MessageFormat.format(_("An error occured saving the file {0} (job {1}):\n"), hsf.getPath(), yj.getIDValue()) + e1.getMessage() , _("Error"), JOptionPane.ERROR_MESSAGE);
                                         showExceptionDialog(MessageFormat.format(_("An error occured saving the file {0} (job {1}):"), hsf.getPath(), yj.getIDValue()), e1);
@@ -373,7 +376,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                     connection.endMultiOperation();
                 }
             } catch (Exception ex) {
-                showExceptionDialog(_("Error saving faxes: "), ex);
+                showExceptionDialog(_("Error saving faxes:"), ex);
             }
         }
         
@@ -453,7 +456,9 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                                     try {
                                         downloadedFiles.add(hsf.getDocument());
                                     } catch (ServerResponseException sre) {
-                                        showExceptionDialog(MessageFormat.format(_("While downloading the file {0} (job {1}), the server gave back an error code::"), hsf.getPath(), yj.getIDValue()), sre);
+                                        showExceptionDialog(MessageFormat.format(_("While downloading the file {0} (job {1}), the server gave back an error code:"), hsf.getPath(), yj.getIDValue()), sre);
+                                    } catch (FileNotFoundException fnfe) { 
+                                        showExceptionDialog(MessageFormat.format(_("The file {0} (job {1}) could not be opened for reading (probably you lack the necessary access permissions):"), hsf.getPath(), yj.getIDValue()), fnfe);
                                     } catch (Exception e1) {
                                         showExceptionDialog(MessageFormat.format(_("An error occured displaying the file {0} (job {1}):\n"), hsf.getPath(), yj.getIDValue()), e1);
                                     }
@@ -475,7 +480,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                     connection.endMultiOperation();
                 }
             } catch (Exception ex) {
-                showExceptionDialog(_("Error displaying faxes: "), ex);
+                showExceptionDialog(_("Error displaying faxes:"), ex);
             }
         }
         
@@ -548,7 +553,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                     connection.endMultiOperation();
                 }
             } catch (Exception ex) {
-                showExceptionDialog(_("Error suspending faxes: "), ex);
+                showExceptionDialog(_("Error suspending faxes:"), ex);
             }
         }
         @Override
@@ -605,7 +610,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                     connection.endMultiOperation();
                 }
             } catch (Exception ex) {
-                showExceptionDialog(_("Error resuming faxes: "), ex);
+                showExceptionDialog(_("Error resuming faxes:"), ex);
             }
         }
         @Override
@@ -649,6 +654,8 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                                     ffs.add(hsf.getDocument());
                                 } catch (ServerResponseException sre) {
                                     showExceptionDialog(MessageFormat.format(_("While downloading the file {0} (job {1}), the server gave back an error code:"), hsf.getPath(), yj.getIDValue()), sre);
+                                } catch (FileNotFoundException fnfe) { 
+                                    showExceptionDialog(MessageFormat.format(_("The file {0} (job {1}) could not be opened for reading (probably you lack the necessary access permissions):"), hsf.getPath(), yj.getIDValue()), fnfe);
                                 } catch (Exception e1) {
                                     showExceptionDialog(MessageFormat.format(_("An error occured saving the file {0} (job {1}):"), hsf.getPath(), yj.getIDValue()), e1);
                                 }
@@ -690,7 +697,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                     connection.endMultiOperation();
                 }
             } catch (Exception ex) {
-                showExceptionDialog(_("Error resuming faxes: "), ex);
+                showExceptionDialog(_("Error saving faxes:"), ex);
             }
         }
         
@@ -1103,7 +1110,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                                 connection.endMultiOperation();
                             }
                         } catch (Exception ex) {
-                            ExceptionDialog.showExceptionDialog(MainWin.this, _("Error resending faxes: "), ex);
+                            ExceptionDialog.showExceptionDialog(MainWin.this, _("Error resending faxes:"), ex);
                         }
                     }
                     
@@ -2082,10 +2089,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                                         try {
                                             hsf.getDocument().view();
                                         } catch (Exception e) {
-                                            if (Utils.debugMode) {
-                                                log.log(Level.WARNING, "Exception while trying to view new faxes:", e);
-                                                //e.printStackTrace(Utils.debugOut);
-                                            }
+                                            log.log(Level.WARNING, "Exception while trying to view new faxes:", e);
                                         }
                                     }
                                     if ((myopts.newFaxAction & FaxOptions.NEWFAX_MARKASREAD) != 0) {
