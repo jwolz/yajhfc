@@ -20,6 +20,7 @@ package yajhfc;
 
 import static yajhfc.Utils._;
 import gnu.hylafax.HylaFAXClient;
+import gnu.inet.ftp.ServerResponseException;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -126,6 +127,7 @@ import yajhfc.model.table.UnreadItemListener;
 import yajhfc.model.ui.TooltipJTable;
 import yajhfc.options.OptionsWin;
 import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
+import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 import yajhfc.phonebook.ui.NewPhoneBookWin;
 import yajhfc.plugin.PluginManager;
 import yajhfc.plugin.PluginUI;
@@ -234,11 +236,12 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     
     // Worker classes:
     private class DeleteWorker extends ProgressWorker {
-        private TooltipJTable<? extends FmtItem> selTable;
+        //private TooltipJTable<? extends FmtItem> selTable;
+        private FaxJob<? extends FmtItem>[] selJobs;
         
         @Override
         protected int calculateMaxProgress() {
-            return 20 + 10*selTable.getSelectedRowCount();
+            return 20 + 10*selJobs.length;
         }
 
         @Override
@@ -247,13 +250,10 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 connection.beginMultiOperation();
                 try {
 
-                    int[] selRows =  selTable.getSelectedRows();
-
-                    for (int i : selRows) {
-                        FaxJob<? extends FmtItem> yj = null;
+                    MessageFormat infoFormat = new MessageFormat(_("Deleting fax {0}"));
+                    for (FaxJob<? extends FmtItem> yj : selJobs) {
                         try {
-                            yj = selTable.getJobForRow(i);
-                            updateNote(MessageFormat.format(_("Deleting fax {0}"), yj.getIDValue()));
+                            updateNote(infoFormat.format(new Object[] {yj.getIDValue()}));
 
                             yj.delete();
 
@@ -283,13 +283,13 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         }
         
         public DeleteWorker(TooltipJTable<? extends FmtItem> selTable) {
-            this.selTable = selTable;
+            this.selJobs = selTable.getSelectedJobs();
             this.progressMonitor = tablePanel;
             this.setCloseOnExit(false);
         }
     }
     private class MultiSaveWorker extends ProgressWorker {
-        private TooltipJTable<? extends FmtItem> selTable;
+        private FaxJob<? extends FmtItem>[] selJobs;
         private File targetDir;
         private int fileCounter;
         private final boolean askForEveryFile;
@@ -297,7 +297,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         
         @Override
         protected int calculateMaxProgress() {
-            return 1000*selTable.getSelectedRowCount();
+            return 1000*selJobs.length;
         }
 
         @Override
@@ -306,12 +306,10 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             try {
                 connection.beginMultiOperation();
                 try {
-                    int[] selRows =  selTable.getSelectedRows();
                     List<String> errorInfo = new ArrayList<String>();
-                    for (int i : selRows) {
-                        FaxJob<? extends FmtItem> yj = null;
+                    MessageFormat infoFormat = new MessageFormat(_("Saving fax {0}"));
+                    for (FaxJob<? extends FmtItem> yj : selJobs) {
                         try {
-                            yj = selTable.getJobForRow(i);
                             errorInfo.clear();
                             Collection<FaxDocument> hsfs = yj.getDocuments(errorInfo);
                             if (hsfs.size() == 0) {
@@ -329,7 +327,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                                     showMessageDialog(res.toString(), _("Save fax"), JOptionPane.INFORMATION_MESSAGE);
                                 } 
                             } else {
-                                updateNote(MessageFormat.format(_("Saving fax {0}"), yj.getIDValue()));
+                                updateNote(infoFormat.format(new Object[] {yj.getIDValue()}));
                                 for (FaxDocument hsf : hsfs) {
                                     try {
                                         String filename = hsf.getPath();
@@ -354,6 +352,8 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                                         hsf.downloadToStream(outStream);
                                         outStream.close();
                                         fileCounter++;
+                                    } catch (ServerResponseException sre) {
+                                        showExceptionDialog(MessageFormat.format(_("While downloading the file {0} (job {1}), the server gave back an error code:"), hsf.getPath(), yj.getIDValue()), sre);
                                     } catch (Exception e1) {
                                         //JOptionPane.showMessageDialog(MainWin.this, MessageFormat.format(_("An error occured saving the file {0} (job {1}):\n"), hsf.getPath(), yj.getIDValue()) + e1.getMessage() , _("Error"), JOptionPane.ERROR_MESSAGE);
                                         showExceptionDialog(MessageFormat.format(_("An error occured saving the file {0} (job {1}):"), hsf.getPath(), yj.getIDValue()), e1);
@@ -395,7 +395,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         }
         
         public MultiSaveWorker(TooltipJTable<? extends FmtItem> selTable, File targetDir, boolean askForEveryFile) {
-            this.selTable = selTable;
+            this.selJobs = selTable.getSelectedJobs();
             this.targetDir = targetDir;
             this.progressMonitor = tablePanel;
             this.askForEveryFile = askForEveryFile;
@@ -403,12 +403,13 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         }
     }
     private class ShowWorker extends ProgressWorker {
-        private TooltipJTable<? extends FmtItem> selTable;
+        private FaxJob<? extends FmtItem>[] selJobs;
+        private boolean updateReadState;
         private int sMin, sMax;
         
         @Override
         protected int calculateMaxProgress() {
-            return 100 + 1200*selTable.getSelectedRowCount();
+            return 100 + 1200*selJobs.length;
         }
         
         @Override
@@ -418,14 +419,10 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 try {
                     List<FormattedFile> downloadedFiles = new ArrayList<FormattedFile>();
                     List<String> errorInfo = new ArrayList<String>();
-                    int[] selRows =  selTable.getSelectedRows();
-                    sMin = Integer.MAX_VALUE; sMax = Integer.MIN_VALUE;
                     final MessageFormat displayingMsg      = new MessageFormat(_("Displaying fax {0}"));
                     final MessageFormat downloadingMessage = new MessageFormat(Utils._("Downloading {0}"));
-                    for (int i : selRows) {
-                        FaxJob<? extends FmtItem> yj = null;
+                    for (FaxJob<? extends FmtItem> yj : selJobs) {
                         try {
-                            yj = selTable.getJobForRow(i);
                             updateNote(displayingMsg.format(new Object[] { yj.getIDValue() }));
                             downloadedFiles.clear();
                             errorInfo.clear();
@@ -455,6 +452,8 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                                     updateNote(downloadingMessage.format(new Object[] {hsf.getPath()}));
                                     try {
                                         downloadedFiles.add(hsf.getDocument());
+                                    } catch (ServerResponseException sre) {
+                                        showExceptionDialog(MessageFormat.format(_("While downloading the file {0} (job {1}), the server gave back an error code::"), hsf.getPath(), yj.getIDValue()), sre);
                                     } catch (Exception e1) {
                                         showExceptionDialog(MessageFormat.format(_("An error occured displaying the file {0} (job {1}):\n"), hsf.getPath(), yj.getIDValue()), e1);
                                     }
@@ -467,10 +466,6 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                                 stepProgressBar(100);
                             }
                             yj.setRead(true);
-                            if (i < sMin)
-                                sMin = i;
-                            if (i > sMax)
-                                sMax = i;
                         } catch (Exception e1) {
                             //JOptionPane.showMessageDialog(MainWin.this, MessageFormat.format(_("An error occured displaying the fax \"{0}\":\n"), yj.getIDValue()) + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
                             showExceptionDialog(MessageFormat.format(_("An error occured displaying the fax \"{0}\":"), yj.getIDValue()), e1);
@@ -486,25 +481,37 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         
         @Override
         protected void done() {
-            if (sMax >= 0 && selTable == tableRecv) {
+            if (sMax >= 0 && updateReadState) {
                 tableRecv.getSorter().fireTableRowsUpdated(sMin, sMax);
                 actFaxRead.putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, true);
             }
         }
         
         public ShowWorker(TooltipJTable<? extends FmtItem> selTable) {
-            this.selTable = selTable;
+            this.updateReadState = (selTable == tableRecv);
+            this.selJobs = selTable.getSelectedJobs();
             this.progressMonitor = tablePanel;
             this.setCloseOnExit(true);
+            
+            if (updateReadState) {
+                sMin = Integer.MAX_VALUE; sMax = Integer.MIN_VALUE;
+                for (int i : selTable.getSelectedRows()) {
+                    // Calculate the minimum and maximum selected row
+                    if (i < sMin)
+                        sMin = i;
+                    if (i > sMax)
+                        sMax = i;
+                }
+            }
         }
     }
     // Worker classes:
     private class SuspendWorker extends ProgressWorker {
-        private TooltipJTable<? extends FmtItem> selTable;
+        private FaxJob<? extends FmtItem>[] selJobs;
         
         @Override
         protected int calculateMaxProgress() {
-            return 20 + 10*selTable.getSelectedRowCount();
+            return 20 + 10*selJobs.length;
         }
         
         @Override
@@ -512,13 +519,10 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             try {
                 connection.beginMultiOperation();
                 try {
-                    int[] selRows =  selTable.getSelectedRows();
-
-                    for (int i : selRows) {
-                        FaxJob<? extends FmtItem> yj = null;
+                    MessageFormat infoFormat = new MessageFormat(_("Suspending job {0}"));
+                    for (FaxJob<? extends FmtItem> yj : selJobs) {
                         try {
-                            yj = selTable.getJobForRow(i);
-                            updateNote(MessageFormat.format(_("Suspending job {0}"), yj.getIDValue()));
+                            updateNote(infoFormat.format(new Object[]{yj.getIDValue()}));
 
                             JobState jobstate = yj.getJobState();
                             if (jobstate == JobState.RUNNING) {
@@ -553,18 +557,18 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         }
         
         public SuspendWorker(TooltipJTable<? extends FmtItem> selTable) {
-            this.selTable = selTable;
+            this.selJobs = selTable.getSelectedJobs();
             this.progressMonitor = tablePanel;
             this.setCloseOnExit(false);
         }
     }
     // Worker classes:
     private class ResumeWorker extends ProgressWorker {
-        private TooltipJTable<? extends FmtItem> selTable;
+        private FaxJob<? extends FmtItem>[] selJobs;
         
         @Override
         protected int calculateMaxProgress() {
-            return 20 + 10*selTable.getSelectedRowCount();
+            return 20 + 10*selJobs.length;
         }
         
         @Override
@@ -572,13 +576,11 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             try {
                 connection.beginMultiOperation();
                 try {
-                    int[] selRows =  selTable.getSelectedRows();
-
-                    for (int i : selRows) {
-                        FaxJob<? extends FmtItem> yj = null;
+                    MessageFormat infoFormat = new MessageFormat(_("Resuming job {0}"));
+                    
+                    for (FaxJob<? extends FmtItem> yj : selJobs) {
                         try {
-                            yj = selTable.getJobForRow(i);
-                            updateNote(MessageFormat.format(_("Resuming job {0}"), yj.getIDValue()));
+                            updateNote(infoFormat.format(new Object[] { yj.getIDValue() }));
                             JobState jobstate = yj.getJobState();
                             if (jobstate != JobState.SUSPENDED) {
                                 if (showConfirmDialog(MessageFormat.format(_("Job {0} is not in state \"Suspended\" so resuming it probably will not work. Try to resume it anyway?") , yj.getIDValue()),
@@ -612,13 +614,13 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         }
         
         public ResumeWorker(TooltipJTable<? extends FmtItem> selTable) {
-            this.selTable = selTable;
+            this.selJobs = selTable.getSelectedJobs();
             this.progressMonitor = tablePanel;
             this.setCloseOnExit(false);
         }
     }
     private class SaveToFormatWorker extends ProgressWorker {
-        private TooltipJTable<? extends FmtItem> selTable;
+        private FaxJob<? extends FmtItem>[] selJobs;
         private File targetDir;
         private int fileCounter;
         private JFileChooser fileChooser;
@@ -627,7 +629,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         
         @Override
         protected int calculateMaxProgress() {
-            return 1000*selTable.getSelectedRowCount();
+            return 1000*selJobs.length;
         }
         
         @Override
@@ -636,20 +638,18 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 fileCounter = 0;
                 connection.beginMultiOperation();
                 try {
-                    int[] selRows =  selTable.getSelectedRows();
                     List<FormattedFile> ffs = new ArrayList<FormattedFile>();
-
-                    for (int i : selRows) {
-                        FaxJob<? extends FmtItem> yj = null;
+                    MessageFormat infoFormat = new MessageFormat(_("Saving fax {0}"));
+                    for (FaxJob<? extends FmtItem> yj : selJobs) {
                         try {
-                            yj = selTable.getJobForRow(i);
-                            updateNote(MessageFormat.format(_("Saving fax {0}"), yj.getIDValue()));
+                            updateNote(infoFormat.format(new Object[]{yj.getIDValue()}));
                             ffs.clear();
                             for(FaxDocument hsf : yj.getDocuments()) {
                                 try {
                                     ffs.add(hsf.getDocument());
+                                } catch (ServerResponseException sre) {
+                                    showExceptionDialog(MessageFormat.format(_("While downloading the file {0} (job {1}), the server gave back an error code:"), hsf.getPath(), yj.getIDValue()), sre);
                                 } catch (Exception e1) {
-                                    //JOptionPane.showMessageDialog(MainWin.this, MessageFormat.format(_("An error occured saving the file {0} (job {1}):\n"), hsf.getPath(), yj.getIDValue()) + e1.getMessage() , _("Error"), JOptionPane.ERROR_MESSAGE);
                                     showExceptionDialog(MessageFormat.format(_("An error occured saving the file {0} (job {1}):"), hsf.getPath(), yj.getIDValue()), e1);
                                 }
                             }
@@ -716,7 +716,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         }
         
         public SaveToFormatWorker(TooltipJTable<? extends FmtItem> selTable, File targetDir, boolean askForEveryFile, MultiFileConvFormat desiredFormat) {
-            this.selTable = selTable;
+            this.selJobs = selTable.getSelectedJobs();
             this.targetDir = targetDir;
             this.progressMonitor = tablePanel;
             this.askForEveryFile = askForEveryFile;
@@ -1046,61 +1046,92 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         actResend = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {                
                 TooltipJTable<? extends FmtItem> selTable = getSelectedTable();
-                if (selTable != tableSent || selTable.getSelectedRow() < 0)
+                if (selTable.getSelectedRow() < 0)
                     return;
 
                 Utils.setWaitCursor(null);
-                SendWinControl sw = SendController.createSendWindow(MainWin.this, connection.getClientManager(), false, true);
-                Set<FaxDocument> files = new HashSet<FaxDocument>();
-                String subject = null;
+                
+                final FaxJob<? extends FmtItem>[] selectedJobs = selTable.getSelectedJobs(); 
+                
+                ProgressWorker resendWorker = new ProgressWorker() {
+                    Set<FaxDocument> files = new HashSet<FaxDocument>();
+                    String subject = null;
+                    List<PBEntryFieldContainer> recipients = new ArrayList<PBEntryFieldContainer>();
+                    boolean success = false;
+                    
+                    @Override
+                    public void doWork() {
+                        try {
+                            MessageFormat infoFormat = new MessageFormat(_("Getting information for job {0}..."));
+                            connection.beginMultiOperation();
+                            try {
+                                for (FaxJob<? extends FmtItem> job : selectedJobs) {
+                                    String number, voiceNumber, company, name, location;
+                                    Collection<FaxDocument> jobFiles;
 
-                try {
-                    connection.beginMultiOperation();
-                    try {
-                        for (int row : selTable.getSelectedRows()) {
-                            FaxJob<? extends FmtItem> job = selTable.getJobForRow(row);
-                            String number, voiceNumber, company, name, location;
-                            Collection<FaxDocument> jobFiles;
-
-                            jobFiles = job.getDocuments();
-                            
-                            Map<String,String> props = job.getJobProperties("DIALSTRING", "TOUSER", "TOCOMPANY", "TOLOCATION", "TOVOICE", "REGARDING");
-                            if (props != null && props.size() > 0) {
-                                number = props.get("DIALSTRING");
-                                name = props.get("TOUSER");
-                                company = props.get("TOCOMPANY");
-                                location = props.get("TOLOCATION");
-                                voiceNumber = props.get("TOVOICE");
-                                if (subject == null || subject.length() == 0) {
-                                    // Simply take the first non-empty subject
-                                    subject = props.get("REGARDING").trim();
+                                    updateNote(infoFormat.format(new Object[] {job.getIDValue()}));
+                                    
+                                    jobFiles = job.getDocuments();
+                                    
+                                    Map<String,String> props = job.getJobProperties("EXTERNAL", "DIALSTRING", "TOUSER", "TOCOMPANY", "TOLOCATION", "TOVOICE", "REGARDING");
+                                    if (props != null && props.size() > 0) {
+                                        number = props.get("DIALSTRING");
+                                        if (number == null) {
+                                            number = props.get("EXTERNAL");
+                                        }
+                                        name = props.get("TOUSER");
+                                        company = props.get("TOCOMPANY");
+                                        location = props.get("TOLOCATION");
+                                        voiceNumber = props.get("TOVOICE");
+                                        if (subject == null || subject.length() == 0) {
+                                            // Simply take the first non-empty subject
+                                            subject = props.get("REGARDING").trim();
+                                        }
+                                        recipients.add(new DefaultPBEntryFieldContainer(number, name, company, location, voiceNumber));
+                                    }
+                                    for (FaxDocument hysf : jobFiles) {
+                                            files.add(hysf);
+                                    }
                                 }
-                                sw.getRecipients().add(new DefaultPBEntryFieldContainer(number, name, company, location, voiceNumber));
+                                updateNote(_("Opening send dialog..."));
+                                success = true;
+                            } catch (Exception e1) {
+                                Utils.unsetWaitCursor(null);
+                                ExceptionDialog.showExceptionDialog(MainWin.this, _("Could not get all of the job information necessary to resend the fax:"), e1);
+                                return;
+                            } finally {
+                                connection.endMultiOperation();
                             }
-                            for (FaxDocument hysf : jobFiles) {
-                                if (!files.contains(hysf)) {
-                                    sw.addServerFile(hysf);
-                                    files.add(hysf);
-                                }
-                            }
+                        } catch (Exception ex) {
+                            ExceptionDialog.showExceptionDialog(MainWin.this, _("Error resending faxes: "), ex);
                         }
-                    } catch (Exception e1) {
-                        Utils.unsetWaitCursor(null);
-                        ExceptionDialog.showExceptionDialog(MainWin.this, _("Could not get all of the job information necessary to resend the fax:"), e1);
-                        return;
-                    } finally {
-                        connection.endMultiOperation();
                     }
-                } catch (Exception ex) {
-                    ExceptionDialog.showExceptionDialog(MainWin.this, _("Error resending faxes: "), ex);
-                }
-                if (subject != null)
-                    sw.setSubject(subject);
+                    
+                    @Override
+                    protected void done() {
+                        if (success) {
+                            SendWinControl sw = SendController.createSendWindow(MainWin.this, connection.getClientManager(), false, true);
 
-                Utils.unsetWaitCursorOnOpen(null, sw.getWindow());
-                sw.setVisible(true);
-                refreshTables();
-            };
+                            sw.getRecipients().addAll(recipients);
+                            for (FaxDocument doc : files) {
+                                sw.addServerFile(doc);
+                            }
+
+                            if (subject != null)
+                                sw.setSubject(subject);
+
+                            Utils.unsetWaitCursorOnOpen(null, sw.getWindow());
+                            sw.setVisible(true);
+                        } else {
+                            Utils.unsetWaitCursor(null);
+                        }
+                    }
+                };
+                resendWorker.setProgressMonitor(tablePanel);
+                resendWorker.setCloseOnExit(true);
+                
+                resendWorker.startWork(MainWin.this, _("Resending fax..."));
+            }
         };
         actResend.putValue(Action.NAME, _("Resend fax..."));
         actResend.putValue(Action.SHORT_DESCRIPTION, _("Resend the fax"));
@@ -1632,12 +1663,17 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 
                 saveWindowSettings();
                 
-                doLogout(false, new Runnable() {
-                   public void run() {
-                       Thread.yield();
-                       System.exit(0);
-                    } 
-                });
+                if (connection.getConnectionState() == ConnectionState.CONNECTED) {
+                    doLogout(false, new Runnable() {
+                        public void run() {
+                            Thread.yield();
+                            System.exit(0);
+                        } 
+                    });
+                } else {
+                    Thread.yield();
+                    System.exit(0);
+                }
             }
         });
         setIconImage(Toolkit.getDefaultToolkit().getImage(MainWin.class.getResource("icon.png")));
@@ -1742,14 +1778,18 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     /**
      * Disconnects from the server asnynchronously. If immediateReconnect is true,
      * calls reconnectToServer after the disconnect has completed.
-     * If intermediateAction != null, the Runnable is run after the disconnect completed,
+     * If intermediateAction != null, the Runnable is run in the EDT after the disconnect completed,
      * (but before the reconnect is started when requested).
      */
     void doLogout(final boolean immediateReconnect, final Runnable intermediateAction) {
         try {
             log.fine("Logging out...");
+            stopReconnectTimer();
+            
             sendReady = immediateReconnect ? SendReadyState.NeedToWait : SendReadyState.NotReady;
             
+            if (Utils.debugMode)
+                log.fine("Logout ConnectionState is: " + connection.getConnectionState());
             if (connection.getConnectionState() == ConnectionState.CONNECTED) {                
                 saveTableColumnSettings();
                 
@@ -1761,10 +1801,10 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 Utils.executorService.submit(new Runnable() {
                    public void run() {
                        connection.disconnect();
-                       if (intermediateAction != null)
-                           intermediateAction.run();
                        SwingUtilities.invokeLater(new Runnable() {
                            public void run() {
+                               if (intermediateAction != null)
+                                   intermediateAction.run();
                                if (immediateReconnect) {
                                    reconnectToServer(null);
                                } else {
@@ -1781,7 +1821,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 }
             }
             
-            log.fine("Successfully logged out");
+            log.fine("Successfully initiated log out");
         } catch (Exception e) {
             log.log(Level.WARNING, "Error logging out:", e);
             // do nothing
@@ -1834,10 +1874,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     }
     
     public void reconnectToServer(Runnable loginAction) {        
-        if (reconnectTimer != null && reconnectTimer.isRunning()) {
-            reconnectTimer.stop();
-            reconnectTimer = null;
-        }
+        stopReconnectTimer();
         
         if (myopts.host.length() == 0) { // Prompt for server if not set
             actOptions.actionPerformed(null);
@@ -1851,7 +1888,6 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         Utils.executorService.submit(new LoginThread((Boolean)actAdminMode.getValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY), loginAction));
         
     }
-    
     
     
     /**
@@ -2469,7 +2505,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 if (tableArchive.getSelectedRow() >= 0) {
                     deleteState = true;
                     showState = true;
-                    resendState = false;
+                    resendState = true;
                     viewLogState = true;
                 }
             } 
@@ -2711,25 +2747,35 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     private static final int RECONNECT_DELAY = 30;
     javax.swing.Timer reconnectTimer;
     protected void setupReconnectTimer() {
-        reconnectTimer = new javax.swing.Timer(1000, null);
-        reconnectTimer.setInitialDelay(0);
-        reconnectTimer.addActionListener(new ActionListener() {
-            private int counter = RECONNECT_DELAY;
-            MessageFormat reconnectFmt = new MessageFormat(_("Disconnected, will try to reconnect in {0} seconds..."));
-            
-            public void actionPerformed(ActionEvent e) {
-                textStatus.setText(reconnectFmt.format(new Object[] {counter}));
-                if (counter > 0) {
-                    counter--;
-                } else {
-                    reconnectTimer.stop();
-                    reconnectTimer = null;
-                    reconnectToServer(null);
+        if (reconnectTimer == null) {
+            reconnectTimer = new javax.swing.Timer(1000, null);
+            reconnectTimer.setInitialDelay(0);
+            reconnectTimer.addActionListener(new ActionListener() {
+                private int counter = RECONNECT_DELAY;
+                MessageFormat reconnectFmt = new MessageFormat(_("Disconnected, will try to reconnect in {0} seconds..."));
+
+                public void actionPerformed(ActionEvent e) {
+                    textStatus.setText(reconnectFmt.format(new Object[] {counter}));
+                    if (counter > 0) {
+                        counter--;
+                    } else {
+                        reconnectTimer.stop();
+                        reconnectTimer = null;
+                        reconnectToServer(null);
+                    }
                 }
-            }
-        });
-        reconnectTimer.start();
+            });
+            reconnectTimer.start();
+        }
     }
+    
+    private void stopReconnectTimer() {
+        if (reconnectTimer != null && reconnectTimer.isRunning()) {
+            reconnectTimer.stop();
+            reconnectTimer = null;
+        }
+    }
+    
 
     class QuickSearchHelper extends AbstractQuickSearchHelper implements ChangeListener {
         

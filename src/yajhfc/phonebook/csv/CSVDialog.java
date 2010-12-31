@@ -31,7 +31,6 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Vector;
@@ -91,11 +90,7 @@ public class CSVDialog extends JDialog {
         JPanel contentPane = new JPanel(new TableLayout(dLay));
         
         Vector<Charset> availCharsets = new Vector<Charset>(Charset.availableCharsets().values());
-        Collections.sort(availCharsets, new Comparator<Charset>() {
-            public int compare(Charset o1, Charset o2) {
-                return o1.toString().compareToIgnoreCase(o2.toString());
-            }
-        });
+        Collections.sort(availCharsets);
         comboCharset = new JComboBox(availCharsets);
         
         String[] separators = {

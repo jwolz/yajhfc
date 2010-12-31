@@ -84,10 +84,17 @@ public class JobQueueFaxJob extends DirectAccessFaxJob<QueueFileFormat> {
     @Override
     public FaxDocument getCommunicationsLog() throws IOException {
         String commID = (String)getData(QueueFileFormat.commid);
+        if (Utils.debugMode) {
+            log.fine(this.jobID + ": has CommID: " + commID);
+        }
         if (commID == null || commID.length() == 0) {
             return null;
         } else {
-            return new DirectAccessFaxDoc<QueueFileFormat>(this, getLogFileName(commID) , FileFormat.PlainText);
+            String logFileName = getLogFileName(commID);
+            if (Utils.debugMode) {
+                log.fine(this.jobID + ": returning filename: " + logFileName);
+            }
+            return new DirectAccessFaxDoc<QueueFileFormat>(this, logFileName, FileFormat.PlainText);
         }
     }
     
@@ -109,6 +116,25 @@ public class JobQueueFaxJob extends DirectAccessFaxJob<QueueFileFormat> {
         fileEntries.put("!pdf", FileFormat.PDF);
     }
     
+    @Override
+    public Map<String, String> getJobProperties(String... properties) {
+        Map<String,String> resMap = new HashMap<String,String>();
+        try {
+            Map<String, int[]> desiredItems = new HashMap<String, int[]>(properties.length);
+            for (int i=0; i<properties.length; i++) {
+                desiredItems.put(JobPropToQueueAndJobFmtMapping.getMappingFor(properties[i]).queueFormat.getHylaFmt(), new int[] {i});
+            }
+            String[] res = readSpoolFile(getDirAccessor(), desiredItems, properties.length, false);
+            for (int i=0; i<properties.length; i++) {
+                if (res[i] != null)
+                    resMap.put(properties[i], res[i]);
+            }
+        } catch (IOException e) {
+            log.log(Level.WARNING, "Error retrieving the job properties", e);
+        }
+        return resMap;
+    }
+    
     /**
      * Translated the filename from the control file (docq/docXYZ.ps) into the actual file name
      * @param fileName
@@ -118,12 +144,23 @@ public class JobQueueFaxJob extends DirectAccessFaxJob<QueueFileFormat> {
         return fileName;
     }
     
-    protected void readSpoolFile(HylaDirAccessor hyda) throws IOException {
+    protected void readSpoolFile(HylaDirAccessor hyda) throws IOException {        
+        String[] result = readSpoolFile(hyda, getDesiredItems(),
+                parent.getColumns().getCompleteView().size(), true);
+        if (Utils.debugMode) {
+            log.finer(jobID + ": calculated documents: " + documents);
+        }
+        lastModified = hyda.getLastModified(fileName);
+        reloadData(result);
+    }
+    
+    protected String[] readSpoolFile(HylaDirAccessor hyda, Map<String,int[]> desiredItems, int resultSize, boolean readDocs) throws IOException {
         BufferedReader qFileReader = new BufferedReader(hyda.getInputReader(fileName));
-        Map<String,int[]> desiredItems = getDesiredItems();
         
-        String[] result = new String[parent.getColumns().getCompleteView().size()];
-        documents.clear();
+        String[] result = new String[resultSize];
+        if (readDocs) {
+            documents.clear();
+        }
         
         String line;
         StringBuilder lineBuffer = null;
@@ -160,7 +197,7 @@ public class JobQueueFaxJob extends DirectAccessFaxJob<QueueFileFormat> {
                     for (int offset : resultOffsets) {
                         result[offset] = realLine.substring(colonOffset + 1);
                     }
-                } else if (fileEntries.containsKey(key)) {
+                } else if (readDocs && fileEntries.containsKey(key)) {
                     // lastIndexOf is > -1 since indexOf is > -1
                     String fileName = realLine.substring(realLine.lastIndexOf(':') + 1);
                     documents.add(new DirectAccessFaxDoc<QueueFileFormat>(this, translateFileName(fileName), fileEntries.get(key)));
@@ -174,7 +211,6 @@ public class JobQueueFaxJob extends DirectAccessFaxJob<QueueFileFormat> {
             }
         }
         qFileReader.close();
-        lastModified = hyda.getLastModified(fileName);
-        reloadData(result);
+        return result;
     }
 }

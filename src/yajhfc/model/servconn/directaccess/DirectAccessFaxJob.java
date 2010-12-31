@@ -5,14 +5,17 @@ import gnu.inet.ftp.ServerResponseException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
+import yajhfc.Utils;
 import yajhfc.model.FmtItem;
 import yajhfc.model.jobq.HylaDirAccessor;
 import yajhfc.model.servconn.FaxDocument;
 import yajhfc.model.servconn.defimpl.AbstractFaxJob;
 
 public abstract class DirectAccessFaxJob<T extends FmtItem> extends AbstractFaxJob<T> {
-
+    static final Logger log = Logger.getLogger(DirectAccessFaxJob.class.getName());
+    
     protected final String jobID;
     protected final String fileName;
     protected long lastModified = -1;
@@ -51,6 +54,8 @@ public abstract class DirectAccessFaxJob<T extends FmtItem> extends AbstractFaxJ
     public boolean pollForChanges() throws IOException {
         HylaDirAccessor hyda = getDirAccessor();
         long newModified = hyda.getLastModified(fileName);
+        if (Utils.debugMode)
+            log.fine(fileName + ": poll for changes: lastModified="+lastModified +"; newModified=" + newModified);
         if (newModified != lastModified) {
             readSpoolFile(hyda);
             return true;

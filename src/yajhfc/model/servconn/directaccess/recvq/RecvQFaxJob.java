@@ -23,10 +23,12 @@ import gnu.inet.ftp.ServerResponseException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+import yajhfc.Utils;
 import yajhfc.file.FileFormat;
 import yajhfc.model.RecvFormat;
 import yajhfc.model.jobq.HylaDirAccessor;
@@ -53,7 +55,7 @@ public class RecvQFaxJob extends DirectAccessFaxJob<RecvFormat> {
     @Override
     protected void readSpoolFile(HylaDirAccessor hyda) throws IOException {        
         RecvTIFFReader r = new RecvTIFFReader();
-        FileInputStream inStream = hyda.getFileInputStream(fileName);
+        FileInputStream inStream = new FileInputStream(hyda.getFile(fileName));
         r.read(inStream);
         inStream.close();
         
@@ -123,6 +125,9 @@ public class RecvQFaxJob extends DirectAccessFaxJob<RecvFormat> {
             }
         }
         data = resultData;
+        if (Utils.debugMode) {
+            log.finest(jobID + " data after reading: " + Arrays.toString(resultData));
+        }
 
         // Calculate status
         String errorDesc = r.getReason();

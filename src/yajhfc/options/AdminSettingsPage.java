@@ -19,6 +19,7 @@
 package yajhfc.options;
 
 import static yajhfc.Utils._;
+import static yajhfc.options.OptionsWin.border;
 import info.clearthought.layout.TableLayout;
 
 import java.awt.Dimension;
@@ -48,9 +49,8 @@ import yajhfc.util.SafeJFileChooser;
  * @author jonas
  *
  */
-public class AdminSettingsPage extends JPanel implements OptionsPage {
+public class AdminSettingsPage extends AbstractOptionsPanel {
     protected final OptionsWin parentWin;
-    private static final int border = 6;
     
     JCheckBox checkUseWin32ShutdownManager, checkAdjustMenusForMacOSX, checkUseJDK16PSBugfix;
     JCheckBox checkRegardingAsUsrKey, checkAllowChangeFilter, checkSendFORMCommand;
@@ -61,10 +61,10 @@ public class AdminSettingsPage extends JPanel implements OptionsPage {
     public AdminSettingsPage(OptionsWin parentWin) {
         super(false);
         this.parentWin = parentWin;
-        initialize();
     }
     
-    private void initialize() {
+    @Override
+    protected void createOptionsUI() {
         double[][] dLay = {
                 {border, TableLayout.FILL, border, TableLayout.PREFERRED, border},
                 {border, TableLayout.PREFERRED, border*2, TableLayout.FILL, border}
@@ -129,7 +129,7 @@ public class AdminSettingsPage extends JPanel implements OptionsPage {
                         
                         FaxOptions newOpts = new FaxOptions();
                         newOpts.loadFromProperties(p);
-                        parentWin.loadSettings(newOpts);
+                        parentWin.reloadSettings(newOpts);
                         
                         JOptionPane.showMessageDialog(AdminSettingsPage.this, _("Settings imported successfully."));
                     } catch (Exception ex) {
@@ -203,12 +203,4 @@ public class AdminSettingsPage extends JPanel implements OptionsPage {
         foEdit.useWin32ShutdownManager = checkUseWin32ShutdownManager.isSelected();
         foEdit.sendFORMCommand = checkSendFORMCommand.isSelected();
     }
-
-    /* (non-Javadoc)
-     * @see yajhfc.options.OptionsPage#validateSettings(yajhfc.options.OptionsWin)
-     */
-    public boolean validateSettings(OptionsWin optionsWin) {
-        return true;
-    }
-
 }

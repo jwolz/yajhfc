@@ -4,6 +4,7 @@ import gnu.hylafax.HylaFAXClient;
 import gnu.inet.ftp.ServerResponseException;
 
 import java.awt.Window;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,6 +25,7 @@ public class HylaClientManager {
     protected int transactionCounter;
     protected List<HylaModem> realModems = null;
     protected List<HylaModem> modems = null;
+    protected boolean showErrorsUsingGUI = true;
     
     protected static final String modemListFormat = "$$$|%m|%n";
     protected static final String modemListPrefix = "$$$";    
@@ -122,6 +124,7 @@ public class HylaClientManager {
             synchronized (client) {
                 //client.setDebug(Utils.debugMode);
                 client.setSocketTimeout(myopts.socketTimeout);
+                client.setCharacterEncoding(myopts.hylaFAXCharacterEncoding);
                 try {
                     client.open(myopts.host, myopts.port);
                     if (Utils.debugMode) {
@@ -184,8 +187,26 @@ public class HylaClientManager {
 
                     client.rcvfmt(myopts.recvfmt.getFormatString());
                     return client;
+                } catch (ServerResponseException sre) {
+                    if (showErrorsUsingGUI) {
+                        ExceptionDialog.showExceptionDialog(owner, Utils._("The HylaFAX server responded with an error:"), sre);
+                    } else {
+                        log.log(Level.WARNING, "The HylaFAX server responded with an error:", sre);
+                    }
+                    return null;
+                } catch (UnknownHostException uhe) {
+                    if (showErrorsUsingGUI) {
+                        ExceptionDialog.showExceptionDialog(owner, Utils._("The server's host name was not found:"), uhe);
+                    } else {
+                        log.log(Level.WARNING, "The server's host name was not found:", uhe);
+                    }
+                    return null;
                 } catch (Exception e) {
-                    ExceptionDialog.showExceptionDialog(owner, Utils._("An error occured connecting to the server:"), e);
+                    if (showErrorsUsingGUI) {
+                        ExceptionDialog.showExceptionDialog(owner, Utils._("An error occured connecting to the server:"), e);
+                    } else {
+                        log.log(Level.WARNING, "An error occured connecting to the server:", e);
+                    }
                     return null;
                 }
             }
@@ -284,5 +305,13 @@ public class HylaClientManager {
     
     public String getUser() {
         return userName;
+    }
+    
+    public void setShowErrorsUsingGUI(boolean showErrorsUsingGUI) {
+        this.showErrorsUsingGUI = showErrorsUsingGUI;
+    }
+    
+    public boolean isShowErrorsUsingGUI() {
+        return showErrorsUsingGUI;
     }
 }

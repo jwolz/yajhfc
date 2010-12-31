@@ -19,6 +19,7 @@
 package yajhfc.options;
 
 import static yajhfc.Utils._;
+import static yajhfc.options.OptionsWin.border;
 import info.clearthought.layout.TableLayout;
 import info.clearthought.layout.TableLayoutConstraints;
 
@@ -27,7 +28,6 @@ import java.awt.Dimension;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
-import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -58,7 +58,7 @@ import yajhfc.util.ClipboardPopup;
  * @author jonas
  *
  */
-public class CoverPanel extends JPanel implements OptionsPage {
+public class CoverPanel extends AbstractOptionsPanel {
 
     Map<PBEntryField,JTextComponent> entryFields = new EnumMap<PBEntryField, JTextComponent>(PBEntryField.class);
     
@@ -70,6 +70,10 @@ public class CoverPanel extends JPanel implements OptionsPage {
     
     public CoverPanel() {
         super(new BorderLayout(), false);
+    }
+    
+    @Override
+    protected void createOptionsUI() {
         add(getBottomPanel(), BorderLayout.WEST);
         add(getPanelCover(), BorderLayout.CENTER);
     }
@@ -106,15 +110,16 @@ public class CoverPanel extends JPanel implements OptionsPage {
         Dimension spacer = new Dimension(OptionsWin.border, OptionsWin.border);
         bottomPanel.add(Box.createRigidArea(spacer));
         addComboToBox(bottomPanel, comboNameRule, Utils._("Name format:"));
-        bottomPanel.add(Box.createVerticalGlue());
+        bottomPanel.add(Box.createRigidArea(spacer));
         addComboToBox(bottomPanel, comboCompanyRule, Utils._("Company format:"));
-        bottomPanel.add(Box.createVerticalGlue());
+        bottomPanel.add(Box.createRigidArea(spacer));
         addComboToBox(bottomPanel, comboLocationRule, Utils._("Location format:"));
-        bottomPanel.add(Box.createVerticalGlue());
+        bottomPanel.add(Box.createRigidArea(spacer));
         addComboToBox(bottomPanel, comboZIPCodeRule, Utils._("ZIP code format:"));
-        bottomPanel.add(Box.createVerticalGlue());
+        bottomPanel.add(Box.createRigidArea(spacer));
         bottomPanel.add(checkUseCustomDefCover);
         bottomPanel.add(ftfCustomDefCover);
+        bottomPanel.add(Box.createVerticalGlue());
         bottomPanel.add(Box.createRigidArea(spacer));
         return bottomPanel;
     }
@@ -153,15 +158,20 @@ public class CoverPanel extends JPanel implements OptionsPage {
                     longFields++;
                 }
             }
-            final int rowCount = 2 + 2 * (longFields - 1 + (shortFields+1)/2);
+            final int rowCount = 2 + 3 * (longFields - 1 + (shortFields+1)/2);
             double[][] dLay = {
                     {OptionsWin.border, 0.5, OptionsWin.border, TableLayout.FILL, OptionsWin.border},
                     new double[rowCount]
             };
-            final double rowH = 1.0 / (double)(rowCount - 2);
-            Arrays.fill(dLay[1], 1, rowCount - 2, rowH);
-            dLay[1][0] = dLay[1][rowCount - 1] = OptionsWin.border;
-            dLay[1][rowCount - 2] = TableLayout.FILL;
+            
+            for (int i=0; i<rowCount-1; i++) {
+                if (i%3 == 0) {
+                    dLay[1][i] = border;
+                } else {
+                    dLay[1][i] = TableLayout.PREFERRED;
+                }
+            }
+            dLay[1][rowCount - 1] = TableLayout.FILL;
             
             panelCover = new JPanel(new TableLayout(dLay), false);
             panelCover.setBorder(BorderFactory.createTitledBorder(_("Sender data")));
@@ -177,13 +187,13 @@ public class CoverPanel extends JPanel implements OptionsPage {
                         if (col == 1) {
                             col = 3;
                         } else {
-                            row += 2;
+                            row += 3;
                             col  = 1;
                         }
                     } else {
                         layout = new TableLayoutConstraints(1, row, 3, row, TableLayoutConstraints.FULL, TableLayoutConstraints.CENTER);
                         col  = 1;
-                        row += 2;
+                        row += 3;
                     }
                     Utils.addWithLabel(panelCover, textField, field.getDescription()+":", layout);
                 }

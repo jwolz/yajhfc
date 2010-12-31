@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Logger;
 
 import yajhfc.FaxOptions;
 import yajhfc.Utils;
@@ -36,6 +37,7 @@ import yajhfc.model.servconn.FaxJob;
 import yajhfc.model.servconn.defimpl.AbstractFaxJobList;
 
 public abstract class AbstractHylaFaxJobList<T extends FmtItem> extends AbstractFaxJobList<T> implements ManagedFaxJobList<T>  {
+    static final Logger log = Logger.getLogger(AbstractHylaFaxJobList.class.getName());
     protected final HylaFaxListConnection parent;
     
     protected Vector<?> lastJobListing = null;
@@ -46,8 +48,12 @@ public abstract class AbstractHylaFaxJobList<T extends FmtItem> extends Abstract
     }
 
     public void pollForNewJobs(HylaFAXClient hyfc) throws IOException, ServerResponseException {
+        if (Utils.debugMode)
+            log.finer("Getting job listing with columns: " + columns.getCompleteView());
         Vector<?> newJobs = getJobListing(hyfc);
         if (lastJobListing == null || !newJobs.equals(lastJobListing)) {
+            log.fine("Job listings differ, reloading jobs");
+            
             List<FaxJob<T>> newFaxJobs = new ArrayList<FaxJob<T>>(newJobs.size());
             for (int i = 0; i < newJobs.size(); i++) {
                 newFaxJobs.add(createFaxJob(Utils.fastSplit((String)newJobs.get(i), '|')));
@@ -55,6 +61,8 @@ public abstract class AbstractHylaFaxJobList<T extends FmtItem> extends Abstract
             lastJobListing = newJobs;
             
             setJobs(newFaxJobs);
+        } else {
+            log.fine("Job listings are the same.");
         }
     }
     

@@ -21,8 +21,8 @@ package yajhfc.model.servconn.defimpl;
 import gnu.inet.ftp.ServerResponseException;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -36,11 +36,10 @@ import yajhfc.model.DefaultIconMap;
 import yajhfc.model.FmtItem;
 import yajhfc.model.IconMap;
 import yajhfc.model.servconn.FaxDocument;
-import yajhfc.model.servconn.FaxJob;
 import yajhfc.model.servconn.FaxJobList;
 import yajhfc.model.servconn.JobState;
 
-public abstract class AbstractFaxJob<T extends FmtItem> implements FaxJob<T>, Serializable {
+public abstract class AbstractFaxJob<T extends FmtItem> implements SerializableFaxJob<T> {
     static final Logger log = Logger.getLogger(AbstractFaxJob.class.getName());
     private static final long serialVersionUID = 1;
     
@@ -102,6 +101,8 @@ public abstract class AbstractFaxJob<T extends FmtItem> implements FaxJob<T>, Se
             ServerResponseException {
                 if (documents == null) {
                     documents = calcDocuments();
+                    if (Utils.debugMode)
+                        log.fine("Calculated documents for " + getIDValue() + ": " + documents + "; inaccessibleDocs=" + inaccessibleDocuments);
                 }
                 if (inaccessibleDocs != null && inaccessibleDocuments != null) {
                     inaccessibleDocs.addAll(inaccessibleDocuments);
@@ -123,8 +124,8 @@ public abstract class AbstractFaxJob<T extends FmtItem> implements FaxJob<T>, Se
         return parent;
     }
     
-    public void setParent(AbstractFaxJobList<T> parent) {
-        this.parent = parent;
+    public void setParent(FaxJobList<T> parent) {
+        this.parent = (AbstractFaxJobList<T>)parent;
     }
 
     public boolean isError() {
@@ -204,6 +205,9 @@ public abstract class AbstractFaxJob<T extends FmtItem> implements FaxJob<T>, Se
      * @param strData
      */
     protected void reloadData(String[] strData) {
+        if (Utils.debugMode) {
+            log.finest("Raw data is: " + Arrays.toString(strData));
+        }
         rawData = strData;
         List<T> completeView = parent.getColumns().getCompleteView();
         data = new Object[completeView.size()];
@@ -213,6 +217,9 @@ public abstract class AbstractFaxJob<T extends FmtItem> implements FaxJob<T>, Se
             } else {
                 data[i] = null;
             }
+        }
+        if (Utils.debugMode) {
+            log.finest("Parsed data is: " + Arrays.toString(data));
         }
         state = calculateJobState();
     }
@@ -250,6 +257,11 @@ public abstract class AbstractFaxJob<T extends FmtItem> implements FaxJob<T>, Se
     protected AbstractFaxJob(AbstractFaxJobList<T> parent, String[] data) {
         this.parent = parent;
         reloadData(data);
+    }
+    
+    @Override
+    public String toString() {
+        return getIDValue().toString();
     }
     
 }

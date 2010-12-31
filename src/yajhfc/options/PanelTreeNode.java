@@ -24,7 +24,6 @@ import java.util.Enumeration;
 import java.util.List;
 
 import javax.swing.Icon;
-import javax.swing.JComponent;
 import javax.swing.tree.TreeNode;
 
 
@@ -32,10 +31,12 @@ public class PanelTreeNode implements TreeNode {
 
     private List<PanelTreeNode> children;
     private TreeNode parent;
-    private JComponent panel;
+    private OptionsPage optionsPage;
     private String label;
     private String longLabel;
     private Icon icon;
+    
+    boolean settingsAndUILoaded = false;
     
     public Enumeration<PanelTreeNode> children() {
         if (children == null)
@@ -89,8 +90,8 @@ public class PanelTreeNode implements TreeNode {
         this.children = Arrays.asList(children);
     }
 
-    public JComponent getPanel() {
-        return panel;
+    public OptionsPage getOptionsPage() {
+        return optionsPage;
     }
     
     public Icon getIcon() {
@@ -106,14 +107,14 @@ public class PanelTreeNode implements TreeNode {
         return label;
     }
     
-    public PanelTreeNode(TreeNode parent, JComponent panel, String label, Icon icon) {
-        this(parent,panel,label,icon,label);
+    public PanelTreeNode(TreeNode parent, OptionsPage page, String label, Icon icon) {
+        this(parent,page,label,icon,label);
     }
     
-    public PanelTreeNode(TreeNode parent, JComponent panel, String label, Icon icon, String longLabel) {
+    public PanelTreeNode(TreeNode parent, OptionsPage page, String label, Icon icon, String longLabel) {
         super();
         this.label = label;
-        this.panel = panel;
+        this.optionsPage = page;
         this.parent = parent;
         this.icon = icon;
         this.longLabel = longLabel;

@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -36,6 +37,11 @@ import yajhfc.util.ExternalProcessExecutor;
  *
  */
 public class PDFMultiFileConverter extends MultiFileConverter {
+
+    /**
+     * The number of lines of error output to show in the message to the user
+     */
+    private static final int LINES_OF_ERROR_OUTPUT = 20;
 
     private static final Logger log = Logger.getLogger(PDFMultiFileConverter.class.getName());
     
@@ -102,14 +108,24 @@ public class PDFMultiFileConverter extends MultiFileConverter {
         gs.getOutputStream().close();
         BufferedReader bufR = new BufferedReader(new InputStreamReader(gs.getInputStream()));
         String line;
+        LinkedList<String> tail = new LinkedList<String>();
         while ((line = bufR.readLine()) != null) {
             log.info("gs output: " + line);
+            tail.offer(line);
+            while (tail.size() > LINES_OF_ERROR_OUTPUT) {
+                tail.poll();
+            }
         }
         bufR.close();
         try {
             int exitVal = gs.waitFor();
             if (exitVal != 0) {
-                throw new ConversionException("Non-zero exit code of GhostScript (" + exitVal + ")");
+                StringBuilder excText = new StringBuilder();
+                excText.append("Non-zero exit code of GhostScript (").append(exitVal).append("):\n");
+                for (String text : tail) {
+                    excText.append(text).append('\n');
+                }
+                throw new ConversionException(excText.toString());
             }
         } catch (InterruptedException e) {
             throw new ConversionException(e);

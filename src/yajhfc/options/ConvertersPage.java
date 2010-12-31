@@ -59,7 +59,7 @@ import yajhfc.util.URIClickListener;
  * @author jonas
  *
  */
-public class ConvertersPage extends JPanel implements OptionsPage {
+public class ConvertersPage extends AbstractOptionsPanel {
 
     ConverterTableModel tableModel;
     JTable formatsTable;
@@ -67,7 +67,12 @@ public class ConvertersPage extends JPanel implements OptionsPage {
     private static final String WIKI_URL = "http://openfacts2.berlios.de/wikien/index.php/BerliosProject:Yet_another_Java_HylaFAX_client_-_Custom_File_Filters";
     
     public ConvertersPage() {
-        super(new BorderLayout());
+        super(new BorderLayout());        
+    }
+    
+    
+    @Override
+    protected void createOptionsUI() {
         tableModel = new ConverterTableModel(FormattedFile.fileConverters);
         formatsTable = new JTable(tableModel);
         formatsTable.setDefaultRenderer(Row.class, new RowRenderer());
@@ -87,7 +92,6 @@ public class ConvertersPage extends JPanel implements OptionsPage {
         
         add(box, BorderLayout.NORTH);
         add(new JScrollPane(formatsTable), BorderLayout.CENTER);
-        
     }
    
     

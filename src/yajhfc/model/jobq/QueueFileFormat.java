@@ -92,6 +92,9 @@ public enum QueueFileFormat implements FmtItem {
         usexvres("usexvres", _("Use max. vertical resolution"), Utils._("Whether or not to use highest vertical resolution"), Boolean.class),
         state_desc("state", _("State"), _("Job state (long description)"), IconMap.class),
         notify_desc("notify",_("Notification when"), _("E-mail notification handling (long description)"), IconMap.class),
+        // the following properties are not officially documented in doneq(5)/sendq(5)
+        voice("voice", _("Recipient phone"), _("Recipient's telephone (voice) number"), String.class),
+        regarding("regarding", _("Subject"), _("Subject (\"Regarding\") of the fax"), String.class),
         ;
         
         private final String description;

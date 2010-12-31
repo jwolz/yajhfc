@@ -145,6 +145,18 @@ public abstract class DefaultPhoneBookEntry implements PhoneBookEntry {
     }
     
     @Override
+    public int hashCode() {
+        int hashCode = 0;
+        for (PBEntryField entry : sortOrder) {
+            String val = getField(entry);
+            if (val != null) {
+                hashCode ^= val.hashCode();
+            }
+        }
+        return hashCode;
+    }
+    
+    @Override
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;

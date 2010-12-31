@@ -21,6 +21,8 @@ package yajhfc.options;
 import java.awt.Dimension;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.File;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +33,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.JOptionPane;
 
 import yajhfc.FaxOptions;
 import yajhfc.FileTextField;
@@ -46,7 +48,7 @@ import yajhfc.util.fmtEditor;
  * @author jonas
  *
  */
-public class ArchivePanel extends JPanel implements OptionsPage {
+public class ArchivePanel extends AbstractOptionsPanel {
 
     fmtEditor<QueueFileFormat> columnEditor;
     JCheckBox checkUseArchive;
@@ -56,10 +58,11 @@ public class ArchivePanel extends JPanel implements OptionsPage {
     
     public ArchivePanel() {
         super(false);
-        initialize();
     }
-
-    private void initialize() {
+   
+    
+    @Override
+    protected void createOptionsUI() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         
         archiveLabel = new JLabel(Utils._("Location of archive directory:"));
@@ -128,11 +131,16 @@ public class ArchivePanel extends JPanel implements OptionsPage {
         foEdit.archiveFmt.addAll(selection);
     }
 
-    /* (non-Javadoc)
-     * @see yajhfc.options.OptionsPage#validateSettings(yajhfc.options.OptionsWin)
-     */
+    @Override
     public boolean validateSettings(OptionsWin optionsWin) {
+        if (checkUseArchive.isSelected()) {
+            File archiveDir = new File(ftfArchiveLocation.getText());
+            if (!archiveDir.exists()) {
+                JOptionPane.showMessageDialog(this, MessageFormat.format(Utils._("Directory {0} does not exist!"), archiveDir), Utils._("Archive location"), JOptionPane.ERROR_MESSAGE);
+                optionsWin.focusComponent(ftfArchiveLocation.getJTextField());
+                return false;
+            }
+        }
         return true;
     }
-
 }

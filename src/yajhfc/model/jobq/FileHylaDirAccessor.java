@@ -7,30 +7,67 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.lang.ref.SoftReference;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Logger;
 
 import yajhfc.Utils;
 
 public class FileHylaDirAccessor implements HylaDirAccessor {
+    static final Logger log = Logger.getLogger(FileHylaDirAccessor.class.getName());
+    
     protected File baseDir;
+    protected Map<String,SoftReference<File>> fileCache = new HashMap<String, SoftReference<File>>();
     
     public FileHylaDirAccessor(File baseDir) {
+        if (Utils.debugMode)
+            log.fine("Created new dir accessor for " + baseDir);
         this.baseDir = baseDir;
     }
 
     public void deleteFile(String fileName) {
-        new File(baseDir, fileName).delete();
+        if (Utils.debugMode)
+            log.fine("Delete " + fileName);
+        getFile(fileName).delete();
+    }
+
+    /**
+     * Return a new file object implementing some caching
+     * @param fileName
+     * @return
+     */
+    public File getFile(String fileName) {
+        SoftReference<File> ref = fileCache.get(fileName);
+        File file;
+        if (ref != null)
+            file = ref.get();
+        else
+            file = null;
+        
+        if (file == null) {
+            file = new File(baseDir, fileName);
+            fileCache.put(fileName, new SoftReference<File>(file));
+        }
+        return file;
     }
 
     public String[] listDirectory() throws IOException {
+        if (Utils.debugMode)
+            log.fine("List base dir");
         return baseDir.list();
     }
     
     public String[] listDirectory(String dir) {
-        return new File(baseDir, dir).list();
+        if (Utils.debugMode)
+            log.fine("List directory " + dir);
+        return getFile(dir).list();
     }
 
     public void deleteTree(String dirName) throws IOException {
-        delTree(new File(baseDir, dirName));
+        if (Utils.debugMode)
+            log.fine("Delete tree " + dirName);
+        delTree(getFile(dirName));
     }
 
     private void delTree(File dir) throws IOException {
@@ -45,9 +82,11 @@ public class FileHylaDirAccessor implements HylaDirAccessor {
     }
 
     public void copyFile(String fileName, OutputStream target) throws IOException {
+        if (Utils.debugMode)
+            log.fine("Copy file " + fileName);
         InputStream inStream = null;
         try {
-            inStream = new FileInputStream(new File(baseDir, fileName));
+            inStream = new FileInputStream(getFile(fileName));
             Utils.copyStream(inStream, target);
         } finally {
             try {
@@ -59,29 +98,35 @@ public class FileHylaDirAccessor implements HylaDirAccessor {
         }
     }
     
-    public FileInputStream getFileInputStream(String fileName)
-            throws IOException {
-        return new FileInputStream(new File(baseDir, fileName));
-    }
 
     public Reader getInputReader(String fileName) throws IOException {
-        return new InputStreamReader(getFileInputStream(fileName), Utils.HYLAFAX_CHARACTER_ENCODING);
+        if (Utils.debugMode)
+            log.fine("Get input reader " + fileName);
+        return new InputStreamReader(new FileInputStream(getFile(fileName)), Utils.getFaxOptions().hylaFAXCharacterEncoding);
     }
 
     public long getLastModified() throws IOException {
+        if (Utils.debugMode)
+            log.fine("Get base dir last modified ");
         return baseDir.lastModified();
     }
 
     public long getLastModified(String fileName) throws IOException {
-        return new File(baseDir, fileName).lastModified();
+        if (Utils.debugMode)
+            log.fine("Get last modified " + fileName);
+        return getFile(fileName).lastModified();
     }
     
     public long getSize(String fileName) throws IOException {
-        return new File(baseDir, fileName).length();
+        if (Utils.debugMode)
+            log.fine("Get size " + fileName);
+        return getFile(fileName).length();
     }
     
     public int getProtection(String fileName) throws IOException {
-        File f = new File(baseDir, fileName);
+        if (Utils.debugMode)
+            log.fine("Get protection " + fileName);
+        File f = getFile(fileName);
         int result = 0;
         // Bad emulation of stat call...
         if (f.canRead()) 
@@ -91,4 +136,7 @@ public class FileHylaDirAccessor implements HylaDirAccessor {
         return result;
     }
 
+    public String getBasePath() {
+        return baseDir.getPath();
+    }
 }

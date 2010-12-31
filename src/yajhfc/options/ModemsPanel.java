@@ -19,6 +19,7 @@
 package yajhfc.options;
 
 import static yajhfc.Utils._;
+import static yajhfc.options.OptionsWin.border;
 import info.clearthought.layout.TableLayout;
 import info.clearthought.layout.TableLayoutConstraints;
 
@@ -38,7 +39,6 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -60,7 +60,7 @@ import yajhfc.util.JTableTABAction;
  * @author jonas
  *
  */
-public class ModemsPanel extends JPanel implements OptionsPage {
+public class ModemsPanel extends AbstractOptionsPanel {
 
     ButtonGroup customOrAllGroup;
     Action actAdd, actRemove, actUp, actDown, actReset;
@@ -68,12 +68,10 @@ public class ModemsPanel extends JPanel implements OptionsPage {
     JRadioButton radAuto, radManual;
     HylaModemTableModel tableModel;
     
-    private static final int border = 6;
-    
     public ModemsPanel() {
         super(false);
-        initialize();
     }
+    
     
     private void createActions() {
         actAdd = new ExcDialogAbstractAction() {
@@ -141,7 +139,8 @@ public class ModemsPanel extends JPanel implements OptionsPage {
         actReset.putValue(Action.SMALL_ICON, Utils.loadIcon("general/Refresh"));
     }
     
-    private void initialize() {
+    @Override
+    protected void createOptionsUI() {
         createActions();
         
         final int rowCount = 7;

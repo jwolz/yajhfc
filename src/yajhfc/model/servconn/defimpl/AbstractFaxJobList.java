@@ -22,7 +22,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
+import yajhfc.Utils;
 import yajhfc.model.FmtItem;
 import yajhfc.model.FmtItemList;
 import yajhfc.model.servconn.FaxJob;
@@ -35,6 +37,8 @@ import yajhfc.model.servconn.FaxJobListListener;
  */
 public abstract class AbstractFaxJobList<T extends FmtItem> implements
         FaxJobList<T> {
+    static final Logger log = Logger.getLogger(AbstractFaxJobList.class.getName());
+    
     protected final FmtItemList<T> columns;
     protected final List<FaxJobListListener<T>> listeners = new ArrayList<FaxJobListListener<T>>();
     protected List<FaxJob<T>> jobs = Collections.emptyList();
@@ -57,6 +61,9 @@ public abstract class AbstractFaxJobList<T extends FmtItem> implements
     }
 
     public synchronized void fireFaxJobsUpdated(List<FaxJob<T>> newJobs, List<FaxJob<T>> oldJobs) {
+        if (Utils.debugMode) {
+            log.finest("Fire faxJobsUpdated; newJobs=" + newJobs + "; oldJobs=" + oldJobs);
+        }
         for (FaxJobListListener<T> l : listeners) {
             l.faxJobsUpdated(this, oldJobs, newJobs);
         }
@@ -72,6 +79,9 @@ public abstract class AbstractFaxJobList<T extends FmtItem> implements
     }
     
     public synchronized void fireReadStateChanged(FaxJob<T> job, boolean oldState, boolean newState) {
+        if (Utils.debugMode) {
+            log.fine("Fire read state changed for " + job + "; oldState=" + oldState + "; newState=" + newState);
+        }
         for (FaxJobListListener<T> l : listeners) {
             l.readStateChanged(this, job, oldState, newState);
         }
@@ -85,8 +95,9 @@ public abstract class AbstractFaxJobList<T extends FmtItem> implements
     public void loadJobsFromCache(Map<String, Object> cache, String keyPrefix) {
         List<FaxJob<T>> newJobs = (List<FaxJob<T>>) cache.get(keyPrefix);
         if (newJobs != null) {
+            log.fine("Loading jobs from cache with prefix " + keyPrefix);
             for (FaxJob<T> job : newJobs) {
-                ((AbstractFaxJob<T>)job).setParent(this);
+                ((SerializableFaxJob<T>)job).setParent(this);
             }
             setJobs(newJobs);
         }

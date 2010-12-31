@@ -58,7 +58,9 @@ public interface FaxListConnection {
     public FaxJobList<QueueFileFormat> getArchivedJobs();
     
     /**
-     * Connects to the server to retrieve the lists of faxes
+     * Connects to the server to retrieve the lists of faxes.
+     * The lists may be come available (and the appropriate listeners fire) any time after this method has been called,
+     * even before this method returns.
      * Returns true if the connection attempt was successful and false otherwise
      */
     public boolean connect(boolean adminMode);

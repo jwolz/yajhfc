@@ -46,7 +46,7 @@ public class ServerFileTFLItem extends HylaTFLItem {
         try {
             return hysf.getDocument();
         } catch (ServerResponseException e) {
-            IOException ioEx = new IOException(e.getMessage());
+            IOException ioEx = new IOException("The server gave back an error code::\n" + e.getMessage());
             ioEx.initCause(e);
             throw ioEx;
         }

@@ -481,6 +481,20 @@ public class PluginManager {
             this.persistent = persistent;
         }
 
+        @Override
+        public int hashCode() {
+            int hashCode = 0;
+            if (file != null)
+                hashCode ^= file.hashCode();
+            if (type != null)
+                hashCode ^= type.hashCode();
+            if (persistent)
+                hashCode ^= 2323;
+            if (loaded)
+                hashCode ^= 4242;
+            
+            return hashCode;
+        }
 
         @Override
         public boolean equals(Object obj) {
