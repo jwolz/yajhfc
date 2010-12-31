@@ -23,12 +23,7 @@ import java.awt.Frame;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 
 import yajhfc.MainWin.SendReadyState;
 import yajhfc.launch.CommandLineOpts;
@@ -40,16 +35,15 @@ import yajhfc.send.SendController;
 import yajhfc.send.SendControllerListener;
 import yajhfc.send.StreamTFLItem;
 import yajhfc.util.ExceptionDialog;
-import yajhfc.util.ProgressWorker.ProgressUI;
+import yajhfc.util.ProgressContentPane;
 
 /**
  * @author jonas
  *
  */
-public class NoGUISender extends JFrame implements ProgressUI, MainApplicationFrame {
+public class NoGUISender extends JFrame implements MainApplicationFrame {
 
-    JLabel progressLabel, noteLabel;
-    JProgressBar progressBar;
+    ProgressContentPane progressPanel;
     public HylaClientManager clientManager;
     
     /**
@@ -58,18 +52,8 @@ public class NoGUISender extends JFrame implements ProgressUI, MainApplicationFr
     public NoGUISender() throws HeadlessException {
         super(Utils.AppShortName);
         
-        JPanel progressPanel = new JPanel(null);
-        progressPanel.setLayout(new BoxLayout(progressPanel, BoxLayout.Y_AXIS));
-        
-        progressLabel = new JLabel("Logging in...");
-        noteLabel = new JLabel();
-        progressBar = new JProgressBar(JProgressBar.HORIZONTAL);
-                
-        progressPanel.add(progressLabel);
-        progressPanel.add(noteLabel);
-        progressPanel.add(Box.createVerticalStrut(5));
-        progressPanel.add(progressBar);
-        
+
+        progressPanel = new ProgressContentPane();
         setContentPane(progressPanel);
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         setIconImage(Toolkit.getDefaultToolkit().getImage(NoGUISender.class.getResource("/yajhfc/icon.png")));
@@ -94,63 +78,6 @@ public class NoGUISender extends JFrame implements ProgressUI, MainApplicationFr
         return SendReadyState.Ready;
     }
     
-    /* (non-Javadoc)
-     * @see yajhfc.util.ProgressWorker.ProgressUI#close()
-     */
-    public void close() {
-        dispose();
-    }
-
-    /* (non-Javadoc)
-     * @see yajhfc.util.ProgressWorker.ProgressUI#setNote(java.lang.String)
-     */
-    public void setNote(String note) {
-        noteLabel.setText(note);
-        pack();
-    }
-
-    /* (non-Javadoc)
-     * @see yajhfc.util.ProgressWorker.ProgressUI#setProgress(int)
-     */
-    public void setProgress(int progress) {
-        if (progressBar.isIndeterminate())
-            progressBar.setIndeterminate(false);
-        progressBar.setValue(progress);
-    }
-
-    /* (non-Javadoc)
-     * @see yajhfc.util.ProgressWorker.ProgressUI#showDeterminateProgress(java.lang.String, java.lang.String, int, int)
-     */
-    public void showDeterminateProgress(String message, String initialNote,
-            int min, int max) {
-        progressBar.setIndeterminate(false);
-        progressBar.setMinimum(min);
-        progressBar.setMaximum(max);
-        progressBar.setValue(min);
-        commonProgressSetup(message, initialNote);
-    }
-
-    public boolean supportsIndeterminateProgress() {
-        return true;
-    }
-    
-    public void showIndeterminateProgress(String message, String initialNote) {
-        progressBar.setIndeterminate(true);
-        commonProgressSetup(message, initialNote);
-    }
-    
-    protected void commonProgressSetup(String progressText, String noteText) {
-        progressLabel.setText(progressText);
-        setNote(noteText);
-    }
-    
-    public boolean isShowingIndeterminate() {
-        return progressBar.isIndeterminate();
-    }
-    
-    public void setMaximum(int progress) {
-        progressBar.setMaximum(progress);
-    }
     
     public void saveWindowSettings() {
         // Do nothing
@@ -168,7 +95,7 @@ public class NoGUISender extends JFrame implements ProgressUI, MainApplicationFr
                 
         NoGUISender progressFrame = new NoGUISender();
         Launcher2.application = progressFrame;
-        progressFrame.showIndeterminateProgress(Utils._("Logging in..."), null);
+        progressFrame.progressPanel.showIndeterminateProgress(Utils._("Logging in..."), null);
         progressFrame.setVisible(true);
         
         try {
@@ -176,7 +103,7 @@ public class NoGUISender extends JFrame implements ProgressUI, MainApplicationFr
             progressFrame.clientManager = clientManager;
             clientManager.forceLogin(progressFrame);
             
-            SendController sendController = new SendController(clientManager, progressFrame, false, progressFrame);
+            SendController sendController = new SendController(clientManager, progressFrame, false, progressFrame.progressPanel);
             sendController.addSendControllerListener(new SendControllerListener() {
                public void sendOperationComplete(boolean success) {
                    System.exit(success ? 0 : 1);

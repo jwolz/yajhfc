@@ -25,20 +25,29 @@ import yajhfc.FaxOptions;
 import yajhfc.model.FmtItemList;
 import yajhfc.model.TableType;
 import yajhfc.model.jobq.FileHylaDirAccessor;
+import yajhfc.model.jobq.HylaDirAccessor;
 import yajhfc.model.jobq.QueueFileFormat;
 import yajhfc.model.servconn.FaxListConnection;
 import yajhfc.model.servconn.directaccess.DirectAccessFaxJob;
 import yajhfc.model.servconn.directaccess.jobq.JobQueueFaxJobList;
 
 public class ArchiveFaxJobList extends JobQueueFaxJobList {
+    protected HylaDirAccessor hyda;
     
     public TableType getJobType() {
         return TableType.ARCHIVE;
     }
     
-    public void reloadSettings(FaxOptions fo) {        
+    public void reloadSettings(FaxOptions fo) {
+        if (hyda == null || !fo.archiveLocation.equals(hyda.getBasePath())) {
+            hyda = new FileHylaDirAccessor(new File(fo.archiveLocation));
+        }
         super.reloadSettings(fo);
-        setDirAccessor(new FileHylaDirAccessor(new File(fo.archiveLocation)));
+    }
+    
+    @Override
+    public HylaDirAccessor getDirAccessor() {
+        return hyda;
     }
     
     public ArchiveFaxJobList(FaxListConnection parent,

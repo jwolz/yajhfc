@@ -18,7 +18,6 @@
  */
 package yajhfc.model.servconn.directaccess.jobq;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +29,6 @@ import java.util.regex.Pattern;
 import yajhfc.FaxOptions;
 import yajhfc.model.FmtItemList;
 import yajhfc.model.TableType;
-import yajhfc.model.jobq.FileHylaDirAccessor;
 import yajhfc.model.jobq.QueueFileFormat;
 import yajhfc.model.servconn.FaxListConnection;
 import yajhfc.model.servconn.directaccess.DirectAccessFaxJob;
@@ -46,20 +44,16 @@ public class JobQueueFaxJobList extends DirectAccessFaxJobList<QueueFileFormat> 
 
     protected Map<String,int[]> desiredItems;
     
-    public void reloadSettings(FaxOptions fo) {
-        // TODO...
-        /// FIXME!!!
-        setDirAccessor(new FileHylaDirAccessor(new File(fo.archiveLocation + "/..")));
-        
-        List<QueueFileFormat> archiveCols = columns.getCompleteView();
+    public void reloadSettings(FaxOptions fo) {        
+        List<QueueFileFormat> completeCols = columns.getCompleteView();
         if (desiredItems == null)
             desiredItems = new HashMap<String,int[]>();
         else
             desiredItems.clear();
         // Create a mapping of which properties are to be put in which output column
         //  (e.g. "external" -> [3,7] : value of external is put in the 4th and 8th column)
-        for (int i = 0; i < archiveCols.size(); i++) {
-            String hylaFmt = archiveCols.get(i).getHylaFmt();
+        for (int i = 0; i < completeCols.size(); i++) {
+            String hylaFmt = completeCols.get(i).getHylaFmt();
             
             int[] oldVal = desiredItems.get(hylaFmt);
             int[] val;

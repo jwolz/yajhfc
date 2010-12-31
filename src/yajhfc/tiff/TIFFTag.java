@@ -54,7 +54,7 @@ public class TIFFTag {
     
     @Override
     public String toString() {
-        return "ID: " + ID + ";\t nIFD: " + nIFD + ";\t dataType: " + dataType + ";\t " + valueToString();
+        return "{ID: " + ID + "; nIFD: " + nIFD + "; dataType: " + dataType + "; value: " + valueToString() + '}';
     }
     
     protected String valueToString() {
@@ -67,7 +67,7 @@ public class TIFFTag {
         } else if (value instanceof long[]) {
             return Arrays.toString((long[])value);
         } else if (value instanceof float[]) {
-            return Arrays.toString((byte[])value);
+            return Arrays.toString((float[])value);
         } else if (value instanceof double[]) {
             return Arrays.toString((double[])value);
         } else {

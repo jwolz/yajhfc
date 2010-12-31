@@ -22,6 +22,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -36,6 +37,7 @@ import yajhfc.model.servconn.FaxJobListListener;
 import yajhfc.model.servconn.defimpl.SwingFaxJobListListener;
 
 public class FaxListTableModel<T extends FmtItem> extends AbstractTableModel {
+    static final Logger log = Logger.getLogger(FaxListTableModel.class.getName());
     
     /**
      * jobs: *All* Jobs from the HylaFAX server
@@ -56,8 +58,10 @@ public class FaxListTableModel<T extends FmtItem> extends AbstractTableModel {
     protected Color errorColor = defErrorColor;
     
     public void setJobFilter(Filter<FaxJob<T>,T> jobFilter) {
-        this.jobFilter = jobFilter;
-        refreshVisibleJobs();
+        if (jobFilter != this.jobFilter) {
+            this.jobFilter = jobFilter;
+            refreshVisibleJobs();
+        }
     }
     
     public Filter<FaxJob<T>,T> getJobFilter() {
@@ -105,6 +109,15 @@ public class FaxListTableModel<T extends FmtItem> extends AbstractTableModel {
      * Reloads the visible Jobs array. Called if either jobs[] or jobFilter has changed.
      */
     protected void refreshVisibleJobs() {
+        refreshVisibleJobsWithoutEvent();
+        log.fine("Jobs refreshed, firing table data changed");
+        fireTableDataChanged();
+    }
+
+    private void refreshVisibleJobsWithoutEvent() {
+        if (Utils.debugMode) {
+            log.finest("refreshing jobs: jobFilter=" + jobFilter + "; jobs=" + (jobs == null ? "<jobs null>" : jobs.getJobs()));
+        }
         if (jobs == null) {
             visibleJobs = null;
         } else {
@@ -119,9 +132,11 @@ public class FaxListTableModel<T extends FmtItem> extends AbstractTableModel {
                         visibleJobs.add(job);
                     }
                 }
+                if (Utils.debugMode) {
+                    log.finest("refreshing jobs: resulting visibleJobs=" + visibleJobs);
+                }
             }
         }
-        fireTableDataChanged();
     }
     
     public FmtItemList<T> getColumns() {
@@ -209,6 +224,8 @@ public class FaxListTableModel<T extends FmtItem> extends AbstractTableModel {
             if (jobs != null) {
                 jobs.addFaxJobListListener(getUpdateListener());
             }
+            refreshVisibleJobsWithoutEvent();
+            log.fine("New Jobs have been set, firing tableStructureChanged");
             fireTableStructureChanged();
         }
     }

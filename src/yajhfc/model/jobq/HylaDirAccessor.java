@@ -3,7 +3,7 @@
  */
 package yajhfc.model.jobq;
 
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Reader;
@@ -49,11 +49,11 @@ public interface HylaDirAccessor {
     
     
     /**
-     * Returns an FileInputStream reading the data for the specified file.
+     * Returns a (possibly temporary) File containing the data for the specified file.
      * @param fileName
      * @throws IOException
      */
-    public FileInputStream getFileInputStream(String fileName) throws IOException;
+    public File getFile(String fileName) throws IOException;
     
     /**
      * Deletes the given file
@@ -101,4 +101,10 @@ public interface HylaDirAccessor {
      * @throws IOException
      */
     public int getProtection(String fileName) throws IOException;
+    
+    /**
+     * Returns the base path used in this dir accessor
+     * @return
+     */
+    public String getBasePath();
 }

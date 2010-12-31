@@ -1,6 +1,6 @@
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005-2008 Jonas Wolz
+ * Copyright (C) 2005-2010 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,39 +16,25 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package yajhfc.options;
+package yajhfc.model.servconn.defimpl;
 
-import javax.swing.JComponent;
+import java.io.Serializable;
 
-import yajhfc.FaxOptions;
+import yajhfc.model.FmtItem;
+import yajhfc.model.servconn.FaxJob;
+import yajhfc.model.servconn.FaxJobList;
 
 /**
+ * A fax job that is serializable
  * @author jonas
  *
  */
-public interface OptionsPage {
-    /**
-     * Returns the root panel for this option page's UI.
-     * The UI should be created on the first call to this method for performance reasons.
-     * @return
-     */
-    public JComponent getPanel();
+public interface SerializableFaxJob<T extends FmtItem> extends FaxJob<T>, Serializable {
    
     /**
-     * Loads the settings from the options
-     * @param foEdit
+     * Used to set the parent after the job has been deserialized
+     * @param parent
      */
-    public void loadSettings(FaxOptions foEdit);
-    /**
-     * Saves the settings to the options.
-     * @param foEdit
-     */
-    public void saveSettings(FaxOptions foEdit);
+    public void setParent(FaxJobList<T> parent);
 
-    /**
-     * Validates the user's settings
-     * @param optionsWin
-     * @return true if settings are valid, false otherwise
-     */
-    public boolean validateSettings(OptionsWin optionsWin);
 }

@@ -18,7 +18,6 @@
  */
 package yajhfc.model.servconn.directaccess.recvq;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -26,7 +25,6 @@ import yajhfc.FaxOptions;
 import yajhfc.model.FmtItemList;
 import yajhfc.model.RecvFormat;
 import yajhfc.model.TableType;
-import yajhfc.model.jobq.FileHylaDirAccessor;
 import yajhfc.model.servconn.FaxListConnection;
 import yajhfc.model.servconn.directaccess.DirectAccessFaxJob;
 import yajhfc.model.servconn.directaccess.DirectAccessFaxJobList;
@@ -44,10 +42,8 @@ public class RecvQFaxJobList extends DirectAccessFaxJobList<RecvFormat> {
         String fileName = directory + "/" + jobID;
         return new RecvQFaxJob(this, jobID, fileName);
     }
-
     public void reloadSettings(FaxOptions fo) {
-        // FIXME!!!
-        setDirAccessor(new FileHylaDirAccessor(new File(fo.archiveLocation + "/..")));
+        // NOP
     }
 
     @Override

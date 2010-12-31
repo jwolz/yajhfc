@@ -46,7 +46,7 @@ import yajhfc.util.ClipboardPopup;
  * @author jonas
  *
  */
-public class PathAndViewPanel extends JPanel implements OptionsPage {
+public class PathAndViewPanel extends AbstractOptionsPanel {
 
     /**
      * Set this to false to disable the "tiff2pdf location" entry field
@@ -60,6 +60,10 @@ public class PathAndViewPanel extends JPanel implements OptionsPage {
     
     public PathAndViewPanel() {
         super(false);
+    }
+    
+    @Override
+    protected void createOptionsUI() {
         setLayout(new TableLayout(new double[][] {
                 {OptionsWin.border, 0.5, OptionsWin.border, TableLayout.FILL, OptionsWin.border},
                 {OptionsWin.border, TableLayout.FILL, OptionsWin.border, TableLayout.PREFERRED, OptionsWin.border}

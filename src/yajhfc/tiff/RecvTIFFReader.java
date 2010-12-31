@@ -25,7 +25,7 @@ import yajhfc.Utils;
  *
  */
 public class RecvTIFFReader extends TIFFReader {
-    private static final Logger log = Logger.getLogger(TIFFReader.class.getName());
+    private static final Logger log = Logger.getLogger(RecvTIFFReader.class.getName());
     
     protected Class2Params params;
     
@@ -41,6 +41,7 @@ public class RecvTIFFReader extends TIFFReader {
     public void read(FileInputStream inStream, boolean readTags) {
         try {
             super.read(inStream, true);
+            inProgress = false;
         } catch (IOException e) {
             log.log(Level.INFO, "Exception reading TIFF, assuming it's in progress: " + inStream, e);
             inProgress = true;
@@ -56,6 +57,10 @@ public class RecvTIFFReader extends TIFFReader {
 //            log.log(Level.INFO, "Exception getting lock, assuming it's in progress for " + inStream , e);
 //            inProgress = true;
 //        }
+        
+        if (Utils.debugMode) {
+            log.finest("TIFF read successfully; tags are: " + tags);
+        }
         
         params = new Class2Params();
         

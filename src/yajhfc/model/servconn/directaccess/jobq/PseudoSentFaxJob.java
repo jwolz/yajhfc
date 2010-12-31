@@ -30,15 +30,16 @@ import yajhfc.model.servconn.FaxDocument;
 import yajhfc.model.servconn.FaxJob;
 import yajhfc.model.servconn.FaxJobList;
 import yajhfc.model.servconn.JobState;
+import yajhfc.model.servconn.defimpl.SerializableFaxJob;
 
 /**
  * @author jonas
  *
  */
-public class PseudoSentFaxJob implements FaxJob<JobFormat> {
+public class PseudoSentFaxJob implements SerializableFaxJob<JobFormat> {
     private static final long serialVersionUID = 1;
     protected final FaxJob<QueueFileFormat> wrapped;
-    protected final PseudoSentFaxJobList parent;
+    protected transient PseudoSentFaxJobList parent;
     
     public PseudoSentFaxJob(PseudoSentFaxJobList parent, FaxJob<QueueFileFormat> wrapped) {
         super();
@@ -116,6 +117,11 @@ public class PseudoSentFaxJob implements FaxJob<JobFormat> {
 
     public FaxJobList<JobFormat> getParent() {
         return parent;
+    }
+
+    public void setParent(FaxJobList<JobFormat> parent) {
+        this.parent = (PseudoSentFaxJobList)parent;
+        ((SerializableFaxJob<QueueFileFormat>)wrapped).setParent(this.parent.wrapped);
     }
 
 }

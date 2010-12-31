@@ -60,6 +60,7 @@ public class TIFFReader {
                     Object value;
                     int oldPosition = buf.position();
                     if (length <= 0) {
+                        buf.position(oldPosition+4);
                         continue;
                     } else if (length <= 4) {  
                         value = readTagData(buf, dataType, numValues);

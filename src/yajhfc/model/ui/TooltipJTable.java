@@ -136,6 +136,17 @@ public class TooltipJTable<T extends FmtItem> extends JTable {
         return getRealModel().getJob(getSorter().modelIndex(rowIndex));
     }
     
+    @SuppressWarnings("unchecked")
+    public FaxJob<T>[] getSelectedJobs() {
+        int[] selRows = getSelectedRows();
+        FaxJob<T>[] jobs = new FaxJob[selRows.length];
+        
+        for (int i=0; i<selRows.length; i++) {
+            jobs[i] = getJobForRow(selRows[i]);
+        }
+        return jobs;
+    }
+    
     @Override
     public void columnAdded(TableColumnModelEvent e) {
         // Set identifier 

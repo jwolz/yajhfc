@@ -71,28 +71,11 @@ public class Cache {
 		return checkData;
 	}
 	
-	public void putDefaultCheckData(FaxOptions fo) {
-		checkData.clear();
-		checkData.put("AppVersion", Utils.AppVersion);
-		checkData.put("host", fo.host);
-		checkData.put("port", fo.port);
-		checkData.put("user", fo.user);
-		checkData.put("showArchive", fo.showArchive);
-		checkData.put("archiveLocation", fo.archiveLocation);
-		checkData.put("dateOffsetSecs", fo.dateOffsetSecs);
-		checkData.put("tzone", fo.tzone);
-		checkData.put("recvfmt", fo.recvfmt.toString());
-		checkData.put("sentfmt", fo.sentfmt.toString());
-		checkData.put("sendingfmt", fo.sendingfmt.toString());
-		checkData.put("archivefmt", fo.archiveFmt.toString());
-	}
-	
 	/**
 	 * Writes the cache to the default location using the default check data
 	 * @throws IOException
 	 */
 	public void writeToCache(FaxOptions fo)  throws IOException {
-		putDefaultCheckData(fo);
 		writeToCache(getDefaultCacheLocation());
 	}
 	
@@ -130,7 +113,6 @@ public class Cache {
 	 * @throws ClassNotFoundException 
 	 */
 	public boolean readFromCache(FaxOptions fo)  throws IOException, ClassNotFoundException {
-		putDefaultCheckData(fo);
 		return readFromCache(getDefaultCacheLocation());
 	}
 	
@@ -171,8 +153,10 @@ public class Cache {
 		Map<String,Object> cacheCheckData = (Map<String,Object>)in.readObject();
 		if (!checkData.equals(cacheCheckData)) {
 			log.info("Cache invalid: Check data differs");
-			log.fine("Check data in cache: " + cacheCheckData);
-			log.fine("Check data expected: " + checkData);
+			if (Utils.debugMode) {
+			    log.fine("Check data in cache: " + cacheCheckData);
+			    log.fine("Check data expected: " + checkData);
+			}
 			return false;
 		}
 		cachedData = (Map<String,Object>)in.readObject();

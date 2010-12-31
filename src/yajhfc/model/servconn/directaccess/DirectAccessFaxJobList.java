@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import yajhfc.FaxOptions;
+import yajhfc.Utils;
 import yajhfc.model.FmtItem;
 import yajhfc.model.FmtItemList;
 import yajhfc.model.jobq.HylaDirAccessor;
@@ -26,7 +27,6 @@ public abstract class DirectAccessFaxJobList<T extends FmtItem> extends Abstract
 
     static final Logger log = Logger.getLogger(DirectAccessFaxJobList.class.getName());
     protected final FaxListConnection parent;
-    private HylaDirAccessor hyda;
     protected long lastDirectoryModification = -1;
     protected final String directory;
 
@@ -55,10 +55,13 @@ public abstract class DirectAccessFaxJobList<T extends FmtItem> extends Abstract
     
     public void pollForNewJobs() throws IOException {
         long modificationTime = getDirAccessor().getLastModified();
+        if (Utils.debugMode)
+            log.fine(directory + ": poll for changes: lastDirectoryModification="+lastDirectoryModification +"; modificationTime=" + modificationTime);
         if (lastDirectoryModification == -1 || lastDirectoryModification != modificationTime) {
             setJobs(updateQueueFiles());
             lastDirectoryModification = modificationTime;
         } else {
+            log.fine("Directory unchanged; polling individual jobs for changes");
             boolean res = false;
             for (FaxJob<T> job : jobs) {
                 res |= ((DirectAccessFaxJob<T>)job).pollForChanges();
@@ -87,13 +90,25 @@ public abstract class DirectAccessFaxJobList<T extends FmtItem> extends Abstract
 
     @SuppressWarnings("unchecked")
     public List<FaxJob<T>> updateQueueFiles() throws IOException {
-        final String[] jobIDs = translateDirectoryEntries(getDirAccessor().listDirectory(directory));
-        if (jobIDs == null || jobIDs.length == 0)
+        String[] listing = getDirAccessor().listDirectory(directory);
+        if (Utils.debugMode) {
+            log.finer(directory + " entries: " + Arrays.toString(listing));
+        }
+        final String[] jobIDs = translateDirectoryEntries(listing);
+        if (jobIDs == null || jobIDs.length == 0) {
+            log.fine("Directory is empty");
             return Collections.emptyList();
+        }
+        
+        if (Utils.debugMode) {
+            log.finer(directory + " new jobIDs=" + Arrays.toString(jobIDs) + "; old jobs=" + jobs);
+            log.finer(directory + " columns are: " + columns.getCompleteView());
+        }
         
         List<FaxJob<T>> resultList = new ArrayList<FaxJob<T>>(jobIDs.length);
         if (jobs.size() == 0) {
             // No old jobs, use "easy" algorithm
+            log.fine("No old jobs");
             for (String nr : jobIDs) {
                 try {
                     resultList.add(createJob(nr));
@@ -102,6 +117,7 @@ public abstract class DirectAccessFaxJobList<T extends FmtItem> extends Abstract
                 }
             }
         } else {
+            log.fine("Comparing old job list with new");
             DirectAccessFaxJob<T>[] oldJobs = new DirectAccessFaxJob[jobs.size()];
             oldJobs = jobs.toArray(oldJobs);
             
@@ -154,16 +170,9 @@ public abstract class DirectAccessFaxJobList<T extends FmtItem> extends Abstract
     }
 
     /**
-     * @param hyda the hyda to set
-     */
-    public void setDirAccessor(HylaDirAccessor hyda) {
-        this.hyda = hyda;
-    }
-
-    /**
      * @return the hyda
      */
     public HylaDirAccessor getDirAccessor() {
-        return hyda;
+        return ((DirectAccessFaxListConnection)parent).getDirAccessor();
     }
 }

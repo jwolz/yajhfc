@@ -29,12 +29,11 @@ import java.net.UnknownHostException;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import yajhfc.FaxOptions;
 import yajhfc.Utils;
-import yajhfc.options.OptionsPage;
+import yajhfc.options.AbstractOptionsPanel;
 import yajhfc.options.OptionsWin;
 import yajhfc.util.ClipboardPopup;
 import yajhfc.util.IntVerifier;
@@ -43,7 +42,7 @@ import yajhfc.util.IntVerifier;
  * @author jonas
  *
  */
-public class PortOptionsPanel extends JPanel implements OptionsPage {
+public class PortOptionsPanel extends AbstractOptionsPanel {
     private static final int border = 8;    
     
     JTextField textBindAddr;
@@ -56,25 +55,16 @@ public class PortOptionsPanel extends JPanel implements OptionsPage {
 
     
     public PortOptionsPanel() {
-        initialize();
+        super(false);
     }
     
-    private void initialize() {
+    @Override
+    protected void createOptionsUI() {
         double[][] dLay = {
                 {border, 0.66, border, TableLayout.FILL, border},
                 {border, TableLayout.PREFERRED, border, TableLayout.PREFERRED, border, TableLayout.PREFERRED, TableLayout.PREFERRED, border*2, TableLayout.PREFERRED, border, TableLayout.PREFERRED, TableLayout.PREFERRED, border, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.FILL}
         };
         setLayout(new TableLayout(dLay));
-        
-//        actAbout = new AbstractAction() {
-//            public void actionPerformed(ActionEvent e) {
-//                final String aboutString = String.format(
-//                        "%s\nVersion %s\n\n%s\n\nHomepage: %s\nE-Mail: %s",
-//                        EntryPoint.AppShortName, EntryPoint.AppVersion, EntryPoint.AppCopyright, EntryPoint.HomepageURL, EntryPoint.AuthorEMail);
-//                JOptionPane.showMessageDialog(PortOptionsPanel.this, aboutString, MessageFormat.format(_("About {0}"), EntryPoint.AppShortName), JOptionPane.INFORMATION_MESSAGE);
-//            }
-//        };
-//        actAbout.putValue(Action.NAME, _("About..."));
         
         JLabel labelDesc = new JLabel("<html>" + 
         _("YajHFC supports listening for new PostScript documents to send on a TCP port or a named pipe.") + "<br>" +

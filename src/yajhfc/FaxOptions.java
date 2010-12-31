@@ -43,7 +43,7 @@ import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 import yajhfc.phonebook.convrules.ZIPCodeRule;
 import yajhfc.send.SendWinStyle;
 
-public class FaxOptions extends AbstractFaxOptions {
+public class FaxOptions extends AbstractFaxOptions implements Cloneable {
     
     /**
      * The time zone to use to display date or time
@@ -615,6 +615,16 @@ public class FaxOptions extends AbstractFaxOptions {
      */
     public FaxListConnectionType faxListConnectionType = FaxListConnectionType.HYLAFAX;
     
+    /**
+     * The location of the spool area for direct access
+     */
+    public String directAccessSpoolPath = "";
+    
+    /**
+     * The character encoding used by the HylaFAX server
+     */
+    public String hylaFAXCharacterEncoding = "UTF-8";
+    
     public FaxOptions() {
         super(null);
         
@@ -844,5 +854,14 @@ public class FaxOptions extends AbstractFaxOptions {
 
     public PBEntryFieldContainer getCoverFrom() {
         return coverFrom;
+    }
+    
+    @Override
+    public FaxOptions clone()  {
+        try {
+            return (FaxOptions)super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

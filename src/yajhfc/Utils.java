@@ -77,16 +77,11 @@ import yajhfc.util.TransactFileOutputStream;
 public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
-    public static final String AppCopyright = "Copyright © 2005-2010 by Jonas Wolz";
-    public static final String AppVersion = "0.4.4a";
+    public static final String AppCopyright = "Copyright © 2005-2011 by Jonas Wolz";
+    public static final String AppVersion = "0.5.0beta";
     public static final String AuthorName = "Jonas Wolz";
     public static final String AuthorEMail = "jwolz@freenet.de";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
-    
-    /**
-     * The character encoding used by the HylaFAX server
-     */
-    public static final String HYLAFAX_CHARACTER_ENCODING = "ISO8859-1";
     
     /**
      * Input format for "long" HylaFax dates

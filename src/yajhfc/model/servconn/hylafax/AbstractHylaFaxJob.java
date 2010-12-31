@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.logging.Logger;
 
+import yajhfc.Utils;
 import yajhfc.model.FmtItem;
 import yajhfc.model.servconn.defimpl.AbstractFaxJob;
 
@@ -39,6 +40,8 @@ public abstract class AbstractHylaFaxJob<T extends FmtItem> extends AbstractFaxJ
     public void delete() throws IOException, ServerResponseException {
         HylaFAXClient hyfc = getConnection().beginServerTransaction();
         try {
+            if (Utils.debugMode)
+                log.fine("Deleting job " + getIDValue());
             deleteImpl(hyfc);
         } finally {
             getConnection().endServerTransaction();
@@ -56,6 +59,8 @@ public abstract class AbstractHylaFaxJob<T extends FmtItem> extends AbstractFaxJ
     public void resume() throws IOException, ServerResponseException {
         HylaFAXClient hyfc = getConnection().beginServerTransaction();
         try {
+            if (Utils.debugMode)
+                log.fine("Resuming job " + getIDValue());
             resumeImpl(hyfc);
         } finally {
             getConnection().endServerTransaction();
@@ -75,6 +80,8 @@ public abstract class AbstractHylaFaxJob<T extends FmtItem> extends AbstractFaxJ
     public void suspend() throws IOException, ServerResponseException {
         HylaFAXClient hyfc = getConnection().beginServerTransaction();
         try {
+            if (Utils.debugMode)
+                log.fine("Suspending job " + getIDValue());
             suspendImpl(hyfc);
         } finally {
             getConnection().endServerTransaction();

@@ -25,6 +25,7 @@ import gnu.inet.ftp.ServerResponseException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,16 +59,21 @@ public class SentFaxJob extends AbstractHylaFaxJob<JobFormat> {
     
     @Override
     public Map<String, String> getJobProperties(String... properties) {
+        if (Utils.debugMode) {
+            log.finer("Retrieving properties for job " + getIDValue() + ": " + Arrays.toString(properties));
+        }
         Map<String,String> result = new HashMap<String,String>();
         try {
             HylaFAXClient hyfc = getConnection().beginServerTransaction();
             try {
-                Job hyJob = getJob(hyfc);
-                for (String key : properties) {
-                    try {
-                        result.put(key, hyJob.getProperty(key));
-                    } catch (Exception e) {
-                        log.log(Level.FINE, "Error retrieving property " + key, e);
+                synchronized (hyfc) {
+                    Job hyJob = getJob(hyfc);
+                    for (String key : properties) {
+                        try {
+                            result.put(key, hyJob.getProperty(key));
+                        } catch (Exception e) {
+                            log.log(Level.INFO, "Error retrieving property " + key, e);
+                        }
                     }
                 }
             } finally {
@@ -76,6 +82,9 @@ public class SentFaxJob extends AbstractHylaFaxJob<JobFormat> {
         } catch (Exception e) {
             log.log(Level.WARNING, "Error retrieving the job properties", e);
         } 
+        if (Utils.debugMode) {
+            log.finer("Retrieved properties for job " + getIDValue() + ": " + result);
+        }
         return result;
     }
 
@@ -145,6 +154,9 @@ public class SentFaxJob extends AbstractHylaFaxJob<JobFormat> {
     @Override
     public FaxDocument getCommunicationsLog() throws IOException {
         String commID = (String)getData(JobFormat.W);
+        if (Utils.debugMode) {
+            log.finer("CommID for job " + getIDValue() + " is: " + commID);
+        }
         if (commID == null || commID.length() == 0) {
             return null;
         } else {

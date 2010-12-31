@@ -19,11 +19,14 @@
 package yajhfc.model.servconn.directaccess;
 
 import java.awt.Window;
+import java.io.File;
 
 import yajhfc.FaxOptions;
 import yajhfc.model.FmtItemList;
 import yajhfc.model.JobFormat;
 import yajhfc.model.RecvFormat;
+import yajhfc.model.jobq.FileHylaDirAccessor;
+import yajhfc.model.jobq.HylaDirAccessor;
 import yajhfc.model.jobq.QueueFileFormat;
 import yajhfc.model.servconn.directaccess.jobq.JobQueueFaxJobList;
 import yajhfc.model.servconn.directaccess.jobq.JobToQueueMapping;
@@ -38,10 +41,12 @@ import yajhfc.util.ProgressWorker.ProgressUI;
  *
  */
 public class DirectAccessFaxListConnection extends HylaFaxListConnection {
-
+    protected HylaDirAccessor hyda;
+    
     public DirectAccessFaxListConnection(FaxOptions fo, Window parentWindow,
             ProgressUI progressUI) {
         super(fo, parentWindow, progressUI);
+        refreshDirAccessor();
     }
 
     @Override
@@ -57,4 +62,22 @@ public class DirectAccessFaxListConnection extends HylaFaxListConnection {
                 new JobQueueFaxJobList(this, wrappedList, fo, "doneq"));
     }
 
+    protected void refreshDirAccessor() {
+        if (hyda == null || !fo.directAccessSpoolPath.equals(hyda.getBasePath())) {
+            hyda = new FileHylaDirAccessor(new File(fo.directAccessSpoolPath));
+        }
+    }
+    
+    @Override
+    public void reloadSettings() {
+        refreshDirAccessor();
+        super.reloadSettings();
+    }
+    
+    /**
+     * @return the hyda
+     */
+    public HylaDirAccessor getDirAccessor() {
+        return hyda;
+    }
 }
