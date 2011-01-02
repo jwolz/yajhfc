@@ -58,6 +58,7 @@ public abstract class DirectAccessFaxJob<T extends FmtItem> extends AbstractFaxJ
             log.fine(fileName + ": poll for changes: lastModified="+lastModified +"; newModified=" + newModified);
         if (newModified != lastModified) {
             readSpoolFile(hyda);
+            lastModified = newModified;
             return true;
         } else {
             return false;

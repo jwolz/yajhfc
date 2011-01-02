@@ -52,6 +52,7 @@ import yajhfc.faxcover.Faxcover;
 import yajhfc.faxcover.Faxcover.InvalidCoverFormatException;
 import yajhfc.file.FormattedFile;
 import yajhfc.file.MultiFileConverter;
+import yajhfc.launch.Launcher2;
 import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
 import yajhfc.phonebook.convrules.NameRule;
@@ -94,6 +95,11 @@ public class SendController {
      * The selected modem. Either a HylaModem or a String containing the modem's name.
      */
     protected Object selectedModem = Utils.getFaxOptions().defaultModem;
+    
+    /**
+     * The list of the submitted job IDs
+     */
+    protected final List<Long> submittedJobs = new ArrayList<Long>();
     
     // Internal properties:
     protected final List<SendControllerListener> listeners = new ArrayList<SendControllerListener>();
@@ -306,7 +312,7 @@ public class SendController {
                     return;
                 }
 
-                //File coverFile = null;
+                submittedJobs.clear();
                 Faxcover cover = null;
                 FaxOptions fo = Utils.getFaxOptions();                    
 
@@ -407,6 +413,10 @@ public class SendController {
                             stepProgressBar(5);
 
                             hyfc.submit(j);
+                            
+                            Long jobID = Long.valueOf(j.getId());
+                            submittedJobs.add(jobID);
+                            printJobIDIfRequested(jobID);
                         }
                         log.finest("Out of hyfc monitor");
                         stepProgressBar(5);
@@ -650,6 +660,18 @@ public class SendController {
     protected void fireSendOperationComplete(boolean success) {
         for (SendControllerListener l : listeners) {
             l.sendOperationComplete(success);
+        }
+    }
+    
+    public List<Long> getSubmittedJobs() {
+        return submittedJobs;
+    }
+    
+    public static void printJobIDIfRequested(Long jobID) {
+        if (Launcher2.jobIDWriter != null) {
+            Launcher2.jobIDWriter.printf("%1$tF %1$tT NEW_FAXJOB %2$d", new Date(), jobID);
+            Launcher2.jobIDWriter.println();
+            Launcher2.jobIDWriter.flush();
         }
     }
     

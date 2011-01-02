@@ -150,7 +150,6 @@ public class JobQueueFaxJob extends DirectAccessFaxJob<QueueFileFormat> {
         if (Utils.debugMode) {
             log.finer(jobID + ": calculated documents: " + documents);
         }
-        lastModified = hyda.getLastModified(fileName);
         reloadData(result);
     }
     

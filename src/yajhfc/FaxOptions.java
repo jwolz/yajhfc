@@ -623,7 +623,7 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
     /**
      * The character encoding used by the HylaFAX server
      */
-    public String hylaFAXCharacterEncoding = "UTF-8";
+    public String hylaFAXCharacterEncoding = System.getProperty("file.encoding", "UTF-8");
     
     public FaxOptions() {
         super(null);

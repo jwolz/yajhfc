@@ -213,6 +213,10 @@ final class SendWin extends JDialog implements SendWinControl  {
         return modalResult;
     }
     
+    public List<Long> getSubmittedJobIDs() {
+        return sendController.getSubmittedJobs();
+    }
+    
     private JLabel addCoverComp(JComponent comp, String lblText, String layout) {
         JLabel lbl = addWithLabel(paneCover, comp, lblText, layout);
 //        coverComps.add(comp);

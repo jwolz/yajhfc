@@ -771,6 +771,10 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         textSubject.setText(subject);
     }
     
+    public List<Long> getSubmittedJobIDs() {
+        return sendController.getSubmittedJobs();
+    }
+    
     void enableCoverComps(boolean state) {
 //      for (JComponent comp: coverComps)
 //          comp.setEnabled(state);

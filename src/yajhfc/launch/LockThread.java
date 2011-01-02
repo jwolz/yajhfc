@@ -145,7 +145,23 @@ sessionLoop:    do {
                             response = waitSubmitOK();
                             
                             if (response == Lock.RESPONSE_OK) {
-                                submitProto.submit(wait);
+                                long[] ids = submitProto.submit(wait);
+                                // Special extra data for submit, so copy the write response code
+                                strOut.write(response);
+                                strOut.writeUTF(responseMsg);
+                                if (ids == null) {
+                                    // Write the length 0
+                                    strOut.writeInt(0);
+                                } else {
+                                    // Write the job ids for the submitted jobs 
+                                    // in the format (int length, long id0, long id1, ...)
+                                    strOut.writeInt(ids.length);
+                                    for (long id : ids) {
+                                        strOut.writeLong(id);
+                                    }
+                                }
+                                strOut.flush();
+                                continue sessionLoop;
                             }
                             break;
                         case -1: // Stream closed...

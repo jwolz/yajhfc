@@ -27,6 +27,17 @@ public class TIFFReader {
         read(inStream, true);
     }
     
+    /**
+     * Allows a sub class to control which tag IDs are to be read.
+     * Return true to read the specified tag or false to skip it.
+     * @param tagID
+     * @param nIFD
+     * @return
+     */
+    protected boolean shouldTagBeRead(int tagID, int nIFD) {
+        return true;
+    }
+    
     public void read(FileInputStream inStream, boolean readTags) throws IOException {
         tags.clear();
         numberOfPages = 0;
@@ -53,6 +64,10 @@ public class TIFFReader {
             if (readTags) {
                 for (int i = 0; i < numEntries; i++) {
                     int tag = readUShort(buf);
+                    if (!shouldTagBeRead(tag, numberOfPages)) {
+                        buf.position(buf.position() + 10); // Skip rest of tag
+                        continue;
+                    }
                     int dataType = buf.getShort();
                     int numValues = buf.getInt();
 
