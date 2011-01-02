@@ -38,6 +38,27 @@ public class RecvTIFFReader extends TIFFReader {
     protected boolean inProgress;
     
     @Override
+    protected boolean shouldTagBeRead(int tagID, int nIFD) {
+        switch (tagID) {
+        case TIFFConstants.TIFFTAG_FAXRECVPARAMS:
+        case TIFFConstants.TIFFTAG_YRESOLUTION:
+        case TIFFConstants.TIFFTAG_RESOLUTIONUNIT:
+        case TIFFConstants.TIFFTAG_XRESOLUTION:
+        case TIFFConstants.TIFFTAG_IMAGEWIDTH:
+        case TIFFConstants.TIFFTAG_IMAGELENGTH:
+        case TIFFConstants.TIFFTAG_FAXDCS:
+        case TIFFConstants.TIFFTAG_IMAGEDESCRIPTION:
+        case TIFFConstants.TIFFTAG_FAXSUBADDRESS:
+        case TIFFConstants.TIFFTAG_DATETIME:
+            return (nIFD == 0); // Read only for the first page; the rest should be identical
+        case TIFFConstants.TIFFTAG_FAXRECVTIME:
+            return true;
+        default:
+            return false;
+        }
+    }
+    
+    @Override
     public void read(FileInputStream inStream, boolean readTags) {
         try {
             super.read(inStream, true);

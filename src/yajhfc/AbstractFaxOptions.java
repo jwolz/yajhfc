@@ -60,22 +60,22 @@ import yajhfc.model.FmtItemList;
  * @author jonas
  *
  */
-public abstract class AbstractFaxOptions {
+public abstract class AbstractFaxOptions implements PropertiesSerializable {
     static final Logger log = Logger.getLogger(AbstractFaxOptions.class.getName());
     
-    protected final String prefix;
+    protected final String propertyPrefix;
 
     /**
      * Constructs a abstract fax options class with the specified property name prefix
-     * @param prefix
+     * @param propertyPrefix
      */
-    public AbstractFaxOptions(String prefix) {
+    public AbstractFaxOptions(String propertyPrefix) {
         super();
-        this.prefix = prefix;
+        this.propertyPrefix = propertyPrefix;
     }
     
     
-    protected String getPropertyName(Field field) {
+    protected String getPropertyName(Field field, String prefix) {
         if (prefix == null || prefix.length() == 0)
             return field.getName();
         else
@@ -85,16 +85,20 @@ public abstract class AbstractFaxOptions {
     private static final char sep = '|';
     
     public void storeToProperties(Properties p) {
-        storeToProperties(p, getClass().getFields());
+        storeToProperties(p, getClass().getFields(), propertyPrefix);
+    }
+    
+    public void storeToProperties(Properties p, String prefix) {
+        storeToProperties(p, getClass().getFields(), prefix);
     }
     
     /**
-     * Stores the fields given by f into p
+     * Stores the fields given by f into p using the prefix prefix
      * @param p
      * @param f
      */
     @SuppressWarnings("unchecked")
-    public void storeToProperties(Properties p, java.lang.reflect.Field[] f) {
+    public void storeToProperties(Properties p, java.lang.reflect.Field[] f, String prefix) {
         
         for (int i = 0; i < f.length; i++) {
             try {
@@ -105,7 +109,7 @@ public abstract class AbstractFaxOptions {
                 if (val == null)
                     continue;
                 
-                final String propertyName = getPropertyName(f[i]);
+                final String propertyName = getPropertyName(f[i], prefix);
                 if ((val instanceof String) || (val instanceof Integer) || (val instanceof Boolean) || (val instanceof Long))
                     p.setProperty(propertyName, val.toString());
                 else if (val instanceof YajLanguage) {
@@ -124,21 +128,29 @@ public abstract class AbstractFaxOptions {
                         log.warning("Could not resolve type params for " + f[i]);
                         continue;
                     }
-                    if (typeParams[0] == String.class) {
+                    final Class<?> elementClass = typeParams[0];
+                    if (elementClass == String.class) {
                         List lst = (List)val;
                         int idx = 0;
                         for (Object o : lst) {
                             p.setProperty(propertyName + '.' + (++idx), (String)o);
                         }
-                    } else if (Enum.class.isAssignableFrom(typeParams[0])){
+                    } else if (Enum.class.isAssignableFrom(elementClass)){
                         StringBuilder res = new StringBuilder();
                         List<? extends Enum> lst = (List<? extends Enum>)val;
                         for (Enum e : lst) {
                             res.append(e.name()).append(sep);
                         }
                         p.setProperty(propertyName, res.toString());
+                    } else if (PropertiesSerializable.class.isAssignableFrom(elementClass)) {
+                        List<? extends PropertiesSerializable> lst = (List<? extends PropertiesSerializable>)val;
+                        int idx = 0;
+                        p.setProperty(propertyName + ".count", String.valueOf(lst.size()));
+                        for (PropertiesSerializable ps : lst) {
+                            ps.storeToProperties(p, propertyName + '.' + (++idx));
+                        }
                     } else {
-                        log.warning("Invalid list content type " + typeParams[0] + " for field " + f[i]);
+                        log.warning("Invalid list content type " + elementClass + " for field " + f[i]);
                     }
                 } else if (val instanceof Enum) {
                     p.setProperty(propertyName, ((Enum)val).name());
@@ -168,8 +180,12 @@ public abstract class AbstractFaxOptions {
         }
     }
     
-    @SuppressWarnings("unchecked")
     public void loadFromProperties(Properties p) {
+        loadFromProperties(p, propertyPrefix);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public void loadFromProperties(Properties p, String prefix) {
 
         if (p.size() == 0) {
             log.info("No settings to load found.");
@@ -182,7 +198,7 @@ public abstract class AbstractFaxOptions {
             
             try {
                 final Class<?> fcls = f.getType();
-                final String propertyName = getPropertyName(f);
+                final String propertyName = getPropertyName(f, prefix);
                 
                 if (List.class.isAssignableFrom(fcls) 
                         && (!FmtItemList.class.isAssignableFrom(fcls))) {
@@ -191,7 +207,8 @@ public abstract class AbstractFaxOptions {
                         log.warning("Could not resolve type params for " + f);
                         continue;
                     }
-                    if (typeParams[0] == String.class) {
+                    final Class<?> elementClass = typeParams[0];
+                    if (elementClass == String.class) {
                         final List<String> list = (List<String>)f.get(this);
                         list.clear();
 
@@ -201,7 +218,7 @@ public abstract class AbstractFaxOptions {
                             list.add(val);
                             i++;
                         }
-                    } else if (Enum.class.isAssignableFrom(typeParams[0])){
+                    } else if (Enum.class.isAssignableFrom(elementClass)){
                         String val = p.getProperty(propertyName);
                         if (val != null) {
                             List<Enum> lst = (List<Enum>)f.get(this);
@@ -210,12 +227,22 @@ public abstract class AbstractFaxOptions {
                                 String[] items = Utils.fastSplit(val, sep);
 
                                 for (String item : items) {
-                                    lst.add(Enum.valueOf((Class<? extends Enum>)typeParams[0], item));
+                                    lst.add(Enum.valueOf((Class<? extends Enum>)elementClass, item));
                                 }
                             }
                         }
+                    } else if (PropertiesSerializable.class.isAssignableFrom(elementClass)) {
+                        final List list = (List)f.get(this);
+                        list.clear();
+                        int count = Integer.parseInt(p.getProperty(propertyName + ".count", "0"));
+                        
+                        for (int i = 1; i<=count; i++) {
+                            PropertiesSerializable ps = (PropertiesSerializable)elementClass.newInstance();
+                            ps.loadFromProperties(p, propertyName + '.' + i);
+                            list.add(ps);
+                        }
                     } else {
-                        log.warning("Invalid list content type " + typeParams[0] + " for field " + f);
+                        log.warning("Invalid list content type " + elementClass + " for field " + f);
                     }
                 } else if (Password.class.isAssignableFrom(fcls)) {
                     Password pwd = (Password)f.get(this);

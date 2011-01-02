@@ -430,6 +430,8 @@ public class HylaFaxListConnection implements FaxListConnection {
     };
     
     class JobListRefresher extends TimerTask {
+        private static final boolean PROFILING = false;
+        private final Level PROFILING_LOGLEVEL = Level.FINE;
         private boolean cancelled = false;
         
         public synchronized void run() {
@@ -448,15 +450,15 @@ public class HylaFaxListConnection implements FaxListConnection {
                     try {
                         try {
                             if (receivedJobs != null) {
-                                if (Utils.debugMode) {
-                                    log.fine("About to poll recvq");
+                                if (PROFILING || Utils.debugMode) {
+                                    log.log(PROFILING_LOGLEVEL, "About to poll recvq");
                                     time = System.currentTimeMillis();
                                 }
                                 
                                 receivedJobs.pollForNewJobs(hyfc);
                                 
-                                if (Utils.debugMode) {
-                                    log.fine("recvq polled successfully; time to poll was: " + (System.currentTimeMillis() - time));
+                                if (PROFILING || Utils.debugMode) {
+                                    log.log(PROFILING_LOGLEVEL, "recvq polled successfully; time to poll was: " + (System.currentTimeMillis() - time));
                                 }
                             }
                         } catch (SocketException se) {
@@ -471,14 +473,14 @@ public class HylaFaxListConnection implements FaxListConnection {
                             return;
                         try {
                             if (sentJobs != null) {
-                                if (Utils.debugMode) {
-                                    log.fine("About to poll doneq");
+                                if (PROFILING || Utils.debugMode) {
+                                    log.log(PROFILING_LOGLEVEL, "About to poll doneq");
                                     time = System.currentTimeMillis();
                                 }
                                 
                                 sentJobs.pollForNewJobs(hyfc);
-                                if (Utils.debugMode) {
-                                    log.fine("doneq polled successfully; time to poll was: " + (System.currentTimeMillis() - time));
+                                if (PROFILING || Utils.debugMode) {
+                                    log.log(PROFILING_LOGLEVEL, "doneq polled successfully; time to poll was: " + (System.currentTimeMillis() - time));
                                 }
                             }
                         } catch (SocketException se) {
@@ -493,15 +495,15 @@ public class HylaFaxListConnection implements FaxListConnection {
                             return;
                         try {
                             if (sendingJobs != null) {
-                                if (Utils.debugMode) {
-                                    log.fine("About to poll sendq");
+                                if (PROFILING || Utils.debugMode) {
+                                    log.log(PROFILING_LOGLEVEL, "About to poll sendq");
                                     time = System.currentTimeMillis();
                                 }
                                 
                                 sendingJobs.pollForNewJobs(hyfc);
                                 
-                                if (Utils.debugMode) {
-                                    log.fine("sendq polled successfully; time to poll was: " + (System.currentTimeMillis() - time));
+                                if (PROFILING || Utils.debugMode) {
+                                    log.log(PROFILING_LOGLEVEL, "sendq polled successfully; time to poll was: " + (System.currentTimeMillis() - time));
                                 }
                             }
                         } catch (SocketException se) {
@@ -519,15 +521,15 @@ public class HylaFaxListConnection implements FaxListConnection {
                     }
                 }
                 if (archiveJobs != null) {
-                    if (Utils.debugMode) {
-                        log.fine("About to poll archive");
+                    if (PROFILING || Utils.debugMode) {
+                        log.log(PROFILING_LOGLEVEL, "About to poll archive");
                         time = System.currentTimeMillis();
                     }
                     
                     archiveJobs.pollForNewJobs(null);
                     
-                    if (Utils.debugMode) {
-                        log.fine("archive polled successfully; time to poll was: " + (System.currentTimeMillis() - time));
+                    if (PROFILING || Utils.debugMode) {
+                        log.log(PROFILING_LOGLEVEL, "archive polled successfully; time to poll was: " + (System.currentTimeMillis() - time));
                     }
                 }
                 if (cancelled)

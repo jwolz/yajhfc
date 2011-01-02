@@ -20,6 +20,7 @@ package yajhfc.send;
 
 import java.awt.Window;
 import java.util.Collection;
+import java.util.List;
 
 import yajhfc.model.servconn.FaxDocument;
 import yajhfc.phonebook.convrules.PBEntryFieldContainer;
@@ -40,6 +41,14 @@ public interface SendWinControl {
      * @return
      */
     public boolean getModalResult();
+    
+    /**
+     * Returns a list of the job IDs of the submitted jobs if getModalResult() == true
+     * If getModalResult() == false, the result is undefined
+     * @return
+     */
+    public List<Long> getSubmittedJobIDs();
+    
     /**
      * Returns true if this dialog is in "poll fax" style
      * @return

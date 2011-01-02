@@ -113,7 +113,7 @@ public abstract class DirectAccessFaxJobList<T extends FmtItem> extends Abstract
                 try {
                     resultList.add(createJob(nr));
                 } catch (FileNotFoundException e) {
-                    log.log(Level.INFO, "Could not add archive file:", e);
+                    log.log(Level.INFO, "Could not add " + directory + " file:", e);
                 }
             }
         } else {
@@ -152,7 +152,7 @@ public abstract class DirectAccessFaxJobList<T extends FmtItem> extends Abstract
                         j++;
                     }
                 } catch (FileNotFoundException e) {
-                    log.log(Level.INFO, "Could not add archive file:", e);
+                    log.log(Level.INFO, "Could not add " + directory + " file:", e);
                 }
             }
             
@@ -161,7 +161,7 @@ public abstract class DirectAccessFaxJobList<T extends FmtItem> extends Abstract
                 try {
                     resultList.add(createJob(jobIDs[i]));
                 } catch (FileNotFoundException e) {
-                    log.log(Level.INFO, "Could not add archive file:", e);
+                    log.log(Level.INFO, "Could not add " + directory + " file:", e);
                 }
             }
         }

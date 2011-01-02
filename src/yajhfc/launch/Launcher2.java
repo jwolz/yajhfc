@@ -48,6 +48,7 @@ import yajhfc.logconsole.SwingLogHandler;
 import yajhfc.plugin.PluginManager;
 import yajhfc.plugin.PluginManager.PluginInfo;
 import yajhfc.readstate.PersistentReadState;
+import yajhfc.send.SendController;
 import yajhfc.shutdown.ShutdownManager;
 import yajhfc.splashscreen.YJSplashScreen;
 import yajhfc.util.ExternalProcessExecutor;
@@ -75,6 +76,10 @@ public class Launcher2 {
     
     public static MainApplicationFrame application;
     public static SwingLogHandler swingLogHandler;
+    /**
+     * A print writer to print the IDs of sent jobs to
+     */
+    public static PrintWriter jobIDWriter = null;
     
     /**
      * The main method
@@ -135,6 +140,17 @@ public class Launcher2 {
         
         loadPlugins(opts.plugins, opts.noPlugins);
         Utils.initializeUIProperties();
+        if (opts.jobIDOutput != null) {
+            if ("-".equals(opts.jobIDOutput)) {
+                jobIDWriter = getConsoleWriter();
+            } else {
+                try {
+                    jobIDWriter = new PrintWriter(opts.jobIDOutput);
+                } catch (Exception e) {
+                    launchLog.log(Level.WARNING, "Specified job ID file  \"" + opts.jobIDOutput + "\" could not be opened for writing", e);
+                }
+            }
+        }
         if (opts.noGUI) {
             noGUIStartup(opts);
         } else {
@@ -210,7 +226,12 @@ public class Launcher2 {
                 if (needSubmitProtocol(opts)) {
                     launchLog.info("Submitting fax using the old instance");
                     fillSubmitProtocol(oldInst, opts);
-                    oldInst.submit(!opts.noWait);
+                    long[] ids = oldInst.submit(!opts.noWait);
+                    if (ids != null) {
+                        for (long id : ids) {
+                            SendController.printJobIDIfRequested(id);
+                        }
+                    }
                 } else {
                     launchLog.fine("There already is a running instance!");
                     getConsoleWriter().println(Utils._("There already is a running instance!"));

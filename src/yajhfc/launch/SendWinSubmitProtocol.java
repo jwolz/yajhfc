@@ -54,6 +54,8 @@ public class SendWinSubmitProtocol implements SubmitProtocol, Runnable {
     
     protected boolean preparedSubmit = false;
     
+    protected long[] submittedIDs = null;
+    
     public SendWinSubmitProtocol() {
     }
     
@@ -122,7 +124,7 @@ public class SendWinSubmitProtocol implements SubmitProtocol, Runnable {
     /* (non-Javadoc)
      * @see yajhfc.launch.SubmitProtocol#submitNoWait()
      */
-    public void submit(boolean wait) throws IOException {
+    public long[] submit(boolean wait) throws IOException {
         prepareSubmit();
         if (wait) {
             if (SwingUtilities.isEventDispatchThread()) {
@@ -134,8 +136,11 @@ public class SendWinSubmitProtocol implements SubmitProtocol, Runnable {
                     log.log(Level.WARNING, "Error submitting the fax:", e);
                 }
             }
-        } else
+            return submittedIDs;
+        } else {
             SwingUtilities.invokeLater(this);
+            return null;
+        }
     }
 
     /* (non-Javadoc)
@@ -175,6 +180,17 @@ public class SendWinSubmitProtocol implements SubmitProtocol, Runnable {
         log.fine("Showing SendWin");
         sw.setVisible(true);
         log.fine("SendWin closed");
+        
+        if (sw.getModalResult()) {
+            List<Long> idList = sw.getSubmittedJobIDs();
+            long[] ids = new long[idList.size()];
+            for (int i=0; i<ids.length; i++) {
+                ids[i] = idList.get(i).longValue();
+            }
+            submittedIDs = ids;
+        } else {
+            submittedIDs = null;
+        }
         
         if (closeAfterSubmit)
             Launcher2.application.dispose();

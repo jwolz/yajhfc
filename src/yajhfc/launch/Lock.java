@@ -184,7 +184,7 @@ public class Lock implements SubmitProtocol {
         checkResponse();
     }
     
-    public void submit(boolean wait) throws IOException {
+    public long[] submit(boolean wait) throws IOException {
         if (inStreamToSubmit == null) {
             if (Utils.debugMode) {
                 log.finer("submit: no stream, wait=" + wait);
@@ -203,6 +203,12 @@ public class Lock implements SubmitProtocol {
             sock.shutdownOutput();
         }
         checkResponse();
+        int size = inStream.readInt();
+        long[] rv = new long[size];
+        for (int i=0; i<size; i++) {
+            rv[i] = inStream.readLong();
+        }
+        return rv;
     }
     
     /**

@@ -130,6 +130,12 @@ public class CommandLineOpts { //IMPORTANT!: Do not use Utils here!
     public int desiredWindowState = WINDOWSTATE_NOCHANGE;
     
     /**
+     * Location where the job id of newly created fax jobs should be written to.
+     * Not communicated.
+     */
+    public String jobIDOutput = null;
+    
+    /**
      * Parses the command line arguments and does some initial processing for the --help and --logfile options.
      * @param args
      */
@@ -143,6 +149,7 @@ public class CommandLineOpts { //IMPORTANT!: Do not use Utils here!
                 new LongOpt("comment", LongOpt.REQUIRED_ARGUMENT, null, 9),
                 new LongOpt("modem", LongOpt.REQUIRED_ARGUMENT, null, 'M'),
                 new LongOpt("stdin", LongOpt.NO_ARGUMENT, null, 1),
+                new LongOpt("print-jobids", LongOpt.OPTIONAL_ARGUMENT, null, 13),
                 new LongOpt("admin", LongOpt.NO_ARGUMENT, null, 'A'),
                 new LongOpt("debug", LongOpt.NO_ARGUMENT, null, 'd'),
                 new LongOpt("logfile", LongOpt.REQUIRED_ARGUMENT, null, 'l'),
@@ -248,6 +255,14 @@ public class CommandLineOpts { //IMPORTANT!: Do not use Utils here!
                     }
                 }
                 overrideSettings.append('\n');
+                break;
+            case 13: //print-jobids
+                optarg = getopt.getOptarg();
+                if (optarg == null) {
+                    jobIDOutput = "-"; //stdout
+                } else {
+                    jobIDOutput = optarg;
+                }
                 break;
             case 'C': // use-cover
                 optarg = getopt.getOptarg();
