@@ -42,7 +42,7 @@ public class RecvdFaxJobList extends AbstractHylaFaxJobList<RecvFormat> {
     @Override
     protected Vector<?> getJobListing(HylaFAXClient hyfc) throws IOException, ServerResponseException {
         synchronized (hyfc) {
-            hyfc.rcvfmt(columns.getFormatString());
+            hyfc.rcvfmt(columns.getFormatString(SPLIT_CHAR));
             return hyfc.getList("recvq");
         }
     }

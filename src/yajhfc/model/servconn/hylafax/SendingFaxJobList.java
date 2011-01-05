@@ -47,7 +47,7 @@ public class SendingFaxJobList extends AbstractHylaFaxJobList<JobFormat> {
     protected Vector<?> getJobListing(HylaFAXClient hyfc) throws IOException,
             ServerResponseException {
         synchronized (hyfc) {
-            hyfc.jobfmt(columns.getFormatString());
+            hyfc.jobfmt(columns.getFormatString(SPLIT_CHAR));
             return hyfc.getList("sendq");
         }
     }

@@ -37,6 +37,7 @@ import yajhfc.model.servconn.FaxJob;
 import yajhfc.model.servconn.defimpl.AbstractFaxJobList;
 
 public abstract class AbstractHylaFaxJobList<T extends FmtItem> extends AbstractFaxJobList<T> implements ManagedFaxJobList<T>  {
+    protected static final char SPLIT_CHAR = '|';
     static final Logger log = Logger.getLogger(AbstractHylaFaxJobList.class.getName());
     protected final HylaFaxListConnection parent;
     
@@ -56,7 +57,7 @@ public abstract class AbstractHylaFaxJobList<T extends FmtItem> extends Abstract
             
             List<FaxJob<T>> newFaxJobs = new ArrayList<FaxJob<T>>(newJobs.size());
             for (int i = 0; i < newJobs.size(); i++) {
-                newFaxJobs.add(createFaxJob(Utils.fastSplit((String)newJobs.get(i), '|')));
+                newFaxJobs.add(createFaxJob(Utils.fastSplit((String)newJobs.get(i), SPLIT_CHAR)));
             }
             lastJobListing = newJobs;
             
