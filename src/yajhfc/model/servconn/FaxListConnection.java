@@ -25,7 +25,6 @@ import yajhfc.HylaClientManager;
 import yajhfc.model.JobFormat;
 import yajhfc.model.RecvFormat;
 import yajhfc.model.jobq.QueueFileFormat;
-import yajhfc.util.ProgressWorker.ProgressUI;
 
 /**
  * @author jonas
@@ -78,9 +77,8 @@ public interface FaxListConnection {
     /**
      * Sets the UI components to use for feedback to the user 
      * @param parentWindow
-     * @param progressUI
      */
-    public void setUI(Window parentWindow, ProgressUI progressUI);
+    public void setUI(Window parentWindow);
     
     /**
      * Returns if a server status is available for this connection type
