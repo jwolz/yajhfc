@@ -184,8 +184,6 @@ public class HylaClientManager {
 
                     client.setPassive(myopts.pasv);
                     client.tzone(myopts.tzone.getTimezone());
-
-                    client.rcvfmt(myopts.recvfmt.getFormatString());
                     return client;
                 } catch (ServerResponseException sre) {
                     if (showErrorsUsingGUI) {

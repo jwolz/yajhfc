@@ -350,7 +350,7 @@ public class ServerSettingsPanel extends AbstractOptionsPanel {
             panelServer.add(checkAskAdminPassword, "6, 11, 7, 11, f, c");
             
             panelServer.add(checkPasv, "1, 14, 7, 14");
-            panelServer.add(new JButton(actTestConnection), "1,17,3,17,f,f");
+            panelServer.add(new JButton(actTestConnection), "1,17,7,17,f,f");
         }
         return panelServer;
     }
