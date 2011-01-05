@@ -22,13 +22,12 @@ import java.awt.Window;
 import java.lang.reflect.Constructor;
 
 import yajhfc.FaxOptions;
-import yajhfc.util.ProgressWorker.ProgressUI;
 
 public class FaxListConnectionFactory {
-    public static FaxListConnection getFaxListConnection(FaxOptions options, Window parentWindow, ProgressUI progressUI) throws Exception {
+    public static FaxListConnection getFaxListConnection(FaxOptions options, Window parentWindow) throws Exception {
         Class <? extends FaxListConnection> implClass = options.faxListConnectionType.getImplementingClass();
-        Constructor<? extends FaxListConnection> constructor = implClass.getConstructor(FaxOptions.class, Window.class, ProgressUI.class);
-        return constructor.newInstance(options, parentWindow, progressUI);
+        Constructor<? extends FaxListConnection> constructor = implClass.getConstructor(FaxOptions.class, Window.class);
+        return constructor.newInstance(options, parentWindow);
     }
     
     public static boolean isConnectionTypeStillValid(FaxListConnection connection, FaxOptions newOptions) {

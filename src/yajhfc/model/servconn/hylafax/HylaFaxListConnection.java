@@ -46,7 +46,6 @@ import yajhfc.model.servconn.FaxListConnection;
 import yajhfc.model.servconn.FaxListConnectionListener;
 import yajhfc.model.servconn.FaxListConnectionListener.RefreshKind;
 import yajhfc.model.servconn.directaccess.archive.ArchiveFaxJobList;
-import yajhfc.util.ProgressWorker.ProgressUI;
 
 public class HylaFaxListConnection implements FaxListConnection {
     static final Logger log = Logger.getLogger(HylaFaxListConnection.class.getName());
@@ -54,7 +53,6 @@ public class HylaFaxListConnection implements FaxListConnection {
     protected final List<FaxListConnectionListener> listeners = new ArrayList<FaxListConnectionListener>();
     protected HylaClientManager clientManager;
     protected Window parentWindow;
-    protected ProgressUI progressUI;
     protected ConnectionState connectionState = ConnectionState.DISCONNECTED;
     
     protected Timer refreshTimer = new Timer("ListRefresher", true);
@@ -263,13 +261,12 @@ public class HylaFaxListConnection implements FaxListConnection {
         }
     }
     
-    public void setUI(Window parentWindow, ProgressUI progressUI) {
+    public void setUI(Window parentWindow) {
         this.parentWindow = parentWindow;
-        this.progressUI = progressUI;
     }
     
-    public HylaFaxListConnection(FaxOptions fo, Window parentWindow, ProgressUI progressUI) {
-        setUI(parentWindow, progressUI);
+    public HylaFaxListConnection(FaxOptions fo, Window parentWindow) {
+        setUI(parentWindow);
         clientManager = new HylaClientManager(fo);
         this.fo = fo;
         receivedJobs = createRecvdList();

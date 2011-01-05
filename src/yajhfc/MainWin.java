@@ -2734,7 +2734,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         try {
             if (connection != null)
                 connection.removeFaxListConnectionListener(connListener);
-            connection = FaxListConnectionFactory.getFaxListConnection(myopts, this, tablePanel);
+            connection = FaxListConnectionFactory.getFaxListConnection(myopts, this);
             connection.addFaxListConnectionListener(connListener);
         } catch (Exception e) {
             if (myopts.faxListConnectionType == FaxListConnectionType.HYLAFAX) {

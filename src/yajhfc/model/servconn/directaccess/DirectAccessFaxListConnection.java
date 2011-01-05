@@ -34,7 +34,6 @@ import yajhfc.model.servconn.directaccess.jobq.PseudoSentFaxJobList;
 import yajhfc.model.servconn.directaccess.recvq.RecvQFaxJobList;
 import yajhfc.model.servconn.hylafax.HylaFaxListConnection;
 import yajhfc.model.servconn.hylafax.ManagedFaxJobList;
-import yajhfc.util.ProgressWorker.ProgressUI;
 
 /**
  * @author jonas
@@ -43,9 +42,8 @@ import yajhfc.util.ProgressWorker.ProgressUI;
 public class DirectAccessFaxListConnection extends HylaFaxListConnection {
     protected HylaDirAccessor hyda;
     
-    public DirectAccessFaxListConnection(FaxOptions fo, Window parentWindow,
-            ProgressUI progressUI) {
-        super(fo, parentWindow, progressUI);
+    public DirectAccessFaxListConnection(FaxOptions fo, Window parentWindow) {
+        super(fo, parentWindow);
         refreshDirAccessor();
     }
 
