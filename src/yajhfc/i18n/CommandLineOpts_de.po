@@ -1,12 +1,12 @@
 # translation of CommandLineOpts_de.po to Deutsch
-# Jonas Wolz <jwolz@freenet.de>, 2008, 2009, 2010.
+# Jonas Wolz <jwolz@freenet.de>, 2008, 2009, 2010, 2011.
 # Help texts for the command line.
 # Messages ending in -desc contain descriptions of the arguments,
 # while those ending in -arg contain the description of parameter to the argument
 msgid ""
 msgstr ""
 "Project-Id-Version: CommandLineOpts_de\n"
-"PO-Revision-Date: 2010-05-12 14:59GMT\n"
+"PO-Revision-Date: 2011-01-09 10:58GMT\n"
 "Last-Translator: Jonas Wolz <jwolz@freenet.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -183,5 +183,31 @@ msgstr "SCHLÜSSEL=WERT"
 
 # Untranslated text: Overrides the value of the specified setting for this session. The overridden setting is not saved.
 msgid "override-setting-desc"
-msgstr "Überschreibt den Wert der angegebenen Einstellung für diese Sitzung. Die überschriebene Einstellung wird nicht gespeichert."
+msgstr ""
+"Überschreibt den Wert der angegebenen Einstellung für diese Sitzung. Die "
+"überschriebene Einstellung wird nicht gespeichert."
+
+# Untranslated text: FILE
+msgid "print-jobids-arg"
+msgstr "DATEI"
+
+# Untranslated text: Prints the job IDs of newly sent faxes to stdout or to the specified file. One job per line is printed, in the format \"yyyy-mm-dd hh:mm:ss NEW_FAXJOB jobid\".
+msgid "print-jobids-desc"
+msgstr "Gibt die Job-IDs neu gesendeter Faxe auf der Standardausgabe oder in der angegebenen Datei aus. Eine ID pro Zeile wird ausgegeben, im Format \"yyyy-mm-dd hh:mm:ss NEW_FAXJOB jobid\"."
+
+# Untranslated text: SERVER
+msgid "server-arg"
+msgstr "SERVER"
+
+# Untranslated text: Sets the server to send the fax. Specify either the server's name (e.g. \"My server\"), the server's list index (0 is the first element) or the ID in the form \"#ID\".
+msgid "server-desc"
+msgstr "Gibt den Server zum Senden des Faxes an. Geben Sie entweder den Namen des Servers an (z.B. \"Mein Server\"), den Listenindex des Servers (0 entspricht dem ersten Element) oder die ID in der Form \"#ID\"."
+
+# Untranslated text: IDENTITY
+msgid "identity-arg"
+msgstr "IDENTITÄT"
+
+# Untranslated text: Sets the sender identity to use when sending the fax. Specify either the identity's name (e.g. \"My identity\"), the identity's list index (0 is the first element) or the ID in the form \"#ID\".
+msgid "identity-desc"
+msgstr "Gibt die zum Senden des Faxes verwendete Identität an. Geben Sie entweder den Namen der Identität an (z.B. \"Meine Identität\"), den Listenindex der Identität (0 entspricht dem ersten Element) oder die ID in der Form \"#ID\"."
 
