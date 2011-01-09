@@ -25,6 +25,7 @@ import info.clearthought.layout.TableLayout;
 
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -41,24 +42,28 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 
 import yajhfc.FaxNotification;
-import yajhfc.FaxOptions;
 import yajhfc.FaxResolution;
-import yajhfc.FaxTimezone;
-import yajhfc.HylaClientManager;
 import yajhfc.HylaModem;
+import yajhfc.IDAndNameOptions;
 import yajhfc.PaperSize;
+import yajhfc.SenderIdentity;
 import yajhfc.Utils;
-import yajhfc.launch.Launcher2;
 import yajhfc.model.IconMap;
 import yajhfc.send.JobPropsEditorDialog;
+import yajhfc.server.Server;
+import yajhfc.server.ServerManager;
+import yajhfc.server.ServerOptions;
 import yajhfc.util.ClipboardPopup;
 import yajhfc.util.ExcDialogAbstractAction;
+import yajhfc.util.ListComboModel;
+import yajhfc.util.ListListModel;
+import yajhfc.util.WrapperComboBoxModel;
 
 /**
  * @author jonas
  *
  */
-public class SendPanel extends AbstractOptionsPanel {
+public class SendPanel extends AbstractOptionsPanel<ServerOptions> {
     static final Logger log = Logger.getLogger(SendPanel.class.getName());
     
     JTextField textFilterFromFaxNr;
@@ -68,16 +73,26 @@ public class SendPanel extends AbstractOptionsPanel {
     JComboBox comboNotify;
     JComboBox comboPaperSize;
     JComboBox comboResolution;
-    JComboBox comboTZone;
     JSpinner spinKillTime;
     JSpinner spinMaxDial;
     JSpinner spinMaxTry;
-    List<HylaModem> availableModems;
     Action jobOptionAction;
     Map<String,String> customProperties;
+    JComboBox comboIdentity;
+    ListListModel<SenderIdentity> identitiesModel;
+    ListComboModel<HylaModem> modemsModel;
 
     public SendPanel() {
         super(false);
+    }
+    
+    public ListListModel<SenderIdentity> getIdentitiesModel() {
+        return identitiesModel;
+    }
+    
+    public void setIdentitiesModel(
+            ListListModel<SenderIdentity> identitiesModel) {
+        this.identitiesModel = identitiesModel;
     }
     
     /* (non-Javadoc)
@@ -85,13 +100,7 @@ public class SendPanel extends AbstractOptionsPanel {
      */
     @Override
     protected void createOptionsUI() {
-        HylaClientManager clientManager = Launcher2.application.getClientManager();
-        if (clientManager != null)
-            this.availableModems = clientManager.getModems();
-        else 
-            this.availableModems = HylaModem.defaultModems;
-
-        final int rowCount = 21;
+        final int rowCount = 22;
         double[][] tablelay = {
                 {border,  0.5, border, TableLayout.FILL, border},
                 new double[rowCount]
@@ -115,14 +124,13 @@ public class SendPanel extends AbstractOptionsPanel {
         textFilterFromFaxNr.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
         textFilterFromFaxNr.setToolTipText( _("Characters filtered from the fax number sent to HylaFAX:"));
         
-        comboTZone = new JComboBox(FaxTimezone.values());
         comboNotify = new JComboBox(FaxNotification.values());
         comboNotify.setRenderer(new IconMap.ListCellRenderer());
         comboPaperSize = new JComboBox(PaperSize.values());
         comboResolution = new JComboBox(FaxResolution.values());
         
-        //availableModems = HylaModem.defaultModems;
-        comboModem = new JComboBox(availableModems.toArray());
+        modemsModel = new ListComboModel<HylaModem>(Collections.<HylaModem>emptyList());
+        comboModem = new JComboBox(modemsModel);
         comboModem.setEditable(true);
         
         spinMaxDial = new JSpinner(new SpinnerNumberModel(12, 1, 100, 1));
@@ -141,18 +149,20 @@ public class SendPanel extends AbstractOptionsPanel {
         jobOptionAction.putValue(Action.NAME, Utils._("Job properties") + "...");
         JButton buttonJobOption = new JButton(jobOptionAction);
         
+        comboIdentity = new JComboBox(new WrapperComboBoxModel(getIdentitiesModel()));
+        
         addWithLabel(this, textNotifyAddress, _("E-mail address for notifications:"), "1, 2, 3, 2, f, c");
         addWithLabel(this, comboNotify, _("Notify when:"), "1, 5, 1, 5, f, c");
         addWithLabel(this, comboModem, _("Modem:"), "3, 5, 3, 5, f, c");
-        addWithLabel(this, comboTZone, _("Time zone:"), "1, 8, f, c");
+        addWithLabel(this, comboPaperSize, _("Paper size:"), "1, 8, f, c" );
         addWithLabel(this, comboResolution, _("Resolution:"), "3, 8, f, c");
-        addWithLabel(this, comboPaperSize, _("Paper size:"), "1, 11, f, c" );
-        addWithLabel(this, spinKillTime, _("Cancel job after (minutes):"), "3, 11, f, c");
-        addWithLabel(this, spinMaxDial, _("Maximum dials:"), "1, 14, f, c");
-        addWithLabel(this, spinMaxTry, _("Maximum tries:"), "3, 14, f, c");
-        addWithLabel(this, textFilterFromFaxNr, _("Filter from fax number:"), "1,17,f,c");
-        this.add(checkArchiveSentFaxes, "3,17,f,c");
-        this.add(buttonJobOption, "1,19,f,c");
+        addWithLabel(this, spinMaxDial, _("Maximum dials:"), "1, 11, f, c");
+        addWithLabel(this, spinKillTime, _("Cancel job after (minutes):"), "3,11,f, c");
+        addWithLabel(this, textFilterFromFaxNr, _("Filter from fax number:"), "1,14,f,c");
+        addWithLabel(this, spinMaxTry, _("Maximum tries:"), "3,14,f,c");
+        addWithLabel(this, comboIdentity, _("Default identity:"), "1,17,3,17,f,c");
+        this.add(buttonJobOption, "1,20,f,c");
+        this.add(checkArchiveSentFaxes, "3,20,f,c");
     }
 
     private String getModem() {
@@ -176,18 +186,23 @@ public class SendPanel extends AbstractOptionsPanel {
     /* (non-Javadoc)
      * @see yajhfc.options.OptionsPage#loadSettings(yajhfc.FaxOptions)
      */
-    public void loadSettings(FaxOptions foEdit) {
+    public void loadSettings(ServerOptions foEdit) {
         textNotifyAddress.setText(foEdit.notifyAddress);
         textFilterFromFaxNr.setText(foEdit.filterFromFaxNr);
 
         comboNotify.setSelectedItem(foEdit.notifyWhen);
         comboPaperSize.setSelectedItem(foEdit.paperSize);
         comboResolution.setSelectedItem(foEdit.resolution);
-        comboTZone.setSelectedItem(foEdit.tzone);
-        //comboNewFaxAction.setSelectedItem(foEdit.newFaxAction);
 
-        //changedLF = false;
-
+        List<HylaModem> availableModems;
+        // TODO: Use correct modems for this server
+        Server currentServer = ServerManager.getDefault().getCurrent();
+        if (currentServer != null)
+            availableModems = currentServer.getClientManager().getModems();
+        else 
+            availableModems = HylaModem.defaultModems;
+        
+        modemsModel.setList(availableModems);
         Object selModem = foEdit.defaultModem;
         for (HylaModem modem : availableModems) {
             if (modem.getInternalName().equals(selModem)) {
@@ -205,12 +220,18 @@ public class SendPanel extends AbstractOptionsPanel {
         spinKillTime.setValue(foEdit.killTime);
         
         customProperties = new TreeMap<String,String>(foEdit.customJobOptions);
+        
+        List<SenderIdentity> identities = getIdentitiesModel().getList();
+        SenderIdentity identity = IDAndNameOptions.getItemByID(identities, foEdit.defaultIdentity);
+        if (identity == null)
+            identity = foEdit.getParent().getDefaultIdentity();
+        comboIdentity.setSelectedItem(identity);
     }
 
     /* (non-Javadoc)
      * @see yajhfc.options.OptionsPage#saveSettings(yajhfc.FaxOptions)
      */
-    public void saveSettings(FaxOptions foEdit) {
+    public void saveSettings(ServerOptions foEdit) {
         
         foEdit.maxDial = ((Integer)spinMaxDial.getValue()).intValue();
         foEdit.maxTry = ((Integer)spinMaxTry.getValue()).intValue();
@@ -222,8 +243,6 @@ public class SendPanel extends AbstractOptionsPanel {
         foEdit.notifyWhen = (FaxNotification)comboNotify.getSelectedItem();
         foEdit.paperSize = (PaperSize)comboPaperSize.getSelectedItem();
         foEdit.resolution = (FaxResolution)comboResolution.getSelectedItem();
-        foEdit.tzone = (FaxTimezone)comboTZone.getSelectedItem();
-        //foEdit.newFaxAction = (FaxIntProperty)comboNewFaxAction.getSelectedItem();
         
         foEdit.archiveSentFaxes = checkArchiveSentFaxes.isSelected();
         
@@ -231,6 +250,9 @@ public class SendPanel extends AbstractOptionsPanel {
         
         foEdit.customJobOptions.clear();
         foEdit.customJobOptions.putAll(customProperties);
+        
+        SenderIdentity identity = (SenderIdentity)comboIdentity.getSelectedItem();
+        foEdit.defaultIdentity = (identity == null) ? -1 : identity.id;
     }
 
 

@@ -23,7 +23,7 @@ import java.util.Properties;
 /**
  * A class that can be "serialized" to a Properties object.
  * 
- * Classes implementing this interface (and "serializable" by AbstractFaxOptions) must have a constructor with no parameters
+ * Classes implementing this interface (and "serializable" by AbstractFaxOptions) must have a constructor with one parameter representing the "parent" class
  * that can be used to create an instance of this class with the attributes set
  * to default values.
  * 

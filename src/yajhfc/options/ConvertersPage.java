@@ -59,7 +59,7 @@ import yajhfc.util.URIClickListener;
  * @author jonas
  *
  */
-public class ConvertersPage extends AbstractOptionsPanel {
+public class ConvertersPage extends AbstractOptionsPanel<FaxOptions> {
 
     ConverterTableModel tableModel;
     JTable formatsTable;

@@ -21,7 +21,6 @@ package yajhfc.model.servconn.directaccess;
 import java.awt.Window;
 import java.io.File;
 
-import yajhfc.FaxOptions;
 import yajhfc.model.FmtItemList;
 import yajhfc.model.JobFormat;
 import yajhfc.model.RecvFormat;
@@ -34,6 +33,7 @@ import yajhfc.model.servconn.directaccess.jobq.PseudoSentFaxJobList;
 import yajhfc.model.servconn.directaccess.recvq.RecvQFaxJobList;
 import yajhfc.model.servconn.hylafax.HylaFaxListConnection;
 import yajhfc.model.servconn.hylafax.ManagedFaxJobList;
+import yajhfc.server.ServerOptions;
 
 /**
  * @author jonas
@@ -42,27 +42,27 @@ import yajhfc.model.servconn.hylafax.ManagedFaxJobList;
 public class DirectAccessFaxListConnection extends HylaFaxListConnection {
     protected HylaDirAccessor hyda;
     
-    public DirectAccessFaxListConnection(FaxOptions fo, Window parentWindow) {
+    public DirectAccessFaxListConnection(ServerOptions fo, Window parentWindow) {
         super(fo, parentWindow);
         refreshDirAccessor();
     }
 
     @Override
     protected ManagedFaxJobList<RecvFormat> createRecvdList() {
-        return new RecvQFaxJobList(this, fo.recvfmt, fo, "recvq");
+        return new RecvQFaxJobList(this, fo.getParent().recvfmt, fo, "recvq");
     }
 
     @Override
     protected ManagedFaxJobList<JobFormat> createSentList() {
         FmtItemList<QueueFileFormat> wrappedList = new FmtItemList<QueueFileFormat>(QueueFileFormat.values(), new QueueFileFormat[0]);
-        JobToQueueMapping.getRequiredFormats(fo.sentfmt, wrappedList);
-        return new PseudoSentFaxJobList(fo.sentfmt,
-                new JobQueueFaxJobList(this, wrappedList, fo, "doneq"));
+        JobToQueueMapping.getRequiredFormats(fo.getParent().sentfmt, wrappedList);
+        return new PseudoSentFaxJobList(fo.getParent().sentfmt,
+                new JobQueueFaxJobList(this, wrappedList, fo, "doneq"), this);
     }
 
     protected void refreshDirAccessor() {
         if (hyda == null || !fo.directAccessSpoolPath.equals(hyda.getBasePath())) {
-            hyda = new FileHylaDirAccessor(new File(fo.directAccessSpoolPath));
+            hyda = new FileHylaDirAccessor(new File(fo.directAccessSpoolPath), fo);
         }
     }
     

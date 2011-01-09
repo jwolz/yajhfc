@@ -25,6 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import yajhfc.Utils;
+import yajhfc.server.ServerOptions;
 
 /**
  * This class supports loading and saving the (un)read state of faxes.
@@ -90,10 +91,6 @@ public abstract class PersistentReadState {
 
 
     /**
-     * Contains the currently used PersistentReadState class
-     */
-    private static PersistentReadState CURRENT; 
-    /**
      * The default persistence method. The createInstance() method of this class
      * MUST accept a null config as this is used as a fall back.
      */
@@ -110,37 +107,28 @@ public abstract class PersistentReadState {
      * Returns the currently selected persistent read state
      * @return 
      */
-    public static PersistentReadState getCurrent() {
-        if (CURRENT == null) {
-            String keyToFind = Utils.getFaxOptions().persistenceMethod;
-            try {
-                for (AvailablePersistenceMethod method : persistenceMethods) {
-                    if (method.getKey().equals(keyToFind)) {
-                        String config = Utils.getFaxOptions().persistenceConfig;
-                        if (config != null && config.length() == 0) {
-                            config = null;
-                        }
-                        if (Utils.debugMode) {
-                            log.info(String.format("Using persistence method %s with Config \"%s\".", keyToFind, config));
-                        }
-                        CURRENT = method.createInstance(config);
-                        break;
+    public static PersistentReadState createFromOptions(ServerOptions so) {
+        String keyToFind = so.persistenceMethod;
+        try {
+            for (AvailablePersistenceMethod method : persistenceMethods) {
+                if (method.getKey().equals(keyToFind)) {
+                    String config = so.persistenceConfig;
+                    if (config != null && config.length() == 0) {
+                        config = null;
                     }
+                    if (Utils.debugMode) {
+                        log.info(String.format("Using persistence method %s with Config \"%s\".", keyToFind, config));
+                    }
+                    return method.createInstance(config, so.id);
                 }
-            } catch (Exception e) {
-                log.log(Level.WARNING, "Could not create persistence object:", e);
             }
-            
-            if (CURRENT == null) { // Something did not work...
-                log.warning(String.format("Could not create instance for persistence method %s, using default.", keyToFind));
-                CURRENT = DEFAULT_METHOD.createInstance(null);
-            }
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Could not create persistence object:", e);
         }
-        return CURRENT;
-    }
-    
-    public static void resetCurrent() {
-        CURRENT = null;
+
+        // Something did not work...
+        log.warning(String.format("Could not create instance for persistence method %s, using default.", keyToFind));
+        return DEFAULT_METHOD.createInstance(null, so.id);
     }
     
 }

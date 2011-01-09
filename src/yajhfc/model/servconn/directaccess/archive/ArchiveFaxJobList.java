@@ -21,7 +21,6 @@ package yajhfc.model.servconn.directaccess.archive;
 import java.io.File;
 import java.io.IOException;
 
-import yajhfc.FaxOptions;
 import yajhfc.model.FmtItemList;
 import yajhfc.model.TableType;
 import yajhfc.model.jobq.FileHylaDirAccessor;
@@ -30,6 +29,7 @@ import yajhfc.model.jobq.QueueFileFormat;
 import yajhfc.model.servconn.FaxListConnection;
 import yajhfc.model.servconn.directaccess.DirectAccessFaxJob;
 import yajhfc.model.servconn.directaccess.jobq.JobQueueFaxJobList;
+import yajhfc.server.ServerOptions;
 
 public class ArchiveFaxJobList extends JobQueueFaxJobList {
     protected HylaDirAccessor hyda;
@@ -38,9 +38,9 @@ public class ArchiveFaxJobList extends JobQueueFaxJobList {
         return TableType.ARCHIVE;
     }
     
-    public void reloadSettings(FaxOptions fo) {
+    public void reloadSettings(ServerOptions fo) {
         if (hyda == null || !fo.archiveLocation.equals(hyda.getBasePath())) {
-            hyda = new FileHylaDirAccessor(new File(fo.archiveLocation));
+            hyda = new FileHylaDirAccessor(new File(fo.archiveLocation), fo);
         }
         super.reloadSettings(fo);
     }
@@ -51,7 +51,7 @@ public class ArchiveFaxJobList extends JobQueueFaxJobList {
     }
     
     public ArchiveFaxJobList(FaxListConnection parent,
-            FmtItemList<QueueFileFormat> columns, FaxOptions fo) {
+            FmtItemList<QueueFileFormat> columns, ServerOptions fo) {
         super(parent, columns, fo, ".");
     }
 

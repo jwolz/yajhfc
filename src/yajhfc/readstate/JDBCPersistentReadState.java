@@ -377,7 +377,7 @@ public class JDBCPersistentReadState extends PersistentReadState {
             return true;
         }
 
-        public PersistentReadState createInstance(String config) {
+        public PersistentReadState createInstance(String config, int serverID) {
             return new JDBCPersistentReadState(new ConnectionSettings(config));
         }
 

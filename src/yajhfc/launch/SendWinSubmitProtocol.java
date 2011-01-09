@@ -32,6 +32,7 @@ import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
 import yajhfc.send.SendController;
 import yajhfc.send.SendWinControl;
 import yajhfc.send.StreamTFLItem;
+import yajhfc.server.ServerManager;
 
 /**
  * @author jonas
@@ -51,6 +52,8 @@ public class SendWinSubmitProtocol implements SubmitProtocol, Runnable {
     protected InputStream inStream;
     protected String streamDesc = null;
     protected StreamTFLItem tflInStream;
+    
+    protected String server, identity;
     
     protected boolean preparedSubmit = false;
     
@@ -108,6 +111,14 @@ public class SendWinSubmitProtocol implements SubmitProtocol, Runnable {
         this.closeAfterSubmit = closeAfterSumbit;
     }
     
+    public void setIdentity(String identityToUse) throws IOException {
+        this.identity = identityToUse;
+    }
+    
+    public void setServer(String serverToUse) throws IOException {
+        this.server = serverToUse;
+    }
+    
     /**
      * Prepares the submit
      */
@@ -151,8 +162,14 @@ public class SendWinSubmitProtocol implements SubmitProtocol, Runnable {
 //        Launcher2.application.bringToFront();
 
         log.fine("Initializing SendWin");
-        SendWinControl sw = SendController.getSendWindow(Launcher2.application.getFrame(), Launcher2.application.getClientManager(), false, true);
+        SendWinControl sw = SendController.getSendWindow(Launcher2.application.getFrame(), ServerManager.getDefault().getCurrent(), false, true);
 
+        if (server != null) {
+            sw.setServer(server);
+        }
+        if (identity != null) {
+            sw.setIdentity(identity);
+        }
         if (inStream != null) {                
             sw.addInputStream(tflInStream);
         } else {

@@ -133,6 +133,14 @@ sessionLoop:    do {
                             log.fine("Got CODE_SET_MODEM");
                             submitProto.setModem(strIn.readUTF());
                             break;
+                        case Lock.CODE_SET_SERVER:
+                            log.fine("Got CODE_SET_SERVER");
+                            submitProto.setServer(strIn.readUTF());
+                            break;
+                        case Lock.CODE_SET_IDENTITY:
+                            log.fine("Got CODE_SET_IDENTITY");
+                            submitProto.setIdentity(strIn.readUTF());
+                            break;
                         case Lock.CODE_SUBMIT:
                         case Lock.CODE_SUBMIT_STREAM:
                             wait = strIn.readBoolean();

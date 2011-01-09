@@ -35,7 +35,7 @@ import yajhfc.model.servconn.FaxJob;
 public class SendingFaxJobList extends AbstractHylaFaxJobList<JobFormat> {
     
     protected SendingFaxJobList(HylaFaxListConnection parent) {
-        super(parent, parent.fo.sendingfmt);
+        super(parent, parent.fo.getParent().sendingfmt);
     }
 
     @Override

@@ -136,6 +136,18 @@ public class CommandLineOpts { //IMPORTANT!: Do not use Utils here!
     public String jobIDOutput = null;
     
     /**
+     * The server to use.
+     * Communicated over socket.
+     */
+    public String serverToUse = null;
+    
+    /**
+     * The identity to use.
+     * Communicated over socket.
+     */
+    public String identityToUse = null;
+    
+    /**
      * Parses the command line arguments and does some initial processing for the --help and --logfile options.
      * @param args
      */
@@ -148,6 +160,8 @@ public class CommandLineOpts { //IMPORTANT!: Do not use Utils here!
                 new LongOpt("subject", LongOpt.REQUIRED_ARGUMENT, null, 's'),
                 new LongOpt("comment", LongOpt.REQUIRED_ARGUMENT, null, 9),
                 new LongOpt("modem", LongOpt.REQUIRED_ARGUMENT, null, 'M'),
+                new LongOpt("server", LongOpt.REQUIRED_ARGUMENT, null, 'S'),
+                new LongOpt("identity", LongOpt.REQUIRED_ARGUMENT, null, 'I'),
                 new LongOpt("stdin", LongOpt.NO_ARGUMENT, null, 1),
                 new LongOpt("print-jobids", LongOpt.OPTIONAL_ARGUMENT, null, 13),
                 new LongOpt("admin", LongOpt.NO_ARGUMENT, null, 'A'),
@@ -170,7 +184,7 @@ public class CommandLineOpts { //IMPORTANT!: Do not use Utils here!
         };
         final String[] argsWork = args.clone();
         
-        Getopt getopt = new Getopt("yajhfc", argsWork, "h::Adc:r:T:l:C::s:M:", longOpts);
+        Getopt getopt = new Getopt("yajhfc", argsWork, "h::Adc:r:T:l:C::s:M:I:S:", longOpts);
         int opt;
         String optarg;
         while ((opt = getopt.getopt()) != -1) {
@@ -322,6 +336,12 @@ public class CommandLineOpts { //IMPORTANT!: Do not use Utils here!
                 break;
             case 'M': // modem
                 modem = getopt.getOptarg();
+                break;
+            case 'I': // identity
+                identityToUse = getopt.getOptarg();
+                break;
+            case 'S': // server
+                serverToUse = getopt.getOptarg();
                 break;
             case '?':
                 break;

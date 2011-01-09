@@ -42,7 +42,7 @@ import yajhfc.util.IntVerifier;
  * @author jonas
  *
  */
-public class PortOptionsPanel extends AbstractOptionsPanel {
+public class PortOptionsPanel extends AbstractOptionsPanel<FaxOptions> {
     private static final int border = 8;    
     
     JTextField textBindAddr;

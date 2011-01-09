@@ -27,7 +27,7 @@ import javax.swing.JPanel;
  * @author jonas
  *
  */
-public abstract class AbstractOptionsPanel extends JPanel implements OptionsPage {
+public abstract class AbstractOptionsPanel<T> extends JPanel implements OptionsPage<T> {
 
     public AbstractOptionsPanel(LayoutManager layout) {
         super(layout);
@@ -65,5 +65,16 @@ public abstract class AbstractOptionsPanel extends JPanel implements OptionsPage
     public boolean validateSettings(OptionsWin optionsWin) {
         return true;
     }
+    
+    public boolean pageIsHidden(OptionsWin optionsWin) {
+        return true;
+    }
+    
+    public void pageIsShown(OptionsWin optionsWin) {
+        // NOP
+    }
 
+    public void initializeTreeNode(PanelTreeNode node, T foEdit) {
+        // NOP
+    };
 }

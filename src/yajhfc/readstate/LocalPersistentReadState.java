@@ -158,9 +158,15 @@ public class LocalPersistentReadState extends PersistentReadState {
             return false;
         }
 
-        public PersistentReadState createInstance(String config) {
-            File recvread = new File(Utils.getConfigDir(), "recvread");
+        public PersistentReadState createInstance(String config, int serverID) {
+            File recvread = new File(Utils.getConfigDir(), "recvread-" + serverID);
             TransactFileOutputStream.checkRecovery(recvread);
+            
+            // Port old file
+            File recvreadOld = new File(Utils.getConfigDir(), "recvread");
+            if (recvreadOld.exists()) {
+                recvreadOld.renameTo(recvread);
+            }
             return new LocalPersistentReadState(recvread);
         }
 

@@ -108,7 +108,7 @@ public class LogViewWorker extends ProgressWorker {
                         try {
                             logStream.reset();
                             hsf.downloadToStream(logStream);
-                            String logText = logStream.toString(Utils.getFaxOptions().hylaFAXCharacterEncoding);
+                            String logText = logStream.toString(connection.getOptions().hylaFAXCharacterEncoding);
                             logList.add(new Log(caption, logText));
                         } catch (Exception e) {
                             logList.add(new Log(caption, 

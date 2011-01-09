@@ -53,13 +53,46 @@ public interface SubmitProtocol {
      */
     void setCover(boolean useCover) throws IOException; 
     
+    /**
+     * Sets the subject for the fax
+     * @param subject
+     * @throws IOException
+     */
     void setSubject(String subject) throws IOException;
-    
+    /**
+     * Sets the comment for the new fax
+     * @param comments
+     * @throws IOException
+     */
     void setComments(String comments) throws IOException; 
    
+    /**
+     * Sets the modem to use for the new fax
+     * @param modem
+     * @throws IOException
+     */
     void setModem(String modem) throws IOException;
     
+    /**
+     * Sets if the application should close after submitting the fax
+     * @param closeAfterSumbit
+     * @throws IOException
+     * @throws OperationNotSupportedException
+     */
     void setCloseAfterSubmit(boolean closeAfterSumbit) throws IOException, OperationNotSupportedException;
+    
+    /**
+     * Sets the server to use for the new fax
+     * @param serverToUse
+     * @throws IOException
+     */
+    void setServer(String serverToUse) throws IOException;
+    /**
+     * Sets the identity to use for the new fax
+     * @param identityToUse
+     * @throws IOException
+     */
+    void setIdentity(String identityToUse) throws IOException;
     
     /**
      * Shows the send dialog, configures it as specified and optionally waits for the user to close it.

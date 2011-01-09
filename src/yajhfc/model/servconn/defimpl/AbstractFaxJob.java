@@ -172,10 +172,10 @@ public abstract class AbstractFaxJob<T extends FmtItem> implements SerializableF
                             return  Double.valueOf(data);
                         else if (dataClass == Date.class) {
                             Date d = fmtItem.getHylaDateFormat().parse(data);
-                            if (d != null && Utils.getFaxOptions().dateOffsetSecs != 0) {
+                            if (d != null && parent.getParent().getOptions().dateOffsetSecs != 0) {
                                 Calendar cal = Calendar.getInstance(Utils.getLocale());
                                 cal.setTime(d);
-                                cal.add(Calendar.SECOND, Utils.getFaxOptions().dateOffsetSecs);
+                                cal.add(Calendar.SECOND, parent.getParent().getOptions().dateOffsetSecs);
                                 d = cal.getTime();
                             }
                             return  d;

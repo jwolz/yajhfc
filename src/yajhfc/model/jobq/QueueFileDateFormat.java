@@ -25,7 +25,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import yajhfc.FaxTimezone;
-import yajhfc.Utils;
+import yajhfc.server.ServerManager;
 
 public class QueueFileDateFormat extends DateFormat {
     
@@ -35,7 +35,7 @@ public class QueueFileDateFormat extends DateFormat {
     public StringBuffer format(Date date, StringBuffer toAppendTo,
             FieldPosition fieldPosition) {
         long millisecs = date.getTime();
-        if (applyTimezoneCorrection && Utils.getFaxOptions().tzone == FaxTimezone.LOCAL) {
+        if (applyTimezoneCorrection && ServerManager.getDefault().getCurrent().getOptions().tzone == FaxTimezone.LOCAL) {
             millisecs -= TimeZone.getDefault().getOffset(millisecs);
         }
         
@@ -48,7 +48,7 @@ public class QueueFileDateFormat extends DateFormat {
     @Override
     public Date parse(String source, ParsePosition pos) {
         long millisecs = Long.parseLong(source.substring(pos.getIndex())) * 1000;
-        if (applyTimezoneCorrection && Utils.getFaxOptions().tzone == FaxTimezone.LOCAL) {
+        if (applyTimezoneCorrection && ServerManager.getDefault().getCurrent().getOptions().tzone == FaxTimezone.LOCAL) {
             millisecs += TimeZone.getDefault().getOffset(millisecs);
         }
         pos.setIndex(source.length());

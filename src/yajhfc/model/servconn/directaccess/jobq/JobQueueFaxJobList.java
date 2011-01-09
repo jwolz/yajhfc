@@ -26,25 +26,25 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import yajhfc.FaxOptions;
 import yajhfc.model.FmtItemList;
 import yajhfc.model.TableType;
 import yajhfc.model.jobq.QueueFileFormat;
 import yajhfc.model.servconn.FaxListConnection;
 import yajhfc.model.servconn.directaccess.DirectAccessFaxJob;
 import yajhfc.model.servconn.directaccess.DirectAccessFaxJobList;
+import yajhfc.server.ServerOptions;
 
 public class JobQueueFaxJobList extends DirectAccessFaxJobList<QueueFileFormat>  {
     
     public JobQueueFaxJobList(FaxListConnection parent,
-            FmtItemList<QueueFileFormat> columns, FaxOptions fo,
+            FmtItemList<QueueFileFormat> columns, ServerOptions fo,
             String directory) {
         super(parent, columns, fo, directory);
     }
 
     protected Map<String,int[]> desiredItems;
     
-    public void reloadSettings(FaxOptions fo) {        
+    public void reloadSettings(ServerOptions fo) {        
         List<QueueFileFormat> completeCols = columns.getCompleteView();
         if (desiredItems == null)
             desiredItems = new HashMap<String,int[]>();

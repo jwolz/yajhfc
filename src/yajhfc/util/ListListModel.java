@@ -19,6 +19,8 @@
 package yajhfc.util;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.AbstractListModel;
@@ -28,7 +30,7 @@ import javax.swing.AbstractListModel;
  * @author jonas
  *
  */
-public class ListListModel<T> extends AbstractListModel {
+public class ListListModel<T> extends AbstractListModel implements Iterable<T> {
 
     protected List<T> list;
 
@@ -48,6 +50,11 @@ public class ListListModel<T> extends AbstractListModel {
      */
     public int getSize() {
         return list.size();
+    }
+    
+    public void changeNotify(T element) {
+        int index = list.indexOf(element);
+        fireContentsChanged(this, index, index);
     }
 
     public void add(T element) {
@@ -152,5 +159,29 @@ public class ListListModel<T> extends AbstractListModel {
      */
     public List<T> getList() {
         return list;
+    }
+    
+    /**
+     * Sets the list internally used by this model
+     * @param list
+     */
+    public void setList(List<T> list) {
+        if (this.list != list) {
+            int oldEnd = this.list.size()-1;
+            if (oldEnd >= 0) {
+                this.list = Collections.emptyList();
+                fireIntervalRemoved(this, 0, oldEnd);
+            }
+            
+            this.list = list;
+            fireIntervalAdded(this, 0, list.size()-1);
+        }
+    }
+
+    /**
+     * Returns an iterator to iterate over this model
+     */
+    public Iterator<T> iterator() {
+        return list.iterator();
     }
 }

@@ -33,7 +33,6 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import yajhfc.FaxOptions;
 import yajhfc.HylaClientManager;
 import yajhfc.Utils;
 import yajhfc.cache.Cache;
@@ -46,6 +45,7 @@ import yajhfc.model.servconn.FaxListConnection;
 import yajhfc.model.servconn.FaxListConnectionListener;
 import yajhfc.model.servconn.FaxListConnectionListener.RefreshKind;
 import yajhfc.model.servconn.directaccess.archive.ArchiveFaxJobList;
+import yajhfc.server.ServerOptions;
 
 public class HylaFaxListConnection implements FaxListConnection {
     static final Logger log = Logger.getLogger(HylaFaxListConnection.class.getName());
@@ -58,7 +58,7 @@ public class HylaFaxListConnection implements FaxListConnection {
     protected Timer refreshTimer = new Timer("ListRefresher", true);
     protected TimerTask statusRefresher;
     protected TimerTask jobRefresher;
-    protected FaxOptions fo;
+    protected ServerOptions fo;
     
     protected String statusText = "";
     
@@ -107,7 +107,7 @@ public class HylaFaxListConnection implements FaxListConnection {
             if (archiveJobs != null) {
                 archiveJobs.saveJobsToCache(cacheMap, "archiveJobs");
             }
-            listCache.writeToCache(fo);
+            listCache.writeToCache(fo.id);
             // Clear map as objects inside are no longer needed
             cacheMap.clear();
         } catch (Exception e) {
@@ -122,7 +122,7 @@ public class HylaFaxListConnection implements FaxListConnection {
             return;
         }
         try {
-            if (listCache.readFromCache(fo)) {
+            if (listCache.readFromCache(fo.id)) {
                 Map<String,Object> cacheMap = listCache.getCachedData();
                 if (receivedJobs != null) {
                     receivedJobs.loadJobsFromCache(cacheMap, "receivedJobs");
@@ -153,7 +153,7 @@ public class HylaFaxListConnection implements FaxListConnection {
         log.fine("Connecting; adminMode=" + adminMode);
         setConnectionState(ConnectionState.CONNECTING);
         setStatusText(_("Connecting..."));
-        if (fo.useFaxListCache) {
+        if (fo.getParent().useFaxListCache) {
             log.fine("Loading cache...");
             putDefaultCacheCheckData();
             loadFromCache();
@@ -162,9 +162,9 @@ public class HylaFaxListConnection implements FaxListConnection {
         if (clientManager.forceLogin(parentWindow) != null) {
             log.fine("ClientManager successfully logged in");
             refreshTimer.schedule(statusRefresher = createStatusRefresher(), 
-                    0, fo.statusUpdateInterval);
+                    0, fo.getParent().statusUpdateInterval);
             refreshTimer.schedule(jobRefresher = createJobListRefresher(), 
-                    0, fo.tableUpdateInterval);
+                    0, fo.getParent().tableUpdateInterval);
             log.fine("Refreshers scheduled");
             setConnectionState(ConnectionState.CONNECTED);
             return true;
@@ -199,7 +199,7 @@ public class HylaFaxListConnection implements FaxListConnection {
         log.fine("Cancelled refresh tasks");
         if (oldState == ConnectionState.CONNECTED) {
             // Only save cache if cleanly connected...
-            if (fo.useFaxListCache) {
+            if (fo.getParent().useFaxListCache) {
                 log.fine("Saving cache");
                 // Do not put check data here, options may have changed...
                 saveToCache();
@@ -265,7 +265,7 @@ public class HylaFaxListConnection implements FaxListConnection {
         this.parentWindow = parentWindow;
     }
     
-    public HylaFaxListConnection(FaxOptions fo, Window parentWindow) {
+    public HylaFaxListConnection(ServerOptions fo, Window parentWindow) {
         setUI(parentWindow);
         clientManager = new HylaClientManager(fo);
         this.fo = fo;
@@ -288,7 +288,7 @@ public class HylaFaxListConnection implements FaxListConnection {
     }
     
     protected ManagedFaxJobList<QueueFileFormat> createArchiveList() {
-        return new ArchiveFaxJobList(this, fo.archiveFmt, fo);
+        return new ArchiveFaxJobList(this, fo.getParent().archiveFmt, fo);
     }
     
     protected void createOrDestroyOptionalObjects() {
@@ -307,11 +307,11 @@ public class HylaFaxListConnection implements FaxListConnection {
             }
         }
         if (listCache == null) {
-            if (fo.useFaxListCache) {
+            if (fo.getParent().useFaxListCache) {
                 listCache = new Cache();
             }
         } else {
-            if (!fo.useFaxListCache) {
+            if (!fo.getParent().useFaxListCache) {
                 listCache = null;
             }
         }
@@ -331,10 +331,10 @@ public class HylaFaxListConnection implements FaxListConnection {
         checkData.put("directAccessSpoolPath", fo.directAccessSpoolPath);
         
         checkData.put("tzone", fo.tzone);
-        checkData.put("recvfmt", fo.recvfmt.toString());
-        checkData.put("sentfmt", fo.sentfmt.toString());
-        checkData.put("sendingfmt", fo.sendingfmt.toString());
-        checkData.put("archivefmt", fo.archiveFmt.toString());
+        checkData.put("recvfmt", fo.getParent().recvfmt.toString());
+        checkData.put("sentfmt", fo.getParent().sentfmt.toString());
+        checkData.put("sendingfmt", fo.getParent().sendingfmt.toString());
+        checkData.put("archivefmt", fo.getParent().archiveFmt.toString());
     }
     
     public String getStatusText() {
@@ -558,5 +558,9 @@ public class HylaFaxListConnection implements FaxListConnection {
     public void refreshStatus() {
         if (statusRefresher != null)
             statusRefresher.run();
+    }
+    
+    public ServerOptions getOptions() {
+        return fo;
     }
 }

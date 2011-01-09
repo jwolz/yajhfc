@@ -23,8 +23,10 @@ import static yajhfc.options.OptionsWin.border;
 import info.clearthought.layout.TableLayout;
 import info.clearthought.layout.TableLayoutConstraints;
 
+import java.awt.Dialog;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
@@ -44,29 +46,88 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
-import yajhfc.FaxOptions;
 import yajhfc.HylaClientManager;
 import yajhfc.HylaModem;
 import yajhfc.Utils;
-import yajhfc.launch.Launcher2;
+import yajhfc.server.ServerOptions;
 import yajhfc.util.ExcDialogAbstractAction;
 import yajhfc.util.JTableTABAction;
+import yajhfc.util.ProgressDialog;
+import yajhfc.util.ProgressWorker;
 
 /**
  * @author jonas
  *
  */
-public class ModemsPanel extends AbstractOptionsPanel {
+public class ModemsPanel extends AbstractOptionsPanel<ServerOptions> {
+    protected final static class ModemRefreshWorker extends ProgressWorker implements ActionListener {
+        private final Dialog ow;
+        private final ServerOptions tempFO;
+        private HylaClientManager tempHCM;
+        private volatile boolean cancelled = false;
+        private List<HylaModem> modemList = null;
+        private final HylaModemTableModel tableModel;
+
+        protected ModemRefreshWorker(Dialog ow, ServerOptions tempFO, HylaModemTableModel tableModel) {
+            this.ow = ow;
+            this.tempFO = tempFO;
+            this.tableModel = tableModel;
+            
+            setProgressMonitor(new ProgressDialog(ow, _("Refreshing modem list"), this).progressPanel);
+        }
+        
+        public void startWork() {
+            startWork(ow, _("Refreshing modem list"));
+        }
+
+        @Override
+        public void doWork() {
+            updateNote(_("Logging in..."));
+            tempHCM = new HylaClientManager(tempFO);
+            if (!cancelled && tempHCM.forceLogin(ow) != null) {
+                if (!cancelled) {
+                    updateNote(_("Retrieving modem list..."));
+                    modemList = tempHCM.getRealModems();
+                }
+                if (!cancelled)
+                    updateNote(_("Login successful, logging out."));
+                tempHCM.forceLogout();
+                if (!cancelled) {
+                    progressMonitor.close();
+                }
+            }
+        }
+        
+        @Override
+        protected void done() {
+            if (!cancelled && modemList != null) {
+                tableModel.clear();
+                tableModel.addAll(HylaModem.defaultModems);
+                tableModel.addAll(modemList);
+            }
+        }
+        
+        public void actionPerformed(ActionEvent e) {
+            cancelled = true;
+            if (tempHCM != null) {
+                tempHCM.setShowErrorsUsingGUI(false);
+            }
+            interrupt();
+            getProgressMonitor().close();
+        }
+    }
 
     ButtonGroup customOrAllGroup;
     Action actAdd, actRemove, actUp, actDown, actReset;
     JTable modemsTable;
     JRadioButton radAuto, radManual;
     HylaModemTableModel tableModel;
+    ServerOptions myopts;
     
     public ModemsPanel() {
         super(false);
@@ -218,7 +279,8 @@ public class ModemsPanel extends AbstractOptionsPanel {
     /* (non-Javadoc)
      * @see yajhfc.options.OptionsPage#loadSettings(yajhfc.FaxOptions)
      */
-    public void loadSettings(FaxOptions foEdit) {
+    public void loadSettings(ServerOptions foEdit) {
+        myopts = foEdit;
         tableModel.loadFromStringList(foEdit.customModems);
         if (foEdit.useCustomModems) {
             radManual.setSelected(true);
@@ -235,7 +297,7 @@ public class ModemsPanel extends AbstractOptionsPanel {
     /* (non-Javadoc)
      * @see yajhfc.options.OptionsPage#saveSettings(yajhfc.FaxOptions)
      */
-    public void saveSettings(FaxOptions foEdit) {
+    public void saveSettings(ServerOptions foEdit) {
         foEdit.useCustomModems = radManual.isSelected();
         tableModel.saveToStringList(foEdit.customModems);
     }
@@ -251,12 +313,9 @@ public class ModemsPanel extends AbstractOptionsPanel {
     }
 
     void resetModemsList() {
-        tableModel.clear();
-        tableModel.addAll(HylaModem.defaultModems);
-        HylaClientManager clientManager = Launcher2.application.getClientManager();
-        if (clientManager != null)
-            tableModel.addAll(clientManager.getRealModems());
-
+        ModemRefreshWorker mrw = new ModemRefreshWorker((Dialog)SwingUtilities.getWindowAncestor(this), 
+                myopts, tableModel);
+        mrw.startWork();
     }
 
     static class MutableHylaModem extends HylaModem {

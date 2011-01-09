@@ -78,7 +78,7 @@ public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2011 by Jonas Wolz";
-    public static final String AppVersion = "0.5.0beta1";
+    public static final String AppVersion = "0.5.0beta2";
     public static final String AuthorName = "Jonas Wolz";
     public static final String AuthorEMail = "jwolz@freenet.de";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
@@ -988,6 +988,20 @@ public final class Utils {
             }
         }
         return selectedFile;
+    }
+    
+    /**
+     * Checks if the string is numeric, i.e. consists only of digits
+     * @param s
+     * @return
+     */
+    public static boolean isStringNumeric(String s) {
+        for (int i=0; i<s.length(); i++) {
+            if (!Character.isDigit(s.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 

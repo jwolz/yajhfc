@@ -47,6 +47,7 @@ import yajhfc.FaxResolution;
 import yajhfc.HylaClientManager;
 import yajhfc.HylaModem;
 import yajhfc.PaperSize;
+import yajhfc.SenderIdentity;
 import yajhfc.Utils;
 import yajhfc.faxcover.Faxcover;
 import yajhfc.faxcover.Faxcover.InvalidCoverFormatException;
@@ -57,6 +58,8 @@ import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
 import yajhfc.phonebook.convrules.NameRule;
 import yajhfc.phonebook.convrules.PBEntryFieldContainer;
+import yajhfc.server.Server;
+import yajhfc.server.ServerOptions;
 import yajhfc.util.ProgressWorker;
 import yajhfc.util.ProgressWorker.ProgressUI;
 
@@ -67,7 +70,7 @@ import yajhfc.util.ProgressWorker.ProgressUI;
 public class SendController {
     
     // These properties are set in the constructor:
-    protected HylaClientManager clientManager;
+    protected Server server;
     protected Window parent;
     protected boolean pollMode;
     
@@ -76,25 +79,27 @@ public class SendController {
     protected List<HylaTFLItem> files = new ArrayList<HylaTFLItem>();
     protected List<PBEntryFieldContainer> numbers = new ArrayList<PBEntryFieldContainer>();
     protected String subject = "", comments = "";
-    protected PaperSize paperSize = Utils.getFaxOptions().paperSize; 
+    protected PaperSize paperSize; 
     protected File customCover = null;
     
-    protected int maxTries = Utils.getFaxOptions().maxTry;
-    protected FaxNotification notificationType = Utils.getFaxOptions().notifyWhen;
-    protected FaxResolution resolution = Utils.getFaxOptions().resolution;
-    protected int killTime = Utils.getFaxOptions().killTime;
+    protected int maxTries;
+    protected FaxNotification notificationType;
+    protected FaxResolution resolution;
+    protected int killTime;
     // null = "NOW"
     protected Date sendTime = null;
-    protected boolean archiveJob = Utils.getFaxOptions().archiveSentFaxes;
+    protected boolean archiveJob;
     
-    protected final Map<String,String> customProperties = new TreeMap<String,String>(Utils.getFaxOptions().customJobOptions);
+    protected final Map<String,String> customProperties;
     
     protected ProgressUI progressMonitor = null;
+    
+    protected SenderIdentity fromIdentity;
     
     /**
      * The selected modem. Either a HylaModem or a String containing the modem's name.
      */
-    protected Object selectedModem = Utils.getFaxOptions().defaultModem;
+    protected Object selectedModem;
     
     /**
      * The list of the submitted job IDs
@@ -128,8 +133,8 @@ public class SendController {
         File coverTemplate = null;
         if (customCover != null) {
             coverTemplate = customCover;
-        } else if (fo.useCustomDefaultCover) {
-            coverTemplate = new File(fo.defaultCover);
+        } else if (fromIdentity.useCustomDefaultCover) {
+            coverTemplate = new File(fromIdentity.defaultCover);
         }
         cov = Faxcover.createInstanceForTemplate(coverTemplate);
         
@@ -141,9 +146,9 @@ public class SendController {
                 JOptionPane.showMessageDialog(parent, MessageFormat.format(Utils._("Can not read file \"{0}\"!"), customCover.toString()), Utils._("Error"), JOptionPane.WARNING_MESSAGE);
                 return null;
             }
-        } else if (fo.useCustomDefaultCover) {
-            if (!(new File(fo.defaultCover).canRead())) {
-                JOptionPane.showMessageDialog(parent, MessageFormat.format(Utils._("Can not read default cover page file \"{0}\"!"), fo.defaultCover), Utils._("Error"), JOptionPane.WARNING_MESSAGE);
+        } else if (fromIdentity.useCustomDefaultCover) {
+            if (!(new File(fromIdentity.defaultCover).canRead())) {
+                JOptionPane.showMessageDialog(parent, MessageFormat.format(Utils._("Can not read default cover page file \"{0}\"!"), fromIdentity.defaultCover), Utils._("Error"), JOptionPane.WARNING_MESSAGE);
                 return null;
             }
         }
@@ -158,7 +163,7 @@ public class SendController {
             }
         }
         
-        cov.fromData = fo.getCoverFrom();
+        cov.fromData = fromIdentity;
         cov.nameRule = fo.coverNameRule;
         cov.locationRule = fo.coverLocationRule.generateRule(fo.coverZIPCodeRule);
         cov.companyRule = fo.coverCompanyRule;
@@ -236,6 +241,7 @@ public class SendController {
                     else
                         step = 0;
                 }
+                HylaClientManager clientManager = server.getClientManager();
                 HylaFAXClient hyfc = clientManager.beginServerTransaction(SendController.this.parent);
                 if (hyfc == null) {
                     return;
@@ -306,6 +312,7 @@ public class SendController {
 
         @Override
         public void doWork() {
+            HylaClientManager clientManager = server.getClientManager();
             try {
                 HylaFAXClient hyfc = clientManager.beginServerTransaction(SendController.this.parent);
                 if (hyfc == null) {
@@ -314,7 +321,8 @@ public class SendController {
 
                 submittedJobs.clear();
                 Faxcover cover = null;
-                FaxOptions fo = Utils.getFaxOptions();                    
+                FaxOptions fo = Utils.getFaxOptions();          
+                ServerOptions so = server.getOptions();
 
                 if (!pollMode) {
                     setPaperSizes();
@@ -332,7 +340,7 @@ public class SendController {
                     log.fine("Use modem: " + modem);
                     //Utils.debugOut.println(modem);
                 }
-                final String numberFilterChars = fo.filterFromFaxNr + "\r\n";
+                final String numberFilterChars = so.filterFromFaxNr + "\r\n";
                 for (PBEntryFieldContainer numItem : numbers) {
                     updateNote(MessageFormat.format(Utils._("Creating job to {0}"), numItem.getField(PBEntryField.FaxNumber)));
 
@@ -349,11 +357,11 @@ public class SendController {
                             stepProgressBar(5);
 
                             j.setFromUser(Utils.sanitizeInput(clientManager.getUser()));
-                            String notifyAddr = Utils.sanitizeInput(fo.notifyAddress);
+                            String notifyAddr = Utils.sanitizeInput(so.notifyAddress);
                             if (notifyAddr != null && notifyAddr.length() > 0) {
                                 j.setNotifyAddress(notifyAddr);
                             }
-                            j.setMaximumDials(fo.maxDial);
+                            j.setMaximumDials(so.maxDial);
 
                             if (!pollMode) {
                                 // Set general job information...
@@ -363,9 +371,9 @@ public class SendController {
                                 setIfNotEmpty(j, "TOVOICE", numItem.getField(PBEntryField.VoiceNumber));
                                 setIfNotEmpty(j, "REGARDING", subject);
                                 setIfNotEmpty(j, "COMMENTS", comments);
-                                setIfNotEmpty(j, "FROMCOMPANY", fo.FromCompany);
-                                setIfNotEmpty(j, "FROMLOCATION", fo.FromLocation);
-                                setIfNotEmpty(j, "FROMVOICE", fo.FromVoiceNumber);
+                                setIfNotEmpty(j, "FROMCOMPANY", fromIdentity.FromCompany);
+                                setIfNotEmpty(j, "FROMLOCATION", fromIdentity.FromLocation);
+                                setIfNotEmpty(j, "FROMVOICE", fromIdentity.FromVoiceNumber);
 
                                 if (fo.regardingAsUsrKey) {
                                     setIfNotEmpty(j, "USRKEY", subject);
@@ -449,15 +457,25 @@ public class SendController {
         }
     }
     
-    public SendController(HylaClientManager clientManager, Window parent, boolean pollMode) {
-        this(clientManager, parent, pollMode, null);
+    public SendController(Server server, Window parent, boolean pollMode) {
+        this(server, parent, pollMode, null);
     }
     
-    public SendController(HylaClientManager clientManager, Window parent, boolean pollMode, ProgressUI progressMonitor) {
-        this.clientManager = clientManager;
+    public SendController(Server server, Window parent, boolean pollMode, ProgressUI progressMonitor) {
+        this.server = server;
         this.parent = parent;
         this.pollMode = pollMode;
         this.progressMonitor = progressMonitor;
+        
+        ServerOptions so = server.getOptions();
+        paperSize = so.paperSize;
+        maxTries = so.maxTry;
+        notificationType = so.notifyWhen;
+        resolution = so.resolution;
+        archiveJob = so.archiveSentFaxes;
+        customProperties = new TreeMap<String,String>(so.customJobOptions);
+        selectedModem = so.defaultModem;
+        fromIdentity = server.getDefaultIdentity();
     }
     
     /**
@@ -613,8 +631,12 @@ public class SendController {
         return customProperties;
     }
     
-    public HylaClientManager getClientManager() {
-        return clientManager;
+    public Server getServer() {
+        return server;
+    }
+
+    public void setServer(Server server) {
+        this.server = server;
     }
 
     public Window getParent() {
@@ -667,6 +689,14 @@ public class SendController {
         return submittedJobs;
     }
     
+    public SenderIdentity getFromIdentity() {
+        return fromIdentity;
+    }
+    
+    public void setFromIdentity(SenderIdentity fromIdentity) {
+        this.fromIdentity = fromIdentity;
+    }
+    
     public static void printJobIDIfRequested(Long jobID) {
         if (Launcher2.jobIDWriter != null) {
             Launcher2.jobIDWriter.printf("%1$tF %1$tT NEW_FAXJOB %2$d", new Date(), jobID);
@@ -683,9 +713,9 @@ public class SendController {
      * @param initiallyHideFiles
      * @return
      */
-    public static SendWinControl getSendWindow(Frame owner, HylaClientManager manager, boolean pollMode, boolean initiallyHideFiles) {
+    public static SendWinControl getSendWindow(Frame owner, Server server, boolean pollMode, boolean initiallyHideFiles) {
         if (lastSendWin == null || lastSendWin.isPollMode() != pollMode) {
-            return createSendWindow(owner, manager, false, initiallyHideFiles);
+            return createSendWindow(owner, server, false, initiallyHideFiles);
         } else {
             return lastSendWin;
         }
@@ -698,7 +728,7 @@ public class SendController {
      * @param initiallyHideFiles
      * @return
      */
-    public static SendWinControl createSendWindow(Frame owner, HylaClientManager manager, boolean pollMode, boolean initiallyHideFiles) {
+    public static SendWinControl createSendWindow(Frame owner, Server server, boolean pollMode, boolean initiallyHideFiles) {
         SendWinControl result;
         
         if (lastSendWin != null) {
@@ -708,9 +738,9 @@ public class SendController {
         
         
         if (pollMode || Utils.getFaxOptions().sendWinStyle == SendWinStyle.TRADITIONAL) {
-            result = new SendWin(manager, owner, pollMode);
+            result = new SendWin(server, owner, pollMode);
         } else {
-            result = new SimplifiedSendDialog(manager, owner, initiallyHideFiles);
+            result = new SimplifiedSendDialog(server, owner, initiallyHideFiles);
         }
         
         lastSendWin = result;

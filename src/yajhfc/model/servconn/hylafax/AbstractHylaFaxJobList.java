@@ -28,13 +28,13 @@ import java.util.List;
 import java.util.Vector;
 import java.util.logging.Logger;
 
-import yajhfc.FaxOptions;
 import yajhfc.Utils;
 import yajhfc.model.FmtItem;
 import yajhfc.model.FmtItemList;
 import yajhfc.model.TableType;
 import yajhfc.model.servconn.FaxJob;
 import yajhfc.model.servconn.defimpl.AbstractFaxJobList;
+import yajhfc.server.ServerOptions;
 
 public abstract class AbstractHylaFaxJobList<T extends FmtItem> extends AbstractFaxJobList<T> implements ManagedFaxJobList<T>  {
     protected static final char SPLIT_CHAR = '|';
@@ -67,12 +67,12 @@ public abstract class AbstractHylaFaxJobList<T extends FmtItem> extends Abstract
         }
     }
     
-    public void reloadSettings(FaxOptions fo) {
+    public void reloadSettings(ServerOptions fo) {
         // NOP
     }
     
     protected AbstractHylaFaxJobList(HylaFaxListConnection parent, FmtItemList<T> columns) {
-        super(columns);
+        super(columns, parent);
         this.parent = parent;
     }
 

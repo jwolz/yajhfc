@@ -12,13 +12,14 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import yajhfc.server.ServerOptions;
 import yajhfc.util.ExceptionDialog;
 import yajhfc.util.PasswordDialog;
 
 public class HylaClientManager {
     protected boolean adminMode;
     protected HylaFAXClient client;
-    protected FaxOptions myopts;
+    protected ServerOptions myopts;
     protected String password;
     protected String adminPassword;
     protected String userName;
@@ -32,7 +33,7 @@ public class HylaClientManager {
     
     private static final Logger log = Logger.getLogger(HylaClientManager.class.getName());
     
-    public HylaClientManager(FaxOptions myopts) {
+    public HylaClientManager(ServerOptions myopts) {
         super();
         this.myopts = myopts;
         optionsChanged();
@@ -123,7 +124,7 @@ public class HylaClientManager {
             client = new HylaFAXClient();
             synchronized (client) {
                 //client.setDebug(Utils.debugMode);
-                client.setSocketTimeout(myopts.socketTimeout);
+                client.setSocketTimeout(myopts.getParent().socketTimeout);
                 client.setCharacterEncoding(myopts.hylaFAXCharacterEncoding);
                 try {
                     client.open(myopts.host, myopts.port);

@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import yajhfc.FaxOptions;
 import yajhfc.Utils;
 import yajhfc.model.FmtItem;
 import yajhfc.model.FmtItemList;
@@ -22,18 +21,17 @@ import yajhfc.model.servconn.FaxListConnection;
 import yajhfc.model.servconn.defimpl.AbstractFaxJobList;
 import yajhfc.model.servconn.defimpl.JobIDComparator;
 import yajhfc.model.servconn.hylafax.ManagedFaxJobList;
+import yajhfc.server.ServerOptions;
 
 public abstract class DirectAccessFaxJobList<T extends FmtItem> extends AbstractFaxJobList<T> implements ManagedFaxJobList<T> {
 
     static final Logger log = Logger.getLogger(DirectAccessFaxJobList.class.getName());
-    protected final FaxListConnection parent;
     protected long lastDirectoryModification = -1;
     protected final String directory;
 
     public DirectAccessFaxJobList(FaxListConnection parent,
-            FmtItemList<T> columns, FaxOptions fo, String directory) {
-        super(columns);
-        this.parent = parent;
+            FmtItemList<T> columns, ServerOptions fo, String directory) {
+        super(columns, parent);
         this.directory = directory;
         reloadSettings(fo);
     }    

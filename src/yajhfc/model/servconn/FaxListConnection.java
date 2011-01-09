@@ -25,6 +25,7 @@ import yajhfc.HylaClientManager;
 import yajhfc.model.JobFormat;
 import yajhfc.model.RecvFormat;
 import yajhfc.model.jobq.QueueFileFormat;
+import yajhfc.server.ServerOptions;
 
 /**
  * @author jonas
@@ -138,4 +139,10 @@ public interface FaxListConnection {
      * Refreshes the fax lists
      */
     public void refreshFaxLists();
+    
+    /**
+     * Returns the ServerOptions used to create this connection
+     * @return
+     */
+    public ServerOptions getOptions();
 }

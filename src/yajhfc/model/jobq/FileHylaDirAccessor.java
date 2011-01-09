@@ -13,17 +13,20 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import yajhfc.Utils;
+import yajhfc.server.ServerOptions;
 
 public class FileHylaDirAccessor implements HylaDirAccessor {
     static final Logger log = Logger.getLogger(FileHylaDirAccessor.class.getName());
     
     protected File baseDir;
     protected Map<String,SoftReference<File>> fileCache = new HashMap<String, SoftReference<File>>();
+    protected String encoding;
     
-    public FileHylaDirAccessor(File baseDir) {
+    public FileHylaDirAccessor(File baseDir, ServerOptions options) {
         if (Utils.debugMode)
             log.fine("Created new dir accessor for " + baseDir);
         this.baseDir = baseDir;
+        encoding = options.hylaFAXCharacterEncoding;
     }
 
     public void deleteFile(String fileName) {
@@ -102,7 +105,7 @@ public class FileHylaDirAccessor implements HylaDirAccessor {
     public Reader getInputReader(String fileName) throws IOException {
         if (Utils.debugMode)
             log.fine("Get input reader " + fileName);
-        return new InputStreamReader(new FileInputStream(getFile(fileName)), Utils.getFaxOptions().hylaFAXCharacterEncoding);
+        return new InputStreamReader(new FileInputStream(getFile(fileName)), encoding);
     }
 
     public long getLastModified() throws IOException {

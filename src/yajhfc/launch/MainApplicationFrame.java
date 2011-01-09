@@ -20,7 +20,6 @@ package yajhfc.launch;
 
 import java.awt.Frame;
 
-import yajhfc.HylaClientManager;
 import yajhfc.MainWin;
 
 /**
@@ -30,7 +29,6 @@ import yajhfc.MainWin;
  */
 public interface MainApplicationFrame {
     public Frame getFrame();
-    public HylaClientManager getClientManager();
     public void bringToFront();
     public void dispose();
     public MainWin.SendReadyState getSendReadyState();

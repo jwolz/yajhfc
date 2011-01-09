@@ -40,17 +40,17 @@ import java.util.logging.StreamHandler;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import yajhfc.HylaClientManager;
 import yajhfc.MainWin;
 import yajhfc.NoGUISender;
 import yajhfc.Utils;
 import yajhfc.logconsole.SwingLogHandler;
 import yajhfc.plugin.PluginManager;
 import yajhfc.plugin.PluginManager.PluginInfo;
-import yajhfc.readstate.PersistentReadState;
 import yajhfc.send.SendController;
+import yajhfc.server.ServerManager;
 import yajhfc.shutdown.ShutdownManager;
 import yajhfc.splashscreen.YJSplashScreen;
+import yajhfc.util.ExceptionDialog;
 import yajhfc.util.ExternalProcessExecutor;
 
 /**
@@ -198,7 +198,7 @@ public class Launcher2 {
                 submitProto = null;
             }
             SwingUtilities.invokeLater(new NewInstRunner(submitProto,
-                    opts.adminMode, opts.selectedTab, opts.desiredWindowState));
+                    opts.adminMode, opts.selectedTab, opts.desiredWindowState, opts.serverToUse));
             
             Lock.startLockThread();
             if (Utils.debugMode) {
@@ -211,7 +211,7 @@ public class Launcher2 {
                     
                     application.saveWindowSettings();
                     
-                    PersistentReadState.getCurrent().persistReadState();
+                    ServerManager.getDefault().shutdownCleanup();
 
                     Utils.storeOptionsToFile();
                     Lock.releaseLock();
@@ -284,15 +284,14 @@ public class Launcher2 {
             
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
-                    //Utils.initializeUIProperties();
-                    
                     NoGUISender dummyFrame = new NoGUISender();
-                    dummyFrame.clientManager = new HylaClientManager(Utils.getFaxOptions());
                     Launcher2.application = dummyFrame;
                     try {
+                        //Utils.initializeUIProperties();
                         submitProto.submit(true);
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         launchLog.log(Level.WARNING, "Error submitting fax", e);
+                        ExceptionDialog.showExceptionDialog(dummyFrame, Utils._("Error submitting fax"), e);
                     }
                     System.exit(0);
                 } 
@@ -346,6 +345,12 @@ public class Launcher2 {
         }
         if (opts.modem != null) {
             sp.setModem(opts.modem);
+        }
+        if (opts.serverToUse != null) {
+            sp.setServer(opts.serverToUse);
+        }
+        if (opts.identityToUse != null) {
+            sp.setIdentity(opts.identityToUse);
         }
     }
     
@@ -517,7 +522,8 @@ public class Launcher2 {
         return consoleWriter;
     }
     
-    static class NewInstRunner implements Runnable{
+    static class NewInstRunner implements Runnable {
+        protected final String server;
         protected final boolean adminMode;
         protected final int selectedTab;
         protected final Runnable loginRunner;
@@ -527,8 +533,9 @@ public class Launcher2 {
             boolean setVisible = true;
             //Utils.initializeUIProperties();
             
-            MainWin mainWin = new MainWin(adminMode);
+            MainWin mainWin = new MainWin();
             Launcher2.application = mainWin;
+            mainWin.initialize(adminMode, server);
             
             if (desiredWindowState != CommandLineOpts.WINDOWSTATE_NOCHANGE) {
                 if (desiredWindowState >= 0) {
@@ -557,12 +564,13 @@ public class Launcher2 {
             }
         }   
         
-        public NewInstRunner(Runnable loginRunner, boolean adminMode, int selectedTab, int desiredWindowState) {
+        public NewInstRunner(Runnable loginRunner, boolean adminMode, int selectedTab, int desiredWindowState, String server) {
             this.loginRunner = loginRunner;
             
             this.adminMode = adminMode;
             this.selectedTab = selectedTab;
             this.desiredWindowState = desiredWindowState;
+            this.server = server;
         }
     }
 }

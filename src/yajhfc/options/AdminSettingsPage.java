@@ -49,7 +49,7 @@ import yajhfc.util.SafeJFileChooser;
  * @author jonas
  *
  */
-public class AdminSettingsPage extends AbstractOptionsPanel {
+public class AdminSettingsPage extends AbstractOptionsPanel<FaxOptions> {
     protected final OptionsWin parentWin;
     
     JCheckBox checkUseWin32ShutdownManager, checkAdjustMenusForMacOSX, checkUseJDK16PSBugfix;

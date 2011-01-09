@@ -1,22 +1,5 @@
 package yajhfc;
-/*
- * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005-2006 Jonas Wolz
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
+
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -24,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
-import java.util.logging.Logger;
 
 import javax.print.attribute.Attribute;
 
@@ -33,43 +15,17 @@ import yajhfc.model.FmtItemList;
 import yajhfc.model.JobFormat;
 import yajhfc.model.RecvFormat;
 import yajhfc.model.jobq.QueueFileFormat;
-import yajhfc.model.servconn.FaxListConnectionType;
 import yajhfc.options.MultiFileMode;
 import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.convrules.CompanyRule;
 import yajhfc.phonebook.convrules.LocationRule;
 import yajhfc.phonebook.convrules.NameRule;
-import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 import yajhfc.phonebook.convrules.ZIPCodeRule;
 import yajhfc.send.SendWinStyle;
+import yajhfc.server.ServerOptions;
 
 public class FaxOptions extends AbstractFaxOptions implements Cloneable {
-    
-    /**
-     * The time zone to use to display date or time
-     */
-    public FaxTimezone tzone;
-    /**
-     * The HylaFAX server's host name
-     */
-    public String host;
-    /**
-     * The TCP port to connect to 
-     */
-    public int port;
-    /**
-     * Use passive mode for HylaFAX protocol operations
-     */
-    public boolean pasv;
-    /**
-     * The user name used to connect to the HylaFAX server
-     */
-    public String user;
-    /**
-     * The password used to connect to the HylaFAX server
-     */
-    public final Password pass = new Password();
-    
+        
     /**
      * The columns displayed in the "Received" table
      */
@@ -99,36 +55,6 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
      * true if PDF files shall be viewed using the psViewer instead of pdfViewer
      */
     public boolean viewPDFAsPS = true;
-    
-    /**
-     * The notification e-mail address sent to the HylaFAX server
-     */
-    public String notifyAddress;
-    /**
-     * When to send a notification e-mail
-     */
-    public FaxNotification notifyWhen = null;
-    /**
-     * The default resolution used to send faxes 
-     */
-    public FaxResolution resolution = null;
-    /**
-     * The default paper size used to send faxes
-     */
-    public PaperSize paperSize = null;
-    
-    /**
-     * The default maximum number of tries to send a fax
-     */
-    public int maxTry;
-    /**
-     * The default maximum number of dials sending a fax
-     */
-    public int maxDial;
-    /**
-     * The default kill time in minutes
-     */
-    public int killTime = 180;
     
     /**
      * The screen position of the main window in pixels
@@ -167,84 +93,12 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
      * The last selected tab in the main window
      */
     public int mainwinLastTab;
-    
-    /**
-     * The update interval of the server status in milliseconds
-     */
-    public int statusUpdateInterval;
-    /**
-     * The update interval of the tables in milliseconds
-     */
-    public int tableUpdateInterval;
-    /**
-     * The socket timeout in milliseconds
-     */
-    public int socketTimeout = 90000;
-    
-    /**
-     * The sender's fax number for the cover page
-     */
-    public String FromFaxNumber;
-    /**
-     * The sender's voice number for the cover page
-     */
-    public String FromVoiceNumber;
-    /**
-     * The sender's name for the cover page
-     */
-    public String FromName;
-    /**
-     * The sender's location for the cover page
-     */
-    public String FromLocation;
-    /**
-     * The sender's company for the cover page
-     */
-    public String FromCompany;
+
     /**
      * The custom cover page to use
      */
     public String CustomCover;
-    /**
-     * The sender's e-mail address for the cover page
-     */
-    public String FromEMail = "";
-    /**
-     * The sender's country for the cover page
-     */
-    public String FromCountry= "";
-    /**
-     * The sender's department for the cover page
-     */
-    public String FromDepartment= "";
-    /**
-     * The sender's given name for the cover page
-     */
-    public String FromGivenName= "";
-    /**
-     * The sender's position for the cover page
-     */
-    public String FromPosition= "";
-    /**
-     * The sender's state for the cover page
-     */
-    public String FromState= "";
-    /**
-     * The sender's street for the cover page
-     */
-    public String FromStreet= "";
-    /**
-     * The sender's title for the cover page
-     */
-    public String FromTitle= "";
-    /**
-     * The sender's ZIP code for the cover page
-     */
-    public String FromZIPCode= "";
-    /**
-     * The sender's website for the cover page
-     */
-    public String FromWebsite= "";
+
     /**
      * Use a cover page by default?
      */
@@ -276,22 +130,6 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
      * Use the PCL file type bug fix?
      */
     public boolean pclBug = false;
-    /**
-     * Always ask for password?
-     */
-    public boolean askPassword = false;
-    /**
-     * Always ask for admin password?
-     */
-    public boolean askAdminPassword = true;
-    /**
-     * Always ask for user name?
-     */
-    public boolean askUsername = false;
-    /**
-     * The administrative password used to connect to the HylaFAX server in admin mode
-     */
-    public final Password AdminPassword = new Password();
     
     /**
      * The filter for the "Received" table
@@ -311,25 +149,11 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
     public boolean allowChangeFilter = true;
     
     /**
-     * The default cover page to use
-     */
-    public String defaultCover = null;
-    /**
-     * "true" if the cover page specified by defaultCover shall be used, "false" to use the internal default cover
-     */
-    public boolean useCustomDefaultCover = false;
-    
-    /**
      * The UI language
      */
     public YajLanguage locale = YajLanguage.SYSTEM_DEFAULT;
     
-    /**
-     *  Offset for displayed date values in seconds
-     */
-    public int dateOffsetSecs = 0;
     
-    //public boolean preferRenderedTIFF = false;
     /**
      * Mark failed jobs with a light red background?
      */
@@ -356,14 +180,6 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
     public final List<String> phoneBooks = new ArrayList<String>();
     
     /**
-     * Create a new session for every action?
-     */
-    public boolean useDisconnectedMode = false;
-    /**
-     * The default modem to use
-     */
-    public String defaultModem = "any";
-    /**
      * Use the fax's subject as USRKEY HylaFAX property
      */
     public boolean regardingAsUsrKey = true;
@@ -371,10 +187,6 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
      * The last path faxes have been saved to
      */
     public String lastSavePath = "";
-    /**
-     * Archive sent faxes by default?
-     */
-    public boolean archiveSentFaxes = false;
     
     /**
      * Style of the send dialog
@@ -388,14 +200,6 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
      * Last path from which fax documents have been added
      */
     public String lastSendWinPath = "";
-    /**
-     * The method to save the read/unread state
-     */
-    public String persistenceMethod = "local";
-    /**
-     * Configuration of the method to save the read/unread state
-     */
-    public String persistenceConfig = "";
     
     public static final String DEF_TOOLBAR_CONFIG = "Send|---|Show|Delete|---|Refresh|---|Phonebook|---|Resume|Suspend";
     /**
@@ -475,12 +279,6 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
      */
     public String tiff2PDFLocation;
     
-    
-    // Uncomment for archive support.
-    /**
-     * Show the archive table?
-     */
-    public boolean showArchive = false;
     /**
      * The columns displayed in the "Archive" table
      */
@@ -489,10 +287,6 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
      * The state (sorting and widths) of the "Archive" table's columns
      */
     public String archiveColState = "";
-    /**
-     * The path to the archive folder
-     */
-    public String archiveLocation = "";
     /**
      * The filter for the "Archive" table
      */
@@ -526,16 +320,6 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
      * Status bar size in the main window. -1 means "automatically resize"
      */
     public int statusBarSize = -1;
-
-    /**
-     * Custom job options.
-     */
-    public final Map<String,String> customJobOptions = new TreeMap<String,String>();
-    
-    /**
-     * Characters to filter out from the fax number.
-     */
-    public String filterFromFaxNr = "-/()[]{}";
     
     /**
      * Try to use an alternate shutdown method on Windows to work around a Java bug.
@@ -551,16 +335,6 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
      * Determines if certain menu entries (Quit, Options, About) are removed on Mac OS X
      */
     public boolean adjustMenusForMacOSX = true;
-    
-    /**
-     * Use custom (user-specified) modems?
-     */
-    public boolean useCustomModems = false;
-    
-    /**
-     * The list of custom modems
-     */
-    public final List<String> customModems = new ArrayList<String>();
     
     /**
      * The attributes used for printing
@@ -611,28 +385,35 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
     public boolean useFaxListCache = true;
     
     /**
-     * The type of fax list connection used.
+     * The known HylaFAX itemsListModel
      */
-    public FaxListConnectionType faxListConnectionType = FaxListConnectionType.HYLAFAX;
+    public final List<ServerOptions> servers = new ArrayList<ServerOptions>();
     
     /**
-     * The location of the spool area for direct access
+     * The known sender identities
      */
-    public String directAccessSpoolPath = "";
+    public final List<SenderIdentity> identities = new ArrayList<SenderIdentity>();
     
     /**
-     * The character encoding used by the HylaFAX server
+     * The last selected server ID
      */
-    public String hylaFAXCharacterEncoding = System.getProperty("file.encoding", "UTF-8");
+    public int lastServerID = -1;
+    
+    /**
+     * The update interval of the server status in milliseconds
+     */
+    public int statusUpdateInterval = 3000;
+    /**
+     * The update interval of the tables in milliseconds
+     */
+    public int tableUpdateInterval = 20000;
+    /**
+     * The socket timeout in milliseconds
+     */
+    public int socketTimeout = 90000;
     
     public FaxOptions() {
         super(null);
-        
-        this.host = "";
-        this.port = 4559;
-        this.user = System.getProperty("user.name");
-        this.pasv = true;
-        this.tzone = FaxTimezone.LOCAL;
         
         this.recvfmt = new FmtItemList<RecvFormat>(RecvFormat.values(), RecvFormat.getRequiredFormats());
         this.recvfmt.add(RecvFormat.Y);
@@ -694,28 +475,9 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
             this.tiff2PDFLocation = "tiff2pdf";
         }
         
-        this.resolution = FaxResolution.HIGH;
-        this.paperSize = PaperSize.A4;
-        this.notifyWhen = FaxNotification.DONE_AND_REQUEUE;
-        this.notifyAddress = this.user +  "@localhost"; //+ this.host;
-        this.maxTry = 6;
-        this.maxDial = 12;  
-        
         mainWinBounds = null;
         phoneWinBounds = null;
         mainwinLastTab = 0;
-        
-        statusUpdateInterval = 2000;
-        tableUpdateInterval = 6000;
-        //recvReadState = "";
-        
-        //lastPhonebook = "";
-        
-        FromFaxNumber = "";
-        FromVoiceNumber = "";
-        FromName = user;
-        FromLocation = "";
-        FromCompany = "";
         
         useCover = false;
         useCustomCover = false;
@@ -751,109 +513,32 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
     		}
     	}
     	super.loadFromProperties(p2 == null ? p : p2);
-    }
-    
-    private final PBEntryFieldContainer coverFrom = new PBEntryFieldContainer() {
-        @SuppressWarnings("fallthrough")
-        public String getField(PBEntryField field) {
-            switch (field) {
-            case Company:
-                return FromCompany;
-            case Country:
-                return FromCountry;
-            case Department:
-                return FromDepartment;
-            case EMailAddress:
-                return FromEMail;
-            case FaxNumber:
-                return FromFaxNumber;
-            case GivenName:
-                return FromGivenName;
-            case Location:
-                return FromLocation;
-            case Name:
-                return FromName;
-            case Position:
-                return FromPosition;
-            case State:
-                return FromState;
-            case Street:
-                return FromStreet;
-            case Title:
-                return FromTitle;
-            case VoiceNumber:
-                return FromVoiceNumber;
-            case ZIPCode:
-                return FromZIPCode;
-            case WebSite:
-                return FromWebsite;
-            default:
-                Logger.getLogger(getClass().getName()).warning("Unknown PBEntryField: " + field.name());
-                // Fall through intended
-            case Comment:
-                return "";
-            }
+    	
+        if (p.containsKey("host")) {
+            // Copy server settings over
+            ServerOptions so = new ServerOptions(this);
+            so.name = "Default";
+            so.loadFromProperties(p);
+            servers.add(so);
         }
         
-        @SuppressWarnings("fallthrough")
-        public void setField(PBEntryField field, String value) {
-            switch (field) {
-            case Company:
-                FromCompany = value;
-                break;
-            case Country:
-                FromCountry = value;
-                break;
-            case Department:
-                FromDepartment = value;
-                break;
-            case EMailAddress:
-                FromEMail = value;
-                break;
-            case FaxNumber:
-                FromFaxNumber = value;
-                break;
-            case GivenName:
-                FromGivenName = value;
-                break;
-            case Location:
-                FromLocation = value;
-                break;
-            case Name:
-                FromName = value;
-                break;
-            case Position:
-                FromPosition = value;
-                break;
-            case State:
-                FromState = value;
-                break;
-            case Street:
-                FromStreet = value;
-                break;
-            case Title:
-                FromTitle = value;
-                break;
-            case VoiceNumber:
-                FromVoiceNumber = value;
-                break;
-            case ZIPCode:
-                FromZIPCode = value;
-                break;
-            case WebSite:
-                FromWebsite = value;
-                break;
-            default:
-                Logger.getLogger(getClass().getName()).warning("Unknown PBEntryField: " + field.name());
-                // Fall through intended
-            case Comment:
-                break;
-            }
+        if (p.containsKey("FromName")) {
+            // Copy identity over
+            SenderIdentity si = new SenderIdentity(this);
+            si.name = "Default";
+            si.loadFromProperties(p);
+            identities.add(si);
         }
-    };
-
-    public PBEntryFieldContainer getCoverFrom() {
-        return coverFrom;
+        
+        int count = IDAndNameOptions.removeDuplicates(servers);
+        if (count > 0) {
+            log.severe("" + count + " duplicate servers removed!");
+        }
+        
+        count = IDAndNameOptions.removeDuplicates(identities);
+        if (count > 0) {
+            log.severe("" + count + " duplicate identities removed!");
+        }
     }
     
     @Override
@@ -863,5 +548,25 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }
+    }
+    
+    /**
+     * Returns the default server to use as a fall back
+     * @return
+     */
+    public ServerOptions getDefaultServer() {
+        if (servers.size() == 0)
+            return null;
+        return servers.get(0);
+    }
+    
+    /**
+     * Returns the default identity to use as a fall back
+     * @return
+     */
+    public SenderIdentity getDefaultIdentity() {
+        if (identities.size() == 0)
+            return null;
+        return identities.get(0);
     }
 }

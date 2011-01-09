@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import yajhfc.FaxOptions;
 import yajhfc.model.FmtItemList;
 import yajhfc.model.JobFormat;
 import yajhfc.model.TableType;
@@ -33,8 +32,10 @@ import yajhfc.model.jobq.QueueFileFormat;
 import yajhfc.model.servconn.FaxJob;
 import yajhfc.model.servconn.FaxJobList;
 import yajhfc.model.servconn.FaxJobListListener;
+import yajhfc.model.servconn.FaxListConnection;
 import yajhfc.model.servconn.defimpl.AbstractFaxJobList;
 import yajhfc.model.servconn.hylafax.ManagedFaxJobList;
+import yajhfc.server.ServerOptions;
 
 /**
  * @author jonas
@@ -45,8 +46,8 @@ public class PseudoSentFaxJobList extends AbstractFaxJobList<JobFormat>
     
     protected final JobQueueFaxJobList wrapped;
     
-    public PseudoSentFaxJobList(FmtItemList<JobFormat> columns, JobQueueFaxJobList wrapped) {
-        super(columns);
+    public PseudoSentFaxJobList(FmtItemList<JobFormat> columns, JobQueueFaxJobList wrapped, FaxListConnection parent) {
+        super(columns, parent);
         this.wrapped = wrapped;
         wrapped.addFaxJobListListener(this);
     }
@@ -69,7 +70,7 @@ public class PseudoSentFaxJobList extends AbstractFaxJobList<JobFormat>
         return wrapped.isShowingErrorsSupported();
     }
     
-    public void reloadSettings(FaxOptions fo) {
+    public void reloadSettings(ServerOptions fo) {
         JobToQueueMapping.getRequiredFormats(columns, wrapped.getColumns());
         wrapped.reloadSettings(fo);
     }
