@@ -44,7 +44,8 @@ public class ServerManager {
                 setCurrentByIndex(0);
             }
         } else {
-            setCurrentByIndex(0);
+            if (servers.size() > 0)
+                setCurrentByIndex(0);
         }
     }
     

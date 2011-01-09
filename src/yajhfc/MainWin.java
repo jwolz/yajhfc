@@ -1889,7 +1889,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     public void reconnectToServer(Runnable loginAction) {        
         stopReconnectTimer();
         
-        if (myopts.servers.size() == 0) { // Prompt for server if not set
+        if (currentServer.getOptions().host == null || currentServer.getOptions().host.length() == 0) { // Prompt for server if not set
             actOptions.actionPerformed(null);
             return;
         }
@@ -2277,7 +2277,8 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     protected ServerMenu getServerMenu() {
         if (serverMenu == null) {
             serverMenu = new ServerMenu();
-            serverMenu.setSelectionByID(currentServer.getID());
+            if (currentServer != null)
+                serverMenu.setSelectionByID(currentServer.getID());
         }
         return serverMenu;
     }
@@ -2707,7 +2708,8 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     protected void setCurrentServerByID(final int newID) {
         final ServerManager serverMan = ServerManager.getDefault();
         if (!serverMan.setCurrentByID(newID)) {
-            serverMan.setCurrentByIndex(0);
+            if (serverMan.getServers().size() > 0)
+                serverMan.setCurrentByIndex(0);
         }
         currentServer = serverMan.getCurrent();
     }
@@ -2771,6 +2773,9 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         }
     };
     void setFaxListConnectionFromServer()  {
+        if (currentServer == null)
+            return;
+        
         try {
             if (connection != null)
                 connection.removeFaxListConnectionListener(connListener);
