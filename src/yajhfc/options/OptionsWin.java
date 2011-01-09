@@ -132,7 +132,8 @@ public class OptionsWin extends JDialog {
         }
 
         // Small special handling for new users
-        if (foToEdit.servers.size() == 0) {
+        String server0Host = foToEdit.servers.get(0).host;
+        if (server0Host == null || server0Host.length() == 0) {
             //TabMain.setSelectedIndex(1);
             if (serverSettingsNode.isLeaf()) {
                 mainTree.setSelectionPath(new TreePath(new Object[] { rootNode, serverSettingsNode }));

@@ -530,14 +530,28 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
             identities.add(si);
         }
         
-        int count = IDAndNameOptions.removeDuplicates(servers);
-        if (count > 0) {
-            log.severe("" + count + " duplicate servers removed!");
+        if (servers.size() == 0) {
+            // Add a default server
+            ServerOptions so = new ServerOptions(this);
+            so.name = Utils._("Default");
+            servers.add(so);
+        } else {
+            int count = IDAndNameOptions.removeDuplicates(servers);
+            if (count > 0) {
+                log.severe("" + count + " duplicate servers removed!");
+            }
         }
-        
-        count = IDAndNameOptions.removeDuplicates(identities);
-        if (count > 0) {
-            log.severe("" + count + " duplicate identities removed!");
+
+        if (identities.size() == 0) {
+            // Add a default identity
+            SenderIdentity si = new SenderIdentity(this);
+            si.name = Utils._("Default");
+            identities.add(si);
+        } else {
+            int count = IDAndNameOptions.removeDuplicates(identities);
+            if (count > 0) {
+                log.severe("" + count + " duplicate identities removed!");
+            }
         }
     }
     
