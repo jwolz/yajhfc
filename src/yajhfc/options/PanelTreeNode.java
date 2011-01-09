@@ -24,17 +24,22 @@ import java.util.Enumeration;
 import java.util.List;
 
 import javax.swing.Icon;
+import javax.swing.JPopupMenu;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
+
+import yajhfc.FaxOptions;
 
 
 public class PanelTreeNode implements TreeNode {
 
     private List<PanelTreeNode> children;
-    private TreeNode parent;
-    private OptionsPage optionsPage;
+    private PanelTreeNode parent;
+    private OptionsPage<FaxOptions> optionsPage;
     private String label;
     private String longLabel;
     private Icon icon;
+    private JPopupMenu popupMenu;
     
     boolean settingsAndUILoaded = false;
     
@@ -90,7 +95,7 @@ public class PanelTreeNode implements TreeNode {
         this.children = Arrays.asList(children);
     }
 
-    public OptionsPage getOptionsPage() {
+    public OptionsPage<FaxOptions> getOptionsPage() {
         return optionsPage;
     }
     
@@ -102,16 +107,36 @@ public class PanelTreeNode implements TreeNode {
         return longLabel;
     }
     
+    public JPopupMenu getPopupMenu() {
+        return popupMenu;
+    }
+    
+    public void setPopupMenu(JPopupMenu popupMenu) {
+        this.popupMenu = popupMenu;
+    }
+    
     @Override
     public String toString() {
         return label;
     }
     
-    public PanelTreeNode(TreeNode parent, OptionsPage page, String label, Icon icon) {
+    public DefaultTreeModel getTreeModel() {
+        return parent.getTreeModel();
+    }
+    
+    public void setLabel(String label) {
+        this.label = label;
+    }
+    
+    public void setLongLabel(String longLabel) {
+        this.longLabel = longLabel;
+    }
+    
+    public PanelTreeNode(PanelTreeNode parent, OptionsPage<FaxOptions> page, String label, Icon icon) {
         this(parent,page,label,icon,label);
     }
     
-    public PanelTreeNode(TreeNode parent, OptionsPage page, String label, Icon icon, String longLabel) {
+    public PanelTreeNode(PanelTreeNode parent, OptionsPage<FaxOptions> page, String label, Icon icon, String longLabel) {
         super();
         this.label = label;
         this.optionsPage = page;

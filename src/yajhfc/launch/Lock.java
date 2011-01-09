@@ -55,6 +55,8 @@ public class Lock implements SubmitProtocol {
     final static int CODE_SET_SUBJECT = 9;
     final static int CODE_SET_COMMENT = 10;
     final static int CODE_SET_MODEM = 11;
+    final static int CODE_SET_SERVER = 12;
+    final static int CODE_SET_IDENTITY = 13;
     
     public final static int RESPONSE_OK = 0;
     public final static int RESPONSE_NOT_CONNECTED = 10;
@@ -167,6 +169,26 @@ public class Lock implements SubmitProtocol {
         }
         outStream.write(CODE_SET_MODEM);
         outStream.writeUTF(modem);
+        outStream.flush();
+        checkResponse();
+    }
+    
+    public void setServer(String server) throws IOException {
+        if (Utils.debugMode) {
+            log.finer("setServer: " + server);
+        }
+        outStream.write(CODE_SET_SERVER);
+        outStream.writeUTF(server);
+        outStream.flush();
+        checkResponse();
+    }
+    
+    public void setIdentity(String identity) throws IOException {
+        if (Utils.debugMode) {
+            log.finer("setIdentity: " + identity);
+        }
+        outStream.write(CODE_SET_IDENTITY);
+        outStream.writeUTF(identity);
         outStream.flush();
         checkResponse();
     }

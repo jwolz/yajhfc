@@ -21,16 +21,16 @@ package yajhfc.model.servconn;
 import java.awt.Window;
 import java.lang.reflect.Constructor;
 
-import yajhfc.FaxOptions;
+import yajhfc.server.ServerOptions;
 
 public class FaxListConnectionFactory {
-    public static FaxListConnection getFaxListConnection(FaxOptions options, Window parentWindow) throws Exception {
+    public static FaxListConnection getFaxListConnection(ServerOptions options, Window parentWindow) throws Exception {
         Class <? extends FaxListConnection> implClass = options.faxListConnectionType.getImplementingClass();
-        Constructor<? extends FaxListConnection> constructor = implClass.getConstructor(FaxOptions.class, Window.class);
+        Constructor<? extends FaxListConnection> constructor = implClass.getConstructor(ServerOptions.class, Window.class);
         return constructor.newInstance(options, parentWindow);
     }
     
-    public static boolean isConnectionTypeStillValid(FaxListConnection connection, FaxOptions newOptions) {
+    public static boolean isConnectionTypeStillValid(FaxListConnection connection, ServerOptions newOptions) {
         return (connection.getClass() == newOptions.faxListConnectionType.getImplementingClass());
     }
 }

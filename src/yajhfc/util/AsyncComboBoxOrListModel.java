@@ -41,6 +41,7 @@ public class AsyncComboBoxOrListModel<T> extends AbstractListModel
     protected final List<T> elements;
     protected Future<List<T>> future;
     protected boolean finished = false;
+    private Callable<List<T>> listCallable;
     
     /**
      * Creates a new AsyncComboBoxOrListModel
@@ -53,7 +54,7 @@ public class AsyncComboBoxOrListModel<T> extends AbstractListModel
         super();
         this.elements = new ArrayList<T>(initialItems);
         
-        future = Utils.executorService.submit(new Callable<List<T>>() {
+        listCallable = new Callable<List<T>>() {
             public List<T> call() throws Exception {
                 final List<T> newElements = callable.call();
                 final int oldSize = elements.size();
@@ -81,9 +82,17 @@ public class AsyncComboBoxOrListModel<T> extends AbstractListModel
                 });
                 return newElements;
             }
-        });
+        };
+        refreshListAsync();
     }
 
+    /**
+     * Refreshes the list asynchronously
+     */
+    public void refreshListAsync() {
+        future = Utils.executorService.submit(listCallable);
+    }
+    
     /* (non-Javadoc)
      * @see javax.swing.ListModel#getElementAt(int)
      */

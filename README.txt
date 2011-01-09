@@ -1,4 +1,4 @@
-README for YajHFC 0.4.4
+README for YajHFC 0.5.0
 =======================
 
 ABOUT
@@ -65,6 +65,19 @@ YajHFC was originally written as a first more complicated
 
 CHANGES
 -------
+
+0.5.0:
+- Support for local caching of the fax lists, probably making the start-up of 
+the application feel much quicker
+- Experimental support for direct reading to the recvq and doneq directory, 
+bypassing the HylaFAX server (and the HylaFAX user authentication). This 
+might lead to a lower server load with large queues since only modified files 
+are read to refresh the fax lists. This still needs some testing, however... 
+(any feedback on this feature is very welcome!)
+- Options dialog should open a bit faster than before
+- "Test connection" button in the Options dialog
+- Support for multiple servers
+- Support for multiple identities
 
 0.4.4:
 - Improved MAC OS support (mostly cosmetic changes)

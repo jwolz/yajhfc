@@ -46,7 +46,7 @@ import yajhfc.util.ClipboardPopup;
  * @author jonas
  *
  */
-public class PathAndViewPanel extends AbstractOptionsPanel {
+public class PathAndViewPanel extends AbstractOptionsPanel<FaxOptions> {
 
     /**
      * Set this to false to disable the "tiff2pdf location" entry field

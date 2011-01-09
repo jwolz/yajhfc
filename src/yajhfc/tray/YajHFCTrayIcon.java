@@ -41,12 +41,13 @@ import javax.swing.Timer;
 import yajhfc.FaxOptions;
 import yajhfc.MainWin;
 import yajhfc.Utils;
-import yajhfc.launch.Launcher2;
 import yajhfc.model.RecvFormat;
 import yajhfc.model.servconn.FaxJob;
 import yajhfc.model.table.ReadStateFaxListTableModel;
 import yajhfc.model.table.UnreadItemEvent;
 import yajhfc.model.table.UnreadItemListener;
+import yajhfc.server.Server;
+import yajhfc.server.ServerManager;
 import yajhfc.util.ExcDialogAbstractAction;
 
 /**
@@ -160,8 +161,13 @@ public class YajHFCTrayIcon implements UnreadItemListener<RecvFormat>, WindowLis
             String text;
             if (connected) {
                 StringBuffer textBuf = new StringBuffer();
-                String userName = (Launcher2.application.getClientManager() == null) ? Utils.getFaxOptions().user : Launcher2.application.getClientManager().getUser();
-                textBuf.append(userName).append('@').append(Utils.getFaxOptions().host);
+                final Server currentServer = ServerManager.getDefault().getCurrent();
+                if (currentServer != null) {
+                    String userName = (currentServer.isConnected()) ? currentServer.getOptions().user : currentServer.getClientManager().getUser();
+                    textBuf.append(userName).append('@').append(currentServer.getOptions().host);
+                } else {
+                    textBuf.append("<no server>");
+                }
                 textBuf.append(" - ");
                 new MessageFormat(Utils._("{0} unread fax(es)")).format(new Object[] {numUnread}, textBuf, null);
                 text = textBuf.toString();

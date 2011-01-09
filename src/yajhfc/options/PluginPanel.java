@@ -48,7 +48,7 @@ import yajhfc.util.JTableTABAction;
  * @author jonas
  *
  */
-public class PluginPanel extends AbstractOptionsPanel {
+public class PluginPanel extends AbstractOptionsPanel<FaxOptions> {
     JTable tablePlugins;
     PluginTableModel pluginTableModel;
     JButton buttonAddJDBC;

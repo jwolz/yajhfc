@@ -25,6 +25,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -235,9 +236,10 @@ public abstract class AbstractFaxOptions implements PropertiesSerializable {
                         final List list = (List)f.get(this);
                         list.clear();
                         int count = Integer.parseInt(p.getProperty(propertyName + ".count", "0"));
+                        Constructor constructor = elementClass.getConstructor(getClass());
                         
                         for (int i = 1; i<=count; i++) {
-                            PropertiesSerializable ps = (PropertiesSerializable)elementClass.newInstance();
+                            PropertiesSerializable ps = (PropertiesSerializable)constructor.newInstance(this);
                             ps.loadFromProperties(p, propertyName + '.' + i);
                             list.add(ps);
                         }

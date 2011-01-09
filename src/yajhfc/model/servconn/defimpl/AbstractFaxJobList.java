@@ -30,6 +30,7 @@ import yajhfc.model.FmtItemList;
 import yajhfc.model.servconn.FaxJob;
 import yajhfc.model.servconn.FaxJobList;
 import yajhfc.model.servconn.FaxJobListListener;
+import yajhfc.model.servconn.FaxListConnection;
 
 /**
  * @author jonas
@@ -42,6 +43,7 @@ public abstract class AbstractFaxJobList<T extends FmtItem> implements
     protected final FmtItemList<T> columns;
     protected final List<FaxJobListListener<T>> listeners = new ArrayList<FaxJobListListener<T>>();
     protected List<FaxJob<T>> jobs = Collections.emptyList();
+    protected final FaxListConnection parent;
     
     public FmtItemList<T> getColumns() {
         return columns;
@@ -107,9 +109,14 @@ public abstract class AbstractFaxJobList<T extends FmtItem> implements
         cache.put(keyPrefix, jobs);
     }
     
-    protected AbstractFaxJobList(FmtItemList<T> columns) {
+    public FaxListConnection getParent() {
+        return parent;
+    }
+    
+    protected AbstractFaxJobList(FmtItemList<T> columns, FaxListConnection parent) {
         super();
         this.columns = columns;
+        this.parent = parent;
     }
 
 

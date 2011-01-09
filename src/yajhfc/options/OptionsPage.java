@@ -20,13 +20,11 @@ package yajhfc.options;
 
 import javax.swing.JComponent;
 
-import yajhfc.FaxOptions;
-
 /**
  * @author jonas
  *
  */
-public interface OptionsPage {
+public interface OptionsPage<T> {
     /**
      * Returns the root panel for this option page's UI.
      * The UI should be created on the first call to this method for performance reasons.
@@ -35,15 +33,20 @@ public interface OptionsPage {
     public JComponent getPanel();
    
     /**
+     * Initializes the node's children
+     */
+    public void initializeTreeNode(PanelTreeNode node, T foEdit);
+    
+    /**
      * Loads the settings from the options
      * @param foEdit
      */
-    public void loadSettings(FaxOptions foEdit);
+    public void loadSettings(T foEdit);
     /**
      * Saves the settings to the options.
      * @param foEdit
      */
-    public void saveSettings(FaxOptions foEdit);
+    public void saveSettings(T foEdit);
 
     /**
      * Validates the user's settings
@@ -51,4 +54,15 @@ public interface OptionsPage {
      * @return true if settings are valid, false otherwise
      */
     public boolean validateSettings(OptionsWin optionsWin);
+    
+    /**
+     * Called just before the page gets visible
+     */
+    public void pageIsShown(OptionsWin optionsWin);
+    
+    /**
+     * Called just after the page gets hidden
+     * Return false to prevent changing the page.
+     */
+    public boolean pageIsHidden(OptionsWin optionsWin);
 }

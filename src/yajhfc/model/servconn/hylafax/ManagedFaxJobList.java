@@ -24,9 +24,9 @@ import gnu.inet.ftp.ServerResponseException;
 import java.io.IOException;
 import java.util.Map;
 
-import yajhfc.FaxOptions;
 import yajhfc.model.FmtItem;
 import yajhfc.model.servconn.FaxJobList;
+import yajhfc.server.ServerOptions;
 
 /**
  * A fax job list with some management methods needed for the list connection
@@ -46,7 +46,7 @@ public interface ManagedFaxJobList<T extends FmtItem> extends FaxJobList<T> {
     /**
      * Reloads the settings retrieved from the fax options
      */
-    public void reloadSettings(FaxOptions fo);
+    public void reloadSettings(ServerOptions fo);
     
     /**
      * Does some cleanup (especially clears the job list) when the connection disconnects

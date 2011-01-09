@@ -47,13 +47,13 @@ import java.text.FieldPosition;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -116,7 +116,6 @@ import yajhfc.model.servconn.ConnectionState;
 import yajhfc.model.servconn.FaxDocument;
 import yajhfc.model.servconn.FaxJob;
 import yajhfc.model.servconn.FaxListConnection;
-import yajhfc.model.servconn.FaxListConnectionFactory;
 import yajhfc.model.servconn.FaxListConnectionListener;
 import yajhfc.model.servconn.FaxListConnectionType;
 import yajhfc.model.servconn.JobState;
@@ -136,6 +135,9 @@ import yajhfc.print.FaxTablePrinter;
 import yajhfc.readstate.PersistentReadState;
 import yajhfc.send.SendController;
 import yajhfc.send.SendWinControl;
+import yajhfc.server.Server;
+import yajhfc.server.ServerManager;
+import yajhfc.server.ServerOptions;
 import yajhfc.tray.TrayFactory;
 import yajhfc.tray.YajHFCTrayIcon;
 import yajhfc.util.AbstractQuickSearchHelper;
@@ -156,10 +158,7 @@ import yajhfc.util.ProgressWorker.ProgressUI;
 @SuppressWarnings("serial")
 public final class MainWin extends JFrame implements MainApplicationFrame {
     
-    /**
-     * The interval in which the read state is automatically saved
-     */
-    private static final int READ_PERSIST_INTERVAL = 12345;
+
     static final Logger log = Logger.getLogger(MainWin.class.getName());
     
     protected JPanel jContentPane = null;
@@ -224,7 +223,9 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     protected ActionEnabler actChecker;
     protected Map<String,Action> availableActions = new HashMap<String,Action>();
     protected YajHFCTrayIcon trayIcon = null;
+    protected ServerMenu serverMenu;
     
+    protected Server currentServer;
     protected FaxListConnection connection;
     
     public enum SendReadyState {
@@ -466,7 +467,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                                 }
                                 updateNote(Utils._("Launching viewer"));
                                 if (downloadedFiles.size() > 0) {
-                                    MultiFileConverter.viewMultipleFiles(downloadedFiles, myopts.paperSize, false);
+                                    MultiFileConverter.viewMultipleFiles(downloadedFiles, currentServer.getOptions().paperSize, false);
                                 }
                                 stepProgressBar(100);
                             }
@@ -682,7 +683,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                                     target = runner.getSelection();
                                     targetDir = target.getParentFile();
                                 }
-                                MultiFileConverter.convertMultipleFilesToSingleFile(ffs, target, desiredFormat, myopts.paperSize);
+                                MultiFileConverter.convertMultipleFilesToSingleFile(ffs, target, desiredFormat, currentServer.getOptions().paperSize);
                                 fileCounter++;
                             }
                         } catch (Exception e1) {
@@ -807,7 +808,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         actSend = new ExcDialogAbstractAction() {
             public void actualActionPerformed(java.awt.event.ActionEvent e) {
                 Utils.setWaitCursor(null);
-                SendWinControl sw = SendController.createSendWindow(MainWin.this, connection.getClientManager(), false, false);
+                SendWinControl sw = SendController.createSendWindow(MainWin.this, currentServer, false, false);
 
                 Utils.unsetWaitCursorOnOpen(null, sw.getWindow());
                 sw.setVisible(true);
@@ -824,7 +825,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         actPoll = new ExcDialogAbstractAction() {
             public void actualActionPerformed(java.awt.event.ActionEvent e) {
                 Utils.setWaitCursor(null);
-                SendWinControl sw = SendController.createSendWindow(MainWin.this, connection.getClientManager(), true, true);
+                SendWinControl sw = SendController.createSendWindow(MainWin.this, currentServer, true, true);
                 Utils.unsetWaitCursorOnOpen(null, sw.getWindow());
                 sw.setVisible(true);
             }
@@ -1001,7 +1002,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                     return;
                 }
                 
-                SendWinControl sw = SendController.createSendWindow(MainWin.this, connection.getClientManager(), false, true);
+                SendWinControl sw = SendController.createSendWindow(MainWin.this, currentServer, false, true);
                 for (FaxDocument doc : files) {
                     sw.addServerFile(doc);
                 }
@@ -1117,7 +1118,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                     @Override
                     protected void done() {
                         if (success) {
-                            SendWinControl sw = SendController.createSendWindow(MainWin.this, connection.getClientManager(), false, true);
+                            SendWinControl sw = SendController.createSendWindow(MainWin.this, currentServer, false, true);
 
                             sw.getRecipients().addAll(recipients);
                             for (FaxDocument doc : files) {
@@ -1638,9 +1639,9 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     /**
      * This is the default constructor
      */
-    public MainWin(boolean adminState) {
+    public MainWin() {
         super();
-        initialize(adminState);
+        //initialize(adminState);
     }
 
     /**
@@ -1648,12 +1649,22 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
      * 
      * @return void
      */
-    private void initialize(boolean adminState) {
+    public void initialize(boolean adminState, String serverToUse) {
         myopts = Utils.getFaxOptions();
         
         createActions(adminState);
         
-        createFaxListConnection();
+        if (serverToUse != null) {
+            ServerOptions sOpt = IDAndNameOptions.getItemFromCommandLineCoding(myopts.servers, serverToUse);
+            if (sOpt != null) {
+                setCurrentServerByID(sOpt.id);
+            } else {
+                setCurrentServerByID(myopts.lastServerID);
+            }
+        } else {
+            setCurrentServerByID(myopts.lastServerID);
+        }
+        setFaxListConnectionFromServer();
         
         initializePlatformSpecifics();
         
@@ -1703,15 +1714,11 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             UpdateChecker.startSilentUpdateCheck();
         }
         
-        Utils.executorService.scheduleAtFixedRate(new Runnable() {
-            public void run() {
-                PersistentReadState.getCurrent().persistReadState();
-            }
-        }, READ_PERSIST_INTERVAL, READ_PERSIST_INTERVAL, TimeUnit.MILLISECONDS);
     }
     
     public void saveWindowSettings() {
         saveTableColumnSettings();
+        myopts.lastServerID = currentServer.getID();
         
         menuViewListener.saveToOptions(myopts);
         myopts.mainwinLastTab = getTabMain().getSelectedIndex();
@@ -1875,15 +1882,14 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         tableRecv.setColumnCfgString(myopts.recvColState);
         tableSent.setColumnCfgString(myopts.sentColState);
         tableSending.setColumnCfgString(myopts.sendingColState);
-        // Uncomment for archive support.
-        if (myopts.showArchive && tableArchive != null)
+        if (currentServer.getOptions().showArchive && tableArchive != null)
             tableArchive.setColumnCfgString(myopts.archiveColState);
     }
     
     public void reconnectToServer(Runnable loginAction) {        
         stopReconnectTimer();
         
-        if (myopts.host.length() == 0) { // Prompt for server if not set
+        if (myopts.servers.size() == 0) { // Prompt for server if not set
             actOptions.actionPerformed(null);
             return;
         }
@@ -1952,6 +1958,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         if (jJMenuBar == null) {
             jJMenuBar = new JMenuBar();
             jJMenuBar.add(getMenuFax());
+            jJMenuBar.add(getServerMenu().getMenu());
             jJMenuBar.add(getMenuView());
             jJMenuBar.add(getMenuExtras());
             jJMenuBar.add(getHelpMenu());
@@ -1990,8 +1997,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     }
 
     void addOrRemoveArchiveTab() {
-        // Uncomment for archive support.
-        if (myopts.showArchive) {
+        if (currentServer.getOptions().showArchive) {
             if ((scrollArchive == null || tabMain.indexOfComponent(scrollArchive) < 0 )) {
                 tabMain.addTab(_("Archive"), Utils.loadCustomIcon("archive.gif"), getScrollArchive());
             }
@@ -2068,7 +2074,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     
     ReadStateFaxListTableModel<RecvFormat> getRecvTableModel() {
         if (recvTableModel == null) {
-            recvTableModel = new ReadStateFaxListTableModel<RecvFormat>(connection.getReceivedJobs(), PersistentReadState.getCurrent());
+            recvTableModel = new ReadStateFaxListTableModel<RecvFormat>(connection.getReceivedJobs(), currentServer.getPersistence());
             recvTableModel.addUnreadItemListener(new UnreadItemListener<RecvFormat>() {
                 public void newItemsAvailable(UnreadItemEvent<RecvFormat> evt) {
                     if (evt.isOldDataNull())
@@ -2268,6 +2274,14 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         return menuExtras;
     }
     
+    protected ServerMenu getServerMenu() {
+        if (serverMenu == null) {
+            serverMenu = new ServerMenu();
+            serverMenu.setSelectionByID(currentServer.getID());
+        }
+        return serverMenu;
+    }
+    
     public Frame getFrame() {
         return this;
     }
@@ -2361,7 +2375,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         }
         
         private Filter<FaxJob<? extends FmtItem>,? extends FmtItem> getOwnFilterFor(FaxListTableModel<? extends FmtItem> model) {
-            final String user = (connection.getClientManager() != null) ? connection.getClientManager().getUser() : myopts.user;
+            final String user = currentServer.isConnected() ? connection.getClientManager().getUser() : currentServer.getOptions().user;
             return new StringFilter<FaxJob<? extends FmtItem>,FmtItem>(getOwnerColumn(model), StringFilterOperator.EQUAL, user, true);
         }
         
@@ -2559,7 +2573,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         public void run() {  
             try {
                 
-                PersistentReadState persistentReadState = PersistentReadState.getCurrent();
+                PersistentReadState persistentReadState = currentServer.getPersistence();
                 recvTableModel.setPersistentReadState(persistentReadState);
                 
                 // Read the read/unread status *after* the table contents has been set 
@@ -2586,13 +2600,14 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                         if (tablePanel.isShowingProgress())
                             tablePanel.showIndeterminateProgress(_("Fetching fax list..."));
                         
-                        MainWin.this.setTitle(connection.getClientManager().getUser() + "@" + myopts.host + (connection.getClientManager().isAdminMode() ? " (admin)" : "") + " - " +Utils.AppName);
+                        final HylaClientManager clientManager = connection.getClientManager();
+                        MainWin.this.setTitle(clientManager.getUser() + "@" + currentServer.getOptions().host + (clientManager.isAdminMode() ? " (admin)" : "") + " - " + Utils.AppName);
                         if (trayIcon != null) {
                             trayIcon.setConnectedState(true);
                         }
 
-                        actAdminMode.putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, connection.getClientManager().isAdminMode());
-                        if (connection.getClientManager().isAdminMode()) {
+                        actAdminMode.putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, clientManager.isAdminMode());
+                        if (clientManager.isAdminMode()) {
                             // A reddish gray
                             Color defStatusBackground = getDefStatusBackground();
                             textStatus.setBackground(new Color(Math.min(defStatusBackground.getRed() + 40, 255), defStatusBackground.getGreen(), defStatusBackground.getBlue()));
@@ -2684,30 +2699,55 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         return connection.getClientManager();
     }
     
-    protected void optionsChanged() {
-        showOrHideTrayIcon();
-        addOrRemoveArchiveTab();
+    /**
+     * Sets the currentServer to the server with the specified ID
+     * Do not call this method if there is a server already set; use switchServer in that case instead!
+     * @param newID
+     */
+    protected void setCurrentServerByID(final int newID) {
+        final ServerManager serverMan = ServerManager.getDefault();
+        if (!serverMan.setCurrentByID(newID)) {
+            serverMan.setCurrentByIndex(0);
+        }
+        currentServer = serverMan.getCurrent();
+    }
+    
+    /**
+     * Switches to the specified server.
+     * @param newID
+     */
+    protected void switchServer(final int newID) {
         doLogout(true, new Runnable() {
             public void run() {
-                if (FaxListConnectionFactory.isConnectionTypeStillValid(connection, myopts)) {
-                    connection.reloadSettings();
+                setCurrentServerByID(newID);
+                
+                addOrRemoveArchiveTab();
+                if (currentServer.getConnection() == connection) {
                     getRecvTableModel().fireTableStructureChanged();
                     getSentTableModel().fireTableStructureChanged();
                     getSendingTableModel().fireTableStructureChanged();
-                    if (myopts.showArchive) {
+                    if (currentServer.getOptions().showArchive) {
                         getArchiveTableModel().fireTableStructureChanged();
                     }
                 } else {
-                    createFaxListConnection();
+                    setFaxListConnectionFromServer();
                     getRecvTableModel().setJobs(connection.getReceivedJobs());
                     getSentTableModel().setJobs(connection.getSentJobs());
                     getSendingTableModel().setJobs(connection.getSendingJobs());
-                    if (myopts.showArchive) {
+                    if (currentServer.getOptions().showArchive) {
                         getArchiveTableModel().setJobs(connection.getArchivedJobs());
                     }
                 }
+                serverMenu.setSelectionByID(newID);
             }
         });
+    }
+    
+    protected void optionsChanged() {
+        showOrHideTrayIcon();
+        ServerManager.getDefault().optionsChanged();
+        serverMenu.refreshMenuItems();
+        switchServer(currentServer.getID());
     }
 
     private final FaxListConnectionListener connListener = new SwingFaxListConnectionListener(true, true, false) {        
@@ -2730,20 +2770,20 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             }
         }
     };
-    void createFaxListConnection()  {
+    void setFaxListConnectionFromServer()  {
         try {
             if (connection != null)
                 connection.removeFaxListConnectionListener(connListener);
-            connection = FaxListConnectionFactory.getFaxListConnection(myopts, this);
+            connection = currentServer.getConnection();
             connection.addFaxListConnectionListener(connListener);
         } catch (Exception e) {
-            if (myopts.faxListConnectionType == FaxListConnectionType.HYLAFAX) {
+            if (currentServer.getOptions().faxListConnectionType == FaxListConnectionType.HYLAFAX) {
                 ExceptionDialog.showExceptionDialog(MainWin.this, "Error creating FaxListConnection, exiting YajHFC.", e);
                 System.exit(1);
             } else {
                 ExceptionDialog.showExceptionDialog(MainWin.this, "Error creating FaxListConnection, fallling back to default.", e);
-                myopts.faxListConnectionType = FaxListConnectionType.HYLAFAX;
-                createFaxListConnection();
+                currentServer.getOptions().faxListConnectionType = FaxListConnectionType.HYLAFAX;
+                setFaxListConnectionFromServer();
             }
         }
     }
@@ -2779,7 +2819,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             reconnectTimer = null;
         }
     }
-    
+   
 
     class QuickSearchHelper extends AbstractQuickSearchHelper implements ChangeListener {
         
@@ -2960,6 +3000,89 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         }
     }
     
+    class ServerMenu implements ActionListener {
+        //private static final String PROP_SERVER = "ServerMenu->Server";
+        
+        protected JMenu serverMenu;
+        protected final List<JRadioButtonMenuItem> serverMenuItems = new ArrayList<JRadioButtonMenuItem>();
+        protected ButtonGroup serverGroup;
+        
+        public ServerMenu() {
+            serverMenu = new JMenu(_("Server"));
+            serverGroup = new ButtonGroup();
+            refreshMenuItems();
+        }
+        
+        public JMenu getMenu() {
+            return serverMenu;
+        }
+        
+        public void refreshMenuItems() {
+            Map<String,JRadioButtonMenuItem> oldMenus;
+            if (serverMenuItems.size() > 0) {
+                oldMenus = new HashMap<String, JRadioButtonMenuItem>();
+                for (JRadioButtonMenuItem item : serverMenuItems) {
+                    oldMenus.put(item.getActionCommand(), item);
+                }
+            } else {
+                oldMenus = Collections.emptyMap();
+            }
+            
+            serverMenuItems.clear();
+            serverMenu.removeAll();
+         
+            for (Server server : ServerManager.getDefault().getServers()) {
+                String actionCommand = String.valueOf(server.getID());
+                
+                JRadioButtonMenuItem newItem = oldMenus.get(actionCommand);
+                if (newItem == null) {
+                    newItem = new JRadioButtonMenuItem(server.toString());
+                    newItem.addActionListener(this);
+                    newItem.setActionCommand(actionCommand);
+                    serverGroup.add(newItem);
+                } else {
+                    newItem.setText(server.toString());
+                    oldMenus.remove(actionCommand);
+                }
+                //newItem.putClientProperty(PROP_SERVER, server);
+                serverMenuItems.add(newItem);
+                serverMenu.add(newItem);
+                
+                if (server == currentServer) {
+                    newItem.setSelected(true);
+                }
+            }
+            
+            // Items left in the map correspond to removed itemsListModel
+            for (JRadioButtonMenuItem item : oldMenus.values()) {
+                serverGroup.remove(item);
+            }
+        }
+        
+        public void setSelectionByIndex(int index) {
+            serverMenuItems.get(index).setSelected(true);
+        }
+        
+        public void setSelectionByID(int id) {
+            String sID = String.valueOf(id);
+            for (JRadioButtonMenuItem item : serverMenuItems) {
+                if (sID.equals(item.getActionCommand())) {
+                    item.setSelected(true);
+                    break;
+                }
+            }
+        }
+        
+        public void actionPerformed(ActionEvent e) {
+            //System.out.println("actionPerformed: " + e);
+            JRadioButtonMenuItem item = (JRadioButtonMenuItem)e.getSource();
+            int newID = Integer.parseInt(item.getActionCommand());
+            if (newID != currentServer.getID()) {
+                switchServer(newID);
+            }
+        }
+        
+    }
 }  
 
 

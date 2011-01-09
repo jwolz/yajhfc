@@ -22,6 +22,7 @@ import java.awt.Cursor;
 import java.awt.Frame;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
+import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 
@@ -34,6 +35,9 @@ import yajhfc.send.LocalFileTFLItem;
 import yajhfc.send.SendController;
 import yajhfc.send.SendControllerListener;
 import yajhfc.send.StreamTFLItem;
+import yajhfc.server.Server;
+import yajhfc.server.ServerManager;
+import yajhfc.server.ServerOptions;
 import yajhfc.util.ExceptionDialog;
 import yajhfc.util.ProgressContentPane;
 
@@ -44,7 +48,6 @@ import yajhfc.util.ProgressContentPane;
 public class NoGUISender extends JFrame implements MainApplicationFrame {
 
     ProgressContentPane progressPanel;
-    public HylaClientManager clientManager;
     
     /**
      * @throws HeadlessException
@@ -64,10 +67,6 @@ public class NoGUISender extends JFrame implements MainApplicationFrame {
 
     public void bringToFront() {
         toFront();
-    }
-    
-    public HylaClientManager getClientManager() {
-        return clientManager;
     }
     
     public Frame getFrame() {
@@ -99,20 +98,38 @@ public class NoGUISender extends JFrame implements MainApplicationFrame {
         progressFrame.setVisible(true);
         
         try {
-            HylaClientManager clientManager = new HylaClientManager(Utils.getFaxOptions());
-            progressFrame.clientManager = clientManager;
-            clientManager.forceLogin(progressFrame);
+            Server server;
+            if (opts.serverToUse == null) {
+                server = ServerManager.getDefault().getCurrent(); 
+            } else {
+                ServerOptions so = IDAndNameOptions.getItemFromCommandLineCoding(Utils.getFaxOptions().servers, opts.serverToUse);
+                if (so != null) {
+                    server = ServerManager.getDefault().getServerByID(so.id);
+                } else {
+                    Logger.getAnonymousLogger().warning("Server not found, using default instead: " + opts.serverToUse);
+                    server = ServerManager.getDefault().getCurrent(); 
+                }
+            }
             
-            SendController sendController = new SendController(clientManager, progressFrame, false, progressFrame.progressPanel);
+            SendController sendController = new SendController(server, progressFrame, false, progressFrame.progressPanel);
             sendController.addSendControllerListener(new SendControllerListener() {
                public void sendOperationComplete(boolean success) {
                    System.exit(success ? 0 : 1);
                } 
             });
+
+            if (opts.identityToUse != null) {
+                SenderIdentity identity = IDAndNameOptions.getItemFromCommandLineCoding(Utils.getFaxOptions().identities, opts.identityToUse);
+                if (identity != null) {
+                    sendController.setFromIdentity(identity);
+                } else {
+                    Logger.getAnonymousLogger().warning("Identity not found, using default instead: " + opts.identityToUse);
+                    sendController.setFromIdentity(server.getDefaultIdentity());
+                }
+            } else {
+                sendController.setFromIdentity(server.getDefaultIdentity());
+            }
             
-//            for (String number : recipients) {
-//                sendController.getNumbers().add(new DefaultPBEntryFieldContainer().parseFromString(number));
-//            }
             DefaultPBEntryFieldContainer.parseCmdLineStrings(sendController.getNumbers(), opts.recipients);
             
             sendController.setUseCover(opts.useCover != null ? opts.useCover : false);

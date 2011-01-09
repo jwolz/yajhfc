@@ -34,7 +34,6 @@ import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import yajhfc.FaxOptions;
 import yajhfc.Utils;
 
 /**
@@ -75,8 +74,8 @@ public class Cache {
 	 * Writes the cache to the default location using the default check data
 	 * @throws IOException
 	 */
-	public void writeToCache(FaxOptions fo)  throws IOException {
-		writeToCache(getDefaultCacheLocation());
+	public void writeToCache(int serverID)  throws IOException {
+		writeToCache(getCacheLocation(serverID));
 	}
 	
 	/**
@@ -112,8 +111,8 @@ public class Cache {
 	 * @throws IOException
 	 * @throws ClassNotFoundException 
 	 */
-	public boolean readFromCache(FaxOptions fo)  throws IOException, ClassNotFoundException {
-		return readFromCache(getDefaultCacheLocation());
+	public boolean readFromCache(int serverID)  throws IOException, ClassNotFoundException {
+		return readFromCache(getCacheLocation(serverID));
 	}
 	
 	/**
@@ -168,7 +167,7 @@ public class Cache {
 		checkData = new HashMap<String,Object>();
 	}
 
-	public static File getDefaultCacheLocation() {
-		return new File(Utils.getConfigDir(), "faxlists.cache");
+	public static File getCacheLocation(int serverID) {
+		return new File(Utils.getConfigDir(), "faxlists" + serverID + ".cache");
 	}
 }

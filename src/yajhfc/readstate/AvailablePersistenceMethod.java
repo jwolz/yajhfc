@@ -57,5 +57,5 @@ public interface AvailablePersistenceMethod {
      * @param config
      * @return
      */
-    public PersistentReadState createInstance(String config);
+    public PersistentReadState createInstance(String config, int serverID);
 }

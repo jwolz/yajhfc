@@ -1,6 +1,6 @@
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005-2010 Jonas Wolz
+ * Copyright (C) 2005-2011 Jonas Wolz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,72 +18,63 @@
  */
 package yajhfc.options;
 
-import java.awt.Component;
-
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 
 import yajhfc.FaxOptions;
 
-/**
- * A pseudo options page showing a centered text.
- * 
- * @author jonas
- *
- */
-public class LabelOptionsPage extends JLabel implements OptionsPage<FaxOptions> {
-
-    public LabelOptionsPage(String text) {
-        super(text);
-        initialize();
-    }
-
-    private void initialize() {
-        this.setHorizontalAlignment(JLabel.CENTER);
-        this.setVerticalAlignment(JLabel.CENTER);
-        this.setHorizontalTextPosition(JLabel.CENTER);
-        this.setVerticalTextPosition(JLabel.CENTER);
-        this.setAlignmentX(Component.CENTER_ALIGNMENT);
-        this.setAlignmentY(Component.CENTER_ALIGNMENT);
+class OptionsPageWrapper<T> implements OptionsPage<FaxOptions> {
+    protected OptionsPage<T> realPage;
+    protected T options;
+    protected Callback<T> callback;
+    
+    public OptionsPage<T> getRealPage() {
+        return realPage;
     }
     
-    /* (non-Javadoc)
-     * @see yajhfc.options.OptionsPage#getPanel()
-     */
-    public JComponent getPanel() {
-        return this;
+    public T getOptions() {
+        return options;
     }
-
-    /* (non-Javadoc)
-     * @see yajhfc.options.OptionsPage#loadSettings(yajhfc.FaxOptions)
-     */
+    
+    public JComponent getPanel() {
+        return realPage.getPanel();
+    }
+    
     public void loadSettings(FaxOptions foEdit) {
         // NOP
     }
-
-    /* (non-Javadoc)
-     * @see yajhfc.options.OptionsPage#saveSettings(yajhfc.FaxOptions)
-     */
     public void saveSettings(FaxOptions foEdit) {
-        // NOP
+        callback.saveSettingsCalled(this, foEdit);
     }
-
-    /* (non-Javadoc)
-     * @see yajhfc.options.OptionsPage#validateSettings(yajhfc.options.OptionsWin)
-     */
     public boolean validateSettings(OptionsWin optionsWin) {
-        return true;
+        return callback.validateSettingsCalled(this, optionsWin);
     }
-
+    
     public boolean pageIsHidden(OptionsWin optionsWin) {
+        if (!realPage.validateSettings(optionsWin))
+            return false;
+        realPage.saveSettings(options);
+        callback.elementSaved(this);
         return true;
     }
     
     public void pageIsShown(OptionsWin optionsWin) {
+        realPage.loadSettings(options);
+    }
+
+    public OptionsPageWrapper(OptionsPage<T> realPage, T options, Callback<T> callback) {
+        super();
+        this.realPage = realPage;
+        this.options = options;
+        this.callback = callback;
+    }
+
+    public void initializeTreeNode(PanelTreeNode node, FaxOptions foEdit) {
         // NOP
     }
     
-    public void initializeTreeNode(PanelTreeNode node, FaxOptions foEdit) {
-        // NOP
-    };
+    public interface Callback<T> {
+        public void elementSaved(OptionsPageWrapper<T> source);
+        public void saveSettingsCalled(OptionsPageWrapper<T> source, FaxOptions foEdit);
+        public boolean validateSettingsCalled(OptionsPageWrapper<T> source, OptionsWin optionsWin);
+    }
 }

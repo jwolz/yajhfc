@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.logging.Logger;
 
 import javax.swing.Action;
 import javax.swing.Box;
@@ -71,9 +72,10 @@ import yajhfc.FaxNotification;
 import yajhfc.FaxOptions;
 import yajhfc.FaxResolution;
 import yajhfc.FileTextField;
-import yajhfc.HylaClientManager;
 import yajhfc.HylaModem;
+import yajhfc.IDAndNameOptions;
 import yajhfc.PaperSize;
+import yajhfc.SenderIdentity;
 import yajhfc.Utils;
 import yajhfc.faxcover.Faxcover;
 import yajhfc.file.FormattedFile;
@@ -85,6 +87,9 @@ import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
 import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 import yajhfc.phonebook.ui.NewPhoneBookWin;
 import yajhfc.phonebook.ui.PBEntryFieldTableModel;
+import yajhfc.server.Server;
+import yajhfc.server.ServerManager;
+import yajhfc.server.ServerOptions;
 import yajhfc.util.AsyncComboBoxOrListModel;
 import yajhfc.util.CancelAction;
 import yajhfc.util.ClipboardPopup;
@@ -103,8 +108,9 @@ import yajhfc.util.SafeJFileChooser;
  */
 final class SimplifiedSendDialog extends JDialog implements SendWinControl {
     protected static final int FAXNUMBER_LRU_COUNT = 10;
+    static final Logger log = Logger.getLogger(SimplifiedSendDialog.class.getName());
     
-    HylaClientManager clientManager;
+    Server server;
     SendController sendController;
     
     protected JPanel contentPane, advancedPane;
@@ -125,6 +131,9 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
     protected JComboBox comboPaperSize;
     protected JComboBox comboNotification;
     protected JComboBox comboModem;
+    protected JComboBox comboIdentity;
+    protected JLabel labelServer;
+    protected JComboBox comboServer;
     
     protected JSpinner spinKillTime;
     protected JSpinner spinMaxTries;
@@ -145,6 +154,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
     protected boolean isAdvancedView = false;
     protected boolean initiallyHideFiles = false;
     protected boolean modalResult = false;
+    protected boolean identitySelectedByUser = false;
     
     private static final int border = 10;
     
@@ -155,9 +165,9 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
      * @param owner
      * @throws HeadlessException
      */
-    public SimplifiedSendDialog(HylaClientManager clientManager, Frame owner, boolean initiallyHideFiles) throws HeadlessException {
+    public SimplifiedSendDialog(Server server, Frame owner, boolean initiallyHideFiles) throws HeadlessException {
         super(owner, Utils._("Send fax"), true);
-        this.clientManager = clientManager;
+        this.server = server;
         this.initiallyHideFiles = initiallyHideFiles;
         initialize();
     }
@@ -171,7 +181,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
     }
 
     private void initialize() {
-        sendController = new SendController(clientManager, this, false);
+        sendController = new SendController(server, this, false);
         
         setContentPane(createContentPane());
         this.setSize(640, initiallyHideFiles ? 400 : 480);
@@ -296,17 +306,37 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
             } 
         });
         
+        comboIdentity = new JComboBox(new ListComboModel<SenderIdentity>(Utils.getFaxOptions().identities));
+        comboIdentity.setSelectedItem(sendController.fromIdentity);
+        comboIdentity.addActionListener(new ActionListener() {
+           public void actionPerformed(ActionEvent e) {
+               identitySelectedByUser = true;
+            } 
+        });
+        comboServer = new JComboBox(new ListComboModel<Server>(ServerManager.getDefault().getServers()));
+        comboServer.setSelectedItem(server);
+        comboServer.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                setServer((Server)comboServer.getSelectedItem());
+            }
+        });
+        
         JPanel buttonPanel = new JPanel(new TableLayout(
                 new double[][] {
                         { TableLayout.FILL },
-                        { TableLayout.PREFERRED, border, TableLayout.PREFERRED, border, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, border, TableLayout.PREFERRED, border}
+                        { TableLayout.PREFERRED, border, TableLayout.PREFERRED, border, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, border, TableLayout.PREFERRED, TableLayout.PREFERRED, border, TableLayout.PREFERRED, TableLayout.PREFERRED, border, TableLayout.PREFERRED, border}
                 }
                 ), false);
         buttonPanel.add(buttonSend, "0,0");
         buttonPanel.add(buttonPreview, "0,2");
         buttonPanel.add(buttonCancel, "0,4");
         buttonPanel.add(buttonCustomProps, "0,6");
-        buttonPanel.add(buttonAdvanced, "0,8");
+        labelServer = addWithLabel(buttonPanel, comboServer, Utils._("Server") + ':', "0,9");
+        addWithLabel(buttonPanel, comboIdentity, Utils._("Identity") + ':', "0,12");
+        buttonPanel.add(buttonAdvanced, "0,14");
+        
+        comboServer.setVisible(false);
+        labelServer.setVisible(false);
 
         checkUseCover = new JCheckBox(Utils._("Use cover page"));
         checkUseCover.setSelected(Utils.getFaxOptions().useCover);
@@ -596,7 +626,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         if (fo.CustomCover != null && fo.CustomCover.length() > 0) {
             ftfCustomCover.setText(fo.CustomCover);
         } else {
-            ftfCustomCover.setText(fo.defaultCover);
+            ftfCustomCover.setText(server.getDefaultIdentity().defaultCover);
         }
         ftfCustomCover.getJTextField().addMouseListener(ClipboardPopup.DEFAULT_POPUP);
 
@@ -611,13 +641,13 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
 
         spinMaxTries = new JSpinner(new SpinnerNumberModel(12, 1, 100, 1));
 
-        modemToSet = fo.defaultModem;
+        modemToSet = server.getOptions().defaultModem;
         modemModel =
             new AsyncComboBoxOrListModel<HylaModem>(
                     HylaModem.defaultModems,
                     new Callable<List<HylaModem>>() {
                         public List<HylaModem> call() throws Exception {
-                            return clientManager.getModems();
+                            return server.getClientManager().getModems();
                         }
                     }, 
                     true,
@@ -653,20 +683,32 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         box.add(checkArchiveJob);
         addWithLabel(advancedPane, box, Utils._("Time to send:"), "0,15,2,15");
         
-        comboResolution.setSelectedItem(fo.resolution);
-        comboPaperSize.setSelectedItem(fo.paperSize);
-        comboNotification.setSelectedItem(fo.notifyWhen);
-        
-        spinMaxTries.setValue(Integer.valueOf(fo.maxTry));
-        spinKillTime.setValue(fo.killTime);
-
-        checkArchiveJob.setSelected(fo.archiveSentFaxes);   
+        intializeAdvancedPaneFromServerOptions(server.getOptions(), null);
         
         return advancedPane;
     }
     
+    
+    protected void intializeAdvancedPaneFromServerOptions(ServerOptions so, ServerOptions soOld) {
+        if (soOld == null || comboResolution.getSelectedItem() == soOld.resolution)
+            comboResolution.setSelectedItem(so.resolution);
+        if (soOld == null || comboPaperSize.getSelectedItem() == soOld.paperSize)
+            comboPaperSize.setSelectedItem(so.paperSize);
+        if (soOld == null || comboNotification.getSelectedItem() == soOld.notifyWhen)
+            comboNotification.setSelectedItem(so.notifyWhen);
+
+        if (soOld == null || ((Integer)spinMaxTries.getValue()).intValue() == soOld.maxTry)
+            spinMaxTries.setValue(Integer.valueOf(so.maxTry));
+        if (soOld == null || ((Integer)spinKillTime.getValue()).intValue() == soOld.killTime)
+            spinKillTime.setValue(Integer.valueOf(so.killTime));
+
+        if (soOld == null || checkArchiveJob.isSelected() == soOld.archiveSentFaxes)
+            checkArchiveJob.setSelected(so.archiveSentFaxes);   
+    }
         
     protected void saveSettingsToSendController() {
+        sendController.setServer(server);
+        
         tflFiles.commit();
         final Object selNumber = comboNumber.getSelectedItem();
         if (selNumber != null && !"".equals(selNumber)) {
@@ -687,6 +729,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         sendController.setArchiveJob(checkArchiveJob.isSelected());
         
         sendController.setSubject(textSubject.getText());
+        sendController.setFromIdentity((SenderIdentity)comboIdentity.getSelectedItem());
         if (checkUseCover != null && checkUseCover.isSelected()) {
             sendController.setUseCover(true);
             sendController.setCustomCover(checkCustomCover.isSelected() ? new File(ftfCustomCover.getText()) : null);
@@ -704,6 +747,8 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         
         isAdvancedView = isAdvanced;
         buttonCustomProps.setVisible(isAdvanced);
+        labelServer.setVisible(isAdvanced);
+        comboServer.setVisible(isAdvanced);
         if (isAdvanced) {
             buttonAdvanced.setText(SIMPLIFIED_TEXT);
             contentPane.add(advancedPane, "1,12,f,f");
@@ -813,7 +858,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
     
     protected void setModemInternal(String modemName) {
         Object selModem = modemName;
-        for (HylaModem modem : clientManager.getModems()) {
+        for (HylaModem modem : server.getClientManager().getModems()) {
             if (modem.getInternalName().equals(modemName)) {
                 selModem = modem;
                 break;
@@ -835,5 +880,45 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         return false;
     }
     
+    public void setIdentity(String identityToUse) {
+        SenderIdentity identity = IDAndNameOptions.getItemFromCommandLineCoding(Utils.getFaxOptions().identities, identityToUse);
+        if (identity != null) {
+            setIdentity(identity, true);
+        } else {
+            log.warning("Identity not found, using default instead: " + identityToUse);
+        }
+    }
+    
+    public void setIdentity(SenderIdentity identity, boolean byUser) {
+        comboIdentity.setSelectedItem(identity);
+        identitySelectedByUser = byUser;
+    }
+    
+    public void setServer(String serverToUse) {
+        ServerOptions server = IDAndNameOptions.getItemFromCommandLineCoding(Utils.getFaxOptions().servers, serverToUse);
+        if (server != null) {
+            setServer(ServerManager.getDefault().getServerByID(server.id));
+        } else {
+            log.warning("Server not found, using default instead: " + serverToUse);
+        }
+    }
+
+    
+    public Server getServer() {
+        return server;
+    }
+
+    public void setServer(Server server) {
+        if (this.server != server) {
+            intializeAdvancedPaneFromServerOptions(server.getOptions(), this.server.getOptions());
+            this.server = server;
+            comboServer.setSelectedItem(server);
+            modemModel.refreshListAsync();
+            if (!identitySelectedByUser) {
+                setIdentity(server.getDefaultIdentity(), false);
+            }
+        }
+    }
+
 }
 

@@ -60,9 +60,10 @@ import yajhfc.FaxNotification;
 import yajhfc.FaxOptions;
 import yajhfc.FaxResolution;
 import yajhfc.FileTextField;
-import yajhfc.HylaClientManager;
 import yajhfc.HylaModem;
+import yajhfc.IDAndNameOptions;
 import yajhfc.PaperSize;
+import yajhfc.SenderIdentity;
 import yajhfc.Utils;
 import yajhfc.faxcover.Faxcover;
 import yajhfc.file.FormattedFile;
@@ -72,6 +73,9 @@ import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.PhoneBookEntry;
 import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 import yajhfc.phonebook.ui.NewPhoneBookWin;
+import yajhfc.server.Server;
+import yajhfc.server.ServerManager;
+import yajhfc.server.ServerOptions;
 import yajhfc.util.CancelAction;
 import yajhfc.util.ClipboardPopup;
 import yajhfc.util.ExcDialogAbstractAction;
@@ -129,23 +133,23 @@ final class SendWin extends JDialog implements SendWinControl  {
     static final Dimension buttonSize = new Dimension(120, 27);
     static final int border = 10;
     
-    HylaClientManager clientManager;
+    Server server;
     SendController sendController;
     
     
-    public SendWin(HylaClientManager manager, Frame owner) {
-        this(manager, owner, false);
+    public SendWin(Server server, Frame owner) {
+        this(server, owner, false);
     }
     
     /**
      * This is the default constructor
      */
-    public SendWin(HylaClientManager manager, Frame owner, boolean pollMode) {
+    public SendWin(Server server, Frame owner, boolean pollMode) {
         super(owner, true);
-        this.clientManager = manager;
+        this.server = server;
         this.pollMode = pollMode;
         if (Utils.debugMode) {
-            log.fine("Creating new SendWin: manager=" + manager + ", owner = " + owner);
+            log.fine("Creating new SendWin: server=" + server + ", owner = " + owner);
         }
         initialize();
         if (Utils.debugMode) {
@@ -164,19 +168,20 @@ final class SendWin extends JDialog implements SendWinControl  {
         this.setName("SendWin");
         this.setTitle(_("Send Fax"));
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        sendController = new SendController(clientManager, this, pollMode);
+        sendController = new SendController(server, this, pollMode);
         
         this.setContentPane(getJContentPane());
         
         FaxOptions fo = Utils.getFaxOptions();
-        comboResolution.setSelectedItem(fo.resolution);
-        comboPaperSize.setSelectedItem(fo.paperSize);
-        comboNotification.setSelectedItem(fo.notifyWhen);
+        ServerOptions so = server.getOptions();
+        comboResolution.setSelectedItem(so.resolution);
+        comboPaperSize.setSelectedItem(so.paperSize);
+        comboNotification.setSelectedItem(so.notifyWhen);
         
-        setModem(fo.defaultModem);
+        setModem(so.defaultModem);
         
-        spinMaxTries.setValue(Integer.valueOf(fo.maxTry));
-        spinKillTime.setValue(fo.killTime);
+        spinMaxTries.setValue(Integer.valueOf(so.maxTry));
+        spinKillTime.setValue(so.killTime);
         
         this.addWindowListener(new WindowAdapter() {
             @Override
@@ -275,7 +280,7 @@ final class SendWin extends JDialog implements SendWinControl  {
             if (fo.CustomCover != null && fo.CustomCover.length() > 0) {
                 ftfCustomCover.setText(fo.CustomCover);
             } else {
-                ftfCustomCover.setText(fo.defaultCover);
+                ftfCustomCover.setText(server.getDefaultIdentity().defaultCover);
             }
             
             textToName = new JTextField();
@@ -438,7 +443,7 @@ final class SendWin extends JDialog implements SendWinControl  {
             
             spinMaxTries = new JSpinner(new SpinnerNumberModel(12, 1, 100, 1));
             
-            comboModem = new JComboBox(clientManager.getModems().toArray());
+            comboModem = new JComboBox(server.getClientManager().getModems().toArray());
             comboModem.setEditable(true);
             
             addWithLabel(paneCommon, box, _("Fax number(s):"), "1, 5, 3, 5, F, C");
@@ -672,7 +677,7 @@ final class SendWin extends JDialog implements SendWinControl  {
     
     public void setModem(String modemName) {
         Object selModem = modemName;
-        for (HylaModem modem : clientManager.getModems()) {
+        for (HylaModem modem : server.getClientManager().getModems()) {
             if (modem.getInternalName().equals(modemName)) {
                 selModem = modem;
                 break;
@@ -719,6 +724,24 @@ final class SendWin extends JDialog implements SendWinControl  {
         checkUseCover.setSelected(useCover);
     }
 
+    public void setIdentity(String identityToUse) {
+        SenderIdentity identity = IDAndNameOptions.getItemFromCommandLineCoding(Utils.getFaxOptions().identities, identityToUse);
+        if (identity != null) {
+            sendController.setFromIdentity(identity);
+        } else {
+            log.warning("Identity not found, using default instead: " + identityToUse);
+        }
+    }
+    
+    public void setServer(String serverToUse) {
+        ServerOptions server = IDAndNameOptions.getItemFromCommandLineCoding(Utils.getFaxOptions().servers, serverToUse);
+        if (server != null) {
+            this.server = ServerManager.getDefault().getServerByID(server.id);
+            sendController.setServer(this.server);
+        } else {
+            log.warning("Server not found, using default instead: " + serverToUse);
+        }
+    }
 
     public boolean isPollMode() {
         return pollMode;

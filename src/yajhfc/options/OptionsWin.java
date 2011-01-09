@@ -27,6 +27,8 @@ import java.awt.Frame;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.MessageFormat;
@@ -50,6 +52,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -57,6 +60,7 @@ import yajhfc.FaxOptions;
 import yajhfc.Utils;
 import yajhfc.model.JobFormat;
 import yajhfc.model.RecvFormat;
+import yajhfc.model.jobq.QueueFileFormat;
 import yajhfc.plugin.PluginManager;
 import yajhfc.plugin.PluginUI;
 import yajhfc.util.CancelAction;
@@ -80,6 +84,8 @@ public class OptionsWin extends JDialog {
     JPanel tabPanel;
 
     FaxOptions foToEdit = null;
+    
+    PanelTreeNode selectedNode = null;
     
     boolean modalResult;
     public static final int border = 5;
@@ -126,9 +132,13 @@ public class OptionsWin extends JDialog {
         }
 
         // Small special handling for new users
-        if (foToEdit.host.length() == 0) {
+        if (foToEdit.servers.size() == 0) {
             //TabMain.setSelectedIndex(1);
-            mainTree.setSelectionPath(new TreePath(new Object[] { rootNode, serverSettingsNode }));
+            if (serverSettingsNode.isLeaf()) {
+                mainTree.setSelectionPath(new TreePath(new Object[] { rootNode, serverSettingsNode }));
+            } else {
+                mainTree.setSelectionPath(new TreePath(new Object[] { rootNode, serverSettingsNode, serverSettingsNode.getChildAt(0) }));
+            }
         } else {
             mainTree.setSelectionRow(0);
         }
@@ -187,46 +197,42 @@ public class OptionsWin extends JDialog {
         return panelButtons;
     }
     
+    
     /**
      * Creates the tree node structure
      */
     private void createRootNode() {
-        //PROFILE: long time = System.currentTimeMillis();
-        rootNode = new PanelTreeNode(null, null, "root", null);
+        rootNode = new PanelTreeNode(null, null, "root", null) {
+            @Override
+            public DefaultTreeModel getTreeModel() {
+                return (DefaultTreeModel)mainTree.getModel();
+            }  
+        };
         List<PanelTreeNode> rootChilds = new ArrayList<PanelTreeNode>();
         rootNode.setChildren(rootChilds);
         
         rootChilds.add(new PanelTreeNode(rootNode, panelCommon = new CommonPanel(this), _("General"), Utils.loadIcon("general/Preferences")));
-        //PROFILE: System.out.println("    After panel common: " + (-time + (time = System.currentTimeMillis())));
         
         rootChilds.add(new PanelTreeNode(rootNode, new PathAndViewPanel(), _("Paths and viewers"), Utils.loadIcon("development/Host")));
-        //PROFILE: System.out.println("    After path and view panel: " + (-time + (time = System.currentTimeMillis())));
         
-        rootChilds.add(serverSettingsNode = new PanelTreeNode(rootNode, new ServerSettingsPanel(), _("Server"), Utils.loadIcon("development/Server")));
-        //PROFILE: System.out.println("    After server settings panel: " + (-time + (time = System.currentTimeMillis())));
-        
-        PanelTreeNode deliveryNode = new PanelTreeNode(rootNode, new SendPanel(), _("Delivery"), Utils.loadIcon("general/SendMail"));
-        //PROFILE: System.out.println("    After send panel: " + (-time + (time = System.currentTimeMillis())));
-        deliveryNode.setChildren(new PanelTreeNode[] {
-                new PanelTreeNode(deliveryNode, new CoverPanel(), _("Cover page"), Utils.loadIcon("general/ComposeMail")),
-                new PanelTreeNode(deliveryNode, new ModemsPanel(), _("Modems"), Utils.loadCustomIcon("modem.png")),
-        });
-        rootChilds.add(deliveryNode);
-        //PROFILE: System.out.println("    After cover panel: " + (-time + (time = System.currentTimeMillis())));
+        ServerSettingsPanel serverPanel;
+        rootChilds.add(serverSettingsNode = new PanelTreeNode(rootNode, serverPanel = new ServerSettingsPanel(), _("Servers"), Utils.loadCustomIcon("servers.png")));
+
+        CoverPanel coverPanel;
+        rootChilds.add(new PanelTreeNode(rootNode, coverPanel = new CoverPanel() , _("Cover page & Identities"), Utils.loadCustomIcon("envelopes.png")));
+        serverPanel.setIdentitiesModel(coverPanel.getListModel());
         
         rootChilds.add(new PanelTreeNode(rootNode, new PluginPanel(), _("Plugins & JDBC"), Utils.loadIcon("development/Jar")));
-        //PROFILE: System.out.println("    After plugins panel: " + (-time + (time = System.currentTimeMillis())));
         
         PanelTreeNode tables = new PanelTreeNode(rootNode, 
                 new LabelOptionsPage(_("Please select on the left which table you want to edit.")),
                 _("Tables"),null);
         MessageFormat tableFormat = new MessageFormat(_("Table \"{0}\""));
         tables.setChildren(new PanelTreeNode[] {
-                new PanelTreeNode(tables, new GeneralTableSettingsPanel(), _("General settings"), Utils.loadIcon("general/Preferences")),
                 new PanelTreeNode(tables, new FmtEditorPanel<RecvFormat>(RecvFormat.values(), "recvfmt"), _("Received"), Utils.loadCustomIcon("received.gif"), tableFormat.format(new Object[] {_("Received")})),
                 new PanelTreeNode(tables, new FmtEditorPanel<JobFormat>(JobFormat.values(), "sentfmt"), _("Sent"), Utils.loadCustomIcon("sent.gif"), tableFormat.format(new Object[] {_("Sent")})),
                 new PanelTreeNode(tables, new FmtEditorPanel<JobFormat>(JobFormat.values(), "sendingfmt"), _("Transmitting"), Utils.loadCustomIcon("sending.gif"), tableFormat.format(new Object[] {_("Transmitting")})),
-                new PanelTreeNode(tables, new ArchivePanel(), _("Archive"), Utils.loadCustomIcon("archive.gif"), tableFormat.format(new Object[] {_("Archive")}))
+                new PanelTreeNode(tables, new FmtEditorPanel<QueueFileFormat>(QueueFileFormat.values(), "archiveFmt"), _("Archive"), Utils.loadCustomIcon("archive.gif"), tableFormat.format(new Object[] {_("Archive")}))
         });
         rootChilds.add(tables);
 
@@ -261,7 +267,6 @@ public class OptionsWin extends JDialog {
             rootChilds.add(advancedNode);
         }
         
-        //PROFILE: System.out.println("    After table panels: " + (-time + (time = System.currentTimeMillis())));
     }
     
     private JComponent getMainPanel() {
@@ -272,13 +277,15 @@ public class OptionsWin extends JDialog {
         mainTree.setRootVisible(false);
         mainTree.addTreeSelectionListener(new TreeSelectionListener() {
 
-            private PanelTreeNode lastSel = null;
-
             public void valueChanged(TreeSelectionEvent e) {
                 PanelTreeNode selNode = (PanelTreeNode)e.getPath().getLastPathComponent();
-                if (selNode != null && selNode != lastSel) {
-                    if (lastSel != null) {
-                        lastSel.getOptionsPage().getPanel().setVisible(false);
+                if (selNode != null && selNode != selectedNode) {
+                    if (selectedNode != null) {
+                        if (!selectedNode.getOptionsPage().pageIsHidden(OptionsWin.this)) {
+                            mainTree.setSelectionPath(e.getOldLeadSelectionPath());
+                            return;
+                        }
+                        selectedNode.getOptionsPage().getPanel().setVisible(false);
                     }
                     if (!selNode.settingsAndUILoaded) {
                         JComponent comp = selNode.getOptionsPage().getPanel();
@@ -290,8 +297,10 @@ public class OptionsWin extends JDialog {
                     } else {
                         selNode.getOptionsPage().getPanel().setVisible(true);
                     }
+                    selNode.getOptionsPage().pageIsShown(OptionsWin.this);
+                    
                     treeSelLabel.setText(selNode.getLongLabel());
-                    lastSel = selNode;
+                    selectedNode = selNode;
                 }
             }
         });
@@ -307,6 +316,28 @@ public class OptionsWin extends JDialog {
                 return this;
             } 
         });
+        mainTree.addMouseListener(new MouseAdapter() {
+            private void maybeShowPopup(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    TreePath path = mainTree.getPathForLocation(e.getX(), e.getY());
+                    if (path != null) {
+                        PanelTreeNode ptn = (PanelTreeNode)path.getLastPathComponent();
+                        if (ptn.getPopupMenu() != null) {
+                            mainTree.setSelectionPath(path);
+                            ptn.getPopupMenu().show((Component)e.getSource(), e.getX(), e.getY());
+                        }
+                    }
+                }
+            }
+            
+            public void mousePressed(MouseEvent e) {
+                maybeShowPopup(e);
+            }
+
+            public void mouseReleased(MouseEvent e) {
+                maybeShowPopup(e);
+            }
+        });
         mainTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         mainTree.setRowHeight(20);
         mainTree.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -314,7 +345,7 @@ public class OptionsWin extends JDialog {
         
         tabPanel = new JPanel(false);
         tabPanel.setLayout(new OverlayLayout(tabPanel));
-        addTreeToPanel(tabPanel, rootNode, null);
+        initializeTree(rootNode, null);
         tabPanel.setMinimumSize(new Dimension(0,0));
         //PROFILE: System.out.println("   After create tab panel: " + (-time + (time = System.currentTimeMillis())));
         
@@ -338,18 +369,20 @@ public class OptionsWin extends JDialog {
     }
 
     /**
-     * Adds the node and it children to the tabPanel and to optionsPages (if instanceof OptionsPage)
+     * Initializes the tree node and its children
      * @param tabPanel
      * @param node
      * @param pathToParent
      */
-    private void addTreeToPanel(JPanel tabPanel, PanelTreeNode node, TreePath pathToParent) {
+    private void initializeTree(PanelTreeNode node, TreePath pathToParent) {
+        if (node.getOptionsPage() != null)
+            node.getOptionsPage().initializeTreeNode(node, foToEdit);
         if (node.getChildren() != null) {
             TreePath pathToMe = (pathToParent == null) ? new TreePath(node) :
                 pathToParent.pathByAddingChild(node);
             
             for (PanelTreeNode child : node.getChildren()) {
-                addTreeToPanel(tabPanel, child, pathToMe);
+                initializeTree(child, pathToMe);
             }
             mainTree.expandPath(pathToMe);
         }
@@ -384,6 +417,11 @@ public class OptionsWin extends JDialog {
      * @return
      */
     public boolean saveSettings(FaxOptions foEdit) {
+        if (selectedNode != null) {
+            if (!selectedNode.getOptionsPage().pageIsHidden(this)) {
+                return false;
+            }
+        }
         
         if (!validateInput(rootNode)) {
             return false;
@@ -428,6 +466,22 @@ public class OptionsWin extends JDialog {
         }
         
         return true;
+    }
+    
+    private TreePath getPathToNode(TreeNode node) {
+        if (node == rootNode) {
+            return new TreePath(node);
+        } else {
+            return getPathToNode(node.getParent()).pathByAddingChild(node);
+        }
+    }
+    
+    public void selectNode(TreeNode node) {
+        mainTree.setSelectionPath(getPathToNode(node));
+    }
+    
+    public TreePath getSelectedPath() {
+        return mainTree.getSelectionPath();
     }
     
     public void focusComponent(Component comp) {

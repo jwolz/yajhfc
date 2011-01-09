@@ -53,7 +53,7 @@ public class RecvdFaxJobList extends AbstractHylaFaxJobList<RecvFormat> {
     }
     
     protected RecvdFaxJobList(HylaFaxListConnection parent) {
-        super(parent, parent.fo.recvfmt);
+        super(parent, parent.fo.getParent().recvfmt);
     }
     
 }

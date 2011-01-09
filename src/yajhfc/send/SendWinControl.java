@@ -19,6 +19,7 @@
 package yajhfc.send;
 
 import java.awt.Window;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -109,4 +110,16 @@ public interface SendWinControl {
      * @param modem
      */
     public void setModem(String modem);
+    /**
+     * Sets the server to use for the new fax
+     * @param serverToUse
+     * @throws IOException
+     */
+    void setServer(String serverToUse);
+    /**
+     * Sets the identity to use for the new fax
+     * @param identityToUse
+     * @throws IOException
+     */
+    void setIdentity(String identityToUse);
 }

@@ -57,7 +57,7 @@ import yajhfc.util.ClipboardPopup;
  * @author jonas
  *
  */
-public class CommonPanel extends AbstractOptionsPanel {
+public class CommonPanel extends AbstractOptionsPanel<FaxOptions> {
     static final Logger log = Logger.getLogger(CommonPanel.class.getName());
     
     static class LF_Entry {

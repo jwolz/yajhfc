@@ -57,7 +57,7 @@ public class SentFaxJobList extends AbstractHylaFaxJobList<JobFormat> {
     }
 
     protected SentFaxJobList(HylaFaxListConnection parent) {
-        super(parent, parent.fo.sentfmt);
+        super(parent, parent.fo.getParent().sentfmt);
     }
     
 }

@@ -61,4 +61,10 @@ public interface FaxJobList<T extends FmtItem> {
      * @return
      */
     public boolean isShowingErrorsSupported();
+    
+    /**
+     * Returns the FaxListConnection this fax job list belongs to
+     * @return
+     */
+    public FaxListConnection getParent();
 }

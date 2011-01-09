@@ -37,7 +37,7 @@ import yajhfc.util.fmtEditor;
  * @author jonas
  *
  */
-public class FmtEditorPanel<T extends FmtItem> implements OptionsPage {
+public class FmtEditorPanel<T extends FmtItem> implements OptionsPage<FaxOptions> {
 
     protected List<T> selection;
     protected fmtEditor<T> fmtEditor;
@@ -90,4 +90,15 @@ public class FmtEditorPanel<T extends FmtItem> implements OptionsPage {
         return true;
     }
 
+    public boolean pageIsHidden(OptionsWin optionsWin) {
+        return true;
+    }
+
+    public void pageIsShown(OptionsWin optionsWin) {
+        // NOP
+    }
+    
+    public void initializeTreeNode(PanelTreeNode node, FaxOptions foEdit) {
+        // NOP
+    };
 }
