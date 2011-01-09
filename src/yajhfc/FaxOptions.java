@@ -517,7 +517,7 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
         if (p.containsKey("host")) {
             // Copy server settings over
             ServerOptions so = new ServerOptions(this);
-            so.name = "Default";
+            so.name = Utils._("Default");
             so.loadFromProperties(p);
             servers.add(so);
         }
@@ -525,7 +525,7 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
         if (p.containsKey("FromName")) {
             // Copy identity over
             SenderIdentity si = new SenderIdentity(this);
-            si.name = "Default";
+            si.name = Utils._("Default");
             si.loadFromProperties(p);
             identities.add(si);
         }

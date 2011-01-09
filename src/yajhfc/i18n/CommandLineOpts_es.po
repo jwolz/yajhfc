@@ -38,7 +38,12 @@ msgstr "DESTINATARIO"
 
 # Untranslated text: Specifies a recipient to send the fax to. You may specify either a fax number or detailed cover page information (see the FAQ for the format in the latter case). You may specify --recipient multiple times for multiple recipients.
 msgid "recipient-desc"
-msgstr "Especifica el destinatario al que se va a enviar un fax. Puede especificar el número de fax o bien información detallada de la página de portada (consulte la FAQ para obtener información del formato si elige esta última opción). Puede especificar varios --recipient en el caso de que haya múltiples destinatarios."
+msgstr ""
+"Especifica el destinatario al que se va a enviar un fax. Puede especificar "
+"el número de fax o bien información detallada de la página de portada "
+"(consulte la FAQ para obtener información del formato si elige esta última "
+"opción). Puede especificar varios --recipient en el caso de que haya "
+"múltiples destinatarios."
 
 # Untranslated text: Use a cover page for sending a fax.
 msgid "use-cover-desc"
@@ -78,7 +83,9 @@ msgstr "ARCHIVO DE REGISTRO"
 
 # Untranslated text: The log file to log debug information to (if not specified, use stdout).
 msgid "logfile-desc"
-msgstr "El archivo de registro donde almacenar la información de depuración (si no se especifica, utilizar la salida estándar \"stdout\")."
+msgstr ""
+"El archivo de registro donde almacenar la información de depuración (si no "
+"se especifica, utilizar la salida estándar \"stdout\")."
 
 # Untranslated text: LOGFILE
 msgid "appendlogfile-arg"
@@ -86,11 +93,14 @@ msgstr "ARCHIVO DE REGISTRO"
 
 # Untranslated text: Append debug information to the given log file.
 msgid "appendlogfile-desc"
-msgstr "Añadir la información de depuración al archivo de registro especificado."
+msgstr ""
+"Añadir la información de depuración al archivo de registro especificado."
 
 # Untranslated text: If there is no already running instance of YajHFC, launch a new instance and terminate this instance (after submitting the fax to send).
 msgid "background-desc"
-msgstr "Si no hay ninguna instancia en ejecución de YajHFC, lanzar una nueva instancia y finalizar esta instancia (después de remitir el fax para enviar)."
+msgstr ""
+"Si no hay ninguna instancia en ejecución de YajHFC, lanzar una nueva "
+"instancia y finalizar esta instancia (después de remitir el fax para enviar)."
 
 # Untranslated text: Do not close YajHFC after submitting the fax.
 msgid "noclose-desc"
@@ -98,7 +108,10 @@ msgstr "No cerrar YajHFC después de enviar el fax."
 
 # Untranslated text: Sets the tab to display on startup. Specify 0 or R for the "Received", 1 or S for the "Sent" or 2 or T for the "Transmitting" tab.
 msgid "showtab-desc"
-msgstr "Define la pestaña para mostrar al inicio. Especifique 0 o R para la pestaña de \"Recibidos\", 1 o S para la pestaña de \"Enviados\" o 2 o T para la pestaña de \"Transmisión\"."
+msgstr ""
+"Define la pestaña para mostrar al inicio. Especifique 0 o R para la pestaña "
+"de \"Recibidos\", 1 o S para la pestaña de \"Enviados\" o 2 o T para la "
+"pestaña de \"Transmisión\"."
 
 # Untranslated text: JARFILE
 msgid "loadplugin-arg"
@@ -114,7 +127,9 @@ msgstr "ARCHIVO JAR"
 
 # Untranslated text: Specifies the location of a JDBC driver JAR file to load.
 msgid "loaddriver-desc"
-msgstr "Especifica la ubicación de un archivo jar para el controlador JDBC para cargar."
+msgstr ""
+"Especifica la ubicación de un archivo jar para el controlador JDBC para "
+"cargar."
 
 # Untranslated text: Disables loading plugins from the plugin.lst file.
 msgid "no-plugins-desc"
@@ -130,7 +145,8 @@ msgstr "DIRECTORIO"
 
 # Untranslated text: Sets the configuration directory to use instead of ~/.yajhfc
 msgid "configdir-desc"
-msgstr "Define la configuración del directorio para utilizar en lugar de ~/.yajhfc"
+msgstr ""
+"Define la configuración del directorio para utilizar en lugar de ~/.yajhfc"
 
 # Untranslated text: COLUMNS
 msgid "help-arg"
@@ -146,11 +162,17 @@ msgstr "Omite la comprobación de la versión de Java al inicio."
 
 # Untranslated text: Do not wait for the send window to be closed by the user. If YajHFC is invoked multiple times before the user closes the send window, the submitted documents are added to the list of files there. This option implies --background.
 msgid "no-wait-desc"
-msgstr "No esperar a que el usuario cierre la ventana de envío. Si se llama a YajHFC varias veces antes de que el usuario cierre la ventana de envío, se añaden los documentos enviados a la lista de archivos. Esta opción implica --background. "
+msgstr ""
+"No esperar a que el usuario cierre la ventana de envío. Si se llama a YajHFC "
+"varias veces antes de que el usuario cierre la ventana de envío, se añaden "
+"los documentos enviados a la lista de archivos. Esta opción implica --"
+"background. "
 
 # Untranslated text: Sets the initial window state of the main window to _N_ormal, _M_aximized, _I_conified (minimized) or minimized to _T_ray.
 msgid "windowstate-desc"
-msgstr "Establece el estado inicial de la ventana principal a _N_ormal, _M_aximizada, M_i_nimizada) o minimizada en la _B_andeja del sistema."
+msgstr ""
+"Establece el estado inicial de la ventana principal a _N_ormal, "
+"_M_aximizada, M_i_nimizada) o minimizada en la _B_andeja del sistema."
 
 # Untranslated text: MODEM
 msgid "modem-arg"
@@ -158,7 +180,9 @@ msgstr "MÓDEM"
 
 # Untranslated text: Sets the modem to send the fax. Specify either the modem's name (e.g. ttyS0) or \"any\" to use any modem.
 msgid "modem-desc"
-msgstr "Establece el módem a utilizar para enviar el fax. Especificar el nombre del módem (p. ej. ttyS0) o \"any\" para usar cualquier módem."
+msgstr ""
+"Establece el módem a utilizar para enviar el fax. Especificar el nombre del "
+"módem (p. ej. ttyS0) o \"any\" para usar cualquier módem."
 
 # Untranslated text: KEY=VALUE
 msgid "override-setting-arg"
@@ -166,5 +190,30 @@ msgstr "CLAVE=VALOR"
 
 # Untranslated text: Overrides the value of the specified setting for this session. The overridden setting is not saved.
 msgid "override-setting-desc"
-msgstr "Sustituye el valor del ajuste especificado para esta sesión. El ajuste sustituido no se guardará."
+msgstr ""
+"Sustituye el valor del ajuste especificado para esta sesión. El ajuste "
+"sustituido no se guardará."
 
+# Untranslated text: FILE
+msgid "print-jobids-arg"
+msgstr ""
+
+# Untranslated text: Prints the job IDs of newly sent faxes to stdout or to the specified file. One job per line is printed, in the format \"yyyy-mm-dd hh:mm:ss NEW_FAXJOB jobid\".
+msgid "print-jobids-desc"
+msgstr ""
+
+# Untranslated text: SERVER
+msgid "server-arg"
+msgstr ""
+
+# Untranslated text: Sets the server to send the fax. Specify either the server's name (e.g. \"My server\"), the server's list index (0 is the first element) or the ID in the form \"#ID\".
+msgid "server-desc"
+msgstr ""
+
+# Untranslated text: IDENTITY
+msgid "identity-arg"
+msgstr ""
+
+# Untranslated text: Sets the sender identity to use when sending the fax. Specify either the identity's name (e.g. \"My identity\"), the identity's list index (0 is the first element) or the ID in the form \"#ID\".
+msgid "identity-desc"
+msgstr ""
