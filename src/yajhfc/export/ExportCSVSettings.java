@@ -48,7 +48,7 @@ public class ExportCSVSettings extends CSVSettings {
 
 	private void putAvailField(Map<String, SettingField> availableFieldsMap, String name) {
 		try {
-			Field f = getClass().getDeclaredField(name);
+			Field f = this.getClass().getField(name);
 			availableFieldsMap.put(name, new ReflectionField(f));
 		} catch (Exception e) {
 			Logger.getLogger(ExportCSVSettings.class.getName()).log(Level.WARNING, "Error reading fields", e);
