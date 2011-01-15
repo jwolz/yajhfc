@@ -92,6 +92,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import yajhfc.export.ExportCSVAction;
+import yajhfc.export.ExportXMLAction;
 import yajhfc.file.FormattedFile;
 import yajhfc.file.MultiFileConvFormat;
 import yajhfc.file.MultiFileConverter;
@@ -219,7 +220,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     // Actions:
     protected Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward, actAdminMode;
     protected Action actRefresh, actResend, actPrintTable, actSuspend, actResume, actClipCopy, actShowRowNumbers, actAdjustColumns, actReconnect, actEditToolbar;
-    protected Action actSaveAsPDF, actSaveAsTIFF, actUpdateCheck, actAnswerCall, actSearchFax, actViewLog, actLogConsole, actExportCSV; 
+    protected Action actSaveAsPDF, actSaveAsTIFF, actUpdateCheck, actAnswerCall, actSearchFax, actViewLog, actLogConsole, actExportCSV, actExportXML; 
     protected StatusBarResizeAction actAutoSizeStatus;
     protected ActionEnabler actChecker;
     protected Map<String,Action> availableActions = new HashMap<String,Action>();
@@ -1415,6 +1416,9 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         actExportCSV = new ExportCSVAction(this);
         putAvailableAction("ExportCSV", actExportCSV);
         
+        actExportXML = new ExportXMLAction(this);
+        putAvailableAction("ExportXML", actExportCSV);
+        
         actChecker = new ActionEnabler();
     }
     
@@ -2249,6 +2253,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             menuExtras.add(new JMenuItem(actClipCopy));
             menuExtras.add(new JMenuItem(actPrintTable));
             menuExtras.add(new JMenuItem(actExportCSV));
+            menuExtras.add(new JMenuItem(actExportXML));
             menuExtras.add(new JMenuItem(actSearchFax));
             menuExtras.addSeparator();
             if (!hideMenusForMac) {
