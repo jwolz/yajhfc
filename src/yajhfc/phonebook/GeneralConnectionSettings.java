@@ -1,6 +1,7 @@
 package yajhfc.phonebook;
 
 import java.util.Arrays;
+import java.util.Map;
 
 /*
  * YAJHFC - Yet another Java Hylafax client
@@ -54,10 +55,10 @@ public class GeneralConnectionSettings extends AbstractConnectionSettings {
     }
     
     @Override
-    protected void readAvailableFields() {
-        super.readAvailableFields();
+    protected void readAvailableFields(Map<String, SettingField> availableFieldsMap) {
+        super.readAvailableFields(availableFieldsMap);
         for (SettingField field : entryFields) {
-            availableFields.put(field.getName(), field);
+			availableFieldsMap.put(field.getName(), field);
         }
     }
 

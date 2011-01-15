@@ -412,6 +412,11 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
      */
     public int socketTimeout = 90000;
     
+    /**
+     * The settings used for "save table as CSV"
+     */
+    public String csvExportSettings = "";
+    
     public FaxOptions() {
         super(null);
         

@@ -20,6 +20,7 @@ package yajhfc.phonebook;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -46,18 +47,33 @@ public abstract class AbstractConnectionSettings {
         return (fieldName == null || fieldName.length() == 0 || fieldName.equals(noField));
     }
     
-
-    protected final Map<String,SettingField> availableFields = new TreeMap<String,SettingField>();
-    
+    protected static final Map<Class<? extends AbstractConnectionSettings>, Map<String,SettingField>> availableFieldMaps = new HashMap<Class<? extends AbstractConnectionSettings>, Map<String,SettingField>>();
+        
     public AbstractConnectionSettings() {
-        readAvailableFields();
+        super();
     }
 
     /**
-     * Reads all available *public* fields using reflection.
+     * Returns a map containing the available fields for this class.
+     * The returned map is shared between instances of the same class. 
+     * If a map does not already exist, a new one is built using readAvailableFields()
+     * @return
      */
-    protected void readAvailableFields() {
-        availableFields.clear();
+    protected Map<String,SettingField> getAvailableFieldsMap() {
+    	Map<String,SettingField> availableFields = availableFieldMaps.get(getClass());
+    	if (availableFields == null) {
+    		availableFields = new TreeMap<String,SettingField>();
+    		availableFieldMaps.put(getClass(), availableFields);
+    		readAvailableFields(availableFields);
+    	}
+		return availableFields;
+	}
+
+	/**
+     * Reads all available *public* fields using reflection and saves them in the specified map
+     */
+    protected void readAvailableFields(Map<String, SettingField> availableFieldsMap) {
+		availableFieldsMap.clear();
         
         for (Field f : getClass().getFields()) {
             if (Modifier.isStatic(f.getModifiers()))
@@ -66,24 +82,24 @@ public abstract class AbstractConnectionSettings {
             if (Password.class.isAssignableFrom(f.getType())) {
                 SettingField sf1 = new PasswordField(f, true);
                 SettingField sf2 = new PasswordField(f, false);
-                availableFields.put(sf1.getName(), sf1);
-                availableFields.put(sf2.getName(), sf2);
+                availableFieldsMap.put(sf1.getName(), sf1);
+                availableFieldsMap.put(sf2.getName(), sf2);
             } else {
                 if (Modifier.isFinal(f.getModifiers()))
                     continue;
 
-                availableFields.put(f.getName(), new ReflectionField(f));
+                availableFieldsMap.put(f.getName(), new ReflectionField(f));
             }
         }     
     }
 
     
     public Set<String> getAvailableFields() {
-        return availableFields.keySet();
+        return getAvailableFieldsMap().keySet();
     }
     
     public void setField(String fieldName, Object value) throws IllegalArgumentException, IllegalAccessException {
-        SettingField f = availableFields.get(fieldName);
+        SettingField f = getAvailableFieldsMap().get(fieldName);
         if (f == null) {
             throw new IllegalArgumentException("Field " + fieldName + " not found.");
         }
@@ -91,7 +107,7 @@ public abstract class AbstractConnectionSettings {
     }
     
     public Object getField(String fieldName) throws IllegalArgumentException, IllegalAccessException {
-        SettingField f = availableFields.get(fieldName);
+        SettingField f = getAvailableFieldsMap().get(fieldName);
         if (f == null) {
             throw new IllegalArgumentException("Field " + fieldName + " not found.");
         }
@@ -102,7 +118,7 @@ public abstract class AbstractConnectionSettings {
         if (other == null)
             return;
 
-        for (SettingField f : availableFields.values()) {
+        for (SettingField f : getAvailableFieldsMap().values()) {
             if (f.isFieldSaved()) {
                 try {
                     f.set(this, f.get(other));
@@ -115,7 +131,7 @@ public abstract class AbstractConnectionSettings {
     
     public String saveToString() {
         StringBuilder builder = new StringBuilder();
-        for (SettingField f : availableFields.values()) {    
+        for (SettingField f : getAvailableFieldsMap().values()) {    
             if (f.isFieldSaved()) {
                 try {
                     String val;
@@ -147,7 +163,7 @@ public abstract class AbstractConnectionSettings {
             String fieldName = line.substring(0, pos);
             String value = Utils.unEscapeChars(line.substring(pos+1), separator, escapeChar);
             try {
-                SettingField f = availableFields.get(fieldName);
+                SettingField f = getAvailableFieldsMap().get(fieldName);
                 if (f == null) {
                     log.warning("Field not found: " + fieldName);
                     continue;

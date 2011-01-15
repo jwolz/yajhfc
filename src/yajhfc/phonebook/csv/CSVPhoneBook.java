@@ -102,7 +102,7 @@ public class CSVPhoneBook extends PhoneBook {
         }
         
         JFileChooser fileChooser = new SafeJFileChooser();
-        FileFilter csvFilter = new ExampleFileFilter(new String[] { "txt", "csv" }, "CSV files");
+        FileFilter csvFilter = new ExampleFileFilter(new String[] { "txt", "csv" }, Utils._("CSV files"));
         fileChooser.addChoosableFileFilter(csvFilter);
         fileChooser.setFileFilter(csvFilter);
         
