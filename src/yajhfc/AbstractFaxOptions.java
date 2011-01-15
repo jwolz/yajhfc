@@ -30,6 +30,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -395,5 +396,47 @@ public abstract class AbstractFaxOptions implements PropertiesSerializable {
             log.fine("Not a parameterized type: " + genType + " for field " + f);
             return null;
         }
+    }
+    
+    /**
+     * Copies this class's public attributes from the specified other class
+     * @param other
+     */
+    @SuppressWarnings("unchecked")
+    public void copyFrom(AbstractFaxOptions other) {
+        if (!this.getClass().isAssignableFrom(other.getClass())) {
+            throw new IllegalArgumentException("Can only copy attributes from the same class or sub classes.");
+        }
+        
+        for (Field f : this.getClass().getFields()) {
+            if (Modifier.isStatic(f.getModifiers()))
+                continue;
+            
+            try {
+                final Class<?> fcls = f.getType();
+                // For lists and maps, create a shallow copy of its contents
+                if (Collection.class.isAssignableFrom(fcls)) {
+                    Collection ourList = (Collection)f.get(this);
+                    Collection otherList = (Collection)f.get(other);
+                    ourList.clear();
+                    ourList.addAll(otherList);
+                } else if (Map.class.isAssignableFrom(fcls)) {
+                    Map ourMap = (Map)f.get(this);
+                    Map otherMap = (Map)f.get(other);
+                    ourMap.clear();
+                    ourMap.putAll(otherMap);
+                } else if (Password.class.isAssignableFrom(fcls)) {
+                    Password ourPwd = (Password)f.get(this);
+                    Password otherPwd = (Password)f.get(other);
+                    ourPwd.setObfuscatedPassword(otherPwd.getObfuscatedPassword());
+                } else {
+                    // For the rest of types, just create a shallow copy
+                    f.set(this, f.get(other));
+                }
+            } catch (Exception e) {
+                log.log(Level.SEVERE, "Error copying field " + f, e);
+            } 
+        }
+        
     }
 }

@@ -191,27 +191,4 @@ public class SenderIdentity extends IDAndNameOptions implements PBEntryFieldCont
         super(null, toClone.parent, toClone.id);
         copyFrom(toClone);
     }
-    
-    public void copyFrom(SenderIdentity toClone) {
-        this.FromCompany = toClone.FromCompany;
-        this.FromCountry = toClone.FromCountry;
-        this.FromDepartment = toClone.FromDepartment;
-        this.FromEMail = toClone.FromEMail;
-        this.FromFaxNumber = toClone.FromFaxNumber;
-        this.FromGivenName = toClone.FromGivenName;
-        this.FromLocation = toClone.FromLocation;
-        this.FromName = toClone.FromName;
-        this.FromPosition = toClone.FromPosition;
-        this.FromState = toClone.FromState;
-        this.FromStreet = toClone.FromStreet;
-        this.FromTitle = toClone.FromTitle;
-        this.FromVoiceNumber = toClone.FromVoiceNumber;
-        this.FromWebsite = toClone.FromWebsite;
-        this.FromZIPCode = toClone.FromZIPCode;
-        this.id = toClone.id;
-        this.name = toClone.name;        
-        
-        this.defaultCover = toClone.defaultCover;
-        this.useCustomDefaultCover = toClone.useCustomDefaultCover;
-    }
 }

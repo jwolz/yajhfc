@@ -178,34 +178,6 @@ public class ServerOptions extends IDAndNameOptions {
         copyFrom(toClone);
     }
     
-    public void copyFrom(ServerOptions toClone) {
-        this.AdminPassword.setObfuscatedPassword(toClone.AdminPassword.getObfuscatedPassword());
-        this.archiveLocation = toClone.archiveLocation;
-        this.askAdminPassword = toClone.askAdminPassword;
-        this.askPassword = toClone.askPassword;
-        this.askUsername = toClone.askUsername;
-        this.customModems.clear();
-        this.customModems.addAll(toClone.customModems);
-        this.dateOffsetSecs = toClone.dateOffsetSecs;
-        this.defaultIdentity = toClone.defaultIdentity;
-        this.directAccessSpoolPath = toClone.directAccessSpoolPath;
-        this.faxListConnectionType = toClone.faxListConnectionType;
-        this.host = toClone.host;
-        this.hylaFAXCharacterEncoding = toClone.hylaFAXCharacterEncoding;
-        this.id = toClone.id;
-        this.name = toClone.name;
-        this.pass.setObfuscatedPassword(toClone.pass.getObfuscatedPassword());
-        this.pasv = toClone.pasv;
-        this.persistenceConfig = toClone.persistenceConfig;
-        this.persistenceMethod = toClone.persistenceMethod;
-        this.port = toClone.port;
-        this.showArchive = toClone.showArchive;
-        this.tzone = toClone.tzone;
-        this.useCustomModems = toClone.useCustomModems;
-        this.useDisconnectedMode = toClone.useDisconnectedMode;
-        this.user = toClone.user;
-    }
-    
     @Override
     public String toString() {
         return name + " (" + user + '@' + host + ')';
