@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://yajhfc.berlios.de/schema/phonebook"
+	elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://yajhfc.berlios.de/schema/phonebook">
+
+    <element name="phonebook" type="tns:PhoneBook" />
+    
+    <complexType name="PhoneBookEntry">
+	<sequence>
+		<element name="givenname" type="string" minOccurs="0" maxOccurs="1" />
+		<element name="surname" type="string" minOccurs="0" maxOccurs="1" />
+		<element name="title" type="string" minOccurs="0" maxOccurs="1" />
+		<element name="company" type="string" minOccurs="0" maxOccurs="1" />
+		<element name="position" type="string" minOccurs="0" maxOccurs="1" />
+		<element name="department" type="string" minOccurs="0" maxOccurs="1" />
+		<element name="street" type="string" minOccurs="0" maxOccurs="1" />
+		<element name="location" type="string" minOccurs="0" maxOccurs="1" />
+		<element name="country" type="string" minOccurs="0" maxOccurs="1" />
+		<element name="zipcode" type="string" minOccurs="0" maxOccurs="1" />
+		<element name="state" type="string" minOccurs="0" maxOccurs="1" />
+		<element name="email" type="string" minOccurs="0" maxOccurs="1" />
+		<element name="website" type="string" minOccurs="0" maxOccurs="1" />
+		<element name="faxnumber" type="string" minOccurs="0" maxOccurs="1" />
+		<element name="voicenumber" type="string" minOccurs="0" maxOccurs="1" />
+		<element name="comment" type="string" minOccurs="0" maxOccurs="1" /> 
+	</sequence>
+    </complexType>
+    
+    <complexType name="DistributionList">
+    	<sequence>
+    		<element name="name" type="string" maxOccurs="1" minOccurs="1"/>
+    		<element name="items" type="tns:PhoneBook" maxOccurs="1" minOccurs="1"/>
+    	</sequence>
+    </complexType>
+
+    <complexType name="PhoneBook">
+    		<choice maxOccurs="unbounded" minOccurs="0">
+    			<element name="entry" type="tns:PhoneBookEntry" />
+    			<element name="distributionlist" type="tns:DistributionList"  />
+    		</choice>
+    </complexType>
+</schema>

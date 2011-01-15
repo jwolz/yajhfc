@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://yajhfc.berlios.de/schema/tableexport" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://yajhfc.berlios.de/schema/tableexport">
+    <element name="faxlist">
+    	<complexType>
+    		<sequence>
+    			<element name="columns" maxOccurs="1" minOccurs="1">
+    				<complexType>
+    					<sequence>
+    						<element name="column" maxOccurs="unbounded" minOccurs="0" type="tns:Column">
+    						</element>
+    					</sequence>
+    				</complexType>
+    			</element>
+    			<element name="contents" maxOccurs="1" minOccurs="1">
+    				<complexType>
+    					<sequence>
+    						<element name="row" maxOccurs="unbounded"
+    							minOccurs="0" type="tns:Row">
+    						</element>
+    					</sequence>
+    				</complexType>
+    			</element>
+    		</sequence>
+    		<attribute name="tableType" type="tns:TableType" use="required"></attribute>
+    	</complexType>
+    </element>
+
+    <simpleType name="TableType">
+    	<restriction base="string">
+    		<enumeration value="RECEIVED"></enumeration>
+    		<enumeration value="SENT"></enumeration>
+    		<enumeration value="SENDING"></enumeration>
+    		<enumeration value="ARCHIVE"></enumeration>
+    	</restriction>
+    </simpleType>
+    <simpleType name="DataType">
+    	<restriction base="string">
+    		<enumeration value="String"></enumeration>
+    		<enumeration value="Integer"></enumeration>
+    		<enumeration value="Long"></enumeration>
+    		<enumeration value="Float"></enumeration>
+    		<enumeration value="Double"></enumeration>
+    		<enumeration value="Date"></enumeration>
+    		<enumeration value="Boolean"></enumeration>
+    	</restriction>
+    </simpleType>
+    <complexType name="Column">
+    	<simpleContent>
+    		<extension base="string">
+    			<attribute use="required" name="name" type="string"></attribute>
+    			<attribute use="required" name="longDescription"
+    				type="string">
+    			</attribute>
+    			<attribute use="required" name="visible"
+    				type="boolean">
+    			</attribute>
+    			<attribute use="required" name="dataType"
+    				type="tns:DataType">
+    			</attribute>
+    		</extension>
+    	</simpleContent>
+    </complexType>
+    <complexType name="Row">
+    	<sequence>
+    		<element minOccurs="0" maxOccurs="unbounded" name="cell" type="tns:Cell">
+    		</element>
+    	</sequence>
+    	<attribute use="required" name="id" type="string"></attribute>
+    </complexType>
+    <complexType name="Cell">
+    	<simpleContent>
+    		<extension base="string">
+    			<attribute use="optional" name="rawValue"
+    				type="string">
+    			</attribute>
+    		</extension>
+    	</simpleContent>
+    </complexType>
+</schema>

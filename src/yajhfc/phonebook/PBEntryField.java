@@ -46,7 +46,7 @@ public enum PBEntryField implements FilterKey {
     ;
     // Classes to adapt when a field is added/removed:
     // - MarkupFaxcover
-    // - FaxOptions
+    // - SenderIdentity
     // - LDAPSettings
     
     private final String desc;
