@@ -125,7 +125,8 @@ public class HylaClientManager {
             synchronized (client) {
                 //client.setDebug(Utils.debugMode);
                 client.setSocketTimeout(myopts.getParent().socketTimeout);
-                client.setCharacterEncoding(myopts.hylaFAXCharacterEncoding);
+                // XXX remove
+                //client.setCharacterEncoding(myopts.hylaFAXCharacterEncoding);
                 try {
                     client.open(myopts.host, myopts.port);
                     if (Utils.debugMode) {

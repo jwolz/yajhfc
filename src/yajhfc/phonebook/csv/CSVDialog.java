@@ -25,6 +25,7 @@ import info.clearthought.layout.TableLayoutConstraints;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -74,6 +75,12 @@ public class CSVDialog extends JDialog {
     public boolean clickedOK = false;
     
     protected boolean eventLock = false;
+    
+    public CSVDialog(Frame owner, CSVSettings settings, String title) {
+        super(owner, title, true);
+        this.settings = settings;
+        initialize();
+    }
     
     public CSVDialog(Dialog owner, CSVSettings settings) {
         super(owner, MessageFormat.format(Utils._("Open CSV file {0}"), Utils.shortenFileNameForDisplay(settings.fileName, 30)), true);

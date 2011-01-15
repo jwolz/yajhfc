@@ -91,6 +91,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import yajhfc.export.ExportCSVAction;
 import yajhfc.file.FormattedFile;
 import yajhfc.file.MultiFileConvFormat;
 import yajhfc.file.MultiFileConverter;
@@ -218,7 +219,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     // Actions:
     protected Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward, actAdminMode;
     protected Action actRefresh, actResend, actPrintTable, actSuspend, actResume, actClipCopy, actShowRowNumbers, actAdjustColumns, actReconnect, actEditToolbar;
-    protected Action actSaveAsPDF, actSaveAsTIFF, actUpdateCheck, actAnswerCall, actSearchFax, actViewLog, actLogConsole; 
+    protected Action actSaveAsPDF, actSaveAsTIFF, actUpdateCheck, actAnswerCall, actSearchFax, actViewLog, actLogConsole, actExportCSV; 
     protected StatusBarResizeAction actAutoSizeStatus;
     protected ActionEnabler actChecker;
     protected Map<String,Action> availableActions = new HashMap<String,Action>();
@@ -1411,6 +1412,9 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         actSaveAsTIFF = new SaveToFormatAction(MultiFileConvFormat.TIFF);
         putAvailableAction("SaveAsTIFF", actSaveAsTIFF);
         
+        actExportCSV = new ExportCSVAction(this);
+        putAvailableAction("ExportCSV", actExportCSV);
+        
         actChecker = new ActionEnabler();
     }
     
@@ -1422,11 +1426,11 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     }
     
     @SuppressWarnings("unchecked")
-    TooltipJTable<? extends FmtItem> getSelectedTable() {
+    public TooltipJTable<? extends FmtItem> getSelectedTable() {
         return (TooltipJTable)((JScrollPane)tabMain.getSelectedComponent()).getViewport().getView();
     }
     @SuppressWarnings("unchecked")
-    TooltipJTable<? extends FmtItem> getTableByIndex(int index) {
+    public TooltipJTable<? extends FmtItem> getTableByIndex(int index) {
         return (TooltipJTable)((JScrollPane)tabMain.getComponent(index)).getViewport().getView();
     }
     
@@ -2244,6 +2248,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             menuExtras.addSeparator();
             menuExtras.add(new JMenuItem(actClipCopy));
             menuExtras.add(new JMenuItem(actPrintTable));
+            menuExtras.add(new JMenuItem(actExportCSV));
             menuExtras.add(new JMenuItem(actSearchFax));
             menuExtras.addSeparator();
             if (!hideMenusForMac) {
@@ -2549,19 +2554,28 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     static class RefreshCompleteHider extends SwingFaxListConnectionListener {
         final ProgressUI progressUI;
         final FaxListConnection parent;
+        final Runnable refreshCompleteAction;
         
         @Override
         protected void refreshCompleteSwing(RefreshKind refreshKind, boolean success) {
             if (refreshKind != RefreshKind.STATUS) {
                 progressUI.close();
                 parent.removeFaxListConnectionListener(this);
+                if (refreshCompleteAction != null) {
+                	refreshCompleteAction.run();
+                }
             }
         }
         
         public RefreshCompleteHider(ProgressUI progressUI, FaxListConnection parent) {
+        	this(progressUI, parent, null);
+        }
+        
+        public RefreshCompleteHider(ProgressUI progressUI, FaxListConnection parent, Runnable refreshCompleteAction) {
             super(false,false,true);
             this.progressUI = progressUI;
             this.parent = parent;
+            this.refreshCompleteAction = refreshCompleteAction;
         }
     }
     
@@ -2584,7 +2598,40 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 if (Utils.debugMode) {
                     log.info("Begin login (wantAdmin=" + wantAdmin + ")");
                 }
-                connection.addFaxListConnectionListener(new RefreshCompleteHider(tablePanel, connection));
+                
+                // UI updates after we have a list of faxes:
+                Runnable refreshCompleteAction = new Runnable() {
+                    public void run() {
+
+                        reloadTableColumnSettings();
+
+                        menuView.setEnabled(true);
+                        // Re-check menu View state:
+                        menuViewListener.reConnected();
+
+                        actSend.setEnabled(true);
+                        actPoll.setEnabled(true);
+                        actAnswerCall.setEnabled(true);
+
+                        setActReconnectState(false);
+
+                        sendReady = SendReadyState.Ready;
+                        MainWin.this.setEnabled(true);
+
+                        log.info("Finished init work after refresh complete!");
+                        if (loginAction != null) {
+                            if (Utils.debugMode) {
+                                log.info("Doing login action: " + loginAction.getClass().getName());
+                            }
+                            loginAction.run();
+                            if (Utils.debugMode) {
+                                log.info("Finished login action.");
+                            }
+                        }
+                    } 
+                };
+                
+                connection.addFaxListConnectionListener(new RefreshCompleteHider(tablePanel, connection, refreshCompleteAction));
                 if (!connection.connect(wantAdmin)) {
                     log.info("Login failed, bailing out");
                     doErrorCleanup();
@@ -2595,7 +2642,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                     log.info("Login succeeded. -- begin init work.");
                 }
                 
-                // Final UI updates:
+                // Final UI updates after we have the connection established:
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
                         if (tablePanel.isShowingProgress())
@@ -2613,34 +2660,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                             Color defStatusBackground = getDefStatusBackground();
                             textStatus.setBackground(new Color(Math.min(defStatusBackground.getRed() + 40, 255), defStatusBackground.getGreen(), defStatusBackground.getBlue()));
                         } 
-
-                        reloadTableColumnSettings();
-
-                        menuView.setEnabled(true);
-                        // Re-check menu View state:
-                        menuViewListener.reConnected();
-
-                        actSend.setEnabled(true);
-                        actPoll.setEnabled(true);
-                        actAnswerCall.setEnabled(true);
-
-                        setActReconnectState(false);
-
-                        sendReady = SendReadyState.Ready;
-                        MainWin.this.setEnabled(true);
-
-                        if (Utils.debugMode) {
-                            log.info("Finished init work!");
-                        }
-                        if (loginAction != null) {
-                            if (Utils.debugMode) {
-                                log.info("Doing login action: " + loginAction.getClass().getName());
-                            }
-                            loginAction.run();
-                            if (Utils.debugMode) {
-                                log.info("Finished login action.");
-                            }
-                        }
+                        log.fine("Finished init work after connect!");
                     } 
                 });
             } catch (Exception e) {
