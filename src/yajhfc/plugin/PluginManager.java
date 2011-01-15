@@ -56,9 +56,22 @@ import yajhfc.util.TransactFileOutputStream;
  */
 public class PluginManager {
     
+	/**
+	 * Normal startup
+	 */
     public static final int STARTUP_MODE_NORMAL = 0;
+    /**
+     * Startup in --no-gui mode
+     */
     public static final int STARTUP_MODE_NO_GUI = 1;
+    /**
+     * Startup in "send only" mode, i.e. only the send dialog is shown and YajHFC
+     * closes again as soon as the fax has been sent.
+     */
     public static final int STARTUP_MODE_SEND_ONLY = 2;
+    /**
+     * The plugin is loaded while YajHFC is running.
+     */
     public static final int STARTUP_MODE_LOAD_WHILE_RUNNING = 3;
     
     private static final Logger log = Logger.getLogger(PluginManager.class.getName());
