@@ -10,6 +10,7 @@ import java.util.TreeMap;
 
 import javax.print.attribute.Attribute;
 
+import yajhfc.file.FileFormat;
 import yajhfc.file.MultiFileConvFormat;
 import yajhfc.model.FmtItemList;
 import yajhfc.model.JobFormat;
@@ -418,9 +419,15 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
     public String csvExportSettings = "";
     
     /**
-     * The path last used for "save table as XML"
+     * The path last used for "save table as"
      */
-    public String lastExportAsXMLPath = "";
+    public String lastExportSavePath = "";
+    
+    /**
+     * The format last used for "save table as"
+     */
+    public FileFormat lastExportFormat = FileFormat.CSV;
+    
     
     /**
      * Show the quick search bar in MainWin?

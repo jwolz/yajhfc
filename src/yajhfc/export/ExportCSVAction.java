@@ -18,59 +18,29 @@
  */
 package yajhfc.export;
 
-import java.awt.event.ActionEvent;
 import java.io.File;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.swing.Action;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.table.TableModel;
 
 import yajhfc.MainWin;
 import yajhfc.Utils;
 import yajhfc.phonebook.csv.CSVDialog;
-import yajhfc.util.ExampleFileFilter;
-import yajhfc.util.ExcDialogAbstractAction;
 import yajhfc.util.ExceptionDialog;
-import yajhfc.util.SafeJFileChooser;
 import au.com.bytecode.opencsv.CSVWriter;
 
 /**
  * @author jonas
  *
  */
-public class ExportCSVAction extends ExcDialogAbstractAction {
-	protected final MainWin parent;
-	private JFileChooser fileChooser;
+public class ExportCSVAction {
 	
-	private JFileChooser getFileChooser() {
-		if (fileChooser == null) {
-			fileChooser = new SafeJFileChooser();
-			fileChooser.resetChoosableFileFilters();
-			FileFilter csvFilter = new ExampleFileFilter(new String[] { "txt", "csv" }, Utils._("CSV files"));;
-			fileChooser.addChoosableFileFilter(csvFilter);
-			fileChooser.setFileFilter(csvFilter);
-		}
-		return fileChooser;
-	}
-
-	/* (non-Javadoc)
-	 * @see yajhfc.util.ExcDialogAbstractAction#actualActionPerformed(java.awt.event.ActionEvent)
-	 */
-	@Override
-	protected void actualActionPerformed(ActionEvent e) {
+	public static void exportToCSV(MainWin parent, File outputFile) {
 		ExportCSVSettings settings = new ExportCSVSettings();
 		settings.loadFromString(Utils.getFaxOptions().csvExportSettings);
-		JFileChooser chooser = getFileChooser();
-		if (settings.fileName != null)
-			chooser.setSelectedFile(new File(settings.fileName));
-		if (chooser.showSaveDialog(parent) != JFileChooser.APPROVE_OPTION) {
-			return;
-		}
-		settings.fileName = Utils.getSelectedFileFromSaveChooser(chooser).getPath();
+		settings.fileName = outputFile.getPath();
 		CSVDialog csvd = new CSVDialog(parent, settings, MessageFormat.format(Utils._("Save to CSV file {0}"), Utils.shortenFileNameForDisplay(settings.fileName, 30)));
 		Utils.setDefWinPos(csvd);
 		csvd.setVisible(true);
@@ -90,18 +60,11 @@ public class ExportCSVAction extends ExcDialogAbstractAction {
         }
 	}
 
-	public ExportCSVAction(MainWin parent) {
-		putValue(Action.NAME, Utils._("Save as CSV") + "...");
-		putValue(Action.SHORT_DESCRIPTION, Utils._("Saves the list of faxes in CSV format"));
-		putValue(Action.SMALL_ICON, Utils.loadCustomIcon("saveAsCSV.png"));
-		this.parent = parent;
-	}
-	
     private static final long TIME_THRESHOLD = (36L*3600L*1000L);
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+    private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss");
     
     public static void exportTableModeltoCSV(TableModel model, CSVWriter writer, boolean writeHeader) {
-        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
-        SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss");
         
         String[] buf = new String[model.getColumnCount()];
         if (writeHeader) {

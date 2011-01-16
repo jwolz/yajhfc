@@ -18,15 +18,11 @@
  */
 package yajhfc.export;
 
-import java.awt.event.ActionEvent;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import javax.swing.Action;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -47,46 +43,18 @@ import yajhfc.model.FmtItemList;
 import yajhfc.model.IconMap;
 import yajhfc.model.servconn.FaxJob;
 import yajhfc.model.servconn.FaxJobList;
-import yajhfc.util.ExampleFileFilter;
-import yajhfc.util.ExcDialogAbstractAction;
 import yajhfc.util.ExceptionDialog;
-import yajhfc.util.SafeJFileChooser;
 
 /**
  * @author jonas
  *
  */
-public class ExportXMLAction extends ExcDialogAbstractAction {
-	protected final MainWin parent;
-	private JFileChooser fileChooser;
-	
-	private JFileChooser getFileChooser() {
-		if (fileChooser == null) {
-			fileChooser = new SafeJFileChooser();
-			fileChooser.resetChoosableFileFilters();
-			FileFilter csvFilter = new ExampleFileFilter("xml", Utils._("XML files"));;
-			fileChooser.addChoosableFileFilter(csvFilter);
-			fileChooser.setFileFilter(csvFilter);
-		}
-		return fileChooser;
-	}
-
-	/* (non-Javadoc)
-	 * @see yajhfc.util.ExcDialogAbstractAction#actualActionPerformed(java.awt.event.ActionEvent)
-	 */
-	@Override
-	protected void actualActionPerformed(ActionEvent e) {
-		JFileChooser chooser = getFileChooser();
-		if (Utils.getFaxOptions().lastExportAsXMLPath != null)
-		    chooser.setCurrentDirectory(new File(Utils.getFaxOptions().lastExportAsXMLPath));
-		if (chooser.showSaveDialog(parent) != JFileChooser.APPROVE_OPTION) {
-			return;
-		}
+public class ExportXMLAction  {
+	public static void exportToXML(MainWin parent, File outputFile) {
 		Utils.setWaitCursor(null);
 		try {
-		    Utils.getFaxOptions().lastExportAsXMLPath = chooser.getCurrentDirectory().getAbsolutePath();
 		    FaxJobList<?> jobList = parent.getSelectedTable().getRealModel().getJobs();
-		    StreamResult out = new StreamResult(Utils.getSelectedFileFromSaveChooser(chooser));
+		    StreamResult out = new StreamResult(outputFile);
 		    saveToResult(out, jobList);
         } catch (Exception ex) {
             ExceptionDialog.showExceptionDialog(parent, Utils._("Error saving the table as XML:"), ex);
@@ -95,25 +63,10 @@ public class ExportXMLAction extends ExcDialogAbstractAction {
         }
 	}
 	
-    protected static DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY;
-    protected static TransformerFactory TRANSFORMER_FACTORY;
-    
-    protected static DocumentBuilder createDocumentBuilder() throws ParserConfigurationException {
-        if (DOCUMENT_BUILDER_FACTORY == null) {
-            DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
-        }
-        return DOCUMENT_BUILDER_FACTORY.newDocumentBuilder();
-    }
-    
-    protected static TransformerFactory getTransformerFactory() {
-        if (TRANSFORMER_FACTORY == null) {
-            TRANSFORMER_FACTORY = TransformerFactory.newInstance();
-        }
-        return TRANSFORMER_FACTORY;
-    }
-
-	protected void saveToResult(Result result, FaxJobList<? extends FmtItem> faxList) throws ParserConfigurationException, TransformerException {
-        Document doc = createDocumentBuilder().newDocument();
+	protected static void saveToResult(Result result, FaxJobList<? extends FmtItem> faxList) throws ParserConfigurationException, TransformerException {
+		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+        Document doc = docBuilder.newDocument();
 
         Element root = doc.createElement("faxlist");
         root.setAttribute("xmlns", "http://yajhfc.berlios.de/schema/tableexport");
@@ -132,7 +85,7 @@ public class ExportXMLAction extends ExcDialogAbstractAction {
 
         root.normalize();
         
-        TransformerFactory tFactory = getTransformerFactory();
+        TransformerFactory tFactory = TransformerFactory.newInstance();
         Transformer transformer = tFactory.newTransformer();
 
         DOMSource source = new DOMSource(doc);
@@ -140,8 +93,9 @@ public class ExportXMLAction extends ExcDialogAbstractAction {
         transformer.transform(source, result);
     }
 	
-	protected void saveRows(FaxJobList<? extends FmtItem> faxList, Element root, Document doc) {
-        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    protected static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	
+	protected static void saveRows(FaxJobList<? extends FmtItem> faxList, Element root, Document doc) {
         
 	    List<? extends FmtItem> cols = faxList.getColumns().getCompleteView();
 	    for (FaxJob<?> job : faxList.getJobs()) {
@@ -167,7 +121,7 @@ public class ExportXMLAction extends ExcDialogAbstractAction {
 	    }
 	}
 	
-	protected void saveColumns(FmtItemList<? extends FmtItem> cols, Element root, Document doc) {
+	protected static void saveColumns(FmtItemList<? extends FmtItem> cols, Element root, Document doc) {
 	    int visiCount = cols.size();
 	    List<? extends FmtItem> completeView = cols.getCompleteView();
 	    for (int i=0; i<completeView.size(); i++) {
@@ -188,12 +142,5 @@ public class ExportXMLAction extends ExcDialogAbstractAction {
 	        
 	        root.appendChild(el);
 	    }
-	}
-	
-	public ExportXMLAction(MainWin parent) {
-		putValue(Action.NAME, Utils._("Save as XML") + "...");
-		putValue(Action.SHORT_DESCRIPTION, Utils._("Saves the list of faxes in XML format"));
-		putValue(Action.SMALL_ICON, Utils.loadCustomIcon("saveAsXML.png"));
-		this.parent = parent;
 	}
 }

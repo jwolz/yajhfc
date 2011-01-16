@@ -42,7 +42,7 @@ public class ExportCSVSettings extends CSVSettings {
 		putAvailField(availableFieldsMap, "separator");
 		putAvailField(availableFieldsMap, "firstLineAreHeaders");
 		putAvailField(availableFieldsMap, "quoteChar");
-		putAvailField(availableFieldsMap, "fileName");
+		//putAvailField(availableFieldsMap, "fileName");
 	}
 
 
