@@ -90,8 +90,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import yajhfc.export.ExportCSVAction;
-import yajhfc.export.ExportXMLAction;
+import yajhfc.export.ExportAction;
 import yajhfc.file.FormattedFile;
 import yajhfc.file.MultiFileConvFormat;
 import yajhfc.file.MultiFileConverter;
@@ -151,10 +150,10 @@ import yajhfc.util.JTableTABAction;
 import yajhfc.util.NumberRowViewport;
 import yajhfc.util.ProgressPanel;
 import yajhfc.util.ProgressWorker;
-import yajhfc.util.ProgressWorker.ProgressUI;
 import yajhfc.util.SafeJFileChooser;
 import yajhfc.util.SelectedActionPropertyChangeListener;
 import yajhfc.util.ToolbarEditorDialog;
+import yajhfc.util.ProgressWorker.ProgressUI;
 
 @SuppressWarnings("serial")
 public final class MainWin extends JFrame implements MainApplicationFrame {
@@ -220,7 +219,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     // Actions:
     protected Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward, actAdminMode;
     protected Action actRefresh, actResend, actPrintTable, actSuspend, actResume, actClipCopy, actShowRowNumbers, actAdjustColumns, actReconnect, actEditToolbar;
-    protected Action actSaveAsPDF, actSaveAsTIFF, actUpdateCheck, actAnswerCall, actSearchFax, actViewLog, actLogConsole, actExportCSV, actExportXML;
+    protected Action actSaveAsPDF, actSaveAsTIFF, actUpdateCheck, actAnswerCall, actSearchFax, actViewLog, actLogConsole, actExport;
     protected Action actShowToolbar, actShowQuickSearchBar;
     protected StatusBarResizeAction actAutoSizeStatus;
     protected ActionEnabler actChecker;
@@ -1454,11 +1453,9 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         actSaveAsTIFF = new SaveToFormatAction(MultiFileConvFormat.TIFF);
         putAvailableAction("SaveAsTIFF", actSaveAsTIFF);
         
-        actExportCSV = new ExportCSVAction(this);
-        putAvailableAction("ExportCSV", actExportCSV);
+        actExport = new ExportAction(this);
+        putAvailableAction("ExportTable", actExport);
         
-        actExportXML = new ExportXMLAction(this);
-        putAvailableAction("ExportXML", actExportXML);
         
         actChecker = new ActionEnabler();
     }
@@ -1470,13 +1467,31 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         act.putValue(Action.ACTION_COMMAND_KEY, key);
     }
     
+    /**
+     * Returns the currently selected (i.e. visible) table
+     * @return
+     */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public TooltipJTable<? extends FmtItem> getSelectedTable() {
         return (TooltipJTable)((JScrollPane)tabMain.getSelectedComponent()).getViewport().getView();
     }
+    
+    /**
+     * Returns the table having the specified index
+     * @param index
+     * @return
+     */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public TooltipJTable<? extends FmtItem> getTableByIndex(int index) {
         return (TooltipJTable)((JScrollPane)tabMain.getComponent(index)).getViewport().getView();
+    }
+    
+    /**
+     * Returns the long description of the currently selected tab
+     * @return
+     */
+    public String getSelectedTableDescription() {
+    	return tabMain.getToolTipTextAt(tabMain.getSelectedIndex());
     }
     
     void setActReconnectState(boolean showConnect) {
@@ -2299,8 +2314,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             menuTable.addSeparator();
             menuTable.add(new JMenuItem(actClipCopy));
             menuTable.add(new JMenuItem(actPrintTable));
-            menuTable.add(new JMenuItem(actExportCSV));
-            menuTable.add(new JMenuItem(actExportXML));
+            menuTable.add(new JMenuItem(actExport));
         }
         return menuTable;
     }

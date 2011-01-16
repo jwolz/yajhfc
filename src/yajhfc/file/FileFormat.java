@@ -35,6 +35,7 @@ public enum FileFormat {
     ODT(Utils._("OpenDocument text documents"), "odt"),
     HTML(Utils._("HTML documents"), "html", "htm"),
     RTF(Utils._("RTF documents"), "rtf"),
+    CSV(Utils._("CSV files"), "csv", "txt"),
     Any(Utils._("Any files"), "dat", ExampleFileFilter.ANY_EXTENSION),
     Unknown(Utils._("Unknown files"), "");
     
