@@ -18,12 +18,9 @@ package yajhfc.send;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-import gnu.hylafax.HylaFAXClient;
 import gnu.inet.ftp.ServerResponseException;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 
 import yajhfc.file.FormattedFile;
 import yajhfc.model.servconn.FaxDocument;
@@ -32,17 +29,7 @@ public class ServerFileTFLItem extends HylaTFLItem {
     private FaxDocument hysf;
     
     @Override
-    public InputStream getInputStream() throws FileNotFoundException {
-        return null;
-    }
-
-    @Override
-    public void upload(HylaFAXClient hyfc) throws FileNotFoundException, IOException, ServerResponseException {
-        // NOP
-    }
-
-    @Override
-    public FormattedFile getPreviewFilename(HylaFAXClient hyfc) throws IOException {
+    public FormattedFile getPreviewFilename() throws IOException {
         try {
             return hysf.getDocument();
         } catch (ServerResponseException e) {
@@ -52,21 +39,9 @@ public class ServerFileTFLItem extends HylaTFLItem {
         }
     }
     
-//    @Override
-//    public boolean preview(Component parent, HylaFAXClient hyfc) throws IOException, UnknownFormatException {
-//        try {
-//            hysf.view(hyfc);
-//            return true;
-//        } catch (ServerResponseException e) {
-//            IOException ioEx = new IOException(e.getMessage());
-//            ioEx.initCause(e);
-//            throw ioEx;
-//        }
-//    }
-    
     @Override
     public String getText() {
-        return "@server:" + serverName;
+        return "@server:" + hysf.getPath();
     }
 
     @Override
@@ -86,6 +61,6 @@ public class ServerFileTFLItem extends HylaTFLItem {
     
     public ServerFileTFLItem(FaxDocument serverFile) {
         this.hysf = serverFile;
-        this.serverName = serverFile.getPath();
+        this.serverName = serverFile.getHylafaxPath();
     }
 }

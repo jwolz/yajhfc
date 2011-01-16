@@ -26,6 +26,7 @@ import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -154,13 +155,10 @@ public class SendController {
         }
 
         for (HylaTFLItem item : files) {
-
-            InputStream strIn = item.getInputStream();
-            if (strIn != null) {
-                // Try to get page count 
-                cov.estimatePostscriptPages(strIn);
-                strIn.close();
-            }
+            InputStream strIn = new FileInputStream(item.getPreviewFilename().file);
+            // Try to get page count 
+            cov.estimatePostscriptPages(strIn);
+            strIn.close();
         }
         
         cov.fromData = fromIdentity;
@@ -241,24 +239,17 @@ public class SendController {
                     else
                         step = 0;
                 }
-                HylaClientManager clientManager = server.getClientManager();
-                HylaFAXClient hyfc = clientManager.beginServerTransaction(SendController.this.parent);
-                if (hyfc == null) {
-                    return;
+
+                for (HylaTFLItem item : files) {
+                    updateNote(MessageFormat.format(Utils._("Formatting {0}"), Utils.shortenFileNameForDisplay(item.getText(), FILE_DISPLAY_LEN)));
+                    //item.preview(SendController.this.parent, hyfc);
+                    FormattedFile file = item.getPreviewFilename();
+                    if (file != null)
+                        // Only add valid files with supported preview
+                        viewFiles.add(file);
+                    stepProgressBar(step);
                 }
-                try {
-                    for (HylaTFLItem item : files) {
-                        updateNote(MessageFormat.format(Utils._("Formatting {0}"), Utils.shortenFileNameForDisplay(item.getText(), FILE_DISPLAY_LEN)));
-                        //item.preview(SendController.this.parent, hyfc);
-                        FormattedFile file = item.getPreviewFilename(hyfc);
-                        if (file != null)
-                            // Only add valid files with supported preview
-                            viewFiles.add(file);
-                        stepProgressBar(step);
-                    }
-                } finally {
-                    clientManager.endServerTransaction();                    
-                }
+
                 if (viewFiles.size() > 0) {
                     updateNote(Utils._("Launching viewer"));
                     MultiFileConverter.viewMultipleFiles(viewFiles, paperSize, true);

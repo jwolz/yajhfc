@@ -18,15 +18,10 @@ package yajhfc.send;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-import gnu.hylafax.HylaFAXClient;
-import gnu.inet.ftp.ServerResponseException;
-
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,9 +29,9 @@ import java.util.logging.Logger;
 import yajhfc.PaperSize;
 import yajhfc.Utils;
 import yajhfc.file.FileConverter;
+import yajhfc.file.FileConverter.ConversionException;
 import yajhfc.file.FileFormat;
 import yajhfc.file.FormattedFile;
-import yajhfc.file.FileConverter.ConversionException;
 import yajhfc.launch.Launcher2;
 import yajhfc.util.ExceptionDialog;
 
@@ -100,7 +95,7 @@ public class LocalFileTFLItem extends HylaTFLItem {
     }
     
     @Override
-    public FormattedFile getPreviewFilename(HylaFAXClient hyfc) {
+    public FormattedFile getPreviewFilename() {
         try {
             prepareFile();
         } catch (Exception ex) {
@@ -109,27 +104,6 @@ public class LocalFileTFLItem extends HylaTFLItem {
         }
         
         return preparedFile;
-    }
-    
-    @Override
-    public InputStream getInputStream() throws FileNotFoundException, IOException {
-        prepareFile();
-        if (preparedFile == null) 
-            return null;
-        
-        return new FileInputStream(preparedFile.file);
-    }
-
-    @Override
-    public void upload(HylaFAXClient hyfc) throws FileNotFoundException, IOException, ServerResponseException {
-        InputStream inStream = getInputStream();
-        if (inStream == null) {
-            serverName = null;
-        } else { 
-            if (Utils.getFaxOptions().sendFORMCommand)
-                hyfc.form(preparedFile.format.getHylaFAXFormatString());
-            serverName = hyfc.putTemporary(inStream);
-        }
     }
 
     @Override

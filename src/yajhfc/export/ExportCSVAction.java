@@ -84,24 +84,25 @@ public class ExportCSVAction extends ExcDialogAbstractAction {
             out.close();
             Utils.getFaxOptions().csvExportSettings = settings.saveToString();
         } catch (Exception ex) {
-            ExceptionDialog.showExceptionDialog(parent, Utils._("Error saving table as CSV:"), ex);
+            ExceptionDialog.showExceptionDialog(parent, Utils._("Error saving the table as CSV:"), ex);
         } finally {
             Utils.unsetWaitCursor(null);
         }
 	}
 
 	public ExportCSVAction(MainWin parent) {
-		putValue(Action.NAME, Utils._("Save fax list as CSV..."));
+		putValue(Action.NAME, Utils._("Save as CSV") + "...");
 		putValue(Action.SHORT_DESCRIPTION, Utils._("Saves the list of faxes in CSV format"));
-		putValue(Action.SMALL_ICON, Utils.loadIcon("general/Save"));
+		putValue(Action.SMALL_ICON, Utils.loadCustomIcon("saveAsCSV.png"));
 		this.parent = parent;
 	}
 	
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
-    private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss");
     private static final long TIME_THRESHOLD = (36L*3600L*1000L);
     
     public static void exportTableModeltoCSV(TableModel model, CSVWriter writer, boolean writeHeader) {
+        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+        SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss");
+        
         String[] buf = new String[model.getColumnCount()];
         if (writeHeader) {
             for (int i=0; i<buf.length; i++) {

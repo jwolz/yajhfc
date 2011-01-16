@@ -40,6 +40,11 @@ public class HylaServerDoc<T extends FmtItem> extends AbstractFaxDocument<T> imp
     protected HylaServerDoc(FaxJob<T> parent, String path, FileFormat type) {
         super(parent, path, type);
     }
+    
+    @Override
+    public String getHylafaxPath() {
+        return path;
+    }
 
     protected void downloadFromServer(final OutputStream target) throws IOException, ServerResponseException {
         HylaFAXClient hyfc = ((AbstractHylaFaxJob<T>)parent).getConnection().beginServerTransaction();

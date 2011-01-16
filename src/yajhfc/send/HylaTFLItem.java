@@ -21,15 +21,16 @@ package yajhfc.send;
 import gnu.hylafax.HylaFAXClient;
 import gnu.inet.ftp.ServerResponseException;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 
 import yajhfc.PaperSize;
+import yajhfc.Utils;
 import yajhfc.file.FormattedFile;
 
 public abstract class HylaTFLItem extends TFLItem {
-    protected String serverName = "<invalid>";
+    protected String serverName = null;
     protected PaperSize desiredPaperSize = PaperSize.A4;
     
     /**
@@ -39,31 +40,27 @@ public abstract class HylaTFLItem extends TFLItem {
      * @throws IOException
      * @throws ServerResponseException
      */
-    public abstract void upload(HylaFAXClient hyfc) throws FileNotFoundException, IOException, ServerResponseException ;
-    
-    // May return null!
-    public abstract InputStream getInputStream() throws FileNotFoundException, IOException;
-    
-    
-//    /**
-//     * Previews the file in a viewer.
-//     */
-//    public boolean preview(Component parent, HylaFAXClient hyfc) throws IOException, UnknownFormatException {
-//        FormattedFile previewFile = getPreviewFilename(hyfc);
-//        if (previewFile == null) {
-//            JOptionPane.showMessageDialog(parent, MessageFormat.format(Utils._("Preview is not supported for document \"{0}\"."), this.getText()), Utils._("Preview"), JOptionPane.INFORMATION_MESSAGE);
-//            return false;
-//        }
-//        previewFile.view();
-//        return true;
-//    }
+    public void upload(HylaFAXClient hyfc) throws FileNotFoundException, IOException, ServerResponseException {
+        if (serverName == null) {
+            FormattedFile inFile = getPreviewFilename();
+            if (inFile == null) {
+                serverName = null;
+            } else { 
+                FileInputStream inStream = new FileInputStream(inFile.file);
+                if (Utils.getFaxOptions().sendFORMCommand)
+                    hyfc.form(inFile.format.getHylaFAXFormatString());
+                serverName = hyfc.putTemporary(inStream);
+                inStream.close();
+            }
+        }
+    }
     
     /**
      * Returns a local file to be used by the default implementation of preview().
      * Return null if preview is not supported.
      * @return
      */
-    public FormattedFile getPreviewFilename(HylaFAXClient hyfc) throws IOException {
+    public FormattedFile getPreviewFilename() throws IOException {
         return null;
     }
     

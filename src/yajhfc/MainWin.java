@@ -72,7 +72,6 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -152,10 +151,10 @@ import yajhfc.util.JTableTABAction;
 import yajhfc.util.NumberRowViewport;
 import yajhfc.util.ProgressPanel;
 import yajhfc.util.ProgressWorker;
+import yajhfc.util.ProgressWorker.ProgressUI;
 import yajhfc.util.SafeJFileChooser;
 import yajhfc.util.SelectedActionPropertyChangeListener;
 import yajhfc.util.ToolbarEditorDialog;
-import yajhfc.util.ProgressWorker.ProgressUI;
 
 @SuppressWarnings("serial")
 public final class MainWin extends JFrame implements MainApplicationFrame {
@@ -165,7 +164,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     
     protected JPanel jContentPane = null;
     
-    protected JToolBar toolbar;
+    protected JToolBar toolbar, quickSearchbar;
     protected QuickSearchHelper quickSearchHelper = new QuickSearchHelper();
     
     protected JTabbedPane tabMain = null;
@@ -193,6 +192,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     protected JMenu menuView = null;
     protected JMenu menuExtras = null;
     protected JMenu helpMenu = null;
+    protected JMenu menuTable;
     
     protected JCheckBoxMenuItem menuMarkError;
     
@@ -220,7 +220,8 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     // Actions:
     protected Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward, actAdminMode;
     protected Action actRefresh, actResend, actPrintTable, actSuspend, actResume, actClipCopy, actShowRowNumbers, actAdjustColumns, actReconnect, actEditToolbar;
-    protected Action actSaveAsPDF, actSaveAsTIFF, actUpdateCheck, actAnswerCall, actSearchFax, actViewLog, actLogConsole, actExportCSV, actExportXML; 
+    protected Action actSaveAsPDF, actSaveAsTIFF, actUpdateCheck, actAnswerCall, actSearchFax, actViewLog, actLogConsole, actExportCSV, actExportXML;
+    protected Action actShowToolbar, actShowQuickSearchBar;
     protected StatusBarResizeAction actAutoSizeStatus;
     protected ActionEnabler actChecker;
     protected Map<String,Action> availableActions = new HashMap<String,Action>();
@@ -1154,7 +1155,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 FaxTablePrinter.printFaxTable(MainWin.this, selTable, tabMain.getToolTipTextAt(tabMain.getSelectedIndex()));
             };
         };
-        actPrintTable.putValue(Action.NAME, _("Print table..."));
+        actPrintTable.putValue(Action.NAME, _("Print") + "...");
         actPrintTable.putValue(Action.SHORT_DESCRIPTION, _("Prints the currently displayed table"));
         actPrintTable.putValue(Action.SMALL_ICON, Utils.loadIcon("general/Print"));
         putAvailableAction("PrintTable", actPrintTable);
@@ -1402,6 +1403,46 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         actLogConsole.putValue(Action.SHORT_DESCRIPTION, _("Displays the YajHFC log in real time"));
         putAvailableAction("LogConsole", actLogConsole);
         
+        actShowToolbar = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(ActionEvent e) {
+                Boolean state = (Boolean)getValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY);
+                boolean newState;
+                if (state == null)
+                    newState = false;
+                else
+                    newState = !state; 
+                
+                toolbar.setVisible(newState);
+                myopts.showToolbar = newState;
+                
+                putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, newState);
+            };
+        };
+        actShowToolbar.putValue(Action.NAME, _("Show Toolbar"));
+        actShowToolbar.putValue(Action.SHORT_DESCRIPTION, _("Shows or hides the toolbar."));
+        actShowToolbar.putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, myopts.showToolbar);
+        putAvailableAction("ShowToolbar", actShowToolbar);
+        
+        actShowQuickSearchBar = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(ActionEvent e) {
+                Boolean state = (Boolean)getValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY);
+                boolean newState;
+                if (state == null)
+                    newState = false;
+                else
+                    newState = !state; 
+                
+                quickSearchbar.setVisible(newState);
+                myopts.showQuickSearchbar = newState;
+                
+                putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, newState);
+            };
+        };
+        actShowQuickSearchBar.putValue(Action.NAME, _("Show Quick Search bar"));
+        actShowQuickSearchBar.putValue(Action.SHORT_DESCRIPTION, _("Show or hides the Quick Search toolbar."));
+        actShowQuickSearchBar.putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, myopts.showQuickSearchbar);
+        putAvailableAction("ShowQuickSearchBar",actShowQuickSearchBar);
+        
         actAutoSizeStatus = new StatusBarResizeAction();
         actAutoSizeStatus.putValue(Action.NAME, _("Auto-size status bar"));
         actAutoSizeStatus.putValue(Action.SHORT_DESCRIPTION, _("Automatically resize the status bar"));
@@ -1417,7 +1458,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         putAvailableAction("ExportCSV", actExportCSV);
         
         actExportXML = new ExportXMLAction(this);
-        putAvailableAction("ExportXML", actExportCSV);
+        putAvailableAction("ExportXML", actExportXML);
         
         actChecker = new ActionEnabler();
     }
@@ -1429,11 +1470,11 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         act.putValue(Action.ACTION_COMMAND_KEY, key);
     }
     
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public TooltipJTable<? extends FmtItem> getSelectedTable() {
         return (TooltipJTable)((JScrollPane)tabMain.getSelectedComponent()).getViewport().getView();
     }
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public TooltipJTable<? extends FmtItem> getTableByIndex(int index) {
         return (TooltipJTable)((JScrollPane)tabMain.getComponent(index)).getViewport().getView();
     }
@@ -1579,6 +1620,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     private JToolBar getToolbar() {
         if (toolbar == null) {
             toolbar = new JToolBar();
+            toolbar.setVisible(myopts.showToolbar);
             
             ToolbarEditorDialog.loadConfigFromString(toolbar, myopts.toolbarConfig, availableActions);
 //            toolbar.add(actSend);
@@ -1631,12 +1673,15 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             menuView.add(menuViewAll);
             menuView.add(menuViewOwn);
             menuView.add(menuViewCustom);
-            menuView.add(new JSeparator());
+            menuView.addSeparator();
             menuView.add(menuMarkError);
             menuView.add(new ActionJCheckBoxMenuItem(actShowRowNumbers));
             menuView.add(new ActionJCheckBoxMenuItem(actAdjustColumns));
+            menuView.addSeparator();
             menuView.add(new ActionJCheckBoxMenuItem(actAutoSizeStatus));
-            menuView.add(new JSeparator());
+            menuView.add(new ActionJCheckBoxMenuItem(actShowToolbar));
+            menuView.add(new ActionJCheckBoxMenuItem(actShowQuickSearchBar));
+            menuView.addSeparator();
             menuView.add(new JMenuItem(actRefresh));
             
             getTabMain().addChangeListener(menuViewListener);
@@ -1933,7 +1978,8 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             
             JPanel quickSearchPanel = new JPanel(new BorderLayout());
             quickSearchPanel.add(tablePanel, BorderLayout.CENTER);
-            quickSearchPanel.add(quickSearchHelper.getQuickSearchBar(actSearchFax), BorderLayout.NORTH);
+            quickSearchPanel.add(quickSearchbar = quickSearchHelper.getQuickSearchBar(actSearchFax), BorderLayout.NORTH);
+            quickSearchbar.setVisible(myopts.showQuickSearchbar);
             
             jContentPane.add(quickSearchPanel, BorderLayout.CENTER);
             jContentPane.add(getToolbar(), BorderLayout.NORTH);
@@ -1966,6 +2012,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         if (jJMenuBar == null) {
             jJMenuBar = new JMenuBar();
             jJMenuBar.add(getMenuFax());
+            jJMenuBar.add(getMenuTable());
             jJMenuBar.add(getServerMenu().getMenu());
             jJMenuBar.add(getMenuView());
             jJMenuBar.add(getMenuExtras());
@@ -2244,17 +2291,24 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         }
         return menuFax;
     }
+    
+    private JMenu getMenuTable() {
+        if (menuTable == null) {
+            menuTable = new JMenu(_("Table"));
+            menuTable.add(new JMenuItem(actSearchFax));
+            menuTable.addSeparator();
+            menuTable.add(new JMenuItem(actClipCopy));
+            menuTable.add(new JMenuItem(actPrintTable));
+            menuTable.add(new JMenuItem(actExportCSV));
+            menuTable.add(new JMenuItem(actExportXML));
+        }
+        return menuTable;
+    }
 
     private JMenu getMenuExtras() {
         if (menuExtras == null) {
             menuExtras = new JMenu(_("Extras"));
             menuExtras.add(actPhonebook);
-            menuExtras.addSeparator();
-            menuExtras.add(new JMenuItem(actClipCopy));
-            menuExtras.add(new JMenuItem(actPrintTable));
-            menuExtras.add(new JMenuItem(actExportCSV));
-            menuExtras.add(new JMenuItem(actExportXML));
-            menuExtras.add(new JMenuItem(actSearchFax));
             menuExtras.addSeparator();
             if (!hideMenusForMac) {
             	menuExtras.add(new JMenuItem(actOptions));
@@ -2299,11 +2353,10 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     
     class MenuViewListener implements ActionListener, ChangeListener {
         private JRadioButtonMenuItem[] lastSel = new JRadioButtonMenuItem[TableType.TABLE_COUNT];
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings({ "rawtypes" })
         private Filter[] currentFilters = new Filter[TableType.TABLE_COUNT];
         
-        @SuppressWarnings("unchecked")
-        private void setJobFilter(FaxListTableModel model, Filter filter) {
+        private void setJobFilter(@SuppressWarnings("rawtypes") FaxListTableModel model, @SuppressWarnings("rawtypes") Filter filter) {
             currentFilters[model.getTableType().ordinal()] = filter;
             refreshFilter(model);
         }
@@ -2317,6 +2370,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         public void actionPerformed(ActionEvent e) {
             try {
                 String cmd = e.getActionCommand();
+                @SuppressWarnings("rawtypes")
                 FaxListTableModel model = getSelectedTable().getRealModel();
                 int selTab = tabMain.getSelectedIndex();
 
@@ -2327,6 +2381,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                     setJobFilter(model, getOwnFilterFor(model));
                     lastSel[selTab] = menuViewOwn;
                 } else if (cmd.equals("view_custom")) {
+                    @SuppressWarnings("rawtypes")
                     CustomFilterDialog cfd = new CustomFilterDialog(MainWin.this, 
                             MessageFormat.format(Utils._("Custom filter for table {0}"), tabMain.getTitleAt(selTab)),
                             Utils._("Only display fax jobs fulfilling:"),
@@ -2418,6 +2473,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         @SuppressWarnings("unchecked")
         public void reConnected() {
             for (int i = 0; i < tabMain.getTabCount(); i++) {
+                @SuppressWarnings("rawtypes")
                 FaxListTableModel model = getTableByIndex(i).getRealModel();
                 if (lastSel[i] == menuViewOwn) {
                     if (ownFilterOK(model)) 
@@ -2439,7 +2495,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         }
         
 
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings({ "unchecked", "rawtypes" })
         private void loadSaveString(int idx, String data) {
             if ((data == null) || data.equals("A")) {
                 lastSel[idx] = menuViewAll;
@@ -2698,7 +2754,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         refreshFilter(getSelectedTable().getRealModel());
     }
     
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     void refreshFilter(FaxListTableModel selectedModel ) {
         TableType selectedTableType = selectedModel.getTableType();
         Filter viewFilter = menuViewListener.getFilterFor(selectedTableType);
@@ -2853,36 +2909,12 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
 
     class QuickSearchHelper extends AbstractQuickSearchHelper implements ChangeListener {
         
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings({ "unchecked", "rawtypes" })
         public Filter getFilterFor(TableType tableType) {
             String searchText = textQuickSearch.getText();
             if (searchText == null || searchText.length() == 0) {
                 return null;
             }
-            
-//            FmtItem[] filterCols;
-//            switch (tableType) {
-//            case RECEIVED:
-//                filterCols = new FmtItem[] { RecvFormat.e, RecvFormat.f, RecvFormat.s, RecvFormat.i, RecvFormat.j, RecvFormat.o, RecvFormat.Y, RecvFormat.Z};
-//                break;
-//            case SENT:
-//            case SENDING:
-//                filterCols = new FmtItem[] { JobFormat.C, JobFormat.e, JobFormat.j, JobFormat.R, JobFormat.s, JobFormat.v, JobFormat.J, JobFormat.S, JobFormat.o, JobFormat.Y, JobFormat.Z};
-//                break;
-//            case ARCHIVE:
-//                filterCols = new FmtItem[] { QueueFileFormat.company, QueueFileFormat.external, QueueFileFormat.jobid, QueueFileFormat.number, QueueFileFormat.receiver, QueueFileFormat.status, QueueFileFormat.jobtag, QueueFileFormat.sender, QueueFileFormat.owner, QueueFileFormat.tts };
-//                break;
-//            default:
-//                throw new IllegalArgumentException("Unknown table type");
-//            }
-//            List<? extends FmtItem> availableCols = getColumnsFor(tableType).getCompleteView();
-//            OrFilter rv = new OrFilter();
-//            
-//            for (FmtItem fi : filterCols) {
-//                if (availableCols.contains(fi)) {
-//                    rv.addChild(new StringFilter(fi, StringFilterOperator.CONTAINS, searchText, false));
-//                }
-//            }
           
             // Search on all visible columns
             List<? extends FmtItem> availableCols = getColumnsFor(tableType);

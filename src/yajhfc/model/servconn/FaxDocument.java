@@ -57,4 +57,11 @@ public interface FaxDocument {
      */
     public void downloadToStream(OutputStream target) throws IOException,
     ServerResponseException;
+    
+    /**
+     * Returns the path the HylaFAX server can use to directly access this document.
+     * Returns null if this document cannot be accessed directly by the HylaFAX server.
+     * @return
+     */
+    public String getHylafaxPath();
 }

@@ -91,6 +91,10 @@ public abstract class AbstractFaxDocument<T extends FmtItem> implements FaxDocum
     public String getPath() {
         return path;
     }
+    
+    public String getHylafaxPath() {
+        return null;
+    }
 
     public FileFormat getType() {
         return type;
