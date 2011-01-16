@@ -417,6 +417,21 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
      */
     public String csvExportSettings = "";
     
+    /**
+     * The path last used for "save table as XML"
+     */
+    public String lastExportAsXMLPath = "";
+    
+    /**
+     * Show the quick search bar in MainWin?
+     */
+    public boolean showQuickSearchbar = true;
+    
+    /**
+     * Show the toolbar in MainWin?
+     */
+    public boolean showToolbar = true;
+    
     public FaxOptions() {
         super(null);
         

@@ -19,6 +19,7 @@
 package yajhfc.export;
 
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -76,16 +77,19 @@ public class ExportXMLAction extends ExcDialogAbstractAction {
 	@Override
 	protected void actualActionPerformed(ActionEvent e) {
 		JFileChooser chooser = getFileChooser();
+		if (Utils.getFaxOptions().lastExportAsXMLPath != null)
+		    chooser.setCurrentDirectory(new File(Utils.getFaxOptions().lastExportAsXMLPath));
 		if (chooser.showSaveDialog(parent) != JFileChooser.APPROVE_OPTION) {
 			return;
 		}
 		Utils.setWaitCursor(null);
 		try {
+		    Utils.getFaxOptions().lastExportAsXMLPath = chooser.getCurrentDirectory().getAbsolutePath();
 		    FaxJobList<?> jobList = parent.getSelectedTable().getRealModel().getJobs();
 		    StreamResult out = new StreamResult(Utils.getSelectedFileFromSaveChooser(chooser));
 		    saveToResult(out, jobList);
         } catch (Exception ex) {
-            ExceptionDialog.showExceptionDialog(parent, Utils._("Error saving table as XML:"), ex);
+            ExceptionDialog.showExceptionDialog(parent, Utils._("Error saving the table as XML:"), ex);
         } finally {
             Utils.unsetWaitCursor(null);
         }
@@ -136,9 +140,9 @@ public class ExportXMLAction extends ExcDialogAbstractAction {
         transformer.transform(source, result);
     }
 	
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	
 	protected void saveRows(FaxJobList<? extends FmtItem> faxList, Element root, Document doc) {
+        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        
 	    List<? extends FmtItem> cols = faxList.getColumns().getCompleteView();
 	    for (FaxJob<?> job : faxList.getJobs()) {
 	        Element rowEl = doc.createElement("row");
@@ -187,9 +191,9 @@ public class ExportXMLAction extends ExcDialogAbstractAction {
 	}
 	
 	public ExportXMLAction(MainWin parent) {
-		putValue(Action.NAME, Utils._("Save fax list as XML..."));
+		putValue(Action.NAME, Utils._("Save as XML") + "...");
 		putValue(Action.SHORT_DESCRIPTION, Utils._("Saves the list of faxes in XML format"));
-		putValue(Action.SMALL_ICON, Utils.loadIcon("general/Save"));
+		putValue(Action.SMALL_ICON, Utils.loadCustomIcon("saveAsXML.png"));
 		this.parent = parent;
 	}
 }

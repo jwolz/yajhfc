@@ -18,11 +18,7 @@ package yajhfc.send;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-import gnu.hylafax.HylaFAXClient;
-import gnu.inet.ftp.ServerResponseException;
-
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -49,24 +45,6 @@ public class StreamTFLItem extends HylaTFLItem {
     }
 
     @Override
-    public InputStream getInputStream() throws FileNotFoundException {
-        return new FileInputStream(tempFile.file);
-    }
-
-
-    @Override
-    public void upload(HylaFAXClient hyfc) throws FileNotFoundException, IOException, ServerResponseException {
-        InputStream inStream = getInputStream();
-        if (inStream == null) {
-            serverName = null;
-        } else { 
-            if (Utils.getFaxOptions().sendFORMCommand)
-                hyfc.form(tempFile.format.getHylaFAXFormatString());
-            serverName = hyfc.putTemporary(inStream);
-        }
-    }
-
-    @Override
     public String getText() {
         return text;
     }
@@ -82,7 +60,7 @@ public class StreamTFLItem extends HylaTFLItem {
     }
     
     @Override
-    public FormattedFile getPreviewFilename(HylaFAXClient hyfc) {
+    public FormattedFile getPreviewFilename() {
         return tempFile;
     }
 

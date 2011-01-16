@@ -60,14 +60,16 @@ public abstract class AbstractConnectionSettings {
      * @return
      */
     protected Map<String,SettingField> getAvailableFieldsMap() {
-    	Map<String,SettingField> availableFields = availableFieldMaps.get(getClass());
-    	if (availableFields == null) {
-    		availableFields = new TreeMap<String,SettingField>();
-    		availableFieldMaps.put(getClass(), availableFields);
-    		readAvailableFields(availableFields);
-    	}
-		return availableFields;
-	}
+        synchronized (availableFieldMaps) {
+            Map<String,SettingField> availableFields = availableFieldMaps.get(getClass());
+            if (availableFields == null) {
+                availableFields = new TreeMap<String,SettingField>();
+                availableFieldMaps.put(getClass(), availableFields);
+                readAvailableFields(availableFields);
+            }
+            return availableFields;
+        }
+    }
 
 	/**
      * Reads all available *public* fields using reflection and saves them in the specified map
