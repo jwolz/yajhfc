@@ -26,6 +26,7 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -57,7 +58,7 @@ public class ExportXMLAction  {
 		    StreamResult out = new StreamResult(outputFile);
 		    saveToResult(out, jobList);
         } catch (Exception ex) {
-            ExceptionDialog.showExceptionDialog(parent, Utils._("Error saving the table as XML:"), ex);
+            ExceptionDialog.showExceptionDialog(parent, Utils._("Error saving the table:"), ex);
         } finally {
             Utils.unsetWaitCursor(null);
         }
@@ -87,6 +88,7 @@ public class ExportXMLAction  {
         
         TransformerFactory tFactory = TransformerFactory.newInstance();
         Transformer transformer = tFactory.newTransformer();
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 
         DOMSource source = new DOMSource(doc);
 
@@ -96,7 +98,6 @@ public class ExportXMLAction  {
     protected static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	protected static void saveRows(FaxJobList<? extends FmtItem> faxList, Element root, Document doc) {
-        
 	    List<? extends FmtItem> cols = faxList.getColumns().getCompleteView();
 	    for (FaxJob<?> job : faxList.getJobs()) {
 	        Element rowEl = doc.createElement("row");

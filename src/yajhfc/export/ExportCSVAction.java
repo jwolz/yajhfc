@@ -20,13 +20,15 @@ package yajhfc.export;
 
 import java.io.File;
 import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.table.TableModel;
 
 import yajhfc.MainWin;
 import yajhfc.Utils;
+import yajhfc.model.FmtItem;
+import yajhfc.model.ui.TooltipJTable;
 import yajhfc.phonebook.csv.CSVDialog;
 import yajhfc.util.ExceptionDialog;
 import au.com.bytecode.opencsv.CSVWriter;
@@ -49,23 +51,18 @@ public class ExportCSVAction {
 		Utils.setWaitCursor(null);
 		try {
             CSVWriter out = settings.createWriter();
-            TableModel model = parent.getSelectedTable().getModel();
-            exportTableModeltoCSV(model, out, settings.firstLineAreHeaders);
+            final TooltipJTable<? extends FmtItem> selectedTable = parent.getSelectedTable();
+            exportTableModeltoCSV(selectedTable.getModel(), selectedTable.getRealModel().getColumns(), out, settings.firstLineAreHeaders);
             out.close();
             Utils.getFaxOptions().csvExportSettings = settings.saveToString();
         } catch (Exception ex) {
-            ExceptionDialog.showExceptionDialog(parent, Utils._("Error saving the table as CSV:"), ex);
+            ExceptionDialog.showExceptionDialog(parent, Utils._("Error saving the table:"), ex);
         } finally {
             Utils.unsetWaitCursor(null);
         }
 	}
-
-    private static final long TIME_THRESHOLD = (36L*3600L*1000L);
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
-    private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss");
     
-    public static void exportTableModeltoCSV(TableModel model, CSVWriter writer, boolean writeHeader) {
-        
+    public static void exportTableModeltoCSV(TableModel model, List<? extends FmtItem> columns, CSVWriter writer, boolean writeHeader) {     
         String[] buf = new String[model.getColumnCount()];
         if (writeHeader) {
             for (int i=0; i<buf.length; i++) {
@@ -77,12 +74,9 @@ public class ExportCSVAction {
             for (int col=0; col<buf.length; col++) {
                 Object val = model.getValueAt(row, col);
                 if (val instanceof Date) {
-                    Date dVal = (Date)val;
-                    if (dVal.getTime() > -TIME_THRESHOLD && dVal.getTime() < TIME_THRESHOLD) { // If it's a date around 1970-01-01, assume it's time only
-                        buf[col] = TIME_FORMAT.format(dVal);
-                    } else {
-                        buf[col] = DATE_FORMAT.format(dVal);
-                    }
+                    buf[col] = columns.get(col).getDisplayDateFormat().format(val);
+                } else  if (val instanceof Boolean) {
+                    buf[col] = ((Boolean)val).booleanValue() ? "X" : " ";
                 } else if (val != null) {
                     buf[col] = val.toString();
                 } else {
