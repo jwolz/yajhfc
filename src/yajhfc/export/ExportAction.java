@@ -123,8 +123,8 @@ public class ExportAction extends ExcDialogAbstractAction {
 	}
 	
 	public ExportAction(MainWin parent) {
-		putValue(Action.NAME, Utils._("Save as") + "...");
-		putValue(Action.SHORT_DESCRIPTION, Utils._("Saves the list of faxes in CSV, HTML or XML format"));
+		putValue(Action.NAME, Utils._("Export") + "...");
+		putValue(Action.SHORT_DESCRIPTION, Utils._("Exports the list of faxes in CSV, HTML or XML format"));
 		putValue(Action.SMALL_ICON, Utils.loadIcon("general/Save"));
 		this.parent = parent;
 	}

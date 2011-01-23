@@ -78,7 +78,7 @@ are read to refresh the fax lists. This still needs some testing, however...
 - "Test connection" button in the Options dialog
 - Support for multiple servers
 - Support for multiple identities
-- Lists of faxes can be saved in CSV or XML format
+- Lists of faxes can be saved in CSV, HTML or XML format
 
 0.4.4:
 - Improved MAC OS support (mostly cosmetic changes)

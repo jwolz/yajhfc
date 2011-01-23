@@ -36,6 +36,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,6 +51,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -72,13 +74,20 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import yajhfc.FaxOptions;
+import yajhfc.MainWin;
 import yajhfc.Utils;
+import yajhfc.export.ExportAction;
+import yajhfc.export.ExportCSVAction;
+import yajhfc.export.ExportHTMLAction;
+import yajhfc.export.ExportXMLAction;
+import yajhfc.file.FileFormat;
 import yajhfc.filters.AndFilter;
 import yajhfc.filters.ConcatStringFilter;
 import yajhfc.filters.Filter;
@@ -100,11 +109,13 @@ import yajhfc.phonebook.ui.PhoneBookTreeModel.RootNode;
 import yajhfc.print.PhonebooksPrinter;
 import yajhfc.util.AbstractQuickSearchHelper;
 import yajhfc.util.ClipboardPopup;
+import yajhfc.util.ExampleFileFilter;
 import yajhfc.util.ExcDialogAbstractAction;
 import yajhfc.util.ExceptionDialog;
 import yajhfc.util.MultiButtonGroup;
 import yajhfc.util.ProgressPanel;
 import yajhfc.util.ProgressWorker;
+import yajhfc.util.SafeJFileChooser;
 
 public final class NewPhoneBookWin extends JDialog implements ActionListener {
 
@@ -129,7 +140,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     JPopupMenu treePopup;
     
     Action listRemoveAction, addEntryAction, removeEntryAction, searchEntryAction, selectAction;
-    Action addDistListAction, viewPopupMenuAction, printAction;
+    Action addDistListAction, viewPopupMenuAction, printAction, exportHTMLAction;
     
     MultiButtonGroup nameStyleGroup, viewGroup;
     
@@ -390,6 +401,8 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         buttonBrowse.setEnabled(havePB);
         if (selectAction != null)
             selectAction.setEnabled(selOK);
+        
+        exportHTMLAction.setEnabled(havePB);
     }
     
     public void actionPerformed(ActionEvent e) {
@@ -746,6 +759,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             pbMenu.add(exportMenu);
             pbMenu.add(new JSeparator());
             pbMenu.add(printAction);
+            pbMenu.add(exportHTMLAction);
             pbMenu.add(new JSeparator());
             pbMenu.add(new JMenuItem(listRemoveAction));
             pbMenu.add(new JSeparator());
@@ -942,6 +956,48 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
 		};
 		printAction.putValue(Action.NAME, _("Print phone books") + "...");
 		printAction.putValue(Action.SMALL_ICON, Utils.loadIcon("general/Print"));
+		
+        exportHTMLAction = new ExcDialogAbstractAction() {
+            private JFileChooser fileChooser;
+            
+            private JFileChooser getFileChooser() {
+                if (fileChooser == null) {
+                    fileChooser = new SafeJFileChooser();
+                    fileChooser.setAcceptAllFileFilterUsed(false);
+                    fileChooser.addChoosableFileFilter(new ExampleFileFilter(FileFormat.HTML.getPossibleExtensions(), FileFormat.HTML.getDescription()));
+                    if (Utils.getFaxOptions().lastExportSavePath != null)
+                        fileChooser.setCurrentDirectory(new File(Utils.getFaxOptions().lastExportSavePath));
+                }
+                return fileChooser;
+            }
+
+            /* (non-Javadoc)
+             * @see yajhfc.util.ExcDialogAbstractAction#actualActionPerformed(java.awt.event.ActionEvent)
+             */
+            @Override
+            protected void actualActionPerformed(ActionEvent e) {
+                if (currentPhonebook == null)
+                    return;
+                
+                JFileChooser chooser = getFileChooser();
+                if (chooser.showSaveDialog(NewPhoneBookWin.this) != JFileChooser.APPROVE_OPTION) {
+                    return;
+                }
+                Utils.setWaitCursor(null);
+                try {
+                    Utils.getFaxOptions().lastExportSavePath = chooser.getCurrentDirectory().getAbsolutePath();
+                    File selectedFile = Utils.getSelectedFileFromSaveChooser(chooser);
+                    
+                    ExportHTMLAction.exportPhonebookToHTML(NewPhoneBookWin.this, currentPhonebook, selectedFile);
+                } catch (Exception ex) {
+                    ExceptionDialog.showExceptionDialog(NewPhoneBookWin.this, Utils._("Error saving the table:"), ex);
+                } finally {
+                    Utils.unsetWaitCursor(null);
+                }
+            }
+        };
+        exportHTMLAction.putValue(Action.NAME, _("Save as HTML") + "...");
+        exportHTMLAction.putValue(Action.SMALL_ICON, Utils.loadIcon("general/Save"));
     }
     
     private void initialize() {
