@@ -35,12 +35,13 @@ public class HylaClientManager {
     
     public HylaClientManager(ServerOptions myopts) {
         super();
-        this.myopts = myopts;
-        optionsChanged();
+        optionsChanged(myopts);
     }
 
-    public void optionsChanged() {
+    public void optionsChanged(ServerOptions newOpts) {
         forceLogout();
+        
+        myopts = newOpts;
         
         realModems = null;
         modems = null;

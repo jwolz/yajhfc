@@ -67,9 +67,9 @@ public class DirectAccessFaxListConnection extends HylaFaxListConnection {
     }
     
     @Override
-    public void reloadSettings() {
+    public void setOptions(ServerOptions so) {
         refreshDirAccessor();
-        super.reloadSettings();
+        super.setOptions(so);
     }
     
     /**
