@@ -71,9 +71,9 @@ public interface FaxListConnection {
     public void disconnect();
     
     /**
-     * Reloads the settings.
+     * Sets new options and reloads the settings.
      */
-    public void reloadSettings();
+    public void setOptions(ServerOptions so);
     
     /**
      * Sets the UI components to use for feedback to the user 

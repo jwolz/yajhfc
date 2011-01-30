@@ -247,9 +247,10 @@ public class HylaFaxListConnection implements FaxListConnection {
         return true;
     }
 
-    public void reloadSettings() {
+    public void setOptions(ServerOptions so) {
+        this.fo = so;
         createOrDestroyOptionalObjects();
-        clientManager.optionsChanged();
+        clientManager.optionsChanged(so);
         if (receivedJobs != null) {
             receivedJobs.reloadSettings(fo);
         }

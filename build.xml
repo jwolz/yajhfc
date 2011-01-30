@@ -21,7 +21,7 @@
 	</fileset>
 	<property name="gnu.hylafax-jar-core" refid="fs.gnu.hylafax-jar-core"/>
 	<property name="gnu.hylafax-jar-inet-ftp" refid="fs.gnu.hylafax-jar-inet-ftp"/>
-
+	
 	<target name="init">
 		<available file="${gnu.hylafax-dir}/gnu/hylafax/HylaFAXClient.class" property="gnu.hylafax.haveClassDir"/>
 		<condition property="gnu.hylafax.haveJars">
@@ -209,5 +209,16 @@
 		<echo>
 Uploaded yajhfc.jar to ftp://ftp.berlios.de/pub/yajhfc/temp/yajhfc.jar
 		</echo>
+	</target>
+	
+	<target name="run-test" depends="dist" description="run yajhfc with empty configuration">
+		<delete dir="${java.io.tmpdir}/yajhfc-test-run"/>
+		<echo>
+Running YajHFC with configdir ${java.io.tmpdir}/yajhfc-test-run ...
+		</echo>
+		<java spawn="yes" fork="yes" jar="${jar-output}">
+			<arg value="--configdir"/>
+			<arg value="${java.io.tmpdir}/yajhfc-test-run"/>
+		</java>
 	</target>
 </project>

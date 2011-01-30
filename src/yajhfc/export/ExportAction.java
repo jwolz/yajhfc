@@ -30,6 +30,9 @@ import javax.swing.filechooser.FileFilter;
 import yajhfc.MainWin;
 import yajhfc.Utils;
 import yajhfc.file.FileFormat;
+import yajhfc.model.FmtItem;
+import yajhfc.model.ui.TooltipJTable;
+import yajhfc.server.ServerManager;
 import yajhfc.util.ExampleFileFilter;
 import yajhfc.util.ExcDialogAbstractAction;
 import yajhfc.util.ExceptionDialog;
@@ -105,7 +108,7 @@ public class ExportAction extends ExcDialogAbstractAction {
 		    	ExportCSVAction.exportToCSV(parent, selectedFile);
 		    	break;
 		    case HTML:
-		    	ExportHTMLAction.exportToHTML(parent, selectedFile);
+		    	exportToHTML(selectedFile);
 		    	break;
 		    case XML:
 		    	ExportXMLAction.exportToXML(parent, selectedFile);
@@ -121,6 +124,22 @@ public class ExportAction extends ExcDialogAbstractAction {
             Utils.unsetWaitCursor(null);
         }
 	}
+	
+    private void exportToHTML(File selectedFile) {
+        Utils.setWaitCursor(null);
+        try {
+            String title = parent.getSelectedTableDescription();
+            String footer = Utils._("Server") + ": " + ServerManager.getDefault().getCurrent().toString();
+            final TooltipJTable<? extends FmtItem> selectedTable = parent.getSelectedTable();
+
+            TooltipJTableHTMLExporter hexp = new TooltipJTableHTMLExporter();
+            hexp.saveToFile(selectedFile, selectedTable.getModel(), title, footer);
+        } catch (Exception ex) {
+            ExceptionDialog.showExceptionDialog(parent, Utils._("Error saving the table:"), ex);
+        } finally {
+            Utils.unsetWaitCursor(null);
+        }
+    }
 	
 	public ExportAction(MainWin parent) {
 		putValue(Action.NAME, Utils._("Export") + "...");

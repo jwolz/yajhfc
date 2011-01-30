@@ -74,19 +74,14 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import yajhfc.FaxOptions;
-import yajhfc.MainWin;
 import yajhfc.Utils;
-import yajhfc.export.ExportAction;
-import yajhfc.export.ExportCSVAction;
-import yajhfc.export.ExportHTMLAction;
-import yajhfc.export.ExportXMLAction;
+import yajhfc.export.PhoneBookHTMLExporter;
 import yajhfc.file.FileFormat;
 import yajhfc.filters.AndFilter;
 import yajhfc.filters.ConcatStringFilter;
@@ -104,6 +99,7 @@ import yajhfc.phonebook.PhoneBookException;
 import yajhfc.phonebook.PhoneBookFactory;
 import yajhfc.phonebook.PhoneBookType;
 import yajhfc.phonebook.convrules.NameRule;
+import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 import yajhfc.phonebook.ui.PhoneBookTreeModel.PBTreeModelListener;
 import yajhfc.phonebook.ui.PhoneBookTreeModel.RootNode;
 import yajhfc.print.PhonebooksPrinter;
@@ -988,9 +984,25 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                     Utils.getFaxOptions().lastExportSavePath = chooser.getCurrentDirectory().getAbsolutePath();
                     File selectedFile = Utils.getSelectedFileFromSaveChooser(chooser);
                     
-                    ExportHTMLAction.exportPhonebookToHTML(NewPhoneBookWin.this, currentPhonebook, selectedFile);
+                    exportPhonebookToHTML(NewPhoneBookWin.this, currentPhonebook, selectedFile);
                 } catch (Exception ex) {
                     ExceptionDialog.showExceptionDialog(NewPhoneBookWin.this, Utils._("Error saving the table:"), ex);
+                } finally {
+                    Utils.unsetWaitCursor(null);
+                }
+            }
+            
+            private void exportPhonebookToHTML(Dialog parent, PhoneBook pb, File selectedFile) {
+                Utils.setWaitCursor(null);
+                try {
+                    String title = pb.toString();
+                    String footer = "";
+
+                    PhoneBookHTMLExporter hexp = new PhoneBookHTMLExporter();
+                    hexp.saveToFile(selectedFile, new PBEntryFieldTableModel(Collections.<PBEntryFieldContainer>unmodifiableList(pb.getEntries())), 
+                            title, footer);
+                } catch (Exception ex) {
+                    ExceptionDialog.showExceptionDialog(parent, Utils._("Error saving the table:"), ex);
                 } finally {
                     Utils.unsetWaitCursor(null);
                 }

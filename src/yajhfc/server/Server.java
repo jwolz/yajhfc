@@ -45,7 +45,7 @@ public class Server {
             if (FaxListConnectionFactory.isConnectionTypeStillValid(connection, options)) {
                 if (Utils.debugMode)
                     log.fine("Server " + options.id + ": reloading connection settings");
-                connection.reloadSettings();
+                connection.setOptions(options);
             } else {
                 if (Utils.debugMode)
                     log.fine("Server " + options.id + ": removing old connection");
