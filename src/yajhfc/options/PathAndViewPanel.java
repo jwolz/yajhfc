@@ -21,6 +21,7 @@ package yajhfc.options;
 import static yajhfc.Utils._;
 import info.clearthought.layout.TableLayout;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -56,6 +57,7 @@ public class PathAndViewPanel extends AbstractOptionsPanel<FaxOptions> {
     FileTextField ftfFaxViewer, ftfPSViewer;
     FileTextField ftfPDFViewer, ftfGSLocation, ftfTIFF2PDFLocation;
     JCheckBox checkPDFSameAsPS, checkCreateSingleFile, checkCreateAlwaysAsTargetFormat, checkCreateAlwaysAsTargetFormatView;
+    JCheckBox checkUseTiffPaperSize;
     JComboBox comboSendMode, comboTargetFormat, comboTargetFormatView;
     
     public PathAndViewPanel() {
@@ -66,7 +68,7 @@ public class PathAndViewPanel extends AbstractOptionsPanel<FaxOptions> {
     protected void createOptionsUI() {
         setLayout(new TableLayout(new double[][] {
                 {OptionsWin.border, 0.5, OptionsWin.border, TableLayout.FILL, OptionsWin.border},
-                {OptionsWin.border, TableLayout.FILL, OptionsWin.border, TableLayout.PREFERRED, OptionsWin.border}
+                {OptionsWin.border, TableLayout.PREFERRED, OptionsWin.border, TableLayout.PREFERRED, TableLayout.FILL, OptionsWin.border}
         }));
         
         JPanel panelPaths = createPanelPaths();
@@ -117,25 +119,31 @@ public class PathAndViewPanel extends AbstractOptionsPanel<FaxOptions> {
         labelGS.setAlignmentX(JComponent.LEFT_ALIGNMENT);
         JLabel labelTIFF2PDF = new JLabel(_("Location of tiff2pdf executable (optional):"));
         labelTIFF2PDF.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+        checkUseTiffPaperSize = new JCheckBox(_("Always use paper size from YajHFC options in the PDF"));
+        checkUseTiffPaperSize.setAlignmentX(JComponent.LEFT_ALIGNMENT);
         
         ftfTIFF2PDFLocation.setEnabled(allowTIFF2PDF);
         labelTIFF2PDF.setEnabled(allowTIFF2PDF);
+        checkUseTiffPaperSize.setEnabled(allowTIFF2PDF);
         
+        Dimension filler = new Dimension(OptionsWin.border, OptionsWin.border);
         panelPaths.add(labelTIFF);
         panelPaths.add(ftfFaxViewer);
-        panelPaths.add(Box.createVerticalGlue());
+        panelPaths.add(Box.createRigidArea(filler));
         panelPaths.add(labelPS);
         panelPaths.add(ftfPSViewer);
-        panelPaths.add(Box.createVerticalGlue());
+        panelPaths.add(Box.createRigidArea(filler));
         panelPaths.add(labelPDF);
         panelPaths.add(checkPDFSameAsPS);
         panelPaths.add(ftfPDFViewer);
-        panelPaths.add(Box.createVerticalGlue());
+        panelPaths.add(Box.createRigidArea(filler));
         panelPaths.add(labelGS);
         panelPaths.add(ftfGSLocation);
-        panelPaths.add(Box.createVerticalGlue());
+        panelPaths.add(Box.createRigidArea(filler));
         panelPaths.add(labelTIFF2PDF);
         panelPaths.add(ftfTIFF2PDFLocation);
+        panelPaths.add(checkUseTiffPaperSize);
+        panelPaths.add(Box.createVerticalGlue());
         return panelPaths;
     }
 
@@ -233,6 +241,7 @@ public class PathAndViewPanel extends AbstractOptionsPanel<FaxOptions> {
         ftfGSLocation.setText(foEdit.ghostScriptLocation);
         ftfTIFF2PDFLocation.setText(foEdit.tiff2PDFLocation);
         
+        checkUseTiffPaperSize.setSelected(foEdit.usePaperSizeForTIFF2Any);
         checkCreateAlwaysAsTargetFormat.setSelected(foEdit.alwaysCreateTargetFormat);
         checkCreateAlwaysAsTargetFormatView.setSelected(foEdit.alwaysCreateTargetFormatForViewing);
         checkCreateSingleFile.setSelected(foEdit.createSingleFilesForViewing);
@@ -257,6 +266,7 @@ public class PathAndViewPanel extends AbstractOptionsPanel<FaxOptions> {
         foEdit.ghostScriptLocation = ftfGSLocation.getText();
         foEdit.tiff2PDFLocation = ftfTIFF2PDFLocation.getText();
 
+        foEdit.usePaperSizeForTIFF2Any = checkUseTiffPaperSize.isSelected();
         foEdit.alwaysCreateTargetFormat = checkCreateAlwaysAsTargetFormat.isSelected();
         foEdit.alwaysCreateTargetFormatForViewing = checkCreateAlwaysAsTargetFormatView.isSelected();
         foEdit.createSingleFilesForViewing = checkCreateSingleFile.isSelected();
