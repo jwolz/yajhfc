@@ -108,6 +108,7 @@ public class ImageExportManager {
     public void resetCache() {
         imageCache.clear();
         imageCounter = 0;
+        outDir = null;
     }
     
     public ImageExportManager(File htmlDoc) {

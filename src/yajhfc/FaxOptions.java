@@ -428,6 +428,10 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
      */
     public FileFormat lastExportFormat = FileFormat.CSV;
     
+    /**
+     * Specify the paper size for tiff2pdf/tiff2ps
+     */
+    public boolean usePaperSizeForTIFF2Any = true;
     
     /**
      * Show the quick search bar in MainWin?

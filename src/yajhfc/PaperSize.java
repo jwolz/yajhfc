@@ -41,8 +41,28 @@ public enum PaperSize {
         return desc;
     }
     
+    /**
+     * Returns the dimensions of the papersize in mm
+     * @return
+     */
     public Dimension getSize() {
         return size;
+    }
+    
+    /**
+     * Returns the papersize's width in inches
+     * @return
+     */
+    public float getWidthInches() {
+        return size.width/25.4f;
+    }
+    
+    /**
+     * Returns the papersize's height in inches
+     * @return
+     */
+    public float getHeightInches() {
+        return size.height/25.4f;
     }
     
     public String getKey() {

@@ -52,7 +52,7 @@ public class TIFFLibConverter implements FileConverter {
     public void convertToHylaFormat(File inFile, OutputStream destination,
             PaperSize paperSize, FileFormat desiredFormat) throws ConversionException, IOException {
         
-        List<String> commandLine = getCommandLine(desiredFormat, inFile);
+        List<String> commandLine = getCommandLine(desiredFormat, inFile, paperSize);
         ExternalProcessExecutor.quoteCommandLine(commandLine);
         if (Utils.debugMode) {
             log.fine("Invoking tiff2pdf with the following command line:");
@@ -115,13 +115,17 @@ public class TIFFLibConverter implements FileConverter {
 
     }
     
-    protected List<String> getCommandLine(FileFormat targetFormat, File input) throws ConversionException {
+    protected List<String> getCommandLine(FileFormat targetFormat, File input, PaperSize paperSize) throws ConversionException {
         List<String> commandLine = new ArrayList<String>();
         switch (targetFormat) {
         case PDF:
             commandLine.add(Utils.getFaxOptions().tiff2PDFLocation);
             for (String opt : tiff2pdfParams) {
                 commandLine.add(opt);
+            }
+            if (Utils.getFaxOptions().usePaperSizeForTIFF2Any) {
+                commandLine.add("-p");
+                commandLine.add(paperSize.name().toLowerCase());
             }
             commandLine.add(input.getAbsolutePath());
             break;
@@ -131,11 +135,17 @@ public class TIFFLibConverter implements FileConverter {
             File tiff2ps = Utils.searchExecutableInPath(new File(new File(Utils.getFaxOptions().tiff2PDFLocation).getParentFile(), "tiff2ps").getPath());
             if (tiff2ps == null) {
                 // Use tiff2pdf instead
-                return getCommandLine(FileFormat.PDF, input);
+                return getCommandLine(FileFormat.PDF, input, paperSize);
             }
             commandLine.add(tiff2ps.getPath());
             for (String opt : tiff2psParams) {
                 commandLine.add(opt);
+            }
+            if (Utils.getFaxOptions().usePaperSizeForTIFF2Any) {
+                commandLine.add("-w");
+                commandLine.add(Float.toString(paperSize.getWidthInches()));
+                commandLine.add("-h");
+                commandLine.add(Float.toString(paperSize.getHeightInches()));
             }
             commandLine.add(input.getAbsolutePath());
             break;
