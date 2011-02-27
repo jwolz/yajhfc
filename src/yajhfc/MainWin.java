@@ -29,6 +29,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -150,10 +151,10 @@ import yajhfc.util.JTableTABAction;
 import yajhfc.util.NumberRowViewport;
 import yajhfc.util.ProgressPanel;
 import yajhfc.util.ProgressWorker;
+import yajhfc.util.ProgressWorker.ProgressUI;
 import yajhfc.util.SafeJFileChooser;
 import yajhfc.util.SelectedActionPropertyChangeListener;
 import yajhfc.util.ToolbarEditorDialog;
-import yajhfc.util.ProgressWorker.ProgressUI;
 
 @SuppressWarnings("serial")
 public final class MainWin extends JFrame implements MainApplicationFrame {
@@ -220,12 +221,13 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     protected Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward, actAdminMode;
     protected Action actRefresh, actResend, actPrintTable, actSuspend, actResume, actClipCopy, actShowRowNumbers, actAdjustColumns, actReconnect, actEditToolbar;
     protected Action actSaveAsPDF, actSaveAsTIFF, actUpdateCheck, actAnswerCall, actSearchFax, actViewLog, actLogConsole, actExport;
-    protected Action actShowToolbar, actShowQuickSearchBar;
+    protected Action actShowToolbar, actShowQuickSearchBar, actServerSelectionPopup;
     protected StatusBarResizeAction actAutoSizeStatus;
     protected ActionEnabler actChecker;
     protected Map<String,Action> availableActions = new HashMap<String,Action>();
     protected YajHFCTrayIcon trayIcon = null;
     protected ServerMenu serverMenu;
+    protected JPopupMenu toolbarPopup;
     
     protected Server currentServer;
     protected FaxListConnection connection;
@@ -1442,6 +1444,21 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         actShowQuickSearchBar.putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, myopts.showQuickSearchbar);
         putAvailableAction("ShowQuickSearchBar",actShowQuickSearchBar);
         
+        actServerSelectionPopup = new ExcDialogAbstractAction() {
+            
+            @Override
+            protected void actualActionPerformed(ActionEvent e) {
+                if (e.getSource() instanceof Component) {
+                    Component sourceComp = (Component)e.getSource();
+                    
+                    Utils.clonePopupFromMenu(serverMenu.getMenu()).show(sourceComp, 0, sourceComp.getHeight());
+                } 
+            }
+        };
+        actServerSelectionPopup.putValue(Action.NAME, "...");
+        actServerSelectionPopup.putValue(Action.SHORT_DESCRIPTION, _("Shows/Changes the current server."));
+        putAvailableAction("ServerSelectionPopup",actServerSelectionPopup);
+        
         actAutoSizeStatus = new StatusBarResizeAction();
         actAutoSizeStatus.putValue(Action.NAME, _("Auto-size status bar"));
         actAutoSizeStatus.putValue(Action.SHORT_DESCRIPTION, _("Automatically resize the status bar"));
@@ -1632,10 +1649,22 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         return hylaDateRenderer;
     }
     
+    private JPopupMenu getToolbarPopup() {
+        if (toolbarPopup == null) {
+            toolbarPopup = new JPopupMenu();
+            toolbarPopup.add(new ActionJCheckBoxMenuItem(actShowToolbar));
+            toolbarPopup.add(new ActionJCheckBoxMenuItem(actShowQuickSearchBar));
+            toolbarPopup.addSeparator();
+            toolbarPopup.add(new JMenuItem(actEditToolbar));
+        }
+        return toolbarPopup;
+    }
+    
     private JToolBar getToolbar() {
         if (toolbar == null) {
             toolbar = new JToolBar();
             toolbar.setVisible(myopts.showToolbar);
+            toolbar.setComponentPopupMenu(getToolbarPopup());
             
             ToolbarEditorDialog.loadConfigFromString(toolbar, myopts.toolbarConfig, availableActions);
 //            toolbar.add(actSend);
@@ -1898,6 +1927,8 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 });
             } else {
                 setDisconnectedUI();
+                if (intermediateAction != null)
+                    intermediateAction.run();
                 if (immediateReconnect) {
                     reconnectToServer(null);
                 }
@@ -1995,6 +2026,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             quickSearchPanel.add(tablePanel, BorderLayout.CENTER);
             quickSearchPanel.add(quickSearchbar = quickSearchHelper.getQuickSearchBar(actSearchFax), BorderLayout.NORTH);
             quickSearchbar.setVisible(myopts.showQuickSearchbar);
+            quickSearchbar.setComponentPopupMenu(getToolbarPopup());
             
             jContentPane.add(quickSearchPanel, BorderLayout.CENTER);
             jContentPane.add(getToolbar(), BorderLayout.NORTH);
@@ -2127,6 +2159,19 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             textStatus.setBackground(getDefStatusBackground());
             textStatus.setFont(new java.awt.Font("DialogInput", java.awt.Font.PLAIN, 12));
             textStatus.setEditable(false);
+            
+            JPopupMenu statusPopup = new JPopupMenu();
+            statusPopup.add(new JMenuItem(new ExcDialogAbstractAction(_("Copy"), Utils.loadIcon("general/Copy")) {
+                @Override
+                protected void actualActionPerformed(ActionEvent e) {
+                   StringSelection sel = new StringSelection(textStatus.getText());
+                   Toolkit.getDefaultToolkit().getSystemClipboard().setContents(sel, sel);
+                }
+            }));
+            statusPopup.addSeparator();
+            statusPopup.add(new ActionJCheckBoxMenuItem(actAutoSizeStatus));
+            
+            textStatus.setComponentPopupMenu(statusPopup);
         }
         return textStatus;
     }
@@ -2807,6 +2852,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 serverMan.setCurrentByIndex(0);
         }
         currentServer = serverMan.getCurrent();
+        actServerSelectionPopup.putValue(Action.NAME, currentServer.toString());
     }
     
     /**
@@ -3151,8 +3197,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         
         public void actionPerformed(ActionEvent e) {
             //System.out.println("actionPerformed: " + e);
-            JRadioButtonMenuItem item = (JRadioButtonMenuItem)e.getSource();
-            int newID = Integer.parseInt(item.getActionCommand());
+            int newID = Integer.parseInt(e.getActionCommand());
             if (newID != currentServer.getID()) {
                 switchServer(newID);
             }

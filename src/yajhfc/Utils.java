@@ -27,6 +27,7 @@ import java.awt.Cursor;
 import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.Window;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -59,7 +60,10 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 
@@ -78,7 +82,7 @@ public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2011 by Jonas Wolz";
-    public static final String AppVersion = "0.5.0beta6";
+    public static final String AppVersion = "0.5.0beta7";
     public static final String AuthorName = "Jonas Wolz";
     public static final String AuthorEMail = "jwolz@freenet.de";
     public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
@@ -1002,6 +1006,42 @@ public final class Utils {
             }
         }
         return true;
+    }
+    
+    /**
+     * Creates a popup menu by cloning it from the specified menu. <br>
+     * NOTE: At the moment the cloning is incomplete. Extend this method as needed.
+     * @param menu
+     * @return
+     */
+    public static JPopupMenu clonePopupFromMenu(JMenu menu) {
+        JPopupMenu res = new JPopupMenu();
+        
+        for (int i=0; i<menu.getItemCount(); i++) {
+            JMenuItem item = menu.getItem(i);
+            if (item == null) {
+                res.addSeparator();
+            } else {
+                JMenuItem newItem;
+                try {
+                    newItem = item.getClass().newInstance();
+                } catch (Exception e) {
+                    log.log(Level.SEVERE, "Error creating JMenuItem", e);
+                    newItem = new JMenuItem();
+                }
+
+                newItem.setText(item.getText());
+                newItem.setIcon(item.getIcon());
+                newItem.setSelected(item.isSelected());
+                newItem.setActionCommand(item.getActionCommand());
+                for (ActionListener al : item.getActionListeners()) {
+                    newItem.addActionListener(al);
+                }
+
+                res.add(newItem);
+            }
+        }
+        return res;
     }
 }
 
