@@ -24,6 +24,7 @@ import yajhfc.phonebook.convrules.NameRule;
 import yajhfc.phonebook.convrules.ZIPCodeRule;
 import yajhfc.send.SendWinStyle;
 import yajhfc.server.ServerOptions;
+import yajhfc.util.AcceleratorKeys;
 
 public class FaxOptions extends AbstractFaxOptions implements Cloneable {
         
@@ -207,6 +208,11 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
      * Configuration of the main window toolbar
      */
     public String toolbarConfig = DEF_TOOLBAR_CONFIG;
+    
+    /**
+     * The map containing the keyboard accelerator mappings
+     */
+    public final Map<String,String> keyboardAccelerators = new TreeMap<String,String>();
     
     /**
      * Show a tray icon?
@@ -513,6 +519,8 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
         useCover = false;
         useCustomCover = false;
         CustomCover = "";
+        
+        keyboardAccelerators.putAll(AcceleratorKeys.DEFAULT_MAPPING);
     }
     
     /**

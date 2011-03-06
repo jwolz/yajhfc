@@ -22,6 +22,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.Icon;
 
 import yajhfc.Utils;
@@ -77,4 +78,10 @@ public abstract class ExcDialogAbstractAction extends AbstractAction {
     }
 
     protected abstract void actualActionPerformed(ActionEvent e);
+    
+    @Override
+    public String toString() {
+        String name = (String)getValue(Action.NAME);
+        return (name == null) ? super.toString() : name; 
+    }
 }

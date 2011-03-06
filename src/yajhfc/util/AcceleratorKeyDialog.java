@@ -20,6 +20,7 @@ package yajhfc.util;
 
 
 import static yajhfc.Utils._;
+import info.clearthought.layout.TableLayout;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -27,16 +28,19 @@ import java.awt.Dialog;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Map;
 
 import javax.swing.Action;
-import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
@@ -45,33 +49,94 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import yajhfc.Utils;
+import yajhfc.util.KeyStrokeTextField.KeyStrokeTextFieldListener;
+
 /**
  * @author jonas
  *
  */
 public class AcceleratorKeyDialog extends JDialog {
+    private static final int border = 6;
+    
     ActionToKeyStrokeTableModel tableModel;
     JTable table;
     KeyStrokeTextField textAccelerator;
-    Action actSetAccelerator, actClearAccelerator, actOK, actReset, actUseDefault;
+    Action actClearAccelerator, actOK, actReset, actUseDefault;
     
-    public AcceleratorKeyDialog(Dialog owner, Collection<Action> actions) {
-        super(owner, _("Edit keyboard accelerators"), true);
+    Map<String,String> defaults;
+    
+    /**
+     * true if the user clicked "OK"
+     */
+    public boolean modalResult = false;
+    
+    public AcceleratorKeyDialog(Dialog owner, Collection<Action> actions, Map<String,String> defaults) {
+        super(owner, _("Edit keyboard shortcuts"), true);
+        this.defaults = defaults;
         initialize(actions);
     }
     
-    public AcceleratorKeyDialog(Frame owner, Collection<Action> actions) {
-        super(owner, _("Edit keyboard accelerators"), true);
+    public AcceleratorKeyDialog(Frame owner, Collection<Action> actions, Map<String,String> defaults) {
+        super(owner, _("Edit keyboard shortcuts"), true);
+        this.defaults = defaults;
         initialize(actions);
+    }
+    
+    KeyStroke getDefaultForAction(Action act) {
+        return KeyStroke.getKeyStroke(defaults.get(act.getValue(Action.ACTION_COMMAND_KEY)));
     }
     
     private void initialize(Collection<Action> actions) {
-    	actSetAccelerator = new ExcDialogAbstractAction(_("Set Key")) {
-			@Override
-			protected void actualActionPerformed(ActionEvent e) {
-				tableModel.setKeystroke(table.getSelectedRow(), textAccelerator.getKeyStroke());
-			}
-		};
+        actClearAccelerator = new ExcDialogAbstractAction(_("Clear")) {
+            @Override
+            protected void actualActionPerformed(ActionEvent e) {
+                int row = table.getSelectedRow();
+                if (row >= 0) {
+                    tableModel.setKeystroke(row, null);
+                    textAccelerator.setKeyStroke(null);
+                }
+            }
+        };
+
+        actUseDefault = new ExcDialogAbstractAction(_("Use default")) {
+            @Override
+            protected void actualActionPerformed(ActionEvent e) {
+                int row = table.getSelectedRow();
+                if (row >= 0) {
+                    Action act = tableModel.getAction(row);
+                    KeyStroke ks = getDefaultForAction(act);
+                    tableModel.setKeystroke(row, ks);
+                    textAccelerator.setKeyStroke(ks);
+                }
+            }
+        };
+
+        actReset = new ExcDialogAbstractAction(_("Reset")) {
+            @Override
+            protected void actualActionPerformed(ActionEvent e) {
+                for (int i=0; i<tableModel.getRowCount(); i++) {
+                    Action act = tableModel.getAction(i);
+                    KeyStroke ks = getDefaultForAction(act);
+                    tableModel.setKeystroke(i, ks);
+                }
+                table.getSelectionModel().clearSelection();
+            }
+        };
+        
+        actOK = new ExcDialogAbstractAction(_("OK")) {
+            @Override
+            protected void actualActionPerformed(ActionEvent e) {
+                Object[] dup = tableModel.searchDuplicates();
+                if (dup != null) {
+                    JOptionPane.showMessageDialog(AcceleratorKeyDialog.this, MessageFormat.format(_("Duplicate shortcut {0} found for actions \"{1}\" and \"{2}\"!"), dup), _("Error"), JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                tableModel.commitChanges();
+                modalResult = true;
+                dispose();
+            }
+        };
     	
         JPanel contentPane = new JPanel(new BorderLayout());
         tableModel = new ActionToKeyStrokeTableModel(actions);
@@ -107,46 +172,69 @@ public class AcceleratorKeyDialog extends JDialog {
         table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				if (!e.getValueIsAdjusting()) {
-					int row = table.getSelectedRow();
-					
-				    boolean enableEditing = (row >= 0);
-			    	actSetAccelerator.setEnabled(enableEditing);
-			    	actUseDefault.setEnabled(enableEditing);
-			    	actClearAccelerator.setEnabled(enableEditing);
-			    	textAccelerator.setEnabled(enableEditing);
-			    	
-			    	if (enableEditing) {
-			    		textAccelerator.setKeyStroke(tableModel.getKeystroke(row));
-			    	} else {
-			    		textAccelerator.setKeyStroke(null);
-			    	}
+					updateSelection();
 				}
 			}
 		});
         
         textAccelerator = new KeyStrokeTextField();
+        textAccelerator.addKeyStrokeTextFieldListener(new KeyStrokeTextFieldListener() {
+            public void userTypedShortcut(KeyStroke newShortcut) {
+                int row = table.getSelectedRow();
+                if (row >= 0) {
+                    tableModel.setKeystroke(row, newShortcut);
+                }
+            }
+        });
         
         CancelAction cancelAct = new CancelAction(this);
         
-        JPanel editPanel = new JPanel(null);
-        editPanel.setLayout(new BoxLayout(editPanel, BoxLayout.Y_AXIS));
-        JLabel accLabel = new JLabel(_("Keyboard Accelerator:"));
-        accLabel.setAlignmentX(LEFT_ALIGNMENT);
-        editPanel.add(accLabel);
+        double[][] dLay = {
+                {border, textAccelerator.getPreferredSize().width, border},
+                {border, TableLayout.PREFERRED, TableLayout.PREFERRED, border, TableLayout.PREFERRED, border, TableLayout.PREFERRED, border, TableLayout.PREFERRED, border, TableLayout.FILL}
+        };
+        JPanel editPanel = new JPanel(new TableLayout(dLay));
+        Utils.addWithLabel(editPanel, textAccelerator, _("Accelerator key") + ':', "1,2");
+        JLabel lblUsage = new JLabel("<html>" + _("Click on the text field above and press the key (combination) to be used as the selected action's keyboard shortcut.") + "</html>");
+        editPanel.add(lblUsage, "1,4");
+        editPanel.add(new JButton(actClearAccelerator), "1,6");
+        editPanel.add(new JButton(actUseDefault), "1,8");
         
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonPanel.add(new JButton(actOK));
         buttonPanel.add(new JButton(actReset));
         buttonPanel.add(cancelAct.createCancelButton());
         
+        contentPane.add(new JScrollPane(table), BorderLayout.CENTER);
+        contentPane.add(editPanel, BorderLayout.EAST);
+        contentPane.add(buttonPanel, BorderLayout.SOUTH);
         
         setContentPane(contentPane);
+        pack();
+        Utils.setDefWinPos(this);
+        
+        updateSelection();
     }
     
+    void updateSelection() {
+        int row = table.getSelectedRow();
+        
+        boolean enableEditing = (row >= 0);
+        actUseDefault.setEnabled(enableEditing);
+        actClearAccelerator.setEnabled(enableEditing);
+        textAccelerator.setEnabled(enableEditing);
+        
+        if (enableEditing) {
+        	textAccelerator.setKeyStroke(tableModel.getKeystroke(row));
+        } else {
+        	textAccelerator.setKeyStroke(null);
+        }
+    }
+
     static class ActionToKeyStrokeTableModel extends AbstractTableModel {
         private final static String[] cols = {
             _("Action"),
-            _("Accelerator Key")
+            _("Accelerator key")
         };
         
         protected Action[] actions;
@@ -197,8 +285,42 @@ public class AcceleratorKeyDialog extends JDialog {
             return keyStrokes[rowIndex];
         }
         
+        public Action getAction(int rowIndex) {
+            return actions[rowIndex];
+        }
+        
+        /**
+         * Searches for duplicates and returns the first duplicate found in the form { KeyStroke, firstAction, secondAction }.
+         * If no duplicates are found, returns null
+         * @return
+         */
+        public Object[] searchDuplicates() {
+            for (int i=0; i<keyStrokes.length-1; i++) {
+                KeyStroke ks = keyStrokes[i];
+                if (ks != null) {
+                    for (int j=i+1; j<keyStrokes.length; j++) {
+                        KeyStroke ks2 = keyStrokes[j];
+                        if (ks2 != null && ks.equals(ks2)) {
+                            return new Object[] { ks, actions[i], actions[j] };
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+        
+        public void commitChanges() {
+            for (int i=0; i<actions.length; i++) {
+                Action act = actions[i];
+                KeyStroke ks = keyStrokes[i];
+                act.putValue(Action.ACCELERATOR_KEY, ks);
+            }
+        }
+        
         public ActionToKeyStrokeTableModel(Collection<Action> actionColl) {
             actions = actionColl.toArray(new Action[actionColl.size()]);
+            keyStrokes = new KeyStroke[actions.length];
+            
             Arrays.sort(actions, ToolbarEditorDialog.actionComparator);
             for (int i = 0; i < actions.length; i++) {
                 keyStrokes[i] = (KeyStroke)actions[i].getValue(Action.ACCELERATOR_KEY);
