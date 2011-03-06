@@ -70,7 +70,7 @@ public class KeyStrokeTextField extends JTextField {
     	if (keyStroke == null)
     		return Utils._("<none>");
         if (keyStroke.getModifiers() != 0) {
-            return KeyEvent.getModifiersExText(keyStroke.getModifiers()) + "+" + KeyEvent.getKeyText(keyStroke.getKeyCode());   
+            return KeyEvent.getModifiersExText(keyStroke.getModifiers()) + '-' + KeyEvent.getKeyText(keyStroke.getKeyCode());   
         } else {
             return KeyEvent.getKeyText(keyStroke.getKeyCode());
         }
