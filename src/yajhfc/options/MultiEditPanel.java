@@ -176,7 +176,7 @@ public abstract class MultiEditPanel<T> extends JPanel implements Callback<T> {
         itemsListModel.addListDataListener(new ListDataListener() {
             
             public void intervalRemoved(ListDataEvent e) {
-                List<PanelTreeNode> range = settingsNode.getChildren().subList(e.getIndex0(), e.getIndex1());
+                List<PanelTreeNode> range = settingsNode.getChildren().subList(e.getIndex0(), e.getIndex1()+1);
                 int[] indices = new int[range.size()];
                 for (int i=0; i < indices.length; i++) {
                     indices[i] = i + e.getIndex0();
