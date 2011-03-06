@@ -70,6 +70,21 @@ public class ToolbarEditorDialog extends JDialog {
         separatorAction.putValue(Action.SHORT_DESCRIPTION, Utils._("Separator"));
     }
     
+    public static final Comparator<Action> actionComparator = new Comparator<Action>() {
+        public int compare(Action o1, Action o2) {
+            String name1 = o1 != null ? (String)o1.getValue(Action.NAME) : null;
+            String name2 = o2 != null ? (String)o2.getValue(Action.NAME) : null;
+            
+            if (name1 == null) {
+                return (name2 == null) ? 0 : -1;
+            } else if (name2 == null) {
+                return 1;
+            } else {
+                return name1.compareToIgnoreCase(name2);
+            }
+          }  
+      };
+    
     fmtEditor<Action> fmtEditor;
     Action actOK, actReset;
     
@@ -146,20 +161,6 @@ public class ToolbarEditorDialog extends JDialog {
     }
     
     private fmtEditor<Action> createFmtEditor() {
-        Comparator<Action> comparator = new Comparator<Action>() {
-          public int compare(Action o1, Action o2) {
-              String name1 = o1 != null ? (String)o1.getValue(Action.NAME) : null;
-              String name2 = o2 != null ? (String)o2.getValue(Action.NAME) : null;
-              
-              if (name1 == null) {
-                  return (name2 == null) ? 0 : -1;
-              } else if (name2 == null) {
-                  return 1;
-              } else {
-                  return name1.compareToIgnoreCase(name2);
-              }
-            }  
-        };
         ListCellRenderer renderer = new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList list, Object value,
@@ -187,7 +188,7 @@ public class ToolbarEditorDialog extends JDialog {
         };
         
         selected = getActionsFromToolbar(toolBarToEdit);
-        return fmtEditor = new fmtEditor<Action>(availableActions.values(), selected, Collections.<Action>emptyList(), renderer, comparator, separatorAction, Utils._("Selected toolbar buttons:"), Utils._("Available toolbar buttons:"));
+        return fmtEditor = new fmtEditor<Action>(availableActions.values(), selected, Collections.<Action>emptyList(), renderer, actionComparator, separatorAction, Utils._("Selected toolbar buttons:"), Utils._("Available toolbar buttons:"));
     }
     
     
