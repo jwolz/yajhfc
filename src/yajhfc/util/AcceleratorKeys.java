@@ -18,6 +18,8 @@
  */
 package yajhfc.util;
 
+import java.awt.Event;
+import java.awt.Toolkit;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -33,27 +35,43 @@ import yajhfc.FaxOptions;
 public class AcceleratorKeys {
     public static Map<String,String> DEFAULT_MAPPING = new TreeMap<String,String>();
     static {
+        StringBuilder sb = new StringBuilder();
+        int menuMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+        if ((menuMask & Event.SHIFT_MASK) != 0) {
+            sb.append("shift ");
+        }
+        if ((menuMask & Event.CTRL_MASK) != 0) {
+            sb.append("ctrl ");
+        }
+        if ((menuMask & Event.META_MASK) != 0) {
+            sb.append("meta ");
+        }        
+        if ((menuMask & Event.ALT_MASK) != 0) {
+            sb.append("alt ");
+        }
+        String menuModifier = sb.toString();
+
         DEFAULT_MAPPING.put("AdminMode","shift pressed F12");
         DEFAULT_MAPPING.put("AnswerCall","pressed F11");
-        DEFAULT_MAPPING.put("ClipCopy","ctrl pressed C");
+        DEFAULT_MAPPING.put("ClipCopy",menuModifier + "pressed C");
         DEFAULT_MAPPING.put("Delete","pressed DELETE");
-        DEFAULT_MAPPING.put("Exit","ctrl pressed Q");
-        DEFAULT_MAPPING.put("FaxRead","ctrl pressed R");
-        DEFAULT_MAPPING.put("FaxSave","ctrl pressed S");
+        DEFAULT_MAPPING.put("Exit",menuModifier + "pressed Q");
+        DEFAULT_MAPPING.put("FaxRead",menuModifier + "pressed R");
+        DEFAULT_MAPPING.put("FaxSave",menuModifier + "pressed S");
         DEFAULT_MAPPING.put("Forward","pressed F4");
         DEFAULT_MAPPING.put("Phonebook","pressed F9");
         DEFAULT_MAPPING.put("Poll","pressed F3");
-        DEFAULT_MAPPING.put("PrintTable","ctrl pressed P");
+        DEFAULT_MAPPING.put("PrintTable",menuModifier + "pressed P");
         DEFAULT_MAPPING.put("Readme","pressed F1");
         DEFAULT_MAPPING.put("Reconnect","pressed F12");
         DEFAULT_MAPPING.put("Refresh","pressed F5");
         DEFAULT_MAPPING.put("Resend","shift pressed F4");
         DEFAULT_MAPPING.put("Resume","pressed F6");
-        DEFAULT_MAPPING.put("SaveAsPDF","shift ctrl pressed S");
-        DEFAULT_MAPPING.put("SearchFax","ctrl pressed F");
+        DEFAULT_MAPPING.put("SaveAsPDF","shift " + menuModifier + "pressed S");
+        DEFAULT_MAPPING.put("SearchFax",menuModifier + "pressed F");
         DEFAULT_MAPPING.put("Send","pressed F2");
         DEFAULT_MAPPING.put("Suspend","pressed F7");
-        DEFAULT_MAPPING.put("ViewLog","ctrl pressed L");
+        DEFAULT_MAPPING.put("ViewLog",menuModifier + "pressed L");
     }
     
     public static void saveToOptions(FaxOptions fo, Map<String,Action> availableActions) {
