@@ -9,6 +9,8 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.text.Keymap;
 
+import yajhfc.Utils;
+
 public class KeyStrokeTextField extends JTextField {
     public KeyStrokeTextField() {
         super(20);
@@ -27,6 +29,8 @@ public class KeyStrokeTextField extends JTextField {
     }
     
     public static String keyStrokeToUserString(KeyStroke keyStroke) {
+    	if (keyStroke == null)
+    		return Utils._("<none>");
         if (keyStroke.getModifiers() != 0) {
             return KeyEvent.getModifiersExText(keyStroke.getModifiers()) + "+" + KeyEvent.getKeyText(keyStroke.getKeyCode());   
         } else {

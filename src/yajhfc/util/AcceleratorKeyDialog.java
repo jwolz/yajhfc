@@ -22,17 +22,28 @@ package yajhfc.util;
 import static yajhfc.Utils._;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dialog;
+import java.awt.FlowLayout;
 import java.awt.Frame;
+import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.Collection;
 
 import javax.swing.Action;
+import javax.swing.BoxLayout;
+import javax.swing.Icon;
+import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 
 /**
  * @author jonas
@@ -42,7 +53,7 @@ public class AcceleratorKeyDialog extends JDialog {
     ActionToKeyStrokeTableModel tableModel;
     JTable table;
     KeyStrokeTextField textAccelerator;
-    Action actSetAccelerator, actClearAccelerator;
+    Action actSetAccelerator, actClearAccelerator, actOK, actReset, actUseDefault;
     
     public AcceleratorKeyDialog(Dialog owner, Collection<Action> actions) {
         super(owner, _("Edit keyboard accelerators"), true);
@@ -55,7 +66,79 @@ public class AcceleratorKeyDialog extends JDialog {
     }
     
     private void initialize(Collection<Action> actions) {
+    	actSetAccelerator = new ExcDialogAbstractAction(_("Set Key")) {
+			@Override
+			protected void actualActionPerformed(ActionEvent e) {
+				tableModel.setKeystroke(table.getSelectedRow(), textAccelerator.getKeyStroke());
+			}
+		};
+    	
         JPanel contentPane = new JPanel(new BorderLayout());
+        tableModel = new ActionToKeyStrokeTableModel(actions);
+        table = new JTable(tableModel);
+        table.setDefaultRenderer(Action.class, new DefaultTableCellRenderer() {
+        	@Override
+        	public Component getTableCellRendererComponent(JTable table,
+        			Object value, boolean isSelected, boolean hasFocus,
+        			int row, int column) {
+        		
+                Action data = (Action)value;
+                String text;
+                Icon icon;
+                String tooltip;
+                if (data == null) {
+                    text = "";
+                    icon = null;
+                    tooltip = null;
+                } else {
+                    text = (String)data.getValue(Action.NAME);
+                    icon = (Icon)data.getValue(Action.SMALL_ICON);
+                    tooltip = (String)data.getValue(Action.SHORT_DESCRIPTION);
+                }
+                
+                JLabel renderer = (JLabel)super.getTableCellRendererComponent(table, text, isSelected, hasFocus,
+        				row, column);
+                renderer.setIcon(icon);
+                renderer.setToolTipText(tooltip);
+                return renderer;
+        	}
+        });
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				if (!e.getValueIsAdjusting()) {
+					int row = table.getSelectedRow();
+					
+				    boolean enableEditing = (row >= 0);
+			    	actSetAccelerator.setEnabled(enableEditing);
+			    	actUseDefault.setEnabled(enableEditing);
+			    	actClearAccelerator.setEnabled(enableEditing);
+			    	textAccelerator.setEnabled(enableEditing);
+			    	
+			    	if (enableEditing) {
+			    		textAccelerator.setKeyStroke(tableModel.getKeystroke(row));
+			    	} else {
+			    		textAccelerator.setKeyStroke(null);
+			    	}
+				}
+			}
+		});
+        
+        textAccelerator = new KeyStrokeTextField();
+        
+        CancelAction cancelAct = new CancelAction(this);
+        
+        JPanel editPanel = new JPanel(null);
+        editPanel.setLayout(new BoxLayout(editPanel, BoxLayout.Y_AXIS));
+        JLabel accLabel = new JLabel(_("Keyboard Accelerator:"));
+        accLabel.setAlignmentX(LEFT_ALIGNMENT);
+        editPanel.add(accLabel);
+        
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.add(new JButton(actOK));
+        buttonPanel.add(new JButton(actReset));
+        buttonPanel.add(cancelAct.createCancelButton());
+        
         
         setContentPane(contentPane);
     }
@@ -99,8 +182,7 @@ public class AcceleratorKeyDialog extends JDialog {
             case 0:
                 return actions[rowIndex];
             case 1:
-                KeyStroke key = keyStrokes[rowIndex];
-                return (key == null) ? "" : key.toString();
+                return KeyStrokeTextField.keyStrokeToUserString(keyStrokes[rowIndex]);
             default:
                 return null;
             }
@@ -109,6 +191,10 @@ public class AcceleratorKeyDialog extends JDialog {
         public void setKeystroke(int rowIndex, KeyStroke key) {
             keyStrokes[rowIndex] = key;
             fireTableCellUpdated(rowIndex, 1);
+        }
+        
+        public KeyStroke getKeystroke(int rowIndex) {
+            return keyStrokes[rowIndex];
         }
         
         public ActionToKeyStrokeTableModel(Collection<Action> actionColl) {
