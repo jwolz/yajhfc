@@ -142,6 +142,8 @@ import yajhfc.server.ServerOptions;
 import yajhfc.tray.TrayFactory;
 import yajhfc.tray.YajHFCTrayIcon;
 import yajhfc.util.AbstractQuickSearchHelper;
+import yajhfc.util.AcceleratorKeyDialog;
+import yajhfc.util.AcceleratorKeys;
 import yajhfc.util.ActionJCheckBoxMenuItem;
 import yajhfc.util.ExampleFileFilter;
 import yajhfc.util.ExcDialogAbstractAction;
@@ -221,7 +223,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     protected Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward, actAdminMode;
     protected Action actRefresh, actResend, actPrintTable, actSuspend, actResume, actClipCopy, actShowRowNumbers, actAdjustColumns, actReconnect, actEditToolbar;
     protected Action actSaveAsPDF, actSaveAsTIFF, actUpdateCheck, actAnswerCall, actSearchFax, actViewLog, actLogConsole, actExport;
-    protected Action actShowToolbar, actShowQuickSearchBar, actServerSelectionPopup;
+    protected Action actShowToolbar, actShowQuickSearchBar, actServerSelectionPopup, actEditAccelerators;
     protected StatusBarResizeAction actAutoSizeStatus;
     protected ActionEnabler actChecker;
     protected Map<String,Action> availableActions = new HashMap<String,Action>();
@@ -1052,7 +1054,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         actRefresh.putValue(Action.NAME, _("Refresh"));
         actRefresh.putValue(Action.SHORT_DESCRIPTION, _("Refresh tables and server status"));
         actRefresh.putValue(Action.SMALL_ICON, Utils.loadIcon("general/Refresh"));
-        actRefresh.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
+        //actRefresh.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
         putAvailableAction("Refresh", actRefresh);
 
         actResend = new ExcDialogAbstractAction() {
@@ -1269,6 +1271,20 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         //actEditToolbar.putValue(Action.SMALL_ICON, Utils.loadIcon("media/Play"));
         putAvailableAction("EditToolbar", actEditToolbar);
         
+        actEditAccelerators = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(java.awt.event.ActionEvent e) {
+                AcceleratorKeyDialog akd = new AcceleratorKeyDialog(MainWin.this, availableActions.values(), AcceleratorKeys.DEFAULT_MAPPING);
+                akd.setVisible(true);
+                if (akd.modalResult) {
+                    AcceleratorKeys.saveToOptions(myopts, availableActions);
+                }
+            }
+        };
+        actEditAccelerators.putValue(Action.NAME, _("Edit keyboard shortcuts") + "...");
+        actEditAccelerators.putValue(Action.SHORT_DESCRIPTION, _("Customize the keyboard shortcuts"));
+        //actEditToolbar.putValue(Action.SMALL_ICON, Utils.loadIcon("media/Play"));
+        putAvailableAction("EditAccelerators", actEditAccelerators);
+        
         actUpdateCheck = new ExcDialogAbstractAction() {
             public void actualActionPerformed(java.awt.event.ActionEvent e) {
                 UpdateChecker.doGUIUpdateCheck(MainWin.this, MainWin.this.tablePanel);
@@ -1445,7 +1461,6 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         putAvailableAction("ShowQuickSearchBar",actShowQuickSearchBar);
         
         actServerSelectionPopup = new ExcDialogAbstractAction() {
-            
             @Override
             protected void actualActionPerformed(ActionEvent e) {
                 if (e.getSource() instanceof Component) {
@@ -1475,6 +1490,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         
         
         actChecker = new ActionEnabler();
+        AcceleratorKeys.loadFromOptions(myopts, availableActions);
     }
     
     private void putAvailableAction(String key, Action act) {
@@ -2373,6 +2389,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             	menuExtras.add(new JMenuItem(actOptions));
             }
             menuExtras.add(new JMenuItem(actEditToolbar));
+            menuExtras.add(new JMenuItem(actEditAccelerators));
             menuExtras.addSeparator();
             menuExtras.add(new JMenuItem(actReconnect));
             menuExtras.add(new ActionJCheckBoxMenuItem(actAdminMode));

@@ -79,6 +79,7 @@ are read to refresh the fax lists. This still needs some testing, however...
 - Support for multiple servers
 - Support for multiple identities
 - Lists of faxes can be saved in CSV, HTML or XML format
+- Support for configurable keyboard accelerators
 
 0.4.4:
 - Improved MAC OS support (mostly cosmetic changes)
