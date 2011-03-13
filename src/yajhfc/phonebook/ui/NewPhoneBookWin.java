@@ -41,7 +41,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -104,6 +106,8 @@ import yajhfc.phonebook.ui.PhoneBookTreeModel.PBTreeModelListener;
 import yajhfc.phonebook.ui.PhoneBookTreeModel.RootNode;
 import yajhfc.print.PhonebooksPrinter;
 import yajhfc.util.AbstractQuickSearchHelper;
+import yajhfc.util.AcceleratorKeyDialog;
+import yajhfc.util.AcceleratorKeys;
 import yajhfc.util.ClipboardPopup;
 import yajhfc.util.ExampleFileFilter;
 import yajhfc.util.ExcDialogAbstractAction;
@@ -115,9 +119,9 @@ import yajhfc.util.SafeJFileChooser;
 
 public final class NewPhoneBookWin extends JDialog implements ActionListener {
 
-    protected static final String FILTER_ACTION_COMMAND = "filter";
+    protected static final String FILTER_ACTION_COMMAND = "FilterEntries";
 
-    protected static final String SHOWALL_ACTION_COMMAND = "showall";
+    protected static final String SHOWALL_ACTION_COMMAND = "ShowAllEntries";
 
     static final Logger log = Logger.getLogger(NewPhoneBookWin.class.getName());
     
@@ -136,7 +140,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     JPopupMenu treePopup;
     
     Action listRemoveAction, addEntryAction, removeEntryAction, searchEntryAction, selectAction;
-    Action addDistListAction, viewPopupMenuAction, printAction, exportHTMLAction;
+    Action addDistListAction, viewPopupMenuAction, printAction, exportHTMLAction, closeAction, editAcceleratorsAction;
     
     MultiButtonGroup nameStyleGroup, viewGroup;
     
@@ -156,6 +160,8 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     TreeCellRenderer phoneBookRenderer = new PhoneBookRenderer();
     
     boolean allowSavePhonebooks = false;
+    
+    Map<String,Action> availableActions = new HashMap<String,Action>();
     
     private PhonebookPanel lastPanel;
     void writeToTextFields(PhoneBook phoneBook, List<PhoneBookEntry> pbs) {
@@ -403,11 +409,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     
     public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand();
-        if (cmd.equals("close")) {
-            usedSelectButton = false;
-            //dispose();
-            closeAndSaveAllPhonebooks(true);
-        } else if (cmd.equals("descopen")) {
+        if (cmd.equals("descopen")) {
             doDescOpen();
         } else if (cmd.equals("descimport")) {
             doDescImport();
@@ -744,22 +746,20 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             
             openMenu.addSeparator();
             openMenu.add(mi);
-            
-            JMenuItem closeWinMenu = new JMenuItem(Utils._("Close"), Utils.loadCustomIcon("close.gif"));
-            closeWinMenu.setActionCommand("close");
-            closeWinMenu.addActionListener(this);
 
             pbMenu = new JMenu(Utils._("Phone book"));
             pbMenu.add(openMenu);
             pbMenu.add(importMenu);
             pbMenu.add(exportMenu);
-            pbMenu.add(new JSeparator());
+            pbMenu.addSeparator();
             pbMenu.add(printAction);
             pbMenu.add(exportHTMLAction);
-            pbMenu.add(new JSeparator());
+            pbMenu.addSeparator();
             pbMenu.add(new JMenuItem(listRemoveAction));
-            pbMenu.add(new JSeparator());
-            pbMenu.add(closeWinMenu);
+            pbMenu.addSeparator();
+            pbMenu.add(new JMenuItem(editAcceleratorsAction));
+            pbMenu.addSeparator();
+            pbMenu.add(new JMenuItem(closeAction));
         }
         return pbMenu;
     }
@@ -771,15 +771,15 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             entryMenu.add(new JMenuItem(addEntryAction));
             entryMenu.add(new JMenuItem(addDistListAction));
             entryMenu.add(new JMenuItem(removeEntryAction));
-            entryMenu.add(new JSeparator());
+            entryMenu.addSeparator();
             JMenu viewMenu = new JMenu(nameStyleGroup.label);
             for (JMenuItem item : nameStyleGroup.createMenuItems()) {
                 viewMenu.add(item);
             }
             entryMenu.add(viewMenu);
-            entryMenu.add(new JSeparator());
+            entryMenu.addSeparator();
             entryMenu.add(new JMenuItem(searchEntryAction));
-            entryMenu.add(new JSeparator());
+            entryMenu.addSeparator();
             for (JRadioButtonMenuItem item : viewGroup.createMenuItems()) {
                 entryMenu.add(item);
             }
@@ -792,6 +792,20 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         menuBar.add(getPhonebookMenu());
         menuBar.add(getEntryMenu());
         return menuBar;
+    }
+    
+    private void putAvailableAction(String key, Action act) {
+        if (availableActions.put(key, act) != null) {
+            log.severe("Action " + key + " already existed!");
+        }
+        act.putValue(Action.ACTION_COMMAND_KEY, key);
+    }
+    
+    private void putAvailableAction(Action act) {
+        String key = (String)act.getValue(Action.ACTION_COMMAND_KEY);
+        if (availableActions.put(key, act) != null) {
+            log.severe("Action " + key + " already existed!");
+        }
     }
     
     private void createActions() {
@@ -808,6 +822,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         addEntryAction.putValue(Action.SMALL_ICON, Utils.loadCustomIcon("pbaddentry.png"));
         addEntryAction.putValue(Action.SHORT_DESCRIPTION, Utils._("Add new entry"));
         addEntryAction.setEnabled(false);
+        putAvailableAction("AddEntry", addEntryAction);
         
         addDistListAction = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {
@@ -825,6 +840,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         addDistListAction.putValue(Action.SMALL_ICON, Utils.loadCustomIcon("pbadddistlist.png"));
         addDistListAction.putValue(Action.SHORT_DESCRIPTION, Utils._("Add a new distribution list"));
         addDistListAction.setEnabled(false);
+        putAvailableAction("AddDistList", addDistListAction);
         
         removeEntryAction = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {
@@ -848,6 +864,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         removeEntryAction.putValue(Action.SMALL_ICON, Utils.loadIcon("general/Delete"));
         removeEntryAction.putValue(Action.SHORT_DESCRIPTION, Utils._("Delete selected entry"));
         removeEntryAction.setEnabled(false);
+        putAvailableAction("RemoveEntry", removeEntryAction);
         
         searchEntryAction = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {
@@ -863,6 +880,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         searchEntryAction.putValue(Action.NAME, Utils._("Find..."));
         searchEntryAction.putValue(Action.SMALL_ICON, Utils.loadIcon("general/Find"));
         searchEntryAction.putValue(Action.SHORT_DESCRIPTION, Utils._("Search for an entry"));
+        putAvailableAction("SearchEntry", searchEntryAction);
         
         listRemoveAction = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {
@@ -873,6 +891,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         };
         listRemoveAction.putValue(Action.NAME, Utils._("Remove from list"));
         listRemoveAction.putValue(Action.SMALL_ICON, Utils.loadIcon("general/Remove"));
+        putAvailableAction("ListRemove", listRemoveAction);
         
         nameStyleGroup = new MultiButtonGroup() {
             @Override
@@ -881,10 +900,8 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             }
         };
         nameStyleGroup.label = Utils._("Display style");
-        //nameStyleGroup.addItem(NameRule.GIVENNAME_NAME.getDisplayName(), NameRule.GIVENNAME_NAME.name());
-        //nameStyleGroup.addItem(NameRule.NAME_GIVENNAME.getDisplayName(), NameRule.NAME_GIVENNAME.name());
         for (NameRule rule : NameRule.values()) {
-            nameStyleGroup.addItem(rule.getDisplayName(), rule.name());
+            putAvailableAction(nameStyleGroup.addItem(rule.getDisplayName(), rule.name()));
         }
         nameStyleGroup.setSelectedActionCommand(Utils.getFaxOptions().phonebookDisplayStyle.name());
         
@@ -915,8 +932,8 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             }
         };
         
-        viewGroup.addItem(Utils._("Show all entries"), SHOWALL_ACTION_COMMAND);
-        viewGroup.addItem(Utils._("Filter entries") + "...", FILTER_ACTION_COMMAND);
+        putAvailableAction(viewGroup.addItem(Utils._("Show all entries"), SHOWALL_ACTION_COMMAND));
+        putAvailableAction(viewGroup.addItem(Utils._("Filter entries") + "...", FILTER_ACTION_COMMAND));
         viewGroup.setSelectedActionCommand(SHOWALL_ACTION_COMMAND);
         
         viewPopupMenuAction = new ExcDialogAbstractAction() {
@@ -952,6 +969,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
 		};
 		printAction.putValue(Action.NAME, _("Print phone books") + "...");
 		printAction.putValue(Action.SMALL_ICON, Utils.loadIcon("general/Print"));
+        putAvailableAction("Print", printAction);
 		
         exportHTMLAction = new ExcDialogAbstractAction() {
             private JFileChooser fileChooser;
@@ -1010,6 +1028,32 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         };
         exportHTMLAction.putValue(Action.NAME, _("Save as HTML") + "...");
         exportHTMLAction.putValue(Action.SMALL_ICON, Utils.loadIcon("general/Save"));
+        putAvailableAction("ExportHTML", exportHTMLAction);
+        
+        
+        closeAction = new ExcDialogAbstractAction() {
+            @Override
+            protected void actualActionPerformed(ActionEvent e) {
+                usedSelectButton = false;
+                closeAndSaveAllPhonebooks(true);
+            }
+        };
+        closeAction.putValue(Action.NAME, Utils._("Close"));
+        closeAction.putValue(Action.SMALL_ICON, Utils.loadCustomIcon("close.gif"));
+        putAvailableAction("Close", closeAction);
+        
+        editAcceleratorsAction = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(java.awt.event.ActionEvent e) {
+                AcceleratorKeyDialog akd = new AcceleratorKeyDialog(NewPhoneBookWin.this, availableActions.values(), AcceleratorKeys.DEFAULT_PBWIN_MAPPING);
+                akd.setVisible(true);
+                if (akd.modalResult) {
+                    AcceleratorKeys.saveToMap(Utils.getFaxOptions().pbwinKeyboardAccelerators, availableActions);
+                }
+            }
+        };
+        editAcceleratorsAction.putValue(Action.NAME, _("Edit keyboard shortcuts") + "...");
+        editAcceleratorsAction.putValue(Action.SHORT_DESCRIPTION, _("Customize the keyboard shortcuts"));
+        putAvailableAction("EditAccelerators", editAcceleratorsAction);
     }
     
     private void initialize() {
@@ -1053,6 +1097,8 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         });
         
         FaxOptions fopts = Utils.getFaxOptions();
+        
+        AcceleratorKeys.loadFromMap(fopts.pbwinKeyboardAccelerators, availableActions);
         
         if (fopts.phoneWinBounds != null)
             this.setBounds(fopts.phoneWinBounds);

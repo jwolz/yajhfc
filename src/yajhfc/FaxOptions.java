@@ -210,9 +210,14 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
     public String toolbarConfig = DEF_TOOLBAR_CONFIG;
     
     /**
-     * The map containing the keyboard accelerator mappings
+     * The map containing the keyboard accelerator mappings for the main window
      */
     public final Map<String,String> keyboardAccelerators = new TreeMap<String,String>();
+    
+    /**
+     * The map containing the keyboard accelerator mappings for the phonebook window
+     */
+    public final Map<String,String> pbwinKeyboardAccelerators = new TreeMap<String,String>();
     
     /**
      * Show a tray icon?
@@ -520,7 +525,8 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
         useCustomCover = false;
         CustomCover = "";
         
-        keyboardAccelerators.putAll(AcceleratorKeys.DEFAULT_MAPPING);
+        keyboardAccelerators.putAll(AcceleratorKeys.DEFAULT_MAINWIN_MAPPING);
+        pbwinKeyboardAccelerators.putAll(AcceleratorKeys.DEFAULT_PBWIN_MAPPING);
     }
     
     /**

@@ -59,6 +59,9 @@ public class JobPropsEditorDialog extends JDialog {
     
     protected Action okAction, deleteAction;
     
+    /**
+     * Available job properties as listed by the "JPARM" command
+     */
     static final String[] availableProperties = {
         "BEGBR",
         "BEGST",
