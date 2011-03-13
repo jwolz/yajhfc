@@ -26,14 +26,13 @@ import java.util.TreeMap;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-import yajhfc.FaxOptions;
-
 /**
  * @author jonas
  *
  */
 public class AcceleratorKeys {
-    public static Map<String,String> DEFAULT_MAPPING = new TreeMap<String,String>();
+    public static final Map<String,String> DEFAULT_MAINWIN_MAPPING = new TreeMap<String,String>();
+    public static final Map<String,String> DEFAULT_PBWIN_MAPPING = new TreeMap<String,String>();
     static {
         StringBuilder sb = new StringBuilder();
         int menuMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
@@ -51,31 +50,39 @@ public class AcceleratorKeys {
         }
         String menuModifier = sb.toString();
 
-        DEFAULT_MAPPING.put("AdminMode","shift pressed F12");
-        DEFAULT_MAPPING.put("AnswerCall","pressed F11");
-        DEFAULT_MAPPING.put("ClipCopy",menuModifier + "pressed C");
-        DEFAULT_MAPPING.put("Delete","pressed DELETE");
-        DEFAULT_MAPPING.put("Exit",menuModifier + "pressed Q");
-        DEFAULT_MAPPING.put("FaxRead",menuModifier + "pressed R");
-        DEFAULT_MAPPING.put("FaxSave",menuModifier + "pressed S");
-        DEFAULT_MAPPING.put("Forward","pressed F4");
-        DEFAULT_MAPPING.put("Phonebook","pressed F9");
-        DEFAULT_MAPPING.put("Poll","pressed F3");
-        DEFAULT_MAPPING.put("PrintTable",menuModifier + "pressed P");
-        DEFAULT_MAPPING.put("Readme","pressed F1");
-        DEFAULT_MAPPING.put("Reconnect","pressed F12");
-        DEFAULT_MAPPING.put("Refresh","pressed F5");
-        DEFAULT_MAPPING.put("Resend","shift pressed F4");
-        DEFAULT_MAPPING.put("Resume","pressed F6");
-        DEFAULT_MAPPING.put("SaveAsPDF","shift " + menuModifier + "pressed S");
-        DEFAULT_MAPPING.put("SearchFax",menuModifier + "pressed F");
-        DEFAULT_MAPPING.put("Send","pressed F2");
-        DEFAULT_MAPPING.put("Suspend","pressed F7");
-        DEFAULT_MAPPING.put("ViewLog",menuModifier + "pressed L");
-    }
-    
-    public static void saveToOptions(FaxOptions fo, Map<String,Action> availableActions) {
-        saveToMap(fo.keyboardAccelerators, availableActions);
+        DEFAULT_MAINWIN_MAPPING.put("AdminMode","shift pressed F12");
+        DEFAULT_MAINWIN_MAPPING.put("AnswerCall","pressed F11");
+        DEFAULT_MAINWIN_MAPPING.put("ClipCopy",menuModifier + "pressed C");
+        DEFAULT_MAINWIN_MAPPING.put("Delete","pressed DELETE");
+        DEFAULT_MAINWIN_MAPPING.put("Exit",menuModifier + "pressed Q");
+        DEFAULT_MAINWIN_MAPPING.put("FaxRead",menuModifier + "pressed R");
+        DEFAULT_MAINWIN_MAPPING.put("FaxSave",menuModifier + "pressed S");
+        DEFAULT_MAINWIN_MAPPING.put("Forward","pressed F4");
+        DEFAULT_MAINWIN_MAPPING.put("Phonebook","pressed F9");
+        DEFAULT_MAINWIN_MAPPING.put("Poll","pressed F3");
+        DEFAULT_MAINWIN_MAPPING.put("PrintTable",menuModifier + "pressed P");
+        DEFAULT_MAINWIN_MAPPING.put("Readme","pressed F1");
+        DEFAULT_MAINWIN_MAPPING.put("Reconnect","pressed F12");
+        DEFAULT_MAINWIN_MAPPING.put("Refresh","pressed F5");
+        DEFAULT_MAINWIN_MAPPING.put("Resend","shift pressed F4");
+        DEFAULT_MAINWIN_MAPPING.put("Resume","pressed F6");
+        DEFAULT_MAINWIN_MAPPING.put("SaveAsPDF","shift " + menuModifier + "pressed S");
+        DEFAULT_MAINWIN_MAPPING.put("SearchFax",menuModifier + "pressed F");
+        DEFAULT_MAINWIN_MAPPING.put("Send","pressed F2");
+        DEFAULT_MAINWIN_MAPPING.put("Suspend","pressed F7");
+        DEFAULT_MAINWIN_MAPPING.put("ViewLog",menuModifier + "pressed L");
+        DEFAULT_MAINWIN_MAPPING.put("view_custom",menuModifier+"shift pressed F");
+        DEFAULT_MAINWIN_MAPPING.put("view_all",menuModifier+"pressed A");
+        
+        
+        DEFAULT_PBWIN_MAPPING.put("Print",menuModifier + "pressed P");
+        DEFAULT_PBWIN_MAPPING.put("Close","alt pressed F4");
+        DEFAULT_PBWIN_MAPPING.put("SearchEntry",menuModifier + "pressed F");
+        DEFAULT_PBWIN_MAPPING.put("RemoveEntry",menuModifier + "pressed DELETE");
+        DEFAULT_PBWIN_MAPPING.put("AddEntry",menuModifier + "pressed N");
+        DEFAULT_PBWIN_MAPPING.put("AddDistList",menuModifier + "shift pressed N");
+        DEFAULT_PBWIN_MAPPING.put("FilterEntries",menuModifier+"shift pressed F");
+        DEFAULT_PBWIN_MAPPING.put("ShowAllEntries",menuModifier+"pressed A");
     }
     
     public static void saveToMap(Map<String,String> map, Map<String,Action> availableActions) {
@@ -86,10 +93,6 @@ public class AcceleratorKeys {
                 map.put((String)act.getValue(Action.ACTION_COMMAND_KEY), ks.toString());
             }
         }
-    }
-
-    public static void loadFromOptions(FaxOptions fo, Map<String,Action> availableActions) {
-        loadFromMap(fo.keyboardAccelerators, availableActions);
     }
     
     public static void loadFromMap(Map<String,String> map, Map<String,Action> availableActions) {

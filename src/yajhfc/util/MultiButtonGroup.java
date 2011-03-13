@@ -20,12 +20,12 @@ package yajhfc.util;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
-import javax.swing.ButtonGroup;
+import javax.swing.Action;
 import javax.swing.JRadioButtonMenuItem;
 
 import yajhfc.Utils;
@@ -36,91 +36,94 @@ import yajhfc.launch.Launcher2;
  * @author jonas
  *
  */
-public abstract class MultiButtonGroup implements ActionListener {
+public abstract class MultiButtonGroup {
     /**
      * The label for this button group
      */
     public String label;
     
     protected List<Item> items = new ArrayList<Item>();
-    protected List<AbstractButton> childItems = new ArrayList<AbstractButton>();
     protected String selectedActionCommand = null;
-    
-    
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-    public final void actionPerformed(ActionEvent e) {
-        try {
-            setSelectedActionCommand(e.getActionCommand(), e.getSource());
-            actualActionPerformed(e);
-        } catch (Exception ex) {
-            Object src = null;
-            if (e != null) {
-                src = e.getSource();
-            }
-            if (src == null || !(src instanceof Component)) {
-                src = Launcher2.application.getFrame();
-            }
-            
-            ExceptionDialog.showExceptionDialog((Component)src, Utils._("An Error occurred executing the desired action:"), ex);
-        }
-    }
     
     protected abstract void actualActionPerformed(ActionEvent e);
 
-    public void addItem(String label, String actionCommand) {
-        items.add(new Item(label, actionCommand));
+    public Item addItem(String label, String actionCommand) {
+        Item item;
+        items.add(item = new Item(label, actionCommand));
+        return item;
     }
     
     public String getSelectedActionCommand() {
         return selectedActionCommand;
     }
     
-    public void setSelectedActionCommand(String selectedActionCommand) {
-        setSelectedActionCommand(selectedActionCommand, null);
-    }
-    
-    protected void setSelectedActionCommand(String actionCommand, Object source) {
+    public void setSelectedActionCommand(String actionCommand) {
         if (!actionCommand.equals(selectedActionCommand)) {
-            for (AbstractButton button : childItems) {
-                if (button != source && actionCommand.equals(button.getActionCommand())) {
-                    button.setSelected(true);
-                }
+            for (Item item : items) {
+                item.setSelected(actionCommand.equals(item.getActionCommand()));
             }
             selectedActionCommand = actionCommand;
         }
     }
-    
+
     public JRadioButtonMenuItem[] createMenuItems() {
         JRadioButtonMenuItem[] menuItems = new JRadioButtonMenuItem[items.size()];
-        ButtonGroup group = new ButtonGroup();
+        //ButtonGroup group = new ButtonGroup();
         
         for (int i = 0; i < items.size(); i++) {
-            Item item = items.get(i);
-            JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(item.label);
-            menuItem.setActionCommand(item.actionCommand);
-            menuItem.addActionListener(this);
-            group.add(menuItem);
+            JRadioButtonMenuItem menuItem = new ActionJRadioButtonMenuItem(items.get(i));
+            //group.add(menuItem);
             
-            if (item.actionCommand.equals(selectedActionCommand)) {
-                menuItem.setSelected(true);
-            }
             menuItems[i] = menuItem;
-            childItems.add(menuItem);
         }
         
         return menuItems;
     }
     
-    public static class Item {
-        public final String label;
-        public final String actionCommand;
+    public List<Item> getItems() {
+        return items;
+    }
+    
+    public class Item extends AbstractAction {
+        
+        public String getActionCommand() {
+            return (String)getValue(Action.ACTION_COMMAND_KEY);
+        }
+        
+        public void setSelected(boolean isSelected) {
+            putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, isSelected);
+        }
+
+        public boolean isSelected() {
+            Boolean selected = (Boolean)getValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY);
+            return (selected != null) && selected.booleanValue();
+        }
+        
+        public final void actionPerformed(ActionEvent e) {
+            try {
+                setSelectedActionCommand(e.getActionCommand());
+                if (e.getSource() instanceof AbstractButton) {
+                    ((AbstractButton)e.getSource()).setSelected(true);
+                }
+                actualActionPerformed(e);
+            } catch (Exception ex) {
+                Object src = null;
+                if (e != null) {
+                    src = e.getSource();
+                }
+                if (src == null || !(src instanceof Component)) {
+                    src = Launcher2.application.getFrame();
+                }
+                
+                ExceptionDialog.showExceptionDialog((Component)src, Utils._("An Error occurred executing the desired action:"), ex);
+            }
+        }
         
         protected Item(String label, String actionCommand) {
-            super();
-            this.label = label;
-            this.actionCommand = actionCommand;
-        }        
+            super(label);
+            
+            putValue(Action.ACTION_COMMAND_KEY, actionCommand);
+            setSelected(false);
+        }
     }
 }

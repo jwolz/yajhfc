@@ -61,7 +61,6 @@ import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
 import javax.swing.InputMap;
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -102,7 +101,6 @@ import yajhfc.filters.OrFilter;
 import yajhfc.filters.StringFilter;
 import yajhfc.filters.StringFilterOperator;
 import yajhfc.filters.ui.CustomFilterDialog;
-import yajhfc.launch.Launcher2;
 import yajhfc.launch.MainApplicationFrame;
 import yajhfc.logconsole.LogConsole;
 import yajhfc.macosx.MacOSXSupport;
@@ -150,6 +148,7 @@ import yajhfc.util.ExcDialogAbstractAction;
 import yajhfc.util.ExceptionDialog;
 import yajhfc.util.FileChooserRunnable;
 import yajhfc.util.JTableTABAction;
+import yajhfc.util.MultiButtonGroup;
 import yajhfc.util.NumberRowViewport;
 import yajhfc.util.ProgressPanel;
 import yajhfc.util.ProgressWorker;
@@ -196,11 +195,6 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     protected JMenu helpMenu = null;
     protected JMenu menuTable;
     
-    protected JCheckBoxMenuItem menuMarkError;
-    
-    protected JRadioButtonMenuItem menuViewAll, menuViewOwn, menuViewCustom;
-    protected ButtonGroup viewGroup;
-    
     protected FaxOptions myopts = null;
 
     protected MouseListener tblMouseListener;
@@ -223,7 +217,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     protected Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward, actAdminMode;
     protected Action actRefresh, actResend, actPrintTable, actSuspend, actResume, actClipCopy, actShowRowNumbers, actAdjustColumns, actReconnect, actEditToolbar;
     protected Action actSaveAsPDF, actSaveAsTIFF, actUpdateCheck, actAnswerCall, actSearchFax, actViewLog, actLogConsole, actExport;
-    protected Action actShowToolbar, actShowQuickSearchBar, actServerSelectionPopup, actEditAccelerators;
+    protected Action actShowToolbar, actShowQuickSearchBar, actServerSelectionPopup, actEditAccelerators, actMarkFailedJobs;
     protected StatusBarResizeAction actAutoSizeStatus;
     protected ActionEnabler actChecker;
     protected Map<String,Action> availableActions = new HashMap<String,Action>();
@@ -1219,6 +1213,25 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         actShowRowNumbers.putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, myopts.showRowNumbers);
         putAvailableAction("ShowRowNumbers", actShowRowNumbers);
         
+        actMarkFailedJobs = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(ActionEvent e) {
+                Boolean state = (Boolean)getValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY);
+                boolean newState;
+                if (state == null)
+                    newState = false;
+                else
+                    newState = !state; 
+
+                myopts.markFailedJobs = newState;
+                getSelectedTable().repaint();
+                
+                putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, newState);
+            };
+        };
+        actMarkFailedJobs.putValue(Action.NAME, _("Mark failed jobs"));
+        actMarkFailedJobs.putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, myopts.markFailedJobs);
+        putAvailableAction("MarkFailedJobs", actMarkFailedJobs);
+        
         actAdjustColumns = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {
                 Boolean state = (Boolean)getValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY);
@@ -1273,10 +1286,10 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         
         actEditAccelerators = new ExcDialogAbstractAction() {
             public void actualActionPerformed(java.awt.event.ActionEvent e) {
-                AcceleratorKeyDialog akd = new AcceleratorKeyDialog(MainWin.this, availableActions.values(), AcceleratorKeys.DEFAULT_MAPPING);
+                AcceleratorKeyDialog akd = new AcceleratorKeyDialog(MainWin.this, availableActions.values(), AcceleratorKeys.DEFAULT_MAINWIN_MAPPING);
                 akd.setVisible(true);
                 if (akd.modalResult) {
-                    AcceleratorKeys.saveToOptions(myopts, availableActions);
+                    AcceleratorKeys.saveToMap(myopts.keyboardAccelerators, availableActions);
                 }
             }
         };
@@ -1488,9 +1501,10 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         actExport = new ExportAction(this);
         putAvailableAction("ExportTable", actExport);
         
+        menuViewListener = new MenuViewListener();
         
         actChecker = new ActionEnabler();
-        AcceleratorKeys.loadFromOptions(myopts, availableActions);
+        AcceleratorKeys.loadFromMap(myopts.keyboardAccelerators, availableActions);
     }
     
     private void putAvailableAction(String key, Action act) {
@@ -1498,6 +1512,13 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             log.severe("Action " + key + " already existed!");
         }
         act.putValue(Action.ACTION_COMMAND_KEY, key);
+    }
+    
+    void putAvailableAction(Action act) {
+        String key = (String)act.getValue(Action.ACTION_COMMAND_KEY);
+        if (availableActions.put(key, act) != null) {
+            log.severe("Action " + key + " already existed!");
+        }
     }
     
     /**
@@ -1702,39 +1723,11 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         if (menuView == null) {
             menuView = new JMenu(_("View"));
             
-            menuViewListener = new MenuViewListener();
-            
-            menuViewAll = new JRadioButtonMenuItem(_("All faxes"));
-            menuViewAll.setActionCommand("view_all");
-            menuViewAll.setSelected(true);
-            menuViewAll.addActionListener(menuViewListener);
-            menuViewAll.setEnabled(myopts.allowChangeFilter);
-            
-            menuViewOwn = new JRadioButtonMenuItem(_("Only own faxes"));
-            menuViewOwn.setActionCommand("view_own");
-            menuViewOwn.addActionListener(menuViewListener);
-            menuViewOwn.setEnabled(myopts.allowChangeFilter);
-            
-            menuViewCustom = new JRadioButtonMenuItem(_("Custom filter..."));
-            menuViewCustom.setActionCommand("view_custom");
-            menuViewCustom.addActionListener(menuViewListener);
-            menuViewCustom.setEnabled(myopts.allowChangeFilter);
-            
-            menuMarkError = new JCheckBoxMenuItem(_("Mark failed jobs"));
-            menuMarkError.setActionCommand("mark_failed");
-            menuMarkError.addActionListener(menuViewListener);
-            menuMarkError.setSelected(myopts.markFailedJobs);
-            
-            viewGroup = new ButtonGroup();
-            viewGroup.add(menuViewAll);
-            viewGroup.add(menuViewOwn);
-            viewGroup.add(menuViewCustom);
-         
-            menuView.add(menuViewAll);
-            menuView.add(menuViewOwn);
-            menuView.add(menuViewCustom);
+            for (JRadioButtonMenuItem mi : menuViewListener.createMenuItems()) {
+                menuView.add(mi);
+            }
             menuView.addSeparator();
-            menuView.add(menuMarkError);
+            menuView.add(new ActionJCheckBoxMenuItem(actMarkFailedJobs));
             menuView.add(new ActionJCheckBoxMenuItem(actShowRowNumbers));
             menuView.add(new ActionJCheckBoxMenuItem(actAdjustColumns));
             menuView.addSeparator();
@@ -2427,10 +2420,31 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         return this;
     }
     
-    class MenuViewListener implements ActionListener, ChangeListener {
-        private JRadioButtonMenuItem[] lastSel = new JRadioButtonMenuItem[TableType.TABLE_COUNT];
+    class MenuViewListener extends MultiButtonGroup implements ChangeListener {
+        private static final String VIEW_CUSTOM = "view_custom";
+        private static final String VIEW_OWN = "view_own";
+        private static final String VIEW_ALL = "view_all";
+        
+        private String[] lastSel = new String[TableType.TABLE_COUNT];
         @SuppressWarnings({ "rawtypes" })
         private Filter[] currentFilters = new Filter[TableType.TABLE_COUNT];
+        
+        private Item itemViewAll, itemViewOwn, itemViewCustom;
+        
+        public MenuViewListener() {
+            itemViewAll = this.addItem(_("All faxes"), VIEW_ALL);
+            itemViewAll.setSelected(true);
+            itemViewAll.setEnabled(myopts.allowChangeFilter);
+            putAvailableAction(itemViewAll);
+            
+            itemViewOwn = this.addItem(_("Only own faxes"), VIEW_OWN);
+            itemViewOwn.setEnabled(myopts.allowChangeFilter);
+            putAvailableAction(itemViewOwn);
+            
+            itemViewCustom = this.addItem(_("Custom filter..."), VIEW_CUSTOM);
+            itemViewCustom.setEnabled(myopts.allowChangeFilter);
+            putAvailableAction(itemViewCustom);
+        }
         
         private void setJobFilter(@SuppressWarnings("rawtypes") FaxListTableModel model, @SuppressWarnings("rawtypes") Filter filter) {
             currentFilters[model.getTableType().ordinal()] = filter;
@@ -2443,63 +2457,47 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         }
         
         @SuppressWarnings("unchecked")
-        public void actionPerformed(ActionEvent e) {
-            try {
-                String cmd = e.getActionCommand();
+        protected void actualActionPerformed(ActionEvent e) {
+            String cmd = e.getActionCommand();
+            @SuppressWarnings("rawtypes")
+            FaxListTableModel model = getSelectedTable().getRealModel();
+            int selTab = tabMain.getSelectedIndex();
+
+            if (cmd.equals(VIEW_ALL)) {
+                setJobFilter(model, null);
+                lastSel[selTab] = VIEW_ALL;
+            } else if (cmd.equals(VIEW_OWN)) {
+                setJobFilter(model, getOwnFilterFor(model));
+                lastSel[selTab] = VIEW_OWN;
+            } else if (cmd.equals(VIEW_CUSTOM)) {
                 @SuppressWarnings("rawtypes")
-                FaxListTableModel model = getSelectedTable().getRealModel();
-                int selTab = tabMain.getSelectedIndex();
-
-                if (cmd.equals("view_all")) {
-                    setJobFilter(model, null);
-                    lastSel[selTab] = menuViewAll;
-                } else if (cmd.equals("view_own")) {
-                    setJobFilter(model, getOwnFilterFor(model));
-                    lastSel[selTab] = menuViewOwn;
-                } else if (cmd.equals("view_custom")) {
-                    @SuppressWarnings("rawtypes")
-                    CustomFilterDialog cfd = new CustomFilterDialog(MainWin.this, 
-                            MessageFormat.format(Utils._("Custom filter for table {0}"), tabMain.getTitleAt(selTab)),
-                            Utils._("Only display fax jobs fulfilling:"),
-                            Utils._("You have entered no filtering conditions. Do you want to show all faxes instead?"),
-                            Utils._("Please enter a valid date/time!\n(Hint: Exactly the same format as in the fax job table is expected)"),
-                            model.getColumns(), (lastSel[selTab] == menuViewCustom) ? getFilterFor(model.getTableType()) : null);
-                    cfd.setVisible(true);
-                    if (cfd.okClicked) {
-                        if (cfd.returnValue == null) {
-                            menuViewAll.doClick();
-                            return;
-                        } else {
-                            setJobFilter(model, cfd.returnValue);
-                            lastSel[selTab] = menuViewCustom;
-                        }
+                CustomFilterDialog cfd = new CustomFilterDialog(MainWin.this, 
+                        MessageFormat.format(Utils._("Custom filter for table {0}"), tabMain.getTitleAt(selTab)),
+                        Utils._("Only display fax jobs fulfilling:"),
+                        Utils._("You have entered no filtering conditions. Do you want to show all faxes instead?"),
+                        Utils._("Please enter a valid date/time!\n(Hint: Exactly the same format as in the fax job table is expected)"),
+                        model.getColumns(), (lastSel[selTab] == VIEW_CUSTOM) ? getFilterFor(model.getTableType()) : null);
+                cfd.setVisible(true);
+                if (cfd.okClicked) {
+                    if (cfd.returnValue == null) {
+                        itemViewAll.actionPerformed(new ActionEvent(this, 0, VIEW_ALL));
+                        return;
                     } else {
-                        if (lastSel[selTab] != menuViewCustom)
-                            resetLastSel(selTab);
+                        setJobFilter(model, cfd.returnValue);
+                        lastSel[selTab] = VIEW_CUSTOM;
                     }
-                } else if (cmd.equals("mark_failed")) {
-                    myopts.markFailedJobs = menuMarkError.isSelected();
-
-                    getSelectedTable().repaint();
+                } else {
+                    if (lastSel[selTab] != VIEW_CUSTOM)
+                        resetLastSel(selTab);
                 }
-            } catch (Exception ex) {
-                Object src = null;
-                if (e != null) {
-                    src = e.getSource();
-                }
-                if (src == null || !(src instanceof Component)) {
-                    src = Launcher2.application;
-                }
-
-                ExceptionDialog.showExceptionDialog((Component)src, Utils._("An Error occurred executing the desired action:"), ex);
-            }
+            } 
         }
         
         private void resetLastSel(int selTab) {
             if (lastSel[selTab] != null)
-                lastSel[selTab].setSelected(true);
+                setSelectedActionCommand(lastSel[selTab]);
             else 
-                menuViewAll.setSelected(true);
+                setSelectedActionCommand(VIEW_ALL);
         }
         
         public void stateChanged(ChangeEvent e) {
@@ -2508,10 +2506,10 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             boolean markErrorState = canMarkError(model);
             
             resetLastSel(tabMain.getSelectedIndex());
-            menuViewOwn.setEnabled(myopts.allowChangeFilter && viewOwnState);
-            menuMarkError.setEnabled(markErrorState);
-            if ((!viewOwnState && menuViewOwn.isSelected())) {
-                menuViewAll.setSelected(true);
+            itemViewOwn.setEnabled(myopts.allowChangeFilter && viewOwnState);
+            actMarkFailedJobs.setEnabled(markErrorState);
+            if ((!viewOwnState && itemViewOwn.isSelected())) {
+                setSelectedActionCommand(VIEW_ALL);
                 setJobFilter(model, null);
             }
         }
@@ -2551,20 +2549,20 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             for (int i = 0; i < tabMain.getTabCount(); i++) {
                 @SuppressWarnings("rawtypes")
                 FaxListTableModel model = getTableByIndex(i).getRealModel();
-                if (lastSel[i] == menuViewOwn) {
+                if (lastSel[i] == VIEW_OWN) {
                     if (ownFilterOK(model)) 
                         setJobFilter(model, getOwnFilterFor(model));
                     else {
-                        lastSel[i] = menuViewAll;
+                        lastSel[i] = VIEW_ALL;
                         setJobFilter(model, null);
                     }
-                } else if (lastSel[i] == menuViewCustom) {
+                } else if (lastSel[i] == VIEW_CUSTOM) {
                     if (getFilterFor(model.getTableType()) == null || !getFilterFor(model.getTableType()).validate(model.getColumns())) {
-                        lastSel[i] = menuViewAll;
+                        lastSel[i] = VIEW_ALL;
                         setJobFilter(model, null);
                     }
                     
-                } else if (lastSel[i] == menuViewAll) 
+                } else if (lastSel[i] == VIEW_ALL) 
                     setJobFilter(model, null);
             }
             stateChanged(null);
@@ -2574,22 +2572,22 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         @SuppressWarnings({ "unchecked", "rawtypes" })
         private void loadSaveString(int idx, String data) {
             if ((data == null) || data.equals("A")) {
-                lastSel[idx] = menuViewAll;
+                lastSel[idx] = VIEW_ALL;
             } else if (data.equals("O")) {
-                lastSel[idx] = menuViewOwn;
+                lastSel[idx] = VIEW_OWN;
             } else if (data.startsWith("C")) {
                 FaxListTableModel model = getTableByIndex(idx).getRealModel();
                 Filter<FaxJob,FmtItem> yjf = FilterCreator.stringToFilter(data.substring(1), model.getColumns());
                 if (yjf == null) {
-                    lastSel[idx] = menuViewAll;
+                    lastSel[idx] = VIEW_ALL;
                 } else {
-                    lastSel[idx] = menuViewCustom;
+                    lastSel[idx] = VIEW_CUSTOM;
                     setJobFilter(model, yjf);
                 }
             } else {
                 // Fall back to view all faxes
                 log.warning("Unknown filter for index " + idx + ":" + data);
-                lastSel[idx] = menuViewAll;
+                lastSel[idx] = VIEW_ALL;
             }
         }
         
@@ -2602,11 +2600,11 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         }
         
         private String getSaveString(int idx) {
-            if (lastSel[idx] == null || lastSel[idx] == menuViewAll) {
+            if (lastSel[idx] == null || lastSel[idx] == VIEW_ALL) {
                 return "A";
-            } else if (lastSel[idx] == menuViewOwn) {
+            } else if (lastSel[idx] == VIEW_OWN) {
                 return "O";
-            } else if (lastSel[idx] == menuViewCustom) {
+            } else if (lastSel[idx] == VIEW_CUSTOM) {
                 FaxListTableModel<? extends FmtItem> model = getTableByIndex(idx).getRealModel();
                 return "C" + FilterCreator.filterToString(getFilterFor(model.getTableType()));
             } else
