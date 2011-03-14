@@ -108,11 +108,12 @@ public class ExportXMLAction  {
 	            Class<?> dataType = cols.get(i).getDataType();
 	            if (Date.class.isAssignableFrom(dataType)) {
 	                Date data = (Date)job.getData(i);
-	                cellEl.setAttribute("rawValue", String.valueOf(data.getTime()));
+	                cellEl.setAttribute("rawValue", String.valueOf((data == null) ? Long.MIN_VALUE : data.getTime()));
 	                
-	                cellEl.setTextContent(DATE_FORMAT.format(data));
+	                cellEl.setTextContent((data == null) ? "" : DATE_FORMAT.format(data));
 	            } else {
-	                cellEl.setTextContent(job.getData(i).toString());
+	                Object data = job.getData(i);
+	                cellEl.setTextContent((data == null) ? "" : data.toString());
 	            }
 	            
 	            rowEl.appendChild(cellEl);
