@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: YajHFC 0.5.0 beta2\n"
+"Project-Id-Version: YajHFC 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-03-13 12:33+0100\n"
-"PO-Revision-Date: 2011-01-09 17:57+0300\n"
+"PO-Revision-Date: 2011-03-14 11:03+0300\n"
 "Last-Translator: Alexander Moisseev <moiseev@mezonplus.ru>\n"
 "Language-Team: RUSSIAN <moiseev@mezonplus.ru>\n"
 "Language: \n"
@@ -19,8 +19,11 @@ msgstr ""
 "X-Poedit-Country: RUSSIAN FEDERATION\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: ../FaxOptions.java:565 ../FaxOptions.java:573 ../FaxOptions.java:581
-#: ../FaxOptions.java:593 ../options/ServerSettingsPanel.java:143
+#: ../FaxOptions.java:565
+#: ../FaxOptions.java:573
+#: ../FaxOptions.java:581
+#: ../FaxOptions.java:593
+#: ../options/ServerSettingsPanel.java:143
 #: ../options/CoverPanel.java:214
 msgid "Default"
 msgstr "Основной"
@@ -51,16 +54,22 @@ msgstr "Александр Моисеев <moiseev@mezonplus.ru>"
 msgid "$LANGUAGE$ translation by {0}"
 msgstr "Автор русского перевода: {0}"
 
-#: ../AboutDialog.java:243 ../filters/ui/CustomFilterDialog.java:86
-#: ../options/OptionsWin.java:177 ../phonebook/ldap/ConnectionDialog.java:156
+#: ../AboutDialog.java:243
+#: ../filters/ui/CustomFilterDialog.java:86
+#: ../options/OptionsWin.java:177
+#: ../phonebook/ldap/ConnectionDialog.java:156
 #: ../phonebook/csv/CSVDialog.java:133
-#: ../phonebook/jdbc/ConnectionDialog.java:197 ../util/ExceptionDialog.java:80
-#: ../util/ToolbarEditorDialog.java:137 ../util/PasswordDialog.java:71
-#: ../util/AcceleratorKeyDialog.java:127 ../send/JobPropsEditorDialog.java:153
+#: ../phonebook/jdbc/ConnectionDialog.java:197
+#: ../util/ExceptionDialog.java:80
+#: ../util/ToolbarEditorDialog.java:137
+#: ../util/PasswordDialog.java:71
+#: ../util/AcceleratorKeyDialog.java:127
+#: ../send/JobPropsEditorDialog.java:153
 msgid "OK"
 msgstr ""
 
-#: ../AboutDialog.java:287 ../MainWin.java:895
+#: ../AboutDialog.java:287
+#: ../MainWin.java:895
 msgid "About"
 msgstr "О программе"
 
@@ -77,7 +86,8 @@ msgstr "О системе"
 msgid "About {0}"
 msgstr "О программе {0}"
 
-#: ../AboutDialog.java:304 ../MainWin.java:923
+#: ../AboutDialog.java:304
+#: ../MainWin.java:923
 msgid "Documentation"
 msgstr "Документация"
 
@@ -125,14 +135,18 @@ msgstr "Напомнить снова"
 msgid "Do not remind me again"
 msgstr "Больше не напоминать"
 
-#: ../UpdateChecker.java:97 ../LogViewWorker.java:158
-#: ../logconsole/LogConsole.java:131 ../filters/ui/SearchWin.java:166
+#: ../UpdateChecker.java:97
+#: ../LogViewWorker.java:158
+#: ../logconsole/LogConsole.java:131
+#: ../filters/ui/SearchWin.java:166
 #: ../phonebook/ui/NewPhoneBookWin.java:1041
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:335
 msgid "Close"
 msgstr "Закрыть"
 
-#: ../UpdateChecker.java:101 ../UpdateChecker.java:228 ../MainWin.java:1306
+#: ../UpdateChecker.java:101
+#: ../UpdateChecker.java:228
+#: ../MainWin.java:1306
 msgid "Check for update"
 msgstr "Проверить обновление"
 
@@ -157,32 +171,16 @@ msgid "Printer port"
 msgstr "Порт принтера"
 
 #: ../printerport/PortOptionsPanel.java:70
-msgid ""
-"YajHFC supports listening for new PostScript documents to send on a TCP port "
-"or a named pipe."
-msgstr ""
-"YajHFC позволяет принимать через порт TCP или именованный канал (named pipe) "
-"новые документы PostScript для последующей отправки."
+msgid "YajHFC supports listening for new PostScript documents to send on a TCP port or a named pipe."
+msgstr "YajHFC позволяет принимать через порт TCP или именованный канал (named pipe) новые документы PostScript для последующей отправки."
 
 #: ../printerport/PortOptionsPanel.java:71
-msgid ""
-"The TCP port can be used as <i>AppSocket</i> port (<i>socket:</i> protocol) "
-"in CUPS or <i>standard TCP/IP port</i> in Windows to create a virtual fax "
-"printer."
-msgstr ""
-"Порт  TCP можно использовать как порт <i>AppSocket</i> (<i>socket:</i> "
-"protocol) в CUPS или <i>standard TCP/IP port</i> в Windows для создания "
-"виртуального факс-принтера."
+msgid "The TCP port can be used as <i>AppSocket</i> port (<i>socket:</i> protocol) in CUPS or <i>standard TCP/IP port</i> in Windows to create a virtual fax printer."
+msgstr "Порт  TCP можно использовать как порт <i>AppSocket</i> (<i>socket:</i> protocol) в CUPS или <i>standard TCP/IP port</i> в Windows для создания виртуального факс-принтера."
 
 #: ../printerport/PortOptionsPanel.java:72
-msgid ""
-"The named pipe is especially useful on Unix, where it can be used together "
-"with a special CUPS backend to get fax printer support for multiple "
-"simultaneously logged in users."
-msgstr ""
-"Именованные каналы главным образом полезны в Unix, где они могут "
-"использоваться совместно со специальным бэкэндом CUPS, чтобы  предоставить "
-"доступ к факс-принтеру для нескольких одновременно работающих пользователей."
+msgid "The named pipe is especially useful on Unix, where it can be used together with a special CUPS backend to get fax printer support for multiple simultaneously logged in users."
+msgstr "Именованные каналы главным образом полезны в Unix, где они могут использоваться совместно со специальным бэкэндом CUPS, чтобы  предоставить доступ к факс-принтеру для нескольких одновременно работающих пользователей."
 
 #: ../printerport/PortOptionsPanel.java:75
 msgid "Enable TCP/IP printer port for YajHFC"
@@ -249,11 +247,13 @@ msgstr "{0} непрочитанных факсов"
 msgid "Disconnected"
 msgstr "Отсоединено"
 
-#: ../print/PhonebooksPrinter.java:85 ../phonebook/ui/NewPhoneBookWin.java:970
+#: ../print/PhonebooksPrinter.java:85
+#: ../phonebook/ui/NewPhoneBookWin.java:970
 msgid "Print phone books"
 msgstr "Печать телефонных справочников"
 
-#: ../print/PhonebooksPrinter.java:90 ../print/FaxTablePrinter.java:87
+#: ../print/PhonebooksPrinter.java:90
+#: ../print/FaxTablePrinter.java:87
 #: ../MainWin.java:1155
 msgid "Print"
 msgstr "Печать"
@@ -263,7 +263,8 @@ msgstr "Печать"
 msgid "All phone books"
 msgstr "Все телефонные справочники"
 
-#: ../print/PhonebooksPrinter.java:112 ../print/PhonebooksPrinter.java:210
+#: ../print/PhonebooksPrinter.java:112
+#: ../print/PhonebooksPrinter.java:210
 msgid "Selected phone book entries"
 msgstr "Выбранные элементы телефонного справочника"
 
@@ -275,7 +276,8 @@ msgstr "Только следующие телефонные справочни�
 msgid "Columns to print:"
 msgstr "Печатать колонки:"
 
-#: ../print/PhonebooksPrinter.java:234 ../print/FaxTablePrinter.java:193
+#: ../print/PhonebooksPrinter.java:234
+#: ../print/FaxTablePrinter.java:193
 msgid "Error printing the table:"
 msgstr "Ошибка печати таблицы:"
 
@@ -296,7 +298,8 @@ msgstr "Печать {0}"
 msgid "Use a bold font for unread faxes"
 msgstr "Использовать жирный шрифт для непрочитанных факсов"
 
-#: ../print/FaxTablePrinter.java:116 ../MainWin.java:1231
+#: ../print/FaxTablePrinter.java:116
+#: ../MainWin.java:1231
 msgid "Mark failed jobs"
 msgstr "Выделить прерванные задания"
 
@@ -319,8 +322,10 @@ msgstr "Получение журнала для {0}"
 msgid "Fax job {0} ({1})"
 msgstr "Задание {0} ({1})"
 
-#: ../LogViewWorker.java:105 ../phonebook/AbstractConnectionSettings.java:44
-#: ../util/KeyStrokeTextField.java:71 ../send/SendWin.java:200
+#: ../LogViewWorker.java:105
+#: ../phonebook/AbstractConnectionSettings.java:44
+#: ../util/KeyStrokeTextField.java:71
+#: ../send/SendWin.java:200
 msgid "<none>"
 msgstr "<нет>"
 
@@ -328,28 +333,36 @@ msgstr "<нет>"
 msgid "There is no log file available for this fax job."
 msgstr "Журнал для этого задания недоступен."
 
-#: ../LogViewWorker.java:115 ../LogViewWorker.java:124
+#: ../LogViewWorker.java:115
+#: ../LogViewWorker.java:124
 msgid "Error retrieving the log:"
 msgstr "Ошибка извлечения журнала:"
 
-#: ../LogViewWorker.java:177 ../MainWin.java:1408
+#: ../LogViewWorker.java:177
+#: ../MainWin.java:1408
 msgid "View log"
 msgstr "Просмотр журнала"
 
-#: ../LogViewWorker.java:215 ../logconsole/LogConsole.java:109
+#: ../LogViewWorker.java:215
+#: ../logconsole/LogConsole.java:109
 msgid "Log files"
 msgstr "Файлы журналов"
 
-#: ../LogViewWorker.java:231 ../logconsole/LogConsole.java:123
+#: ../LogViewWorker.java:231
+#: ../logconsole/LogConsole.java:123
 msgid "Error saving the log file"
 msgstr "Ошибка сохранения файла журнала"
 
-#: ../LogViewWorker.java:236 ../logconsole/LogConsole.java:128
+#: ../LogViewWorker.java:236
+#: ../logconsole/LogConsole.java:128
 msgid "Save"
 msgstr "Сохранить"
 
-#: ../LogViewWorker.java:247 ../logconsole/LogConsole.java:97
-#: ../MainWin.java:1190 ../MainWin.java:2173 ../util/ExceptionDialog.java:84
+#: ../LogViewWorker.java:247
+#: ../logconsole/LogConsole.java:97
+#: ../MainWin.java:1190
+#: ../MainWin.java:2173
+#: ../util/ExceptionDialog.java:84
 #: ../util/ClipboardPopup.java:56
 msgid "Copy"
 msgstr "Копировать"
@@ -361,37 +374,41 @@ msgstr "с YajHFC"
 #: ../export/HTMLExporter.java:164
 #, java-format
 msgid "List saved at {0}."
-msgstr ""
+msgstr "Список сохранен в {0}."
 
 #: ../export/ExportCSVAction.java:46
 #, java-format
 msgid "Save to CSV file {0}"
-msgstr ""
+msgstr "Сохранить в файл CSV {0}"
 
-#: ../export/ExportCSVAction.java:59 ../export/ExportXMLAction.java:61
-#: ../export/ExportAction.java:122 ../export/ExportAction.java:138
+#: ../export/ExportCSVAction.java:59
+#: ../export/ExportXMLAction.java:61
+#: ../export/ExportAction.java:122
+#: ../export/ExportAction.java:138
 #: ../phonebook/ui/NewPhoneBookWin.java:1007
 #: ../phonebook/ui/NewPhoneBookWin.java:1023
 msgid "Error saving the table:"
-msgstr ""
+msgstr "Ошибка сохранения таблицы:"
 
 #: ../export/ImageExportManager.java:96
 #, java-format
 msgid "{0}-files"
-msgstr ""
+msgstr "{0}-файлы"
 
-#: ../export/ExportAction.java:132 ../MainWin.java:3148
+#: ../export/ExportAction.java:132
+#: ../MainWin.java:3148
 #: ../send/SimplifiedSendDialog.java:334
 msgid "Server"
 msgstr "Сервер"
 
-#: ../export/ExportAction.java:145 ../phonebook/ui/NewPhoneBookWin.java:710
+#: ../export/ExportAction.java:145
+#: ../phonebook/ui/NewPhoneBookWin.java:710
 msgid "Export"
 msgstr "Экспорт"
 
 #: ../export/ExportAction.java:146
 msgid "Exports the list of faxes in CSV, HTML or XML format"
-msgstr ""
+msgstr "Экспортирует список факсов в формате CSV, HTML или XML"
 
 #: ../DesktopManager.java:56
 #, java-format
@@ -447,7 +464,8 @@ msgstr "GIF изображения"
 msgid "TIFF pictures"
 msgstr "TIFF изображения"
 
-#: ../file/FileFormat.java:32 ../send/SimplifiedSendDialog.java:518
+#: ../file/FileFormat.java:32
+#: ../send/SimplifiedSendDialog.java:518
 msgid "Text files"
 msgstr "Текстовые файлы"
 
@@ -471,9 +489,10 @@ msgstr "HTML документы"
 msgid "RTF documents"
 msgstr "RTF документы"
 
-#: ../file/FileFormat.java:38 ../phonebook/csv/CSVPhoneBook.java:105
+#: ../file/FileFormat.java:38
+#: ../phonebook/csv/CSVPhoneBook.java:105
 msgid "CSV files"
-msgstr ""
+msgstr "CSV файлы"
 
 #: ../file/FileFormat.java:39
 msgid "Any files"
@@ -486,9 +505,7 @@ msgstr "Неизвестные файлы"
 #: ../file/PrintServiceFileConverter.java:90
 #, java-format
 msgid "Cannot find a PrintService to convert files of type {0} to Postscript!"
-msgstr ""
-"Не удалось найти a PrintService для преобразования файлов типа {0} в "
-"Postscript!"
+msgstr "Не удалось найти a PrintService для преобразования файлов типа {0} в Postscript!"
 
 #: ../file/PrintServiceFileConverter.java:134
 msgid "An error occured while converting the document to PostScript."
@@ -512,17 +529,20 @@ msgstr "Ошибка при удалении факса \"{0}\":\n"
 msgid "Error deleting faxes:"
 msgstr "Ошибка удаления факсов:"
 
-#: ../MainWin.java:312 ../MainWin.java:648
+#: ../MainWin.java:312
+#: ../MainWin.java:648
 #, java-format
 msgid "Saving fax {0}"
 msgstr "Сохранение факса {0}"
 
-#: ../MainWin.java:320 ../MainWin.java:440
+#: ../MainWin.java:320
+#: ../MainWin.java:440
 #, java-format
 msgid "No accessible document files are available for the fax \"{0}\"."
 msgstr "Нет доступных файлов документов для факса \"{0}\"."
 
-#: ../MainWin.java:323 ../MainWin.java:443
+#: ../MainWin.java:323
+#: ../MainWin.java:443
 msgid "The following files were inaccessible:"
 msgstr "Нет доступа к следующим файлам:"
 
@@ -535,40 +555,44 @@ msgstr "Сохранение факса"
 msgid "Save {0} to"
 msgstr "Сохранение {0} в"
 
-#: ../MainWin.java:358 ../MainWin.java:460 ../MainWin.java:657
+#: ../MainWin.java:358
+#: ../MainWin.java:460
+#: ../MainWin.java:657
 #, java-format
-msgid ""
-"While downloading the file {0} (job {1}), the server gave back an error code:"
+msgid "While downloading the file {0} (job {1}), the server gave back an error code:"
 msgstr "При загрузке файла {0} (задание {1}), сервер вернул код ошибки:"
 
-#: ../MainWin.java:360 ../MainWin.java:462 ../MainWin.java:659
+#: ../MainWin.java:360
+#: ../MainWin.java:462
+#: ../MainWin.java:659
 #, java-format
-msgid ""
-"The file {0} (job {1}) could not be opened for reading (probably you lack "
-"the necessary access permissions):"
-msgstr ""
-"Файл {0} (задание {1}) невозможно открыть на чтение (вероятно, у Вас нет "
-"необходимых прав доступа):"
+msgid "The file {0} (job {1}) could not be opened for reading (probably you lack the necessary access permissions):"
+msgstr "Файл {0} (задание {1}) невозможно открыть на чтение (вероятно, у Вас нет необходимых прав доступа):"
 
-#: ../MainWin.java:363 ../MainWin.java:661
+#: ../MainWin.java:363
+#: ../MainWin.java:661
 #, java-format
 msgid "An error occured saving the file {0} (job {1}):"
 msgstr "Произошла ошибка при сохранении файла {0} (job {1}):"
 
-#: ../MainWin.java:371 ../MainWin.java:691
+#: ../MainWin.java:371
+#: ../MainWin.java:691
 msgid "An error occured saving the fax:"
 msgstr "Произошла ошибка при сохранении факса:"
 
-#: ../MainWin.java:380 ../MainWin.java:701
+#: ../MainWin.java:380
+#: ../MainWin.java:701
 msgid "Error saving faxes:"
 msgstr "Ошибка сохранения факсов:"
 
-#: ../MainWin.java:397 ../MainWin.java:722
+#: ../MainWin.java:397
+#: ../MainWin.java:722
 #, java-format
 msgid "{0} files saved to directory {1}."
 msgstr "{0} файлы сохранены в каталог {1}."
 
-#: ../MainWin.java:397 ../MainWin.java:722
+#: ../MainWin.java:397
+#: ../MainWin.java:722
 msgid "Faxes saved"
 msgstr "Факсы сохранены"
 
@@ -591,7 +615,8 @@ msgstr "Отображение факса"
 msgid "An error occured displaying the file {0} (job {1}):\n"
 msgstr "Произошла ошибка при отображении файла {0} (job {1}):\n"
 
-#: ../MainWin.java:468 ../send/SendController.java:254
+#: ../MainWin.java:468
+#: ../send/SendController.java:254
 msgid "Launching viewer"
 msgstr "Запуск программы просмотра"
 
@@ -611,13 +636,8 @@ msgstr "Остановка задания {0}"
 
 #: ../MainWin.java:535
 #, java-format
-msgid ""
-"Suspending the currently running job {0} may block until it is done (or "
-"switch to another \"non running state\"). Try to suspend it anyway?"
-msgstr ""
-"Останов выполняемого задания {0} может быть заблокирован до тех пор, пока "
-"оно не завершится (или перейдет в иное \"не активное состояние\"). "
-"Попытаться остановить?"
+msgid "Suspending the currently running job {0} may block until it is done (or switch to another \"non running state\"). Try to suspend it anyway?"
+msgstr "Останов выполняемого задания {0} может быть заблокирован до тех пор, пока оно не завершится (или перейдет в иное \"не активное состояние\"). Попытаться остановить?"
 
 #: ../MainWin.java:536
 msgid "Suspend fax job"
@@ -643,12 +663,8 @@ msgstr "Возобновление задания {0}"
 
 #: ../MainWin.java:592
 #, java-format
-msgid ""
-"Job {0} is not in state \"Suspended\" so resuming it probably will not work. "
-"Try to resume it anyway?"
-msgstr ""
-"Задание {0} не в состоянии \"Остановлено\" поэтому его возможно не получится "
-"возобновить. Попытаться продолжить?"
+msgid "Job {0} is not in state \"Suspended\" so resuming it probably will not work. Try to resume it anyway?"
+msgstr "Задание {0} не в состоянии \"Остановлено\" поэтому его возможно не получится возобновить. Попытаться продолжить?"
 
 #: ../MainWin.java:593
 msgid "Resume fax job"
@@ -676,19 +692,23 @@ msgstr "Имя файла для сохранения факса {0}"
 #, java-format
 msgid ""
 "Save to {0} needs GhostScript and tiff2pdf.\n"
-"Please specify the location of these tools in the options dialog (see the "
-"FAQ for download locations)."
+"Please specify the location of these tools in the options dialog (see the FAQ for download locations)."
 msgstr ""
 "Для сохранения в {0} требуется GhostScript и tiff2pdf.\n"
-"Пожалуйста, укажите расположение этих средств в меню настроек (адреса для "
-"загрузки смотрите в FAQ)."
+"Пожалуйста, укажите расположение этих средств в меню настроек (адреса для загрузки смотрите в FAQ)."
 
-#: ../MainWin.java:745 ../filters/ui/CustomFilterDialog.java:219
-#: ../filters/ui/CustomFilterDialog.java:223 ../options/IdentityPanel.java:200
-#: ../options/IdentityPanel.java:206 ../options/PathAndViewPanel.java:286
-#: ../options/PathAndViewPanel.java:292 ../options/PathAndViewPanel.java:298
-#: ../options/PathAndViewPanel.java:306 ../options/PathAndViewPanel.java:312
-#: ../options/CommonPanel.java:391 ../options/CommonPanel.java:399
+#: ../MainWin.java:745
+#: ../filters/ui/CustomFilterDialog.java:219
+#: ../filters/ui/CustomFilterDialog.java:223
+#: ../options/IdentityPanel.java:200
+#: ../options/IdentityPanel.java:206
+#: ../options/PathAndViewPanel.java:286
+#: ../options/PathAndViewPanel.java:292
+#: ../options/PathAndViewPanel.java:298
+#: ../options/PathAndViewPanel.java:306
+#: ../options/PathAndViewPanel.java:312
+#: ../options/CommonPanel.java:391
+#: ../options/CommonPanel.java:399
 #: ../options/SingleServerSettingsPanel.java:273
 #: ../options/SingleServerSettingsPanel.java:280
 #: ../options/SingleServerSettingsPanel.java:287
@@ -703,22 +723,28 @@ msgstr ""
 #: ../phonebook/jdbc/ConnectionDialog.java:273
 #: ../phonebook/jdbc/ConnectionDialog.java:277
 #: ../phonebook/jdbc/ConnectionDialog.java:395
-#: ../util/ExceptionDialog.java:243 ../util/ExceptionDialog.java:264
-#: ../util/AcceleratorKeyDialog.java:132 ../send/SendController.java:147
+#: ../util/ExceptionDialog.java:243
+#: ../util/ExceptionDialog.java:264
+#: ../util/AcceleratorKeyDialog.java:132
+#: ../send/SendController.java:147
 #: ../send/SendController.java:152
 msgid "Error"
 msgstr "Ошибка"
 
-#: ../MainWin.java:751 ../MainWin.java:967
+#: ../MainWin.java:751
+#: ../MainWin.java:967
 msgid "Select a directory to save the faxes in"
 msgstr "Выберите каталог для сохранения факсов"
 
-#: ../MainWin.java:752 ../MainWin.java:968
+#: ../MainWin.java:752
+#: ../MainWin.java:968
 #: ../phonebook/ui/NewPhoneBookWin.java:1153
 msgid "Select"
 msgstr "Выбрать"
 
-#: ../MainWin.java:759 ../MainWin.java:764 ../MainWin.java:975
+#: ../MainWin.java:759
+#: ../MainWin.java:764
+#: ../MainWin.java:975
 #: ../MainWin.java:980
 msgid "Saving faxes"
 msgstr "Сохранение факсов"
@@ -733,7 +759,8 @@ msgstr "Сохранить факс как {0}..."
 msgid "Saves the selected fax(es) as single {0} file"
 msgstr "Сохранить выделенныный(е) факс(ы) как один {0} файл"
 
-#: ../MainWin.java:803 ../options/OptionsWin.java:102
+#: ../MainWin.java:803
+#: ../options/OptionsWin.java:102
 #: ../options/CommonPanel.java:358
 msgid "Options"
 msgstr "Настройки"
@@ -742,7 +769,8 @@ msgstr "Настройки"
 msgid "Shows the Options dialog"
 msgstr "Показать диалоговое окно настроек"
 
-#: ../MainWin.java:820 ../send/SendWin.java:527
+#: ../MainWin.java:820
+#: ../send/SendWin.java:527
 #: ../send/SimplifiedSendDialog.java:245
 msgid "Send"
 msgstr "Отправить"
@@ -751,7 +779,8 @@ msgstr "Отправить"
 msgid "Shows the send fax dialog"
 msgstr "Показать диалоговое окно отправки факса"
 
-#: ../MainWin.java:833 ../send/SendWin.java:524
+#: ../MainWin.java:833
+#: ../send/SendWin.java:524
 msgid "Poll"
 msgstr "Запросить"
 
@@ -775,7 +804,8 @@ msgstr "Удалить факсы"
 msgid "Deleting faxes"
 msgstr "Удаление факсов"
 
-#: ../MainWin.java:856 ../phonebook/ui/NewPhoneBookWin.java:863
+#: ../MainWin.java:856
+#: ../phonebook/ui/NewPhoneBookWin.java:863
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:190
 #: ../util/ClipboardPopup.java:60
 msgid "Delete"
@@ -809,7 +839,8 @@ msgstr "Выйти из приложения"
 msgid "Shows the about dialog"
 msgstr "Показать информацию о программе"
 
-#: ../MainWin.java:909 ../phonebook/ui/NewPhoneBookWin.java:750
+#: ../MainWin.java:909
+#: ../phonebook/ui/NewPhoneBookWin.java:750
 #: ../phonebook/ui/NewPhoneBookWin.java:1064
 msgid "Phone book"
 msgstr "Телефонный справочник"
@@ -856,9 +887,7 @@ msgstr "Режим администрирования"
 
 #: ../MainWin.java:1036
 msgid "Connect to the server in admin mode (e.g. to delete faxes)"
-msgstr ""
-"Подключиться к серверу в режиме администрирования (например для удаления "
-"факсов)"
+msgstr "Подключиться к серверу в режиме администрирования (например для удаления факсов)"
 
 #: ../MainWin.java:1048
 msgid "Refresh"
@@ -879,9 +908,7 @@ msgstr "Открытие окна отправки..."
 
 #: ../MainWin.java:1108
 msgid "Could not get all of the job information necessary to resend the fax:"
-msgstr ""
-"Невозможно получить всю информацию о задании необходимую для повторной "
-"отправки факса:"
+msgstr "Невозможно получить всю информацию о задании необходимую для повторной отправки факса:"
 
 #: ../MainWin.java:1114
 msgid "Error resending faxes:"
@@ -931,9 +958,10 @@ msgstr "Продолжить передачу выделенного факса"
 msgid "Copies the selected table items to the clipboard"
 msgstr "Скопировать выделенные элементы таблицы в буфер обмена."
 
-#: ../MainWin.java:1211 ../MainWin.java:1212
+#: ../MainWin.java:1211
+#: ../MainWin.java:1212
 msgid "Show row numbers"
-msgstr "Показать номера строк"
+msgstr "Показывать номера строк"
 
 #: ../MainWin.java:1255
 msgid "Adjust column widths"
@@ -947,7 +975,8 @@ msgstr "Подгонять ширину колонок под размер ок�
 msgid "Connect or disconnect to the HylaFAX server"
 msgstr "Соединиться с сервером HylaFAX или отключиться от сервера"
 
-#: ../MainWin.java:1282 ../util/ToolbarEditorDialog.java:115
+#: ../MainWin.java:1282
+#: ../util/ToolbarEditorDialog.java:115
 msgid "Customize toolbar"
 msgstr "Настроить панель инструментов"
 
@@ -955,29 +984,31 @@ msgstr "Настроить панель инструментов"
 msgid "Customize the toolbar"
 msgstr "Настроить панель инструментов"
 
-#: ../MainWin.java:1296 ../phonebook/ui/NewPhoneBookWin.java:1054
-#: ../util/AcceleratorKeyDialog.java:75 ../util/AcceleratorKeyDialog.java:81
+#: ../MainWin.java:1296
+#: ../phonebook/ui/NewPhoneBookWin.java:1054
+#: ../util/AcceleratorKeyDialog.java:75
+#: ../util/AcceleratorKeyDialog.java:81
 msgid "Edit keyboard shortcuts"
-msgstr ""
+msgstr "Редактировать \"горячие\" клавиши"
 
-#: ../MainWin.java:1297 ../phonebook/ui/NewPhoneBookWin.java:1055
+#: ../MainWin.java:1297
+#: ../phonebook/ui/NewPhoneBookWin.java:1055
 msgid "Customize the keyboard shortcuts"
-msgstr ""
+msgstr "Настроить \"горячие\" клавиши"
 
 #: ../MainWin.java:1307
 msgid "Checks if there is a newer version of YajHFC available"
 msgstr "Проверить, доступна ли более новая версия YajHFC"
 
 #: ../MainWin.java:1315
-msgid ""
-"Answering a phone call requires a direct connection to the HylaFAX server "
-"which is not available."
-msgstr ""
-"Для ответа на телефонный звонок требуется прямое подключение к серверу "
-"HylaFAX, которое не доступно."
+msgid "Answering a phone call requires a direct connection to the HylaFAX server which is not available."
+msgstr "Для ответа на телефонный звонок требуется прямое подключение к серверу HylaFAX, которое не доступно."
 
-#: ../MainWin.java:1315 ../MainWin.java:1328 ../MainWin.java:1333
-#: ../MainWin.java:1350 ../MainWin.java:1354
+#: ../MainWin.java:1315
+#: ../MainWin.java:1328
+#: ../MainWin.java:1333
+#: ../MainWin.java:1350
+#: ../MainWin.java:1354
 msgid "Answer call"
 msgstr "Ответить на звонок"
 
@@ -1005,7 +1036,8 @@ msgstr ""
 msgid "Manually answer a phone call with a modem"
 msgstr "Ответить модемом на звонок вручную"
 
-#: ../MainWin.java:1369 ../MainWinSearchWin.java:108
+#: ../MainWin.java:1369
+#: ../MainWinSearchWin.java:108
 #: ../MainWinSearchWin.java:128
 msgid "Search fax"
 msgstr "Поиск факса"
@@ -1032,23 +1064,23 @@ msgstr "Отображает журнал YajHFC в реальном време�
 
 #: ../MainWin.java:1451
 msgid "Show Toolbar"
-msgstr ""
+msgstr "Показывать панель инструментов"
 
 #: ../MainWin.java:1452
 msgid "Shows or hides the toolbar."
-msgstr ""
+msgstr "Показывает или скрывает панель инструментов."
 
 #: ../MainWin.java:1471
 msgid "Show Quick Search bar"
-msgstr ""
+msgstr "Показывать панель быстрого поиска"
 
 #: ../MainWin.java:1472
 msgid "Show or hides the Quick Search toolbar."
-msgstr ""
+msgstr "Показывает или скрывает панель быстрого поиска."
 
 #: ../MainWin.java:1487
 msgid "Shows/Changes the current server."
-msgstr ""
+msgstr "Показать/Изменить текущий сервер."
 
 #: ../MainWin.java:1491
 msgid "Auto-size status bar"
@@ -1066,11 +1098,13 @@ msgstr "Соединиться с сервером"
 msgid "Disconnect"
 msgstr "Отключиться от сервера"
 
-#: ../MainWin.java:1559 ../MainWin.java:2339
+#: ../MainWin.java:1559
+#: ../MainWin.java:2339
 msgid "Fax"
 msgstr "Факс"
 
-#: ../MainWin.java:1579 ../MainWin.java:2784
+#: ../MainWin.java:1579
+#: ../MainWin.java:2784
 msgid "Fetching fax list..."
 msgstr "Загрузка списка факсов..."
 
@@ -1087,8 +1121,10 @@ msgstr "Отключение от сервера ..."
 msgid "Disconnected."
 msgstr "Отсоединено."
 
-#: ../MainWin.java:2006 ../options/ModemsPanel.java:90
-#: ../options/SingleServerSettingsPanel.java:94 ../NoGUISender.java:97
+#: ../MainWin.java:2006
+#: ../options/ModemsPanel.java:90
+#: ../options/SingleServerSettingsPanel.java:94
+#: ../NoGUISender.java:97
 msgid "Logging in..."
 msgstr "Соединение с сервером ..."
 
@@ -1096,7 +1132,8 @@ msgstr "Соединение с сервером ..."
 msgid "Help"
 msgstr "Помощь"
 
-#: ../MainWin.java:2098 ../options/OptionsWin.java:233
+#: ../MainWin.java:2098
+#: ../options/OptionsWin.java:233
 msgid "Received"
 msgstr "Принятые"
 
@@ -1104,7 +1141,8 @@ msgstr "Принятые"
 msgid "Received faxes"
 msgstr "Принятые факсы"
 
-#: ../MainWin.java:2099 ../options/OptionsWin.java:234
+#: ../MainWin.java:2099
+#: ../options/OptionsWin.java:234
 msgid "Sent"
 msgstr "Отправленные"
 
@@ -1112,7 +1150,8 @@ msgstr "Отправленные"
 msgid "Sent faxes"
 msgstr "Отправленные факсы"
 
-#: ../MainWin.java:2100 ../options/OptionsWin.java:235
+#: ../MainWin.java:2100
+#: ../options/OptionsWin.java:235
 msgid "Transmitting"
 msgstr "Передача"
 
@@ -1120,13 +1159,14 @@ msgstr "Передача"
 msgid "Faxes in the output queue"
 msgstr "Факсы в исходящей очереди"
 
-#: ../MainWin.java:2113 ../options/OptionsWin.java:236
+#: ../MainWin.java:2113
+#: ../options/OptionsWin.java:236
 msgid "Archive"
 msgstr "Архив"
 
 #: ../MainWin.java:2366
 msgid "Table"
-msgstr ""
+msgstr "Таблица"
 
 #: ../MainWin.java:2378
 msgid "Extras"
@@ -1154,9 +1194,7 @@ msgid "Only display fax jobs fulfilling:"
 msgstr "Показывать только задачи, удовлетворяющие:"
 
 #: ../MainWin.java:2477
-msgid ""
-"You have entered no filtering conditions. Do you want to show all faxes "
-"instead?"
+msgid "You have entered no filtering conditions. Do you want to show all faxes instead?"
 msgstr "Вы не ввели условия фильтрации. Показать все факсы?"
 
 #: ../MainWin.java:2478
@@ -1167,7 +1205,8 @@ msgstr ""
 "Пожалуйста, введите Дату/Время!\n"
 "(Подсказка: Точно в таком же формате, как в таблице заданий)"
 
-#: ../MainWin.java:2802 ../HylaClientManager.java:206
+#: ../MainWin.java:2802
+#: ../HylaClientManager.java:206
 msgid "An error occured connecting to the server:"
 msgstr "Произошла ошибка при соединении с сервером:"
 
@@ -1177,17 +1216,15 @@ msgid "Disconnected, will try to reconnect in {0} seconds..."
 msgstr "Отсоединено, следующая попытка подключения через {0} секунд..."
 
 #: ../MainWin.java:3034
-msgid ""
-"Type here parts of the sender, recipient or file name in order to search for "
-"a fax."
-msgstr ""
-"Чтобы найти факс, введите часть имени отправителя, получателя или файла."
+msgid "Type here parts of the sender, recipient or file name in order to search for a fax."
+msgstr "Чтобы найти факс, введите часть имени отправителя, получателя или файла."
 
 #: ../MainWin.java:3035
 msgid "Reset quick search and show all faxes."
 msgstr "Сбросить быстрый поиск и показать все факсы."
 
-#: ../YajLanguage.java:86 ../DateStyle.java:67
+#: ../YajLanguage.java:86
+#: ../DateStyle.java:67
 msgid "(System default)"
 msgstr "(Системный)"
 
@@ -1249,15 +1286,19 @@ msgstr ">="
 msgid "Please enter a valid number!"
 msgstr "Пожалуйста, введите число!"
 
-#: ../filters/ui/CustomFilterDialog.java:99 ../util/CancelAction.java:40
+#: ../filters/ui/CustomFilterDialog.java:99
+#: ../util/CancelAction.java:40
 #: ../util/ProgressDialog.java:60
 msgid "Cancel"
 msgstr "Отмена"
 
-#: ../filters/ui/CustomFilterDialog.java:115 ../options/ModemsPanel.java:144
-#: ../options/MultiEditPanel.java:105 ../phonebook/ui/NewPhoneBookWin.java:821
+#: ../filters/ui/CustomFilterDialog.java:115
+#: ../options/ModemsPanel.java:144
+#: ../options/MultiEditPanel.java:105
+#: ../phonebook/ui/NewPhoneBookWin.java:821
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:330
-#: ../send/SimplifiedSendDialog.java:486 ../send/TextFieldList.java:127
+#: ../send/SimplifiedSendDialog.java:486
+#: ../send/TextFieldList.java:127
 msgid "Add"
 msgstr "Добавить"
 
@@ -1273,11 +1314,13 @@ msgstr "Всем следующим условиям"
 msgid "Question"
 msgstr "Вопрос"
 
-#: ../filters/ui/FilterPanel.java:58 ../options/ConvertersPage.java:268
+#: ../filters/ui/FilterPanel.java:58
+#: ../options/ConvertersPage.java:268
 msgid "(none)"
 msgstr "(нет)"
 
-#: ../filters/ui/FilterPanel.java:208 ../filters/ui/SearchWin.java:178
+#: ../filters/ui/FilterPanel.java:208
+#: ../filters/ui/SearchWin.java:178
 msgid "Case sensitive"
 msgstr "Учитывать регистр"
 
@@ -1289,7 +1332,8 @@ msgstr "Удалить это условие"
 msgid "Please enter a valid compare value."
 msgstr "Пожалуйста, введите допустимое значение для сравнения."
 
-#: ../filters/ui/SearchWin.java:157 ../util/AbstractQuickSearchHelper.java:172
+#: ../filters/ui/SearchWin.java:157
+#: ../util/AbstractQuickSearchHelper.java:172
 msgid "Search"
 msgstr "Поиск"
 
@@ -1349,7 +1393,8 @@ msgstr "Пароль пользователя"
 msgid "Please enter the user password:"
 msgstr "Пожалуйста, введите пользовательский пароль:"
 
-#: ../HylaClientManager.java:153 ../HylaClientManager.java:175
+#: ../HylaClientManager.java:153
+#: ../HylaClientManager.java:175
 msgid "An error occured in response to the password:"
 msgstr "Ошибка аутентификации:"
 
@@ -1393,7 +1438,8 @@ msgstr "Драйвер JDBC"
 msgid "Plugin"
 msgstr "Плагин"
 
-#: ../options/OptionsWin.java:215 ../options/CoverPanel.java:154
+#: ../options/OptionsWin.java:215
+#: ../options/CoverPanel.java:154
 #: ../send/SendWin.java:466
 msgid "General"
 msgstr "Общие"
@@ -1402,7 +1448,8 @@ msgstr "Общие"
 msgid "Paths and viewers"
 msgstr "Пути и просмотр"
 
-#: ../options/OptionsWin.java:220 ../options/ServerSettingsPanel.java:237
+#: ../options/OptionsWin.java:220
+#: ../options/ServerSettingsPanel.java:237
 msgid "Servers"
 msgstr "Серверы"
 
@@ -1410,7 +1457,8 @@ msgstr "Серверы"
 msgid "Cover page & Identities"
 msgstr "Титульный лист и персональные данные"
 
-#: ../options/OptionsWin.java:226 ../options/PluginPanel.java:76
+#: ../options/OptionsWin.java:226
+#: ../options/PluginPanel.java:76
 msgid "Plugins & JDBC"
 msgstr "Плагины и JDBC"
 
@@ -1431,7 +1479,8 @@ msgstr "Таблица \"{0}\""
 msgid "These settings normally need not to be changed."
 msgstr "Обычно не требуется менять эти установки."
 
-#: ../options/OptionsWin.java:242 ../options/AdminSettingsPage.java:84
+#: ../options/OptionsWin.java:242
+#: ../options/AdminSettingsPage.java:84
 msgid "Advanced settings"
 msgstr "Дополнительные установки"
 
@@ -1492,7 +1541,8 @@ msgstr "Доставка"
 msgid "Modems"
 msgstr "Модемы"
 
-#: ../options/ServerSettingsPanel.java:201 ../options/CoverPanel.java:89
+#: ../options/ServerSettingsPanel.java:201
+#: ../options/CoverPanel.java:89
 #, java-format
 msgid "Copy of {0}"
 msgstr "Копия {0}"
@@ -1527,12 +1577,8 @@ msgid "Use PCL file type bugfix"
 msgstr "Исправлять ошибку распознавания PCL файлов"
 
 #: ../options/ServerSettingsPanel.java:297
-msgid ""
-"The maximum time to wait for a interaction with the server to complete. "
-"Values below 5 are not recommended; 0 disables this timeout."
-msgstr ""
-"Максимальное время ожидания завершения взаимодействия с сервером. Значения "
-"менее 5 не рекомендуются; 0 отключает тайм-аут."
+msgid "The maximum time to wait for a interaction with the server to complete. Values below 5 are not recommended; 0 disables this timeout."
+msgstr "Максимальное время ожидания завершения взаимодействия с сервером. Значения менее 5 не рекомендуются; 0 отключает тайм-аут."
 
 #: ../options/ServerSettingsPanel.java:301
 msgid "Table refresh interval (secs.):"
@@ -1584,7 +1630,8 @@ msgstr "Формат адреса:"
 msgid "ZIP code format:"
 msgstr "Формат почтового индекса:"
 
-#: ../options/ModemsPanel.java:81 ../options/ModemsPanel.java:85
+#: ../options/ModemsPanel.java:81
+#: ../options/ModemsPanel.java:85
 msgid "Refreshing modem list"
 msgstr "Обновление списка модемов"
 
@@ -1592,23 +1639,30 @@ msgstr "Обновление списка модемов"
 msgid "Retrieving modem list..."
 msgstr "Получение списка модемов..."
 
-#: ../options/ModemsPanel.java:98 ../options/SingleServerSettingsPanel.java:98
+#: ../options/ModemsPanel.java:98
+#: ../options/SingleServerSettingsPanel.java:98
 msgid "Login successful, logging out."
 msgstr "Успешная регистрация на сервере, завершение сеанса."
 
-#: ../options/ModemsPanel.java:157 ../options/MultiEditPanel.java:125
-#: ../options/MultiEditPanel.java:133 ../send/SimplifiedSendDialog.java:503
+#: ../options/ModemsPanel.java:157
+#: ../options/MultiEditPanel.java:125
+#: ../options/MultiEditPanel.java:133
+#: ../send/SimplifiedSendDialog.java:503
 #: ../send/TextFieldList.java:149
 msgid "Remove"
 msgstr "Удалить"
 
-#: ../options/ModemsPanel.java:173 ../options/MultiEditPanel.java:164
-#: ../util/fmtEditor.java:110 ../send/TextFieldList.java:83
+#: ../options/ModemsPanel.java:173
+#: ../options/MultiEditPanel.java:164
+#: ../util/fmtEditor.java:110
+#: ../send/TextFieldList.java:83
 msgid "Up"
 msgstr "Вверх"
 
-#: ../options/ModemsPanel.java:188 ../options/MultiEditPanel.java:152
-#: ../util/fmtEditor.java:131 ../send/TextFieldList.java:108
+#: ../options/ModemsPanel.java:188
+#: ../options/MultiEditPanel.java:152
+#: ../util/fmtEditor.java:131
+#: ../send/TextFieldList.java:108
 msgid "Down"
 msgstr "Вниз"
 
@@ -1616,9 +1670,11 @@ msgstr "Вниз"
 msgid "Reset the list of modems?"
 msgstr "Сбросить список модемов?"
 
-#: ../options/ModemsPanel.java:194 ../options/ModemsPanel.java:199
+#: ../options/ModemsPanel.java:194
+#: ../options/ModemsPanel.java:199
 #: ../util/AbstractQuickSearchHelper.java:166
-#: ../util/ToolbarEditorDialog.java:145 ../util/AcceleratorKeyDialog.java:115
+#: ../util/ToolbarEditorDialog.java:145
+#: ../util/AcceleratorKeyDialog.java:115
 msgid "Reset"
 msgstr "Сброс"
 
@@ -1684,26 +1740,16 @@ msgid "Same as PostScript viewer"
 msgstr "Такая же как и для программы просмотра PostScript"
 
 #: ../options/PathAndViewPanel.java:112
-msgid ""
-"Command line for fax viewer: (insert %s as a placeholder for the filename)"
-msgstr ""
-"Командная строка для программы просмотра факсов: (используйте %s как "
-"заместитель имени файла)"
+msgid "Command line for fax viewer: (insert %s as a placeholder for the filename)"
+msgstr "Командная строка для программы просмотра факсов: (используйте %s как заместитель имени файла)"
 
 #: ../options/PathAndViewPanel.java:114
-msgid ""
-"Command line for Postscript viewer: (insert %s as a placeholder for the "
-"filename)"
-msgstr ""
-"Командная строка для пограммы просмотра Postscript: (используйте %s как "
-"заместитель имени файла)"
+msgid "Command line for Postscript viewer: (insert %s as a placeholder for the filename)"
+msgstr "Командная строка для пограммы просмотра Postscript: (используйте %s как заместитель имени файла)"
 
 #: ../options/PathAndViewPanel.java:116
-msgid ""
-"Command line for PDF viewer: (insert %s as a placeholder for the filename)"
-msgstr ""
-"Командная строка для программы просмотра PDF: (используйте %s как "
-"заместитель имени файла)"
+msgid "Command line for PDF viewer: (insert %s as a placeholder for the filename)"
+msgstr "Командная строка для программы просмотра PDF: (используйте %s как заместитель имени файла)"
 
 #: ../options/PathAndViewPanel.java:118
 msgid "Location of GhostScript executable (optional):"
@@ -1715,7 +1761,7 @@ msgstr "Расположение исполняемого файла tiff2pdf (�
 
 #: ../options/PathAndViewPanel.java:122
 msgid "Always use paper size from YajHFC options in the PDF"
-msgstr ""
+msgstr "Всегда использовать в PDF размер страницы из настроек YajHFC"
 
 #: ../options/PathAndViewPanel.java:165
 msgid "View settings"
@@ -1755,8 +1801,7 @@ msgstr "Пожалуйста, введите командную строку д�
 
 #: ../options/PathAndViewPanel.java:292
 msgid "Please enter the command line for the PostScript viewer."
-msgstr ""
-"Пожалуйста, введите командную строку для программы просмотра PostScript."
+msgstr "Пожалуйста, введите командную строку для программы просмотра PostScript."
 
 #: ../options/PathAndViewPanel.java:298
 msgid "Please enter the command line for the PDF viewer."
@@ -1782,7 +1827,8 @@ msgstr "Отфильтровывать символы из номера факс
 msgid "Archive sent fax jobs"
 msgstr "Архивировать отправленные задания"
 
-#: ../options/SendPanel.java:149 ../send/JobPropsEditorDialog.java:126
+#: ../options/SendPanel.java:149
+#: ../send/JobPropsEditorDialog.java:126
 #: ../send/SimplifiedSendDialog.java:288
 msgid "Job properties"
 msgstr "Свойства задания"
@@ -1791,22 +1837,26 @@ msgstr "Свойства задания"
 msgid "E-mail address for notifications:"
 msgstr "E-mail для уведомлений:"
 
-#: ../options/SendPanel.java:155 ../send/SendWin.java:452
+#: ../options/SendPanel.java:155
+#: ../send/SendWin.java:452
 #: ../send/SimplifiedSendDialog.java:673
 msgid "Notify when:"
 msgstr "Уведомлять когда:"
 
-#: ../options/SendPanel.java:156 ../send/SendWin.java:453
+#: ../options/SendPanel.java:156
+#: ../send/SendWin.java:453
 #: ../send/SimplifiedSendDialog.java:674
 msgid "Modem:"
 msgstr "Модем:"
 
-#: ../options/SendPanel.java:157 ../send/SendWin.java:455
+#: ../options/SendPanel.java:157
+#: ../send/SendWin.java:455
 #: ../send/SimplifiedSendDialog.java:676
 msgid "Paper size:"
-msgstr "Размер бумаги:"
+msgstr "Размер страницы:"
 
-#: ../options/SendPanel.java:158 ../send/SendWin.java:454
+#: ../options/SendPanel.java:158
+#: ../send/SendWin.java:454
 #: ../send/SimplifiedSendDialog.java:675
 msgid "Resolution:"
 msgstr "Разрешение:"
@@ -1815,7 +1865,8 @@ msgstr "Разрешение:"
 msgid "Maximum dials:"
 msgstr "Максимум дозвонов:"
 
-#: ../options/SendPanel.java:160 ../send/SendWin.java:456
+#: ../options/SendPanel.java:160
+#: ../send/SendWin.java:456
 #: ../send/SimplifiedSendDialog.java:677
 msgid "Cancel job after (minutes):"
 msgstr "Отменить задание после (минут):"
@@ -1824,7 +1875,8 @@ msgstr "Отменить задание после (минут):"
 msgid "Filter from fax number:"
 msgstr "Отфильтровывать из номера факса:"
 
-#: ../options/SendPanel.java:162 ../send/SendWin.java:457
+#: ../options/SendPanel.java:162
+#: ../send/SendWin.java:457
 #: ../send/SimplifiedSendDialog.java:678
 msgid "Maximum tries:"
 msgstr "Максимум попыток:"
@@ -1922,8 +1974,7 @@ msgid "Time format:"
 msgstr "Формат времени:"
 
 #: ../options/CommonPanel.java:358
-msgid ""
-"You must restart the program for the change of the language to take effect."
+msgid "You must restart the program for the change of the language to take effect."
 msgstr "Перезапустите программу, чтобы измениение языка вступило в силу."
 
 #: ../options/CommonPanel.java:391
@@ -1935,22 +1986,20 @@ msgid "Please enter a valid time format."
 msgstr "Пожалуйста, введите правильный формат времени:"
 
 #: ../options/PluginPanel.java:76
-msgid ""
-"You will need to restart the program for the changes to the list of plugins "
-"and JDBC drivers to take full effect."
-msgstr ""
-"Чтобы изменения в списке плагинов и драйверов JDBC вступили в силу, "
-"перезапустите программу."
+msgid "You will need to restart the program for the changes to the list of plugins and JDBC drivers to take full effect."
+msgstr "Чтобы изменения в списке плагинов и драйверов JDBC вступили в силу, перезапустите программу."
 
 #: ../options/PluginPanel.java:132
 msgid "JAR files"
 msgstr "JAR файлы"
 
-#: ../options/PluginPanel.java:145 ../options/PluginPanel.java:169
+#: ../options/PluginPanel.java:145
+#: ../options/PluginPanel.java:169
 msgid "Add JDBC driver"
 msgstr "Добавить драйвер JDBC"
 
-#: ../options/PluginPanel.java:151 ../options/PluginPanel.java:156
+#: ../options/PluginPanel.java:151
+#: ../options/PluginPanel.java:156
 #: ../options/PluginPanel.java:172
 msgid "Add plugin"
 msgstr "Добавить плагин"
@@ -2028,11 +2077,8 @@ msgid "Access method for the fax lists"
 msgstr "Способ доступа к списку факсов"
 
 #: ../options/SingleServerSettingsPanel.java:375
-msgid ""
-"Location of spool directory for direct access (must contain recvq, doneq and "
-"docq)"
-msgstr ""
-"Каталога спулера для прямого доступа (должен содержать recvq, doneq и docq)"
+msgid "Location of spool directory for direct access (must contain recvq, doneq and docq)"
+msgstr "Каталога спулера для прямого доступа (должен содержать recvq, doneq и docq)"
 
 #: ../options/SingleServerSettingsPanel.java:378
 msgid "Location of archive directory:"
@@ -2059,13 +2105,15 @@ msgid "Host name:"
 msgstr "Имя хоста:"
 
 #: ../options/SingleServerSettingsPanel.java:458
-#: ../phonebook/jdbc/ConnectionDialog.java:208 ../util/PasswordDialog.java:90
+#: ../phonebook/jdbc/ConnectionDialog.java:208
+#: ../util/PasswordDialog.java:90
 msgid "Username:"
 msgstr "Имя пользователя:"
 
 #: ../options/SingleServerSettingsPanel.java:460
 #: ../phonebook/ldap/ConnectionDialog.java:169
-#: ../phonebook/jdbc/ConnectionDialog.java:211 ../util/PasswordDialog.java:93
+#: ../phonebook/jdbc/ConnectionDialog.java:211
+#: ../util/PasswordDialog.java:93
 msgid "Password:"
 msgstr "Пароль:"
 
@@ -2082,26 +2130,16 @@ msgid "Create new session for every action"
 msgstr "Создавать новый сеанс для каждого действия"
 
 #: ../options/SingleServerSettingsPanel.java:505
-msgid ""
-"Connect to the server and log in for every action (e.g. view a fax, update "
-"tables, ...) and disconnect afterwards. This impairs performance but might "
-"work around some bugs."
-msgstr ""
-"Соединяться с сервером и авторизоваться при каждом действии (просмотр факса, "
-"обновление таблиц, ...) с последующим отсоединением. Это снижает "
-"производительность,но может помочь обойти некоторые ошибки."
+msgid "Connect to the server and log in for every action (e.g. view a fax, update tables, ...) and disconnect afterwards. This impairs performance but might work around some bugs."
+msgstr "Соединяться с сервером и авторизоваться при каждом действии (просмотр факса, обновление таблиц, ...) с последующим отсоединением. Это снижает производительность,но может помочь обойти некоторые ошибки."
 
 #: ../options/SingleServerSettingsPanel.java:513
 msgid "Date/Time offset:"
 msgstr "Часовой пояс:"
 
 #: ../options/SingleServerSettingsPanel.java:514
-msgid ""
-"Offset to be added to dates received from the HylaFAX server before "
-"displaying them."
-msgstr ""
-"Будет прибавляться к времени получения факса сервером HylaFAX перед "
-"отображением."
+msgid "Offset to be added to dates received from the HylaFAX server before displaying them."
+msgstr "Будет прибавляться к времени получения факса сервером HylaFAX перед отображением."
 
 #: ../options/SingleServerSettingsPanel.java:516
 msgid "Character set:"
@@ -2124,15 +2162,8 @@ msgid "Save location:"
 msgstr "Сохранять в:"
 
 #: ../options/AdminSettingsPage.java:74
-msgid ""
-"This page allows you to import/export settings and to set miscellaneous "
-"advanced settings (change them only if you know what you are doing; you may "
-"need to restart YajHFC for them to take effect)."
-msgstr ""
-"Эта страница позволяет импортировать/экспортировать настройки и "
-"устанавливать разные дополнительные параметры (изменяйте их, только если "
-"понимаете, что делаете; чтобы изменения вступили в силу, может "
-"потребоваться  перезапуск YajHFC)."
+msgid "This page allows you to import/export settings and to set miscellaneous advanced settings (change them only if you know what you are doing; you may need to restart YajHFC for them to take effect)."
+msgstr "Эта страница позволяет импортировать/экспортировать настройки и устанавливать разные дополнительные параметры (изменяйте их, только если понимаете, что делаете; чтобы изменения вступили в силу, может потребоваться  перезапуск YajHFC)."
 
 #: ../options/AdminSettingsPage.java:87
 msgid "Allow the user to change the fax job filter (View menu)"
@@ -2158,7 +2189,8 @@ msgstr "Удалить элементы меню приложения из об�
 msgid "Send FORM command"
 msgstr "Посылать команду FORM"
 
-#: ../options/AdminSettingsPage.java:118 ../options/AdminSettingsPage.java:122
+#: ../options/AdminSettingsPage.java:118
+#: ../options/AdminSettingsPage.java:122
 msgid "Import settings"
 msgstr "Импортировать настройки"
 
@@ -2170,7 +2202,8 @@ msgstr "Настройки успешно импортированы."
 msgid "Error importing settings:"
 msgstr "При импорте настроек произошла ошибка:"
 
-#: ../options/AdminSettingsPage.java:142 ../options/AdminSettingsPage.java:146
+#: ../options/AdminSettingsPage.java:142
+#: ../options/AdminSettingsPage.java:146
 msgid "Export settings"
 msgstr "Экспортировать настройки"
 
@@ -2221,12 +2254,8 @@ msgid "Use authentication"
 msgstr "Использовать аутентификацию"
 
 #: ../phonebook/ldap/ConnectionDialog.java:141
-msgid ""
-"RFC 2254 Filter expression (e.g. \"objectClass=person\") selecting the "
-"directory entries to include. Leave blank to include all."
-msgstr ""
-"Выражение RFC 2254 (например, \"objectClass=person\"). Оставьте пустым, "
-"чтобы выбрать все."
+msgid "RFC 2254 Filter expression (e.g. \"objectClass=person\") selecting the directory entries to include. Leave blank to include all."
+msgstr "Выражение RFC 2254 (например, \"objectClass=person\"). Оставьте пустым, чтобы выбрать все."
 
 #: ../phonebook/ldap/ConnectionDialog.java:143
 msgid "Also search subtrees"
@@ -2241,13 +2270,8 @@ msgid "Load all entries when opened"
 msgstr "Загружать все записи при открытии"
 
 #: ../phonebook/ldap/ConnectionDialog.java:151
-msgid ""
-"If checked, all entries in the directory are loaded when the phone book is "
-"opened. If not, entries are loaded only if a quick search is performed."
-msgstr ""
-"Если отмечено, при открытии телефонного справочника загружаются все элементы "
-"каталога. Если нет, элементы загружаются только если выполняется быстрый "
-"поиск."
+msgid "If checked, all entries in the directory are loaded when the phone book is opened. If not, entries are loaded only if a quick search is performed."
+msgstr "Если отмечено, при открытии телефонного справочника загружаются все элементы каталога. Если нет, элементы загружаются только если выполняется быстрый поиск."
 
 #: ../phonebook/ldap/ConnectionDialog.java:163
 msgid "Server name:"
@@ -2262,7 +2286,8 @@ msgid "User name (Bind DN):"
 msgstr "имя пользователя (Bind DN):"
 
 #: ../phonebook/ldap/ConnectionDialog.java:173
-#: ../phonebook/xml/XMLPhoneBook.java:355 ../phonebook/csv/CSVDialog.java:124
+#: ../phonebook/xml/XMLPhoneBook.java:355
+#: ../phonebook/csv/CSVDialog.java:124
 #: ../phonebook/jdbc/JDBCPhoneBook.java:94
 msgid "Phone book name to display:"
 msgstr "Название телефонного справочника для отображения:"
@@ -2276,12 +2301,8 @@ msgid "Count limit:"
 msgstr "Предельное количество:"
 
 #: ../phonebook/ldap/ConnectionDialog.java:185
-msgid ""
-"Please enter which LDAP attributes correspond to the phone book entry fields "
-"of YajHFC (default should usually work):"
-msgstr ""
-"Пожалуйста, введите атрибуты LDAP, соответсвующие полям телефонного "
-"справочника YajHFC (установки по умолчанию обычно работают):"
+msgid "Please enter which LDAP attributes correspond to the phone book entry fields of YajHFC (default should usually work):"
+msgstr "Пожалуйста, введите атрибуты LDAP, соответсвующие полям телефонного справочника YajHFC (установки по умолчанию обычно работают):"
 
 #: ../phonebook/ldap/ConnectionDialog.java:235
 msgid "You have to specify a server name and port."
@@ -2316,7 +2337,8 @@ msgstr "Фамилия"
 msgid "Title"
 msgstr "Звание"
 
-#: ../phonebook/PBEntryField.java:33 ../model/jobq/QueueFileFormat.java:39
+#: ../phonebook/PBEntryField.java:33
+#: ../model/jobq/QueueFileFormat.java:39
 #: ../model/JobFormat.java:46
 msgid "Company"
 msgstr "Компания"
@@ -2421,18 +2443,17 @@ msgstr "Столбец {0}"
 msgid "Error previewing your settings:"
 msgstr "Ошибка предпросмотра настроек:"
 
-#: ../phonebook/csv/CSVDialog.java:316 ../send/SendWin.java:554
-#: ../send/SendWin.java:559 ../send/SimplifiedSendDialog.java:258
+#: ../phonebook/csv/CSVDialog.java:316
+#: ../send/SendWin.java:554
+#: ../send/SendWin.java:559
+#: ../send/SimplifiedSendDialog.java:258
 #: ../send/SimplifiedSendDialog.java:277
 msgid "Preview"
 msgstr "Просмотр"
 
 #: ../phonebook/csv/CSVDialog.java:318
-msgid ""
-"Please select which columns in the CSV file represent the phone book fields:"
-msgstr ""
-"Пожалуйста, выберите колонки файла CSV, соответствующие полям телефонного "
-"справочника:"
+msgid "Please select which columns in the CSV file represent the phone book fields:"
+msgstr "Пожалуйста, выберите колонки файла CSV, соответствующие полям телефонного справочника:"
 
 #: ../phonebook/csv/CSVPhoneBook.java:59
 msgid "CSV file"
@@ -2549,8 +2570,7 @@ msgstr "Поиск записи"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:887
 msgid "Do you want to remove the current phone book from the list?"
-msgstr ""
-"Вы действительно хотите удалить текущий телефонный справочник из списка?"
+msgstr "Вы действительно хотите удалить текущий телефонный справочник из списка?"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:887
 #: ../phonebook/ui/NewPhoneBookWin.java:892
@@ -2570,12 +2590,8 @@ msgid "Only display phone book items fulfilling:"
 msgstr "Показывать только элементы телефонного справочника, удовлетворяющие:"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:919
-msgid ""
-"You have entered no filtering conditions. Do you want to show all phone book "
-"entries instead?"
-msgstr ""
-"Вы не ввели условия фильтрации. Вы хотите видеть все записи телефонного "
-"справочника?"
+msgid "You have entered no filtering conditions. Do you want to show all phone book entries instead?"
+msgstr "Вы не ввели условия фильтрации. Вы хотите видеть все записи телефонного справочника?"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:920
 msgid "Please enter a valid date/time!"
@@ -2595,7 +2611,7 @@ msgstr "Фильтровать элементы телефонного спра�
 
 #: ../phonebook/ui/NewPhoneBookWin.java:1029
 msgid "Save as HTML"
-msgstr ""
+msgstr "Сохранить как HTML"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:1089
 msgid "Error closing the phone books:"
@@ -2635,8 +2651,7 @@ msgstr "Добавить существующий элемент"
 
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:175
 msgid "Add an existing phone book entry to the distribution list"
-msgstr ""
-"Добавить существующую запись из телефонного справочника к списку рассылки"
+msgstr "Добавить существующую запись из телефонного справочника к списку рассылки"
 
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:273
 msgid "Items in the distribution list:"
@@ -2662,7 +2677,8 @@ msgstr "Добавить выделенную запись к списку ра�
 msgid "Please select the items to add to the distribution list:"
 msgstr "Пожалуйста, выберите элементы для добавления к списку рассылки:"
 
-#: ../phonebook/ui/SingleEntryPhonebookPanel.java:115 ../send/SendWin.java:315
+#: ../phonebook/ui/SingleEntryPhonebookPanel.java:115
+#: ../send/SendWin.java:315
 #: ../send/SimplifiedSendDialog.java:365
 msgid "Comments:"
 msgstr "Комментарии:"
@@ -2700,12 +2716,8 @@ msgid "New JDBC phone book"
 msgstr "Новый телефонный справочник JDBC"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:136
-msgid ""
-"Please select which database fields correspond to the phone book entry "
-"fields of YajHFC:"
-msgstr ""
-"Пожалуйста, выберите поля базы данных, соответствующие полям Телефонного "
-"справочника YajHFC:"
+msgid "Please select which database fields correspond to the phone book entry fields of YajHFC:"
+msgstr "Пожалуйста, выберите поля базы данных, соответствующие полям Телефонного справочника YajHFC:"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:255
 #: ../phonebook/jdbc/ConnectionDialog.java:295
@@ -2736,9 +2748,7 @@ msgstr "Невозможно загрузить телефонный справ�
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:333
 msgid "Cannot open phone book since no database fields were selected!"
-msgstr ""
-"Невозможно открыть телефонный справочник, так как не были выбраны поля базы "
-"данных!"
+msgstr "Невозможно открыть телефонный справочник, так как не были выбраны поля базы данных!"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:386
 #: ../phonebook/jdbc/JDBCPhoneBook.java:389
@@ -2812,12 +2822,10 @@ msgstr "Состояние Прочитано/Непрочитано:"
 
 #: ../readstate/JDBCPersistentReadState.java:147
 msgid ""
-"Could not open the database table to store the read/unread state. The "
-"current read/unread state will not be saved.\n"
+"Could not open the database table to store the read/unread state. The current read/unread state will not be saved.\n"
 " Reason:"
 msgstr ""
-"Невозможно открыть таблицу базы данных для сохранения состояния прочитано/"
-"непрочитано. Текущее состояние сохранено не будет.\n"
+"Невозможно открыть таблицу базы данных для сохранения состояния прочитано/непрочитано. Текущее состояние сохранено не будет.\n"
 " Причина:"
 
 #: ../readstate/JDBCPersistentReadState.java:385
@@ -2829,12 +2837,8 @@ msgid "JDBC settings to save read/unread state"
 msgstr "Установки JDBC для сохранения состояния \"прочитано/непрочитано\""
 
 #: ../readstate/JDBCPersistentReadState.java:400
-msgid ""
-"Please select which fields in the table correspond to the necessary fields "
-"to save the read/unread state"
-msgstr ""
-"Пожалуйста, выберите соответсвующие поля таблицы для сохранения состояния "
-"прочитано/непрочитано"
+msgid "Please select which fields in the table correspond to the necessary fields to save the read/unread state"
+msgstr "Пожалуйста, выберите соответсвующие поля таблицы для сохранения состояния прочитано/непрочитано"
 
 #: ../readstate/LocalPersistentReadState.java:174
 msgid "Local file"
@@ -2844,7 +2848,8 @@ msgstr "Локальный файл"
 msgid "Error sending the fax:"
 msgstr "Ошибка отправки факса:"
 
-#: ../model/jobq/QueueFileFormat.java:37 ../model/JobFormat.java:118
+#: ../model/jobq/QueueFileFormat.java:37
+#: ../model/JobFormat.java:118
 msgid "Page chopping threshold (inches)"
 msgstr "Граница обрезки страниц (дюймы)"
 
@@ -2852,7 +2857,8 @@ msgstr "Граница обрезки страниц (дюймы)"
 msgid "Communication identifier for last call"
 msgstr "Идентификатор связи последнего звонка"
 
-#: ../model/jobq/QueueFileFormat.java:39 ../model/JobFormat.java:46
+#: ../model/jobq/QueueFileFormat.java:39
+#: ../model/JobFormat.java:46
 msgid "Destination company name"
 msgstr "Название компании получателя"
 
@@ -2872,7 +2878,8 @@ msgstr "Фармат данных, использованный для пере�
 msgid "Desired transmit speed"
 msgstr "Желаемая скорость передачи"
 
-#: ../model/jobq/QueueFileFormat.java:44 ../model/JobFormat.java:66
+#: ../model/jobq/QueueFileFormat.java:44
+#: ../model/JobFormat.java:66
 msgid "Desired data format"
 msgstr "Желаемый формат данных"
 
@@ -2884,11 +2891,13 @@ msgstr ""
 msgid "Desired use of Error Correction Mode (ECM)"
 msgstr "Желаемое использрвание Режима Коррекции Ошибок (ECM)"
 
-#: ../model/jobq/QueueFileFormat.java:46 ../model/JobFormat.java:62
+#: ../model/jobq/QueueFileFormat.java:46
+#: ../model/JobFormat.java:62
 msgid "Desired min-scanline time"
 msgstr "Желаемое мин. время сканирования"
 
-#: ../model/jobq/QueueFileFormat.java:46 ../model/JobFormat.java:62
+#: ../model/jobq/QueueFileFormat.java:46
+#: ../model/JobFormat.java:62
 msgid "Desired minimum scanline time"
 msgstr "Желаемое минимальное время сканирования"
 
@@ -2900,19 +2909,23 @@ msgstr "Заголовок"
 msgid "Whether or not to use tagline parameter"
 msgstr "Использовать параметр заголовка"
 
-#: ../model/jobq/QueueFileFormat.java:48 ../model/JobFormat.java:122
+#: ../model/jobq/QueueFileFormat.java:48
+#: ../model/JobFormat.java:122
 msgid "Job done operation"
 msgstr "Операция завершения"
 
-#: ../model/jobq/QueueFileFormat.java:48 ../model/JobFormat.java:122
+#: ../model/jobq/QueueFileFormat.java:48
+#: ../model/JobFormat.java:122
 msgid "Operation to perform when job is done"
 msgstr "Операция, выполняемая после завершения задания"
 
-#: ../model/jobq/QueueFileFormat.java:49 ../model/JobFormat.java:158
+#: ../model/jobq/QueueFileFormat.java:49
+#: ../model/JobFormat.java:158
 msgid "Number"
 msgstr "Номер"
 
-#: ../model/jobq/QueueFileFormat.java:49 ../model/JobFormat.java:158
+#: ../model/jobq/QueueFileFormat.java:49
+#: ../model/JobFormat.java:158
 msgid "Public (external) format of dialstring"
 msgstr "Полный номер (с префиксами)"
 
@@ -2924,7 +2937,8 @@ msgstr "Готов"
 msgid "Document ready for transmission"
 msgstr "Документ готов к передаче"
 
-#: ../model/jobq/QueueFileFormat.java:51 ../model/JobFormat.java:166
+#: ../model/jobq/QueueFileFormat.java:51
+#: ../model/JobFormat.java:166
 msgid "Group identifier"
 msgstr "Групповой идентификатор"
 
@@ -2932,7 +2946,8 @@ msgstr "Групповой идентификатор"
 msgid "HylaFAX job group identifier"
 msgstr "Групповой идентификатор задания HylaFAX"
 
-#: ../model/jobq/QueueFileFormat.java:52 ../model/JobFormat.java:178
+#: ../model/jobq/QueueFileFormat.java:52
+#: ../model/JobFormat.java:178
 msgid "ID"
 msgstr ""
 
@@ -2940,15 +2955,18 @@ msgstr ""
 msgid "HylaFAX job identifier"
 msgstr "Идентификатор задания HylaFAX"
 
-#: ../model/jobq/QueueFileFormat.java:53 ../model/JobFormat.java:74
+#: ../model/jobq/QueueFileFormat.java:53
+#: ../model/JobFormat.java:74
 msgid "Tag string"
 msgstr "Метка"
 
-#: ../model/jobq/QueueFileFormat.java:53 ../model/JobFormat.java:74
+#: ../model/jobq/QueueFileFormat.java:53
+#: ../model/JobFormat.java:74
 msgid "Client-specified job tag string"
 msgstr "Метка задания, определяемая клиентом"
 
-#: ../model/jobq/QueueFileFormat.java:54 ../model/JobFormat.java:130
+#: ../model/jobq/QueueFileFormat.java:54
+#: ../model/JobFormat.java:130
 msgid "Job type"
 msgstr "Тип задания"
 
@@ -2956,23 +2974,28 @@ msgstr "Тип задания"
 msgid "Job type identification string"
 msgstr "Строка идентификаторов типа задания"
 
-#: ../model/jobq/QueueFileFormat.java:55 ../model/JobFormat.java:182
+#: ../model/jobq/QueueFileFormat.java:55
+#: ../model/JobFormat.java:182
 msgid "Job kill time"
 msgstr "Время отмены задания"
 
-#: ../model/jobq/QueueFileFormat.java:55 ../model/JobFormat.java:182
+#: ../model/jobq/QueueFileFormat.java:55
+#: ../model/JobFormat.java:182
 msgid "Time to give up trying to send job"
 msgstr "Время прекращения попыток выполнить задание отправки"
 
-#: ../model/jobq/QueueFileFormat.java:56 ../model/JobFormat.java:82
+#: ../model/jobq/QueueFileFormat.java:56
+#: ../model/JobFormat.java:82
 msgid "Location"
 msgstr "Адрес"
 
-#: ../model/jobq/QueueFileFormat.java:56 ../model/JobFormat.java:82
+#: ../model/jobq/QueueFileFormat.java:56
+#: ../model/JobFormat.java:82
 msgid "Destination geographic location"
 msgstr "Географическое местоположение получателя"
 
-#: ../model/jobq/QueueFileFormat.java:57 ../model/JobFormat.java:86
+#: ../model/jobq/QueueFileFormat.java:57
+#: ../model/JobFormat.java:86
 msgid "Sender e-mail"
 msgstr "e-mail отправителя"
 
@@ -2980,19 +3003,23 @@ msgstr "e-mail отправителя"
 msgid "Email address of sender"
 msgstr "Адрес электронной почты отправителя"
 
-#: ../model/jobq/QueueFileFormat.java:58 ../model/JobFormat.java:234
+#: ../model/jobq/QueueFileFormat.java:58
+#: ../model/JobFormat.java:234
 msgid "Maximum # dials"
 msgstr "Макс. # дозвонов"
 
-#: ../model/jobq/QueueFileFormat.java:58 ../model/JobFormat.java:234
+#: ../model/jobq/QueueFileFormat.java:58
+#: ../model/JobFormat.java:234
 msgid "Maximum number of times to dial"
 msgstr "Максимальное количество дозвонов"
 
-#: ../model/jobq/QueueFileFormat.java:59 ../model/JobFormat.java:222
+#: ../model/jobq/QueueFileFormat.java:59
+#: ../model/JobFormat.java:222
 msgid "Max. tries"
 msgstr "Макс. попыток"
 
-#: ../model/jobq/QueueFileFormat.java:59 ../model/JobFormat.java:222
+#: ../model/jobq/QueueFileFormat.java:59
+#: ../model/JobFormat.java:222
 msgid "Maximum number of attempts to send job"
 msgstr "Максимальное количество попыток отправки задания"
 
@@ -3004,7 +3031,8 @@ msgstr "Минимальная скорость"
 msgid "Minimum required transmit speed"
 msgstr "Требуемая минимальная скорость передачи"
 
-#: ../model/jobq/QueueFileFormat.java:61 ../model/JobFormat.java:190
+#: ../model/jobq/QueueFileFormat.java:61
+#: ../model/JobFormat.java:190
 msgid "Modem"
 msgstr "Модем"
 
@@ -3012,15 +3040,18 @@ msgstr "Модем"
 msgid "Outgoing modem to use"
 msgstr "Модем для исходящей связи"
 
-#: ../model/jobq/QueueFileFormat.java:62 ../model/JobFormat.java:146
+#: ../model/jobq/QueueFileFormat.java:62
+#: ../model/JobFormat.java:146
 msgid "# consecutive failed tries"
 msgstr "# неуспешных передач"
 
-#: ../model/jobq/QueueFileFormat.java:62 ../model/JobFormat.java:146
+#: ../model/jobq/QueueFileFormat.java:62
+#: ../model/JobFormat.java:146
 msgid "Number of consecutive failed attempts to place call"
 msgstr "Количество последовательных неуспешных попыток дозвониться"
 
-#: ../model/jobq/QueueFileFormat.java:63 ../model/JobFormat.java:194
+#: ../model/jobq/QueueFileFormat.java:63
+#: ../model/JobFormat.java:194
 msgid "Notification"
 msgstr "Уведомление"
 
@@ -3028,11 +3059,13 @@ msgstr "Уведомление"
 msgid "Email notification specification"
 msgstr "Детализация уведомления по Email"
 
-#: ../model/jobq/QueueFileFormat.java:64 ../model/JobFormat.java:202
+#: ../model/jobq/QueueFileFormat.java:64
+#: ../model/JobFormat.java:202
 msgid "# pages"
 msgstr "# страниц"
 
-#: ../model/jobq/QueueFileFormat.java:64 ../model/JobFormat.java:202
+#: ../model/jobq/QueueFileFormat.java:64
+#: ../model/JobFormat.java:202
 msgid "Number of pages transmitted"
 msgstr "Количество переданных страниц"
 
@@ -3044,20 +3077,24 @@ msgstr "Попытки (текущая страница)"
 msgid "Number of attempts to send current page"
 msgstr "Количество попыток передачи текущей страницы"
 
-#: ../model/jobq/QueueFileFormat.java:66 ../model/JobFormat.java:226
+#: ../model/jobq/QueueFileFormat.java:66
+#: ../model/JobFormat.java:226
 msgid "Specified number"
 msgstr "Заданный номер"
 
-#: ../model/jobq/QueueFileFormat.java:66 ../model/JobFormat.java:226
+#: ../model/jobq/QueueFileFormat.java:66
+#: ../model/JobFormat.java:226
 msgid "Client-specified dialstring"
 msgstr "Номер, заданный клиентом"
 
-#: ../model/jobq/QueueFileFormat.java:67 ../model/JobFormat.java:198
+#: ../model/jobq/QueueFileFormat.java:67
+#: ../model/JobFormat.java:198
 #: ../model/RecvFormat.java:86
 msgid "Owner"
 msgstr "Владелец"
 
-#: ../model/jobq/QueueFileFormat.java:67 ../model/JobFormat.java:198
+#: ../model/jobq/QueueFileFormat.java:67
+#: ../model/JobFormat.java:198
 msgid "Job owner"
 msgstr "Владелец задания"
 
@@ -3069,11 +3106,13 @@ msgstr "PIN страницы"
 msgid "PIN in a page operation"
 msgstr "PIN в операции со страницей"
 
-#: ../model/jobq/QueueFileFormat.java:69 ../model/JobFormat.java:170
+#: ../model/jobq/QueueFileFormat.java:69
+#: ../model/JobFormat.java:170
 msgid "Page chop handling"
 msgstr "Поддержка обрезки страниц"
 
-#: ../model/jobq/QueueFileFormat.java:69 ../model/JobFormat.java:170
+#: ../model/jobq/QueueFileFormat.java:69
+#: ../model/JobFormat.java:170
 msgid "Whitespace truncation handling"
 msgstr "Поддержка усечения пустого места"
 
@@ -3085,31 +3124,37 @@ msgstr "Обработка страницы"
 msgid "Page analysis information"
 msgstr "Аналитическая информация страницы"
 
-#: ../model/jobq/QueueFileFormat.java:71 ../model/JobFormat.java:186
+#: ../model/jobq/QueueFileFormat.java:71
+#: ../model/JobFormat.java:186
 #: ../model/RecvFormat.java:74
 msgid "Page length"
 msgstr "Длина страницы"
 
-#: ../model/jobq/QueueFileFormat.java:71 ../model/JobFormat.java:186
+#: ../model/jobq/QueueFileFormat.java:71
+#: ../model/JobFormat.java:186
 #: ../model/RecvFormat.java:74
 msgid "Page length in mm"
 msgstr "Длина страницы в мм"
 
-#: ../model/jobq/QueueFileFormat.java:72 ../model/JobFormat.java:230
+#: ../model/jobq/QueueFileFormat.java:72
+#: ../model/JobFormat.java:230
 #: ../model/RecvFormat.java:110
 msgid "Page width"
 msgstr "Ширина страницы"
 
-#: ../model/jobq/QueueFileFormat.java:72 ../model/JobFormat.java:230
+#: ../model/jobq/QueueFileFormat.java:72
+#: ../model/JobFormat.java:230
 #: ../model/RecvFormat.java:110
 msgid "Page width in mm"
 msgstr "Ширина страницы в мм"
 
-#: ../model/jobq/QueueFileFormat.java:73 ../model/JobFormat.java:42
+#: ../model/jobq/QueueFileFormat.java:73
+#: ../model/JobFormat.java:42
 msgid "Password"
 msgstr "Пароль"
 
-#: ../model/jobq/QueueFileFormat.java:73 ../model/JobFormat.java:42
+#: ../model/jobq/QueueFileFormat.java:73
+#: ../model/JobFormat.java:42
 msgid "Destination Password"
 msgstr "Пароль устройства получателя"
 
@@ -3117,32 +3162,39 @@ msgstr "Пароль устройства получателя"
 msgid "Polling request"
 msgstr "Запрос"
 
-#: ../model/jobq/QueueFileFormat.java:75 ../model/JobFormat.java:70
+#: ../model/jobq/QueueFileFormat.java:75
+#: ../model/JobFormat.java:70
 msgid "Priority"
 msgstr "Приоритет"
 
-#: ../model/jobq/QueueFileFormat.java:75 ../model/JobFormat.java:70
+#: ../model/jobq/QueueFileFormat.java:75
+#: ../model/JobFormat.java:70
 msgid "Client-specified scheduling priority"
 msgstr "Установленный клиентом приоритет"
 
-#: ../model/jobq/QueueFileFormat.java:76 ../model/JobFormat.java:106
+#: ../model/jobq/QueueFileFormat.java:76
+#: ../model/JobFormat.java:106
 msgid "Receiver"
 msgstr "Получатель"
 
-#: ../model/jobq/QueueFileFormat.java:76 ../model/JobFormat.java:106
+#: ../model/jobq/QueueFileFormat.java:76
+#: ../model/JobFormat.java:106
 msgid "Destination person (receiver)"
 msgstr "Лицо, которому адресован факс (получатель)"
 
-#: ../model/jobq/QueueFileFormat.java:77 ../model/JobFormat.java:210
+#: ../model/jobq/QueueFileFormat.java:77
+#: ../model/JobFormat.java:210
 #: ../model/RecvFormat.java:98
 msgid "Resolution"
 msgstr "Разрешение"
 
-#: ../model/jobq/QueueFileFormat.java:77 ../model/JobFormat.java:210
+#: ../model/jobq/QueueFileFormat.java:77
+#: ../model/JobFormat.java:210
 msgid "Document resolution in lines/inch"
 msgstr "Разрешение документа, строк/дюйм"
 
-#: ../model/jobq/QueueFileFormat.java:78 ../model/JobFormat.java:206
+#: ../model/jobq/QueueFileFormat.java:78
+#: ../model/JobFormat.java:206
 msgid "Retry time"
 msgstr "Время повтора"
 
@@ -3158,24 +3210,29 @@ msgstr "Возвращённое состояние"
 msgid "Indicates status return value for the job"
 msgstr "Показывает возвращённое значение состояния задания"
 
-#: ../model/jobq/QueueFileFormat.java:80 ../model/JobFormat.java:174
+#: ../model/jobq/QueueFileFormat.java:80
+#: ../model/JobFormat.java:174
 msgid "Scheduling priority"
 msgstr "Приоритет задания"
 
-#: ../model/jobq/QueueFileFormat.java:80 ../model/JobFormat.java:174
+#: ../model/jobq/QueueFileFormat.java:80
+#: ../model/JobFormat.java:174
 msgid "Current scheduling priority"
 msgstr "Текущий приоритет задания"
 
-#: ../model/jobq/QueueFileFormat.java:81 ../model/JobFormat.java:110
+#: ../model/jobq/QueueFileFormat.java:81
+#: ../model/JobFormat.java:110
 #: ../model/RecvFormat.java:102
 msgid "Sender"
 msgstr "Отправитель"
 
-#: ../model/jobq/QueueFileFormat.java:81 ../model/JobFormat.java:110
+#: ../model/jobq/QueueFileFormat.java:81
+#: ../model/JobFormat.java:110
 msgid "Sender's identity"
 msgstr "Личность отправителя"
 
-#: ../model/jobq/QueueFileFormat.java:82 ../model/JobFormat.java:54
+#: ../model/jobq/QueueFileFormat.java:82
+#: ../model/JobFormat.java:54
 #: ../model/RecvFormat.java:46
 msgid "Speed"
 msgstr "Скорость"
@@ -3184,65 +3241,80 @@ msgstr "Скорость"
 msgid "Signalling rate at which a facsimile was sent"
 msgstr "Скорость передачи, на которой был отправлен факс"
 
-#: ../model/jobq/QueueFileFormat.java:83 ../model/JobFormat.java:142
+#: ../model/jobq/QueueFileFormat.java:83
+#: ../model/JobFormat.java:142
 msgid "Job state"
 msgstr "Состояние задания"
 
-#: ../model/jobq/QueueFileFormat.java:84 ../model/JobFormat.java:214
+#: ../model/jobq/QueueFileFormat.java:84
+#: ../model/JobFormat.java:214
 msgid "Status"
 msgstr "Состояние"
 
-#: ../model/jobq/QueueFileFormat.java:84 ../model/JobFormat.java:214
+#: ../model/jobq/QueueFileFormat.java:84
+#: ../model/JobFormat.java:214
 msgid "Job status information from last failure"
 msgstr "Информация о состоянии задания"
 
-#: ../model/jobq/QueueFileFormat.java:85 ../model/JobFormat.java:38
+#: ../model/jobq/QueueFileFormat.java:85
+#: ../model/JobFormat.java:38
 #: ../model/RecvFormat.java:42
 msgid "SubAddress"
 msgstr ""
 
-#: ../model/jobq/QueueFileFormat.java:85 ../model/JobFormat.java:38
+#: ../model/jobq/QueueFileFormat.java:85
+#: ../model/JobFormat.java:38
 msgid "Destination SubAddress"
 msgstr "SubAddress устройства получателя"
 
-#: ../model/jobq/QueueFileFormat.java:86 ../model/JobFormat.java:58
+#: ../model/jobq/QueueFileFormat.java:86
+#: ../model/JobFormat.java:58
 msgid "Tagline format"
 msgstr "Формат метки"
 
-#: ../model/jobq/QueueFileFormat.java:86 ../model/JobFormat.java:58
+#: ../model/jobq/QueueFileFormat.java:86
+#: ../model/JobFormat.java:58
 msgid "Client-specific tagline format string"
 msgstr "Формат метки, определяемой клиентом"
 
-#: ../model/jobq/QueueFileFormat.java:87 ../model/JobFormat.java:154
+#: ../model/jobq/QueueFileFormat.java:87
+#: ../model/JobFormat.java:154
 msgid "Total # dials"
 msgstr "Общее # Дозвонов"
 
-#: ../model/jobq/QueueFileFormat.java:87 ../model/JobFormat.java:154
+#: ../model/jobq/QueueFileFormat.java:87
+#: ../model/JobFormat.java:154
 msgid "Total number of phone calls"
 msgstr "Общее количество телефонных звонков"
 
-#: ../model/jobq/QueueFileFormat.java:88 ../model/JobFormat.java:238
+#: ../model/jobq/QueueFileFormat.java:88
+#: ../model/JobFormat.java:238
 #: ../model/RecvFormat.java:90
 msgid "Pages"
 msgstr "Страниц"
 
-#: ../model/jobq/QueueFileFormat.java:88 ../model/JobFormat.java:238
+#: ../model/jobq/QueueFileFormat.java:88
+#: ../model/JobFormat.java:238
 msgid "Total # pages to transmit"
 msgstr "Общее # страниц "
 
-#: ../model/jobq/QueueFileFormat.java:89 ../model/JobFormat.java:218
+#: ../model/jobq/QueueFileFormat.java:89
+#: ../model/JobFormat.java:218
 msgid "Tries"
 msgstr "Попытки"
 
-#: ../model/jobq/QueueFileFormat.java:89 ../model/JobFormat.java:218
+#: ../model/jobq/QueueFileFormat.java:89
+#: ../model/JobFormat.java:218
 msgid "Total number of attempts to send job"
 msgstr "Общее количество попыток отправить задание"
 
-#: ../model/jobq/QueueFileFormat.java:90 ../model/JobFormat.java:242
+#: ../model/jobq/QueueFileFormat.java:90
+#: ../model/JobFormat.java:242
 msgid "Time to send job"
 msgstr "Время отправки задания"
 
-#: ../model/jobq/QueueFileFormat.java:91 ../model/JobFormat.java:94
+#: ../model/jobq/QueueFileFormat.java:91
+#: ../model/JobFormat.java:94
 msgid "Use continuation cover"
 msgstr "Использовать титульный лист продолжения"
 
@@ -3258,19 +3330,23 @@ msgstr "Использовать макс. вертикальное разреш
 msgid "Whether or not to use highest vertical resolution"
 msgstr "Использовать наивысшее вертикальное разрешение"
 
-#: ../model/jobq/QueueFileFormat.java:93 ../model/JobFormat.java:246
+#: ../model/jobq/QueueFileFormat.java:93
+#: ../model/JobFormat.java:246
 msgid "State"
 msgstr "Состояние"
 
-#: ../model/jobq/QueueFileFormat.java:93 ../model/JobFormat.java:246
+#: ../model/jobq/QueueFileFormat.java:93
+#: ../model/JobFormat.java:246
 msgid "Job state (long description)"
 msgstr "Состояние задания (подробное описание)"
 
-#: ../model/jobq/QueueFileFormat.java:94 ../model/JobFormat.java:250
+#: ../model/jobq/QueueFileFormat.java:94
+#: ../model/JobFormat.java:250
 msgid "Notification when"
 msgstr "Уведомлять когда"
 
-#: ../model/jobq/QueueFileFormat.java:94 ../model/JobFormat.java:250
+#: ../model/jobq/QueueFileFormat.java:94
+#: ../model/JobFormat.java:250
 msgid "E-mail notification handling (long description)"
 msgstr "Поддержка уведомления по E-mail (подробное описание)"
 
@@ -3324,8 +3400,7 @@ msgstr "Желательно ли использовать личную метк
 
 #: ../model/JobFormat.java:94
 msgid "Whether to use continuation cover page (one-character symbol)"
-msgstr ""
-"Нужно ли использовать титульный лист продолжения (буквенное обозначение)"
+msgstr "Нужно ли использовать титульный лист продолжения (буквенное обозначение)"
 
 #: ../model/JobFormat.java:98
 msgid "Pages done/total"
@@ -3448,12 +3523,8 @@ msgid "Sleeping"
 msgstr "Бездействует"
 
 #: ../model/servconn/JobState.java:35
-msgid ""
-"Sleeping (waiting for a scheduled timeout such as a delay between attempts "
-"to send)"
-msgstr ""
-"Бездействует (запланированный тайм-аут, напр. задержка между попытками "
-"передачи)"
+msgid "Sleeping (waiting for a scheduled timeout such as a delay between attempts to send)"
+msgstr "Бездействует (запланированный тайм-аут, напр. задержка между попытками передачи)"
 
 #: ../model/servconn/JobState.java:36
 msgid "Blocked"
@@ -3635,16 +3706,20 @@ msgstr "dd.MM.yyyy"
 msgid "HH:mm:ss"
 msgstr ""
 
-#: ../util/ExceptionDialog.java:82 ../util/ExceptionDialog.java:220
+#: ../util/ExceptionDialog.java:82
+#: ../util/ExceptionDialog.java:220
 msgid "Details"
 msgstr "Подробно"
 
-#: ../util/ProgressWorker.java:153 ../util/ProgressWorker.java:183
-#: ../util/ProgressWorker.java:191 ../util/ProgressWorker.java:202
+#: ../util/ProgressWorker.java:153
+#: ../util/ProgressWorker.java:183
+#: ../util/ProgressWorker.java:191
+#: ../util/ProgressWorker.java:202
 msgid "Error performing the operation:"
 msgstr "Ошибка выполнения операции:"
 
-#: ../util/ProgressWorker.java:162 ../util/ProgressWorker.java:165
+#: ../util/ProgressWorker.java:162
+#: ../util/ProgressWorker.java:165
 #: ../util/ProgressWorker.java:168
 msgid "Initializing..."
 msgstr "Инициализация..."
@@ -3666,7 +3741,8 @@ msgstr "Выбранные кнопки панели инструментов:"
 msgid "Available toolbar buttons:"
 msgstr "Доступные кнопки панели инструментов:"
 
-#: ../util/MultiButtonGroup.java:118 ../util/ExcDialogAbstractAction.java:76
+#: ../util/MultiButtonGroup.java:118
+#: ../util/ExcDialogAbstractAction.java:76
 msgid "An Error occurred executing the desired action:"
 msgstr "При выполнении требуемого действия произошла ошибка:"
 
@@ -3700,30 +3776,29 @@ msgstr "Перемещает выделенный элемент вниз"
 
 #: ../util/AcceleratorKeyDialog.java:91
 msgid "Clear"
-msgstr ""
+msgstr "Очистить"
 
 #: ../util/AcceleratorKeyDialog.java:102
 msgid "Use default"
-msgstr ""
+msgstr "По умолчанию"
 
 #: ../util/AcceleratorKeyDialog.java:132
 #, java-format
 msgid "Duplicate shortcut {0} found for actions \"{1}\" and \"{2}\"!"
-msgstr ""
+msgstr "Обнаружена совпадающая клавиша {0} для действий \"{1}\" и  \"{2}\"!"
 
-#: ../util/AcceleratorKeyDialog.java:197 ../util/AcceleratorKeyDialog.java:237
+#: ../util/AcceleratorKeyDialog.java:197
+#: ../util/AcceleratorKeyDialog.java:237
 msgid "Accelerator key"
-msgstr ""
+msgstr "Горячая клавиша"
 
 #: ../util/AcceleratorKeyDialog.java:198
-msgid ""
-"Click on the text field above and press the key (combination) to be used as "
-"the selected action's keyboard shortcut."
-msgstr ""
+msgid "Click on the text field above and press the key (combination) to be used as the selected action's keyboard shortcut."
+msgstr "Кликните на текстовое поле выше и нажмите клавишу (комбинацию), которая будет использоваться как горячая клавиша для выбранного действия."
 
 #: ../util/AcceleratorKeyDialog.java:236
 msgid "Action"
-msgstr ""
+msgstr "Действие"
 
 #: ../util/MapTableModel.java:39
 msgid "Key"
@@ -3749,11 +3824,13 @@ msgstr "Отправить Факс"
 msgid "Poll fax"
 msgstr "Запросить факс"
 
-#: ../send/SendWin.java:262 ../send/SimplifiedSendDialog.java:341
+#: ../send/SendWin.java:262
+#: ../send/SimplifiedSendDialog.java:341
 msgid "Use cover page"
 msgstr "Использовать титульный лист"
 
-#: ../send/SendWin.java:270 ../send/SimplifiedSendDialog.java:616
+#: ../send/SendWin.java:270
+#: ../send/SimplifiedSendDialog.java:616
 msgid "Use custom cover page:"
 msgstr "Использовать специальный титульный лист:"
 
@@ -3773,7 +3850,8 @@ msgstr "Адрес:"
 msgid "Voice number:"
 msgstr "Телефон:"
 
-#: ../send/SendWin.java:314 ../send/SimplifiedSendDialog.java:364
+#: ../send/SendWin.java:314
+#: ../send/SimplifiedSendDialog.java:364
 msgid "Subject:"
 msgstr "Тема:"
 
@@ -3789,17 +3867,18 @@ msgstr "Номер(а) факс(а|ов):"
 msgid "Cover page"
 msgstr "Титульный лист"
 
-#: ../send/SendWin.java:559 ../send/SimplifiedSendDialog.java:258
-msgid ""
-"Nothing to preview! (Neither a cover page nor a file to send has been "
-"selected.)"
+#: ../send/SendWin.java:559
+#: ../send/SimplifiedSendDialog.java:258
+msgid "Nothing to preview! (Neither a cover page nor a file to send has been selected.)"
 msgstr "Нечего смотреть! (Не выбраны ни файл для отправки ни титульный лист)."
 
-#: ../send/SendWin.java:621 ../send/SimplifiedSendDialog.java:454
+#: ../send/SendWin.java:621
+#: ../send/SimplifiedSendDialog.java:454
 msgid "Choose number from phone book"
 msgstr "Выбрать номер из телефонного справочника"
 
-#: ../send/SendWin.java:645 ../send/SimplifiedSendDialog.java:772
+#: ../send/SendWin.java:645
+#: ../send/SimplifiedSendDialog.java:772
 msgid "An error occured reading the input: "
 msgstr "Произошла ошибка при чтении ввода:"
 
@@ -3808,12 +3887,8 @@ msgid "Remove row"
 msgstr "Удалить строку"
 
 #: ../send/JobPropsEditorDialog.java:184
-msgid ""
-"This dialog allows you to set HylaFAX job properties directly. Use it only "
-"if you know what you are doing!"
-msgstr ""
-"Это окно позволяет непосредственно устанавливать свойства заданий HylaFAX. "
-"Используйте его, только если понимаете что делаете!"
+msgid "This dialog allows you to set HylaFAX job properties directly. Use it only if you know what you are doing!"
+msgstr "Это окно позволяет непосредственно устанавливать свойства заданий HylaFAX. Используйте его, только если понимаете что делаете!"
 
 #: ../send/SimplifiedSendDialog.java:161
 msgid ">> Advanced"
@@ -3857,9 +3932,7 @@ msgstr "Добавить из текстового файла..."
 
 #: ../send/SimplifiedSendDialog.java:533
 msgid "Adds recipients from a text file containing one recipient per line"
-msgstr ""
-"Добавить получателей из текстового файла, содержащего по одному получателю в "
-"строке"
+msgstr "Добавить получателей из текстового файла, содержащего по одному получателю в строке"
 
 #: ../send/SimplifiedSendDialog.java:586
 msgid "Fax number:"
@@ -3883,12 +3956,11 @@ msgstr ""
 
 #: ../send/LocalFileTFLItem.java:63
 #, java-format
-msgid ""
-"The document {0} could not be converted to PostScript, PDF or TIFF. Reason:"
-msgstr ""
-"Документ {0} невозможно преобразовать в PostScript, PDF или TIFF. Причина:"
+msgid "The document {0} could not be converted to PostScript, PDF or TIFF. Reason:"
+msgstr "Документ {0} невозможно преобразовать в PostScript, PDF или TIFF. Причина:"
 
-#: ../send/TimeToSendEntry.java:49 ../send/TimeToSendEntry.java:79
+#: ../send/TimeToSendEntry.java:49
+#: ../send/TimeToSendEntry.java:79
 msgid "Now"
 msgstr "Сейчас"
 
@@ -3900,7 +3972,8 @@ msgstr "Через (интервал времени)"
 msgid "At (exact time)"
 msgstr "В (точное время)"
 
-#: ../send/SendFileManager.java:65 ../send/SendFileManager.java:139
+#: ../send/SendFileManager.java:65
+#: ../send/SendFileManager.java:139
 #, java-format
 msgid "Uploading {0}"
 msgstr "Выгрузка {0}"
@@ -3949,12 +4022,8 @@ msgstr "Создание задания для {0}"
 
 #: ../send/SendController.java:423
 #, java-format
-msgid ""
-"An error occured while submitting the fax job for phone number \"{0}\" (will "
-"try to submit the fax to the other numbers anyway): "
-msgstr ""
-"Произошла ошибка при отправке факса на номер \"{0}\" (будет сделана попытка "
-"доставки факса на остальные номера):"
+msgid "An error occured while submitting the fax job for phone number \"{0}\" (will try to submit the fax to the other numbers anyway): "
+msgstr "Произошла ошибка при отправке факса на номер \"{0}\" (будет сделана попытка доставки факса на остальные номера):"
 
 #: ../send/SendController.java:427
 msgid "Cleaning up"
@@ -3968,7 +4037,8 @@ msgstr "Произошла ошибка при отправке факса:"
 msgid "To send a fax you have to enter at least one phone number!"
 msgstr "Чтобы отправить факс, введите хотя бы один телефонный номер!"
 
-#: ../send/SendController.java:479 ../send/SendController.java:486
+#: ../send/SendController.java:479
+#: ../send/SendController.java:486
 #: ../send/SendController.java:496
 msgid "Warning"
 msgstr "Предупреждение"
@@ -3980,8 +4050,7 @@ msgstr "Для получателя {0} (\"{1}\") не был указан но�
 
 #: ../send/SendController.java:493
 msgid ""
-"You haven't selected a file to transmit, so your fax will ONLY contain the "
-"cover page.\n"
+"You haven't selected a file to transmit, so your fax will ONLY contain the cover page.\n"
 "Continue anyway?"
 msgstr ""
 "Вы не выбрали файл для отправки, Ваш факс содержит ТОЛЬКО титульный лист.\n"
