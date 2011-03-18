@@ -1,4 +1,4 @@
-LISEZ MOI for YajHFC 0.4.3
+LISEZ MOI for YajHFC 0.5.0
 ==========================
 
 A PROPOS DE
@@ -12,7 +12,7 @@ Caracteristiques:
 * Reception de faxes
 * Support de la generation de pages de couvertures depuis des modeles
 * Visualiser les faxs envoyes et recus
-* Carnet d'adresse (les entrée peuvent provenir d'annuaire LDAP ou base SQL)
+* Carnet d'adresse (les entrÃ©e peuvent provenir d'annuaire LDAP ou base SQL)
 * Parametrage des colonnes affichees par boite de dialogue
 * Support de 10 langues : Chinois,Anglais, Allemand, Espagnol,Francais,Grec,Italien, Polonais, Russe,Turc
 
@@ -29,9 +29,9 @@ Pres requis:
 * Optionnel: Un visualiseur Postscript (e.g. Ghostview), GhostScript
      et tiff2pdf (librairie libtiff-utils)
 
-Pour Installer YajHFC Telechargez le fichier yajhfc-0_4_3http://yajhfc.berlios.de/.jar dans un repertoire
+Pour Installer YajHFC Telechargez le fichier yajhfc-0_5_0http://yajhfc.berlios.de/.jar dans un repertoire
 sur votre machine.
-Pour l'executer, utilisez la commande: "java -jar yajhfc-0_4_1.jar"
+Pour l'executer, utilisez la commande: "java -jar yajhfc-0_5_0.jar"
 (Sous Windows vous pouvez habituellement double cliquer sur le fichier jar.)
 
 LICENCE
@@ -62,13 +62,41 @@ YajHFC a ete originellement ecrit comme un premier projet Java
 
 MODIFICATIONS
 -------------
+0.5.0:
+- Support d'un cache local de la liste de faxs, certainement un demarrage de l'application plus rapide
+- Support d'un acces direct aux files d'attente recvq et doneq Experimental qui outrepasse le serveur Hylafax (et l'authetification). 
+	Cela devrait permettre une charge moindre du serveur pour les grandes files comme seulement les fichiers modifies seront mis a jour. Cela demande cependant des tests, mais .... 
+	(tout retour sur cette fonction et la bienvenue !)
+- Acceleration de l'affichage de la boite de dialogue des options
+- Bouton "Test connection" dans le dialogue d'ouverture
+- Support de plusieur serveurs
+- Support de plusisuers identites
+- Listes des faxs peut etre sauvee au format CSV, HTML or XML 
+- Support de raccourcis claviers configurables
+
+
+0.4.4:
+- Amelioration du support MAC OS (Principalement des changements graphiques)
+- Support de convertion de fichier personalisee
+- Acces aux parametres avances en mode graphique
+- Support de l'impression des annuaires
+- Amelioration de l'impression des faxs
+- Support du tag @@CCNameAndFax@@ dans les pages de garde HTML
+- Renvoi des fax pour plusieurs destinataires
+- Console Log pour voir les logs en temps reel
+- Separation du format d'affichage et d'envoi des faxs
+- Liste de modems editable par l'utilisateur
+- nouveau "override-setting" parametre de ligne de commande
+- Corrections de Bugs
+
+
 
 0.4.3:
-- "Visualiser log" pour les fax envoyés
-- Le message de bas de page peut être inibé
+- "Visualiser log" pour les fax envoyÃ©s
+- Le message de bas de page peut Ãªtre inibÃ©
 - Filtres pour le carnet d'adresse
 - Support d'une "resolution Etendue" (i.e. USEXVRES=yes)
-- Nouveaux paramètres de ligne de commande : --modem
+- Nouveaux paramÃ¨tres de ligne de commande : --modem
 - Support des ports d'imprimante virtuelle TCP/IP et named pipe
 - Support de surcharge de configurations par default dans /etc/yajhfc
 - Quelques corrections de bugs
@@ -78,17 +106,17 @@ MODIFICATIONS
 Correction du bug d'enregistrement des options quand aucune ancienne version d'options n'existait.
 
 0.4.2:
-- Traduction polonaise ajouté
-- Support de la lecture des récipiendaires dans un fichier texte
-- L'état de la fenêtre peut être spécifié dans la ligne de commande
-- "mode envoi seulement" sans affichage de la fenêtre principale (Quand un
-  document est envoyé et ni --background ou --noclose n'est spécifié)
-- Des options Hylafax peuvent être spécifiés pour les nouveaux travaus de Fax
-- Contournement du bug java empechant YajHFC d'enregistrer ses paramètres quand 
+- Traduction polonaise ajoutÃ©
+- Support de la lecture des rÃ©cipiendaires dans un fichier texte
+- L'Ã©tat de la fenÃªtre peut Ãªtre spÃ©cifiÃ© dans la ligne de commande
+- "mode envoi seulement" sans affichage de la fenÃªtre principale (Quand un
+  document est envoyÃ© et ni --background ou --noclose n'est spÃ©cifiÃ©)
+- Des options Hylafax peuvent Ãªtre spÃ©cifiÃ©s pour les nouveaux travaus de Fax
+- Contournement du bug java empechant YajHFC d'enregistrer ses paramÃ¨tres quand 
   il est en cours et que l'utilisateur quite windows sous Windows 7, Vista et (quelquefois) XP
-- La page de garde par défaut est maintenant en HTML pour éliminer les problèmes avec les jeux de caractères non ISO-8859-1
-- Le programme d'installation peut de façon optionnelle installer tiff2pdf et GhostScript
-- D'autres corrections de bug, amélioration et nettoyage de code
+- La page de garde par dÃ©faut est maintenant en HTML pour Ã©liminer les problÃ¨mes avec les jeux de caractÃ¨res non ISO-8859-1
+- Le programme d'installation peut de faÃ§on optionnelle installer tiff2pdf et GhostScript
+- D'autres corrections de bug, amÃ©lioration et nettoyage de code
 
 0.4.1:
 - Support des listes de diffusion pour les carnet d'adresse (XML+JDBC seulement)
@@ -128,7 +156,7 @@ Correction du bug d'enregistrement des options quand aucune ancienne version d'o
 - Support des pages de garde au format HTML
 - Support des pages de garde au format XSL:FO et ODT avec l'utilisation d'un module (plugin)
 - Meilleur support des modules (plugin)
-- Gestion des logs modifiée pour utiliser les APIs Java
+- Gestion des logs modifiÃ©e pour utiliser les APIs Java
 - Maintenant utilise gnu.hylafax 1.0.1
 - Correction de bugs
 
@@ -147,7 +175,7 @@ Correction du bug d'enregistrement des options quand aucune ancienne version d'o
 
 0.3.4a:
 - Correction de bugs:
-  dans la version 0.3.4 un caractere etait ajouté en fin  quand un fax etait soumis par
+  dans la version 0.3.4 un caractere etait ajoutÃ© en fin  quand un fax etait soumis par
   l'entree standard a une instance en cours d'execution
 
 0.3.4:
@@ -171,18 +199,18 @@ Correction du bug d'enregistrement des options quand aucune ancienne version d'o
 - Quelques parametres de ligne de commande supplementaires
 - Bouton de rafraichissement de l'ecran
 - Fichier de compilation ant inclu dans la distribution des sources
-- Mise à jour de la documentation
+- Mise Ã  jour de la documentation
 
 0.3.1:
 - Apparence modifiable
 - option pour afficher les nouveaux faxs automatiquement dans un visualiseur
-- UI option pour modifier l'intervalle de mise à jour de la boite de reception du serveur HylaFAX
+- UI option pour modifier l'intervalle de mise Ã  jour de la boite de reception du serveur HylaFAX
 - Boite de dialogue de recherche dans l'annuaire telephonique
 - YajHFC devrait maintenant fonctionner avec la version officielle de la bibliotheque gnu.hylafax (Pas entierement teste!)
 
 0.3.0:
 - Support de la convertion des images en postscript avant d'envoyer un fax
-- Bouton de pre visualisation ajoute à la boite de dialogue d'envoi
+- Bouton de pre visualisation ajoute Ã  la boite de dialogue d'envoi
 - Support des annuaires dans des bases SQL (utilsation de JDBC)
 
 0.2.7a:

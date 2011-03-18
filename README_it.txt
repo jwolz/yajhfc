@@ -1,4 +1,4 @@
-LEGGIMI per YajHFC 0.4.4
+LEGGIMI per YajHFC 0.5.0
 ========================
 
 INFORMAZIONI
@@ -64,6 +64,22 @@ YajHFC originariamente era stato scritto come primo progetto Java più complesso
 
 MODIFICHE
 ---------
+
+0.5.0:
+- Supporto per il caching locale degli elenchi fax, che dovrebbe rendere più
+veloce l'avvio dell'applicazione
+- Supporto sperimentale per la lettura diretta delle directory recvq e doneq,
+bypassando il server HylaFAX (e l'autenticazione utente HylaFAX). Questo
+potrebbe comportare un minor carico del server in presenza di grosse code dal
+momento che solo i file modificati vengono letti per aggiornare gli elenchi.
+Necessita però ancora un po' di verifica... (qualsiasi suggerimento su questa
+funzionalità sarà gradito).
+- La finestra di dialogo Opzioni ora dovrebbe aprirsi più velocemente.
+- Pulsante "Verifica connessioine" nella finestra di dialogo Opzioni
+- Supporto per server multipli
+- Supporto per identità multiple
+- Gli elenchi fax possono essere salvati nei formati CSV, HTML e XML.
+- Supporto per scorciatoie da tastiera configurabili
 
 0.4.4:
 - Migliorato il supporto per Mac OS (principalmente modifiche estetiche)
