@@ -29,9 +29,9 @@ Requirements:
 * Optional: A PostScript viewer (e.g. Ghostview), GhostScript
      and tiff2pdf (from libtiff-utils)
 
-To install YajHFC just download the yajhfc-0_4_4.jar file to some folder on your
+To install YajHFC just download the yajhfc-0_5_0.jar file to some folder on your
 file system.
-To execute it, use: "java -jar yajhfc-0_4_4.jar"
+To execute it, use: "java -jar yajhfc-0_5_0.jar"
 (In Windows you usually can just double click the jar file as well.)
 
 LICENSE

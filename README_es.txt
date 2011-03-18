@@ -1,4 +1,4 @@
-LÉAME (README) de YajHFC 0.4.4
+LÉAME (README) de YajHFC 0.5.0
 ==============================
 
 ACERCA DE
@@ -8,12 +8,12 @@ YajHFC (Yet another java HylaFAX client) es un cliente para el servidor HylaFAX
 (http://www.hylafax.org) escrito en Java.
 
 Características:
-* Envío de faxes en PostScript, PDF y otros formatos
+* Envío de faxes desde archivos PostScript, PDF y otros formatos
 * Transmisión bajo demanda (polling) de faxes
 * Soporte para generar páginas de portada a partir de plantillas
 * Visualización de faxes enviados y recibidos
 * Agenda telefónica (los datos se pueden leer, de manera opcional, desde bases de datos SQL o directorios LDAP)
-* Selección de columnas visibles (configurable desde cuadro de diálogo)
+* Selección de columnas visibles (configurable desde el menú de opciones)
 * Disponible en diez idiomas: alemán, chino, español, francés, griego, inglés, italiano, polaco, ruso y turco
 
 Página principal: http://yajhfc.berlios.de/
@@ -26,12 +26,12 @@ Requisitos:
 * JRE 5.0 o superior (se recomienda Java 6.0)
 * Servidor HylaFAX funcionando en la red (obviamente ;-) )
 * Algún programa para ver archivos TIFF (consultar la FAQ)
-* Opcional: un visor PostScript (por ejemplo, Ghostview), GhostScript
+* Opcional: un visor PostScript (p. ej., Ghostview), GhostScript
   y tiff2pdf (integrado en libtiff-utils)
 
-Para instalar YajHFC descargue el archivo yajhfc-0_4_3.jar en algún lugar 
+Para instalar YajHFC descargue el archivo yajhfc-0_5_0.jar en algún lugar 
 de su disco.
-Para ejecutarlo, utilice: "java -jar yajhfc-0_4_3.jar"
+Para ejecutarlo, utilice: "java -jar yajhfc-0_5_0.jar"
 (En Windows seguramente sólo sea necesario ejecutarlo pulsando dos veces sobre el archivo).
 
 LICENCIA
@@ -65,6 +65,22 @@ de Java (más avanzado que los programas "Hola mundo") utilizando la IDE Eclipse
 
 CAMBIOS
 -------
+
+0.5.0:
+- Soporte de caché local para la lista de faxes, lo que probablemente hará
+que el inicio de la aplicación parezca más rápido
+- Soporte experimental para la lectura directa de los directorios recvq y doneq,
+sin pasar por el servidor HylaFAX (ni la autentificación del usuario de HylaFAX). 
+Esto debería generar menos carga en un servidor con colas grandes puesto que sólo 
+se leen los archivos modificados para actualizar la lista de faxes. Sin embargo, 
+esta opción aún necesita probarse más (¡cualquier comentario sobre esta 
+característica será bienvenido!)
+- El menú de Opciones debería abrirse un poco más rápido que antes
+- El botón de "Probar la conexión" se encuentra en el menú de Opciones
+- Soporte para múltiples servidores
+- Soporte para múltiples identidades
+- Las listas de faxes se pueden guardar en formato CSV, HTML o XML
+- Soporte para la configuración de aceleradores de teclado
 
 0.4.4:
 - Soporte mejorado para MacOS (cambios de diseño, principalmente)
@@ -240,17 +256,17 @@ Se corrige un error por el cual no se almacenan los ajustes cuando no existe un 
 POR HACER
 ---------
 
-Las siguientes características posiblemente se añadirán en el futuro:
+Las siguientes características podrían añadirse en el futuro:
 
 * ¿Más traducciones? (mirar abajo)
 
 YajHFC utiliza GNU gettext para las traducciones por lo que resulta muy sencillo 
 integrarlas en el programa.
 Para el traductor que crea una nueva traducción (sin traducir la documentación)
-le llevará unas pocas horas el trabajo inicial y una media hora por cada nueva
-traducción. No se necesita un conocimiento "avanzado" para hacerlo (básicamente
-sólo se necesita saber trabajar con un editor de textos, y si se instala un programa
-especializado resulta más sencillo aún).
+le llevará unas pocas horas el trabajo inicial y alrededor de una hora por cada 
+nueva versión. No se necesita un conocimiento técnico "avanzado" para hacerlo 
+(básicamente sólo se necesita saber trabajar con un editor de textos, y si instala 
+un programa especializado resulta más sencillo aún).
 
 Así que, si le gustaría tener YajHFC traducido en tu idioma, los voluntarios
 son siempre bienvenidos. ;-)
