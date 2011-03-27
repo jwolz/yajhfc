@@ -1541,6 +1541,14 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     }
     
     /**
+     * Returns the progress panel that can be used for showing progress
+     * @return
+     */
+    public ProgressPanel getTablePanel() {
+        return tablePanel;
+    }
+    
+    /**
      * Returns the long description of the currently selected tab
      * @return
      */

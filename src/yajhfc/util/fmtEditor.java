@@ -25,6 +25,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -152,7 +154,17 @@ public class fmtEditor<T> extends JPanel
                     }
                 };
             });
-                        
+            listAvail.addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent e) {
+                    if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
+                        int index = listAvail.locationToIndex(e.getPoint());
+                        if (index >= 0) {
+                            actionPerformed(new ActionEvent(e.getSource(), e.getID(), "Forward"));
+                        }
+                    }
+                }
+            });
+            
             scrollAvail = new JScrollPane(listAvail);
             scrollAvail.setPreferredSize(new Dimension(100, 100));
             
@@ -180,6 +192,16 @@ public class fmtEditor<T> extends JPanel
                     }
                 };
             });
+            listSelected.addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent e) {
+                    if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
+                        int index = listSelected.locationToIndex(e.getPoint());
+                        if (index >= 0) {
+                            actionPerformed(new ActionEvent(e.getSource(), e.getID(), "Back"));
+                        }
+                    }
+                }
+            });
             
             scrollSelected = new JScrollPane(listSelected);
             scrollSelected.setPreferredSize(new Dimension(100, 100));
@@ -206,7 +228,8 @@ public class fmtEditor<T> extends JPanel
     @SuppressWarnings("unchecked")
     public void actionPerformed(ActionEvent e) {
 
-        if (e.getActionCommand().equals("Forward")) { //>>
+        final String actionCommand = e.getActionCommand();
+        if (actionCommand.equals("Forward")) { //>>
             int[] selIndexes = listAvail.getSelectedIndices();
             if (selIndexes.length == 0) {
                 return;
@@ -225,7 +248,7 @@ public class fmtEditor<T> extends JPanel
             if (selIndexes.length == 0) {
                 return;
             }
-            if (e.getActionCommand().equals("Back")) { //<<
+            if (actionCommand.equals("Back")) { //<<
                 Object[] sel = listSelected.getSelectedValues();
                 if (canDelete(sel)) {
                     for (Object o : sel) {
@@ -235,13 +258,13 @@ public class fmtEditor<T> extends JPanel
                     }
                     selectedFmtModel.removeAll(selIndexes);
                 }
-            } else if (e.getActionCommand().equals("Up")) {
+            } else if (actionCommand.equals("Up")) {
                 selectedFmtModel.moveUp(selIndexes);
                 for (int i = 0; i < selIndexes.length; i++) {
                     selIndexes[i]--;
                 }
                 listSelected.setSelectedIndices(selIndexes);
-            } else if (e.getActionCommand().equals("Down")) { 
+            } else if (actionCommand.equals("Down")) { 
                 selectedFmtModel.moveDown(selIndexes);
                 for (int i = 0; i < selIndexes.length; i++) {
                     selIndexes[i]++;

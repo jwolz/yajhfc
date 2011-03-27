@@ -30,7 +30,7 @@ import yajhfc.Utils;
 import yajhfc.model.FmtItem;
 import yajhfc.model.ui.TooltipJTable;
 import yajhfc.phonebook.csv.CSVDialog;
-import yajhfc.util.ExceptionDialog;
+import yajhfc.util.ProgressWorker;
 import au.com.bytecode.opencsv.CSVWriter;
 
 /**
@@ -39,27 +39,43 @@ import au.com.bytecode.opencsv.CSVWriter;
  */
 public class ExportCSVAction {
 	
-	public static void exportToCSV(MainWin parent, File outputFile) {
-		ExportCSVSettings settings = new ExportCSVSettings();
+	public static void exportToCSV(final MainWin mwParent, final File outputFile) {
+		final ExportCSVSettings settings = new ExportCSVSettings();
 		settings.loadFromString(Utils.getFaxOptions().csvExportSettings);
 		settings.fileName = outputFile.getPath();
-		CSVDialog csvd = new CSVDialog(parent, settings, MessageFormat.format(Utils._("Save to CSV file {0}"), Utils.shortenFileNameForDisplay(settings.fileName, 30)));
+		CSVDialog csvd = new CSVDialog(mwParent, settings, MessageFormat.format(Utils._("Save to CSV file {0}"), Utils.shortenFileNameForDisplay(settings.fileName, 30)));
 		Utils.setDefWinPos(csvd);
 		csvd.setVisible(true);
 		if (!csvd.clickedOK)
 			return;
 		Utils.setWaitCursor(null);
-		try {
-            CSVWriter out = settings.createWriter();
-            final TooltipJTable<? extends FmtItem> selectedTable = parent.getSelectedTable();
-            exportTableModeltoCSV(selectedTable.getModel(), selectedTable.getRealModel().getColumns(), out, settings.firstLineAreHeaders);
-            out.close();
-            Utils.getFaxOptions().csvExportSettings = settings.saveToString();
-        } catch (Exception ex) {
-            ExceptionDialog.showExceptionDialog(parent, Utils._("Error saving the table:"), ex);
-        } finally {
-            Utils.unsetWaitCursor(null);
-        }
+        final TooltipJTable<? extends FmtItem> selectedTable = mwParent.getSelectedTable();
+		ProgressWorker pw = new ProgressWorker() {
+		    @Override
+		    protected void initialize() {
+		        progressMonitor = mwParent.getTablePanel();
+		    }
+		    
+            @Override
+            public void doWork() {     
+                try {
+                    updateNote(Utils._("Exporting..."));
+                    CSVWriter out = settings.createWriter();
+                    exportTableModeltoCSV(selectedTable.getModel(), selectedTable.getRealModel().getColumns(), out, settings.firstLineAreHeaders);
+                    out.close();
+                    Utils.getFaxOptions().csvExportSettings = settings.saveToString();
+                } catch (Exception ex) {
+                    showExceptionDialog(Utils._("Error saving the table:"), ex);
+                } 
+            }
+            
+            @Override
+            protected void done() {
+                Utils.unsetWaitCursor(null);
+            }
+            
+        };
+        pw.startWork(mwParent, Utils._("Save to CSV"));
 	}
     
     public static void exportTableModeltoCSV(TableModel model, List<? extends FmtItem> columns, CSVWriter writer, boolean writeHeader) {     
@@ -76,7 +92,7 @@ public class ExportCSVAction {
                 if (val instanceof Date) {
                     buf[col] = columns.get(col).getDisplayDateFormat().format(val);
                 } else  if (val instanceof Boolean) {
-                    buf[col] = ((Boolean)val).booleanValue() ? "X" : " ";
+                    buf[col] = ((Boolean)val).booleanValue() ? "Y" : "N";
                 } else if (val != null) {
                     buf[col] = val.toString();
                 } else {
