@@ -45,23 +45,39 @@ import yajhfc.model.IconMap;
 import yajhfc.model.servconn.FaxJob;
 import yajhfc.model.servconn.FaxJobList;
 import yajhfc.util.ExceptionDialog;
+import yajhfc.util.ProgressWorker;
 
 /**
  * @author jonas
  *
  */
 public class ExportXMLAction  {
-	public static void exportToXML(MainWin parent, File outputFile) {
-		Utils.setWaitCursor(null);
-		try {
-		    FaxJobList<?> jobList = parent.getSelectedTable().getRealModel().getJobs();
-		    StreamResult out = new StreamResult(outputFile);
-		    saveToResult(out, jobList);
-        } catch (Exception ex) {
-            ExceptionDialog.showExceptionDialog(parent, Utils._("Error saving the table:"), ex);
-        } finally {
-            Utils.unsetWaitCursor(null);
-        }
+	public static void exportToXML(final MainWin mwParent, final File outputFile) {
+	    Utils.setWaitCursor(null);
+	    final FaxJobList<?> jobList = mwParent.getSelectedTable().getRealModel().getJobs();
+	    ProgressWorker pw = new ProgressWorker() {
+	        @Override
+	        protected void initialize() {
+	            this.progressMonitor = mwParent.getTablePanel();
+	        }
+
+	        @Override
+	        public void doWork() {
+	            try {
+	                updateNote(Utils._("Exporting..."));
+	                StreamResult out = new StreamResult(outputFile);
+	                saveToResult(out, jobList);
+	            } catch (Exception ex) {
+	                ExceptionDialog.showExceptionDialog(parent, Utils._("Error saving the table:"), ex);
+	            }
+	        }  
+
+	        @Override
+	        protected void done() {
+	            Utils.unsetWaitCursor(null);
+	        }
+	    };
+	    pw.startWork(mwParent, Utils._("Export to XML"));
 	}
 	
 	protected static void saveToResult(Result result, FaxJobList<? extends FmtItem> faxList) throws ParserConfigurationException, TransformerException {

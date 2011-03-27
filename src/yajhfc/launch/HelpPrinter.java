@@ -35,7 +35,7 @@ public class HelpPrinter {
     /**
      * The minimum value of a "real" short option
      */
-    private static final int MIN_OPT_VAL = 'A';
+    public static final int MIN_OPT_VAL = '0';
     
     private static final ResourceBundle resources = ResourceBundle.getBundle("yajhfc.i18n.CommandLineOpts");
     
@@ -56,6 +56,29 @@ public class HelpPrinter {
     }
     
     /**
+     * Hides options that should not be displayed in the help text
+     * @param options
+     * @return
+     */
+    public static LongOpt[] filterOptions(LongOpt[] options) {
+        // Search for undocumented options at the end and cut them off:
+        int i;
+        for (i=options.length-1; i>=0; i--) {
+            if ( options[i].getName() == null ||
+                !options[i].getName().startsWith("X")) {
+                break;
+            }
+        }
+        if (i+1 == options.length) {
+            return options;
+        } else {
+            LongOpt[] rv = new LongOpt[i+1];
+            System.arraycopy(options, 0, rv, 0, i+1);
+            return rv;
+        }
+    }
+    
+    /**
      * Prints usage information
      * @param out
      * @throws IOException 
@@ -73,6 +96,7 @@ public class HelpPrinter {
                 System.err.println("Invalid number of columns: " + cols);
             }
         }
+        options = filterOptions(options);
         
         String[] argDescs = new String[options.length]; // Cache for argument descriptions (we need them twice)
         
@@ -149,7 +173,7 @@ public class HelpPrinter {
     }
     
     private static final Pattern wordSplitter = Pattern.compile("(\\s|\n)+");
-    private static void printWrapped(PrintWriter out, int indent, String text, int screenWidth) {
+    public static void printWrapped(PrintWriter out, int indent, String text, int screenWidth) {
         int pos = indent;
 
         for (String word: wordSplitter.split(text)) {

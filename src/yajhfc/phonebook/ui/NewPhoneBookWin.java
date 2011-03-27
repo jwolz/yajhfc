@@ -1010,20 +1010,33 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                 }
             }
             
-            private void exportPhonebookToHTML(Dialog parent, PhoneBook pb, File selectedFile) {
+            private void exportPhonebookToHTML(final Dialog parent, final PhoneBook pb, final File selectedFile) {
                 Utils.setWaitCursor(null);
-                try {
-                    String title = pb.toString();
-                    String footer = "";
+                ProgressWorker pw = new ProgressWorker() {
+                    protected void initialize() {
+                        this.progressMonitor = NewPhoneBookWin.this.progressPanel;
+                    }
+                    
+                    @Override
+                    public void doWork() {
+                        try {
+                            updateNote(_("Exporting..."));
+                            String title = pb.toString();
+                            String footer = "";
 
-                    PhoneBookHTMLExporter hexp = new PhoneBookHTMLExporter();
-                    hexp.saveToFile(selectedFile, new PBEntryFieldTableModel(Collections.<PBEntryFieldContainer>unmodifiableList(pb.getEntries())), 
-                            title, footer);
-                } catch (Exception ex) {
-                    ExceptionDialog.showExceptionDialog(parent, Utils._("Error saving the table:"), ex);
-                } finally {
-                    Utils.unsetWaitCursor(null);
-                }
+                            PhoneBookHTMLExporter hexp = new PhoneBookHTMLExporter();
+                            hexp.saveToFile(selectedFile, new PBEntryFieldTableModel(Collections.<PBEntryFieldContainer>unmodifiableList(pb.getEntries())), 
+                                    title, footer);
+                        } catch (Exception ex) {
+                            ExceptionDialog.showExceptionDialog(parent, Utils._("Error saving the table:"), ex);
+                        } 
+                    }
+                    
+                    protected void done() {
+                        Utils.unsetWaitCursor(null);
+                    }
+                };
+                pw.startWork(parent, _("Export to HTML"));
             }
         };
         exportHTMLAction.putValue(Action.NAME, _("Save as HTML") + "...");

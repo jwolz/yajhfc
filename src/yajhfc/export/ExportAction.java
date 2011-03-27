@@ -36,6 +36,7 @@ import yajhfc.server.ServerManager;
 import yajhfc.util.ExampleFileFilter;
 import yajhfc.util.ExcDialogAbstractAction;
 import yajhfc.util.ExceptionDialog;
+import yajhfc.util.ProgressWorker;
 import yajhfc.util.SafeJFileChooser;
 
 /**
@@ -96,7 +97,7 @@ public class ExportAction extends ExcDialogAbstractAction {
 		if (chooser.showSaveDialog(parent) != JFileChooser.APPROVE_OPTION) {
 			return;
 		}
-		Utils.setWaitCursor(null);
+		//Utils.setWaitCursor(null);
 		try {
 		    Utils.getFaxOptions().lastExportSavePath = chooser.getCurrentDirectory().getAbsolutePath();
 		    FileFormat selectedFormat = getFormatFromFilter(chooser.getFileFilter());
@@ -120,25 +121,41 @@ public class ExportAction extends ExcDialogAbstractAction {
 		    }
         } catch (Exception ex) {
             ExceptionDialog.showExceptionDialog(parent, Utils._("Error saving the table:"), ex);
-        } finally {
+        } /*finally {
             Utils.unsetWaitCursor(null);
-        }
+        }*/
 	}
 	
-    private void exportToHTML(File selectedFile) {
+    private void exportToHTML(final File selectedFile) {
         Utils.setWaitCursor(null);
-        try {
-            String title = parent.getSelectedTableDescription();
-            String footer = Utils._("Server") + ": " + ServerManager.getDefault().getCurrent().toString();
-            final TooltipJTable<? extends FmtItem> selectedTable = parent.getSelectedTable();
 
-            TooltipJTableHTMLExporter hexp = new TooltipJTableHTMLExporter();
-            hexp.saveToFile(selectedFile, selectedTable.getModel(), title, footer);
-        } catch (Exception ex) {
-            ExceptionDialog.showExceptionDialog(parent, Utils._("Error saving the table:"), ex);
-        } finally {
-            Utils.unsetWaitCursor(null);
-        }
+        final String title = parent.getSelectedTableDescription();
+        final TooltipJTable<? extends FmtItem> selectedTable = parent.getSelectedTable();
+
+        ProgressWorker pw = new ProgressWorker() {
+            @Override
+            protected void initialize() {
+                this.progressMonitor = ExportAction.this.parent.getTablePanel();
+            }
+
+            @Override
+            public void doWork() {
+                try {
+                    updateNote(Utils._("Exporting..."));
+                    final String footer = Utils._("Server") + ": " + ServerManager.getDefault().getCurrent().toString();
+                    TooltipJTableHTMLExporter hexp = new TooltipJTableHTMLExporter();
+                    hexp.saveToFile(selectedFile, selectedTable.getModel(), title, footer);
+                } catch (Exception ex) {
+                    ExceptionDialog.showExceptionDialog(parent, Utils._("Error saving the table:"), ex);
+                } 
+            }
+
+            @Override
+            protected void done() {
+                Utils.unsetWaitCursor(null);
+            }
+        };
+        pw.startWork(parent, Utils._("Export to HTML"));
     }
 	
 	public ExportAction(MainWin parent) {

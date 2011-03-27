@@ -180,7 +180,8 @@ public class CommandLineOpts { //IMPORTANT!: Do not use Utils here!
                 new LongOpt("no-gui", LongOpt.NO_ARGUMENT, null, 8),
                 new LongOpt("no-check", LongOpt.NO_ARGUMENT, null, -2),
                 new LongOpt("configdir", LongOpt.REQUIRED_ARGUMENT, null, 'c'),
-                new LongOpt("help", LongOpt.OPTIONAL_ARGUMENT, null, 'h')
+                new LongOpt("help", LongOpt.OPTIONAL_ARGUMENT, null, 'h'),
+                new LongOpt("Xprint-manpage", LongOpt.NO_ARGUMENT, null, -3),
         };
         final String[] argsWork = args.clone();
         
@@ -189,6 +190,15 @@ public class CommandLineOpts { //IMPORTANT!: Do not use Utils here!
         String optarg;
         while ((opt = getopt.getopt()) != -1) {
             switch (opt) {
+            case -3: //Xprint-manpage
+                try {
+                    ManPrinter.printManPage(Launcher2.getConsoleWriter(), longOpts);
+                    System.exit(0);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.exit(1);
+                }
+                break;
             case -2: // no-check (in general: ignore)
                 break;
             case 1: //stdin
