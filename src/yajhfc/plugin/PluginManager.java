@@ -82,9 +82,10 @@ public class PluginManager {
      * This is used for plug ins integrated into the main tree or otherwise parts of
      * the program that can be separated from the rest.
      */
-    private static final Class<?>[] internalPlugins = {
-        yajhfc.printerport.EntryPoint.class        
-    };
+    public static final List<Class<?>> internalPlugins = new ArrayList<Class<?>>();
+    static {
+        internalPlugins.add(yajhfc.printerport.EntryPoint.class);        
+    }
     
     
     /**
