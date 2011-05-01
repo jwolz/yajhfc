@@ -34,21 +34,26 @@ import yajhfc.Utils;
 public class MapTableModel extends AbstractTableModel {
     protected final List<Row> rows = new ArrayList<Row>();
     protected Map<String,String> mapToEdit;
-    
-    private static String[] cols = {
-        Utils._("Key"), Utils._("Value")
-    };
+    public String keyColumnName   = Utils._("Key");
+    public String valueColumnName = Utils._("Value");
     
     /* (non-Javadoc)
      * @see javax.swing.table.TableModel#getColumnCount()
      */
     public int getColumnCount() {
-        return cols.length;
+        return 2;
     }
     
     @Override
     public String getColumnName(int column) {
-        return cols[column];
+        switch (column) {
+        case 0:
+            return keyColumnName;
+        case 1:
+            return valueColumnName;
+        default:
+            return null;
+        }
     }
     
     @Override

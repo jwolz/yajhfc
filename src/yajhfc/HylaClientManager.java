@@ -12,6 +12,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import yajhfc.launch.Launcher2;
 import yajhfc.server.ServerOptions;
 import yajhfc.util.ExceptionDialog;
 import yajhfc.util.PasswordDialog;
@@ -263,7 +264,7 @@ public class HylaClientManager {
         
     public synchronized List<HylaModem> getRealModems() {
         if (realModems == null) {
-            HylaFAXClient hyfc = beginServerTransaction(null);
+            HylaFAXClient hyfc = beginServerTransaction(Launcher2.application.getFrame());
             if (hyfc == null) {
                 realModems = Collections.emptyList();
                 return realModems;
