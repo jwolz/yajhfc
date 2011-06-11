@@ -78,13 +78,14 @@ public class PluginManager {
     
     /**
      * A list of classes implementing a plugin's init interface that should
-     * be initialized just like a plug in at start up.
-     * This is used for plug ins integrated into the main tree or otherwise parts of
+     * be initialized just like a plugin at start up.
+     * This is used for former plugins now integrated into the main tree or otherwise parts of
      * the program that can be separated from the rest.
      */
     public static final List<Class<?>> internalPlugins = new ArrayList<Class<?>>();
     static {
-        internalPlugins.add(yajhfc.printerport.EntryPoint.class);        
+        internalPlugins.add(yajhfc.printerport.EntryPoint.class);   
+        internalPlugins.add(yajhfc.customprops.EntryPoint.class);
     }
     
     
