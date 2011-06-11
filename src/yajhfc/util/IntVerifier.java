@@ -25,11 +25,16 @@ import javax.swing.text.JTextComponent;
 public class IntVerifier extends InputVerifier {
     public int min;
     public int max;
+    public boolean allowEmpty;
     
     @Override
     public boolean verify(JComponent input) {
+        String text = ((JTextComponent)input).getText();
+        if (text == null || text.length() == 0) {
+        	return allowEmpty;
+        }
         try {
-            int val = Integer.parseInt(((JTextComponent)input).getText());
+			int val = Integer.parseInt(text);
             return ((val >= min) && (val <= max));
         } catch (NumberFormatException e) {
             return false;
@@ -41,8 +46,13 @@ public class IntVerifier extends InputVerifier {
     }
     
     public IntVerifier(int min, int max) {
+    	this(min,max,false);
+    }
+    
+    public IntVerifier(int min, int max, boolean allowEmpty) {
         super();
         this.min = min;
         this.max = max;
+        this.allowEmpty = allowEmpty;
     }
 }
