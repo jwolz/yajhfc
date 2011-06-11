@@ -139,7 +139,10 @@ public class Launcher2 {
         }
         
         loadPlugins(opts.plugins, opts.noPlugins);
+        
+        // Set custom system properties:
         Utils.initializeUIProperties();
+        
         if (opts.jobIDOutput != null) {
             if ("-".equals(opts.jobIDOutput)) {
                 jobIDWriter = getConsoleWriter();

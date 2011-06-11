@@ -466,6 +466,8 @@ public class SendController {
         archiveJob = so.archiveSentFaxes;
         customProperties = new TreeMap<String,String>(so.customJobOptions);
         selectedModem = so.defaultModem;
+        killTime = so.killTime;
+        
         fromIdentity = server.getDefaultIdentity();
     }
     
