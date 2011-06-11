@@ -18,6 +18,7 @@
  */
 package yajhfc.customprops;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -33,14 +34,19 @@ import yajhfc.plugin.PluginUI;
  */
 public class EntryPoint extends PluginUI {
     
-    private static final String PREFIX = "java";
+    public static final String PROP_USE_SYSTEM_PROXIES = "java.net.useSystemProxies";
+    public static final String PROP_HTTP_HOST = "http.proxyHost";
+    public static final String PROP_HTTP_PORT = "http.proxyPort";
+    public static final String PROP_HTTP_NON_PROXY_HOSTS = "http.nonProxyHosts";    
+    
+	private static final String PREFIX = "java";
     private static final int VERSION = 1;
 
     static final Logger log = Logger.getLogger(EntryPoint.class.getName());
     
-    protected static Properties customJavaProperties;
+    protected static Map<String,String> customJavaProperties;
     
-    private static Properties loadCustomProperties(Properties source) {        
+    private static Map<String,String> loadCustomProperties(Properties source) {        
         String sVersion = source.getProperty(PREFIX + "-VERSION");
         int version;
         if (sVersion == null) {
@@ -53,23 +59,23 @@ public class EntryPoint extends PluginUI {
             }
         }
         
-        Properties res = new Properties();
+        Map<String,String> res = new HashMap<String,String>();
         if (version < 1) {
-            res.put("java.net.useSystemProxies", "true");
+            res.put(PROP_USE_SYSTEM_PROXIES, "true");
         }
         
         for (Map.Entry<Object,Object> prop : source.entrySet()) {
             String key = (String)prop.getKey();
             if (key.startsWith(PREFIX + "--")) {
-                res.put(key.substring(PREFIX.length()+2), prop.getValue());
+                res.put(key.substring(PREFIX.length()+2), (String)prop.getValue());
             }
         }
         return res;
     }
     
-    private static void saveCustomProperties(Properties customProps, Properties target) {
+    private static void saveCustomProperties(Map<String,String> customProps, Properties target) {
         target.put(PREFIX + "-VERSION", String.valueOf(VERSION));
-        for (Map.Entry<Object,Object> prop : customProps.entrySet()) {
+        for (Map.Entry<String,String> prop : customProps.entrySet()) {
             target.put(PREFIX + "--" + prop.getKey(), prop.getValue());
         }
     }
@@ -78,7 +84,7 @@ public class EntryPoint extends PluginUI {
         System.getProperties().putAll(customJavaProperties);
     }
     
-    public static Properties getCustomJavaProperties() {
+    public static Map<String,String> getCustomJavaProperties() {
         return customJavaProperties;
     }
     
