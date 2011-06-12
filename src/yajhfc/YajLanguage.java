@@ -134,7 +134,7 @@ public class YajLanguage  {
         // Use special handling for english locale as we don't use
         // a ResourceBundle for it
         final Locale myLocale = getLocale();
-        if (myLocale.equals(Locale.ENGLISH)) {
+        if (myLocale.getLanguage().equals(Locale.ENGLISH.getLanguage())) {
             if (Utils.debugMode) {
                 log.fine("Not loading messages for language " + myLocale);
             }
