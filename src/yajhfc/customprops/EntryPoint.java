@@ -18,6 +18,7 @@
  */
 package yajhfc.customprops;
 
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -39,7 +40,7 @@ public class EntryPoint extends PluginUI {
     public static final String PROP_HTTP_PORT = "http.proxyPort";
     public static final String PROP_HTTP_NON_PROXY_HOSTS = "http.nonProxyHosts";    
     
-	private static final String PREFIX = "java";
+	private static final String PREFIX = "javaprop";
     private static final int VERSION = 1;
 
     static final Logger log = Logger.getLogger(EntryPoint.class.getName());
@@ -61,13 +62,14 @@ public class EntryPoint extends PluginUI {
         
         Map<String,String> res = new HashMap<String,String>();
         if (version < 1) {
-            res.put(PROP_USE_SYSTEM_PROXIES, "true");
+            //res.put(PROP_USE_SYSTEM_PROXIES, "true"); // May cause problems...
         }
         
-        for (Map.Entry<Object,Object> prop : source.entrySet()) {
-            String key = (String)prop.getKey();
+        Enumeration<?> propertyNames = source.propertyNames();
+        while (propertyNames.hasMoreElements()) {
+            String key = (String)propertyNames.nextElement();
             if (key.startsWith(PREFIX + "--")) {
-                res.put(key.substring(PREFIX.length()+2), (String)prop.getValue());
+                res.put(key.substring(PREFIX.length()+2), source.getProperty(key));
             }
         }
         return res;
@@ -80,9 +82,6 @@ public class EntryPoint extends PluginUI {
         }
     }
     
-    public static void activateCustomProperties() {
-        System.getProperties().putAll(customJavaProperties);
-    }
     
     public static Map<String,String> getCustomJavaProperties() {
         return customJavaProperties;
@@ -93,7 +92,7 @@ public class EntryPoint extends PluginUI {
         
         customJavaProperties = loadCustomProperties(Utils.getSettingsProperties());
         
-        activateCustomProperties();
+        System.getProperties().putAll(customJavaProperties);
         
         return true;
     }

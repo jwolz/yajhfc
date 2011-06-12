@@ -64,20 +64,23 @@ public class CustomPropOptionsPanel extends AbstractOptionsPanel<FaxOptions> {
     public void loadSettings(FaxOptions foEdit) {
     	customProps = new HashMap<String,String>(EntryPoint.getCustomJavaProperties());
         
-    	loadUIFromProperties(customProps);
+    	loadUIFromProperties(customProps, true);
     }
 
-    private String getProperty(Map<String,String> p, String propertyName, String defaultValue) {
+    private String getProperty(Map<String,String> p, String propertyName, String defaultValue, boolean initialLoad) {
     	String res = p.get(propertyName);
+    	if (initialLoad && res == null)
+    	    res = System.getProperty(propertyName);
+    	
     	return (res == null) ? defaultValue : res;
     }
     
-    void loadUIFromProperties(Map<String,String> p) {
-        checkUseSystemProxies.setSelected(Boolean.parseBoolean(getProperty(p, EntryPoint.PROP_USE_SYSTEM_PROXIES, "false")));
+    void loadUIFromProperties(Map<String,String> p, boolean initialLoad) {
+        checkUseSystemProxies.setSelected(Boolean.parseBoolean(getProperty(p, EntryPoint.PROP_USE_SYSTEM_PROXIES, "false", initialLoad)));
         
-        textHttpProxyHost.setText(getProperty(p, EntryPoint.PROP_HTTP_HOST, ""));
-        textHttpProxyPort.setText(getProperty(p, EntryPoint.PROP_HTTP_PORT, ""));
-        textHttpNonProxyHosts.setText(getProperty(p, EntryPoint.PROP_HTTP_NON_PROXY_HOSTS, ""));
+        textHttpProxyHost.setText(getProperty(p, EntryPoint.PROP_HTTP_HOST, "", initialLoad));
+        textHttpProxyPort.setText(getProperty(p, EntryPoint.PROP_HTTP_PORT, "", initialLoad));
+        textHttpNonProxyHosts.setText(getProperty(p, EntryPoint.PROP_HTTP_NON_PROXY_HOSTS, "", initialLoad));
     }
     
     void saveUIToProperties(Map<String,String> p) {
@@ -101,9 +104,13 @@ public class CustomPropOptionsPanel extends AbstractOptionsPanel<FaxOptions> {
     	saveUIToProperties(customProps);
     	
     	Map<String,String> target = EntryPoint.getCustomJavaProperties();
+    	Properties sysProps = System.getProperties();
+
+    	sysProps.keySet().removeAll(target.keySet());
     	target.clear();
+    	
     	target.putAll(customProps);
-    	EntryPoint.activateCustomProperties();
+    	sysProps.putAll(customProps);
     }
 
     @Override
@@ -142,7 +149,7 @@ public class CustomPropOptionsPanel extends AbstractOptionsPanel<FaxOptions> {
 				
 				med.setVisible(true);
 				
-				loadUIFromProperties(customProps);
+				loadUIFromProperties(customProps, false);
 			}
 		};
         

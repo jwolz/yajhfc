@@ -65,7 +65,14 @@ public class CSVPhoneBook extends PhoneBook {
     protected List<PhoneBookEntry> entryView = Collections.<PhoneBookEntry>unmodifiableList(entries);
     protected String[] columnHeaders;
     protected Map<PBEntryField,Integer> columnMapping = new EnumMap<PBEntryField, Integer>(PBEntryField.class);
+    /**
+     * The count of columns used for new items
+     */
     protected int columnCount;
+    /**
+     * The maximum index used in the mapping
+     */
+    protected int maxMapIndex;
     protected boolean wasChanged = false;
     protected boolean open = false;
     
@@ -169,15 +176,37 @@ public class CSVPhoneBook extends PhoneBook {
         settings.loadFromString(descriptorWithoutPrefix);
         
         columnMapping.clear();
+        maxMapIndex = -1;
         for (PBEntryField field : PBEntryField.values()) {
             String mapping = settings.getMappingFor(field);
             if (!ConnectionSettings.isNoField(mapping)) {
-                columnMapping.put(field, Integer.valueOf(Integer.parseInt(mapping)));
+                final int mapIndex = Integer.parseInt(mapping);
+                columnMapping.put(field, Integer.valueOf(mapIndex));
+                
+                if (mapIndex > maxMapIndex) {
+                    maxMapIndex = mapIndex;
+                }
             }
         }
         
         reloadEntries();
         open = true;
+    }
+    
+    /**
+     * Ensures that the respective line is large enough to hold the mapping
+     * @param line
+     * @return
+     */
+    private String[] ensureSize(String[] line) {
+        if (line.length > maxMapIndex) {
+            return line;
+        } else {
+            String[] rv = new String[maxMapIndex+1];
+            Arrays.fill(rv, line.length, rv.length, "");
+            System.arraycopy(line, 0, rv, 0, line.length);
+            return rv;
+        }
     }
 
     private void reloadEntries() throws PhoneBookException {
@@ -199,7 +228,7 @@ public class CSVPhoneBook extends PhoneBook {
                 }
                 String[] line;
                 while ((line = reader.readNext()) != null) {
-                    entries.add(new CSVPhonebookEntry(this, line));
+                    entries.add(new CSVPhonebookEntry(this, ensureSize(line)));
                 }
                 reader.close();
 
@@ -211,6 +240,10 @@ public class CSVPhoneBook extends PhoneBook {
                     } else {
                         initEmptyFile();
                     }
+                }
+                if (columnCount <= maxMapIndex) {
+                    // Ensure we create an array large enough to hold the complete mapping for new items
+                    columnCount = maxMapIndex+1;
                 }
             } catch (Exception ex) {
                 throw new PhoneBookException(ex, false);
