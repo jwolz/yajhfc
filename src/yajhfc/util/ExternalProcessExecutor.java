@@ -90,10 +90,6 @@ public class ExternalProcessExecutor extends Thread {
         new ExternalProcessExecutor(commandLine);
     }
     
-    private static final int STATE_NORMAL = 0;
-    private static final int STATE_DQUOTE = 1;
-    private static final int STATE_SQUOTE = 2;
-    private static final int STATE_WHITESPACE = 3;
     /**
      * Splits a command line string and returns a list of arguments suitable
      * for a process builder
@@ -101,6 +97,21 @@ public class ExternalProcessExecutor extends Thread {
      * @return
      */
     public static List<String> splitCommandLine(String str) {
+    	return splitCommandLine(str, !Utils.IS_WINDOWS);
+    }
+    
+    private static final int STATE_NORMAL = 0;
+    private static final int STATE_DQUOTE = 1;
+    private static final int STATE_SQUOTE = 2;
+    private static final int STATE_WHITESPACE = 3;
+    /**
+     * Splits a command line string and returns a list of arguments suitable
+     * for a process builder
+     * @param str the command line to split
+     * @param stripQuotes whether to strip quotes from the arguments
+     * @return
+     */
+    public static List<String> splitCommandLine(String str, boolean stripQuotes) {
         List<String> result = new ArrayList<String>();
         int state = STATE_NORMAL;
         int argStart = 0;
@@ -118,7 +129,7 @@ public class ExternalProcessExecutor extends Thread {
                     break;
                 case ' ':
                     String res = str.substring(argStart, i);
-                    if (!Utils.IS_WINDOWS) {
+                    if (stripQuotes) {
                         res = Utils.stripQuotes(res);
                     }
                     result.add(res);
@@ -160,7 +171,7 @@ public class ExternalProcessExecutor extends Thread {
         }
         if (argStart < str.length() - 1) {
             String res = str.substring(argStart);
-            if (!Utils.IS_WINDOWS) {
+            if (stripQuotes) {
                 res = Utils.stripQuotes(res);
             }
             result.add(res);

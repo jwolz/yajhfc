@@ -53,7 +53,7 @@ public final class EntryPoint {
     public static boolean init(int mode) {
         if (mode != PluginManager.STARTUP_MODE_NORMAL) {
             log.fine("Not loading for startup mode " + mode);
-            return false;
+            return true;
         }
         
         PluginManager.pluginUIs.add(new PluginUI() {
