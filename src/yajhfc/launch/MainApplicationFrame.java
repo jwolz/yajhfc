@@ -21,6 +21,7 @@ package yajhfc.launch;
 import java.awt.Frame;
 
 import yajhfc.MainWin;
+import yajhfc.ui.YajOptionPane;
 
 /**
  * Interface for the main application frame
@@ -29,6 +30,7 @@ import yajhfc.MainWin;
  */
 public interface MainApplicationFrame {
     public Frame getFrame();
+    public YajOptionPane getDialogUI();
     public void bringToFront();
     public void dispose();
     public MainWin.SendReadyState getSendReadyState();

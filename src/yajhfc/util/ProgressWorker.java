@@ -19,23 +19,22 @@ package yajhfc.util;
  */
 
 
-import java.awt.Component;
 import java.awt.Window;
-import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Logger;
 
-import javax.swing.JOptionPane;
-import javax.swing.ProgressMonitor;
 import javax.swing.SwingUtilities;
 
 import yajhfc.Utils;
+import yajhfc.ui.YajOptionPane;
+import yajhfc.ui.swing.SwingYajOptionPane;
 
 public abstract class ProgressWorker extends Thread{
     static final Logger log = Logger.getLogger(ProgressWorker.class.getName());
     
     protected ProgressUI progressMonitor;
     protected int progress;
-    protected Component parent;
+    //protected Component parent;
+    protected YajOptionPane dialogs;
     protected boolean closeOnExit = true;
     protected boolean working = false;
  
@@ -120,46 +119,35 @@ public abstract class ProgressWorker extends Thread{
     }
 
     public void showExceptionDialog(String message, Exception ex) {
-        ExceptionDialog.showExceptionDialog(parent, message, ex);
+        dialogs.showExceptionDialog(message, ex);
     }
     
     public void showMessageDialog(String message, String title, int msgType) {
-        try {
-            SwingUtilities.invokeAndWait(new MsgDlgDisplayer(parent, message, title, msgType));
-        } catch (InterruptedException e) {
-            // NOP
-        } catch (InvocationTargetException e) {
-            // NOP
-        }
+        dialogs.showMessageDialog(message, title, msgType);
     }
     
     public int showConfirmDialog(String message, String title, int optionType, int msgType) {
-        try {
-            MsgDlgDisplayer runner = new MsgDlgDisplayer(parent, message, title, optionType, msgType);
-            SwingUtilities.invokeAndWait(runner);
-            return runner.returnValue;
-        } catch (InterruptedException e) {
-            return Integer.MIN_VALUE;
-        } catch (InvocationTargetException e) {
-            return Integer.MIN_VALUE;
-        }
+        return dialogs.showConfirmDialog(message, title, optionType, msgType);
     }
     
-    
     public void startWork(Window parent, String text) {
+        startWork(new SwingYajOptionPane(parent), text);
+    }
+    
+    public void startWork(YajOptionPane dialogs, String text) {
         try {
-            startWorkPriv(parent, text);
+            startWorkPriv(dialogs, text);
         } catch (Exception e) { 
-            ExceptionDialog.showExceptionDialog(parent, Utils._("Error performing the operation:"), e);
+            dialogs.showExceptionDialog(Utils._("Error performing the operation:"), e);
             working = false;
         } 
     }
     
-    private void startWorkPriv(Component parent, String text) {
+    private void startWorkPriv(YajOptionPane dialogs, String text) {
         working = true;
         initialize();
         if (progressMonitor == null) {
-            progressMonitor = new MyProgressMonitor(parent, text, Utils._("Initializing..."), 0, calculateMaxProgress());
+            progressMonitor = dialogs.createDefaultProgressMonitor(text, Utils._("Initializing..."), 0, calculateMaxProgress());
         } else {
             if (progressMonitor.supportsIndeterminateProgress()) {
                 progressMonitor.showIndeterminateProgress(text, Utils._("Initializing..."));
@@ -170,7 +158,7 @@ public abstract class ProgressWorker extends Thread{
         }
         progress = 0;
         //parent.setEnabled(false);
-        this.parent = parent;        
+        this.dialogs = dialogs;        
         
         start();
     }
@@ -180,26 +168,27 @@ public abstract class ProgressWorker extends Thread{
         try {
             doWork();
         } catch (Exception e) { 
-            ExceptionDialog.showExceptionDialog(parent, Utils._("Error performing the operation:"), e);
+            dialogs.showExceptionDialog(Utils._("Error performing the operation:"), e);
         } finally {
-            SwingUtilities.invokeLater(new Runnable() {
+            dialogs.invokeLater(new Runnable() {
                 public void run() {
                     try {
                         try {
                             done();
                         } catch (Exception e) { 
-                            ExceptionDialog.showExceptionDialog(parent, Utils._("Error performing the operation:"), e);
+                            dialogs.showExceptionDialog(Utils._("Error performing the operation:"), e);
                         }
-                        parent.setEnabled(true);
+                        if (dialogs.getParent() != null)
+                            dialogs.getParent().setEnabled(true);
                         if (closeOnExit) {
                             progressMonitor.close();
-                            if (progressMonitor instanceof MyProgressMonitor) {
-                                progressMonitor = null;
-                            }
+//                            if (progressMonitor instanceof MyProgressMonitor) {
+//                                progressMonitor = null;
+//                            }
                             try {
                                 pMonClosed();
                             } catch (Exception e) { 
-                                ExceptionDialog.showExceptionDialog(parent, Utils._("Error performing the operation:"), e);
+                                dialogs.showExceptionDialog(Utils._("Error performing the operation:"), e);
                             } 
                         }
                     } finally {
@@ -214,46 +203,6 @@ public abstract class ProgressWorker extends Thread{
         return working;
     }
     
-    private static class MsgDlgDisplayer implements Runnable {
-        private Component parent;
-        private String msg;
-        private String title;
-        private int msgType;
-        private int optionType = Integer.MIN_VALUE;
-        
-        public int returnValue = 0;
-        
-        public void run() {
-            if (optionType == Integer.MIN_VALUE) {
-                JOptionPane.showMessageDialog(parent, msg, title, msgType);
-            } else {
-                returnValue = JOptionPane.showConfirmDialog(parent, msg, title, optionType, msgType);
-            }
-        }
-        
-        public MsgDlgDisplayer(Component parent, String msg, String title, int msgType) {
-            this.parent = parent;
-            this.msg = msg;
-            this.title = title;
-            this.msgType = msgType;
-            
-            if (Utils.debugMode) {
-                log.info("ProgressWorker showMessageDialog: msg=\"" + msg + "\", title = \"" + title + "\", msgType=" + msgType);
-            }
-        }
-        
-        public MsgDlgDisplayer(Component parent, String msg, String title, int optionType, int msgType) {
-            this.parent = parent;
-            this.msg = msg;
-            this.title = title;
-            this.msgType = msgType;
-            this.optionType = optionType;
-            
-            if (Utils.debugMode) {
-                log.info("ProgressWorker showConfirmDialog: msg=\"" + msg + "\", title = \"" + title + "\", msgType=" + msgType + ", optionType=" + optionType);
-            }
-        }
-    }
     private static class ProgressUpdater implements Runnable {
         private int progress;
         private ProgressUI pMon;
@@ -312,34 +261,5 @@ public abstract class ProgressWorker extends Thread{
         public boolean isShowingIndeterminate();
         
         public void showDeterminateProgress(String message, String initialNote, int min, int max);
-    }
-    
-    /**
-     * Wrapper class around ProgressMonitor implementing the ProgressUI interface
-     * @author jonas
-     *
-     */
-    protected static class MyProgressMonitor extends ProgressMonitor implements ProgressUI {
-        public MyProgressMonitor(Component parentComponent, Object message,
-                String note, int min, int max) {
-            super(parentComponent, message, note, min, max);
-        }
-        
-        public void showDeterminateProgress(String message, String initialNote, int min,
-                int max) {
-            throw new IllegalStateException("Can not reinitialize a progress monitor.");            
-        }
-
-        public void showIndeterminateProgress(String message, String initialNote) {
-            throw new UnsupportedOperationException("Indeterminate progress not supported.");
-        }
-
-        public boolean supportsIndeterminateProgress() {
-            return false;
-        }
-
-        public boolean isShowingIndeterminate() {
-            return false;
-        }
     }
 }

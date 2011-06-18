@@ -223,9 +223,9 @@ public class UpdateChecker {
             protected void pMonClosed() {
                 if (checkResult != null) {
                     if (checkResult.booleanValue()) {
-                        uc.showInfoDialog((Window)this.parent, false);
+                        uc.showInfoDialog(this.dialogs.getParent(), false);
                     } else {
-                        JOptionPane.showMessageDialog(this.parent, Utils._("Your version of YajHFC is up to date."), Utils._("Check for update"), JOptionPane.INFORMATION_MESSAGE);
+                        dialogs.showMessageDialog(Utils._("Your version of YajHFC is up to date."), Utils._("Check for update"), JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
             }
