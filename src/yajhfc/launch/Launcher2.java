@@ -87,6 +87,21 @@ public class Launcher2 {
      */
     public static void main(String[] args) {
         CommandLineOpts opts = new CommandLineOpts(args);
+        
+        setupFirstStage(args, opts); // IMPORTANT: Don't access Utils before this line!
+        
+        if (opts.noGUI) {
+            noGUIStartup(opts);
+        } else {
+            if (needSubmitProtocol(opts) && opts.closeAfterSubmit && !opts.forkNewInst) {
+                sendOnlyStartup(opts);
+            } else {
+                normalStartup(opts);
+            }
+        } 
+    }
+
+    public static void setupFirstStage(String[] args, CommonCommandLineOpts opts) {
         cmdLineConfDir = opts.configDir;
         if (opts.overrideSettings.length() > 0) {
             overrideSettings = new Properties();
@@ -154,15 +169,6 @@ public class Launcher2 {
                 }
             }
         }
-        if (opts.noGUI) {
-            noGUIStartup(opts);
-        } else {
-            if (needSubmitProtocol(opts) && opts.closeAfterSubmit && !opts.forkNewInst) {
-                sendOnlyStartup(opts);
-            } else {
-                normalStartup(opts);
-            }
-        } 
     }
     
     /**

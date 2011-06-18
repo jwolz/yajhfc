@@ -55,6 +55,7 @@ import yajhfc.HylaClientManager;
 import yajhfc.HylaModem;
 import yajhfc.Utils;
 import yajhfc.server.ServerOptions;
+import yajhfc.ui.swing.SwingYajOptionPane;
 import yajhfc.util.ExcDialogAbstractAction;
 import yajhfc.util.JTableTABAction;
 import yajhfc.util.ProgressDialog;
@@ -89,7 +90,7 @@ public class ModemsPanel extends AbstractOptionsPanel<ServerOptions> {
         public void doWork() {
             updateNote(_("Logging in..."));
             tempHCM = new HylaClientManager(tempFO);
-            if (!cancelled && tempHCM.forceLogin(ow) != null) {
+            if (!cancelled && tempHCM.forceLogin(new SwingYajOptionPane(ow)) != null) {
                 if (!cancelled) {
                     updateNote(_("Retrieving modem list..."));
                     modemList = tempHCM.getRealModems();

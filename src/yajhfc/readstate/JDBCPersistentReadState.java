@@ -87,7 +87,7 @@ public class JDBCPersistentReadState extends PersistentReadState {
 
         String password;
         if (settings.askForPWD) {
-            String[] pwd = PasswordDialog.showPasswordDialog(Launcher2.application.getFrame(), Utils._("Database password"), MessageFormat.format(Utils._("Please enter the database password (database: {0}):"), settings.dbURL), settings.user, false);
+            String[] pwd = Launcher2.application.getDialogUI().showPasswordDialog(Utils._("Database password"), MessageFormat.format(Utils._("Please enter the database password (database: {0}):"), settings.dbURL), settings.user, false);
             if (pwd == null)
                 return;
             else
@@ -144,7 +144,7 @@ public class JDBCPersistentReadState extends PersistentReadState {
             } catch (Exception e) {
                 readStateMap = new HashMap<String,Boolean>();
                 //log.log(Level.SEVERE, "Could not read read state table.", e);
-                ExceptionDialog.showExceptionDialog(Launcher2.application.getFrame(), Utils._("Could not open the database table to store the read/unread state. The current read/unread state will not be saved.\n Reason:"), e);
+                Launcher2.application.getDialogUI().showExceptionDialog(Utils._("Could not open the database table to store the read/unread state. The current read/unread state will not be saved.\n Reason:"), e);
             }
             
             Runnable updater = new Runnable() {

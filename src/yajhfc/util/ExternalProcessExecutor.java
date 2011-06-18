@@ -75,7 +75,7 @@ public class ExternalProcessExecutor extends Thread {
                 log.info(commandName +  " executed successfully.");
             }
         } catch (Exception e) {
-            ExceptionDialog.showExceptionDialog(Launcher2.application.getFrame(), MessageFormat.format(Utils._("Error executing {0}:"), commandName), e);
+            Launcher2.application.getDialogUI().showExceptionDialog(MessageFormat.format(Utils._("Error executing {0}:"), commandName), e);
         }
     }
     

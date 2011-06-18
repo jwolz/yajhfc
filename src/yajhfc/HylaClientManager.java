@@ -3,7 +3,6 @@ package yajhfc;
 import gnu.hylafax.HylaFAXClient;
 import gnu.inet.ftp.ServerResponseException;
 
-import java.awt.Window;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,8 +13,7 @@ import java.util.logging.Logger;
 
 import yajhfc.launch.Launcher2;
 import yajhfc.server.ServerOptions;
-import yajhfc.util.ExceptionDialog;
-import yajhfc.util.PasswordDialog;
+import yajhfc.ui.YajOptionPane;
 
 public class HylaClientManager {
     protected boolean adminMode;
@@ -63,7 +61,7 @@ public class HylaClientManager {
             userName = null;
     }
     
-    public synchronized HylaFAXClient beginServerTransaction(Window owner) {
+    public synchronized HylaFAXClient beginServerTransaction(YajOptionPane dialogs) {
         transactionCounter++;
         
         if (Utils.debugMode) {
@@ -90,7 +88,7 @@ public class HylaClientManager {
             if (transactionCounter != 1) {
                 log.warning("Before forceLogin: transactionCounter = " + transactionCounter);
             }
-            return forceLogin(owner);
+            return forceLogin(dialogs);
         } else {
             return client;   
         }
@@ -109,13 +107,13 @@ public class HylaClientManager {
     /**
      * Logs in. Returns null if an error occurred.
      */
-    public synchronized HylaFAXClient forceLogin(Window owner) {
+    public synchronized HylaFAXClient forceLogin(YajOptionPane dialogs) {
         if (Utils.debugMode) {
             log.fine("HylaClientManager -> forceLogin");
         }
         if (client == null) {
             if (userName == null) {
-                String[] pwd = PasswordDialog.showPasswordDialog(owner, Utils._("Log in"), Utils._("Please enter the credentials to log into the HylaFAX server:"), myopts.user, true, true);
+                String[] pwd = dialogs.showPasswordDialog(Utils._("Log in"), Utils._("Please enter the credentials to log into the HylaFAX server:"), myopts.user, true, true);
                 if (pwd == null) {
                     return null;
                 }
@@ -138,7 +136,7 @@ public class HylaClientManager {
                     while (client.user(userName)) {                
                         if (password == null || password.length() == 0) {
 
-                            String[] pwd = PasswordDialog.showPasswordDialog(owner, Utils._("User password"), Utils._("Please enter the user password:"), userName, false, false);
+                            String[] pwd = dialogs.showPasswordDialog(Utils._("User password"), Utils._("Please enter the user password:"), userName, false, false);
                             if (pwd == null || pwd[1].length() == 0) { // User cancelled
                                 client.quit();
                                 //doErrorCleanup(); // TODO
@@ -151,7 +149,7 @@ public class HylaClientManager {
                                     //repeatAsk = false;
                                     break;
                                 } catch (ServerResponseException e) {
-                                    ExceptionDialog.showExceptionDialog(owner, Utils._("An error occured in response to the password:"), e);
+                                    dialogs.showExceptionDialog(Utils._("An error occured in response to the password:"), e);
                                     //repeatAsk = true;
                                 }
                         } else {
@@ -164,7 +162,7 @@ public class HylaClientManager {
                         boolean authOK = false;
                         if (adminPassword == null || adminPassword.length() == 0) {
                             do {
-                                String[] pwd = PasswordDialog.showPasswordDialog(owner, Utils._("Admin password"), Utils._("Please enter the administrative password:"), userName, false, false);
+                                String[] pwd = dialogs.showPasswordDialog(Utils._("Admin password"), Utils._("Please enter the administrative password:"), userName, false, false);
                                 if (pwd == null || pwd[1].length() == 0) { // User cancelled
                                     break; //Continue in "normal" mode
                                 } else
@@ -173,7 +171,7 @@ public class HylaClientManager {
                                         adminPassword = pwd[1];
                                         authOK = true;
                                     } catch (ServerResponseException e) {
-                                        ExceptionDialog.showExceptionDialog(owner, Utils._("An error occured in response to the password:"), e);
+                                        dialogs.showExceptionDialog(Utils._("An error occured in response to the password:"), e);
                                         authOK = false;
                                     }
                             } while (!authOK);
@@ -190,21 +188,21 @@ public class HylaClientManager {
                     return client;
                 } catch (ServerResponseException sre) {
                     if (showErrorsUsingGUI) {
-                        ExceptionDialog.showExceptionDialog(owner, Utils._("The HylaFAX server responded with an error:"), sre);
+                        dialogs.showExceptionDialog(Utils._("The HylaFAX server responded with an error:"), sre);
                     } else {
                         log.log(Level.WARNING, "The HylaFAX server responded with an error:", sre);
                     }
                     return null;
                 } catch (UnknownHostException uhe) {
                     if (showErrorsUsingGUI) {
-                        ExceptionDialog.showExceptionDialog(owner, Utils._("The server's host name was not found:"), uhe);
+                        dialogs.showExceptionDialog(Utils._("The server's host name was not found:"), uhe);
                     } else {
                         log.log(Level.WARNING, "The server's host name was not found:", uhe);
                     }
                     return null;
                 } catch (Exception e) {
                     if (showErrorsUsingGUI) {
-                        ExceptionDialog.showExceptionDialog(owner, Utils._("An error occured connecting to the server:"), e);
+                        dialogs.showExceptionDialog(Utils._("An error occured connecting to the server:"), e);
                     } else {
                         log.log(Level.WARNING, "An error occured connecting to the server:", e);
                     }
@@ -264,7 +262,7 @@ public class HylaClientManager {
         
     public synchronized List<HylaModem> getRealModems() {
         if (realModems == null) {
-            HylaFAXClient hyfc = beginServerTransaction(Launcher2.application.getFrame());
+            HylaFAXClient hyfc = beginServerTransaction(Launcher2.application.getDialogUI());
             if (hyfc == null) {
                 realModems = Collections.emptyList();
                 return realModems;

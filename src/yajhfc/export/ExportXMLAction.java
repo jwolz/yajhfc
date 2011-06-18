@@ -44,7 +44,6 @@ import yajhfc.model.FmtItemList;
 import yajhfc.model.IconMap;
 import yajhfc.model.servconn.FaxJob;
 import yajhfc.model.servconn.FaxJobList;
-import yajhfc.util.ExceptionDialog;
 import yajhfc.util.ProgressWorker;
 
 /**
@@ -68,7 +67,7 @@ public class ExportXMLAction  {
 	                StreamResult out = new StreamResult(outputFile);
 	                saveToResult(out, jobList);
 	            } catch (Exception ex) {
-	                ExceptionDialog.showExceptionDialog(parent, Utils._("Error saving the table:"), ex);
+	                dialogs.showExceptionDialog(Utils._("Error saving the table:"), ex);
 	            }
 	        }  
 

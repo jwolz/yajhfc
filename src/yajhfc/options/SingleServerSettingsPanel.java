@@ -59,6 +59,7 @@ import yajhfc.model.servconn.FaxListConnectionType;
 import yajhfc.readstate.AvailablePersistenceMethod;
 import yajhfc.readstate.PersistentReadState;
 import yajhfc.server.ServerOptions;
+import yajhfc.ui.swing.SwingYajOptionPane;
 import yajhfc.util.ClipboardPopup;
 import yajhfc.util.ExcDialogAbstractAction;
 import yajhfc.util.IntVerifier;
@@ -93,7 +94,7 @@ public class SingleServerSettingsPanel extends AbstractOptionsPanel<ServerOption
         public void doWork() {
             updateNote(_("Logging in..."));
             tempHCM = new HylaClientManager(tempFO);
-            if (!cancelled && tempHCM.forceLogin(ow) != null) {
+            if (!cancelled && tempHCM.forceLogin(new SwingYajOptionPane(ow)) != null) {
                 if (!cancelled)
                     updateNote(_("Login successful, logging out."));
                 tempHCM.forceLogout();

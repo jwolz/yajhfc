@@ -168,6 +168,11 @@ public class ServerOptions extends IDAndNameOptions {
      */
     public String filterFromFaxNr = "-/()[]{}";
     
+    /**
+     * A prefix prepended to the fax number before sending it to HylaFAX
+     */
+    public String numberPrefix = "";
+    
     public ServerOptions(FaxOptions parent) {
         super(null, parent);
     }

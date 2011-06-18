@@ -139,6 +139,8 @@ import yajhfc.server.ServerManager;
 import yajhfc.server.ServerOptions;
 import yajhfc.tray.TrayFactory;
 import yajhfc.tray.YajHFCTrayIcon;
+import yajhfc.ui.YajOptionPane;
+import yajhfc.ui.swing.SwingYajOptionPane;
 import yajhfc.util.AbstractQuickSearchHelper;
 import yajhfc.util.AcceleratorKeyDialog;
 import yajhfc.util.AcceleratorKeys;
@@ -235,6 +237,8 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     boolean hideMenusForMac = false;
     
     protected boolean userInitiatedLogout = false;
+    
+    protected YajOptionPane dialogUI = new SwingYajOptionPane(this);
     
     // Worker classes:
     private class DeleteWorker extends ProgressWorker {
@@ -1072,6 +1076,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                         try {
                             MessageFormat infoFormat = new MessageFormat(_("Getting information for job {0}..."));
                             connection.beginMultiOperation();
+                            String numberPrefix = connection.getOptions().numberPrefix;
                             try {
                                 for (FaxJob<? extends FmtItem> job : selectedJobs) {
                                     String number, voiceNumber, company, name, location;
@@ -1086,6 +1091,9 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                                         number = props.get("DIALSTRING");
                                         if (number == null) {
                                             number = props.get("EXTERNAL");
+                                        }
+                                        if (numberPrefix.length() > 0 && number != null && number.startsWith(numberPrefix)) {
+                                            number = number.substring(numberPrefix.length()); // Cut off the number prefix if present
                                         }
                                         name = props.get("TOUSER");
                                         company = props.get("TOCOMPANY");
@@ -1335,7 +1343,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                     if (modem == null)
                         return;
                     
-                    HylaFAXClient hyfc = clientManager.beginServerTransaction(MainWin.this);
+                    HylaFAXClient hyfc = clientManager.beginServerTransaction(MainWin.this.dialogUI);
                     if (hyfc == null)
                         return;
                     
@@ -2426,6 +2434,10 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     
     public Frame getFrame() {
         return this;
+    }
+    
+    public YajOptionPane getDialogUI() {
+        return dialogUI;
     }
     
     class MenuViewListener extends MultiButtonGroup implements ChangeListener {

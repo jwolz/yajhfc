@@ -18,7 +18,6 @@
  */
 package yajhfc.model.servconn.directaccess;
 
-import java.awt.Window;
 import java.io.File;
 
 import yajhfc.model.FmtItemList;
@@ -34,6 +33,7 @@ import yajhfc.model.servconn.directaccess.recvq.RecvQFaxJobList;
 import yajhfc.model.servconn.hylafax.HylaFaxListConnection;
 import yajhfc.model.servconn.hylafax.ManagedFaxJobList;
 import yajhfc.server.ServerOptions;
+import yajhfc.ui.YajOptionPane;
 
 /**
  * @author jonas
@@ -42,8 +42,8 @@ import yajhfc.server.ServerOptions;
 public class DirectAccessFaxListConnection extends HylaFaxListConnection {
     protected HylaDirAccessor hyda;
     
-    public DirectAccessFaxListConnection(ServerOptions fo, Window parentWindow) {
-        super(fo, parentWindow);
+    public DirectAccessFaxListConnection(ServerOptions fo, YajOptionPane dialogUI) {
+        super(fo, dialogUI);
         refreshDirAccessor();
     }
 

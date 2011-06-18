@@ -61,6 +61,8 @@ import yajhfc.phonebook.convrules.NameRule;
 import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 import yajhfc.server.Server;
 import yajhfc.server.ServerOptions;
+import yajhfc.ui.YajOptionPane;
+import yajhfc.ui.swing.SwingYajOptionPane;
 import yajhfc.util.ProgressWorker;
 import yajhfc.util.ProgressWorker.ProgressUI;
 
@@ -72,7 +74,7 @@ public class SendController {
     
     // These properties are set in the constructor:
     protected Server server;
-    protected Window parent;
+    protected YajOptionPane dialogUI;
     protected boolean pollMode;
     
     // These properties have default values and may be set using getters and setters
@@ -144,12 +146,12 @@ public class SendController {
 
         if (customCover != null) {
             if (!(customCover.canRead())) {
-                JOptionPane.showMessageDialog(parent, MessageFormat.format(Utils._("Can not read file \"{0}\"!"), customCover.toString()), Utils._("Error"), JOptionPane.WARNING_MESSAGE);
+                dialogUI.showMessageDialog(MessageFormat.format(Utils._("Can not read file \"{0}\"!"), customCover.toString()), Utils._("Error"), JOptionPane.WARNING_MESSAGE);
                 return null;
             }
         } else if (fromIdentity.useCustomDefaultCover) {
             if (!(new File(fromIdentity.defaultCover).canRead())) {
-                JOptionPane.showMessageDialog(parent, MessageFormat.format(Utils._("Can not read default cover page file \"{0}\"!"), fromIdentity.defaultCover), Utils._("Error"), JOptionPane.WARNING_MESSAGE);
+                dialogUI.showMessageDialog(MessageFormat.format(Utils._("Can not read default cover page file \"{0}\"!"), fromIdentity.defaultCover), Utils._("Error"), JOptionPane.WARNING_MESSAGE);
                 return null;
             }
         }
@@ -305,7 +307,7 @@ public class SendController {
         public void doWork() {
             HylaClientManager clientManager = server.getClientManager();
             try {
-                HylaFAXClient hyfc = clientManager.beginServerTransaction(SendController.this.parent);
+                HylaFAXClient hyfc = clientManager.beginServerTransaction(SendController.this.dialogUI);
                 if (hyfc == null) {
                     return;
                 }
@@ -371,7 +373,7 @@ public class SendController {
                                 }
                             }
 
-                            String faxNumber = Utils.sanitizeInput(numItem.getField(PBEntryField.FaxNumber), numberFilterChars, ' ', 255);
+                            String faxNumber = so.numberPrefix + Utils.sanitizeInput(numItem.getField(PBEntryField.FaxNumber), numberFilterChars, ' ', 255);
                             j.setDialstring(faxNumber);
                             //j.setProperty("EXTERNAL", faxNumber); // needed to fix an error while sending multiple jobs
                             j.setMaximumTries(maxTries);
@@ -438,7 +440,9 @@ public class SendController {
         protected void done() {
             fireSendOperationComplete(success);
             if (success) {
-                SendController.this.parent.dispose();
+                if (SendController.this.dialogUI.getParent() != null) {
+                    SendController.this.dialogUI.getParent().dispose();
+                }
             }
         }
         
@@ -453,8 +457,12 @@ public class SendController {
     }
     
     public SendController(Server server, Window parent, boolean pollMode, ProgressUI progressMonitor) {
+        this(server, new SwingYajOptionPane(parent), pollMode, progressMonitor);
+    }
+    
+    public SendController(Server server, YajOptionPane dialogUI, boolean pollMode, ProgressUI progressMonitor) {
         this.server = server;
-        this.parent = parent;
+        this.dialogUI = dialogUI;
         this.pollMode = pollMode;
         this.progressMonitor = progressMonitor;
         
@@ -478,24 +486,24 @@ public class SendController {
     public boolean validateEntries() {    
         
         if (numbers.size() == 0) {
-            JOptionPane.showMessageDialog(parent, Utils._("To send a fax you have to enter at least one phone number!"), Utils._("Warning"), JOptionPane.INFORMATION_MESSAGE);
+            dialogUI.showMessageDialog(Utils._("To send a fax you have to enter at least one phone number!"), Utils._("Warning"), JOptionPane.INFORMATION_MESSAGE);
             return false;
         }
         for (int i=0; i < numbers.size(); i++) {
             PBEntryFieldContainer number = numbers.get(i);
             String faxNumber = number.getField(PBEntryField.FaxNumber);
             if (faxNumber == null || faxNumber.length() == 0) {
-                JOptionPane.showMessageDialog(parent, MessageFormat.format(Utils._("For recipient {0} (\"{1}\") no fax number has been entered."), i+1, NameRule.GIVENNAME_NAME.applyRule(number)), Utils._("Warning"), JOptionPane.INFORMATION_MESSAGE);
+                dialogUI.showMessageDialog(MessageFormat.format(Utils._("For recipient {0} (\"{1}\") no fax number has been entered."), i+1, NameRule.GIVENNAME_NAME.applyRule(number)), Utils._("Warning"), JOptionPane.INFORMATION_MESSAGE);
                 return false;
             }
         }
         
         if (files.size() == 0) {
             if (useCover) {
-                if (JOptionPane.showConfirmDialog(parent, Utils._("You haven't selected a file to transmit, so your fax will ONLY contain the cover page.\nContinue anyway?"), Utils._("Continue?"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION)
+                if (dialogUI.showConfirmDialog(Utils._("You haven't selected a file to transmit, so your fax will ONLY contain the cover page.\nContinue anyway?"), Utils._("Continue?"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION)
                     return false;
             } else {
-                JOptionPane.showMessageDialog(parent, Utils._("To send a fax you must select at least one file!"), Utils._("Warning"), JOptionPane.INFORMATION_MESSAGE);
+                dialogUI.showMessageDialog(Utils._("To send a fax you must select at least one file!"), Utils._("Warning"), JOptionPane.INFORMATION_MESSAGE);
                 return false;
             }
         }   
@@ -505,12 +513,12 @@ public class SendController {
     
     public void sendFax() {
         SendWorker wrk = new SendWorker();
-        wrk.startWork(parent, Utils._("Sending fax"));
+        wrk.startWork(dialogUI, Utils._("Sending fax"));
     }
     
     public void previewFax(PBEntryFieldContainer selectedNumber) {
         PreviewWorker wrk = new PreviewWorker(selectedNumber);
-        wrk.startWork(parent, Utils._("Previewing fax"));
+        wrk.startWork(dialogUI, Utils._("Previewing fax"));
     }
 
     
@@ -630,10 +638,6 @@ public class SendController {
 
     public void setServer(Server server) {
         this.server = server;
-    }
-
-    public Window getParent() {
-        return parent;
     }
 
     public boolean isPollMode() {

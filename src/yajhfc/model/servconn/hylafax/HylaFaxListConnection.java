@@ -21,7 +21,6 @@ package yajhfc.model.servconn.hylafax;
 import static yajhfc.Utils._;
 import gnu.hylafax.HylaFAXClient;
 
-import java.awt.Window;
 import java.io.IOException;
 import java.net.SocketException;
 import java.util.ArrayList;
@@ -46,13 +45,14 @@ import yajhfc.model.servconn.FaxListConnectionListener;
 import yajhfc.model.servconn.FaxListConnectionListener.RefreshKind;
 import yajhfc.model.servconn.directaccess.archive.ArchiveFaxJobList;
 import yajhfc.server.ServerOptions;
+import yajhfc.ui.YajOptionPane;
 
 public class HylaFaxListConnection implements FaxListConnection {
     static final Logger log = Logger.getLogger(HylaFaxListConnection.class.getName());
     
     protected final List<FaxListConnectionListener> listeners = new ArrayList<FaxListConnectionListener>();
     protected HylaClientManager clientManager;
-    protected Window parentWindow;
+    protected YajOptionPane dialogUI;
     protected ConnectionState connectionState = ConnectionState.DISCONNECTED;
     
     protected Timer refreshTimer = new Timer("ListRefresher", true);
@@ -159,7 +159,7 @@ public class HylaFaxListConnection implements FaxListConnection {
             loadFromCache();
         }
         clientManager.setAdminMode(adminMode);
-        if (clientManager.forceLogin(parentWindow) != null) {
+        if (clientManager.forceLogin(dialogUI) != null) {
             log.fine("ClientManager successfully logged in");
             refreshTimer.schedule(statusRefresher = createStatusRefresher(), 
                     0, fo.getParent().statusUpdateInterval);
@@ -262,12 +262,12 @@ public class HylaFaxListConnection implements FaxListConnection {
         }
     }
     
-    public void setUI(Window parentWindow) {
-        this.parentWindow = parentWindow;
+    public void setUI(YajOptionPane dialogUI) {
+        this.dialogUI = dialogUI;
     }
     
-    public HylaFaxListConnection(ServerOptions fo, Window parentWindow) {
-        setUI(parentWindow);
+    public HylaFaxListConnection(ServerOptions fo, YajOptionPane dialogUI) {
+        setUI(dialogUI);
         clientManager = new HylaClientManager(fo);
         this.fo = fo;
         receivedJobs = createRecvdList();
@@ -363,7 +363,7 @@ public class HylaFaxListConnection implements FaxListConnection {
     }
         
     public HylaFAXClient beginServerTransaction() throws IOException {
-        HylaFAXClient hyfc = clientManager.beginServerTransaction(parentWindow);
+        HylaFAXClient hyfc = clientManager.beginServerTransaction(dialogUI);
         if (hyfc == null) {
             throw new IOException("Could not get a HylaFAXClient connection.");
         }
@@ -392,7 +392,7 @@ public class HylaFaxListConnection implements FaxListConnection {
         public synchronized void run() {
             boolean success = false;
             try {
-                HylaFAXClient hyfc = clientManager.beginServerTransaction(parentWindow);
+                HylaFAXClient hyfc = clientManager.beginServerTransaction(dialogUI);
                 if (hyfc == null) {
                     setStatusText(Utils._("Could not log in"));
                     cancel();
@@ -436,7 +436,7 @@ public class HylaFaxListConnection implements FaxListConnection {
             boolean success = false;
             try {
                 long time = 0;
-                HylaFAXClient hyfc = clientManager.beginServerTransaction(parentWindow);
+                HylaFAXClient hyfc = clientManager.beginServerTransaction(dialogUI);
                 if (hyfc == null) {
                     cancel();
                     disconnect();

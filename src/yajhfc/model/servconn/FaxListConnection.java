@@ -18,7 +18,6 @@
  */
 package yajhfc.model.servconn;
 
-import java.awt.Window;
 import java.io.IOException;
 
 import yajhfc.HylaClientManager;
@@ -26,6 +25,7 @@ import yajhfc.model.JobFormat;
 import yajhfc.model.RecvFormat;
 import yajhfc.model.jobq.QueueFileFormat;
 import yajhfc.server.ServerOptions;
+import yajhfc.ui.YajOptionPane;
 
 /**
  * @author jonas
@@ -79,7 +79,7 @@ public interface FaxListConnection {
      * Sets the UI components to use for feedback to the user 
      * @param parentWindow
      */
-    public void setUI(Window parentWindow);
+    public void setUI(YajOptionPane dialogUI);
     
     /**
      * Returns if a server status is available for this connection type

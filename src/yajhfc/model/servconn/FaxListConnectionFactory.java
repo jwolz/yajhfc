@@ -18,16 +18,16 @@
  */
 package yajhfc.model.servconn;
 
-import java.awt.Window;
 import java.lang.reflect.Constructor;
 
 import yajhfc.server.ServerOptions;
+import yajhfc.ui.YajOptionPane;
 
 public class FaxListConnectionFactory {
-    public static FaxListConnection getFaxListConnection(ServerOptions options, Window parentWindow) throws Exception {
+    public static FaxListConnection getFaxListConnection(ServerOptions options, YajOptionPane dialogUI) throws Exception {
         Class <? extends FaxListConnection> implClass = options.faxListConnectionType.getImplementingClass();
-        Constructor<? extends FaxListConnection> constructor = implClass.getConstructor(ServerOptions.class, Window.class);
-        return constructor.newInstance(options, parentWindow);
+        Constructor<? extends FaxListConnection> constructor = implClass.getConstructor(ServerOptions.class, YajOptionPane.class);
+        return constructor.newInstance(options, dialogUI);
     }
     
     public static boolean isConnectionTypeStillValid(FaxListConnection connection, ServerOptions newOptions) {

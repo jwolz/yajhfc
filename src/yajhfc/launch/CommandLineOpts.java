@@ -39,7 +39,7 @@ import yajhfc.util.ExampleFileFilter;
  * @author jonas
  *
  */
-public class CommandLineOpts { //IMPORTANT!: Do not use Utils here!
+public class CommandLineOpts extends CommonCommandLineOpts { //IMPORTANT!: Do not use Utils here!
     /**
      * Files to submit. Communicated over socket.
      */
@@ -48,14 +48,6 @@ public class CommandLineOpts { //IMPORTANT!: Do not use Utils here!
      * Recipients to submit to. Communicated over socket.
      */
     public final List<String> recipients = new ArrayList<String>();
-    /**
-     * Plugins to use. Communicated over command line.
-     */
-    public final List<PluginInfo> plugins = new ArrayList<PluginInfo>();
-    /**
-     * Overridden settings. Communicated over command line.
-     */
-    public final StringBuilder overrideSettings = new StringBuilder();
     /**
      * Submit file from stdin. Communicated over socket.
      */
@@ -73,14 +65,6 @@ public class CommandLineOpts { //IMPORTANT!: Do not use Utils here!
      */
     public boolean closeAfterSubmit = true;
     /**
-     * Debug mode? Communicated over command line.
-     */
-    public boolean debugMode = false;
-    /**
-     * Do not load plugin.lst. Communicated over command line.
-     */
-    public boolean noPlugins = false;
-    /**
      * Start without GUI. Never communicated.
      */
     public boolean noGUI = false;
@@ -88,14 +72,6 @@ public class CommandLineOpts { //IMPORTANT!: Do not use Utils here!
      * Tab to show in MainWin. Communicated over command line.
      */
     public int selectedTab = -1;
-    /**
-     * Log file. Communicated over command line.
-     */
-    public String logFile = null;
-    /**
-     * Append to log file? Communicated over command line.
-     */
-    public boolean appendToLog = false;
     /**
      * Use cover? null: Don't change, else use booleanValue()
      * Communicated over socket.
@@ -117,23 +93,12 @@ public class CommandLineOpts { //IMPORTANT!: Do not use Utils here!
      * Wait for submit to complete. Communicated over socket.
      */
     public boolean noWait = false;
-    /**
-     * Config dir. Communicated over command line.
-     */
-    public String configDir = null;
-    
     public final static int WINDOWSTATE_NOCHANGE = -1;
     public final static int WINDOWSTATE_TOTRAY = -2;
     /**
      * Desired window state. Communicated over command line.
      */
     public int desiredWindowState = WINDOWSTATE_NOCHANGE;
-    
-    /**
-     * Location where the job id of newly created fax jobs should be written to.
-     * Not communicated.
-     */
-    public String jobIDOutput = null;
     
     /**
      * The server to use.

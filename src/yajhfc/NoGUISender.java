@@ -38,6 +38,8 @@ import yajhfc.send.StreamTFLItem;
 import yajhfc.server.Server;
 import yajhfc.server.ServerManager;
 import yajhfc.server.ServerOptions;
+import yajhfc.ui.YajOptionPane;
+import yajhfc.ui.swing.SwingYajOptionPane;
 import yajhfc.util.ExceptionDialog;
 import yajhfc.util.ProgressContentPane;
 
@@ -48,6 +50,7 @@ import yajhfc.util.ProgressContentPane;
 public class NoGUISender extends JFrame implements MainApplicationFrame {
 
     ProgressContentPane progressPanel;
+    YajOptionPane dialogUI = new SwingYajOptionPane(this);
     
     /**
      * @throws HeadlessException
@@ -71,6 +74,10 @@ public class NoGUISender extends JFrame implements MainApplicationFrame {
     
     public Frame getFrame() {
         return this;
+    }
+    
+    public YajOptionPane getDialogUI() {
+        return dialogUI;
     }
     
     public SendReadyState getSendReadyState() {

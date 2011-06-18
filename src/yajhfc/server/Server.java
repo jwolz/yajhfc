@@ -1,6 +1,5 @@
 package yajhfc.server;
 
-import java.awt.Window;
 import java.util.logging.Logger;
 
 import yajhfc.FaxOptions;
@@ -13,6 +12,7 @@ import yajhfc.model.servconn.ConnectionState;
 import yajhfc.model.servconn.FaxListConnection;
 import yajhfc.model.servconn.FaxListConnectionFactory;
 import yajhfc.readstate.PersistentReadState;
+import yajhfc.ui.YajOptionPane;
 
 public class Server {
     static final Logger log = Logger.getLogger(Server.class.getName());
@@ -64,7 +64,7 @@ public class Server {
             try {
                 if (Utils.debugMode)
                     log.fine("Server " + options.id + ": creating connection");
-                connection = FaxListConnectionFactory.getFaxListConnection(options, getParentWindow());
+                connection = FaxListConnectionFactory.getFaxListConnection(options, getDialogUI());
                 cleanupClientManager();
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -73,8 +73,8 @@ public class Server {
         return connection;
     }
 
-    protected Window getParentWindow() {
-        return Launcher2.application.getFrame();
+    protected YajOptionPane getDialogUI() {
+        return Launcher2.application.getDialogUI();
     }
     
     public synchronized HylaClientManager getClientManager() {
