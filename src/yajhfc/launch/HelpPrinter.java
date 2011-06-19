@@ -37,9 +37,17 @@ public class HelpPrinter {
      */
     public static final int MIN_OPT_VAL = '0';
     
-    private static final ResourceBundle resources = ResourceBundle.getBundle("yajhfc.i18n.CommandLineOpts");
+    protected final ResourceBundle resources;
     
-    public static String getResource(String key) {
+    public HelpPrinter() {
+        this("yajhfc.i18n.CommandLineOpts");
+    }
+    
+    public HelpPrinter(String resourceName) {
+        this.resources = ResourceBundle.getBundle(resourceName);
+    }
+    
+    public String getResource(String key) {
         try {
             return resources.getString(key);
         } catch (Exception ex) {
@@ -47,11 +55,11 @@ public class HelpPrinter {
         }
     }
     
-    public static String getDescription(LongOpt option) {
+    public String getDescription(LongOpt option) {
         return getResource(option.getName() + "-desc");
     }
     
-    public static String getArgDesc(LongOpt option) {
+    public String getArgDesc(LongOpt option) {
         return getResource(option.getName() + "-arg");
     }
     
@@ -60,7 +68,7 @@ public class HelpPrinter {
      * @param options
      * @return
      */
-    public static LongOpt[] filterOptions(LongOpt[] options) {
+    public LongOpt[] filterOptions(LongOpt[] options) {
         // Search for undocumented options at the end and cut them off:
         int i;
         for (i=options.length-1; i>=0; i--) {
@@ -83,8 +91,17 @@ public class HelpPrinter {
      * @param out
      * @throws IOException 
      */
+    public void printHelp(PrintWriter out, LongOpt[] options, String cols) {
+        printHelp(out, options, cols, "java -jar yajhfc.jar");
+    }
+    
+    /**
+     * Prints usage information
+     * @param out
+     * @throws IOException 
+     */
     @SuppressWarnings("fallthrough")
-    public static void printHelp(PrintWriter out, LongOpt[] options, String cols) {
+    public void printHelp(PrintWriter out, LongOpt[] options, String cols, String appInvoke) {
         int screenWidth = 80;
         if (cols != null) {
             try {
@@ -121,7 +138,7 @@ public class HelpPrinter {
         }
         optionwidth += 1;
         out.append(getResource("usage")).println(':');
-        out.append("java -jar yajhfc.jar [").append(getResource("options")).
+        out.append(appInvoke).append(" [").append(getResource("options")).
             append("]... [").append(getResource("files-to-send")).println("]...");
         out.println();
         out.append(getResource("argument-description")).println(':');
@@ -166,7 +183,7 @@ public class HelpPrinter {
         out.flush();
     }
     
-    private static void appendSpaces(PrintWriter out, int numspaces) {
+    protected static void appendSpaces(PrintWriter out, int numspaces) {
         for (int i=0; i<numspaces; i++) {
             out.append(' ');
         }

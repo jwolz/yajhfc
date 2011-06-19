@@ -157,7 +157,7 @@ public class CommandLineOpts extends CommonCommandLineOpts { //IMPORTANT!: Do no
             switch (opt) {
             case -3: //Xprint-manpage
                 try {
-                    ManPrinter.printManPage(Launcher2.getConsoleWriter(), longOpts);
+                    new ManPrinter().printManPage(Launcher2.getConsoleWriter(), longOpts);
                     System.exit(0);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -265,7 +265,7 @@ public class CommandLineOpts extends CommonCommandLineOpts { //IMPORTANT!: Do no
                 subject = getopt.getOptarg();
                 break;
             case 'h': // help
-                HelpPrinter.printHelp(Launcher2.getConsoleWriter(), longOpts, getopt.getOptarg());
+                new HelpPrinter().printHelp(Launcher2.getConsoleWriter(), longOpts, getopt.getOptarg());
                 System.exit(0);
                 break;
             case 'A': // admin
