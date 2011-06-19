@@ -521,11 +521,11 @@ public class Launcher2 {
                 Method writerMethod = consoleClass.getMethod("writer");
                 consoleWriter = (PrintWriter)writerMethod.invoke(consoleMethod.invoke(null));
                 if (consoleWriter == null) {
-                    consoleWriter = new PrintWriter(System.out);
+                    consoleWriter = new PrintWriter(System.out, true);
                 }
             } catch (Exception ex) {
                 // Java 5 or another problem -> fall back to System.out
-                consoleWriter = new PrintWriter(System.out);
+                consoleWriter = new PrintWriter(System.out, true);
             }
         }
         return consoleWriter;
