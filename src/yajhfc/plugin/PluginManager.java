@@ -73,6 +73,10 @@ public class PluginManager {
      * The plugin is loaded while YajHFC is running.
      */
     public static final int STARTUP_MODE_LOAD_WHILE_RUNNING = 3;
+    /**
+     * The plugin is loaded while YajHFC is running in console mode
+     */
+    public static final int STARTUP_MODE_CONSOLE = 4;
     
     private static final Logger log = Logger.getLogger(PluginManager.class.getName());
     
