@@ -13,13 +13,13 @@ import java.util.List;
 public class TIFFReader {
 
     protected int numberOfPages;
-    protected final List<TIFFTag> tags = new ArrayList<TIFFTag>();
+    protected TIFFTag[] tags;
     
     public int getNumberOfPages() {
         return numberOfPages;
     }
     
-    public List<TIFFTag> getTags() {
+    public TIFFTag[] getTags() {
         return tags;
     }
     
@@ -38,8 +38,32 @@ public class TIFFReader {
         return true;
     }
     
+    /**
+     * Finds the first tag having the specified ID
+     * @param tagID
+     * @return the tag or null if no such tag exists
+     */
+    public TIFFTag findTag(int tagID) {
+        return findTag(tagID, -1);
+    }
+    
+    /**
+     * Finds the first tag having the specified ID and IFD number
+     * @param tagID
+     * @param nIFD
+     * @return the tag or null if no such tag exists
+     */
+    public TIFFTag findTag(int tagID, int nIFD) {
+        for (TIFFTag tag : tags) {
+            if (tag.ID == tagID && (nIFD < 0 || tag.nIFD == nIFD)) {
+                return tag;
+            }
+        }
+        return null;
+    }
+    
     public void read(FileInputStream inStream, boolean readTags) throws IOException {
-        tags.clear();
+        List<TIFFTag> tagList = new ArrayList<TIFFTag>();
         numberOfPages = 0;
         FileChannel channel = inStream.getChannel();
         ByteBuffer buf = channel.map(MapMode.READ_ONLY, 0, channel.size());
@@ -86,7 +110,7 @@ public class TIFFReader {
                     }
                     buf.position(oldPosition+4);
 
-                    tags.add(new TIFFTag(tag, numberOfPages, dataType, value));
+                    tagList.add(new TIFFTag(tag, numberOfPages, dataType, value));
                 }
             } else {
                 // Skip tags
@@ -96,6 +120,7 @@ public class TIFFReader {
             ifdOffset = buf.getInt();
             numberOfPages++;
         }
+        tags = tagList.toArray(new TIFFTag[tagList.size()]);
     }
     
     protected Object readTagData(ByteBuffer buf, int dataType, int numValues) throws UnsupportedEncodingException {
@@ -197,6 +222,7 @@ public class TIFFReader {
             for (TIFFTag tag : r.tags) {
                 System.out.println(tag);
             }
+            System.out.println("Resolution X: " + r.findTag(TIFFConstants.TIFFTAG_XRESOLUTION).doubleValue());
             System.out.println("-----------------------------");
             System.out.println();
         }
