@@ -3,6 +3,7 @@
  */
 package yajhfc.tiff;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 
 public class TIFFTag {
@@ -51,6 +52,108 @@ public class TIFFTag {
      * This tag's value
      */
     public final Object value;
+    
+    
+    /**
+     * Returns the first value of this tag as a double (if applicable to the data type)
+     * @return
+     */
+    public double doubleValue() {
+        return doubleValue(0);
+    }
+    
+    /**
+     * Returns the nth value of this tag as a double (if applicable to the data type)
+     * @return
+     */
+    public double doubleValue(int n) {
+        switch (dataType) {
+        case TIFFConstants.DATATYPE_BYTE:
+        case TIFFConstants.DATATYPE_SBYTE:
+        case TIFFConstants.DATATYPE_SHORT:
+        case TIFFConstants.DATATYPE_SSHORT:
+        case TIFFConstants.DATATYPE_LONG:
+        case TIFFConstants.DATATYPE_SLONG:
+        case TIFFConstants.DATATYPE_FLOAT:
+        case TIFFConstants.DATATYPE_DOUBLE:
+            return Array.getDouble(value, n);
+        case TIFFConstants.DATATYPE_RATIONAL:
+        case TIFFConstants.DATATYPE_SRATIONAL:
+            double numerator   = Array.getDouble(value, 2*n);
+            double denominator = Array.getDouble(value, 2*n+1);
+            return (numerator / denominator);
+        case TIFFConstants.DATATYPE_ASCII:
+        case TIFFConstants.DATATYPE_UNDEFINED:
+        default:
+            throw new IllegalArgumentException("This tag's data type does not represent a double value");
+        }
+    }
+    
+    /**
+     * Returns the first value of this tag as a float (if applicable to the data type)
+     * @return
+     */
+    public float floatValue() {
+        return floatValue(0);
+    }
+    
+    /**
+     * Returns the nth value of this tag as a double (if applicable to the data type)
+     * @return
+     */
+    public float floatValue(int n) {
+        return (float)doubleValue(n);
+    }
+    
+    
+    /**
+     * Returns the first value of this tag as a long (if applicable to the data type)
+     * @return
+     */
+    public long longValue() {
+        return longValue(0);
+    }
+    
+    /**
+     * Returns the nth value of this tag as a long (if applicable to the data type)
+     * @return
+     */
+    public long longValue(int n) {
+        switch (dataType) {
+        case TIFFConstants.DATATYPE_BYTE:
+        case TIFFConstants.DATATYPE_SBYTE:
+        case TIFFConstants.DATATYPE_SHORT:
+        case TIFFConstants.DATATYPE_SSHORT:
+        case TIFFConstants.DATATYPE_LONG:
+        case TIFFConstants.DATATYPE_SLONG:
+            return Array.getLong(value, n);
+        case TIFFConstants.DATATYPE_FLOAT:
+        case TIFFConstants.DATATYPE_DOUBLE:
+        case TIFFConstants.DATATYPE_RATIONAL:
+        case TIFFConstants.DATATYPE_SRATIONAL:
+            return (long)doubleValue(n);
+        case TIFFConstants.DATATYPE_ASCII:
+        case TIFFConstants.DATATYPE_UNDEFINED:
+        default:
+            throw new IllegalArgumentException("This tag's data type does not represent a long value");
+        }
+    }
+    
+    /**
+     * Returns the first value of this tag as a int (if applicable to the data type)
+     * @return
+     */
+    public int intValue() {
+        return intValue(0);
+    }
+    
+    /**
+     * Returns the nth value of this tag as a int (if applicable to the data type)
+     * @return
+     */
+    public int intValue(int n) {
+        return (int)longValue(n);
+    }
     
     @Override
     public String toString() {

@@ -18,18 +18,24 @@
  */
 package yajhfc.file;
 
+import java.awt.Dimension;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import yajhfc.PaperSize;
 import yajhfc.Utils;
+import yajhfc.tiff.TIFFConstants;
+import yajhfc.tiff.TIFFReader;
+import yajhfc.tiff.TIFFTag;
 import yajhfc.util.ExternalProcessExecutor;
 
 /**
@@ -158,4 +164,93 @@ public class TIFFLibConverter implements FileConverter {
     public boolean isOverridable() {
         return true;
     }
+    
+    public static Dimension getTIFFSizeInMM(File tiff) {
+        try {
+            TIFFReader rdr = new TIFFReader() {
+                    @Override
+                    protected boolean shouldTagBeRead(int tagID, int nIFD) {
+                            switch (tagID) {
+                            case TIFFConstants.TIFFTAG_RESOLUTIONUNIT:
+                            case TIFFConstants.TIFFTAG_XRESOLUTION:
+                            case TIFFConstants.TIFFTAG_YRESOLUTION:
+                            case TIFFConstants.TIFFTAG_IMAGELENGTH:
+                            case TIFFConstants.TIFFTAG_IMAGEWIDTH:
+                                    return true;
+                            default:
+                                    return false;
+                            }
+                    }
+            };
+            FileInputStream inStream = new FileInputStream(tiff);
+                    rdr.read(inStream);
+                    inStream.close();
+            
+            Dimension res = new Dimension();
+forLoop:    for (int i=0; i<rdr.getNumberOfPages(); i++) {
+                TIFFTag v;
+                
+                v = rdr.findTag(TIFFConstants.TIFFTAG_IMAGEWIDTH, i);
+                if (v == null) {
+                    log.fine(tiff.toString() + ": TIFFTAG_IMAGEWIDTH not found");
+                    continue;
+                }
+                double pixelWidth = v.doubleValue();
+                
+                v = rdr.findTag(TIFFConstants.TIFFTAG_IMAGELENGTH, i);
+                if (v == null) {
+                    log.fine(tiff.toString() + ": TIFFTAG_IMAGELENGTH not found");
+                    continue;
+                }
+                double pixelHeight = v.doubleValue();
+                
+                v = rdr.findTag(TIFFConstants.TIFFTAG_RESOLUTIONUNIT, i);
+                if (v == null) {
+                    log.fine(tiff.toString() + ": TIFFTAG_RESOLUTIONUNIT not found");
+                    continue;
+                }
+                int resUnit = v.intValue();
+                
+                v = rdr.findTag(TIFFConstants.TIFFTAG_XRESOLUTION, i);
+                if (v == null) {
+                    log.fine(tiff.toString() + ": TIFFTAG_XRESOLUTION not found");
+                    continue;
+                }
+                double resX = v.doubleValue();
+                
+                v = rdr.findTag(TIFFConstants.TIFFTAG_YRESOLUTION, i);
+                if (v == null) {
+                    log.fine(tiff.toString() + ": TIFFTAG_YRESOLUTION not found");
+                    continue;
+                }
+                double resY = v.doubleValue();
+                
+                System.out.println("pixelWidth=" + pixelWidth + "; pixelHeight=" + pixelHeight + "; resUnit=" + resUnit + "; resX=" + resX +"; resY=" + resY);
+                
+                double resFactor;
+                switch (resUnit) {
+                case TIFFConstants.RESUNIT_CENTIMETER:
+                    resFactor = 10;   // 10 mm/cm
+                    break;
+                case TIFFConstants.RESUNIT_INCH:
+                    resFactor = 25.4; // 25.4 mm/inch
+                    break;
+                default:
+                    log.fine(tiff.toString() + ": Unsupported resunit: " + resUnit);
+                    continue forLoop;
+                }
+                int pageWidth  = (int)Math.ceil(pixelWidth  / resX * resFactor);
+                int pageHeight = (int)Math.ceil(pixelHeight / resY * resFactor);
+                
+                res.height = Math.max(res.height, pageHeight);
+                res.width  = Math.max(res.width,  pageWidth);
+            }
+            
+            return res;
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Can not determine page size for " + tiff, e);
+            return null;
+        }
+    }
+
 }

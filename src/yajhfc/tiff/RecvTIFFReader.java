@@ -1,8 +1,10 @@
 package yajhfc.tiff;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -10,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import yajhfc.Utils;
+import yajhfc.file.TIFFLibConverter;
 
 /**
  * Reads information about a fax from the TIFF file.
@@ -80,24 +83,24 @@ public class RecvTIFFReader extends TIFFReader {
 //        }
         
         if (Utils.debugMode) {
-            log.finest("TIFF read successfully; tags are: " + tags);
+            log.finest("TIFF read successfully; tags are: " + Arrays.toString(tags));
         }
         
         params = new Class2Params();
         
-        long[] v = (long[])getTagValue(TIFFConstants.TIFFTAG_FAXRECVPARAMS);
+        TIFFTag v = findTag(TIFFConstants.TIFFTAG_FAXRECVPARAMS);
         if (v != null) {
-            params.decodeClass2Params(v[0]);
+            params.decodeClass2Params(v.longValue());
         } else {
             float vres = 3.85f;                  // XXX default
-            float[] pvres = (float[]) getTagValue(TIFFConstants.TIFFTAG_YRESOLUTION);
+            TIFFTag pvres = findTag(TIFFConstants.TIFFTAG_YRESOLUTION);
             if (pvres != null) {
-                vres = pvres[0];
+                vres = pvres.floatValue();
 
                 int resunit = TIFFConstants.RESUNIT_INCH;          // TIFF spec default
-                int[] presunit = (int[])getTagValue(TIFFConstants.TIFFTAG_RESOLUTIONUNIT);
+                TIFFTag presunit = findTag(TIFFConstants.TIFFTAG_RESOLUTIONUNIT);
                 if (presunit != null) {
-                    resunit = presunit[0];
+                    resunit = presunit.intValue();
                 }
                 if (resunit == TIFFConstants.RESUNIT_INCH)
                     vres /= 25.4;
@@ -105,13 +108,13 @@ public class RecvTIFFReader extends TIFFReader {
                     vres /= 720.0;              // postscript units ?
             }
             float hres = 8.03f;                  // XXX default
-            float[] phres = (float[]) getTagValue(TIFFConstants.TIFFTAG_XRESOLUTION);
+            TIFFTag phres = findTag(TIFFConstants.TIFFTAG_XRESOLUTION);
             if (phres != null) {
-                hres = phres[0];
+                hres = phres.floatValue();
                 int resunit = TIFFConstants.RESUNIT_INCH;          // TIFF spec default
-                int[] presunit = (int[])getTagValue(TIFFConstants.TIFFTAG_RESOLUTIONUNIT);
+                TIFFTag presunit = findTag(TIFFConstants.TIFFTAG_RESOLUTIONUNIT);
                 if (presunit != null) {
-                    resunit = presunit[0];
+                    resunit = presunit.intValue();
                 }
                 if (resunit == TIFFConstants.RESUNIT_INCH)
                     hres /= 25.4;
@@ -119,17 +122,18 @@ public class RecvTIFFReader extends TIFFReader {
                     hres /= 720.0;              // postscript units ?
             }
             params.setRes((int) hres, (int) vres);   // resolution
-            v = (long[]) getTagValue(TIFFConstants.TIFFTAG_IMAGEWIDTH);
+            v = findTag(TIFFConstants.TIFFTAG_IMAGEWIDTH);
             if (v != null) {
-                params.setPageWidthInPixels((int)v[0]);
+                params.setPageWidthInPixels(v.intValue());
             }
-            v = (long[]) getTagValue(TIFFConstants.TIFFTAG_IMAGELENGTH);
+            v = findTag(TIFFConstants.TIFFTAG_IMAGELENGTH);
             if (v != null) {
-                params.setPageLengthInMM((int)(v[0] / vres));
+                params.setPageLengthInMM((int)(v.floatValue() / vres));
             }
         }
         
-        String faxDCS = (String)getTagValue(TIFFConstants.TIFFTAG_FAXDCS);
+        v = findTag(TIFFConstants.TIFFTAG_FAXDCS);
+        String faxDCS = (v == null ? null : (String)v.value);
         if (faxDCS != null && !faxDCS.equals("00 00 00")) {
             // cannot trust br from faxdcs as V.34-Fax does not provide it there
             int brhold = params.br;
@@ -141,7 +145,8 @@ public class RecvTIFFReader extends TIFFReader {
     
         sender = "";
         callid = Collections.emptyList();
-        String imageDesc = (String)getTagValue(TIFFConstants.TIFFTAG_IMAGEDESCRIPTION);
+        v = findTag(TIFFConstants.TIFFTAG_IMAGEDESCRIPTION);
+        String imageDesc = (v == null ? null : (String)v.value);
         if (imageDesc != null) {
             List<String> l = Utils.fastSplitToList(imageDesc, '\n');
             if (l.size() >= 1) {
@@ -153,13 +158,15 @@ public class RecvTIFFReader extends TIFFReader {
         } else
             sender = "<unknown>";
         
-        String subAddr = (String)getTagValue(TIFFConstants.TIFFTAG_FAXSUBADDRESS);
+        v = findTag(TIFFConstants.TIFFTAG_FAXSUBADDRESS);
+        String subAddr = (v == null ? null : (String)v.value);
         if (subAddr != null) {
             subaddr = subAddr;
         } else
             subaddr = "";
         
-        strDate = (String)getTagValue(TIFFConstants.TIFFTAG_DATETIME);
+        v = findTag(TIFFConstants.TIFFTAG_DATETIME);
+        strDate = (v == null ? null : (String)v.value);
         if (strDate != null) {
             try {
                 date = Utils.HYLA_LONG_DATE_FORMAT.parse(strDate);
@@ -174,19 +181,9 @@ public class RecvTIFFReader extends TIFFReader {
         
         for (TIFFTag tag : tags) {
             if (tag.ID == TIFFConstants.TIFFTAG_FAXRECVTIME) {
-                recvTime += ((long[])tag.value)[0];
+                recvTime += tag.intValue();
             }
         }
-    }
-
-    
-    private Object getTagValue(int id) {
-        for (TIFFTag tag : tags) {
-            if (tag.ID == id) {
-                return tag.value;
-            }
-        }
-        return null;
     }
     
 
@@ -337,6 +334,7 @@ public class RecvTIFFReader extends TIFFReader {
             System.out.println("SubAddress: \t" + r.getSubAddress());
             System.out.println("Vertical resolution: \t" + r.getVerticalRes());
             
+            System.out.println("Page size: \t"+TIFFLibConverter.getTIFFSizeInMM(new File(file)));
             System.out.println("-----------------------------");
             System.out.println();
         }
