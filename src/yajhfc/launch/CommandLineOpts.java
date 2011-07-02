@@ -340,9 +340,11 @@ public class CommandLineOpts extends CommonCommandLineOpts { //IMPORTANT!: Do no
     }
     
     public CommandLineOpts() {
+        super();
     }
     
     public CommandLineOpts(String[] args) {
+        this();
         parse(args);
     }
     
