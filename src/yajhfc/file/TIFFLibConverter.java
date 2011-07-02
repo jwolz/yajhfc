@@ -225,7 +225,7 @@ forLoop:    for (int i=0; i<rdr.getNumberOfPages(); i++) {
                 }
                 double resY = v.doubleValue();
                 
-                System.out.println("pixelWidth=" + pixelWidth + "; pixelHeight=" + pixelHeight + "; resUnit=" + resUnit + "; resX=" + resX +"; resY=" + resY);
+                System.out.println("Page " + i + ": pixelWidth=" + pixelWidth + "; pixelHeight=" + pixelHeight + "; resUnit=" + resUnit + "; resX=" + resX +"; resY=" + resY);
                 
                 double resFactor;
                 switch (resUnit) {
@@ -239,8 +239,10 @@ forLoop:    for (int i=0; i<rdr.getNumberOfPages(); i++) {
                     log.fine(tiff.toString() + ": Unsupported resunit: " + resUnit);
                     continue forLoop;
                 }
-                int pageWidth  = (int)Math.ceil(pixelWidth  / resX * resFactor);
-                int pageHeight = (int)Math.ceil(pixelHeight / resY * resFactor);
+                int pageWidth  = (int)Math.round(pixelWidth  / resX * resFactor);
+                int pageHeight = (int)Math.round(pixelHeight / resY * resFactor);
+                
+                System.out.println("Page " + i + " (WxH) => "  + pageWidth +"mm x " + pageHeight + "mm");
                 
                 res.height = Math.max(res.height, pageHeight);
                 res.width  = Math.max(res.width,  pageWidth);

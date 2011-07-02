@@ -54,12 +54,30 @@ public class DefaultPBEntryFieldContainer extends EnumMap<PBEntryField, String>
         }
     }    
     
-    @SuppressWarnings("fallthrough")
+    /**
+     * Parses a string in the format field1:value1;field2:value2;... into this instance.
+     * Fields not specified in the String are set to "".
+     * 
+     * @param numberOrFullFields
+     */
     public DefaultPBEntryFieldContainer parseFromString(final String numberOrFullFields) {
         setAllFieldsTo("");
+        parseStringToPBEntryFieldContainer(this, numberOrFullFields);
+        return this;
+    }
+    
+    /**
+     * Parses a string in the format field1:value1;field2:value2;... into the given PBEntryFieldContainer
+     * Fields not specified in the String keep their current values.
+     * 
+     * @param container
+     * @param numberOrFullFields
+     */
+    @SuppressWarnings("fallthrough")
+    public static void parseStringToPBEntryFieldContainer(final PBEntryFieldContainer container, final String numberOrFullFields) {
         // If it contains no : or ;, assume it's a fax number
         if (numberOrFullFields.indexOf(':') < 0 || numberOrFullFields.indexOf(';') < 0) {
-            put(PBEntryField.FaxNumber, numberOrFullFields);
+            container.setField(PBEntryField.FaxNumber, numberOrFullFields);
         } else {
             int pos;
             int oldPos = 0;
@@ -96,14 +114,13 @@ public class DefaultPBEntryFieldContainer extends EnumMap<PBEntryField, String>
 
                 PBEntryField pbField = PBEntryField.getKeyToFieldMap().get(key);
                 if (pbField != null) {
-                    put(pbField, value.toString().trim());
+                    container.setField(pbField, value.toString().trim());
                 } else {
                     log.info("Unknown field:value \"" + key + ':' + value + '"');
                 }
                 oldPos = pos+1;
             }
         }
-        return this;
     }
     
     public void setAllFieldsTo(String value) {
