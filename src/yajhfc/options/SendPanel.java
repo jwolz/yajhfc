@@ -68,6 +68,7 @@ public class SendPanel extends AbstractOptionsPanel<ServerOptions> {
     
     JTextField textFilterFromFaxNr;
     JTextField textNotifyAddress;
+    JTextField textNumberPrefix;
     JCheckBox checkArchiveSentFaxes;
     JComboBox comboModem;
     JComboBox comboNotify;
@@ -124,6 +125,10 @@ public class SendPanel extends AbstractOptionsPanel<ServerOptions> {
         textFilterFromFaxNr.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
         textFilterFromFaxNr.setToolTipText( _("Characters filtered from the fax number sent to HylaFAX:"));
         
+        textNumberPrefix = new JTextField();
+        textNumberPrefix.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
+        textFilterFromFaxNr.setToolTipText( _("Characters put in front of the fax number before sending it to HylaFAX."));
+        
         comboNotify = new JComboBox(FaxNotification.values());
         comboNotify.setRenderer(new IconMap.ListCellRenderer());
         comboPaperSize = new JComboBox(PaperSize.values());
@@ -149,7 +154,7 @@ public class SendPanel extends AbstractOptionsPanel<ServerOptions> {
         jobOptionAction.putValue(Action.NAME, Utils._("Job properties") + "...");
         JButton buttonJobOption = new JButton(jobOptionAction);
         
-        comboIdentity = new JComboBox(new WrapperComboBoxModel(getIdentitiesModel()));
+        comboIdentity = new JComboBox(new WrapperComboBoxModel(getIdentitiesModel()));        
         
         addWithLabel(this, textNotifyAddress, _("E-mail address for notifications:"), "1, 2, 3, 2, f, c");
         addWithLabel(this, comboNotify, _("Notify when:"), "1, 5, 1, 5, f, c");
@@ -160,7 +165,8 @@ public class SendPanel extends AbstractOptionsPanel<ServerOptions> {
         addWithLabel(this, spinKillTime, _("Cancel job after (minutes):"), "3,11,f, c");
         addWithLabel(this, textFilterFromFaxNr, _("Filter from fax number:"), "1,14,f,c");
         addWithLabel(this, spinMaxTry, _("Maximum tries:"), "3,14,f,c");
-        addWithLabel(this, comboIdentity, _("Default identity:"), "1,17,3,17,f,c");
+        addWithLabel(this, textNumberPrefix, _("Dial prefix:"), "1,17,1,17,f,c");
+        addWithLabel(this, comboIdentity, _("Default identity:"), "3,17,3,17,f,c");
         this.add(buttonJobOption, "1,20,f,c");
         this.add(checkArchiveSentFaxes, "3,20,f,c");
     }
@@ -189,6 +195,7 @@ public class SendPanel extends AbstractOptionsPanel<ServerOptions> {
     public void loadSettings(ServerOptions foEdit) {
         textNotifyAddress.setText(foEdit.notifyAddress);
         textFilterFromFaxNr.setText(foEdit.filterFromFaxNr);
+        textNumberPrefix.setText(foEdit.numberPrefix);
 
         comboNotify.setSelectedItem(foEdit.notifyWhen);
         comboPaperSize.setSelectedItem(foEdit.paperSize);
@@ -239,6 +246,7 @@ public class SendPanel extends AbstractOptionsPanel<ServerOptions> {
         
         foEdit.notifyAddress = textNotifyAddress.getText();
         foEdit.filterFromFaxNr = textFilterFromFaxNr.getText();
+        foEdit.numberPrefix = textNumberPrefix.getText();
         
         foEdit.notifyWhen = (FaxNotification)comboNotify.getSelectedItem();
         foEdit.paperSize = (PaperSize)comboPaperSize.getSelectedItem();
