@@ -16,8 +16,8 @@ Funzionalità:
 * E' possibile selezionare in una apposita finestra le colonne degli elenchi fax da visualizzare
 * Supporto per dieci lingue: Cinese, Inglese, Francese, Tedesco, Greco, Italiano, Polacco, Russo, Spagnolo e Turco
 
-Homepage: http://yajhfc.berlios.de/
-email:    Jonas Wolz <jwolz@freenet.de>
+Homepage: http://www.yajhfc.de/
+email:    Jonas Wolz <info@yajhfc.de>
 
 INSTALLAZIONE
 -------------

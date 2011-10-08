@@ -204,7 +204,7 @@ public class AboutDialog extends JDialog implements HyperlinkListener {
             
             JPanel panelHomepage = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0), false);
             panelHomepage.add(new JLabel(Utils._("Homepage") + ": "));
-            JLabel homepageLabel = new JLabel("<html><a href=\"http://yajhfc.berlios.de\">" + Utils.HomepageURL + "</a></html>");
+            JLabel homepageLabel = new JLabel("<html><a href=\"http://www.yajhfc.de\">" + Utils.HomepageURL + "</a></html>");
             homepageLabel.addMouseListener(new URIClickListener(Utils.HomepageURL));
             homepageLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             panelHomepage.add(homepageLabel);

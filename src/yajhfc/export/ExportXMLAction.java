@@ -85,7 +85,7 @@ public class ExportXMLAction  {
         Document doc = docBuilder.newDocument();
 
         Element root = doc.createElement("faxlist");
-        root.setAttribute("xmlns", "http://yajhfc.berlios.de/schema/tableexport");
+        root.setAttribute("xmlns", "http://yajhfc.de/schema/tableexport");
         root.setAttribute("tableType", faxList.getJobType().name());
         
         Element el;

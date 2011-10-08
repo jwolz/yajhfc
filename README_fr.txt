@@ -16,8 +16,8 @@ Caracteristiques:
 * Parametrage des colonnes affichees par boite de dialogue
 * Support de 10 langues : Chinois,Anglais, Allemand, Espagnol,Francais,Grec,Italien, Polonais, Russe,Turc
 
-Page d'accueil: http://yajhfc.berlios.de/
-email:    Jonas Wolz <jwolz@freenet.de>
+Page d'accueil: http://www.yajhfc.de/
+email:    Jonas Wolz <info@yajhfc.de>
 
 INSTALLATION
 ------------
@@ -29,7 +29,7 @@ Pres requis:
 * Optionnel: Un visualiseur Postscript (e.g. Ghostview), GhostScript
      et tiff2pdf (librairie libtiff-utils)
 
-Pour Installer YajHFC Telechargez le fichier yajhfc-0_5_0http://yajhfc.berlios.de/.jar dans un repertoire
+Pour Installer YajHFC Telechargez le fichier yajhfc-0_5_0.jar dans un repertoire
 sur votre machine.
 Pour l'executer, utilisez la commande: "java -jar yajhfc-0_5_0.jar"
 (Sous Windows vous pouvez habituellement double cliquer sur le fichier jar.)

@@ -59,7 +59,7 @@ import yajhfc.util.ProgressWorker.ProgressUI;
 public class UpdateChecker {
     
     static final Logger log = Logger.getLogger(UpdateChecker.class.getName());
-    private static final String UPDATE_URL = "http://yajhfc.berlios.de/updatecheck/versioninfo.xml"; //"file:/home/jonas/java/yajhfc/update.xml";
+    private static final String UPDATE_URL = "http://update.yajhfc.de/versioninfo.xml"; //"file:/home/jonas/java/yajhfc/update.xml";
     private static final String RELEASE_DATE_FORMAT = "yyyy-MM-dd";
     private static final long CHECK_INTERVAL = 7 * 24 * 3600 * 1000; // Check weekly
     

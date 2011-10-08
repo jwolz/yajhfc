@@ -16,8 +16,8 @@ YajHFC (Yet Another Java HylaFAX Client), HylaFAX faks sunucusu
 * Bir iletişimde görünür tablo sütunlarını seçebilme
 * Sekiz Dil desteği: İngilizce, Fransızca, Almanca, İtalyanca, Rusça, İspanyolca, Türkçe ve Yunanca
 
-Web sitesi: http://yajhfc.berlios.de/
-e-posta:    Jonas Wolz <jwolz@freenet.de>
+Web sitesi: http://www.yajhfc.de/
+e-posta:    Jonas Wolz <info@yajhfc.de>
 
 KURULUM
 ------------

@@ -187,7 +187,7 @@ public class XMLPhoneBook extends PhoneBook {
         Document doc = createDocumentBuilder().newDocument();
 
         Element root = doc.createElement("phonebook");
-        root.setAttribute("xmlns", "http://yajhfc.berlios.de/schema/phonebook");
+        root.setAttribute("xmlns", "http://yajhfc.de/schema/phonebook");
         saveToXML(root, doc);
         doc.appendChild(root);
 

@@ -16,8 +16,8 @@ Características:
 * Selección de columnas visibles (configurable desde el menú de opciones)
 * Disponible en diez idiomas: alemán, chino, español, francés, griego, inglés, italiano, polaco, ruso y turco
 
-Página principal: http://yajhfc.berlios.de/
-E-mail: 	  Jonas Wolz <jwolz@freenet.de>
+Página principal: http://www.yajhfc.de/
+E-mail: 	  Jonas Wolz <info@yajhfc.de>
 
 INSTALACIÓN
 -----------

@@ -84,8 +84,8 @@ public final class Utils {
     public static final String AppCopyright = "Copyright © 2005-2011 by Jonas Wolz";
     public static final String AppVersion = "0.5.1beta8";
     public static final String AuthorName = "Jonas Wolz";
-    public static final String AuthorEMail = "jwolz@freenet.de";
-    public static final String HomepageURL = "http://yajhfc.berlios.de/"; 
+    public static final String AuthorEMail = "info@yajhfc.de";
+    public static final String HomepageURL = "http://www.yajhfc.de/"; 
     
     /**
      * Input format for "long" HylaFax dates
