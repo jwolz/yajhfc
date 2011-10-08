@@ -16,8 +16,8 @@ Features:
 * Visible table columns may be selected in a dialog
 * Supports ten languages: Chinese, English, French, German, Greek, Italian, Polish, Russian, Spanish and Turkish
 
-Homepage: http://yajhfc.berlios.de/
-email:    Jonas Wolz <jwolz@freenet.de>
+Homepage: http://www.yajhfc.de/
+email:    Jonas Wolz <info@yajhfc.de>
 
 INSTALLATION
 ------------

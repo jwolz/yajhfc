@@ -16,8 +16,8 @@ Features:
 * Eine Auswahl der anzuzeigenden Tabellenspalten ist über ein Dialogfeld möglich
 * Unterstützt sieben Sprachen: Deutsch, Englisch, Französisch, Italienisch, Russisch, Spanisch und Türkisch
 
-Homepage: http://yajhfc.berlios.de/
-E-Mail:   Jonas Wolz <jonas.wolz@freenet.de>
+Homepage: http://www.yajhfc.de/
+E-Mail:   Jonas Wolz <info@yajhfc.de>
 
 INSTALLATION
 ------------
