@@ -265,7 +265,7 @@ public class ManPrinter extends HelpPrinter {
             "and on the homepage at\n"+
             ".IR http://www.yajhfc.de/\n"+
             ".SH AUTHOR\n"+
-            "YajHFC was written by Jonas Wolz <jonas.wolz@freenet.de>.\n"+
+            "YajHFC was written by Jonas Wolz <jonas@yajhfc.de>.\n"+
             "\n");
        return out.toString();
     }

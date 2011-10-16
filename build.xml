@@ -166,6 +166,7 @@
 				<exclude name="doc/faq-src/*"/>
 				<exclude name="**/*.log"/>
 				<exclude name="**/*~"/>
+				<exclude name="**/.hg/**"/>
 			</zipfileset>
 			<zipfileset dir="${src}" prefix="yajhfc/">
 				<include name="doc/faq-src/.latex2html-init"/>
