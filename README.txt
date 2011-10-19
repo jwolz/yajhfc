@@ -67,9 +67,9 @@ CHANGES
 -------
 
 0.5.1:
-- Added console only version
+- Added console only add on
 - Changed URLs from yajhfc.berlios.de to www.yajhfc.de
-- Some bugfixes
+- Some bugfixes and minor feature enhancements
 
 0.5.0:
 - Support for local caching of the fax lists, probably making the start-up of 
