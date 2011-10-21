@@ -272,7 +272,7 @@ msgstr "列印欄"
 
 #: ../print/PhonebooksPrinter.java:234 ../print/FaxTablePrinter.java:193
 msgid "Error printing the table:"
-msgstr "表格列印錯誤:"
+msgstr "清單列印錯誤:"
 
 #: ../print/FaxTablePrinter.java:69
 msgid "Fit to contents"
@@ -306,34 +306,34 @@ msgstr "頁 {0}"
 
 #: ../customprops/EntryPoint.java:107
 msgid "Proxies and system properties"
-msgstr ""
+msgstr "代理伺服器及系統內容"
 
 #: ../customprops/CustomPropOptionsPanel.java:118
 #: ../customprops/CustomPropOptionsPanel.java:125
 msgid "Define system properties"
-msgstr ""
+msgstr "定義系統內容"
 
 #: ../customprops/CustomPropOptionsPanel.java:129
 msgid ""
 "Here you can define Java system properties. Only do this if you know what "
 "you are doing."
-msgstr ""
+msgstr "如果您了解Java系統,您可以設定Java"
 
 #: ../customprops/CustomPropOptionsPanel.java:156
 msgid "Use system proxy settings"
-msgstr ""
+msgstr "使用系統預設Proxy"
 
 #: ../customprops/CustomPropOptionsPanel.java:178
 msgid "HTTP proxy server"
-msgstr ""
+msgstr "代理伺服器"
 
 #: ../customprops/CustomPropOptionsPanel.java:179
 msgid "HTTP proxy port"
-msgstr ""
+msgstr "代理伺服器port"
 
 #: ../customprops/CustomPropOptionsPanel.java:180
 msgid "HTTP non proxy hosts"
-msgstr ""
+msgstr "HTTP non proxy hosts"
 
 #: ../LogViewWorker.java:91
 #, java-format
@@ -408,7 +408,7 @@ msgstr "儲存表錯誤:"
 
 #: ../export/ExportCSVAction.java:78
 msgid "Save to CSV"
-msgstr ""
+msgstr "儲存成CSV檔"
 
 #: ../export/ImageExportManager.java:96
 #, java-format
@@ -426,7 +426,7 @@ msgstr "伺服器"
 
 #: ../export/ExportAction.java:158 ../phonebook/ui/NewPhoneBookWin.java:1039
 msgid "Export to HTML"
-msgstr ""
+msgstr "匯出成HTML"
 
 #: ../export/ExportAction.java:162 ../phonebook/ui/NewPhoneBookWin.java:710
 msgid "Export"
@@ -551,7 +551,7 @@ msgstr "删除傳真錯誤 \"{0}\":\n"
 
 #: ../MainWin.java:282
 msgid "Error deleting faxes:"
-msgstr ""
+msgstr "刪除傳真錯誤:"
 
 #: ../MainWin.java:316 ../MainWin.java:652
 #, java-format
@@ -580,14 +580,14 @@ msgstr "儲存{0}到.."
 #, java-format
 msgid ""
 "While downloading the file {0} (job {1}), the server gave back an error code:"
-msgstr ""
+msgstr "下載檔案 {0} (job {1}), 伺服器回覆錯誤::"
 
 #: ../MainWin.java:364 ../MainWin.java:466 ../MainWin.java:663
 #, java-format
 msgid ""
 "The file {0} (job {1}) could not be opened for reading (probably you lack "
 "the necessary access permissions):"
-msgstr ""
+msgstr "檔案{0} (job {1}) 不能開啟 (也許需要權限)"
 
 #: ../MainWin.java:367 ../MainWin.java:665
 #, java-format
@@ -600,7 +600,7 @@ msgstr "發生錯誤儲存傳真："
 
 #: ../MainWin.java:384 ../MainWin.java:705
 msgid "Error saving faxes:"
-msgstr ""
+msgstr "儲存傳真錯誤:"
 
 #: ../MainWin.java:401 ../MainWin.java:726
 #, java-format
@@ -702,7 +702,7 @@ msgstr "恢復傳真錯誤工作 \"{0}\":\n"
 
 #: ../MainWin.java:618
 msgid "Error resuming faxes:"
-msgstr ""
+msgstr "重送傳真錯誤:"
 
 #: ../MainWin.java:682
 #, java-format
@@ -839,7 +839,7 @@ msgstr "離開"
 
 #: ../MainWin.java:885
 msgid "Exits the application"
-msgstr "退出程序"
+msgstr "退出程式"
 
 #: ../MainWin.java:900
 msgid "Shows the about dialog"
@@ -961,7 +961,7 @@ msgstr "恢復轉換所選傳真"
 
 #: ../MainWin.java:1199
 msgid "Copies the selected table items to the clipboard"
-msgstr "複製所選表格到剪貼簿"
+msgstr "複製所選清單到剪貼簿"
 
 #: ../MainWin.java:1219 ../MainWin.java:1220
 msgid "Show row numbers"
@@ -1156,7 +1156,7 @@ msgstr "檔案"
 
 #: ../MainWin.java:2382
 msgid "Table"
-msgstr "表"
+msgstr "清單"
 
 #: ../MainWin.java:2394
 msgid "Extras"
@@ -1445,16 +1445,16 @@ msgstr "外掛& JDBC"
 
 #: ../options/OptionsWin.java:229
 msgid "Please select on the left which table you want to edit."
-msgstr "請在表格左邊選取要編輯的傳真"
+msgstr "請在清單左邊選取要編輯的傳真"
 
 #: ../options/OptionsWin.java:230
 msgid "Tables"
-msgstr "表格"
+msgstr "清單"
 
 #: ../options/OptionsWin.java:231
 #, java-format
 msgid "Table \"{0}\""
-msgstr "表格 \"{0}\""
+msgstr "清單 \"{0}\""
 
 #: ../options/OptionsWin.java:241
 msgid "These settings normally need not to be changed."
@@ -1563,7 +1563,7 @@ msgstr "伺服器完成等待最大時間. 建議不低於 5，; 0禁用."
 
 #: ../options/ServerSettingsPanel.java:301
 msgid "Table refresh interval (secs.):"
-msgstr "表格刷新間隔(秒):"
+msgstr "清單刷新間隔(秒):"
 
 #: ../options/ServerSettingsPanel.java:302
 msgid "Server status refresh interval (secs.):"
@@ -2774,7 +2774,7 @@ msgstr "資料庫網址："
 
 #: ../phonebook/jdbc/ConnectionDialog.java:216
 msgid "Table:"
-msgstr "表格:"
+msgstr "清單:"
 
 #: ../phonebook/jdbc/ConnectionDialog.java:273
 msgid "You have to specify a driver class."
@@ -4027,7 +4027,7 @@ msgid "minutes"
 msgstr "分鐘"
 
 #~ msgid "Print table..."
-#~ msgstr "列印表格..."
+#~ msgstr "列印清單..."
 
 #~ msgid "Sender data"
 #~ msgstr "發送數據"
