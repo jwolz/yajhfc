@@ -127,7 +127,7 @@ public class SendPanel extends AbstractOptionsPanel<ServerOptions> {
         
         textNumberPrefix = new JTextField();
         textNumberPrefix.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
-        textFilterFromFaxNr.setToolTipText( _("Characters put in front of the fax number before sending it to HylaFAX."));
+        textNumberPrefix.setToolTipText( _("Characters put in front of the fax number before sending it to HylaFAX."));
         
         comboNotify = new JComboBox(FaxNotification.values());
         comboNotify.setRenderer(new IconMap.ListCellRenderer());
