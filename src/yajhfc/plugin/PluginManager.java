@@ -33,6 +33,7 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -608,6 +609,17 @@ public class PluginManager {
 
         public boolean jdbcCompliant() {
             return wrapped.jdbcCompliant();
+        }
+        
+        // TODO: Check Java 5 support...
+        public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+        	// Method is only present in Java 7, so use reflection to make this compilable on Java 6
+        	try {
+				Method getParentLogger = wrapped.getClass().getMethod("getParentLogger");
+				return (Logger)getParentLogger.invoke(wrapped);
+			} catch (Exception e) {
+				throw new SQLFeatureNotSupportedException(e);
+			} 
         }
         
     }
