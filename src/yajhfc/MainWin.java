@@ -1876,9 +1876,12 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             if (trayIcon == null && TrayFactory.trayIsAvailable()) {
                 trayIcon = new YajHFCTrayIcon(this, recvTableModel, actSend, actReconnect, null, actExit, null, actAbout);
             }
-            if (trayIcon != null) {
+            if (trayIcon != null && trayIcon.isValid()) {
                 setDefaultCloseOperation(myopts.minimizeToTrayOnMainWinClose ? JFrame.HIDE_ON_CLOSE : JFrame.DISPOSE_ON_CLOSE);
                 trayIcon.setMinimizeToTray(myopts.minimizeToTray);
+            } else {
+            	trayIcon = null;
+            	setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             }
         } else {
             if (trayIcon != null) {
