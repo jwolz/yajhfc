@@ -1,4 +1,4 @@
-LÉAME (README) de YajHFC 0.5.0
+LÉAME (README) de YajHFC 0.5.1
 ==============================
 
 ACERCA DE
@@ -65,6 +65,11 @@ de Java (más avanzado que los programas "Hola mundo") utilizando la IDE Eclipse
 
 CAMBIOS
 -------
+
+0.5.1:
+- Complemento para función en consola
+- Cambio de la dirección URL de yajhfc.berlios.de a www.yajhfc.de
+- Corrección de algunos errores y mejora de características de menor importancia
 
 0.5.0:
 - Soporte de caché local para la lista de faxes, lo que probablemente hará
