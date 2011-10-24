@@ -102,6 +102,11 @@ public class YajHFCTrayIcon implements UnreadItemListener<RecvFormat>, WindowLis
                     }
                 }
                 TrayManager manager = TrayFactory.getTrayManager();
+                if (manager == null) {
+                	Logger.getLogger(YajHFCTrayIcon.class.getName()).log(Level.WARNING, "Could not get a tray manager!");
+                	trayIcon = null;
+                	return;
+                }
                 Dimension traySize = manager.getTrayIconSize();
                 faxIcon = Toolkit.getDefaultToolkit().getImage(YajHFCTrayIcon.class.getResource("/yajhfc/logo-large.png")).getScaledInstance(traySize.width, traySize.height, Image.SCALE_SMOOTH);
                 emptyImage = new BufferedImage(traySize.width, traySize.height, BufferedImage.TRANSLUCENT);
@@ -117,6 +122,10 @@ public class YajHFCTrayIcon implements UnreadItemListener<RecvFormat>, WindowLis
             Logger.getLogger(YajHFCTrayIcon.class.getName()).log(Level.SEVERE, "Error creating tray icon:", ex);
             trayIcon = null;
         }
+    }
+    
+    public boolean isValid() {
+    	return (trayIcon != null);
     }
     
     private MenuItem createMenuItemForAction(Action a) {
