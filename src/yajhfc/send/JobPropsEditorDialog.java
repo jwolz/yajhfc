@@ -1,6 +1,6 @@
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005-2009 Jonas Wolz
+ * Copyright (C) 2005-2011 Jonas Wolz <info@yajhfc.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
