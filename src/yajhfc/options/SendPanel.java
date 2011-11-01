@@ -122,7 +122,7 @@ public class SendPanel extends AbstractOptionsPanel<ServerOptions> {
         
         textFilterFromFaxNr = new JTextField();
         textFilterFromFaxNr.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
-        textFilterFromFaxNr.setToolTipText( _("Characters filtered from the fax number sent to HylaFAX:"));
+        textFilterFromFaxNr.setToolTipText( _("Characters filtered from the fax number sent to HylaFAX."));
         
         textNumberPrefix = new JTextField();
         textNumberPrefix.addMouseListener(ClipboardPopup.DEFAULT_POPUP);

@@ -44,6 +44,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
@@ -81,7 +82,7 @@ public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2011 by Jonas Wolz";
-    public static final String AppVersion = "0.5.1rc5";
+    public static final String AppVersion = "0.5.1";
     public static final String AuthorName = "Jonas Wolz";
     public static final String AuthorEMail = "info@yajhfc.de";
     public static final String HomepageURL = "http://www.yajhfc.de/"; 
@@ -206,7 +207,7 @@ public final class Utils {
         return systemwideConfigDir;
     }
 
-    public static String listToString(List<?> l, String delim) {
+    public static String listToString(Collection<?> l, String delim) {
         StringBuilder s = new StringBuilder();
         if (l.size() == 0) {
             return "";
