@@ -474,7 +474,7 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
         this.sentfmt.add(JobFormat.t);
         this.sentfmt.add(JobFormat.j);
         this.sentfmt.add(JobFormat.a_desc);
-        this.sentfmt.add(JobFormat.z);
+        this.sentfmt.add(JobFormat.Y);
         
         this.sendingfmt = new FmtItemList<JobFormat>(JobFormat.values(), JobFormat.getRequiredFormats());
         this.sendingfmt.addAll(this.sentfmt);

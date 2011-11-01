@@ -63,7 +63,8 @@ public class ConvertersPage extends AbstractOptionsPanel<FaxOptions> {
     ConverterTableModel tableModel;
     JTable formatsTable;
     
-    private static final String WIKI_URL = "http://openfacts2.berlios.de/wikien/index.php/BerliosProject:Yet_another_Java_HylaFAX_client_-_Custom_File_Filters";
+    //private static final String WIKI_URL = "http://openfacts2.berlios.de/wikien/index.php/BerliosProject:Yet_another_Java_HylaFAX_client_-_Custom_File_Filters";
+    private static final String WIKI_URL = "http://www.yajhfc.de/documentation/wiki/91-using-custom-file-filters";
     
     public ConvertersPage() {
         super(new BorderLayout());        
