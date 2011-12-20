@@ -43,16 +43,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
-import java.util.Collection;
-import java.util.EnumMap;
-import java.util.Map;
 import java.util.regex.Pattern;
 
-import javax.print.DocFlavor;
-import javax.swing.filechooser.FileFilter;
-
 import yajhfc.Utils;
-import yajhfc.util.ExampleFileFilter;
 
 public class FormattedFile {
     public final File file;
@@ -67,6 +60,10 @@ public class FormattedFile {
         this.format = format;
     }
     
+    public FormattedFile(String fileName) {
+        this(new File(fileName));
+    }
+        
     public FormattedFile(File file) {
         this.file = file;
         try {
@@ -105,60 +102,14 @@ public class FormattedFile {
     }
     
 
+    @Override
+    public String toString() {
+        return file + " [format=" + format.name() + "]";
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Static fields & methods:
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    public static final Map<FileFormat,FileConverter> fileConverters = new EnumMap<FileFormat, FileConverter>(FileFormat.class);
-    static {
-        fileConverters.put(FileFormat.PostScript, FileConverter.IDENTITY_CONVERTER);
-        fileConverters.put(FileFormat.PDF, FileConverter.IDENTITY_CONVERTER);
-        fileConverters.put(FileFormat.TIFF, new TIFFLibConverter());
-        
-        fileConverters.put(FileFormat.PNG, new PrintServiceFileConverter(DocFlavor.URL.PNG));
-        fileConverters.put(FileFormat.GIF, new PrintServiceFileConverter(DocFlavor.URL.GIF));
-        fileConverters.put(FileFormat.JPEG, new PrintServiceFileConverter(DocFlavor.URL.JPEG));
-        
-        fileConverters.put(FileFormat.HTML, EditorPaneFileConverter.HTML_CONVERTER);
-        // Doesn't work very well
-        //fileConverters.put(FileFormat.RTF, new EditorPaneFileConverter("text/rtf"));
-        
-        loadCustomConverters(Utils.getFaxOptions().customFileConverters);
-    }
-    
-    public static void loadCustomConverters(Map<String,String> converters) {
-        for (FileFormat format : FileFormat.values()) {
-            FileConverter oldConv = fileConverters.get(format);
-            FileConverter defaultConverter;
-            if (oldConv instanceof ExternalProcessConverter) {
-                ExternalProcessConverter epc = (ExternalProcessConverter)oldConv;
-                if (epc.isUserDefined()) {
-                    defaultConverter = epc.getInternalConverter();
-                } else {
-                    defaultConverter = oldConv;
-                }
-            } else {
-                defaultConverter = oldConv;
-            }
-            // Ignore non-overridable converters
-            if (oldConv != null && !oldConv.isOverridable())
-                continue;
-            
-            String customConv = converters.get(format.name());
-            if (customConv != null && customConv.length() > 0) {
-                fileConverters.put(format, new ExternalProcessConverter(customConv, defaultConverter));
-            } else {
-                if (oldConv != defaultConverter) {
-                    if (defaultConverter == null)
-                        fileConverters.remove(format);
-                    else
-                        fileConverters.put(format, defaultConverter);
-                }
-            }
-        }
-        fileConvertersChanged();
-    }
     
     //private static final short[] JPEGSignature = { 0xff, 0xd8, 0xff, 0xe0, -1, -1, 'J', 'F', 'I', 'F', 0 };
     private static final short[] JPEGSignature = { 0xff, 0xd8, 0xff }; //, -1, -1, -1, 'J', 'F', 'I', 'F', 0 };
@@ -320,45 +271,6 @@ public class FormattedFile {
         default:
             return false;
         }
-    }
-    
-    
-//  protected static final FileFormat[] acceptedFormats = {
-//  FileFormat.PostScript, FileFormat.PDF, FileFormat.JPEG, FileFormat.GIF, FileFormat.PNG, FileFormat.TIFF
-//  };
-    protected static FileFilter[] acceptedFilters;
-
-    public static FileFilter[] createFileFiltersFromFormats(Collection<FileFormat> formats) {
-        ExampleFileFilter allSupported = new ExampleFileFilter((String)null, Utils._("All supported file formats"));
-        allSupported.setExtensionListInDescription(false);
-        
-        FileFilter[] filters = new FileFilter[formats.size() + 1];
-        filters[0] = allSupported;
-        
-        int i = 0;
-        for (FileFormat ff : formats) {
-            for (String ext : ff.getPossibleExtensions()) {
-                allSupported.addExtension(ext);
-            }
-            filters[++i] = new ExampleFileFilter(ff.getPossibleExtensions(), ff.getDescription());
-        }
-        
-        return filters;
-    }
-    
-    public static FileFilter[] getConvertableFileFilters() {
-        if (acceptedFilters == null) {
-            acceptedFilters = createFileFiltersFromFormats(fileConverters.keySet());
-        }
-        return acceptedFilters;
-    }
-
-    /**
-     * Called to notify this class that the file converter map changed and
-     * any information computed from that map should be refreshed
-     */
-    public static void fileConvertersChanged() {
-        acceptedFilters = null;
     }
     
     public static void main(String[] args) throws Exception {

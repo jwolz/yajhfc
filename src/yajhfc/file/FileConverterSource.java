@@ -14,7 +14,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *  
+ *
  *  Linking YajHFC statically or dynamically with other modules is making 
  *  a combined work based on YajHFC. Thus, the terms and conditions of 
  *  the GNU General Public License cover the whole combination.
@@ -36,55 +36,31 @@
  */
 package yajhfc.file;
 
+import java.util.Map;
+
 /**
  * @author jonas
  *
  */
-public enum MultiFileConvFormat {
-    PDF(new PDFMultiFileConverter()),
-    PostScript(new PSMultiFileConverter()),
-    TIFF(new TIFFMultiFileConverter()),
-    TIFF_DITHER(new TIFFDitherMultiFileConverter(), "TIFF (dithered)");
-    
-    private final MultiFileConverter converter;
-    private final String description;
-
-    private MultiFileConvFormat(MultiFileConverter converter, String description) {
-        this.converter = converter;
-        this.description = description;
-    }
-    
-    private MultiFileConvFormat(MultiFileConverter converter) {
-        this(converter, null);
-    }
-
-    public FileFormat getFileFormat() {
-        return converter.getTargetFormat();
-    }
-    
-    public MultiFileConverter getConverter() {
-        return converter;
-    }
-    
-    @Override
-    public String toString() {
-        return (description == null) ? super.toString() : description;
-    }
+public abstract class FileConverterSource implements Comparable<FileConverterSource> {
+    /**
+     * Adds the file converters coming from this source to the specified map
+     * @param converters
+     */
+    public abstract void addFileConvertersTo(Map<FileFormat,FileConverter> converters);
     
     /**
-     * Returns a MultiFileConvFormat that produces files in the given format.
-     * Returns null if none can be found.
-     * Please note that the mapping MultiFileConvFormat <-> FileFormat is not necessarily unique, i.e. there may be multiple MultiFileConvFormat
-     * for a given target format.
-     * @param ff
+     * Returns this source's priority.
+     * Sources with higher priority are called after those with a lower priority, i.e. may overwrite the converters
      * @return
      */
-    public static MultiFileConvFormat getByFileFormat(FileFormat ff) {
-        for (MultiFileConvFormat mfcf : values()) {
-            if (mfcf.getFileFormat() == ff) {
-                return mfcf;
-            }
-        }
-        return null;
+    public int priority() {
+        return 0;
     }
+    
+    public int compareTo(FileConverterSource o) {
+        return this.priority() - o.priority();
+    }
+    
+    
 }

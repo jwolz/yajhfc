@@ -96,7 +96,7 @@ import yajhfc.PaperSize;
 import yajhfc.SenderIdentity;
 import yajhfc.Utils;
 import yajhfc.faxcover.Faxcover;
-import yajhfc.file.FormattedFile;
+import yajhfc.file.FileConverters;
 import yajhfc.model.IconMap;
 import yajhfc.model.servconn.FaxDocument;
 import yajhfc.phonebook.PBEntryField;
@@ -413,7 +413,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
                 }
             }
         };
-        ftfFileName.setFileFilters(FormattedFile.getConvertableFileFilters()); 
+        ftfFileName.setFileFilters(FileConverters.getConvertableFileFilters()); 
         if (Utils.getFaxOptions().lastSendWinPath.length() > 0) {
             ftfFileName.setCurrentDirectory(new File(Utils.getFaxOptions().lastSendWinPath));
         }

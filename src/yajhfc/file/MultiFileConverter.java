@@ -81,7 +81,7 @@ public abstract class MultiFileConverter {
                 target[i] = ff.file;
                 break;
             default:
-                FileConverter conv = FormattedFile.fileConverters.get(ff.format);
+                FileConverter conv = FileConverters.getConverterFor(ff.format);
                 if (conv == null || conv == FileConverter.IDENTITY_CONVERTER) {
                     throw new UnknownFormatException("Unsupported file format: " + ff.format);
                 } else {

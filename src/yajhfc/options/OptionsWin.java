@@ -50,8 +50,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -227,47 +225,61 @@ public class OptionsWin extends JDialog {
                 return (DefaultTreeModel)mainTree.getModel();
             }  
         };
-        List<PanelTreeNode> rootChilds = new ArrayList<PanelTreeNode>();
-        rootNode.setChildren(rootChilds);
         
-        rootChilds.add(new PanelTreeNode(rootNode, panelCommon = new CommonPanel(this), _("General"), Utils.loadIcon("general/Preferences")));
+        PanelTreeNode generalNode, pathsNode, coverNode, pluginsNode;
         
-        rootChilds.add(new PanelTreeNode(rootNode, new PathAndViewPanel(), _("Paths and viewers"), Utils.loadIcon("development/Host")));
+        rootNode.addChild(generalNode = new PanelTreeNode(rootNode, panelCommon = new CommonPanel(this), _("General"), Utils.loadIcon("general/Preferences")));
+        
+        rootNode.addChild(pathsNode = new PanelTreeNode(rootNode, new PathAndViewPanel(), _("Paths and viewers"), Utils.loadIcon("development/Host")));
         
         ServerSettingsPanel serverPanel;
-        rootChilds.add(serverSettingsNode = new PanelTreeNode(rootNode, serverPanel = new ServerSettingsPanel(), _("Servers"), Utils.loadCustomIcon("servers.png")));
+        rootNode.addChild(serverSettingsNode = new PanelTreeNode(rootNode, serverPanel = new ServerSettingsPanel(), _("Servers"), Utils.loadCustomIcon("servers.png")));
 
         CoverPanel coverPanel;
-        rootChilds.add(new PanelTreeNode(rootNode, coverPanel = new CoverPanel() , _("Cover page & Identities"), Utils.loadCustomIcon("envelopes.png")));
+        rootNode.addChild(coverNode = new PanelTreeNode(rootNode, coverPanel = new CoverPanel() , _("Cover page & Identities"), Utils.loadCustomIcon("envelopes.png")));
         serverPanel.setIdentitiesModel(coverPanel.getListModel());
         
-        rootChilds.add(new PanelTreeNode(rootNode, new PluginPanel(), _("Plugins & JDBC"), Utils.loadIcon("development/Jar")));
+        rootNode.addChild(pluginsNode = new PanelTreeNode(rootNode, new PluginPanel(), _("Plugins & JDBC"), Utils.loadIcon("development/Jar")));
         
-        PanelTreeNode tables = new PanelTreeNode(rootNode, 
+        PanelTreeNode tablesNode = new PanelTreeNode(rootNode, 
                 new LabelOptionsPage(_("Please select on the left which table you want to edit.")),
                 _("Tables"),null);
         MessageFormat tableFormat = new MessageFormat(_("Table \"{0}\""));
-        tables.setChildren(new PanelTreeNode[] {
-                new PanelTreeNode(tables, new FmtEditorPanel<RecvFormat>(RecvFormat.values(), "recvfmt"), _("Received"), Utils.loadCustomIcon("received.gif"), tableFormat.format(new Object[] {_("Received")})),
-                new PanelTreeNode(tables, new FmtEditorPanel<JobFormat>(JobFormat.values(), "sentfmt"), _("Sent"), Utils.loadCustomIcon("sent.gif"), tableFormat.format(new Object[] {_("Sent")})),
-                new PanelTreeNode(tables, new FmtEditorPanel<JobFormat>(JobFormat.values(), "sendingfmt"), _("Transmitting"), Utils.loadCustomIcon("sending.gif"), tableFormat.format(new Object[] {_("Transmitting")})),
-                new PanelTreeNode(tables, new FmtEditorPanel<QueueFileFormat>(QueueFileFormat.values(), "archiveFmt"), _("Archive"), Utils.loadCustomIcon("archive.gif"), tableFormat.format(new Object[] {_("Archive")}))
-        });
-        rootChilds.add(tables);
+        tablesNode.addChild(new PanelTreeNode(tablesNode, new FmtEditorPanel<RecvFormat>(RecvFormat.values(), "recvfmt"), _("Received"), Utils.loadCustomIcon("received.gif"), tableFormat.format(new Object[] {_("Received")})));
+        tablesNode.addChild(new PanelTreeNode(tablesNode, new FmtEditorPanel<JobFormat>(JobFormat.values(), "sentfmt"), _("Sent"), Utils.loadCustomIcon("sent.gif"), tableFormat.format(new Object[] {_("Sent")})));
+        tablesNode.addChild(new PanelTreeNode(tablesNode, new FmtEditorPanel<JobFormat>(JobFormat.values(), "sendingfmt"), _("Transmitting"), Utils.loadCustomIcon("sending.gif"), tableFormat.format(new Object[] {_("Transmitting")})));
+        tablesNode.addChild(new PanelTreeNode(tablesNode, new FmtEditorPanel<QueueFileFormat>(QueueFileFormat.values(), "archiveFmt"), _("Archive"), Utils.loadCustomIcon("archive.gif"), tableFormat.format(new Object[] {_("Archive")})));
+        rootNode.addChild(tablesNode);
 
         PanelTreeNode advancedNode = new PanelTreeNode(rootNode, 
                 new LabelOptionsPage(_("These settings normally need not to be changed.")),
                 _("Advanced settings"), null);
-        List<PanelTreeNode> advancedNodeChildren = new ArrayList<PanelTreeNode>();
-        advancedNode.setChildren(advancedNodeChildren);
-        advancedNodeChildren.add(new PanelTreeNode(advancedNode, new AdminSettingsPage(this), _("Administrative settings"), Utils.loadCustomIcon("adminsettings.gif")));
-        advancedNodeChildren.add(new PanelTreeNode(advancedNode, new ConvertersPage(), _("File converters"), Utils.loadCustomIcon("customfilters.png")));
+        advancedNode.addChild(new PanelTreeNode(advancedNode, new AdminSettingsPage(this), _("Administrative settings"), Utils.loadCustomIcon("adminsettings.gif")));
+        advancedNode.addChild(new PanelTreeNode(advancedNode, new ConvertersPage(), _("File converters"), Utils.loadCustomIcon("customfilters.png")));
         
         for (PluginUI puc : PluginManager.pluginUIs) {
             PanelTreeNode parent;
             switch (puc.getOptionsPanelParent()) {
             case PluginUI.OPTION_PANEL_ADVANCED:
                 parent = advancedNode;
+                break;
+            case PluginUI.OPTION_PANEL_COVER:
+                parent = coverNode;
+                break;
+            case PluginUI.OPTION_PANEL_GENERAL:
+                parent = generalNode;
+                break;
+            case PluginUI.OPTION_PANEL_PATHS_VIEWERS:
+                parent = pathsNode;
+                break;
+            case PluginUI.OPTION_PANEL_PLUGINS:
+                parent = pluginsNode;
+                break;
+            case PluginUI.OPTION_PANEL_SERVER:
+                parent = serverSettingsNode;
+                break;
+            case PluginUI.OPTION_PANEL_TABLES:
+                parent = tablesNode;
                 break;
             case PluginUI.OPTION_PANEL_ROOT:
             default:
@@ -277,13 +289,13 @@ public class OptionsWin extends JDialog {
             
             PanelTreeNode node = puc.createOptionsPanel(parent);
             if (node != null) {
-                parent.getChildren().add(node);
+                parent.addChild(node);
             }
         }
         
         // Add the "advanced settings" node at the bottom of the list
         if (advancedNode.getChildCount() > 0) {
-            rootChilds.add(advancedNode);
+            rootNode.addChild(advancedNode);
         }
         
     }

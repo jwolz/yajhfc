@@ -36,7 +36,7 @@
  */
 package yajhfc.options;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
@@ -105,12 +105,15 @@ public class PanelTreeNode implements TreeNode {
         return children;
     }
 
-    public void setChildren(List<PanelTreeNode> children) {
-        this.children = children;
+    public void initializeChildren() {
+        children = new ArrayList<PanelTreeNode>();
     }
-
-    public void setChildren(PanelTreeNode[] children) {
-        this.children = Arrays.asList(children);
+    
+    public void addChild(PanelTreeNode child) {
+        if (children == null) {
+            initializeChildren();
+        }
+        children.add(child);
     }
 
     public OptionsPage<FaxOptions> getOptionsPage() {

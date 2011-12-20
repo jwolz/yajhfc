@@ -302,7 +302,7 @@ public abstract class Faxcover {
     protected static FileFilter[] acceptedFilters;
     public static FileFilter[] getAcceptedFileFilters() {
         if (acceptedFilters == null) {
-            acceptedFilters = FormattedFile.createFileFiltersFromFormats(supportedCoverFormats.keySet());
+            acceptedFilters = FileFormat.createFileFiltersFromFormats(supportedCoverFormats.keySet());
         }
         return acceptedFilters;
     }

@@ -91,7 +91,7 @@ public abstract class MultiEditPanel<T> extends JPanel implements Callback<T> {
     
     public void setSettingsNode(PanelTreeNode settingsNode) {
         this.settingsNode = settingsNode;
-        settingsNode.setChildren(new ArrayList<PanelTreeNode>());
+        settingsNode.initializeChildren();
     }
     
     protected abstract String getDeletePrompt(T selectedItem);

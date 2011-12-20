@@ -48,6 +48,7 @@ import yajhfc.PaperSize;
 import yajhfc.Utils;
 import yajhfc.file.FileConverter;
 import yajhfc.file.FileConverter.ConversionException;
+import yajhfc.file.FileConverters;
 import yajhfc.file.FileFormat;
 import yajhfc.file.FormattedFile;
 import yajhfc.launch.Launcher2;
@@ -98,7 +99,7 @@ public class LocalFileTFLItem extends HylaTFLItem {
         if (FormattedFile.canViewFormat(format)) {
             preparedFile = new FormattedFile(fileName, format);
         } else {
-            FileConverter fconv = FormattedFile.fileConverters.get(format);
+            FileConverter fconv = FileConverters.getConverterFor(format);
             if (Utils.debugMode) {
                 log.info("prepareFile: fileName='" + fileName + "' format: " + format);
             }

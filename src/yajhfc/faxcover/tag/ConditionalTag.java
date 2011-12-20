@@ -14,7 +14,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *  
+ *
  *  Linking YajHFC statically or dynamically with other modules is making 
  *  a combined work based on YajHFC. Thus, the terms and conditions of 
  *  the GNU General Public License cover the whole combination.
@@ -34,57 +34,19 @@
  *  version without this exception; this exception also makes it possible 
  *  to release a modified version which carries forward this exception.
  */
-package yajhfc.file;
+package yajhfc.faxcover.tag;
+
 
 /**
+ * Super class for all Tags implementing conditionals
+ * 
  * @author jonas
  *
  */
-public enum MultiFileConvFormat {
-    PDF(new PDFMultiFileConverter()),
-    PostScript(new PSMultiFileConverter()),
-    TIFF(new TIFFMultiFileConverter()),
-    TIFF_DITHER(new TIFFDitherMultiFileConverter(), "TIFF (dithered)");
-    
-    private final MultiFileConverter converter;
-    private final String description;
+public abstract class ConditionalTag extends Tag {
 
-    private MultiFileConvFormat(MultiFileConverter converter, String description) {
-        this.converter = converter;
-        this.description = description;
-    }
-    
-    private MultiFileConvFormat(MultiFileConverter converter) {
-        this(converter, null);
-    }
-
-    public FileFormat getFileFormat() {
-        return converter.getTargetFormat();
-    }
-    
-    public MultiFileConverter getConverter() {
-        return converter;
-    }
-    
     @Override
-    public String toString() {
-        return (description == null) ? super.toString() : description;
-    }
-    
-    /**
-     * Returns a MultiFileConvFormat that produces files in the given format.
-     * Returns null if none can be found.
-     * Please note that the mapping MultiFileConvFormat <-> FileFormat is not necessarily unique, i.e. there may be multiple MultiFileConvFormat
-     * for a given target format.
-     * @param ff
-     * @return
-     */
-    public static MultiFileConvFormat getByFileFormat(FileFormat ff) {
-        for (MultiFileConvFormat mfcf : values()) {
-            if (mfcf.getFileFormat() == ff) {
-                return mfcf;
-            }
-        }
-        return null;
+    public boolean valueIsRaw() {
+        return true;
     }
 }
