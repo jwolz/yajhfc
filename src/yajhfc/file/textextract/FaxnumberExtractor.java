@@ -14,7 +14,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *  
+ *
  *  Linking YajHFC statically or dynamically with other modules is making 
  *  a combined work based on YajHFC. Thus, the terms and conditions of 
  *  the GNU General Public License cover the whole combination.
@@ -34,57 +34,71 @@
  *  version without this exception; this exception also makes it possible 
  *  to release a modified version which carries forward this exception.
  */
-package yajhfc.file;
+package yajhfc.file.textextract;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import yajhfc.Utils;
+import yajhfc.file.FileConverter.ConversionException;
+import yajhfc.file.FormattedFile;
 
 /**
  * @author jonas
  *
  */
-public enum MultiFileConvFormat {
-    PDF(new PDFMultiFileConverter()),
-    PostScript(new PSMultiFileConverter()),
-    TIFF(new TIFFMultiFileConverter()),
-    TIFF_DITHER(new TIFFDitherMultiFileConverter(), "TIFF (dithered)");
-    
-    private final MultiFileConverter converter;
-    private final String description;
+public class FaxnumberExtractor {
 
-    private MultiFileConvFormat(MultiFileConverter converter, String description) {
+    private static final Logger log = Logger.getLogger(FaxnumberExtractor.class.getName());
+    
+    protected final Pattern faxnumberPattern;
+    protected final HylaToTextConverter converter;
+       
+    public FaxnumberExtractor(HylaToTextConverter converter,
+            Pattern faxnumberPattern) {
+        super();
         this.converter = converter;
-        this.description = description;
-    }
-    
-    private MultiFileConvFormat(MultiFileConverter converter) {
-        this(converter, null);
+        this.faxnumberPattern = faxnumberPattern;
     }
 
-    public FileFormat getFileFormat() {
-        return converter.getTargetFormat();
+    public FaxnumberExtractor(HylaToTextConverter converter) {
+        this(converter,
+                Pattern.compile("@@\\s*faxnumber\\s*:?\\s*(.*?)@@", Pattern.CASE_INSENSITIVE));
     }
-    
-    public MultiFileConverter getConverter() {
-        return converter;
-    }
-    
-    @Override
-    public String toString() {
-        return (description == null) ? super.toString() : description;
-    }
-    
-    /**
-     * Returns a MultiFileConvFormat that produces files in the given format.
-     * Returns null if none can be found.
-     * Please note that the mapping MultiFileConvFormat <-> FileFormat is not necessarily unique, i.e. there may be multiple MultiFileConvFormat
-     * for a given target format.
-     * @param ff
-     * @return
-     */
-    public static MultiFileConvFormat getByFileFormat(FileFormat ff) {
-        for (MultiFileConvFormat mfcf : values()) {
-            if (mfcf.getFileFormat() == ff) {
-                return mfcf;
-            }
+
+
+
+    public List<String> extractFromMultipleFiles(List<FormattedFile> input) throws IOException, ConversionException {
+        CharSequence[] texts = converter.convertFilesToText(input);        
+        
+        List<String> faxNumbers = new ArrayList<String>();
+        for (CharSequence text : texts) {
+            getMatchesInText(text, 1, faxNumbers);
         }
-        return null;
+        
+        return faxNumbers;
+    }
+    
+    
+    public void getMatchesInText(CharSequence text, int captureGroup, List<String> listToAddTo) throws IOException {
+        if (Utils.debugMode) {
+            log.finest("input text is:\n" + text);
+        }
+        System.out.println(text);
+        Matcher m = faxnumberPattern.matcher(text);
+        
+        while (m.find()) {
+            if (Utils.debugMode) {
+                log.fine("Found match: " + m);
+            }
+            listToAddTo.add(m.group(captureGroup));
+        }
+        if (Utils.debugMode) {
+            log.fine("No more matches");
+        }
     }
 }

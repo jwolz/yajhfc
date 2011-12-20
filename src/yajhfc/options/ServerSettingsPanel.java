@@ -182,12 +182,14 @@ public class ServerSettingsPanel extends AbstractOptionsPanel<FaxOptions> {
                     PanelTreeNode newChild = new PanelTreeNode(settingsNode, 
                             new OptionsPageWrapper<ServerOptions>(singleServerPanel, forItem, this),
                             label, Utils.loadIcon("development/Server"), serverFormat.format(new Object[] { label }));
-                    newChild.setChildren(new PanelTreeNode[] {
+                    newChild.addChild(
                             new PanelTreeNode(newChild, new OptionsPageWrapper<ServerOptions>(sendPanel, forItem, this), 
-                                    _("Delivery"), Utils.loadIcon("general/SendMail"), sendFormat.format(new Object[] { label })),
+                                    _("Delivery"), Utils.loadIcon("general/SendMail"), sendFormat.format(new Object[] { label }))
+                    );
+                    newChild.addChild(
                             new PanelTreeNode(newChild, new OptionsPageWrapper<ServerOptions>(modemPanel, forItem, this),
                                     _("Modems"), Utils.loadCustomIcon("modem.png"), modemFormat.format(new Object[] { label }))
-                    });
+                    );
                     return newChild;
                 }
 

@@ -36,6 +36,10 @@
  */
 package yajhfc.file;
 
+import java.util.Collection;
+
+import javax.swing.filechooser.FileFilter;
+
 import yajhfc.Utils;
 import yajhfc.util.ExampleFileFilter;
 
@@ -112,4 +116,23 @@ public enum FileFormat {
             return "data";
         }
     }
+    
+    public static FileFilter[] createFileFiltersFromFormats(Collection<FileFormat> formats) {
+        ExampleFileFilter allSupported = new ExampleFileFilter((String)null, Utils._("All supported file formats"));
+        allSupported.setExtensionListInDescription(false);
+        
+        FileFilter[] filters = new FileFilter[formats.size() + 1];
+        filters[0] = allSupported;
+        
+        int i = 0;
+        for (FileFormat ff : formats) {
+            for (String ext : ff.getPossibleExtensions()) {
+                allSupported.addExtension(ext);
+            }
+            filters[++i] = new ExampleFileFilter(ff.getPossibleExtensions(), ff.getDescription());
+        }
+        
+        return filters;
+    }
+    
 }

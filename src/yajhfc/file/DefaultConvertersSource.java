@@ -14,7 +14,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *  
+ *
  *  Linking YajHFC statically or dynamically with other modules is making 
  *  a combined work based on YajHFC. Thus, the terms and conditions of 
  *  the GNU General Public License cover the whole combination.
@@ -36,55 +36,36 @@
  */
 package yajhfc.file;
 
+import java.util.Map;
+
+import javax.print.DocFlavor;
+
 /**
  * @author jonas
  *
  */
-public enum MultiFileConvFormat {
-    PDF(new PDFMultiFileConverter()),
-    PostScript(new PSMultiFileConverter()),
-    TIFF(new TIFFMultiFileConverter()),
-    TIFF_DITHER(new TIFFDitherMultiFileConverter(), "TIFF (dithered)");
-    
-    private final MultiFileConverter converter;
-    private final String description;
+public class DefaultConvertersSource extends FileConverterSource {
 
-    private MultiFileConvFormat(MultiFileConverter converter, String description) {
-        this.converter = converter;
-        this.description = description;
-    }
-    
-    private MultiFileConvFormat(MultiFileConverter converter) {
-        this(converter, null);
-    }
-
-    public FileFormat getFileFormat() {
-        return converter.getTargetFormat();
-    }
-    
-    public MultiFileConverter getConverter() {
-        return converter;
-    }
-    
-    @Override
-    public String toString() {
-        return (description == null) ? super.toString() : description;
-    }
-    
-    /**
-     * Returns a MultiFileConvFormat that produces files in the given format.
-     * Returns null if none can be found.
-     * Please note that the mapping MultiFileConvFormat <-> FileFormat is not necessarily unique, i.e. there may be multiple MultiFileConvFormat
-     * for a given target format.
-     * @param ff
-     * @return
+    /* (non-Javadoc)
+     * @see yajhfc.file.FileConverterSource#addFileConvertersTo(java.util.Map)
      */
-    public static MultiFileConvFormat getByFileFormat(FileFormat ff) {
-        for (MultiFileConvFormat mfcf : values()) {
-            if (mfcf.getFileFormat() == ff) {
-                return mfcf;
-            }
-        }
-        return null;
+    @Override
+    public void addFileConvertersTo(Map<FileFormat, FileConverter> converters) {
+        converters.put(FileFormat.PostScript, FileConverter.IDENTITY_CONVERTER);
+        converters.put(FileFormat.PDF, FileConverter.IDENTITY_CONVERTER);
+        converters.put(FileFormat.TIFF, new TIFFLibConverter());
+        
+        converters.put(FileFormat.PNG, new PrintServiceFileConverter(DocFlavor.URL.PNG));
+        converters.put(FileFormat.GIF, new PrintServiceFileConverter(DocFlavor.URL.GIF));
+        converters.put(FileFormat.JPEG, new PrintServiceFileConverter(DocFlavor.URL.JPEG));
+        
+        converters.put(FileFormat.HTML, EditorPaneFileConverter.HTML_CONVERTER);
+        // Doesn't work very well
+        //fileConverters.put(FileFormat.RTF, new EditorPaneFileConverter("text/rtf"));
+    }
+
+    @Override
+    public int priority() {
+        return -10000;
     }
 }

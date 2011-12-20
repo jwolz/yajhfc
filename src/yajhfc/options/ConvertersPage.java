@@ -66,8 +66,8 @@ import yajhfc.FaxOptions;
 import yajhfc.Utils;
 import yajhfc.file.ExternalProcessConverter;
 import yajhfc.file.FileConverter;
+import yajhfc.file.FileConverters;
 import yajhfc.file.FileFormat;
-import yajhfc.file.FormattedFile;
 import yajhfc.util.ClipboardPopup;
 import yajhfc.util.ExcDialogAbstractAction;
 import yajhfc.util.SafeJFileChooser;
@@ -92,7 +92,7 @@ public class ConvertersPage extends AbstractOptionsPanel<FaxOptions> {
     
     @Override
     protected void createOptionsUI() {
-        tableModel = new ConverterTableModel(FormattedFile.fileConverters);
+        tableModel = new ConverterTableModel(FileConverters.getFileConverters());
         formatsTable = new JTable(tableModel);
         formatsTable.setDefaultRenderer(Row.class, new RowRenderer());
         formatsTable.setDefaultEditor(Row.class, new RowEditor());
@@ -136,7 +136,7 @@ public class ConvertersPage extends AbstractOptionsPanel<FaxOptions> {
             } 
         }
         
-        FormattedFile.loadCustomConverters(foEdit.customFileConverters);
+        FileConverters.invalidateFileConverters();
     }
 
     /* (non-Javadoc)

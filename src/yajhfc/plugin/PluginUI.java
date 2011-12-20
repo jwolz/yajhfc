@@ -55,9 +55,33 @@ public abstract class PluginUI {
      */
     public static final int OPTION_PANEL_ROOT = 0;
     /**
-     * The options panel should be put under the advanced panel
+     * The options panel should be put under the advanced node
      */
     public static final int OPTION_PANEL_ADVANCED = 1;
+    /**
+     * The options panel should be put under the general node
+     */
+    public static final int OPTION_PANEL_GENERAL = 2;
+    /**
+     * The options panel should be put under the paths&viewers node
+     */
+    public static final int OPTION_PANEL_PATHS_VIEWERS = 3;
+    /**
+     * The options panel should be put under the server node
+     */
+    public static final int OPTION_PANEL_SERVER = 4;
+    /**
+     * The options panel should be put under the cover page node
+     */
+    public static final int OPTION_PANEL_COVER = 5;
+    /**
+     * The options panel should be put under the plugins&JDBC node
+     */
+    public static final int OPTION_PANEL_PLUGINS = 6;
+    /**
+     * The options panel should be put under the tables node
+     */
+    public static final int OPTION_PANEL_TABLES = 7;
     
     /**
      * Creates menu items shown in the options menu of MainWin. <br>

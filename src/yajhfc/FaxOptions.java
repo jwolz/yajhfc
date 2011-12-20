@@ -47,6 +47,7 @@ import javax.print.attribute.Attribute;
 
 import yajhfc.file.FileFormat;
 import yajhfc.file.MultiFileConvFormat;
+import yajhfc.file.textextract.PSToTextConverter;
 import yajhfc.model.FmtItemList;
 import yajhfc.model.JobFormat;
 import yajhfc.model.RecvFormat;
@@ -488,6 +489,30 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
      * Show the toolbar in MainWin?
      */
     public boolean showToolbar = true;
+    
+    
+    /**
+     * Extract fax numbers from documents by default?
+     */
+    public boolean extractFaxnumbers = false;
+    
+    /**
+     * The hyla to text converter to use
+     */
+    public String hylaToTextConverter = "yajhfc.file.textextract.PSToTextConverter";
+    
+    /**
+     * Path to the pstotext executable
+     */
+    public String pstotextPath = (Utils.IS_WINDOWS ? "pstotxt3.exe" : "pstotext");
+    
+    /**
+     * Path to the pdftotext executable
+     */
+    public String pdftotextPath = "pdftotext";
+    
+    
+    
     
     public FaxOptions() {
         super(null);
