@@ -38,11 +38,14 @@ package yajhfc.file.textextract;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import yajhfc.FaxOptions;
 import yajhfc.PaperSize;
 import yajhfc.Utils;
 import yajhfc.file.FileConverter.ConversionException;
@@ -65,12 +68,54 @@ public abstract class HylaToTextConverter {
         availableConverters.add(new PSToAsciiConverter());
     }
     
+    public static final String DEFAULT_CONVERTER = "yajhfc.file.textextract.PSToTextConverter";
+    
+    public static HylaToTextConverter findByString(String converter) {
+        for (HylaToTextConverter conv : availableConverters) {
+            if (conv.name().equals(converter)) {
+                return conv;
+            }
+        }
+        return null;
+    }
+    
+    public static HylaToTextConverter findDefault() {
+        HylaToTextConverter rv = findByString(Utils.getFaxOptions().hylaToTextConverter);
+        if (rv != null) {
+            return rv;
+        } else {
+            rv = findByString(DEFAULT_CONVERTER);
+            if (rv != null) {
+                return rv;
+            } else {
+                throw new RuntimeException("Neither the configured converter " + Utils.getFaxOptions().hylaToTextConverter + " nor the default converter " + DEFAULT_CONVERTER + " could be found!");
+            }
+        }
+    }
+    
     /**
      * Returns an (internal and unique) name for this method
      * @return
      */
     public String name() {
         return getClass().getName();
+    }
+    
+    /**
+     * Returns a new instance using the specified options instead of Utils.getFaxOptions().
+     * 
+     * May also return this if this converter does not have configurable options;
+     * @param options
+     * @return
+     */
+    public HylaToTextConverter getInstanceForOptions(FaxOptions options) {
+        try {
+            Constructor<? extends HylaToTextConverter> constructor = getClass().getConstructor(FaxOptions.class);
+            return constructor.newInstance(options);
+        } catch (Exception e) {
+            log.log(Level.INFO, "Assuming converter has no options", e);
+            return this;
+        } 
     }
     
     /**
@@ -102,6 +147,9 @@ public abstract class HylaToTextConverter {
      */
     public CharSequence[] convertFilesToText(List<FormattedFile> input) throws IOException, ConversionException {
         File[] convertedInput = ensureInputFormat(input);
+        if (Utils.debugMode) {
+            log.fine("Extracting text from the following files " + Arrays.toString(convertedInput) + " using " + getClass().getName());
+        }
         return convertToText(convertedInput);
     }
    

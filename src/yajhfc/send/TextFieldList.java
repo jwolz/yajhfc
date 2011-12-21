@@ -239,7 +239,7 @@ public abstract class TextFieldList<T extends TFLItem> extends JPanel implements
         return list;
     }
 
-    protected JPopupMenu getPopup() {
+    public JPopupMenu getPopup() {
         if (popup == null) {
             popup = new JPopupMenu();
             popup.add(new JMenuItem(getModifyAction()));

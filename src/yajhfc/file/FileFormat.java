@@ -117,6 +117,10 @@ public enum FileFormat {
         }
     }
     
+    public FileFilter createFileFilter() {
+        return new ExampleFileFilter(this.getPossibleExtensions(), this.getDescription());
+    }
+    
     public static FileFilter[] createFileFiltersFromFormats(Collection<FileFormat> formats) {
         ExampleFileFilter allSupported = new ExampleFileFilter((String)null, Utils._("All supported file formats"));
         allSupported.setExtensionListInDescription(false);
@@ -129,7 +133,7 @@ public enum FileFormat {
             for (String ext : ff.getPossibleExtensions()) {
                 allSupported.addExtension(ext);
             }
-            filters[++i] = new ExampleFileFilter(ff.getPossibleExtensions(), ff.getDescription());
+            filters[++i] = ff.createFileFilter();
         }
         
         return filters;

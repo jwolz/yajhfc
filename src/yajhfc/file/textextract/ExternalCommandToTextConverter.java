@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import yajhfc.FaxOptions;
 import yajhfc.Utils;
 import yajhfc.file.FileConverter.ConversionException;
 import yajhfc.util.ArrayCharSequence;
@@ -26,13 +27,26 @@ public abstract class ExternalCommandToTextConverter extends HylaToTextConverter
     /**
      * Encoding of the stream produced by the external command
      */
-    protected String streamEncoding = "ISO8859-1";
+    protected final String streamEncoding;
     
     /**
      * Determines if the command can be called with all files or has to be called once per file
      */
-    protected boolean acceptsMultipleFiles = true;
+    protected final boolean acceptsMultipleFiles;
     
+    /**
+     * The FaxOptions to use
+     */
+    protected FaxOptions options;
+    
+    public ExternalCommandToTextConverter(String streamEncoding,
+            boolean acceptsMultipleFiles, FaxOptions options) {
+        super();
+        this.streamEncoding = streamEncoding;
+        this.acceptsMultipleFiles = acceptsMultipleFiles;
+        this.options = options;
+    }
+
     /**
      * Adds the command line argument to the specified list in order to create the command line to execute
      * @param commandLine

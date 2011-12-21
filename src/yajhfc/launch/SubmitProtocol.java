@@ -72,6 +72,12 @@ public interface SubmitProtocol {
     void setCover(boolean useCover) throws IOException; 
     
     /**
+     * Sets if a recipients should be extracted from the specified documents
+     * @param useCover
+     */
+    void setExtractRecipients(boolean extractRecipients) throws IOException; 
+    
+    /**
      * Sets the subject for the fax
      * @param subject
      * @throws IOException

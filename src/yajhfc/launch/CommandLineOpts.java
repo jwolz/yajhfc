@@ -131,6 +131,12 @@ public class CommandLineOpts extends CommonCommandLineOpts { //IMPORTANT!: Do no
     public String identityToUse = null;
     
     /**
+     * Extract recipients? null: Don't change, else use booleanValue()
+     * Communicated over socket.
+     */
+    public Boolean extractRecipients = null;
+    
+    /**
      * Parses the command line arguments and does some initial processing for the --help and --logfile options.
      * @param args
      */
@@ -139,6 +145,7 @@ public class CommandLineOpts extends CommonCommandLineOpts { //IMPORTANT!: Do no
         // ... and do not forget forkNewInstance
         final LongOpt[] longOpts = new LongOpt[] {
                 new LongOpt("recipient", LongOpt.REQUIRED_ARGUMENT, null, 'r'),
+                new LongOpt("extract-recipients", LongOpt.OPTIONAL_ARGUMENT, null, 14),
                 new LongOpt("use-cover", LongOpt.OPTIONAL_ARGUMENT, null, 'C'),
                 new LongOpt("subject", LongOpt.REQUIRED_ARGUMENT, null, 's'),
                 new LongOpt("comment", LongOpt.REQUIRED_ARGUMENT, null, 9),
@@ -269,6 +276,14 @@ public class CommandLineOpts extends CommonCommandLineOpts { //IMPORTANT!: Do no
                     jobIDOutput = "-"; //stdout
                 } else {
                     jobIDOutput = optarg;
+                }
+                break;
+            case 14: //extract-recipients
+                optarg = getopt.getOptarg();
+                if (optarg == null || optarg.equals("") || Character.toLowerCase(optarg.charAt(0)) == 'y' || optarg.equals("true")) {
+                    extractRecipients = Boolean.TRUE;
+                } else {
+                    extractRecipients = Boolean.FALSE;
                 }
                 break;
             case 'C': // use-cover

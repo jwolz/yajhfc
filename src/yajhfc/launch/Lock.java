@@ -75,6 +75,7 @@ public class Lock implements SubmitProtocol {
     final static int CODE_SET_MODEM = 11;
     final static int CODE_SET_SERVER = 12;
     final static int CODE_SET_IDENTITY = 13;
+    final static int CODE_EXTRACT_RECIPIENTS = 14;
     
     public final static int RESPONSE_OK = 0;
     public final static int RESPONSE_NOT_CONNECTED = 10;
@@ -164,6 +165,17 @@ public class Lock implements SubmitProtocol {
         checkResponse();
     }
 
+    public void setExtractRecipients(boolean extractRecipients)
+            throws IOException {
+        if (Utils.debugMode) {
+            log.finer("setExtractRecipients: " + extractRecipients);
+        }
+        outStream.write(CODE_EXTRACT_RECIPIENTS);
+        outStream.writeBoolean(extractRecipients);
+        outStream.flush();
+        checkResponse();
+    }
+    
     public void setInputStream(InputStream stream, String streamSource) {
         if (Utils.debugMode) {
             log.finer("setInputStream: " + stream);
