@@ -74,12 +74,16 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
     
     protected EntryToStringRule entryToStringRule = PhoneBook.DEFAULT_TOSTRINGRULE;
     
+    protected Comparator<PhoneBookEntry> comparator = null;
+    protected Filter<PhoneBookEntry,PBEntryField> filter = null;
+    
     public void addPhoneBook(PhoneBook pb) {
         phoneBooks.add(pb);
         pb.setEntryToStringRule(entryToStringRule);
         pb.addPhonebookEventListener(this);
         fireTreeNodesInserted(new TreeModelEvent(this, new Object[] { rootNode },
                 new int[] { phoneBooks.size() - 1 }, new Object[] { pb }));
+        refreshItems(pb);
     }
     
     public void removePhoneBook(PhoneBook pb) {
@@ -94,7 +98,8 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
     }
     
     public void refreshPhoneBook(PhoneBook pb) {
-        fireTreeStructureChanged(new TreeModelEvent(this, new Object[] {rootNode, pb}));
+        refreshItems(pb);
+        //fireTreeStructureChanged(new TreeModelEvent(this, new Object[] {rootNode, pb}));
     }
     
     public List<PhoneBook> getPhoneBooks() {
@@ -141,9 +146,7 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
         if (parent instanceof RootNode) {
             return phoneBooks.get(index);
         } else if (parent instanceof PhoneBook) {
-            List<PhoneBookEntry> childs = (showFilteredResults ? 
-                    ((PhoneBook)parent).lastFilterResult :
-                        ((PhoneBook)parent).getEntries());
+            List<PhoneBookEntry> childs = entriesFromPB((PhoneBook)parent);
             return (childs == null) ? null : childs.get(index);
         } else {
             return null;
@@ -157,9 +160,7 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
         if (parent instanceof RootNode) {
             return phoneBooks.size();
         } else if (parent instanceof PhoneBook) {
-            List<PhoneBookEntry> childs = (showFilteredResults ? 
-                    ((PhoneBook)parent).lastFilterResult :
-                        ((PhoneBook)parent).getEntries());
+            List<PhoneBookEntry> childs = entriesFromPB((PhoneBook)parent);
             return (childs == null) ? 0 : childs.size();
         } else {
             return 0;
@@ -173,9 +174,7 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
         if (parent instanceof RootNode) {
             return phoneBooks.indexOf(child);
         } else if (parent instanceof PhoneBook && child instanceof PhoneBookEntry) {
-            List<PhoneBookEntry> childs = (showFilteredResults ? 
-                    ((PhoneBook)parent).lastFilterResult :
-                        ((PhoneBook)parent).getEntries());
+            List<PhoneBookEntry> childs = entriesFromPB((PhoneBook)parent);
             return (childs == null) ? -1 : childs.indexOf(child);
         } else {
             return -1;
@@ -205,6 +204,23 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
     }
     
     /**
+     * Returns the comparator giving the sort order of the phone book entries or null for the default ordering
+     * @return
+     */
+    public Comparator<PhoneBookEntry> getComparator() {
+        return comparator;
+    }
+    
+    /**
+     * Sets the comparator giving the sort order of the phone book entries or null for the default ordering
+     * @param comparator
+     */
+    public void setComparator(Comparator<PhoneBookEntry> comparator) {
+        this.comparator = comparator;
+        refreshItems(null);
+    }
+    
+    /**
      * Used to reset the filter and signalize this fact to listeners
      */
     protected void resetFilter() {
@@ -219,7 +235,16 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
      * @param filter
      */
     public void applyFilter(Filter<PhoneBookEntry,PBEntryField> filter) {
-        boolean oldFiltered = showFilteredResults;
+        this.filter = filter;
+        refreshItems(null);
+    }
+    
+    /**
+     * Refreshes the phone book items using the current filter and comparator
+     * @param toRefresh the PhoneBook to refresh or null to refresh all
+     */
+    protected void refreshItems(PhoneBook toRefresh) {
+        //boolean oldFiltered = showFilteredResults;
         if (filter == null) {
             showFilteredResults = false;
         } else {
@@ -231,18 +256,40 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
             oldSelection = tree.getSelectionPaths();
         }
         
-        for (PhoneBook pb : phoneBooks) {
-            List<PhoneBookEntry> oldEntries = oldFiltered ? pb.lastFilterResult : pb.getEntries();
-            pb.lastFilterResult = pb.applyFilter(filter);
-            
-            List<PhoneBookEntry> newEntries = showFilteredResults ? pb.lastFilterResult : pb.getEntries();
-            if (!listQuickEquals(oldEntries, newEntries)) {
-                fireTreeStructureChanged(new TreeModelEvent(this, new Object[] {rootNode, pb}));
+        if (toRefresh == null) { // Refresh all
+            for (PhoneBook pb : phoneBooks) {
+                refreshSinglePBItems(pb);
             }
+        } else {
+            refreshSinglePBItems(toRefresh);
         }
         
         if (tree != null) {
             tree.setSelectionPaths(oldSelection);
+        }
+    }
+    
+    private static List<PhoneBookEntry> entriesFromPB(PhoneBook pb) {
+        return ((pb.lastFilterResult == null) ? pb.getEntries() : pb.lastFilterResult);
+    }
+
+    private void refreshSinglePBItems(PhoneBook pb) {
+        List<PhoneBookEntry> oldEntries = entriesFromPB(pb); //oldFiltered ? pb.lastFilterResult : pb.getEntries();
+        
+        List<PhoneBookEntry> newEntries = pb.applyFilter(filter);
+        if (!showFilteredResults) {
+                newEntries = pb.getEntries();
+        }
+        if (comparator != null) {
+            if (newEntries == pb.getEntries()) {
+                // Make a copy since we will change the order
+                newEntries = new ArrayList<PhoneBookEntry>(newEntries); 
+            }
+            Collections.sort(newEntries, comparator);
+        }
+        pb.lastFilterResult = newEntries;
+        if (!listQuickEquals(oldEntries, newEntries)) {
+            fireTreeStructureChanged(new TreeModelEvent(this, new Object[] {rootNode, pb}));
         }
     }
     
@@ -423,7 +470,7 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
             for (PhoneBook pb : getPhoneBooks()) {
                 pb.setEntryToStringRule(toStringRule);
 
-                List<PhoneBookEntry> entries = showFilteredResults ? pb.lastFilterResult : pb.getEntries();
+                List<PhoneBookEntry> entries = entriesFromPB(pb);
                 final Object[] entryArray = entries.toArray();
                 final int[] indexArray = new int[entryArray.length];
                 for (int i = 0 ; i < indexArray.length; i++) {

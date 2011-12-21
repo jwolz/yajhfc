@@ -51,6 +51,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -97,6 +98,7 @@ import yajhfc.SenderIdentity;
 import yajhfc.Utils;
 import yajhfc.faxcover.Faxcover;
 import yajhfc.file.FileConverters;
+import yajhfc.file.FormattedFile;
 import yajhfc.model.IconMap;
 import yajhfc.model.servconn.FaxDocument;
 import yajhfc.phonebook.PBEntryField;
@@ -425,7 +427,8 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
             }
         };
         tflFiles.addLocalComponent(ftfFileName.getJButton());
-
+        SaveAsOriginalAction.installOn(tflFiles);
+        
         ClipboardPopup clpFiles = new ClipboardPopup();
         clpFiles.getPopupMenu().addSeparator();
         clpFiles.getPopupMenu().add(tflFiles.getModifyAction());
@@ -938,5 +941,48 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         }
     }
 
+    static class SaveAsOriginalAction extends ExcDialogAbstractAction implements ListSelectionListener {
+        private final TextFieldList<? extends HylaTFLItem> target;
+        
+        @Override
+        protected void actualActionPerformed(ActionEvent e) {
+            HylaTFLItem selection = (HylaTFLItem)target.getList().getSelectedValue();
+            if (selection == null)
+                return;
+            
+            try {
+                FormattedFile selFile = selection.getPreviewFilename();
+                JFileChooser chooser = new SafeJFileChooser();
+                chooser.setSelectedFile(selFile.file);
+                FileFilter ff = selFile.format.createFileFilter();
+                chooser.addChoosableFileFilter(ff);
+                chooser.setFileFilter(ff);
+                if (chooser.showSaveDialog(target) == JFileChooser.APPROVE_OPTION) {
+                    File targetFile = chooser.getSelectedFile();
+                    Utils.copyFile(selFile.file, targetFile);
+                }
+            } catch (Exception e1) {
+                ExceptionDialog.showExceptionDialog(target, Utils._("Error saving the file:"), e1);
+            }
+        }
+        
+        public void valueChanged(ListSelectionEvent e) {
+            setEnabled(target.getList().getSelectedIndex() >= 0);
+        }
+        
+        private SaveAsOriginalAction(TextFieldList<? extends HylaTFLItem> target) {
+            super(Utils._("Save a copy as..."), Utils.loadIcon("general/SaveAs"));
+            this.target=target;
+            
+            setEnabled(false);
+            target.getList().addListSelectionListener(this);
+            target.getPopup().addSeparator();
+            target.getPopup().add(this);
+        }
+        
+        public static SaveAsOriginalAction installOn(TextFieldList<? extends HylaTFLItem> target) {
+            return new SaveAsOriginalAction(target);
+        }
+    }
 }
 

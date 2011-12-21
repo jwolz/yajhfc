@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import yajhfc.FaxOptions;
 import yajhfc.Utils;
 import yajhfc.file.FileFormat;
 
@@ -12,14 +13,17 @@ public class PSToTextConverter extends ExternalCommandToTextConverter {
     private static final Logger log = Logger.getLogger(PSToTextConverter.class.getName());
 
     public PSToTextConverter() {
-        streamEncoding = "ISO8859-1";
-        acceptsMultipleFiles = true;
+        this(Utils.getFaxOptions());
+    }
+    
+    public PSToTextConverter(FaxOptions options) {
+        super("ISO8859-1", true, options);
     }
     
     @Override
     protected void buildCommandLine(List<String> commandLine, File[] inputFiles) {
-        File gsFile = new File(Utils.getFaxOptions().ghostScriptLocation);
-        String pstotextPath = Utils.getFaxOptions().pstotextPath;
+        File gsFile = new File(options.ghostScriptLocation);
+        String pstotextPath = options.pstotextPath;
         
         commandLine.add(pstotextPath);
         commandLine.add("-gs");
@@ -31,13 +35,23 @@ public class PSToTextConverter extends ExternalCommandToTextConverter {
     
     @Override
     protected void modifyEnvironment(Map<String, String> env) {
-        File gsFile = new File(Utils.getFaxOptions().ghostScriptLocation).getAbsoluteFile();
+        File gsFile = new File(options.ghostScriptLocation).getAbsoluteFile();
         
         // Append ghostscript directory to path
-        String newPath = env.get("PATH") + File.pathSeparator + gsFile.getParent();
+        String pathKey = "PATH";
+        if (Utils.IS_WINDOWS) {
+            // Find the key for PATH, as it might be written "Path" or so
+            for (String key : env.keySet()) {
+                if (pathKey.equalsIgnoreCase(key)) {
+                    pathKey = key;
+                    break;
+                }
+            }
+        } 
+        String newPath = env.get(pathKey) + File.pathSeparator + gsFile.getParent();
         if (Utils.debugMode)
             log.fine("New PATH is: " + newPath);
-        env.put("PATH", newPath);
+        env.put(pathKey, newPath);
     }
 
     @Override

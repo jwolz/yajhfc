@@ -38,6 +38,7 @@ package yajhfc.file.textextract;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -67,22 +68,35 @@ public class FaxnumberExtractor {
 
     public FaxnumberExtractor(HylaToTextConverter converter) {
         this(converter,
-                Pattern.compile("@@\\s*faxnumber\\s*:?\\s*(.*?)@@", Pattern.CASE_INSENSITIVE));
+                Pattern.compile("@@\\s*recipient\\s*:?\\s*(.*?)@@", Pattern.CASE_INSENSITIVE));
     }
 
-
-
-    public List<String> extractFromMultipleFiles(List<FormattedFile> input) throws IOException, ConversionException {
-        CharSequence[] texts = converter.convertFilesToText(input);        
-        
-        List<String> faxNumbers = new ArrayList<String>();
-        for (CharSequence text : texts) {
-            getMatchesInText(text, 1, faxNumbers);
-        }
-        
-        return faxNumbers;
+    public FaxnumberExtractor() {
+        this(HylaToTextConverter.findDefault());
     }
     
+    public void extractFromMultipleFileNames(Collection<String> input, List<String> listToAddTo) throws IOException, ConversionException {
+        if (input.size() == 0)
+            return;
+        
+        List<FormattedFile> formattedInput = new ArrayList<FormattedFile>(input.size());
+        for (String f : input) {
+            formattedInput.add(new FormattedFile(f));
+        }
+        extractFromMultipleFiles(formattedInput, listToAddTo);
+    }
+
+    public void extractFromMultipleFiles(List<FormattedFile> input, List<String> listToAddTo) throws IOException, ConversionException {
+        if (input.size() == 0)
+            return;
+        
+        CharSequence[] texts = converter.convertFilesToText(input);        
+        
+        for (CharSequence text : texts) {
+            getMatchesInText(text, 1, listToAddTo);
+        }
+        
+    }
     
     public void getMatchesInText(CharSequence text, int captureGroup, List<String> listToAddTo) throws IOException {
         if (Utils.debugMode) {

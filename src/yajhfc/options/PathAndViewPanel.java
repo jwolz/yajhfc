@@ -70,7 +70,7 @@ public class PathAndViewPanel extends AbstractOptionsPanel<FaxOptions> {
     /**
      * Set this to false to disable the "tiff2pdf location" entry field
      */
-    public static boolean allowTIFF2PDF = true;
+    public static boolean requireTIFF2PDF = true;
     
     FileTextField ftfFaxViewer, ftfPSViewer;
     FileTextField ftfPDFViewer, ftfGSLocation, ftfTIFF2PDFLocation;
@@ -140,9 +140,9 @@ public class PathAndViewPanel extends AbstractOptionsPanel<FaxOptions> {
         checkUseTiffPaperSize = new JCheckBox(_("Always use paper size from YajHFC options in the PDF"));
         checkUseTiffPaperSize.setAlignmentX(JComponent.LEFT_ALIGNMENT);
         
-        ftfTIFF2PDFLocation.setEnabled(allowTIFF2PDF);
-        labelTIFF2PDF.setEnabled(allowTIFF2PDF);
-        checkUseTiffPaperSize.setEnabled(allowTIFF2PDF);
+        //ftfTIFF2PDFLocation.setEnabled(allowTIFF2PDF);
+        //labelTIFF2PDF.setEnabled(allowTIFF2PDF);
+        //checkUseTiffPaperSize.setEnabled(allowTIFF2PDF);
         
         Dimension filler = new Dimension(OptionsWin.border, OptionsWin.border);
         panelPaths.add(labelTIFF);
@@ -325,7 +325,7 @@ public class PathAndViewPanel extends AbstractOptionsPanel<FaxOptions> {
             return false;
         }
         
-        if (allowTIFF2PDF && needsGS && !executableOK(ftfTIFF2PDFLocation.getText())) {
+        if (requireTIFF2PDF && needsGS && !executableOK(ftfTIFF2PDFLocation.getText())) {
             optionsWin.focusComponent(ftfTIFF2PDFLocation.getJTextField());
             JOptionPane.showMessageDialog(optionsWin, _("Please enter the location of the tiff2pdf executable."), _("Error"), JOptionPane.ERROR_MESSAGE);
             return false;

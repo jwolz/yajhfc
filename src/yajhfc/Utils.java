@@ -59,9 +59,11 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.channels.FileChannel;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -298,26 +300,44 @@ public final class Utils {
             
             /*
              * Load the settings properties from the specified files. The files are loaded in the specified
-             * order, i.e. settings from "later" files override the earlier ones
+             * order, i.e. settings from "later" files override the earlier ones.
+             * 
+             * Load order is:
+             * - application-dir/settings.d/*.default
+             * - application-dir/settings.default
+             * - /etc/yajhfc/settings.d/*.default
+             * - /etc/yajhfc/settings.default
+             * 
+             * - ~/.yajhfc/settings
+             * 
+             * - application-dir/settings.d/*.override
+             * - application-dir/settings.override
+             * - /etc/yajhfc/settings.d/*.override
+             * - /etc/yajhfc/settings.override
              */
-            final File settingsDefault  = new File(getApplicationDir(), "settings.default");
-            final File settingsOverride = new File(getApplicationDir(), "settings.override");
-            final File[] files;
-            if (getSystemwideConfigDir() == null) {
-                files = new File[] {
-                        settingsDefault,
-                        defaultConfigFile,
-                        settingsOverride
-                };
-            } else {
-                files = new File[] {
-                        settingsDefault,
-                        new File(getSystemwideConfigDir(), "settings.default"),
-                        defaultConfigFile,
-                        settingsOverride,
-                        new File(getSystemwideConfigDir(), "settings.override"),
-                };
+            File appDir = getApplicationDir();
+            File[] appAdditionalFiles = listSettingsD(appDir);
+            
+            File etcDir = getSystemwideConfigDir();
+            File[] etcAdditionalFiles = listSettingsD(etcDir);
+
+            final List<File> files = new ArrayList<File>();
+            addSettingsD(files, appAdditionalFiles, ".default");
+            files.add(new File(appDir, "settings.default"));
+            if (etcDir != null) {
+                addSettingsD(files, etcAdditionalFiles, ".default");
+                files.add(new File(etcDir, "settings.default"));
             }
+            
+            files.add(defaultConfigFile);
+            
+            addSettingsD(files, appAdditionalFiles, ".override");
+            files.add(new File(appDir, "settings.override"));
+            if (etcDir != null) {
+                addSettingsD(files, etcAdditionalFiles, ".override");
+                files.add(new File(etcDir, "settings.override"));
+            }
+            
 
             Properties p = new Properties();
             for (File file : files) {
@@ -367,6 +387,32 @@ public final class Utils {
             settingsProperties = p;
         }
         return settingsProperties;
+    }
+    
+    private static File[] listSettingsD(File configDir) {
+        
+        if (configDir != null) {
+            File settingsD = new File(configDir, "settings.d");
+            if (settingsD.isDirectory()) {
+                File[] result = settingsD.listFiles();
+                Arrays.sort(result);
+                return result;
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+    
+    private static void addSettingsD(List<File> files, File[] dirList, String suffix) {
+        if (dirList != null) {
+            for (File f : dirList) {
+                if (f.getName().endsWith(suffix)) {
+                    files.add(f);
+                }
+            }
+        }
     }
     
     public static void storeOptionsToFile() {
@@ -748,6 +794,25 @@ public final class Utils {
         while ((len = inStream.read(buf)) >= 0) {
             outStream.write(buf, 0, len);
         }
+    }
+    
+    /**
+     * Copies the file source to target
+     * @param source
+     * @param target
+     * @throws IOException
+     */
+    public static void copyFile(File source, File target) throws IOException {
+        FileInputStream in = new FileInputStream(source);
+        FileOutputStream out = new FileOutputStream(target);
+        
+        FileChannel inChannel = in.getChannel();
+        FileChannel outChannel = out.getChannel();
+        
+        inChannel.transferTo(0, inChannel.size(), outChannel);
+        
+        in.close();
+        out.close();        
     }
     
     /**

@@ -3,18 +3,23 @@ package yajhfc.file.textextract;
 import java.io.File;
 import java.util.List;
 
+import yajhfc.FaxOptions;
 import yajhfc.Utils;
 import yajhfc.file.FileFormat;
 
 public class PSToAsciiConverter extends ExternalCommandToTextConverter {
+    
     public PSToAsciiConverter() {
-        streamEncoding = "ISO8859-1";
-        acceptsMultipleFiles = false;
+        this(Utils.getFaxOptions());
+    }
+    
+    public PSToAsciiConverter(FaxOptions options) {
+        super("ISO8859-1", false, options);
     }
     
     @Override
     protected void buildCommandLine(List<String> commandLine, File[] inputFiles) {
-        String gsPath = Utils.getFaxOptions().ghostScriptLocation;
+        String gsPath = options.ghostScriptLocation;
         
         commandLine.add(gsPath);
         commandLine.add("-q");

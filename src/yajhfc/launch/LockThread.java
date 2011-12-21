@@ -147,6 +147,10 @@ sessionLoop:    do {
                             log.fine("Got CODE_USE_COVER");
                             submitProto.setCover(strIn.readBoolean());
                             break;
+                        case Lock.CODE_EXTRACT_RECIPIENTS:
+                            log.fine("Got CODE_EXTRACT_RECIPIENTS");
+                            submitProto.setExtractRecipients(strIn.readBoolean());
+                            break;
                         case Lock.CODE_SET_MODEM:
                             log.fine("Got CODE_SET_MODEM");
                             submitProto.setModem(strIn.readUTF());

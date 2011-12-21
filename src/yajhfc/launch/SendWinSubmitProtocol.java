@@ -40,12 +40,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.SwingUtilities;
 
+import yajhfc.Utils;
+import yajhfc.file.textextract.FaxnumberExtractor;
 import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
 import yajhfc.send.SendController;
 import yajhfc.send.SendWinControl;
@@ -63,6 +66,7 @@ public class SendWinSubmitProtocol implements SubmitProtocol, Runnable {
     protected String comments;
     protected String modem;
     protected Boolean useCover;
+    protected Boolean extractRecipients;
     protected boolean closeAfterSubmit = false;
     
     protected final List<String> recipients = new ArrayList<String>();
@@ -92,6 +96,11 @@ public class SendWinSubmitProtocol implements SubmitProtocol, Runnable {
      */
     public void setCover(boolean useCover) {
         this.useCover = useCover;
+    }
+    
+    public void setExtractRecipients(boolean extractRecipients)
+            throws IOException {
+        this.extractRecipients = extractRecipients;
     }
 
     /* (non-Javadoc)
@@ -146,6 +155,26 @@ public class SendWinSubmitProtocol implements SubmitProtocol, Runnable {
 
         if (inStream != null)
             tflInStream = new StreamTFLItem(inStream, streamDesc);
+        
+        if (Utils.debugMode)
+            log.fine("Check for extracting recipients: extractRecipients=" + extractRecipients + "; Utils.getFaxOptions().extractRecipients=" + Utils.getFaxOptions().extractRecipients);
+        if ((extractRecipients != null && extractRecipients.booleanValue())
+         || (extractRecipients == null && Utils.getFaxOptions().extractRecipients)) {
+            try {
+                if (inStream != null) {
+                    log.fine("Extracting recipients from stdin");
+                    FaxnumberExtractor extractor = new FaxnumberExtractor();
+                    extractor.extractFromMultipleFiles(Collections.singletonList(tflInStream.getPreviewFilename()), recipients);
+                } else if (files.size() > 0) {
+                    log.fine("Extracting recipients from input files");
+                    FaxnumberExtractor extractor = new FaxnumberExtractor();
+                    extractor.extractFromMultipleFileNames(files, recipients);
+                }
+            } catch (Exception e) {
+                log.log(Level.WARNING, "Error extracting recipients", e);
+            }
+        }
+        
         preparedSubmit = true;
     }
 

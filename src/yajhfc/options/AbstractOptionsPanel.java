@@ -76,6 +76,9 @@ public abstract class AbstractOptionsPanel<T> extends JPanel implements OptionsP
      */
     protected abstract void createOptionsUI();
     
+    public boolean isUICreated() {
+        return uiCreated;
+    }
 
     /* (non-Javadoc)
      * @see yajhfc.options.OptionsPage#validateSettings(yajhfc.options.OptionsWin)

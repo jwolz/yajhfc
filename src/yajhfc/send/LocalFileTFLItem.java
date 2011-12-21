@@ -52,7 +52,6 @@ import yajhfc.file.FileConverters;
 import yajhfc.file.FileFormat;
 import yajhfc.file.FormattedFile;
 import yajhfc.launch.Launcher2;
-import yajhfc.util.ExceptionDialog;
 
 public class LocalFileTFLItem extends HylaTFLItem {    
     private static final Logger log = Logger.getLogger(LocalFileTFLItem.class.getName());
