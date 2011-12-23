@@ -57,4 +57,11 @@ public interface PhonebookEventListener {
      * @param e
      */
     public void elementsChanged(PhonebookEvent e);
+    
+    /**
+     * Fired if the phone book has been reloaded completely
+     * Note: The indices and entries properties of the event are null in this case
+     * @param e
+     */
+    public void phonebookReloaded(PhonebookEvent e);
 }

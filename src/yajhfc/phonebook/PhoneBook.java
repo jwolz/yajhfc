@@ -52,7 +52,7 @@ import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 
 /**
  * Abstract class describing a phone book
- * Should be sorted.
+ * Does not need to be sorted (use a PhonebookSorter if you need this).
  * 
  * Child Classes implementing an actual Phonebook *must* have the following fields
  * _or_ override getPrefix(), getDescription() and getDisplayName() and create their
@@ -91,7 +91,7 @@ public abstract class PhoneBook implements PhoneBookEntryList {
      * Field for internal use by the PhoneBookTreeModel to save the result of
      * the last filtering operation
      */
-    public List<PhoneBookEntry> lastFilterResult = null;
+    public Object treeModelData = null;
     
     public String getDescriptor() {
         return strDescriptor;
@@ -270,23 +270,7 @@ public abstract class PhoneBook implements PhoneBookEntryList {
     }
     
     protected PhonebookEvent eventObjectForInterval(int intervalStart, int intervalEnd) {
-        if (intervalEnd < intervalStart) {
-            // Make sure that intervalStart <= intervalEnd
-            int t = intervalEnd;
-            intervalEnd = intervalStart;
-            intervalStart = t;
-        }
-        int[] indices = new int[intervalEnd - intervalStart + 1];
-        PhoneBookEntry[] entries = new PhoneBookEntry[intervalEnd - intervalStart + 1];
-        List<PhoneBookEntry> entryList = getEntries();
-        
-        for (int i=intervalStart; i <= intervalEnd; i++) {
-            int idx = i-intervalStart;
-            indices[idx] = i;
-            entries[idx] = entryList.get(i);
-        }
-        
-        return new PhonebookEvent(this, entries, indices);
+        return PhonebookEvent.createForInterval(this, intervalStart, intervalEnd);
     }
     
     protected void fireEntriesRemoved(int index, PhoneBookEntry pbe) {
@@ -311,6 +295,16 @@ public abstract class PhoneBook implements PhoneBookEntryList {
         }
     }
     
+    protected void firePhonebookReloaded() {
+        firePhonebookReloaded(new PhonebookEvent(this, null, null));
+    }
+    
+    protected void firePhonebookReloaded(PhonebookEvent pbe) {
+        for (PhonebookEventListener pel : listeners) {
+            pel.phonebookReloaded(pbe);
+        }
+    }
+    
     /**
      * Show dialog to select a new Phonebook.
      * Returns a descriptor if the user selected a valid one or null if user selects cancel
@@ -330,8 +324,6 @@ public abstract class PhoneBook implements PhoneBookEntryList {
     }
     
     public abstract boolean isOpen();
-    
-    public abstract void resort();
     
     protected abstract void openInternal(String descriptorWithoutPrefix) throws PhoneBookException;
     

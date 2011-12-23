@@ -472,7 +472,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                 pb.open(descriptor); 
                 currentPhonebook.addEntries(pb.getEntries());
                 pb.close();
-                currentPhonebook.resort();
+                //currentPhonebook.resort();
             }
         } catch (PhoneBookException e) {
             if (!e.messageAlreadyDisplayed())
