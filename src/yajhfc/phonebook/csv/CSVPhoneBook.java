@@ -109,9 +109,8 @@ public class CSVPhoneBook extends PhoneBook {
         String[] values = new String[columnCount];
         Arrays.fill(values, "");
         CSVPhonebookEntry entry = new CSVPhonebookEntry(this, values);
-        int pos = getInsertionPos(entry);
-        entries.add(pos, entry);
-        fireEntriesAdded(pos, entry);
+        entries.add(entry);
+        fireEntriesAdded(entries.size()-1, entry);
         wasChanged = true;
         return entry;
     }
@@ -269,7 +268,6 @@ public class CSVPhoneBook extends PhoneBook {
         } else {
             initEmptyFile();
         }
-        resort();
         wasChanged = false;
     }
     
@@ -286,22 +284,6 @@ public class CSVPhoneBook extends PhoneBook {
         columnCount = PBEntryField.FIELD_COUNT;
     }
     
-    /* (non-Javadoc)
-     * @see yajhfc.phonebook.PhoneBook#resort()
-     */
-    @Override
-    public void resort() {
-        Collections.sort(entries);
-    }
-    
-    private int getInsertionPos(PhoneBookEntry pbe) {
-        int res = Collections.binarySearch(entries, pbe);
-        if (res >= 0) // Element found?
-            return res + 1;
-        else
-            return -(res + 1);
-    }
-    
     void deleteEntry(PhoneBookEntry entry) {
         int index = Utils.identityIndexOf(entries, entry);
         if (index >= 0) {
@@ -312,11 +294,8 @@ public class CSVPhoneBook extends PhoneBook {
     }
 
     void writeEntry(PhoneBookEntry entry) {
-        int oldpos = Utils.identityIndexOf(entries, entry);
-        entries.remove(oldpos);
-        int pos = getInsertionPos(entry);
-        entries.add(pos, (CSVPhonebookEntry)entry);
-        fireEntriesChanged(eventObjectForInterval(oldpos, pos));
+        int pos = Utils.identityIndexOf(entries, entry);
+        fireEntriesChanged(pos, entry);
         wasChanged = true;
     }
 

@@ -76,7 +76,6 @@ import yajhfc.phonebook.DistributionList;
 import yajhfc.phonebook.PhoneBook;
 import yajhfc.phonebook.PhoneBookEntry;
 import yajhfc.phonebook.PhoneBookException;
-import yajhfc.phonebook.PhonebookEvent;
 import yajhfc.util.ExampleFileFilter;
 import yajhfc.util.ExceptionDialog;
 import yajhfc.util.SafeJFileChooser;
@@ -114,18 +113,6 @@ public class XMLPhoneBook extends PhoneBook {
         return TRANSFORMER_FACTORY;
     }
     
-    public void resort() {
-        Collections.sort(list);
-    }
-    
-    private int getInsertionPos(PhoneBookEntry pbe) {
-        int res = Collections.binarySearch(list, pbe);
-        if (res >= 0) // Element found?
-            return res + 1;
-        else
-            return -(res + 1);
-    }
-    
     @Override
     public PhoneBookEntry addNewEntry() {
         XMLPhoneBookEntry pb = new SingleXMLPhoneBookEntry(this);
@@ -144,9 +131,8 @@ public class XMLPhoneBook extends PhoneBook {
     }
     
     private void addEntryGeneral(XMLPhoneBookEntry pb) {
-        int pos = getInsertionPos(pb);
-        list.add(pos, pb);
-        fireEntriesAdded(pos, pb);
+        list.add(pb);
+        fireEntriesAdded(list.size()-1, pb);
         wasChanged = true;
     }
     
@@ -160,11 +146,8 @@ public class XMLPhoneBook extends PhoneBook {
     }
 
     void writeEntry(PhoneBookEntry entry) {
-        int oldpos = Utils.identityIndexOf(list, entry);
-        list.remove(oldpos);
-        int pos = getInsertionPos(entry);
-        list.add(pos, (XMLPhoneBookEntry)entry);
-        fireEntriesChanged(eventObjectForInterval(oldpos, pos));
+        int pos = Utils.identityIndexOf(list, entry);
+        fireEntriesChanged(pos, entry);
         wasChanged = true;
     }
 
@@ -236,11 +219,6 @@ public class XMLPhoneBook extends PhoneBook {
     
     public void loadFromXML(Element el) {
         NodeList nl = el.getChildNodes();
-        if (list.size() > 0) {
-            PhonebookEvent pbe = eventObjectForInterval(0, list.size() - 1);
-            list.clear();
-            fireEntriesRemoved(pbe);
-        }
         
         for (int i = 0; i < nl.getLength(); i++) {
             Node item = nl.item(i);
@@ -260,10 +238,7 @@ public class XMLPhoneBook extends PhoneBook {
             }
         }
         
-        resort();
-        if (list.size() > 0) {
-            fireEntriesAdded(eventObjectForInterval(0, list.size() - 1));
-        }
+        firePhonebookReloaded();
         wasChanged = false;
     }
     

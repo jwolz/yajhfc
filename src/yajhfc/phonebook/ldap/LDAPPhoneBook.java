@@ -354,11 +354,6 @@ public class LDAPPhoneBook extends PhoneBook {
                 return rv;
         }
     }
-    
-    @Override
-    public void resort() {
-        Collections.sort(entries);
-    }
 
     private List<PhoneBookEntry> itemsView = Collections.<PhoneBookEntry>unmodifiableList(entries);
     @Override

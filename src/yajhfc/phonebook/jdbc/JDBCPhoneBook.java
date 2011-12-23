@@ -125,10 +125,14 @@ public class JDBCPhoneBook extends PhoneBook {
     @Override
     public PhoneBookEntry addNewEntry() {
         JDBCPhoneBookEntry pb = new JDBCPhoneBookEntry(this);
-        int pos = getInsertionPos(pb, itemsView);
-        items.add(pos, pb);
-        itemsView.add(pos, pb);
-        fireEntriesAdded(pos, pb);
+//        int pos = getInsertionPos(pb, itemsView);
+//        items.add(pos, pb);
+//        itemsView.add(pos, pb);
+//        fireEntriesAdded(pos, pb);
+        
+        items.add(pb);
+        itemsView.add(pb);
+        fireEntriesAdded(itemsView.size()-1, pb);
         return pb;
     }
 
@@ -140,10 +144,14 @@ public class JDBCPhoneBook extends PhoneBook {
         JDBCPhoneBookEntry pb = new JDBCPhoneBookEntry(this);
         WrapperDistributionList dl = new WrapperDistributionList(pb);
         
-        int pos = getInsertionPos(dl, itemsView);
-        items.add(pos, pb);
-        itemsView.add(pos, dl);
-        fireEntriesAdded(pos, dl);
+        //int pos = getInsertionPos(dl, itemsView);
+        //items.add(pos, pb);
+        //itemsView.add(pos, dl);
+        //fireEntriesAdded(pos, dl);
+        
+        items.add(pb);
+        itemsView.add(dl);
+        fireEntriesAdded(itemsView.size()-1, dl);
         return dl;
     }
     
@@ -383,7 +391,7 @@ public class JDBCPhoneBook extends PhoneBook {
         resultSet.close();
         stmt.close();
         
-        resort();
+        //resort();
     }
         
     protected void commitToDB() {
@@ -475,25 +483,28 @@ public class JDBCPhoneBook extends PhoneBook {
         deleteStmt.close();
     }
     
-    private static int getInsertionPos(PhoneBookEntry pbe, List<PhoneBookEntry> targetList) {
-        int res = Collections.binarySearch(targetList, pbe);
-        if (res >= 0) // Element found?
-            return res + 1;
-        else
-            return -(res + 1);
-    }
+//    private static int getInsertionPos(PhoneBookEntry pbe, List<PhoneBookEntry> targetList) {
+//        int res = Collections.binarySearch(targetList, pbe);
+//        if (res >= 0) // Element found?
+//            return res + 1;
+//        else
+//            return -(res + 1);
+//    }
     
     void updatePosition(JDBCPhoneBookEntry entry) {
-        int oldpos = Utils.identityIndexOf(items, entry);
-        items.remove(oldpos);
-        PhoneBookEntry oldView = itemsView.remove(oldpos);
+//        int oldpos = Utils.identityIndexOf(items, entry);
+//        items.remove(oldpos);
+//        PhoneBookEntry oldView = itemsView.remove(oldpos);
+//        
+//        int pos = getInsertionPos(oldView, itemsView);
+//        
+//        items.add(pos, entry);
+//        itemsView.add(pos, oldView);
+//        
+//        fireEntriesChanged(eventObjectForInterval(oldpos, pos));
         
-        int pos = getInsertionPos(oldView, itemsView);
-        
-        items.add(pos, entry);
-        itemsView.add(pos, oldView);
-        
-        fireEntriesChanged(eventObjectForInterval(oldpos, pos));
+        int pos = Utils.identityIndexOf(items, entry);
+        fireEntriesChanged(pos, entry);
     }
     
     void removeFromList(JDBCPhoneBookEntry entry) {
@@ -506,13 +517,13 @@ public class JDBCPhoneBook extends PhoneBook {
         }
     }
     
-    @Override
-    public void resort() {
-        Collections.sort(itemsView);
-        for (int i = 0; i < itemsView.size(); i++) {
-            items.set(i, toJDBCEntry(itemsView.get(i)));
-        }
-    }
+//    @Override
+//    public void resort() {
+//        Collections.sort(itemsView);
+//        for (int i = 0; i < itemsView.size(); i++) {
+//            items.set(i, toJDBCEntry(itemsView.get(i)));
+//        }
+//    }
 
     @Override
     public List<PhoneBookEntry> getEntries() {

@@ -127,6 +127,10 @@ public class PhoneBookTableModel extends PBEntryFieldTableModel implements
         }
     }
 
+    public void phonebookReloaded(PhonebookEvent e) {
+        fireTableDataChanged();
+    }
+    
     @Override
     public void addRow() {
         phoneBook.addNewEntry();

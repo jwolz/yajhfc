@@ -67,6 +67,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
@@ -103,7 +104,7 @@ public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2011 by Jonas Wolz";
-    public static final String AppVersion = "0.5.2alpha1";
+    public static final String AppVersion = "0.5.2alpha2";
     public static final String AuthorName = "Jonas Wolz";
     public static final String AuthorEMail = "info@yajhfc.de";
     public static final String HomepageURL = "http://www.yajhfc.de/"; 
@@ -1126,6 +1127,47 @@ public final class Utils {
             }
         }
         return res;
+    }
+
+    /**
+     * Compares if the content of two lists consists of identical objects 
+     * (in the sense of ==, not equals())
+     * @param list1
+     * @param list2
+     * @return
+     */
+    public static boolean listQuickEquals(List<?> list1, List<?> list2) {
+        if (list1 == list2)
+            return true;
+        else if (list1 == null || list2 == null) 
+            return false;
+    
+        if (list1.size() != list2.size()) {
+            return false;
+        } else {
+            for (int i = 0; i < list1.size(); i++) {
+                if (list1.get(i) != list2.get(i)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+    
+    /**
+     * Inserts the given item into the specified sorted list at the correct position given its sort order 
+     * @param list
+     * @param item
+     * @param comparator
+     * @return the index position the item has been inserted in
+     */
+    public static <T> int sortedInsert(List<T> list, T item, Comparator<T> comparator) {
+        int insertIndex = Collections.binarySearch(list, item, comparator);
+        if (insertIndex < 0) // Should always be the case actually
+            insertIndex = -(insertIndex + 1);
+        
+        list.add(insertIndex, item);
+        return insertIndex;
     }
 }
 

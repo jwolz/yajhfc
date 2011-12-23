@@ -37,6 +37,7 @@
 package yajhfc.phonebook;
 
 import java.util.EventObject;
+import java.util.List;
 
 /**
  * @author jonas
@@ -46,7 +47,7 @@ public class PhonebookEvent extends EventObject {
     protected final int[] indices;
     protected final PhoneBookEntry[] entries;
     
-    public PhonebookEvent(PhoneBook source, PhoneBookEntry[] entries, int[] indices) {
+    public PhonebookEvent(PhoneBookEntryList source, PhoneBookEntry[] entries, int[] indices) {
         super(source);
         this.entries = entries;
         this.indices = indices;
@@ -56,12 +57,13 @@ public class PhonebookEvent extends EventObject {
      * The source phone book
      * @return
      */
-    public PhoneBook getPhonebook() {
-        return (PhoneBook)source;
+    public PhoneBookEntryList getPhonebook() {
+        return (PhoneBookEntryList)source;
     }
 
     /**
-     * The affected indices
+     * The affected indices.
+     * This list is guaranteed to be in ascending order.
      * @return
      */
     public int[] getIndices() {
@@ -69,10 +71,39 @@ public class PhonebookEvent extends EventObject {
     }
 
     /**
-     * The affected entries
+     * The affected entries.
+     * This list is guaranteed to have the same order as getIndices(), i.e. getPhonebook().getEntries().get(getIndices()[i]) == getEntries()[i]
+     * before (for removed) or at the time of this event (for add/change)
      * @return
      */
     public PhoneBookEntry[] getEntries() {
         return entries;
+    }
+    
+    /**
+     * Creates an event object for the given interval of indices
+     * @param source
+     * @param intervalStart
+     * @param intervalEnd
+     * @return
+     */
+    public static PhonebookEvent createForInterval(PhoneBookEntryList source, int intervalStart, int intervalEnd) {
+        if (intervalEnd < intervalStart) {
+            // Make sure that intervalStart <= intervalEnd
+            int t = intervalEnd;
+            intervalEnd = intervalStart;
+            intervalStart = t;
+        }
+        int[] indices = new int[intervalEnd - intervalStart + 1];
+        PhoneBookEntry[] entries = new PhoneBookEntry[intervalEnd - intervalStart + 1];
+        List<PhoneBookEntry> entryList = source.getEntries();
+        
+        for (int i=intervalStart; i <= intervalEnd; i++) {
+            int idx = i-intervalStart;
+            indices[idx] = i;
+            entries[idx] = entryList.get(i);
+        }
+        
+        return new PhonebookEvent(source, entries, indices);
     }
 }
