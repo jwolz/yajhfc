@@ -254,61 +254,10 @@ public class PhoneBookTreeModel implements TreeModel, PhonebookEventListener {
         }
     }
     
-//    /**
-//     * Refreshes the phone book items using the current filter and comparator
-//     * @param toRefresh the PhoneBook to refresh or null to refresh all
-//     */
-//    protected void refreshItems(PhoneBook toRefresh) {
-//        //boolean oldFiltered = showFilteredResults;
-//        if (filter == null) {
-//            showFilteredResults = false;
-//        } else {
-//            showFilteredResults = true;
-//        }
-//        
-//        TreePath[] oldSelection = null;
-//        if (tree != null) {
-//            oldSelection = tree.getSelectionPaths();
-//        }
-//        
-//        if (toRefresh == null) { // Refresh all
-//            for (PhoneBook pb : phoneBooks) {
-//                refreshSinglePBItems(pb);
-//            }
-//        } else {
-//            refreshSinglePBItems(toRefresh);
-//        }
-//        
-//        if (tree != null) {
-//            tree.setSelectionPaths(oldSelection);
-//        }
-//    }
-    
     private static List<PhoneBookEntry> entriesFromPB(PhoneBook pb) {
         return ((PhoneBookSorter)pb.treeModelData).getEntries();
     }
 
-//    private void refreshSinglePBItems(PhoneBook pb) {
-//        List<PhoneBookEntry> oldEntries = entriesFromPB(pb); //oldFiltered ? pb.lastFilterResult : pb.getEntries();
-//        
-//        List<PhoneBookEntry> newEntries = pb.applyFilter(filter);
-//        if (!showFilteredResults) {
-//                newEntries = pb.getEntries();
-//        }
-//        if (comparator != null) {
-//            if (newEntries == pb.getEntries()) {
-//                // Make a copy since we will change the order
-//                newEntries = new ArrayList<PhoneBookEntry>(newEntries); 
-//            }
-//            Collections.sort(newEntries, comparator);
-//        }
-//        pb.lastFilterResult = newEntries;
-//        if (!Utils.listQuickEquals(oldEntries, newEntries)) {
-//            fireTreeStructureChanged(new TreeModelEvent(this, new Object[] {rootNode, pb}));
-//        }
-//    }
-    
-    
     
 //    /**
 //     * Computes the difference between the two phone books. It must be assured that

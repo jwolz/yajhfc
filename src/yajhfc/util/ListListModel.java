@@ -74,6 +74,10 @@ public class ListListModel<T> extends AbstractListModel implements Iterable<T> {
         int index = list.indexOf(element);
         fireContentsChanged(this, index, index);
     }
+    
+    public void changeNotify(int index) {
+        fireContentsChanged(this, index, index);
+    }
 
     public void add(T element) {
         list.add(element);

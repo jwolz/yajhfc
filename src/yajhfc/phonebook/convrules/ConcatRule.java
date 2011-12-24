@@ -53,7 +53,8 @@ public class ConcatRule extends DefaultEntryToStringRule {
     public int applyRule(PBEntryFieldContainer entry, StringBuilder appendTo) {
         int oldLen = appendTo.length();
         Object lastItem = null;
-        boolean ignoreNext = false;
+        //boolean ignoreNext = false;
+        boolean foundField = false;
         
         // Concatenate the children.
         // A non-PBEntryField and non-EntryToStringRule child is only appended
@@ -67,8 +68,9 @@ public class ConcatRule extends DefaultEntryToStringRule {
                         appendTo.append(lastItem);
                     }
                     appendTo.append(val);
+                    foundField = true;
                 } else {
-                    ignoreNext = true;
+                    //ignoreNext = true;
                 }
                 lastItem = null;
             } else if (child instanceof EntryToStringRule) {
@@ -77,18 +79,19 @@ public class ConcatRule extends DefaultEntryToStringRule {
                     if (lastItem != null) {
                         appendTo.insert(insertOffset, lastItem);
                     }
+                    foundField = true;
                 } else {
-                    ignoreNext = true;
+                   // ignoreNext = true;
                 }
                 lastItem = null;
             } else {
-                if (lastItem != null) {
-                    appendTo.append(lastItem);
-                }
-                if (!ignoreNext) {
+//                if (lastItem != null) {
+//                    appendTo.append(lastItem);
+//                }
+                if (foundField) { //!ignoreNext) {
                     lastItem = child;
                 } else {
-                    ignoreNext = false;
+                    //ignoreNext = false;
                 }
             }
         }
@@ -129,6 +132,13 @@ public class ConcatRule extends DefaultEntryToStringRule {
     public ConcatRule(Object... children) {
         super();
         this.children = children;
+    }
+
+    /**
+     * @return the children
+     */
+    public Object[] getChildren() {
+        return children;
     }
 
 }

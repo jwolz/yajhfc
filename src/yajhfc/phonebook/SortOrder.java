@@ -14,7 +14,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *  
+ *
  *  Linking YajHFC statically or dynamically with other modules is making 
  *  a combined work based on YajHFC. Thus, the terms and conditions of 
  *  the GNU General Public License cover the whole combination.
@@ -34,49 +34,80 @@
  *  version without this exception; this exception also makes it possible 
  *  to release a modified version which carries forward this exception.
  */
-package yajhfc.phonebook.convrules;
+package yajhfc.phonebook;
 
-import yajhfc.phonebook.PBEntryField;
+import java.util.Comparator;
+
+import yajhfc.Utils;
 
 /**
  * @author jonas
  *
  */
-public enum NameRule implements EntryToStringRuleEnum {
-    GIVENNAME_NAME(new ConcatRule(PBEntryField.GivenName, " ", PBEntryField.Name)),
-    NAME_GIVENNAME(new ConcatRule(PBEntryField.Name, ", ", PBEntryField.GivenName)),
-    TITLE_GIVENNAME_NAME(new ConcatRule(PBEntryField.Title, " ", PBEntryField.GivenName, " ", PBEntryField.Name)),
-    TITLE_NAME_GIVENNAME(new ConcatRule(PBEntryField.Title, " ", PBEntryField.Name, ", ", PBEntryField.GivenName)),
-    TITLE_GIVENNAME_NAME_JOBTITLE(new ConcatRule(PBEntryField.Title, " ", PBEntryField.GivenName, " ", PBEntryField.Name, ", ", PBEntryField.Position)),
-    TITLE_NAME_GIVENNAME_JOBTITLE(new ConcatRule(PBEntryField.Title, " ", PBEntryField.Name, ", ", PBEntryField.GivenName, ", ", PBEntryField.Position))
-    ;
-    
-    private final String displayName;
-    private final EntryToStringRule rule;
-    
-    public String getDisplayName() {
-        return displayName;
+public class SortOrder implements Comparator<PhoneBookEntry> {
+    protected final PBEntryField[] fields;
+    protected final boolean[] descending;
+
+    public int getFieldCount() {
+        return fields.length;
     }
     
-    @Override
-    public String toString() {
-        return displayName;
+    public PBEntryField getFields(int index) {
+        return fields[index];
+    }
+    
+    public boolean getDescending(int index) {
+        return descending[index];
+    }
+    
+    public int compare(PhoneBookEntry o1, PhoneBookEntry o2) {
+        for (int i=0; i<fields.length; i++) {
+            String val1 = o1.getField(fields[i]);
+            String val2 = o2.getField(fields[i]);
+            if (val1 == null) {
+                if (val2 == null) {
+                    continue;
+                } else {
+                    return -1;
+                }
+            } else { // val1 != null
+                if (val2 == null) {
+                    return 1;
+                } else {
+                    int cmp = val1.compareToIgnoreCase(val2);
+                    if (cmp != 0) {
+                        return (descending[i] ? -cmp : cmp);
+                    }
+                }
+            }
+        }
+        return 0;
     }
 
-    public String applyRule(PBEntryFieldContainer entry) {
-        return rule.applyRule(entry);
-    }
-
-    public int applyRule(PBEntryFieldContainer entry, StringBuilder appendTo) {
-        return rule.applyRule(entry, appendTo);
+    public String serialize() {
+        StringBuilder res = new StringBuilder();
+        for (int i=0; i<fields.length; i++) {
+            res.append(descending[i] ? '-' : '+').append(fields[i].name()).append(',');
+        }
+        return res.toString();
     }
     
-    public EntryToStringRule getWrappedRule() {
-        return rule;
+    public static SortOrder deserialize(String s) {
+        String[] split = Utils.fastSplit(s, ',');
+        PBEntryField[] fields = new PBEntryField[split.length];
+        boolean[] descending = new boolean[split.length];
+        
+        for (int i=0; i<split.length; i++) {
+            descending[i] = (split[i].charAt(0) == '-');
+            fields[i] = Enum.valueOf(PBEntryField.class, split[i].substring(1));
+        }
+        
+        return new SortOrder(fields, descending);
     }
-
-    private NameRule(EntryToStringRule rule) {
-        this.displayName = rule.toString();
-        this.rule = rule;
+    
+    public SortOrder(PBEntryField[] fields, boolean[] descending) {
+        super();
+        this.fields = fields;
+        this.descending = descending;
     }
 }

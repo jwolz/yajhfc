@@ -42,7 +42,7 @@ import yajhfc.phonebook.PBEntryField;
  * @author jonas
  *
  */
-public enum CompanyRule implements EntryToStringRule {
+public enum CompanyRule implements EntryToStringRuleEnum {
     COMPANY(new ConcatRule(PBEntryField.Company)),
     DEPARTMENT_COMPANY(new ConcatRule(PBEntryField.Department, ", ", PBEntryField.Company)),
     COMPANY_DEPARTMENT(new ConcatRule(PBEntryField.Company, " (", PBEntryField.Department, ")"))
@@ -66,6 +66,10 @@ public enum CompanyRule implements EntryToStringRule {
 
     public int applyRule(PBEntryFieldContainer entry, StringBuilder appendTo) {
         return rule.applyRule(entry, appendTo);
+    }
+    
+    public EntryToStringRule getWrappedRule() {
+        return rule;
     }
 
     private CompanyRule(EntryToStringRule rule) {

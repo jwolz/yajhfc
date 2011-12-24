@@ -118,8 +118,11 @@ import yajhfc.phonebook.PhoneBookEntryList;
 import yajhfc.phonebook.PhoneBookException;
 import yajhfc.phonebook.PhoneBookFactory;
 import yajhfc.phonebook.PhoneBookType;
+import yajhfc.phonebook.SortOrder;
+import yajhfc.phonebook.convrules.EntryToStringRule;
 import yajhfc.phonebook.convrules.NameRule;
 import yajhfc.phonebook.convrules.PBEntryFieldContainer;
+import yajhfc.phonebook.convrules.RuleSerializer;
 import yajhfc.phonebook.ui.PhoneBookTreeModel.PBTreeModelListener;
 import yajhfc.phonebook.ui.PhoneBookTreeModel.RootNode;
 import yajhfc.print.PhonebooksPrinter;
@@ -137,9 +140,13 @@ import yajhfc.util.SafeJFileChooser;
 
 public final class NewPhoneBookWin extends JDialog implements ActionListener {
 
-    protected static final String FILTER_ACTION_COMMAND = "FilterEntries";
+    private static final String CUSTOM_NAME_RULE = "%custom%";
 
-    protected static final String SHOWALL_ACTION_COMMAND = "ShowAllEntries";
+    private static final String FILTER_ACTION_COMMAND = "FilterEntries";
+    private static final String SHOWALL_ACTION_COMMAND = "ShowAllEntries";
+    
+    private static final String SORT_DEFAULT_ACTION_COMMAND = "SortDefault";
+    private static final String SORT_CUSTOM_ACTION_COMMAND = "SortCustom";
 
     static final Logger log = Logger.getLogger(NewPhoneBookWin.class.getName());
     
@@ -160,7 +167,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     Action listRemoveAction, addEntryAction, removeEntryAction, searchEntryAction, selectAction;
     Action addDistListAction, viewPopupMenuAction, printAction, exportHTMLAction, closeAction, editAcceleratorsAction;
     
-    MultiButtonGroup nameStyleGroup, viewGroup;
+    MultiButtonGroup nameStyleGroup, viewGroup, sortGroup;
     
     ProgressPanel progressPanel;
     
@@ -180,6 +187,9 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     boolean allowSavePhonebooks = false;
     
     Map<String,Action> availableActions = new HashMap<String,Action>();
+    
+    EntryToStringRule nameRule;
+    SortOrder sortOrder;
     
     private PhonebookPanel lastPanel;
     void writeToTextFields(PhoneBook phoneBook, List<PhoneBookEntry> pbs) {
@@ -543,7 +553,8 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             
             treeModel = new PhoneBookTreeModel();
             treeModel.addPBTreeModelListener(searchHelper);
-            treeModel.setNameToStringRule(Utils.getFaxOptions().phonebookDisplayStyle);
+            treeModel.setNameToStringRule(nameRule);
+            treeModel.setComparator(sortOrder);
             
             phoneBookTree = new JTree(treeModel);
             treeModel.setTree(phoneBookTree);
@@ -790,24 +801,34 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             entryMenu.add(new JMenuItem(addDistListAction));
             entryMenu.add(new JMenuItem(removeEntryAction));
             entryMenu.addSeparator();
-            JMenu viewMenu = new JMenu(nameStyleGroup.label);
-            for (JMenuItem item : nameStyleGroup.createMenuItems()) {
-                viewMenu.add(item);
-            }
-            entryMenu.add(viewMenu);
-            entryMenu.addSeparator();
             entryMenu.add(new JMenuItem(searchEntryAction));
-            entryMenu.addSeparator();
-            for (JRadioButtonMenuItem item : viewGroup.createMenuItems()) {
-                entryMenu.add(item);
-            }
+
         }
         return entryMenu;
+    }
+    
+    private JMenu createViewMenu() {
+        JMenu viewMenu = new JMenu(Utils._("View"));
+        JMenu displayStyleMenu = new JMenu(nameStyleGroup.label);
+        for (JMenuItem item : nameStyleGroup.createMenuItems()) {
+            displayStyleMenu.add(item);
+        }
+        viewMenu.add(displayStyleMenu);
+        viewMenu.addSeparator();
+        for (JRadioButtonMenuItem item : viewGroup.createMenuItems()) {
+            viewMenu.add(item);
+        }
+        viewMenu.addSeparator();
+        for (JRadioButtonMenuItem item : sortGroup.createMenuItems()) {
+            viewMenu.add(item);
+        }
+        return viewMenu;
     }
     
     private JMenuBar getMenu() {
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(getPhonebookMenu());
+        menuBar.add(createViewMenu());
         menuBar.add(getEntryMenu());
         return menuBar;
     }
@@ -914,14 +935,26 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         nameStyleGroup = new MultiButtonGroup() {
             @Override
             protected void actualActionPerformed(ActionEvent e) {
-                treeModel.setNameToStringRule(NameRule.valueOf(e.getActionCommand()));
+                if (CUSTOM_NAME_RULE.equals(e.getActionCommand())) {
+                    EntryToStringRule newRule = RuleParserDialog.showForRule(NewPhoneBookWin.this, label, NameRule.values(), nameRule);
+                    if (newRule != null) {
+                        nameRule = newRule;
+                        treeModel.setNameToStringRule(newRule);
+                    } else {
+                        setSelectedNameRule();
+                    }
+                } else {
+                    nameRule = NameRule.valueOf(e.getActionCommand());
+                    treeModel.setNameToStringRule(nameRule);
+                }
             }
         };
         nameStyleGroup.label = Utils._("Display style");
         for (NameRule rule : NameRule.values()) {
             putAvailableAction(nameStyleGroup.addItem(rule.getDisplayName(), rule.name()));
         }
-        nameStyleGroup.setSelectedActionCommand(Utils.getFaxOptions().phonebookDisplayStyle.name());
+        putAvailableAction(nameStyleGroup.addItem(_("Custom") + "...", CUSTOM_NAME_RULE));
+        setSelectedNameRule();
         
         viewGroup = new MultiButtonGroup() {
             @Override
@@ -949,10 +982,31 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                 }
             }
         };
-        
         putAvailableAction(viewGroup.addItem(Utils._("Show all entries"), SHOWALL_ACTION_COMMAND));
         putAvailableAction(viewGroup.addItem(Utils._("Filter entries") + "...", FILTER_ACTION_COMMAND));
         viewGroup.setSelectedActionCommand(SHOWALL_ACTION_COMMAND);
+        
+        sortGroup = new MultiButtonGroup() {
+            @Override
+            protected void actualActionPerformed(ActionEvent e) {
+                String cmd = e.getActionCommand();
+                if (SORT_CUSTOM_ACTION_COMMAND.equals(cmd)) {
+                    SortOrder newSortOrder = SortOrderDialog.showForSortOrder(NewPhoneBookWin.this, sortOrder);
+                    if (newSortOrder != null) {
+                        sortOrder = newSortOrder;
+                        treeModel.setComparator(newSortOrder);
+                    } else {
+                        setSelectedSortOrder();
+                    }
+                } else if (SORT_DEFAULT_ACTION_COMMAND.equals(cmd)) {
+                    sortOrder = null;
+                    treeModel.setComparator(null);
+                }
+            }
+        };
+        putAvailableAction(sortGroup.addItem(Utils._("Default sort order"), SORT_DEFAULT_ACTION_COMMAND));
+        putAvailableAction(sortGroup.addItem(Utils._("Custom sort order") + "...", SORT_CUSTOM_ACTION_COMMAND));
+        setSelectedSortOrder();
         
         viewPopupMenuAction = new ExcDialogAbstractAction() {
             private JPopupMenu popup;
@@ -1086,8 +1140,36 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         editAcceleratorsAction.putValue(Action.SHORT_DESCRIPTION, _("Customize the keyboard shortcuts"));
         putAvailableAction("EditAccelerators", editAcceleratorsAction);
     }
+
+    void setSelectedSortOrder() {
+        sortGroup.setSelectedActionCommand((sortOrder == null) ? SORT_DEFAULT_ACTION_COMMAND : SORT_CUSTOM_ACTION_COMMAND);
+    }
+
+    void setSelectedNameRule() {
+        String selCmd;
+        if (nameRule instanceof NameRule) {
+            selCmd = ((NameRule) nameRule).name();
+        } else {
+            selCmd = CUSTOM_NAME_RULE;
+        }
+        nameStyleGroup.setSelectedActionCommand(selCmd);
+    }
     
     private void initialize() {
+        FaxOptions fopts = Utils.getFaxOptions();
+        
+        nameRule = RuleSerializer.stringToRule(fopts.phonebookDisplayStyle, NameRule.class, NameRule.GIVENNAME_NAME);
+        if (fopts.phonebookSortOrder != null && fopts.phonebookSortOrder.length() > 0) {
+            try {
+                sortOrder = SortOrder.deserialize(fopts.phonebookSortOrder);
+            } catch (Exception e) {
+                log.log(Level.WARNING, "Invalid sort order found: " + fopts.phonebookSortOrder, e);
+                sortOrder = null;
+            }
+        } else {
+            sortOrder = null;
+        }
+        
         createActions();
         setContentPane(createJContentPane());
         setJMenuBar(getMenu());
@@ -1103,8 +1185,10 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                     savePhonebooks();
                 }
                     
-                Utils.getFaxOptions().phoneWinBounds = getBounds();
-                Utils.getFaxOptions().phonebookDisplayStyle = NameRule.valueOf(nameStyleGroup.getSelectedActionCommand());
+                final FaxOptions faxOptions = Utils.getFaxOptions();
+                faxOptions.phoneWinBounds = getBounds();
+                faxOptions.phonebookDisplayStyle = RuleSerializer.ruleToString(nameRule, NameRule.class);
+                faxOptions.phonebookSortOrder = (sortOrder == null) ? "" : sortOrder.serialize();
 
                 if (searchWin != null) {
                     searchWin.dispose();
@@ -1126,8 +1210,6 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
                 savePhonebooks();
             }
         });
-        
-        FaxOptions fopts = Utils.getFaxOptions();
         
         AcceleratorKeys.loadFromMap(fopts.pbwinKeyboardAccelerators, availableActions);
         
