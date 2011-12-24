@@ -106,7 +106,7 @@ public class fmtEditor<T> extends JPanel
     private void initialize(String selCaption, String deselCaption) {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         
-        Dimension spacer = new Dimension(5,0);
+        Dimension spacer = new Dimension(5,5);
         add(getAvailPane(deselCaption));
         add(Box.createRigidArea(spacer));
         add(getButtonPane());
@@ -312,7 +312,21 @@ public class fmtEditor<T> extends JPanel
         super.setEnabled(enabled);
     }
     
-
+    public JList getSelectedList() {
+        return listSelected;
+    }
+    
+    public ListListModel<T> getSelectedListModel() {
+        return selectedFmtModel;
+    }
+    
+    public JList getDeselectedList() {
+        return listAvail;
+    }
+    
+    public SortedListModel<T> getDeselectedListModel() {
+        return deselectedFmtModel;
+    }
     
     /**
      * Creates a new fmtEditor

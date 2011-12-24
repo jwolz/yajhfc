@@ -270,7 +270,12 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
     /**
      * Display style of the phone book entries
      */
-    public NameRule phonebookDisplayStyle = NameRule.GIVENNAME_NAME;
+    public String phonebookDisplayStyle = "GIVENNAME_NAME";
+    /**
+     * Display style of the phone book entries
+     */
+    public String phonebookSortOrder = "";
+    
     /**
      * Format of the name on the cover page 
      */

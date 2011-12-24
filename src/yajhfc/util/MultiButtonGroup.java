@@ -44,6 +44,7 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.Action;
+import javax.swing.JRadioButton;
 import javax.swing.JRadioButtonMenuItem;
 
 import yajhfc.Utils;
@@ -96,6 +97,17 @@ public abstract class MultiButtonGroup {
         }
         
         return menuItems;
+    }
+    
+    public JRadioButton[] createButtons() {
+        JRadioButton[] buttons = new JRadioButton[items.size()];
+        //ButtonGroup group = new ButtonGroup();
+        
+        for (int i = 0; i < items.size(); i++) {
+            buttons[i] = new ActionJRadioButton(items.get(i));
+        }
+        
+        return buttons;
     }
     
     public List<Item> getItems() {

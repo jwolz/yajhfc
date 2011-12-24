@@ -14,7 +14,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *  
+ *
  *  Linking YajHFC statically or dynamically with other modules is making 
  *  a combined work based on YajHFC. Thus, the terms and conditions of 
  *  the GNU General Public License cover the whole combination.
@@ -36,47 +36,66 @@
  */
 package yajhfc.phonebook.convrules;
 
-import yajhfc.phonebook.PBEntryField;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import yajhfc.phonebook.convrules.RuleParser.RuleParseException;
 
 /**
  * @author jonas
  *
  */
-public enum NameRule implements EntryToStringRuleEnum {
-    GIVENNAME_NAME(new ConcatRule(PBEntryField.GivenName, " ", PBEntryField.Name)),
-    NAME_GIVENNAME(new ConcatRule(PBEntryField.Name, ", ", PBEntryField.GivenName)),
-    TITLE_GIVENNAME_NAME(new ConcatRule(PBEntryField.Title, " ", PBEntryField.GivenName, " ", PBEntryField.Name)),
-    TITLE_NAME_GIVENNAME(new ConcatRule(PBEntryField.Title, " ", PBEntryField.Name, ", ", PBEntryField.GivenName)),
-    TITLE_GIVENNAME_NAME_JOBTITLE(new ConcatRule(PBEntryField.Title, " ", PBEntryField.GivenName, " ", PBEntryField.Name, ", ", PBEntryField.Position)),
-    TITLE_NAME_GIVENNAME_JOBTITLE(new ConcatRule(PBEntryField.Title, " ", PBEntryField.Name, ", ", PBEntryField.GivenName, ", ", PBEntryField.Position))
-    ;
+public class RuleSerializer {
+    private static final Logger log = Logger.getLogger(RuleSerializer.class.getName());
     
-    private final String displayName;
-    private final EntryToStringRule rule;
-    
-    public String getDisplayName() {
-        return displayName;
+    /**
+     * Deserializes a rule previously serialized by ruleToString
+     * @param s
+     * @param enumType
+     * @param defaultValue
+     * @return
+     */
+    public static <T extends Enum<T>> EntryToStringRule stringToRule(String s, Class<T> enumType, EntryToStringRule defaultValue) {
+        if (s == null || s.length()==0)
+            return defaultValue;
+        
+        EntryToStringRule rule;
+        switch (s.charAt(0)) {
+        case '$': // Predefined
+            rule = (EntryToStringRule)Enum.valueOf(enumType, s.substring(1));
+            break;
+        case '%':
+            try {
+                rule = RuleParser.parseRule(s.substring(1), false);
+            } catch (RuleParseException e) {
+                log.log(Level.WARNING, "Could not parse rule", e);
+                rule = null;
+            }
+            break;
+        default:
+            rule = (EntryToStringRule)Enum.valueOf(enumType, s);
+            break;
+        }
+        
+        if  (rule == null) {
+            log.warning("Unknown rule, returning default: " + s);
+            return defaultValue;
+        } else {
+            return rule;
+        }
     }
     
-    @Override
-    public String toString() {
-        return displayName;
-    }
-
-    public String applyRule(PBEntryFieldContainer entry) {
-        return rule.applyRule(entry);
-    }
-
-    public int applyRule(PBEntryFieldContainer entry, StringBuilder appendTo) {
-        return rule.applyRule(entry, appendTo);
-    }
-    
-    public EntryToStringRule getWrappedRule() {
-        return rule;
-    }
-
-    private NameRule(EntryToStringRule rule) {
-        this.displayName = rule.toString();
-        this.rule = rule;
+    /**
+     * Serializes a rule to a String
+     * @param s
+     * @param enumType
+     * @return
+     */
+    public static <T extends Enum<T>> String ruleToString(EntryToStringRule rule, Class<T> enumType) {
+        if (enumType.isAssignableFrom(rule.getClass())) {
+            return "$" + ((Enum<?>)rule).name();
+        } else {
+            return "%" + RuleParser.ruleToString(rule, false);
+        }
     }
 }

@@ -1,3 +1,4 @@
+package yajhfc.util;
 /*
  * YAJHFC - Yet another Java Hylafax client
  * Copyright (C) 2005-2011 Jonas Wolz <info@yajhfc.de>
@@ -34,49 +35,34 @@
  *  version without this exception; this exception also makes it possible 
  *  to release a modified version which carries forward this exception.
  */
-package yajhfc.phonebook.convrules;
 
-import yajhfc.phonebook.PBEntryField;
+import java.beans.PropertyChangeListener;
 
-/**
- * @author jonas
- *
- */
-public enum NameRule implements EntryToStringRuleEnum {
-    GIVENNAME_NAME(new ConcatRule(PBEntryField.GivenName, " ", PBEntryField.Name)),
-    NAME_GIVENNAME(new ConcatRule(PBEntryField.Name, ", ", PBEntryField.GivenName)),
-    TITLE_GIVENNAME_NAME(new ConcatRule(PBEntryField.Title, " ", PBEntryField.GivenName, " ", PBEntryField.Name)),
-    TITLE_NAME_GIVENNAME(new ConcatRule(PBEntryField.Title, " ", PBEntryField.Name, ", ", PBEntryField.GivenName)),
-    TITLE_GIVENNAME_NAME_JOBTITLE(new ConcatRule(PBEntryField.Title, " ", PBEntryField.GivenName, " ", PBEntryField.Name, ", ", PBEntryField.Position)),
-    TITLE_NAME_GIVENNAME_JOBTITLE(new ConcatRule(PBEntryField.Title, " ", PBEntryField.Name, ", ", PBEntryField.GivenName, ", ", PBEntryField.Position))
-    ;
+import javax.swing.Action;
+import javax.swing.JRadioButton;
+
+public class ActionJRadioButton extends JRadioButton {
     
-    private final String displayName;
-    private final EntryToStringRule rule;
-    
-    public String getDisplayName() {
-        return displayName;
+    @Override
+    protected PropertyChangeListener createActionPropertyChangeListener(Action a) {
+        return new SelectedActionPropertyChangeListener(this, super.createActionPropertyChangeListener(a));
     }
     
     @Override
-    public String toString() {
-        return displayName;
-    }
-
-    public String applyRule(PBEntryFieldContainer entry) {
-        return rule.applyRule(entry);
-    }
-
-    public int applyRule(PBEntryFieldContainer entry, StringBuilder appendTo) {
-        return rule.applyRule(entry, appendTo);
+    protected void configurePropertiesFromAction(Action a) {
+        Boolean selValue = (Boolean)a.getValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY);
+        if (selValue != null)
+            setSelected(selValue);
+        
+        super.configurePropertiesFromAction(a);
     }
     
-    public EntryToStringRule getWrappedRule() {
-        return rule;
+    public ActionJRadioButton() {
+        super();
     }
-
-    private NameRule(EntryToStringRule rule) {
-        this.displayName = rule.toString();
-        this.rule = rule;
+    
+    public ActionJRadioButton(Action a) {
+        super(a);
     }
+    
 }

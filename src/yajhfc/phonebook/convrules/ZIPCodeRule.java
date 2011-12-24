@@ -42,7 +42,7 @@ import yajhfc.phonebook.PBEntryField;
  * @author jonas
  *
  */
-public enum ZIPCodeRule implements EntryToStringRule {
+public enum ZIPCodeRule implements EntryToStringRuleEnum {
     
     ZIPCODE_LOCATION(new ConcatRule(PBEntryField.ZIPCode, " ", PBEntryField.Location)),
     LOCATION_STATE_ZIPCODE(new ConcatRule(PBEntryField.Location, " ", PBEntryField.State, " ", PBEntryField.ZIPCode)),
@@ -67,6 +67,10 @@ public enum ZIPCodeRule implements EntryToStringRule {
 
     public int applyRule(PBEntryFieldContainer entry, StringBuilder appendTo) {
         return rule.applyRule(entry, appendTo);
+    }
+    
+    public EntryToStringRule getWrappedRule() {
+        return rule;
     }
 
     private ZIPCodeRule(EntryToStringRule rule) {

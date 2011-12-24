@@ -14,7 +14,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *  
+ *
  *  Linking YajHFC statically or dynamically with other modules is making 
  *  a combined work based on YajHFC. Thus, the terms and conditions of 
  *  the GNU General Public License cover the whole combination.
@@ -36,47 +36,15 @@
  */
 package yajhfc.phonebook.convrules;
 
-import yajhfc.phonebook.PBEntryField;
-
 /**
  * @author jonas
  *
  */
-public enum NameRule implements EntryToStringRuleEnum {
-    GIVENNAME_NAME(new ConcatRule(PBEntryField.GivenName, " ", PBEntryField.Name)),
-    NAME_GIVENNAME(new ConcatRule(PBEntryField.Name, ", ", PBEntryField.GivenName)),
-    TITLE_GIVENNAME_NAME(new ConcatRule(PBEntryField.Title, " ", PBEntryField.GivenName, " ", PBEntryField.Name)),
-    TITLE_NAME_GIVENNAME(new ConcatRule(PBEntryField.Title, " ", PBEntryField.Name, ", ", PBEntryField.GivenName)),
-    TITLE_GIVENNAME_NAME_JOBTITLE(new ConcatRule(PBEntryField.Title, " ", PBEntryField.GivenName, " ", PBEntryField.Name, ", ", PBEntryField.Position)),
-    TITLE_NAME_GIVENNAME_JOBTITLE(new ConcatRule(PBEntryField.Title, " ", PBEntryField.Name, ", ", PBEntryField.GivenName, ", ", PBEntryField.Position))
-    ;
-    
-    private final String displayName;
-    private final EntryToStringRule rule;
-    
-    public String getDisplayName() {
-        return displayName;
-    }
-    
-    @Override
-    public String toString() {
-        return displayName;
-    }
+public interface EntryToStringRuleEnum extends EntryToStringRule {
 
-    public String applyRule(PBEntryFieldContainer entry) {
-        return rule.applyRule(entry);
-    }
-
-    public int applyRule(PBEntryFieldContainer entry, StringBuilder appendTo) {
-        return rule.applyRule(entry, appendTo);
-    }
-    
-    public EntryToStringRule getWrappedRule() {
-        return rule;
-    }
-
-    private NameRule(EntryToStringRule rule) {
-        this.displayName = rule.toString();
-        this.rule = rule;
-    }
+    /**
+     * Returns the rule wrapped by this enum field
+     * @return
+     */
+    public EntryToStringRule getWrappedRule();
 }
