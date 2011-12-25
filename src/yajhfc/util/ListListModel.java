@@ -121,19 +121,13 @@ public class ListListModel<T> extends AbstractListModel implements Iterable<T> {
         }
     }
     
-    private void swapInternal(int index1, int index2) {
-        T tmp = list.get(index1);
-        list.set(index1, list.get(index2));
-        list.set(index2, tmp);
-    }
-    
     /**
      * Swaps the elements at the given positions
      * @param index1
      * @param index2
      */
     public void swap(int index1, int index2) {
-        swapInternal(index1, index2);
+        Collections.swap(list, index1, index2);
         fireContentsChanged(this, index1, index1);
         fireContentsChanged(this, index2, index2);
     }
@@ -149,7 +143,7 @@ public class ListListModel<T> extends AbstractListModel implements Iterable<T> {
             throw new ArrayIndexOutOfBoundsException("Cannot move first element up.");
         }
         for (int i : indexes) {
-            swapInternal(i, i-1);
+            Collections.swap(list, i, i-1);
         }
         fireContentsChanged(this, indexes[0]-1, indexes[indexes.length-1]);
     }
@@ -165,7 +159,7 @@ public class ListListModel<T> extends AbstractListModel implements Iterable<T> {
             throw new ArrayIndexOutOfBoundsException("Cannot move last element down.");
         }
         for (int i : indexes) {
-            swapInternal(i, i+1);
+            Collections.swap(list, i, i+1);
         }
         fireContentsChanged(this, indexes[0], indexes[indexes.length-1]+1);
     }

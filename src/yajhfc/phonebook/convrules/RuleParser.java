@@ -96,22 +96,27 @@ public class RuleParser {
 	}
 	
 	@SuppressWarnings("fallthrough")
-    private static Object parseString(Matcher stringMatcher) {
-		String quoted = stringMatcher.group(1);
-		StringBuilder res = new StringBuilder(quoted.length());
-		for (int i=0; i<quoted.length(); i++) {
-			char c = quoted.charAt(i);
-			switch (c) {
-			case '\\':
-				i++;
-				if (i<quoted.length())
-					c = quoted.charAt(i);
-				// Fallthrough intended
-			default: 
-				res.append(c);
-			}
-		}
-		return res.toString();
+	private static Object parseString(Matcher stringMatcher) {
+	    String quoted = stringMatcher.group(1);
+	    if (quoted.indexOf('\\') >= 0) {
+	        StringBuilder res = new StringBuilder(quoted.length());
+	        for (int i=0; i<quoted.length(); i++) {
+	            char c = quoted.charAt(i);
+	            switch (c) {
+	            case '\\':
+	                i++;
+	                if (i<quoted.length())
+	                    c = quoted.charAt(i);
+	                // Fallthrough intended
+	            default: 
+	                res.append(c);
+	            }
+	        }
+	        return res.toString();
+	    } else {
+	        // Nothing quoted in String
+	        return quoted;
+	    }
 	}
 	
 	private static Object parseField(Matcher fieldMatcher, boolean localized) throws RuleParseException {
@@ -122,10 +127,11 @@ public class RuleParser {
 		} else {
 			field = PBEntryField.getKeyToFieldMap().get(name);
 		}
-		if (field == null)
+		if (field == null) {
 			throw new RuleParseException(MessageFormat.format("Unknown field \"{0}\".", name), 
 			        MessageFormat.format(Utils._("Unknown field \"{0}\"."), name),
 			        fieldMatcher.start(), fieldMatcher.end()-1);
+		}
 		return field;
 	}
 

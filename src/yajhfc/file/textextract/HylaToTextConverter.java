@@ -113,7 +113,7 @@ public abstract class HylaToTextConverter {
             Constructor<? extends HylaToTextConverter> constructor = getClass().getConstructor(FaxOptions.class);
             return constructor.newInstance(options);
         } catch (Exception e) {
-            log.log(Level.INFO, "Assuming converter has no options", e);
+            log.log(Level.FINE, "Assuming converter has no options", e);
             return this;
         } 
     }
