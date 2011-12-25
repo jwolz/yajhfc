@@ -174,13 +174,15 @@ public class SortOrderDialog extends JDialog {
         directionGroup = new MultiButtonGroup() {
             @Override
             protected void actualActionPerformed(ActionEvent e) {
-                int idx = fmtEditor.getSelectedList().getSelectedIndex();
-                if (idx < 0)
+                int[] idxs = fmtEditor.getSelectedList().getSelectedIndices();
+                if (idxs.length == 0)
                     return;
 
-                setDescending(idx, DESCENDING_ACTION_COMMAND.equals(e.getActionCommand()));
-                
-                fmtEditor.getSelectedListModel().changeNotify(idx);
+                final boolean desc = DESCENDING_ACTION_COMMAND.equals(e.getActionCommand());
+                for (int idx : idxs) {
+                    setDescending(idx, desc);
+                    fmtEditor.getSelectedListModel().changeNotify(idx);
+                }
             }
         };
         directionGroup.addItem(_("ascending"), ASCENDING_ACTION_COMMAND);
