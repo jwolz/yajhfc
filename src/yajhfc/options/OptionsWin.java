@@ -50,6 +50,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.MessageFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -260,38 +262,42 @@ public class OptionsWin extends JDialog {
         advancedNode.addChild(new PanelTreeNode(advancedNode, new ConvertersPage(), _("File converters"), Utils.loadCustomIcon("customfilters.png")));
         
         for (PluginUI puc : PluginManager.pluginUIs) {
-            PanelTreeNode parent;
-            switch (puc.getOptionsPanelParent()) {
-            case PluginUI.OPTION_PANEL_ADVANCED:
-                parent = advancedNode;
-                break;
-            case PluginUI.OPTION_PANEL_COVER:
-                parent = coverNode;
-                break;
-            case PluginUI.OPTION_PANEL_GENERAL:
-                parent = generalNode;
-                break;
-            case PluginUI.OPTION_PANEL_PATHS_VIEWERS:
-                parent = pathsNode;
-                break;
-            case PluginUI.OPTION_PANEL_PLUGINS:
-                parent = pluginsNode;
-                break;
-            case PluginUI.OPTION_PANEL_SERVER:
-                parent = serverSettingsNode;
-                break;
-            case PluginUI.OPTION_PANEL_TABLES:
-                parent = tablesNode;
-                break;
-            case PluginUI.OPTION_PANEL_ROOT:
-            default:
-                parent = rootNode;
-                break;                    
-            }
-            
-            PanelTreeNode node = puc.createOptionsPanel(parent);
-            if (node != null) {
-                parent.addChild(node);
+            try {
+                PanelTreeNode parent;
+                switch (puc.getOptionsPanelParent()) {
+                case PluginUI.OPTION_PANEL_ADVANCED:
+                    parent = advancedNode;
+                    break;
+                case PluginUI.OPTION_PANEL_COVER:
+                    parent = coverNode;
+                    break;
+                case PluginUI.OPTION_PANEL_GENERAL:
+                    parent = generalNode;
+                    break;
+                case PluginUI.OPTION_PANEL_PATHS_VIEWERS:
+                    parent = pathsNode;
+                    break;
+                case PluginUI.OPTION_PANEL_PLUGINS:
+                    parent = pluginsNode;
+                    break;
+                case PluginUI.OPTION_PANEL_SERVER:
+                    parent = serverSettingsNode;
+                    break;
+                case PluginUI.OPTION_PANEL_TABLES:
+                    parent = tablesNode;
+                    break;
+                case PluginUI.OPTION_PANEL_ROOT:
+                default:
+                    parent = rootNode;
+                    break;                    
+                }
+
+                PanelTreeNode node = puc.createOptionsPanel(parent);
+                if (node != null) {
+                    parent.addChild(node);
+                }
+            } catch (Exception e) {
+                Logger.getLogger(OptionsWin.class.getName()).log(Level.SEVERE, "Error creating options panel " + puc, e);
             }
         }
         
@@ -517,6 +523,10 @@ public class OptionsWin extends JDialog {
         return mainTree.getSelectionPath();
     }
     
+    /**
+     * Focuses the selected component and switches to the appropriate panel
+     * @param comp
+     */
     public void focusComponent(Component comp) {
         focusTab(comp);
         comp.requestFocusInWindow();

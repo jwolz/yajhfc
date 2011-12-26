@@ -76,6 +76,7 @@ import yajhfc.util.ExcDialogAbstractAction;
 public class YajHFCTrayIcon implements UnreadItemListener<RecvFormat>, WindowListener {
 
     private static final int BLINK_INTERVAL = 500;
+    private static final long MINIMIZE_THRESHOLD = 2000;
     
     ITrayIcon trayIcon = null;
     MainWin mainw;
@@ -87,6 +88,8 @@ public class YajHFCTrayIcon implements UnreadItemListener<RecvFormat>, WindowLis
     Image faxIcon, emptyImage;
     Timer blinkTimer;
     long blinkStartTime = -1;
+    
+    long lastShowTime = -1;
     
     /**
      * Creates a new tray icon if it is available and configures the main window
@@ -104,6 +107,7 @@ public class YajHFCTrayIcon implements UnreadItemListener<RecvFormat>, WindowLis
                 showAction = new ExcDialogAbstractAction() {
                     @Override
                     protected void actualActionPerformed(ActionEvent e) {
+                        lastShowTime = System.currentTimeMillis();
                         YajHFCTrayIcon.this.mainw.bringToFront();
                     }
                 };
@@ -244,6 +248,9 @@ public class YajHFCTrayIcon implements UnreadItemListener<RecvFormat>, WindowLis
     }
     
     public void windowIconified(WindowEvent e) {
+        if (System.currentTimeMillis() < lastShowTime+MINIMIZE_THRESHOLD)
+            return; // Ignore the minimize event if we have recently been displayed
+        
         if (minimizeToTray && trayIcon != null) {
             mainw.setVisible(false);
         }
