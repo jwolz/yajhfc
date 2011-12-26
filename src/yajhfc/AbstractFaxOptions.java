@@ -67,6 +67,8 @@ import yajhfc.model.FmtItemList;
  * - boolean
  * - int
  * - long
+ * - float
+ * - double
  * - YajLanguage
  * - FmtItemList
  * - Rectangle
@@ -130,7 +132,7 @@ public abstract class AbstractFaxOptions implements PropertiesSerializable {
                     continue;
                 
                 final String propertyName = getPropertyName(f[i], prefix);
-                if ((val instanceof String) || (val instanceof Integer) || (val instanceof Boolean) || (val instanceof Long))
+                if ((val instanceof String) || (val instanceof Integer) || (val instanceof Boolean) || (val instanceof Long) || (val instanceof Float) || (val instanceof Double))
                     p.setProperty(propertyName, val.toString());
                 else if (val instanceof YajLanguage) {
                     p.setProperty(propertyName, ((YajLanguage)val).getLangCode());
@@ -287,6 +289,10 @@ public abstract class AbstractFaxOptions implements PropertiesSerializable {
                             f.setLong(this, Long.parseLong(val));
                         else if (Boolean.TYPE.isAssignableFrom(fcls))
                             f.setBoolean(this, Boolean.parseBoolean(val));
+                        else if (Float.TYPE.isAssignableFrom(fcls))
+                            f.setFloat(this, Float.parseFloat(val));
+                        else if (Double.TYPE.isAssignableFrom(fcls))
+                            f.setDouble(this, Double.parseDouble(val));
                         else if (YajLanguage.class.isAssignableFrom(fcls)) {
                             f.set(this, YajLanguage.languageFromLangCode(val));
                         } else if (FmtItemList.class.isAssignableFrom(fcls)) {
