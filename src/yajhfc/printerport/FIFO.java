@@ -14,7 +14,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *  
+ *
  *  Linking YajHFC statically or dynamically with other modules is making 
  *  a combined work based on YajHFC. Thus, the terms and conditions of 
  *  the GNU General Public License cover the whole combination.
@@ -37,62 +37,79 @@
 package yajhfc.printerport;
 
 import java.io.IOException;
-import java.io.PushbackInputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.InputStream;
+import java.lang.reflect.Constructor;
 
-import yajhfc.launch.SendWinSubmitProtocol;
-import yajhfc.launch.SubmitProtocol;
+import yajhfc.Utils;
 
 /**
  * @author jonas
  *
  */
-public class FIFOThread extends Thread {
-    private static final Logger log = Logger.getLogger(FIFOThread.class.getName());
-
-    protected final String fifoName;
-    protected FIFO fifo;
+public abstract class FIFO {
+    public static Class<? extends FIFO> FIFO_IMPLEMENTATION;
+    static {
+        if (!Utils.IS_WINDOWS) {
+            FIFO_IMPLEMENTATION = UnixFIFO.class;
+        }
+    }
     
-    public FIFOThread(String fifoName) {
-        super("PrinterFIFO-" + fifoName);
+    /**
+     * Creates a platform dependent FIFO (Named Pipe) with the specified name if available.
+     * Throws an IOException if no FIFOs are supported on this platform or any error occurs creating the FIFO.
+     * @param fifoName
+     * @return
+     */
+    public static FIFO createFIFO(String fifoName) throws IOException {
+        if (FIFO_IMPLEMENTATION == null) {
+            throw new IOException("No FIFO implementation for this platform available");
+        }
+        try {
+            Constructor<? extends FIFO> fifoConstructor = FIFO_IMPLEMENTATION.getConstructor(String.class);
+            return fifoConstructor.newInstance(fifoName);
+        } catch (Exception e) {
+            throw (IOException)new IOException("Error creating the FIFO").initCause(e);
+        } 
+    }
+    
+    
+    //////////////////////////////////////////////////////////////////////////////    
+    
+    protected String fifoName;
+    
+    /**
+     * Creates a FIFO with the specified name
+     * All sub classes must implement a public constructor in this form.
+     * @param fileName
+     */
+    protected FIFO(String fifoName) {
+        super();
         this.fifoName = fifoName;
     }
     
-    public void close() {
-        interrupt();
-        if (fifo != null) {
-            fifo.close();
-            fifo = null;
-        }
+    /**
+     * Opens an InpuStream reading from this FIFO.
+     * May be called multiple times during the lifetime of the FIFO
+     * @return
+     */
+    public abstract InputStream openInputStream() throws IOException;
+    
+    /**
+     * Closes the FIFO (e.g. deletes the special file created for it)
+     * Calling openInputStream after this will probably fail.
+     */
+    public abstract void close();
+    
+    /**
+     * Returns a description of this FIFO (usually the file name)
+     * @return
+     */
+    public String getFIFOName() {
+        return fifoName;
     }
     
     @Override
-    public void run() {
-        try {
-            fifo = FIFO.createFIFO(fifoName);
-        } catch (IOException e1) {
-          log.log(Level.SEVERE, "Could not create FIFO, not created printer port", e1);
-          return;
-        }
-
-        try {
-            while (!isInterrupted()) {
-                PushbackInputStream inStream = new PushbackInputStream(fifo.openInputStream());
-                int b = inStream.read();
-                if (b != -1) {
-                    inStream.unread(b);
-                    SubmitProtocol sp = new SendWinSubmitProtocol();
-                    sp.setInputStream(inStream, fifo.toString());
-                    sp.submit(true);
-                }
-                inStream.close();               
-            }
-        } catch (IOException e) {
-            log.log(Level.WARNING, "Error waiting for a document to be printed:", e);
-        } finally {
-            close();
-        }
+    public String toString() {
+        return getFIFOName();
     }
-
 }
