@@ -14,7 +14,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *  
+ *
  *  Linking YajHFC statically or dynamically with other modules is making 
  *  a combined work based on YajHFC. Thus, the terms and conditions of 
  *  the GNU General Public License cover the whole combination.
@@ -36,63 +36,75 @@
  */
 package yajhfc.printerport;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.PushbackInputStream;
-import java.util.logging.Level;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.List;
 import java.util.logging.Logger;
 
-import yajhfc.launch.SendWinSubmitProtocol;
-import yajhfc.launch.SubmitProtocol;
+import yajhfc.util.ExternalProcessExecutor;
 
 /**
  * @author jonas
  *
  */
-public class FIFOThread extends Thread {
-    private static final Logger log = Logger.getLogger(FIFOThread.class.getName());
+public class UnixFIFO extends FIFO {
+    private static final Logger log = Logger.getLogger(UnixFIFO.class.getName());
 
-    protected final String fifoName;
-    protected FIFO fifo;
+    protected File fifo;
     
-    public FIFOThread(String fifoName) {
-        super("PrinterFIFO-" + fifoName);
-        this.fifoName = fifoName;
+    public UnixFIFO(String fifoName) throws IOException, InterruptedException {
+        super(fifoName);
+        createUnixFIFO(fifoName);
     }
-    
-    public void close() {
-        interrupt();
-        if (fifo != null) {
-            fifo.close();
-            fifo = null;
+
+    private void createUnixFIFO(String fifoName) throws IOException, InterruptedException {
+        fifo = new File(fifoName);
+        
+        final String mkfifo = EntryPoint.getOptions().mkfifo;
+        if (fifo.exists())
+            fifo.delete();
+        
+        log.fine("Executing \"" + mkfifo + " " + fifo + "\".");
+        List<String> commandLine = ExternalProcessExecutor.splitCommandLine(mkfifo);
+        commandLine.add(fifo.getPath());
+        ExternalProcessExecutor.quoteCommandLine(commandLine);
+        
+        Process process = new ProcessBuilder(commandLine)
+                .redirectErrorStream(true).start();
+        process.getOutputStream().close();
+        
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            log.info(mkfifo + " output: " + line);
         }
+        reader.close();
+        int exitCode = process.waitFor();
+        if (exitCode != 0) {
+            throw new IOException(mkfifo + " failed with exit code " + exitCode);
+        }
+        log.fine("FIFO created successfully.");
+        fifo.deleteOnExit();
     }
     
+    /* (non-Javadoc)
+     * @see yajhfc.printerport.FIFO#openInputStream()
+     */
     @Override
-    public void run() {
-        try {
-            fifo = FIFO.createFIFO(fifoName);
-        } catch (IOException e1) {
-          log.log(Level.SEVERE, "Could not create FIFO, not created printer port", e1);
-          return;
-        }
+    public InputStream openInputStream() throws IOException {
+        return new FileInputStream(fifo);
+    }
 
-        try {
-            while (!isInterrupted()) {
-                PushbackInputStream inStream = new PushbackInputStream(fifo.openInputStream());
-                int b = inStream.read();
-                if (b != -1) {
-                    inStream.unread(b);
-                    SubmitProtocol sp = new SendWinSubmitProtocol();
-                    sp.setInputStream(inStream, fifo.toString());
-                    sp.submit(true);
-                }
-                inStream.close();               
-            }
-        } catch (IOException e) {
-            log.log(Level.WARNING, "Error waiting for a document to be printed:", e);
-        } finally {
-            close();
-        }
+    /* (non-Javadoc)
+     * @see yajhfc.printerport.FIFO#close()
+     */
+    @Override
+    public void close() {
+        fifo.delete();
     }
 
 }

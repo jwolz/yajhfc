@@ -21,7 +21,11 @@
 	</fileset>
 	<property name="gnu.hylafax-jar-core" refid="fs.gnu.hylafax-jar-core"/>
 	<property name="gnu.hylafax-jar-inet-ftp" refid="fs.gnu.hylafax-jar-inet-ftp"/>
-	
+
+	<property name="jlfgr.jar" location="../jlfgr-1_0.jar"/>
+	<property name="tablelayout.jar" location="../TableLayout-2007-04/TableLayout-bin-jdk1.5-2007-04-21.jar"/>
+	<property name="commons-logging.jar" location="../commons-logging-1.1.1.jar"/>
+
 	<target name="init">
 		<available file="${gnu.hylafax-dir}/gnu/hylafax/HylaFAXClient.class" property="gnu.hylafax.haveClassDir"/>
 		<condition property="gnu.hylafax.haveJars">
@@ -32,14 +36,36 @@
 			</and>
 		</condition>
 
-	
-		<fail message="gnu.hylafax library not found in path ${gnu.hylafax-dir}. Use -Dgnu.hylafax-dir=$$dirname to specify the correct path.">
+
+		<fail message="gnu.hylafax library not found in path ${gnu.hylafax-dir}. Use build.properties to specify the correct path.">
 			<condition>
 				<not>
 					<or>
 						<istrue value="${gnu.hylafax.haveClassDir}"/>
 						<istrue value="${gnu.hylafax.haveJars}"/>
 					</or>
+				</not>
+			</condition>
+		</fail>
+
+		<fail message="jlfgr.jar not found at ${jlfgr.jar}. Use build.properties to specify the correct path.">
+			<condition>
+				<not>
+					<available file="${jlfgr.jar}" />
+				</not>
+			</condition>
+		</fail>
+		<fail message="tablelayout.jar not found at ${tablelayout.jar}. Use build.properties to specify the correct path.">
+			<condition>
+				<not>
+					<available file="${tablelayout.jar}" />
+				</not>
+			</condition>
+		</fail>
+		<fail message="commons-logging.jar not found at ${commons-logging.jar}. Use build.properties to specify the correct path.">
+			<condition>
+				<not>
+					<available file="${commons-logging.jar}" />
 				</not>
 			</condition>
 		</fail>
@@ -64,9 +90,9 @@
 		<condition property="gnu.hylafax.classFileLocation" value="${gnu.hylafax-dir}" else="${build}/gnu.hylafax">
 			<istrue value="${gnu.hylafax.haveClassDir}"/>
 		</condition>
-		<antcall target="init.unjar-gnuhylafax"/>
 	</target>
-	<target name="init.unjar-gnuhylafax" if="gnu.hylafax.haveJars">
+	
+	<target name="unjar-gnu-hylafax" depends="init" if="gnu.hylafax.haveJars">
 		<mkdir dir="${gnu.hylafax.classFileLocation}"/>
 		<unjar src="${gnu.hylafax-dir}/${gnu.hylafax-jar-core}" dest="${gnu.hylafax.classFileLocation}">
 			<patternset>
@@ -80,14 +106,32 @@
 		</unjar>
 	</target>
 
+	<target name="unjar-dependencies" depends="init,unjar-gnu-hylafax" description="unzip the jars we depend on" >
+		<unjar src="${tablelayout.jar}" dest="${build}/jar">
+		    <patternset>
+		        <include name="info/clearthought/**"/>
+		    </patternset>
+		</unjar>
+		<unjar src="${jlfgr.jar}" dest="${build}/jar">
+		    <patternset>
+		        <include name="toolbarButtonGraphics/**/*16.gif"/>
+		    </patternset>
+		</unjar>
+		<unjar src="${commons-logging.jar}" dest="${build}/jar">
+		    <patternset>
+		        <include name="org/**"/>
+		    </patternset>
+		</unjar>
+	</target>
 
-	<target name="compile" depends="init" description="compile the source code" >
+	<target name="compile" depends="init,unjar-dependencies" description="compile the source code" >
 		<!-- Compile the java code from ${src} into ${build} -->
 		<javac srcdir="${src}/src" includes="yajhfc/**/*.java,gnu/**/*.java" destdir="${build}" source="1.5" target="1.5" encoding="utf-8" debug="true" debuglevel="lines,source">
 			<classpath>
 				<pathelement path="${classpath}"/>
 				<pathelement location="${gnu.hylafax.classFileLocation}"/>
 				<pathelement location="${jar-extra}"/>
+				<pathelement location="${build}/jar"/>
 			</classpath>
 		</javac>
 
@@ -98,6 +142,7 @@
 				<pathelement location="${gnu.hylafax.classFileLocation}"/>
 				<pathelement location="${jar-extra}"/>
 				<pathelement location="${build}"/>
+				<pathelement location="${build}/jar"/>
 			</classpath>
 		</javac>
 
@@ -106,9 +151,8 @@
 		<javac srcdir="${src}/java1-src" includes="yajhfc/**/*.java" destdir="${build}" source="1.3" target="1.1" encoding="utf-8" debug="true" debuglevel="lines,source">
 			<classpath>
 				<pathelement path="${classpath}"/>
-				<pathelement location="${gnu.hylafax.classFileLocation}"/>
 				<pathelement location="${jar-extra}"/>
-				<pathelement location="${build}"/>
+				<!-- the Java 1.1 source may only depend on the JDK (and especially on no Java 5 code) -->
 			</classpath>
 		</javac>
 
@@ -122,6 +166,7 @@
 					<pathelement location="${gnu.hylafax.classFileLocation}"/>
 					<pathelement location="${jar-extra}"/>
 					<pathelement location="${build}"/>
+					<pathelement location="${build}/jar"/>
 				</classpath>
 			</javac>
 	</target>
@@ -146,11 +191,12 @@
 	</target>
 
 	<target name="dist" depends="compile,i18n,doc" description="generate the distribution" >
-		<jar jarfile="${jar-output}" manifest="${jar-extra}/manifest.txt">
+		<jar jarfile="${jar-output}" manifest="${src}/src/MANIFEST.MF">
 			<fileset dir="${build}" includes="yajhfc/**,gnu/**,au/**"/>
 			<fileset dir="${src}/src" includes="yajhfc/i18n/*.class,**/*.properties"/>
 			<fileset dir="${src}/mac-src" includes="yajhfc/**/*.class"/>
-			<fileset dir="${jar-extra}" includes="info/**/*.class,toolbarButtonGraphics/**/*.gif,org/**/*.class"/>
+			<fileset dir="${jar-extra}"/>
+			<fileset dir="${build}/jar"/>
 			<fileset dir="${gnu.hylafax.classFileLocation}" includes="**/*.class"/>
 			<fileset dir="${src}" includes="COPYING,LICENSE,README*.txt,doc/*.html,doc/*.css,doc/*.png"/>
 			<fileset dir="${src}/src" includes="yajhfc/*.png,yajhfc/images/*,yajhfc/faxcover/*.html"/>
