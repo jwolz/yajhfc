@@ -69,10 +69,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -1084,9 +1082,9 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 final FaxJob<? extends FmtItem>[] selectedJobs = selTable.getSelectedJobs(); 
                 
                 ProgressWorker resendWorker = new ProgressWorker() {
-                    Set<FaxDocument> files = new HashSet<FaxDocument>();
-                    String subject = null;
-                    List<PBEntryFieldContainer> recipients = new ArrayList<PBEntryFieldContainer>();
+                    List<PBEntryFieldContainer> recipients = new ArrayList<PBEntryFieldContainer>(selectedJobs.length);
+                    List<Collection<FaxDocument>> files = new ArrayList<Collection<FaxDocument>>(selectedJobs.length);
+                    List<String> subjects = new ArrayList<String>(selectedJobs.length);
                     boolean success = false;
                     
                     @Override
@@ -1097,13 +1095,10 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                             String numberPrefix = connection.getOptions().numberPrefix;
                             try {
                                 for (FaxJob<? extends FmtItem> job : selectedJobs) {
-                                    String number, voiceNumber, company, name, location;
-                                    Collection<FaxDocument> jobFiles;
+                                    String number, voiceNumber, company, name, location, subject;
 
                                     updateNote(infoFormat.format(new Object[] {job.getIDValue()}));
-                                    
-                                    jobFiles = job.getDocuments();
-                                    
+                                 
                                     Map<String,String> props = job.getJobProperties("EXTERNAL", "DIALSTRING", "TOUSER", "TOCOMPANY", "TOLOCATION", "TOVOICE", "REGARDING");
                                     if (props != null && props.size() > 0) {
                                         number = props.get("DIALSTRING");
@@ -1117,14 +1112,11 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                                         company = props.get("TOCOMPANY");
                                         location = props.get("TOLOCATION");
                                         voiceNumber = props.get("TOVOICE");
-                                        if (subject == null || subject.length() == 0) {
-                                            // Simply take the first non-empty subject
-                                            subject = props.get("REGARDING").trim();
-                                        }
+                                        subject = props.get("REGARDING");
+                                        
+                                        files.add(job.getDocuments());
                                         recipients.add(new DefaultPBEntryFieldContainer(number, name, company, location, voiceNumber));
-                                    }
-                                    for (FaxDocument hysf : jobFiles) {
-                                            files.add(hysf);
+                                        subjects.add(subject);
                                     }
                                 }
                                 updateNote(_("Opening send dialog..."));
@@ -1144,18 +1136,20 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                     @Override
                     protected void done() {
                         if (success) {
-                            SendWinControl sw = SendController.createSendWindow(MainWin.this, currentServer, false, true);
+                            for (int i=0; i<recipients.size(); i++) {
+                                SendWinControl sw = SendController.createSendWindow(MainWin.this, currentServer, false, true);
 
-                            sw.getRecipients().addAll(recipients);
-                            for (FaxDocument doc : files) {
-                                sw.addServerFile(doc);
+                                sw.getRecipients().add(recipients.get(i));
+                                for (FaxDocument doc : files.get(i)) {
+                                    sw.addServerFile(doc);
+                                }
+
+                                if (subjects.get(i) != null)
+                                    sw.setSubject(subjects.get(i));
+
+                                Utils.unsetWaitCursorOnOpen(null, sw.getWindow());
+                                sw.setVisible(true);
                             }
-
-                            if (subject != null)
-                                sw.setSubject(subject);
-
-                            Utils.unsetWaitCursorOnOpen(null, sw.getWindow());
-                            sw.setVisible(true);
                         } else {
                             Utils.unsetWaitCursor(null);
                         }

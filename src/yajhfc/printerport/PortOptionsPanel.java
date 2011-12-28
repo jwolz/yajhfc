@@ -126,6 +126,7 @@ public class PortOptionsPanel extends AbstractOptionsPanel<FaxOptions> {
         
         textMkfifo = new JTextField();
         textMkfifo.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
+        textMkfifo.setEnabled(!Utils.IS_WINDOWS);
         
         add(labelDesc, "1,1,3,1,f,f");
         add(checkEnabled, "1,3,3,3,l,c");        
