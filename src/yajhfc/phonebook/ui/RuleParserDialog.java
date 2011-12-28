@@ -74,6 +74,7 @@ import yajhfc.phonebook.convrules.EntryToStringRule;
 import yajhfc.phonebook.convrules.RuleParser;
 import yajhfc.phonebook.convrules.RuleParser.RuleParseException;
 import yajhfc.util.CancelAction;
+import yajhfc.util.ClipboardPopup;
 import yajhfc.util.ExcDialogAbstractAction;
 
 /**
@@ -120,6 +121,7 @@ public class RuleParserDialog extends JDialog {
         
         textEdit = new JTextArea();
         textEdit.setFont(new Font("DialogInput", java.awt.Font.PLAIN, 12));
+        ClipboardPopup.DEFAULT_POPUP.addToComponent(textEdit);
 
         actOK = new ExcDialogAbstractAction(_("OK")) {
             @Override
