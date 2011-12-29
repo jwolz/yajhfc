@@ -41,6 +41,7 @@ import java.io.InputStream;
 import java.lang.reflect.Constructor;
 
 import yajhfc.Utils;
+import yajhfc.printerport.win32.Win32FIFO;
 
 /**
  * @author jonas
@@ -51,6 +52,10 @@ public abstract class FIFO {
     static {
         if (!Utils.IS_WINDOWS) {
             FIFO_IMPLEMENTATION = UnixFIFO.class;
+        } else {
+        	if (Win32FIFO.isAvailable()) {
+        		FIFO_IMPLEMENTATION = Win32FIFO.class;
+        	}
         }
     }
     

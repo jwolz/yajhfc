@@ -44,6 +44,7 @@ import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dialog;
 import java.awt.Frame;
+import java.awt.Image;
 import java.awt.Window;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -55,6 +56,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -1168,6 +1171,23 @@ public final class Utils {
         
         list.add(insertIndex, item);
         return insertIndex;
+    }
+    
+    /**
+     * Sets the icon images for the given Frame.
+     * If run on Java 1.5, this sets the image to the first image specified
+     * @param frame
+     * @param icons
+     */
+    public static void setIconImages(Frame frame, Image... icons) {
+    	try {
+			Method setIconImages = Window.class.getMethod("setIconImages", List.class);
+			setIconImages.invoke(frame, Arrays.asList(icons));
+		} catch (Exception e) {
+			log.log(Level.INFO, "Could not use setIconImages, using Frame.setIconImage instead", e);
+			frame.setIconImage(icons[0]);
+		} 
+    	
     }
 }
 

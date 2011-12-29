@@ -61,7 +61,9 @@ import yajhfc.util.IntVerifier;
  *
  */
 public class PortOptionsPanel extends AbstractOptionsPanel<FaxOptions> {
-    private static final int border = 8;    
+    static final boolean NEED_MKFIFO = !Utils.IS_WINDOWS;
+
+	private static final int border = 8;    
     
     JTextField textBindAddr;
     JTextField textPort;
@@ -94,11 +96,7 @@ public class PortOptionsPanel extends AbstractOptionsPanel<FaxOptions> {
         checkEnabled.setSelected(true);
         checkEnabled.addItemListener(new ItemListener() {
            public void itemStateChanged(ItemEvent e) {
-               boolean enable = checkEnabled.isSelected();
-               textBindAddr.setEnabled(enable);
-               textPort.setEnabled(enable);
-               labelBindAddr.setEnabled(enable);
-               labelPort.setEnabled(enable);
+               checkTCPControlsEnable();
             } 
         });
         
@@ -106,11 +104,7 @@ public class PortOptionsPanel extends AbstractOptionsPanel<FaxOptions> {
         checkEnableFIFO.setSelected(true);
         checkEnableFIFO.addItemListener(new ItemListener() {
            public void itemStateChanged(ItemEvent e) {
-               boolean enable = checkEnableFIFO.isSelected();
-               textFIFO.setEnabled(enable);
-               textMkfifo.setEnabled(enable);
-               labelFIFO.setEnabled(enable);
-               labelMkfifo.setEnabled(enable);
+               checkFIFOControlsEnable();
             } 
         });
         
@@ -126,7 +120,6 @@ public class PortOptionsPanel extends AbstractOptionsPanel<FaxOptions> {
         
         textMkfifo = new JTextField();
         textMkfifo.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
-        textMkfifo.setEnabled(!Utils.IS_WINDOWS);
         
         add(labelDesc, "1,1,3,1,f,f");
         add(checkEnabled, "1,3,3,3,l,c");        
@@ -151,6 +144,9 @@ public class PortOptionsPanel extends AbstractOptionsPanel<FaxOptions> {
         checkEnableFIFO.setSelected(po.enableFIFO);
         textFIFO.setText(po.fifoName);
         textMkfifo.setText(po.mkfifo);
+        
+        checkFIFOControlsEnable();
+        checkTCPControlsEnable();
     }
 
     /* (non-Javadoc)
@@ -231,7 +227,7 @@ public class PortOptionsPanel extends AbstractOptionsPanel<FaxOptions> {
             }
         }
 
-        if (checkEnableFIFO.isSelected()) {
+        if (NEED_MKFIFO && checkEnableFIFO.isSelected()) {
             String mkfifoCommand = textMkfifo.getText();
             if (mkfifoCommand.length() == 0 || 
                     Utils.searchExecutableInPath(Utils.extractExecutableFromCmdLine(mkfifoCommand)) == null) {
@@ -242,5 +238,24 @@ public class PortOptionsPanel extends AbstractOptionsPanel<FaxOptions> {
 
         return true;
     }
+
+	void checkFIFOControlsEnable() {
+		boolean enable = checkEnableFIFO.isSelected();
+		   boolean enableMkFIFO = enable && NEED_MKFIFO;
+		   
+		   textFIFO.setEnabled(enable);
+		   textMkfifo.setEnabled(enableMkFIFO);
+		   labelFIFO.setEnabled(enable);
+		   labelMkfifo.setEnabled(enableMkFIFO);
+	}
+
+	void checkTCPControlsEnable() {
+		boolean enable = checkEnabled.isSelected();
+		   
+		   textBindAddr.setEnabled(enable);
+		   textPort.setEnabled(enable);
+		   labelBindAddr.setEnabled(enable);
+		   labelPort.setEnabled(enable);
+	}
 
 }
