@@ -6,6 +6,7 @@
 	<property name="src" location="."/>
 	<property name="jar-extra" location="jar"/>
 	<property name="build.compiler" value="modern"/>
+	<property name="build.sysclasspath" value="ignore"/>
 
 	<property file="build.properties"/>
 	<property name="gnu.hylafax-dir" location="../gnu-hylafax"/>
@@ -70,7 +71,17 @@
 				</not>
 			</condition>
 		</fail>
-
+		<fail message="jna.jar and/or platform.jar not found in ${jna-dir}. Use build.properties to specify the correct path.">
+			<condition>
+				<not>
+					<and>
+						<available file="${jna-dir}/jna.jar" />
+						<available file="${jna-dir}/platform.jar" />
+					</and>
+				</not>
+			</condition>
+		</fail>
+		
 		<!-- Create the time stamp -->
 		<tstamp/>
 		<!-- Create the build directory structure used by compile -->
@@ -148,15 +159,15 @@
 		</javac>
 
 		
-		<!-- the parts of the source code depending on JNA-->
+		<!-- the parts of the source code depending on JNA (optional)-->
 		<javac srcdir="${src}/jna-src" includes="yajhfc/**/*.java" destdir="${build}" source="1.5" target="1.5" encoding="utf-8" debug="true" debuglevel="lines,source">
 			<classpath>
 				<pathelement path="${classpath}"/>
 				<pathelement location="${gnu.hylafax.classFileLocation}"/>
 				<pathelement location="${jar-extra}"/>
 				<pathelement location="${build}/jar"/>
-				<pathelement location="${jna-path}/jna.jar"/>
-				<pathelement location="${jna-path}/platform.jar"/>
+				<pathelement location="${jna-dir}/jna.jar"/>
+				<pathelement location="${jna-dir}/platform.jar"/>
 			</classpath>
 		</javac>
 
