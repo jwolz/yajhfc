@@ -72,7 +72,7 @@ public class Win32FIFO extends FIFO {
 			Class.forName("com.sun.jna.platform.win32.WinNT");
 			return true;
 		} catch (ClassNotFoundException e) {
-			Logger.getLogger(Win32FIFO.class.getName()).log(Level.INFO, "JNA not found", e);
+			Logger.getLogger(Win32FIFO.class.getName()).log(Level.INFO, "JNA not found, Win32 named pipe printer port will not be available", e);
 			return false;
 		}
 	}

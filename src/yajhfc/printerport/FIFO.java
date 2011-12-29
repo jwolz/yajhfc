@@ -39,9 +39,11 @@ package yajhfc.printerport;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import yajhfc.Utils;
-import yajhfc.printerport.win32.Win32FIFO;
 
 /**
  * @author jonas
@@ -53,9 +55,15 @@ public abstract class FIFO {
         if (!Utils.IS_WINDOWS) {
             FIFO_IMPLEMENTATION = UnixFIFO.class;
         } else {
-        	if (Win32FIFO.isAvailable()) {
-        		FIFO_IMPLEMENTATION = Win32FIFO.class;
-        	}
+        	try {
+				Class<?> win32FIFO = Class.forName("yajhfc.printerport.win32.Win32FIFO");
+				Method isAvailable = win32FIFO.getMethod("isAvailable");
+				if ((Boolean)isAvailable.invoke(null)) {
+					FIFO_IMPLEMENTATION = (Class<? extends FIFO>) win32FIFO;
+				}
+			} catch (Exception e) {
+				Logger.getAnonymousLogger().log(Level.SEVERE, "Could not call yajhfc.printerport.win32.Win32FIFO.isAvailable()");
+			} 
         }
     }
     
