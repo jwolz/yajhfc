@@ -1828,7 +1828,13 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 }
             }
         });
-        setIconImage(Toolkit.getDefaultToolkit().getImage(MainWin.class.getResource("icon.png")));
+        final Toolkit toolkit = Toolkit.getDefaultToolkit();
+		Utils.setIconImages(this,
+        		toolkit.getImage(MainWin.class.getResource("icon.png")),
+        		toolkit.getImage(MainWin.class.getResource("icon-32x32.png")),        		
+        		toolkit.getImage(MainWin.class.getResource("icon-48x48.png")),        		
+        		toolkit.getImage(MainWin.class.getResource("icon-64x64.png")),        		
+        		toolkit.getImage(MainWin.class.getResource("logo-large.png")));
         
         reloadTableColumnSettings();
         menuViewListener.loadFromOptions(myopts);

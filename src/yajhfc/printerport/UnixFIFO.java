@@ -48,6 +48,8 @@ import java.util.logging.Logger;
 import yajhfc.util.ExternalProcessExecutor;
 
 /**
+ * Unix named pipe implementation (i.e. file created by mkfifo command)
+ * 
  * @author jonas
  *
  */
