@@ -135,7 +135,7 @@ public class SortOrderDialog extends JDialog {
         }
         
         fmtEditor = new fmtEditor<PBEntryField>(PBEntryField.values(), selectedList, Collections.<PBEntryField>emptyList(),
-                new DefaultListCellRenderer(), null, null,  _("Selected sort order:"), _("Avaiable fields:"));
+                new DefaultListCellRenderer(), null, null,  _("Selected sort order:"), _("Available fields:"));
         fmtEditor.getSelectedList().setCellRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList list,
