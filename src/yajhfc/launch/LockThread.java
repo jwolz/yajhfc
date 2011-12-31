@@ -48,6 +48,7 @@ import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 
 import yajhfc.Utils;
+import yajhfc.file.textextract.RecipientExtractionMode;
 
 /**
  * @author jonas
@@ -149,7 +150,13 @@ sessionLoop:    do {
                             break;
                         case Lock.CODE_EXTRACT_RECIPIENTS:
                             log.fine("Got CODE_EXTRACT_RECIPIENTS");
-                            submitProto.setExtractRecipients(strIn.readBoolean());
+                            int ordinal = strIn.readInt();
+                            RecipientExtractionMode[] values = RecipientExtractionMode.values();
+                            if (ordinal >= 0 && ordinal < values.length) {
+                            	submitProto.setExtractRecipients(values[ordinal]);
+                            } else {
+                            	log.warning("Invalid ordinal " + ordinal + " received for CODE_EXTRACT_RECIPIENTS");
+                            }
                             break;
                         case Lock.CODE_SET_MODEM:
                             log.fine("Got CODE_SET_MODEM");
