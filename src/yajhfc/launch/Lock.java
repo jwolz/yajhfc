@@ -56,6 +56,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import yajhfc.Utils;
+import yajhfc.file.textextract.RecipientExtractionMode;
 
 /**
  * @author jonas
@@ -165,13 +166,13 @@ public class Lock implements SubmitProtocol {
         checkResponse();
     }
 
-    public void setExtractRecipients(boolean extractRecipients)
+    public void setExtractRecipients(RecipientExtractionMode extractRecipients)
             throws IOException {
         if (Utils.debugMode) {
             log.finer("setExtractRecipients: " + extractRecipients);
         }
         outStream.write(CODE_EXTRACT_RECIPIENTS);
-        outStream.writeBoolean(extractRecipients);
+        outStream.writeInt(extractRecipients.ordinal());
         outStream.flush();
         checkResponse();
     }

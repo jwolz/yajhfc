@@ -48,8 +48,9 @@ import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
-import yajhfc.plugin.PluginType;
+import yajhfc.file.textextract.RecipientExtractionMode;
 import yajhfc.plugin.PluginManager.PluginInfo;
+import yajhfc.plugin.PluginType;
 import yajhfc.util.ExampleFileFilter;
 
 /**
@@ -131,10 +132,10 @@ public class CommandLineOpts extends CommonCommandLineOpts { //IMPORTANT!: Do no
     public String identityToUse = null;
     
     /**
-     * Extract recipients? null: Don't change, else use booleanValue()
+     * Extract recipients? 
      * Communicated over socket.
      */
-    public Boolean extractRecipients = null;
+    public RecipientExtractionMode extractRecipients = null;
     
     /**
      * Parses the command line arguments and does some initial processing for the --help and --logfile options.
@@ -280,10 +281,22 @@ public class CommandLineOpts extends CommonCommandLineOpts { //IMPORTANT!: Do no
                 break;
             case 14: //extract-recipients
                 optarg = getopt.getOptarg();
-                if (optarg == null || optarg.equals("") || Character.toLowerCase(optarg.charAt(0)) == 'y' || optarg.equals("true")) {
-                    extractRecipients = Boolean.TRUE;
+                if (optarg == null || optarg.length() == 0) {
+                	extractRecipients = RecipientExtractionMode.YES;
                 } else {
-                    extractRecipients = Boolean.FALSE;
+                	char firstLower = Character.toLowerCase(optarg.charAt(0));
+                	if (firstLower == 'y' || 
+                			optarg.equals("1")) {
+                		extractRecipients = RecipientExtractionMode.YES;
+                	} else if (firstLower == 'n' || 
+                			optarg.equals("0")) {
+                		extractRecipients = RecipientExtractionMode.NO;
+                	} else if (firstLower == 'a' || 
+                			optarg.equals("2")) {
+                		extractRecipients = RecipientExtractionMode.AUTO;
+                	} else {
+                		System.err.println("Unknown option specified for extract-recipients: " + optarg);
+                	}
                 }
                 break;
             case 'C': // use-cover

@@ -42,6 +42,8 @@ import java.util.Collection;
 
 import javax.naming.OperationNotSupportedException;
 
+import yajhfc.file.textextract.RecipientExtractionMode;
+
 /**
  * @author jonas
  *
@@ -75,7 +77,7 @@ public interface SubmitProtocol {
      * Sets if a recipients should be extracted from the specified documents
      * @param useCover
      */
-    void setExtractRecipients(boolean extractRecipients) throws IOException; 
+    void setExtractRecipients(RecipientExtractionMode extractRecipients) throws IOException; 
     
     /**
      * Sets the subject for the fax

@@ -75,44 +75,72 @@ public class FaxnumberExtractor {
         this(HylaToTextConverter.findDefault());
     }
     
-    public void extractFromMultipleFileNames(Collection<String> input, List<String> listToAddTo) throws IOException, ConversionException {
+    /**
+     * Extract fax numbers from the specified input files and add them to listToAddTo
+     * @param input
+     * @param listToAddTo
+     * @return the number of fax numbers found
+     * @throws IOException
+     * @throws ConversionException
+     */
+    public int extractFromMultipleFileNames(Collection<String> input, List<String> listToAddTo) throws IOException, ConversionException {
         if (input.size() == 0)
-            return;
+            return 0;
         
         List<FormattedFile> formattedInput = new ArrayList<FormattedFile>(input.size());
         for (String f : input) {
             formattedInput.add(new FormattedFile(f));
         }
-        extractFromMultipleFiles(formattedInput, listToAddTo);
+        return extractFromMultipleFiles(formattedInput, listToAddTo);
     }
 
-    public void extractFromMultipleFiles(List<FormattedFile> input, List<String> listToAddTo) throws IOException, ConversionException {
+    /**
+     * Extract fax numbers from the specified input files and add them to listToAddTo
+     * @param input
+     * @param listToAddTo
+     * @return the number of fax numbers found
+     * @throws IOException
+     * @throws ConversionException
+     */
+    public int extractFromMultipleFiles(List<FormattedFile> input, List<String> listToAddTo) throws IOException, ConversionException {
         if (input.size() == 0)
-            return;
+            return 0;
         
         CharSequence[] texts = converter.convertFilesToText(input);        
         
+        int n = 0;
         for (CharSequence text : texts) {
-            getMatchesInText(text, 1, listToAddTo);
+            n += getMatchesInText(text, 1, listToAddTo);
         }
-        
+        return n;
     }
     
-    public void getMatchesInText(CharSequence text, int captureGroup, List<String> listToAddTo) throws IOException {
+    /**
+     * Search for patterns matching faxnumberPattern and add the specified captureGroup to listToAddTo
+     * @param text
+     * @param captureGroup
+     * @param listToAddTo
+     * @return the number of matches found
+     * @throws IOException
+     */
+    public int getMatchesInText(CharSequence text, int captureGroup, List<String> listToAddTo) throws IOException {
         if (Utils.debugMode) {
             log.finest("input text is:\n" + text);
         }
         System.out.println(text);
         Matcher m = faxnumberPattern.matcher(text);
+        int n = 0;
         
         while (m.find()) {
             if (Utils.debugMode) {
                 log.fine("Found match: " + m);
             }
             listToAddTo.add(m.group(captureGroup));
+            n++;
         }
         if (Utils.debugMode) {
-            log.fine("No more matches");
+            log.fine("No more matches; " + n + " matches found in total.");
         }
+        return n;
     }
 }

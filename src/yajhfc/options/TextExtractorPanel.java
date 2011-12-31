@@ -54,7 +54,6 @@ import java.util.Vector;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -73,6 +72,7 @@ import yajhfc.file.FormattedFile;
 import yajhfc.file.textextract.HylaToTextConverter;
 import yajhfc.file.textextract.PDFToTextConverter;
 import yajhfc.file.textextract.PSToTextConverter;
+import yajhfc.file.textextract.RecipientExtractionMode;
 import yajhfc.util.ClipboardPopup;
 import yajhfc.util.ExcDialogAbstractAction;
 import yajhfc.util.ProgressDialog;
@@ -85,7 +85,7 @@ import yajhfc.util.SafeJFileChooser;
  */
 public class TextExtractorPanel extends AbstractOptionsPanel<FaxOptions> {
 
-    JCheckBox checkExtractRecipients;
+	JComboBox comboExtractRecipients;
     JComboBox comboExtractionMethod;
     JLabel labelPath;
     FileTextField ftfPath;
@@ -106,7 +106,7 @@ public class TextExtractorPanel extends AbstractOptionsPanel<FaxOptions> {
         pathMap.put(PDFToTextConverter.class.getName(), foEdit.pdftotextPath);
         pathMap.put(PSToTextConverter.class.getName(), foEdit.pstotextPath);
         
-        checkExtractRecipients.setSelected(foEdit.extractRecipients);
+        comboExtractRecipients.setSelectedItem(foEdit.extractRecipients);
         
         lastSelection = null;
         comboExtractionMethod.setSelectedItem(HylaToTextConverter.findByString(foEdit.hylaToTextConverter));
@@ -120,7 +120,7 @@ public class TextExtractorPanel extends AbstractOptionsPanel<FaxOptions> {
     public void saveSettings(FaxOptions foEdit) {
         savePath();
         
-        foEdit.extractRecipients = checkExtractRecipients.isSelected();
+        foEdit.extractRecipients = (RecipientExtractionMode)comboExtractRecipients.getSelectedItem();
         
         foEdit.hylaToTextConverter = ((HylaToTextConverter)comboExtractionMethod.getSelectedItem()).name();
         
@@ -164,8 +164,8 @@ public class TextExtractorPanel extends AbstractOptionsPanel<FaxOptions> {
     
     @Override
     protected void createOptionsUI() {
-        checkExtractRecipients = new JCheckBox(_("Extract recipients from documents"));
-        JLabel lblExplanation = new JLabel("<html>" + _("By checking this option YajHFC will try to extract the recipients from documents given on the command line or fax printer.") + "<br>" + 
+        //checkExtractRecipients = new JCheckBox(_("Extract recipients from documents"));
+        JLabel lblExplanation = new JLabel("<html>" + _("By activating this option YajHFC will try to extract the recipients from documents given on the command line or fax printer.") + "<br>" + 
                 _("To find recipients it searches for <tt>@@recipient:<i>faxnumber</i>@@</tt> tags in the files.") + "<br>" + 
                 _("This behaviour can be overridden by the <tt>--extract-recipients</tt> command line option.") + "<br><br>" + 
                 _("If you want to use this feature a PDF/PostScript to text conversion method must be selected below.") + "</html>");
@@ -180,6 +180,7 @@ public class TextExtractorPanel extends AbstractOptionsPanel<FaxOptions> {
                 selectNewPath(extractor);
             }
         });
+        comboExtractRecipients = new JComboBox(RecipientExtractionMode.values());
         
         ftfPath = new FileTextField();
         ClipboardPopup.DEFAULT_POPUP.addToComponent(ftfPath.getJTextField());
@@ -230,15 +231,15 @@ public class TextExtractorPanel extends AbstractOptionsPanel<FaxOptions> {
         
         double[][] dLay = {
                 {OptionsWin.border, TableLayout.PREFERRED, OptionsWin.border, TableLayout.PREFERRED, OptionsWin.border, TableLayout.FILL, OptionsWin.border},
-                {OptionsWin.border, TableLayout.PREFERRED, OptionsWin.border, TableLayout.PREFERRED, OptionsWin.border*2, TableLayout.PREFERRED, OptionsWin.border*2, TableLayout.PREFERRED, TableLayout.PREFERRED, OptionsWin.border, TableLayout.PREFERRED, TableLayout.FILL, OptionsWin.border}
+                {OptionsWin.border, TableLayout.PREFERRED, OptionsWin.border*2, TableLayout.PREFERRED, OptionsWin.border*2,  TableLayout.PREFERRED, TableLayout.PREFERRED, OptionsWin.border, TableLayout.PREFERRED, TableLayout.PREFERRED, OptionsWin.border, TableLayout.PREFERRED, TableLayout.FILL, OptionsWin.border}
         };
         setLayout(new TableLayout(dLay));
-        add(checkExtractRecipients, "1,1,5,1,l,c");
-        add(lblExplanation, "1,3,5,3,f,t");
-        add(new JSeparator(), "0,5,6,5,f,c");
-        Utils.addWithLabel(this, comboExtractionMethod, _("PS/PDF to text conversion method:"), "1,8");
-        add(new JButton(actView), "3,8");
-        add(panelConverterSettings, "1,10,5,10,f,f");
+        add(lblExplanation, "1,1,5,1,f,t");
+        add(new JSeparator(), "0,3,6,3,f,c");
+        Utils.addWithLabel(this, comboExtractRecipients, _("Extract recipients from documents:"), "1,6");
+        Utils.addWithLabel(this, comboExtractionMethod, _("PS/PDF to text conversion method:"), "1,9");
+        add(new JButton(actView), "3,9");
+        add(panelConverterSettings, "1,11,5,11,f,f");
     }
 
     

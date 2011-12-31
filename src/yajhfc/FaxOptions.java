@@ -47,6 +47,7 @@ import javax.print.attribute.Attribute;
 
 import yajhfc.file.FileFormat;
 import yajhfc.file.MultiFileConvFormat;
+import yajhfc.file.textextract.RecipientExtractionMode;
 import yajhfc.file.textextract.HylaToTextConverter;
 import yajhfc.model.FmtItemList;
 import yajhfc.model.JobFormat;
@@ -499,7 +500,7 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
     /**
      * Extract fax numbers from documents by default?
      */
-    public boolean extractRecipients = false;
+    public RecipientExtractionMode extractRecipients = RecipientExtractionMode.NO;
     
     /**
      * The hyla to text converter to use
