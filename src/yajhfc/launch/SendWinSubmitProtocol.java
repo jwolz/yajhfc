@@ -37,157 +37,33 @@
 package yajhfc.launch;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.SwingUtilities;
 
-import yajhfc.Utils;
-import yajhfc.file.textextract.FaxnumberExtractor;
+import yajhfc.NoGUISender;
 import yajhfc.file.textextract.RecipientExtractionMode;
-import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
 import yajhfc.send.SendController;
+import yajhfc.send.SendControllerListener;
 import yajhfc.send.SendWinControl;
-import yajhfc.send.StreamTFLItem;
 import yajhfc.server.ServerManager;
 
 /**
  * @author jonas
  *
  */
-public class SendWinSubmitProtocol implements SubmitProtocol, Runnable {
-    private static final Logger log = Logger.getLogger(SendWinSubmitProtocol.class.getName());
+public class SendWinSubmitProtocol extends FaxSenderSubmitProtocol implements SubmitProtocol, Runnable, SendControllerListener {
     
-    protected String subject;
-    protected String comments;
-    protected String modem;
-    protected Boolean useCover;
-    protected RecipientExtractionMode extractRecipients;
-    protected boolean closeAfterSubmit = false;
+    protected List<Long> submittedIDs = null;
+    private boolean ready = false;
     
-    protected final List<String> recipients = new ArrayList<String>();
-    protected final List<String> files = new ArrayList<String>();
-    protected InputStream inStream;
-    protected String streamDesc = null;
-    protected StreamTFLItem tflInStream;
-    
-    protected String server, identity;
-    
-    protected boolean preparedSubmit = false;
-    
-    protected long[] submittedIDs = null;
-    
-    public SendWinSubmitProtocol() {
-    }
-    
-    /* (non-Javadoc)
-     * @see yajhfc.launch.SubmitProtocol#setComments(java.lang.String)
-     */
-    public void setComments(String comments) {
-        this.comments = comments;
-    }
-
-    /* (non-Javadoc)
-     * @see yajhfc.launch.SubmitProtocol#setCover(boolean)
-     */
-    public void setCover(boolean useCover) {
-        this.useCover = useCover;
-    }
-    
-    public void setExtractRecipients(RecipientExtractionMode extractRecipients)
-            throws IOException {
-        this.extractRecipients = extractRecipients;
-    }
-
-    /* (non-Javadoc)
-     * @see yajhfc.launch.SubmitProtocol#setFiles(java.util.List)
-     */
-    public void addFiles(Collection<String> fileNames) {
-        this.files.addAll(fileNames);
-    }
-
-    
-    public void setInputStream(InputStream stream, String sourceText) {
-        this.inStream = stream;
-        this.streamDesc = sourceText;
-    }
-
-    /* (non-Javadoc)
-     * @see yajhfc.launch.SubmitProtocol#setRecipients(java.util.List)
-     */
-    public void addRecipients(Collection<String> recipients) {
-        this.recipients.addAll(recipients);
-    }
-
-    /* (non-Javadoc)
-     * @see yajhfc.launch.SubmitProtocol#setSubject(java.lang.String)
-     */
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-    
-    public void setModem(String modem) throws IOException {
-        this.modem = modem;
-    }
-
-    public void setCloseAfterSubmit(boolean closeAfterSumbit) {
-        this.closeAfterSubmit = closeAfterSumbit;
-    }
-    
-    public void setIdentity(String identityToUse) throws IOException {
-        this.identity = identityToUse;
-    }
-    
-    public void setServer(String serverToUse) throws IOException {
-        this.server = serverToUse;
-    }
-    
-    /**
-     * Prepares the submit
-     */
-    public void prepareSubmit() throws IOException {
-        if (preparedSubmit)
-            return;
-
-        if (inStream != null)
-            tflInStream = new StreamTFLItem(inStream, streamDesc);
-        
-        if (Utils.debugMode)
-            log.fine("Check for extracting recipients: extractRecipients=" + extractRecipients + "; Utils.getFaxOptions().extractRecipients=" + Utils.getFaxOptions().extractRecipients);
-        RecipientExtractionMode rem = extractRecipients;
-        if (rem == null)
-        	rem = Utils.getFaxOptions().extractRecipients;
-        if ((rem == RecipientExtractionMode.YES)
-         || (rem == RecipientExtractionMode.AUTO)) {
-            try {
-                if (inStream != null) {
-                    log.fine("Extracting recipients from stdin");
-                    FaxnumberExtractor extractor = new FaxnumberExtractor();
-                    extractor.extractFromMultipleFiles(Collections.singletonList(tflInStream.getPreviewFilename()), recipients);
-                } else if (files.size() > 0) {
-                    log.fine("Extracting recipients from input files");
-                    FaxnumberExtractor extractor = new FaxnumberExtractor();
-                    extractor.extractFromMultipleFileNames(files, recipients);
-                }
-            } catch (Exception e) {
-                log.log(Level.WARNING, "Error extracting recipients", e);
-            }
-        }
-        
-        preparedSubmit = true;
-    }
-
-
     /* (non-Javadoc)
      * @see yajhfc.launch.SubmitProtocol#submitNoWait()
      */
     public long[] submit(boolean wait) throws IOException {
         prepareSubmit();
+        
         if (wait) {
             if (SwingUtilities.isEventDispatchThread()) {
                 run();
@@ -198,70 +74,101 @@ public class SendWinSubmitProtocol implements SubmitProtocol, Runnable {
                     log.log(Level.WARNING, "Error submitting the fax:", e);
                 }
             }
-            return submittedIDs;
         } else {
             SwingUtilities.invokeLater(this);
-            return null;
         }
+
+        if (submittedIDs == null) {
+            return null;
+        } else {
+            return listToArray(submittedIDs);
+        }
+    }
+    
+    private static long[] listToArray(List<Long> list) {
+        long[] ids = new long[list.size()];
+        for (int i=0; i<ids.length; i++) {
+            ids[i] = list.get(i).longValue();
+        }
+        return ids;
+    }
+
+    private void dispatchToSendController() {
+        Launcher2.application.bringToFront();
+        
+        SendController controller = new SendController(ServerManager.getDefault().getCurrent(), Launcher2.application.getFrame(), false);
+        if (Launcher2.application instanceof NoGUISender) {
+            controller.setProgressMonitor(((NoGUISender)Launcher2.application).progressPanel);
+        }
+        submitTo(controller);
+        controller.addSendControllerListener(this);
+        if (controller.validateEntries()) {
+            controller.sendFax();
+        } else {
+            setReady();
+        }
+    }
+    
+    private void dispatchToSendWin() {
+//      log.fine("Running...");
+//      Launcher2.application.bringToFront();
+
+      log.fine("Initializing SendWin");
+      SendWinControl sw = SendController.getSendWindow(Launcher2.application.getFrame(), ServerManager.getDefault().getCurrent(), false, true);
+
+      submitTo(sw);
+      
+      if (Launcher2.application.getFrame().isVisible()) {
+          Launcher2.application.getFrame().toFront();
+      }
+      log.fine("Showing SendWin");
+      sw.setVisible(true);
+      log.fine("SendWin closed");
+      
+      if (sw.getModalResult()) {
+          submittedIDs = sw.getSubmittedJobIDs();
+      } else {
+          submittedIDs = null;
+      }
+      
+      if (closeAfterSubmit) {
+          Launcher2.application.dispose();
+      }
+      
+      setReady();
     }
 
     /* (non-Javadoc)
      * @see java.lang.Runnable#run()
      */
-    public void run() {
-//        log.fine("Running...");
-//        Launcher2.application.bringToFront();
-
-        log.fine("Initializing SendWin");
-        SendWinControl sw = SendController.getSendWindow(Launcher2.application.getFrame(), ServerManager.getDefault().getCurrent(), false, true);
-
-        if (server != null) {
-            sw.setServer(server);
-        }
-        if (identity != null) {
-            sw.setIdentity(identity);
-        }
-        if (inStream != null) {                
-            sw.addInputStream(tflInStream);
+    public void run() {        
+        if (numExtractedRecipients > 0 && getEffectiveExtractRecipients() == RecipientExtractionMode.AUTO) {
+            dispatchToSendController();
         } else {
-            for (String fileName : files)
-                sw.addLocalFile(fileName);
+            dispatchToSendWin();
         }
-        if (recipients != null && recipients.size() > 0) {
-            DefaultPBEntryFieldContainer.parseCmdLineStrings(sw.getRecipients(), recipients);
-        }
-        if (useCover != null) {
-            sw.setUseCover(useCover);
-        }
-        if (subject != null) {
-            sw.setSubject(subject);
-        }
-        if (comments != null) {
-            sw.setComment(comments);
-        }
-        if (modem != null) {
-            sw.setModem(modem);
-        }
-        if (Launcher2.application.getFrame().isVisible()) {
-            Launcher2.application.getFrame().toFront();
-        }
-        log.fine("Showing SendWin");
-        sw.setVisible(true);
-        log.fine("SendWin closed");
-        
-        if (sw.getModalResult()) {
-            List<Long> idList = sw.getSubmittedJobIDs();
-            long[] ids = new long[idList.size()];
-            for (int i=0; i<ids.length; i++) {
-                ids[i] = idList.get(i).longValue();
-            }
-            submittedIDs = ids;
-        } else {
-            submittedIDs = null;
-        }
-        
-        if (closeAfterSubmit)
-            Launcher2.application.dispose();
     }
 
+    private void setReady() {
+        synchronized (this) {
+            ready = true;
+            notifyAll();
+        }
+    }
+    
+    public void waitReady() {
+        try {
+            synchronized (this) {
+                while (!ready) {
+                    wait();
+                }
+            }
+        } catch (InterruptedException e) {
+            log.log(Level.WARNING, "Error submitting the fax:", e);
+        }
+    }
+
+    public void sendOperationComplete(boolean success) {
+        setReady();
+    }
 }

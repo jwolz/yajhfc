@@ -51,6 +51,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -88,7 +89,7 @@ import yajhfc.util.ProgressWorker.ProgressUI;
  * @author jonas
  *
  */
-public class SendController {
+public class SendController implements FaxSender {
     
     // These properties are set in the constructor:
     protected Server server;
@@ -568,11 +569,11 @@ public class SendController {
         this.subject = subject;
     }
 
-    public String getComments() {
+    public String getComment() {
         return comments;
     }
 
-    public void setComments(String comments) {
+    public void setComment(String comments) {
         if (comments == null) {
             throw new IllegalArgumentException("comments may not be null!");
         }
@@ -700,15 +701,15 @@ public class SendController {
         }
     }
     
-    public List<Long> getSubmittedJobs() {
+    public List<Long> getSubmittedJobIDs() {
         return submittedJobs;
     }
     
-    public SenderIdentity getFromIdentity() {
+    public SenderIdentity getIdentity() {
         return fromIdentity;
     }
     
-    public void setFromIdentity(SenderIdentity fromIdentity) {
+    public void setIdentity(SenderIdentity fromIdentity) {
         this.fromIdentity = fromIdentity;
     }
     
@@ -768,5 +769,17 @@ public class SendController {
             } 
         });
         return result;
+    }
+
+    public Collection<PBEntryFieldContainer> getRecipients() {
+        return numbers;
+    }
+
+    public Collection<HylaTFLItem> getDocuments() {
+        return files;
+    }
+
+    public void setModem(String modem) {
+        setSelectedModem(modem);
     }
 }

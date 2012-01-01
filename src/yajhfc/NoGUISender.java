@@ -67,8 +67,8 @@ import yajhfc.util.ProgressContentPane;
  */
 public class NoGUISender extends JFrame implements MainApplicationFrame {
 
-    ProgressContentPane progressPanel;
-    YajOptionPane dialogUI = new SwingYajOptionPane(this);
+    public final ProgressContentPane progressPanel;
+    public final YajOptionPane dialogUI = new SwingYajOptionPane(this);
     
     /**
      * @throws HeadlessException
@@ -87,6 +87,7 @@ public class NoGUISender extends JFrame implements MainApplicationFrame {
     }
 
     public void bringToFront() {
+        setVisible(true);
         toFront();
     }
     
@@ -146,13 +147,13 @@ public class NoGUISender extends JFrame implements MainApplicationFrame {
             if (opts.identityToUse != null) {
                 SenderIdentity identity = IDAndNameOptions.getItemFromCommandLineCoding(Utils.getFaxOptions().identities, opts.identityToUse);
                 if (identity != null) {
-                    sendController.setFromIdentity(identity);
+                    sendController.setIdentity(identity);
                 } else {
                     Logger.getAnonymousLogger().warning("Identity not found, using default instead: " + opts.identityToUse);
-                    sendController.setFromIdentity(server.getDefaultIdentity());
+                    sendController.setIdentity(server.getDefaultIdentity());
                 }
             } else {
-                sendController.setFromIdentity(server.getDefaultIdentity());
+                sendController.setIdentity(server.getDefaultIdentity());
             }
             
             DefaultPBEntryFieldContainer.parseCmdLineStrings(sendController.getNumbers(), opts.recipients);
@@ -161,7 +162,7 @@ public class NoGUISender extends JFrame implements MainApplicationFrame {
             if (opts.subject != null)
                 sendController.setSubject(opts.subject);
             if (opts.comment != null)
-                sendController.setComments(opts.comment);
+                sendController.setComment(opts.comment);
             if (opts.useStdin) {
                 sendController.getFiles().add(new StreamTFLItem(System.in, null));
             }

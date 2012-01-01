@@ -79,25 +79,21 @@ import yajhfc.FaxOptions;
 import yajhfc.FaxResolution;
 import yajhfc.FileTextField;
 import yajhfc.HylaModem;
-import yajhfc.IDAndNameOptions;
 import yajhfc.PaperSize;
 import yajhfc.SenderIdentity;
 import yajhfc.Utils;
 import yajhfc.faxcover.Faxcover;
 import yajhfc.file.FileConverters;
 import yajhfc.model.IconMap;
-import yajhfc.model.servconn.FaxDocument;
 import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.PhoneBookEntry;
 import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 import yajhfc.phonebook.ui.NewPhoneBookWin;
 import yajhfc.server.Server;
-import yajhfc.server.ServerManager;
 import yajhfc.server.ServerOptions;
 import yajhfc.util.CancelAction;
 import yajhfc.util.ClipboardPopup;
 import yajhfc.util.ExcDialogAbstractAction;
-import yajhfc.util.ExceptionDialog;
 
 
 final class SendWin extends JDialog implements SendWinControl  {
@@ -237,7 +233,7 @@ final class SendWin extends JDialog implements SendWinControl  {
     }
     
     public List<Long> getSubmittedJobIDs() {
-        return sendController.getSubmittedJobs();
+        return sendController.getSubmittedJobIDs();
     }
     
     private JLabel addCoverComp(JComponent comp, String lblText, String layout) {
@@ -647,22 +643,22 @@ final class SendWin extends JDialog implements SendWinControl  {
         return ClipboardPopup.DEFAULT_POPUP;
     }
     
-    public void addLocalFile(String fileName) {
-        tflFiles.addListItem(fileName);
-    }
-    
-    public void addServerFile(FaxDocument serverFile) {
-        tflFiles.model.add(new ServerFileTFLItem(serverFile));
-    }
-    
-    public void addInputStream(StreamTFLItem inStream) {
-        try {
-            tflFiles.model.add(inStream);
-        } catch (Exception e) {
-            //JOptionPane.showMessageDialog(ButtonSend, _("An error occured reading the input: ") + "\n" + e.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
-            ExceptionDialog.showExceptionDialog(this, _("An error occured reading the input: "), e);
-        }
-    }
+//    public void addLocalFile(String fileName) {
+//        tflFiles.addListItem(fileName);
+//    }
+//    
+//    public void addServerFile(FaxDocument serverFile) {
+//        tflFiles.model.add(new ServerFileTFLItem(serverFile));
+//    }
+//    
+//    public void addInputStream(StreamTFLItem inStream) {
+//        try {
+//            tflFiles.model.add(inStream);
+//        } catch (Exception e) {
+//            //JOptionPane.showMessageDialog(ButtonSend, _("An error occured reading the input: ") + "\n" + e.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
+//            ExceptionDialog.showExceptionDialog(this, _("An error occured reading the input: "), e);
+//        }
+//    }
             
     private List<PBEntryFieldContainer> recipientList;
     public Collection<PBEntryFieldContainer> getRecipients() {
@@ -709,7 +705,7 @@ final class SendWin extends JDialog implements SendWinControl  {
         tflNumbers.commit();
         
         if (textToComments != null)
-            sendController.setComments(textToComments.getText());
+            sendController.setComment(textToComments.getText());
         sendController.setKillTime((Integer)spinKillTime.getValue());
         sendController.setMaxTries((Integer)spinMaxTries.getValue());
         sendController.setNotificationType((FaxNotification)comboNotification.getSelectedItem());
@@ -742,27 +738,40 @@ final class SendWin extends JDialog implements SendWinControl  {
         checkUseCover.setSelected(useCover);
     }
 
-    public void setIdentity(String identityToUse) {
-        SenderIdentity identity = IDAndNameOptions.getItemFromCommandLineCoding(Utils.getFaxOptions().identities, identityToUse);
-        if (identity != null) {
-            sendController.setFromIdentity(identity);
-        } else {
-            log.warning("Identity not found, using default instead: " + identityToUse);
-        }
-    }
+//    public void setIdentity(String identityToUse) {
+//        SenderIdentity identity = IDAndNameOptions.getItemFromCommandLineCoding(Utils.getFaxOptions().identities, identityToUse);
+//        if (identity != null) {
+//            sendController.setIdentity(identity);
+//        } else {
+//            log.warning("Identity not found, using default instead: " + identityToUse);
+//        }
+//    }
     
-    public void setServer(String serverToUse) {
-        ServerOptions server = IDAndNameOptions.getItemFromCommandLineCoding(Utils.getFaxOptions().servers, serverToUse);
-        if (server != null) {
-            this.server = ServerManager.getDefault().getServerByID(server.id);
-            sendController.setServer(this.server);
-        } else {
-            log.warning("Server not found, using default instead: " + serverToUse);
-        }
-    }
+//    public void setServer(String serverToUse) {
+//        ServerOptions server = IDAndNameOptions.getItemFromCommandLineCoding(Utils.getFaxOptions().servers, serverToUse);
+//        if (server != null) {
+//            this.server = ServerManager.getDefault().getServerByID(server.id);
+//            sendController.setServer(this.server);
+//        } else {
+//            log.warning("Server not found, using default instead: " + serverToUse);
+//        }
+//    }
 
     public boolean isPollMode() {
         return pollMode;
+    }
+
+    public Collection<HylaTFLItem> getDocuments() {
+        return tflFiles.model;
+    }
+
+    public void setServer(Server serverToUse) {
+        this.server = serverToUse;
+        sendController.setServer(serverToUse);
+    }
+
+    public void setIdentity(SenderIdentity identityToUse) {
+        sendController.setIdentity(identityToUse);
     }
 }  
 

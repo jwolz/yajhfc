@@ -320,7 +320,6 @@ public class Launcher2 {
                         launchLog.log(Level.WARNING, "Error submitting fax", e);
                         ExceptionDialog.showExceptionDialog(dummyFrame, Utils._("Error submitting fax"), e);
                     }
-                    System.exit(0);
                 } 
             });
             ShutdownManager.getInstance().registerShutdownHook(new Runnable() {
@@ -337,6 +336,9 @@ public class Launcher2 {
                         System.err.println("Shutdown work finished.");
                 } 
             });
+            
+            submitProto.waitReady();
+            System.exit(0);
         } catch (Exception e) {
             launchLog.log(Level.WARNING, "Error submitting fax", e);
         }
