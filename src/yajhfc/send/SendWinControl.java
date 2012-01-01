@@ -37,24 +37,14 @@
 package yajhfc.send;
 
 import java.awt.Window;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
 
-import yajhfc.model.servconn.FaxDocument;
-import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 
 /**
  * Control methods for the send dialog
  * @author jonas
  *
  */
-public interface SendWinControl {
-    /**
-     * Shows/hides the dialog
-     * @param visible
-     */
-    public void setVisible(boolean visible);
+public interface SendWinControl extends FaxSender {
     /**
      * Returns true if the user clicked "send fax"
      * @return
@@ -62,82 +52,14 @@ public interface SendWinControl {
     public boolean getModalResult();
     
     /**
-     * Returns a list of the job IDs of the submitted jobs if getModalResult() == true
-     * If getModalResult() == false, the result is undefined
-     * @return
-     */
-    public List<Long> getSubmittedJobIDs();
-    
-    /**
-     * Returns true if this dialog is in "poll fax" style
-     * @return
-     */
-    public boolean isPollMode();
-    /**
      * Returns the window used for the actual dialog
      * @return
      */
     public Window getWindow();
     
     /**
-     * Adds a file on the fax server to the list of files to send
-     * @param serverFile
+     * Shows/hides the dialog
+     * @param visible
      */
-    public void addServerFile(FaxDocument serverFile);
-//    /**
-//     * Adds the specified recipient to list of recipients
-//     * @param recipient
-//     */
-//    public void addRecipient(PBEntryFieldContainer recipient);
-    
-    //public void addRecipient(String faxNumber, String name, String company, String location, String voiceNumber);
-    
-    /**
-     * Returns the collection of recipients. It is partly modifiable: At least the add() method is implemented.
-     */
-    public Collection<PBEntryFieldContainer> getRecipients();
-    
-    /**
-     * Sets the subject of the new fax
-     */
-    public void setSubject(String subject);
-    /**
-     * Adds a document with data from the specified input stream to the list of documents to send
-     * @param inStream
-     */
-    public void addInputStream(StreamTFLItem inStream);
-    /**
-     * Adds a local file to the list of documents to send
-     * @param fileName
-     */
-    public void addLocalFile(String fileName);
-    
-    /**
-     * Specifies if a cover page should be used
-     * @param useCover
-     */
-    public void setUseCover(boolean useCover);
-    /**
-     * Specifies the comment for the new fax
-     * @param comment
-     */
-    public void setComment(String comment);
-    
-    /**
-     * Sets the modem to send
-     * @param modem
-     */
-    public void setModem(String modem);
-    /**
-     * Sets the server to use for the new fax
-     * @param serverToUse
-     * @throws IOException
-     */
-    void setServer(String serverToUse);
-    /**
-     * Sets the identity to use for the new fax
-     * @param identityToUse
-     * @throws IOException
-     */
-    void setIdentity(String identityToUse);
+    public void setVisible(boolean visible);
 }

@@ -150,6 +150,7 @@ import yajhfc.print.FaxTablePrinter;
 import yajhfc.readstate.PersistentReadState;
 import yajhfc.send.SendController;
 import yajhfc.send.SendWinControl;
+import yajhfc.send.ServerFileTFLItem;
 import yajhfc.server.Server;
 import yajhfc.server.ServerManager;
 import yajhfc.server.ServerOptions;
@@ -1024,7 +1025,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 
                 SendWinControl sw = SendController.createSendWindow(MainWin.this, currentServer, false, true);
                 for (FaxDocument doc : files) {
-                    sw.addServerFile(doc);
+                    sw.getDocuments().add(new ServerFileTFLItem(doc));
                 }
                 sw.setVisible(true);
                 refreshTables();
@@ -1141,7 +1142,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
 
                                 sw.getRecipients().add(recipients.get(i));
                                 for (FaxDocument doc : files.get(i)) {
-                                    sw.addServerFile(doc);
+                                    sw.getDocuments().add(new ServerFileTFLItem(doc));
                                 }
 
                                 if (subjects.get(i) != null)

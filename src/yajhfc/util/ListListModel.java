@@ -48,7 +48,7 @@ import javax.swing.AbstractListModel;
  * @author jonas
  *
  */
-public class ListListModel<T> extends AbstractListModel implements Iterable<T> {
+public class ListListModel<T> extends AbstractListModel implements Collection<T> {
 
     protected List<T> list;
 
@@ -79,10 +79,11 @@ public class ListListModel<T> extends AbstractListModel implements Iterable<T> {
         fireContentsChanged(this, index, index);
     }
 
-    public void add(T element) {
+    public boolean add(T element) {
         list.add(element);
         int pos = list.size() - 1;
         fireIntervalAdded(this, pos, pos);
+        return true;
     }
     
     public void add(int index, T element) {
@@ -103,12 +104,13 @@ public class ListListModel<T> extends AbstractListModel implements Iterable<T> {
         }
     }
     
-    public void addAll(Collection<? extends T> elements) {
+    public boolean addAll(Collection<? extends T> elements) {
         int min, max;
         min = list.size();
         list.addAll(elements);
         max = list.size() - 1;
         fireIntervalAdded(this, min, max);
+        return true;
     }
     
     /**
@@ -199,5 +201,58 @@ public class ListListModel<T> extends AbstractListModel implements Iterable<T> {
      */
     public Iterator<T> iterator() {
         return list.iterator();
+    }
+
+    public int size() {
+        return list.size();
+    }
+
+    public boolean isEmpty() {
+        return list.isEmpty();
+    }
+
+    public boolean contains(Object o) {
+        return list.contains(o);
+    }
+
+    public Object[] toArray() {
+        return list.toArray();
+    }
+
+    public <U> U[] toArray(U[] a) {
+        return list.toArray(a);
+    }
+
+    public boolean remove(Object o) {
+        int idx = list.indexOf(o);
+        if (idx >= 0) {
+            remove(idx);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean containsAll(Collection<?> c) {
+        return list.containsAll(c);
+    }
+
+    public boolean removeAll(Collection<?> c) {
+        boolean res = false;
+        for (Object o : c) {
+            res |= remove(o);
+        }
+        return res;
+    }
+
+    public boolean retainAll(Collection<?> c) {
+        boolean res = false;
+        for (Object o : list.toArray()) {
+            if (!c.contains(o)) {
+                remove(o);
+                res = true;
+            }
+        }
+        return res;
     }
 }

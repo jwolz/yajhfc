@@ -127,7 +127,7 @@ public class FaxnumberExtractor {
         if (Utils.debugMode) {
             log.finest("input text is:\n" + text);
         }
-        System.out.println(text);
+        //System.out.println(text);
         Matcher m = faxnumberPattern.matcher(text);
         int n = 0;
         

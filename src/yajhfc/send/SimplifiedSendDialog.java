@@ -91,7 +91,6 @@ import yajhfc.FaxOptions;
 import yajhfc.FaxResolution;
 import yajhfc.FileTextField;
 import yajhfc.HylaModem;
-import yajhfc.IDAndNameOptions;
 import yajhfc.PaperSize;
 import yajhfc.SenderIdentity;
 import yajhfc.Utils;
@@ -99,7 +98,6 @@ import yajhfc.faxcover.Faxcover;
 import yajhfc.file.FileConverters;
 import yajhfc.file.FormattedFile;
 import yajhfc.model.IconMap;
-import yajhfc.model.servconn.FaxDocument;
 import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.PhoneBookEntry;
 import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
@@ -738,7 +736,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
            tableNumbers.getCellEditor().stopCellEditing();
         }
         
-        sendController.setComments(textComments.getText());
+        sendController.setComment(textComments.getText());
         sendController.setKillTime((Integer)spinKillTime.getValue());
         sendController.setMaxTries((Integer)spinMaxTries.getValue());
         sendController.setNotificationType((FaxNotification)comboNotification.getSelectedItem());
@@ -749,7 +747,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         sendController.setArchiveJob(checkArchiveJob.isSelected());
         
         sendController.setSubject(textSubject.getText());
-        sendController.setFromIdentity((SenderIdentity)comboIdentity.getSelectedItem());
+        sendController.setIdentity((SenderIdentity)comboIdentity.getSelectedItem());
         if (checkUseCover != null && checkUseCover.isSelected()) {
             sendController.setUseCover(true);
             sendController.setCustomCover(checkCustomCover.isSelected() ? new File(ftfCustomCover.getText()) : null);
@@ -785,17 +783,6 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         validate();
     }
     
-    public void addInputStream(StreamTFLItem inStream) {
-        try {
-            tflFiles.model.add(inStream);
-        } catch (Exception e) {
-            ExceptionDialog.showExceptionDialog(this, Utils._("An error occured reading the input: "), e);
-        }
-    }
-
-    public void addLocalFile(String fileName) {
-        tflFiles.addListItem(fileName);        
-    }
     
     private List<PBEntryFieldContainer> recipientList;
     public Collection<PBEntryFieldContainer> getRecipients() {
@@ -828,16 +815,12 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         return recipientList;
     }
 
-    public void addServerFile(FaxDocument serverFile) {
-        tflFiles.model.add(new ServerFileTFLItem(serverFile));        
-    }
-
     public void setSubject(String subject) {
         textSubject.setText(subject);
     }
     
     public List<Long> getSubmittedJobIDs() {
-        return sendController.getSubmittedJobs();
+        return sendController.getSubmittedJobIDs();
     }
     
     void enableCoverComps(boolean state) {
@@ -900,29 +883,11 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         return false;
     }
     
-    public void setIdentity(String identityToUse) {
-        SenderIdentity identity = IDAndNameOptions.getItemFromCommandLineCoding(Utils.getFaxOptions().identities, identityToUse);
-        if (identity != null) {
-            setIdentity(identity, true);
-        } else {
-            log.warning("Identity not found, using default instead: " + identityToUse);
-        }
-    }
-    
     public void setIdentity(SenderIdentity identity, boolean byUser) {
         comboIdentity.setSelectedItem(identity);
         identitySelectedByUser = byUser;
     }
     
-    public void setServer(String serverToUse) {
-        ServerOptions server = IDAndNameOptions.getItemFromCommandLineCoding(Utils.getFaxOptions().servers, serverToUse);
-        if (server != null) {
-            setServer(ServerManager.getDefault().getServerByID(server.id));
-        } else {
-            log.warning("Server not found, using default instead: " + serverToUse);
-        }
-    }
-
     
     public Server getServer() {
         return server;
@@ -938,6 +903,14 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
                 setIdentity(server.getDefaultIdentity(), false);
             }
         }
+    }
+    
+    public Collection<HylaTFLItem> getDocuments() {
+        return tflFiles.model;
+    }
+
+    public void setIdentity(SenderIdentity identityToUse) {
+        setIdentity(identityToUse, true);
     }
 
     static class SaveAsOriginalAction extends ExcDialogAbstractAction implements ListSelectionListener {

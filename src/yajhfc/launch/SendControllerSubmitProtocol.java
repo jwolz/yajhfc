@@ -114,7 +114,7 @@ public class SendControllerSubmitProtocol implements SubmitProtocol {
 	 * @see yajhfc.launch.SubmitProtocol#setComments(java.lang.String)
 	 */
 	public void setComments(String comments) throws IOException {
-		sendController.setComments(comments);
+		sendController.setComment(comments);
 	}
 
 	/* (non-Javadoc)
@@ -153,7 +153,7 @@ public class SendControllerSubmitProtocol implements SubmitProtocol {
 	public void setIdentity(String identityToUse) throws IOException {
         SenderIdentity identity = IDAndNameOptions.getItemFromCommandLineCoding(Utils.getFaxOptions().identities, identityToUse);
         if (identity != null) {
-            sendController.setFromIdentity(identity);
+            sendController.setIdentity(identity);
         } else {
             Logger.getAnonymousLogger().warning("Identity not found, using default instead: " + identityToUse);
             //sendController.setFromIdentity(server.getDefaultIdentity());
@@ -166,7 +166,7 @@ public class SendControllerSubmitProtocol implements SubmitProtocol {
 	public long[] submit(boolean wait) throws IOException {
         if (sendController.validateEntries()) {
             sendController.sendFax();
-            List<Long> idList = sendController.getSubmittedJobs();
+            List<Long> idList = sendController.getSubmittedJobIDs();
             long[] ids = new long[idList.size()];
             for (int i=0; i<ids.length; i++) {
                 ids[i] = idList.get(i).longValue();

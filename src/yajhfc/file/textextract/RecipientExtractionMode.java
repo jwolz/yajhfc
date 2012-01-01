@@ -44,8 +44,8 @@ import yajhfc.Utils;
  */
 public enum RecipientExtractionMode {
 	NO(Utils._("No")),
-	YES(Utils._("Yes (always show send dialog)")),
-	AUTO(Utils._("Yes (show send dialog only when no recipients were found)"))
+	YES(Utils._("Yes, always show send dialog")),
+	AUTO(Utils._("Yes, show send dialog only when no recipients were found"))
 	;
 	
 	private final String description;
