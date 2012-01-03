@@ -123,6 +123,7 @@ public interface SubmitProtocol {
     /**
      * Shows the send dialog, configures it as specified and optionally waits for the user to close it.
      * After calling this method, the other methods may not be used any more!
+     * @param wait Wait for the user interaction to complete
      * @return if wait == true the IDs of the successfully submitted faxes, else the result is undefined (probably null)
      */
     long[] submit(boolean wait) throws IOException;

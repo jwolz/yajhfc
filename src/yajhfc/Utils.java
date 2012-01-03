@@ -45,6 +45,7 @@ import java.awt.Cursor;
 import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -56,7 +57,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -107,7 +107,7 @@ public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2011 by Jonas Wolz";
-    public static final String AppVersion = "0.5.2beta1";
+    public static final String AppVersion = "0.5.2beta2";
     public static final String AuthorName = "Jonas Wolz";
     public static final String AuthorEMail = "info@yajhfc.de";
     public static final String HomepageURL = "http://www.yajhfc.de/"; 
@@ -1188,6 +1188,16 @@ public final class Utils {
 			frame.setIconImage(icons[0]);
 		} 
     	
+    }
+    
+    public static void setDefaultIcons(Frame frame) {
+        final Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Utils.setIconImages(frame,
+                toolkit.getImage(Utils.class.getResource("icon.png")),
+                toolkit.getImage(Utils.class.getResource("icon-32x32.png")),              
+                toolkit.getImage(Utils.class.getResource("icon-48x48.png")),              
+                toolkit.getImage(Utils.class.getResource("icon-64x64.png")),              
+                toolkit.getImage(Utils.class.getResource("logo-large.png")));
     }
 }
 

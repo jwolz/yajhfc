@@ -36,16 +36,8 @@
  */
 package yajhfc.launch;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.logging.Level;
-
-import javax.swing.SwingUtilities;
-
-import yajhfc.NoGUISender;
 import yajhfc.file.textextract.RecipientExtractionMode;
 import yajhfc.send.SendController;
-import yajhfc.send.SendControllerListener;
 import yajhfc.send.SendWinControl;
 import yajhfc.server.ServerManager;
 
@@ -53,89 +45,36 @@ import yajhfc.server.ServerManager;
  * @author jonas
  *
  */
-public class SendWinSubmitProtocol extends FaxSenderSubmitProtocol implements SubmitProtocol, Runnable, SendControllerListener {
-    
-    protected List<Long> submittedIDs = null;
-    private boolean ready = false;
-    
-    /* (non-Javadoc)
-     * @see yajhfc.launch.SubmitProtocol#submitNoWait()
-     */
-    public long[] submit(boolean wait) throws IOException {
-        prepareSubmit();
-        
-        if (wait) {
-            if (SwingUtilities.isEventDispatchThread()) {
-                run();
-            } else {
-                try {
-                    SwingUtilities.invokeAndWait(this);
-                } catch (Exception e) {
-                    log.log(Level.WARNING, "Error submitting the fax:", e);
-                }
-            }
-        } else {
-            SwingUtilities.invokeLater(this);
-        }
+public class SendWinSubmitProtocol extends SendControllerSubmitProtocol  {
 
-        if (submittedIDs == null) {
-            return null;
-        } else {
-            return listToArray(submittedIDs);
-        }
-    }
-    
-    private static long[] listToArray(List<Long> list) {
-        long[] ids = new long[list.size()];
-        for (int i=0; i<ids.length; i++) {
-            ids[i] = list.get(i).longValue();
-        }
-        return ids;
-    }
-
-    private void dispatchToSendController() {
-        Launcher2.application.bringToFront();
-        
-        SendController controller = new SendController(ServerManager.getDefault().getCurrent(), Launcher2.application.getFrame(), false);
-        if (Launcher2.application instanceof NoGUISender) {
-            controller.setProgressMonitor(((NoGUISender)Launcher2.application).progressPanel);
-        }
-        submitTo(controller);
-        controller.addSendControllerListener(this);
-        if (controller.validateEntries()) {
-            controller.sendFax();
-        } else {
-            setReady();
-        }
-    }
-    
     private void dispatchToSendWin() {
-//      log.fine("Running...");
-//      Launcher2.application.bringToFront();
+        //      log.fine("Running...");
+        //      Launcher2.application.bringToFront();
+        try {
+            log.fine("Initializing SendWin");
+            SendWinControl sw = SendController.getSendWindow(Launcher2.application.getFrame(), ServerManager.getDefault().getCurrent(), false, true);
 
-      log.fine("Initializing SendWin");
-      SendWinControl sw = SendController.getSendWindow(Launcher2.application.getFrame(), ServerManager.getDefault().getCurrent(), false, true);
+            submitTo(sw);
 
-      submitTo(sw);
-      
-      if (Launcher2.application.getFrame().isVisible()) {
-          Launcher2.application.getFrame().toFront();
-      }
-      log.fine("Showing SendWin");
-      sw.setVisible(true);
-      log.fine("SendWin closed");
-      
-      if (sw.getModalResult()) {
-          submittedIDs = sw.getSubmittedJobIDs();
-      } else {
-          submittedIDs = null;
-      }
-      
-      if (closeAfterSubmit) {
-          Launcher2.application.dispose();
-      }
-      
-      setReady();
+            if (Launcher2.application.getFrame().isVisible()) {
+                Launcher2.application.getFrame().toFront();
+            }
+            log.fine("Showing SendWin");
+            sw.setVisible(true);
+            log.fine("SendWin closed");
+
+            if (sw.getModalResult()) {
+                submittedIDs = sw.getSubmittedJobIDs();
+            } else {
+                submittedIDs = null;
+            }
+
+            if (closeAfterSubmit) {
+                Launcher2.application.dispose();
+            }
+        } finally {
+            setReady(true);
+        }
     }
 
     /* (non-Javadoc)
@@ -147,28 +86,5 @@ public class SendWinSubmitProtocol extends FaxSenderSubmitProtocol implements Su
         } else {
             dispatchToSendWin();
         }
-    }
-
-    private void setReady() {
-        synchronized (this) {
-            ready = true;
-            notifyAll();
-        }
-    }
-    
-    public void waitReady() {
-        try {
-            synchronized (this) {
-                while (!ready) {
-                    wait();
-                }
-            }
-        } catch (InterruptedException e) {
-            log.log(Level.WARNING, "Error submitting the fax:", e);
-        }
-    }
-
-    public void sendOperationComplete(boolean success) {
-        setReady();
     }
 }

@@ -934,7 +934,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
                     Utils.copyFile(selFile.file, targetFile);
                 }
             } catch (Exception e1) {
-                ExceptionDialog.showExceptionDialog(target, Utils._("Error saving the file:"), e1);
+                ExceptionDialog.showExceptionDialog(target, Utils._("Error saving the file"), e1);
             }
         }
         

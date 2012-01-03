@@ -41,6 +41,7 @@ import gnu.getopt.LongOpt;
 
 import java.awt.Frame;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -385,6 +386,36 @@ public class CommandLineOpts extends CommonCommandLineOpts { //IMPORTANT!: Do no
         }
     }
     
+    public void fillSubmitProtocol(SubmitProtocol sp) throws IOException{
+        if (this.fileNames.size() > 0) {
+            sp.addFiles(this.fileNames);
+        }
+        if (this.recipients.size() > 0) {
+            sp.addRecipients(this.recipients);
+        }
+        if (this.useStdin) {
+            sp.setInputStream(System.in, null);
+        }
+        if (this.useCover != null) {
+            sp.setCover(this.useCover);
+        }
+        if (this.subject != null) {
+            sp.setSubject(this.subject);
+        }
+        if (this.comment != null) {
+            sp.setComments(this.comment);
+        }
+        if (this.modem != null) {
+            sp.setModem(this.modem);
+        }
+        if (this.serverToUse != null) {
+            sp.setServer(this.serverToUse);
+        }
+        if (this.identityToUse != null) {
+            sp.setIdentity(this.identityToUse);
+        }
+    }
+
     public CommandLineOpts() {
         super();
     }
