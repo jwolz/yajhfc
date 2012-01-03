@@ -68,7 +68,6 @@ import yajhfc.send.SendController;
 import yajhfc.server.ServerManager;
 import yajhfc.shutdown.ShutdownManager;
 import yajhfc.splashscreen.YJSplashScreen;
-import yajhfc.util.ExceptionDialog;
 import yajhfc.util.ExternalProcessExecutor;
 
 /**
@@ -214,7 +213,7 @@ public class Launcher2 {
             if (needSubmitProtocol(opts)) {
                 try {
                     submitProto = new SendWinSubmitProtocol();
-                    fillSubmitProtocol(submitProto, opts);
+                    opts.fillSubmitProtocol(submitProto);
                     submitProto.setCloseAfterSubmit(opts.closeAfterSubmit);
                     submitProto.prepareSubmit();
                 } catch (IOException e) {
@@ -252,7 +251,7 @@ public class Launcher2 {
                 launchLog.info("Connecting to old instance...");
                 if (needSubmitProtocol(opts)) {
                     launchLog.info("Submitting fax using the old instance");
-                    fillSubmitProtocol(oldInst, opts);
+                    opts.fillSubmitProtocol(oldInst);
                     long[] ids = oldInst.submit(!opts.noWait);
                     if (ids != null) {
                         for (long id : ids) {
@@ -291,7 +290,17 @@ public class Launcher2 {
             launchLog.info("No GUI startup...");
         }
         PluginManager.initializeAllKnownPlugins(PluginManager.STARTUP_MODE_NO_GUI);
-        NoGUISender.startUpWithoutUI(opts);
+        
+        if (opts.recipients.size() == 0) {
+            System.err.println("In no GUI mode you have to specify at least one recipient.");
+            System.exit(1);
+        }
+        if (opts.fileNames.size() == 0 && !opts.useStdin) {
+            System.err.println("In no GUI mode you have to specify at least one file to send or --stdin.");
+            System.exit(1);
+        }
+        
+        NoGUISender.submitWithoutUI(opts, new SendControllerSubmitProtocol());
     }
     
     /**
@@ -305,23 +314,6 @@ public class Launcher2 {
         try {     
             PluginManager.initializeAllKnownPlugins(PluginManager.STARTUP_MODE_SEND_ONLY);
             
-            final SendWinSubmitProtocol submitProto = new SendWinSubmitProtocol();
-            fillSubmitProtocol(submitProto, opts);
-            submitProto.setCloseAfterSubmit(true);
-            
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    NoGUISender dummyFrame = new NoGUISender();
-                    Launcher2.application = dummyFrame;
-                    try {
-                        //Utils.initializeUIProperties();
-                        submitProto.submit(true);
-                    } catch (Exception e) {
-                        launchLog.log(Level.WARNING, "Error submitting fax", e);
-                        ExceptionDialog.showExceptionDialog(dummyFrame, Utils._("Error submitting fax"), e);
-                    }
-                } 
-            });
             ShutdownManager.getInstance().registerShutdownHook(new Runnable() {
                 public void run() {   
                     if (Utils.debugMode)
@@ -337,8 +329,7 @@ public class Launcher2 {
                 } 
             });
             
-            submitProto.waitReady();
-            System.exit(0);
+            NoGUISender.submitWithoutUI(opts, new SendWinSubmitProtocol());
         } catch (Exception e) {
             launchLog.log(Level.WARNING, "Error submitting fax", e);
         }
@@ -352,37 +343,6 @@ public class Launcher2 {
                 opts.useStdin || 
                 (opts.recipients.size() > 0));
     }
-    
-    static void fillSubmitProtocol(SubmitProtocol sp, CommandLineOpts opts) throws IOException{
-        if (opts.fileNames.size() > 0) {
-            sp.addFiles(opts.fileNames);
-        }
-        if (opts.recipients.size() > 0) {
-            sp.addRecipients(opts.recipients);
-        }
-        if (opts.useStdin) {
-            sp.setInputStream(System.in, null);
-        }
-        if (opts.useCover != null) {
-            sp.setCover(opts.useCover);
-        }
-        if (opts.subject != null) {
-            sp.setSubject(opts.subject);
-        }
-        if (opts.comment != null) {
-            sp.setComments(opts.comment);
-        }
-        if (opts.modem != null) {
-            sp.setModem(opts.modem);
-        }
-        if (opts.serverToUse != null) {
-            sp.setServer(opts.serverToUse);
-        }
-        if (opts.identityToUse != null) {
-            sp.setIdentity(opts.identityToUse);
-        }
-    }
-    
     
     public static void loadPlugins(List<PluginInfo> plugins, boolean noPluginLst) {
         launchLog.fine("Initializing plugins...");

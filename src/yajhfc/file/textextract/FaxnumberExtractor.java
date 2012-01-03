@@ -47,6 +47,7 @@ import java.util.regex.Pattern;
 import yajhfc.Utils;
 import yajhfc.file.FileConverter.ConversionException;
 import yajhfc.file.FormattedFile;
+import yajhfc.send.HylaTFLItem;
 
 /**
  * @author jonas
@@ -94,6 +95,25 @@ public class FaxnumberExtractor {
         return extractFromMultipleFiles(formattedInput, listToAddTo);
     }
 
+    /**
+     * Extract fax numbers from the specified input files and add them to listToAddTo
+     * @param input
+     * @param listToAddTo
+     * @return the number of fax numbers found
+     * @throws IOException
+     * @throws ConversionException
+     */
+    public int extractFromMultipleDocuments(Collection<HylaTFLItem> input, List<String> listToAddTo) throws IOException, ConversionException {
+        if (input.size() == 0)
+            return 0;
+        
+        List<FormattedFile> formattedInput = new ArrayList<FormattedFile>(input.size());
+        for (HylaTFLItem f : input) {
+            formattedInput.add(f.getPreviewFilename());
+        }
+        return extractFromMultipleFiles(formattedInput, listToAddTo);
+    }
+    
     /**
      * Extract fax numbers from the specified input files and add them to listToAddTo
      * @param input

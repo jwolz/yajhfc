@@ -93,6 +93,8 @@ such files: \\
 
 Alternatively, starting with YajHFC 0.3.7, you can use Cover pages in HTML or, with a plugin, in XSL:FO or ODT (OpenDocument Text) format.
 
+YajHFC 0.5.2 adds the option use PDF documents as cover pages.
+
 \subsection{Which fields are recognized in a HTML cover page?}
 
 The following ``words'' are replaced (case insensitively) with the corresponding values when a HTML file is used as a cover page:
@@ -176,7 +178,7 @@ Starting with version 0.4.2 some simple conditional statements are supported. Th
 
 \subsection{Where can I find the old default cover page used before version 0.4.2?}
 
-You can find it in the ``Coverpage examples'' archive at \url{ftp://ftp.berlios.de/pub/yajhfc/download/coverpages.zip}
+You can find it in the ``Coverpage examples'' archive at \url{http://download.yajhfc.de/misc/coverpages.zip}
 
 \subsection{I liked the old send dialog better. Can I have it back?}
 
@@ -204,64 +206,77 @@ for the effect of the wildcard \verb#?# use \verb#.#.
 
 \subsection{Which command line arguments does YajHFC understand?}
 
-Output from \verb#java -jar yajhfc.jar --help# (version 0.4.4):
+Output from \verb#java -jar yajhfc.jar --help# (version 0.5.1):
 \begin{verbatim}
 Usage:
 java -jar yajhfc.jar [OPTIONS]... [FILES TO SEND]...
 
 Argument description:
--r, --recipient=RECIPIENT        Specifies a recipient to send the fax to. You
-                                 may specify either a fax number or detailed
-                                 cover page information (see the FAQ for the
-                                 format in the latter case). You may specify
-                                 --recipient multiple times for multiple
-                                 recipients.
--C, --use-cover[=yes|no]         Use a cover page for sending a fax.
--s, --subject=SUBJECT            The fax subject for the cover page.
-    --comment=COMMENT            The comment for the cover page.
+-r, --recipient=RECIPIENT        Specifies a recipient to send the fax to. You 
+                                 may specify either a fax number or detailed 
+                                 cover page information (see the FAQ for the 
+                                 format in the latter case). You may specify 
+                                 --recipient multiple times for multiple 
+                                 recipients. 
+-C, --use-cover[=yes|no]         Use a cover page for sending a fax. 
+-s, --subject=SUBJECT            The fax subject for the cover page. 
+    --comment=COMMENT            The comment for the cover page. 
 -M, --modem=MODEM                Sets the modem to send the fax. Specify either
-                                 the modem's name (e.g. ttyS0) or "any" to use
-                                 any modem.
-    --stdin                      Read the file to send from standard input.
--A, --admin                      Start up in admin mode.
--d, --debug                      Output some debugging information.
--l, --logfile=LOGFILE            The log file to log debug information to (if
-                                 not specified, use stdout).
-    --appendlogfile=LOGFILE      Append debug information to the given log
-                                 file.
-    --background                 If there is no already running instance of
-                                 YajHFC, launch a new instance and terminate
-                                 this instance (after submitting the fax to
-                                 send).
-    --noclose                    Do not close YajHFC after submitting the fax.
-    --no-wait                    Do not wait for the send window to be closed
-                                 by the user. If YajHFC is invoked multiple
-                                 times before the user closes the send window,
-                                 the specified documents are added to the list
-                                 of files there. This option implies
-                                 --background.
--T, --showtab=0|R|1|S|2|T        Sets the tab to display on startup. Specify 0
+                                 the modem's name (e.g. ttyS0) or "any" to use 
+                                 any modem. 
+-S, --server=SERVER              Sets the server to send the fax over. Specify 
+                                 either the server's name (e.g. "My server"), 
+                                 the server's list index (0 is the first 
+                                 element) or the ID in the form "#ID". 
+-I, --identity=IDENTITY          Sets the sender identity to use when sending 
+                                 the fax. Specify either the identity's name 
+                                 (e.g. "My identity"), the identity's list 
+                                 index (0 is the first element) or the ID in 
+                                 the form "#ID". 
+    --stdin                      Read the file to send from standard input. 
+    --print-jobids[=FILE]        Prints the job IDs of newly sent faxes to 
+                                 stdout or to the specified file. One job per 
+                                 line is printed, in the format "yyyy-mm-dd 
+                                 hh:mm:ss NEW_FAXJOB jobid". 
+-A, --admin                      Start up in admin mode. 
+-d, --debug                      Output some debugging information. 
+-l, --logfile=LOGFILE            The log file to log debug information to (if 
+                                 not specified, use stdout). 
+    --appendlogfile=LOGFILE      Append debug information to the given log 
+                                 file. 
+    --background                 If there is no already running instance of 
+                                 YajHFC, launch a new instance and terminate 
+                                 this instance (after submitting the fax to 
+                                 send). 
+    --noclose                    Do not close YajHFC after submitting the fax. 
+    --no-wait                    Do not wait for the send window to be closed 
+                                 by the user. If YajHFC is invoked multiple 
+                                 times before the user closes the send window, 
+                                 the specified documents are added to the list 
+                                 of files there. This option implies 
+                                 --background. 
+-T, --showtab=0|R|1|S|2|T        Sets the tab to display on startup. Specify 0 
                                  or R for the "Received", 1 or S for the "Sent"
-                                 or 2 or T for the "Transmitting" tab.
-    --windowstate=N|M|I|T        Sets the initial window state of the main
-                                 window to _N_ormal, _M_aximized, _I_conified
-                                 (minimized) or minimized to _T_ray.
-    --loadplugin=JARFILE         Specifies a jar file of a YajHFC plugin to
-                                 load.
-    --loaddriver=JARFILE         Specifies the location of a JDBC driver JAR
-                                 file to load.
-    --override-setting=KEY=VALUE Overrides the value of the specified setting
-                                 for this session. The overridden setting is
-                                 not saved.
-    --no-plugins                 Disables loading plugins from the plugin.lst
-                                 file.
-    --no-gui                     Sends a fax with only a minimal GUI.
-    --no-check                   Suppresses the check for the Java version at
-                                 startup.
--c, --configdir=DIRECTORY        Sets the configuration directory to use
-                                 instead of ~/.yajhfc
--h, --help[=COLUMNS]             Displays this text (formatted for COLUMNS
-                                 columns if given).
+                                 or 2 or T for the "Transmitting" tab. 
+    --windowstate=N|M|I|T        Sets the initial window state of the main 
+                                 window to _N_ormal, _M_aximized, _I_conified 
+                                 (minimized) or minimized to _T_ray. 
+    --loadplugin=JARFILE         Specifies a jar file of a YajHFC plugin to 
+                                 load. 
+    --loaddriver=JARFILE         Specifies the location of a JDBC driver JAR 
+                                 file to load. 
+    --override-setting=KEY=VALUE Overrides the value of the specified setting 
+                                 for this session. The overridden setting is 
+                                 not saved. 
+    --no-plugins                 Disables loading plugins from the plugin.lst 
+                                 file. 
+    --no-gui                     Sends a fax with only a minimal GUI. 
+    --no-check                   Suppresses the check for the Java version at 
+                                 startup. 
+-c, --configdir=DIRECTORY        Sets the configuration directory to use 
+                                 instead of ~/.yajhfc 
+-h, --help[=COLUMNS]             Displays this text (formatted for COLUMNS 
+                                 columns if given). 
 \end{verbatim}
 
 \subsection{How can I give cover page information using the \texttt{-{-}recipient} switch?}
@@ -384,6 +399,22 @@ The date is formatted using a Java \texttt{SimpleDateFormat}. A description of t
 \subsection{What does the \texttt{Answer call} feature do?}
 
 The same as the HylaFAX \verb#faxanswer# command: It instructs the HylaFAX server to try answering an incoming call on the given modem even if the modem normally ignores inbound calls. This can be useful for testing or for small installations where a modem shares the line with a normal telephone.
+
+\subsection{Why are there so many text extraction methods?}
+
+Because in my experience no method works 100\% perfect. For some documents none may work correctly.
+
+In Windows, using \textit{iText} usually works just fine.
+
+Especially in Linux where every application produces PostScript for itself, it is not uncommon to come across documents that cannot be converted to text, however.
+In that case typically there is nothing you can do about it. The reason for that is that PostScript (and PDF) are actually not really text oriented formats.
+Any application is free to encode the text as it wants, for example it can encode it so that \textit{1} maps to the glyph (i.e. the picture) of the character \textit{e}, \textit{2} to {h}, 
+and so on. So the text \textit{hello} might be extracted as something like \textit{21334} although it displays correctly.
+
+If you have problems, the \textit{Test} button in the options dialog (under \textit{Recipient extraction}) can be very handy, so you can see how a document comes out when converted to text and try out different conversion methods.
+In my experience, the \textit{iText} method often works best, \textit{ps2ascii} works worst, while \textit{pstotext} and \textit{pdftotext} are somewhere in the middle.
+This heavily depends on the document, however.
+
 
 \section{Problems/Known bugs}
 

@@ -39,23 +39,19 @@ package yajhfc;
 import java.awt.Cursor;
 import java.awt.Frame;
 import java.awt.HeadlessException;
-import java.awt.Toolkit;
+import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 import yajhfc.MainWin.SendReadyState;
 import yajhfc.launch.CommandLineOpts;
 import yajhfc.launch.Launcher2;
 import yajhfc.launch.MainApplicationFrame;
-import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
-import yajhfc.send.LocalFileTFLItem;
-import yajhfc.send.SendController;
-import yajhfc.send.SendControllerListener;
-import yajhfc.send.StreamTFLItem;
-import yajhfc.server.Server;
-import yajhfc.server.ServerManager;
-import yajhfc.server.ServerOptions;
+import yajhfc.launch.SendControllerSubmitProtocol;
+import yajhfc.launch.SubmitProtocol;
 import yajhfc.ui.YajOptionPane;
 import yajhfc.ui.swing.SwingYajOptionPane;
 import yajhfc.util.ExceptionDialog;
@@ -65,34 +61,56 @@ import yajhfc.util.ProgressContentPane;
  * @author jonas
  *
  */
-public class NoGUISender extends JFrame implements MainApplicationFrame {
+public class NoGUISender implements MainApplicationFrame {
 
-    public final ProgressContentPane progressPanel;
-    public final YajOptionPane dialogUI = new SwingYajOptionPane(this);
+    protected ProgressContentPane progressPanel;
+    protected YajOptionPane dialogUI;
+    protected JFrame frame;
+    
+    protected final SubmitProtocol submitProtocol;
     
     /**
      * @throws HeadlessException
+     * @throws InvocationTargetException 
+     * @throws InterruptedException 
      */
-    public NoGUISender() throws HeadlessException {
-        super(Utils.AppShortName);
-        
+    public NoGUISender(SubmitProtocol submitProtocol) throws HeadlessException, InterruptedException, InvocationTargetException {
+        this.submitProtocol = submitProtocol;
+
+        if (SwingUtilities.isEventDispatchThread()) {
+            createUI();
+        } else {
+            SwingUtilities.invokeAndWait(new Runnable() {
+                public void run() {
+                    createUI();
+                }
+            });
+        }
+    }
+    
+    protected void createUI() {
+        frame = new JFrame(Utils.AppShortName);
+        dialogUI = new SwingYajOptionPane(frame);        
 
         progressPanel = new ProgressContentPane();
-        setContentPane(progressPanel);
-        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        setIconImage(Toolkit.getDefaultToolkit().getImage(NoGUISender.class.getResource("/yajhfc/icon.png")));
-        pack();
-        setResizable(false);
-        setLocationRelativeTo(null);
+        frame.setContentPane(progressPanel);
+        frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        Utils.setDefaultIcons(frame);
+        frame.pack();
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
+        
+        progressPanel.showIndeterminateProgress(Utils._("Initializing..."), null);
+        frame.setVisible(true);
     }
 
     public void bringToFront() {
-        setVisible(true);
-        toFront();
+        frame.setVisible(true);
+        frame.toFront();
     }
     
     public Frame getFrame() {
-        return this;
+        return frame;
     }
     
     public YajOptionPane getDialogUI() {
@@ -103,79 +121,38 @@ public class NoGUISender extends JFrame implements MainApplicationFrame {
         return SendReadyState.Ready;
     }
     
+    public ProgressContentPane getProgressPanel() {
+        return progressPanel;
+    }
     
     public void saveWindowSettings() {
         // Do nothing
     }
     
-    public static void startUpWithoutUI(CommandLineOpts opts) {
-        if (opts.recipients.size() == 0) {
-            System.err.println("In no GUI mode you have to specify at least one recipient.");
-            System.exit(1);
-        }
-        if (opts.fileNames.size() == 0 && !opts.useStdin) {
-            System.err.println("In no GUI mode you have to specify at least one file to send or --stdin.");
-            System.exit(1);
-        }
-                
-        NoGUISender progressFrame = new NoGUISender();
-        Launcher2.application = progressFrame;
-        progressFrame.progressPanel.showIndeterminateProgress(Utils._("Logging in..."), null);
-        progressFrame.setVisible(true);
-        
+    public static void submitWithoutUI(final CommandLineOpts opts, final SendControllerSubmitProtocol submitProto) {
+        final NoGUISender sender;
         try {
-            Server server;
-            if (opts.serverToUse == null) {
-                server = ServerManager.getDefault().getCurrent(); 
-            } else {
-                ServerOptions so = IDAndNameOptions.getItemFromCommandLineCoding(Utils.getFaxOptions().servers, opts.serverToUse);
-                if (so != null) {
-                    server = ServerManager.getDefault().getServerByID(so.id);
-                } else {
-                    Logger.getAnonymousLogger().warning("Server not found, using default instead: " + opts.serverToUse);
-                    server = ServerManager.getDefault().getCurrent(); 
-                }
-            }
-            
-            SendController sendController = new SendController(server, progressFrame, false, progressFrame.progressPanel);
-            sendController.addSendControllerListener(new SendControllerListener() {
-               public void sendOperationComplete(boolean success) {
-                   System.exit(success ? 0 : 1);
-               } 
-            });
+            sender = new NoGUISender(submitProto);
+        } catch (Exception e) {
+            Logger.getLogger(NoGUISender.class.getName()).log(Level.SEVERE, "Could not initialize main frame", e);
+            System.exit(1);
+            return;
+        }
+        try {
+            Launcher2.application = sender;
 
-            if (opts.identityToUse != null) {
-                SenderIdentity identity = IDAndNameOptions.getItemFromCommandLineCoding(Utils.getFaxOptions().identities, opts.identityToUse);
-                if (identity != null) {
-                    sendController.setIdentity(identity);
-                } else {
-                    Logger.getAnonymousLogger().warning("Identity not found, using default instead: " + opts.identityToUse);
-                    sendController.setIdentity(server.getDefaultIdentity());
-                }
-            } else {
-                sendController.setIdentity(server.getDefaultIdentity());
-            }
-            
-            DefaultPBEntryFieldContainer.parseCmdLineStrings(sendController.getNumbers(), opts.recipients);
-            
-            sendController.setUseCover(opts.useCover != null ? opts.useCover : false);
-            if (opts.subject != null)
-                sendController.setSubject(opts.subject);
-            if (opts.comment != null)
-                sendController.setComment(opts.comment);
-            if (opts.useStdin) {
-                sendController.getFiles().add(new StreamTFLItem(System.in, null));
-            }
-            for (String file : opts.fileNames) {
-                sendController.getFiles().add(new LocalFileTFLItem(file));
-            }
-            
-            if (sendController.validateEntries()) {
-                sendController.sendFax();
-            }
+            opts.fillSubmitProtocol(submitProto);
+            submitProto.setCloseAfterSubmit(true);
+            submitProto.submit(true);
+
+            System.exit(submitProto.waitReady() ? 0 : 1);
         } catch (Exception ex) {
-            ExceptionDialog.showExceptionDialog(progressFrame, Utils._("Error sending the fax:"), ex);
+            ExceptionDialog.showExceptionDialog(sender.getFrame(), Utils._("Error sending the fax:"), ex);
             System.exit(2);
         }
+    }
+
+    public void dispose() {
+        frame.dispose();
     }
 }

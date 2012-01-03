@@ -193,7 +193,7 @@ public class RuleParserDialog extends JDialog {
             return res;
         } catch (RuleParseException e) {
             log.log(Level.INFO, "Validation failed", e);
-            JOptionPane.showMessageDialog(this, _("Display style is not valid:\n") + e.getLocalizedMessage(), _("Validate"), JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, _("Display style is not valid") + ":\n" + e.getLocalizedMessage(), _("Validate"), JOptionPane.WARNING_MESSAGE);
             int errorEnd = e.getErrorEnd()+1;
             if (errorEnd == 0)
                 errorEnd = text.length();

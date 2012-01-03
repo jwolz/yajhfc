@@ -37,144 +37,116 @@
 package yajhfc.launch;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collection;
 import java.util.List;
-import java.util.logging.Logger;
+import java.util.logging.Level;
 
-import javax.naming.OperationNotSupportedException;
+import javax.swing.SwingUtilities;
 
-import yajhfc.IDAndNameOptions;
-import yajhfc.SenderIdentity;
-import yajhfc.Utils;
-import yajhfc.file.textextract.RecipientExtractionMode;
-import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
-import yajhfc.send.LocalFileTFLItem;
+import yajhfc.NoGUISender;
 import yajhfc.send.SendController;
-import yajhfc.send.StreamTFLItem;
-import yajhfc.server.Server;
+import yajhfc.send.SendControllerListener;
 import yajhfc.server.ServerManager;
-import yajhfc.server.ServerOptions;
 
 /**
  * @author jonas
  *
  */
-public class SendControllerSubmitProtocol implements SubmitProtocol {
-	protected SendController sendController;
-
-	/* (non-Javadoc)
-	 * @see yajhfc.launch.SubmitProtocol#addFiles(java.util.Collection)
-	 */
-	public void addFiles(Collection<String> fileNames) throws IOException {
-        for (String file : fileNames) {
-            sendController.getFiles().add(new LocalFileTFLItem(file));
-        }
-	}
-
-	/* (non-Javadoc)
-	 * @see yajhfc.launch.SubmitProtocol#setInputStream(java.io.InputStream, java.lang.String)
-	 */
-	public void setInputStream(InputStream stream, String sourceText)
-			throws IOException {
-		sendController.getFiles().add(new StreamTFLItem(stream, sourceText));
-	}
-
-	/* (non-Javadoc)
-	 * @see yajhfc.launch.SubmitProtocol#addRecipients(java.util.Collection)
-	 */
-	public void addRecipients(Collection<String> recipients) throws IOException {
-		DefaultPBEntryFieldContainer.parseCmdLineStrings(sendController.getNumbers(), recipients);
-	}
-
-	/* (non-Javadoc)
-	 * @see yajhfc.launch.SubmitProtocol#setCover(boolean)
-	 */
-	public void setCover(boolean useCover) throws IOException {
-		sendController.setUseCover(useCover);
-	}
-
-	/* (non-Javadoc)
-	 * @see yajhfc.launch.SubmitProtocol#setExtractRecipients(yajhfc.file.textextract.RecipientExtractionMode)
-	 */
-	public void setExtractRecipients(RecipientExtractionMode extractRecipients)
-			throws IOException {
-		// TODO Auto-generated method stub
-
-	}
-
-	/* (non-Javadoc)
-	 * @see yajhfc.launch.SubmitProtocol#setSubject(java.lang.String)
-	 */
-	public void setSubject(String subject) throws IOException {
-		sendController.setSubject(subject);
-	}
-
-	/* (non-Javadoc)
-	 * @see yajhfc.launch.SubmitProtocol#setComments(java.lang.String)
-	 */
-	public void setComments(String comments) throws IOException {
-		sendController.setComment(comments);
-	}
-
-	/* (non-Javadoc)
-	 * @see yajhfc.launch.SubmitProtocol#setModem(java.lang.String)
-	 */
-	public void setModem(String modem) throws IOException {
-		sendController.setSelectedModem(modem);
-	}
-
-	/* (non-Javadoc)
-	 * @see yajhfc.launch.SubmitProtocol#setCloseAfterSubmit(boolean)
-	 */
-	public void setCloseAfterSubmit(boolean closeAfterSumbit)
-			throws IOException, OperationNotSupportedException {
-		// Ignore
-	}
-
-	/* (non-Javadoc)
-	 * @see yajhfc.launch.SubmitProtocol#setServer(java.lang.String)
-	 */
-	public void setServer(String serverToUse) throws IOException {
-		Server server;
-		ServerOptions so = IDAndNameOptions.getItemFromCommandLineCoding(Utils.getFaxOptions().servers, serverToUse);
-		if (so != null) {
-			server = ServerManager.getDefault().getServerByID(so.id);
-		} else {
-			Logger.getAnonymousLogger().warning("Server not found, using default instead: " + serverToUse);
-			server = ServerManager.getDefault().getCurrent(); 
-		}
-		sendController.setServer(server); //TODO: identity???
-	}
-
-	/* (non-Javadoc)
-	 * @see yajhfc.launch.SubmitProtocol#setIdentity(java.lang.String)
-	 */
-	public void setIdentity(String identityToUse) throws IOException {
-        SenderIdentity identity = IDAndNameOptions.getItemFromCommandLineCoding(Utils.getFaxOptions().identities, identityToUse);
-        if (identity != null) {
-            sendController.setIdentity(identity);
-        } else {
-            Logger.getAnonymousLogger().warning("Identity not found, using default instead: " + identityToUse);
-            //sendController.setFromIdentity(server.getDefaultIdentity());
-        }
-	}
-
-	/* (non-Javadoc)
-	 * @see yajhfc.launch.SubmitProtocol#submit(boolean)
-	 */
-	public long[] submit(boolean wait) throws IOException {
-        if (sendController.validateEntries()) {
-            sendController.sendFax();
-            List<Long> idList = sendController.getSubmittedJobIDs();
-            long[] ids = new long[idList.size()];
-            for (int i=0; i<ids.length; i++) {
-                ids[i] = idList.get(i).longValue();
+public class SendControllerSubmitProtocol extends FaxSenderSubmitProtocol implements SubmitProtocol, Runnable, SendControllerListener {
+    
+    protected List<Long> submittedIDs = null;
+    private int exitCode = -1;
+    
+    /* (non-Javadoc)
+     * @see yajhfc.launch.SubmitProtocol#submitNoWait()
+     */
+    public long[] submit(boolean wait) throws IOException {
+        prepareSubmit();
+        
+        if (wait) {
+            if (SwingUtilities.isEventDispatchThread()) {
+                run();
+            } else {
+                try {
+                    SwingUtilities.invokeAndWait(this);
+                    waitReady();
+                } catch (Exception e) {
+                    log.log(Level.WARNING, "Error submitting the fax:", e);
+                }
             }
-            return ids;
         } else {
-        	return null;
+            SwingUtilities.invokeLater(this);
         }
-	}
+
+        if (submittedIDs == null) {
+            return null;
+        } else {
+            return listToArray(submittedIDs);
+        }
+    }
+    
+    private static long[] listToArray(List<Long> list) {
+        long[] ids = new long[list.size()];
+        for (int i=0; i<ids.length; i++) {
+            ids[i] = list.get(i).longValue();
+        }
+        return ids;
+    }
+
+    protected void dispatchToSendController() {
+        try {
+            Launcher2.application.bringToFront();
+
+            SendController controller = new SendController(ServerManager.getDefault().getCurrent(), Launcher2.application.getFrame(), false);
+            if (Launcher2.application instanceof NoGUISender) {
+                controller.setProgressMonitor(((NoGUISender)Launcher2.application).getProgressPanel());
+            }
+            submitTo(controller);
+            controller.addSendControllerListener(this);
+            if (controller.validateEntries()) {
+                controller.sendFax();
+            } else {
+                setReady(false);
+            }
+        } catch (RuntimeException e) {
+            setReady(false);
+            throw e;
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Runnable#run()
+     */
+    public void run() {        
+        dispatchToSendController();
+    }
+
+    protected void setReady(boolean success) {
+        synchronized (this) {
+            exitCode = success ? 1 : 0;
+            notifyAll();
+        }
+    }
+    
+    /**
+     * Waits for the send operation to complete
+     * @return true if successful, false otherwise
+     */
+    public boolean waitReady() {
+        try {
+            synchronized (this) {
+                while ((exitCode == -1)) {
+                    wait();
+                }
+                return (exitCode == 1);
+            }
+        } catch (InterruptedException e) {
+            log.log(Level.WARNING, "Error submitting the fax:", e);
+            return false;
+        }
+    }
+
+    public void sendOperationComplete(boolean success) {
+        setReady(success);
+    }
 
 }
