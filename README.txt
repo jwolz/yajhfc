@@ -66,6 +66,15 @@ YajHFC was originally written as a first more complicated
 CHANGES
 -------
 
+0.5.2:
+- Added PDF plugin
+- Custom sort order for phone books
+- Custom display styles for phone books
+- Named pipe printer support for Win32
+- Support to extract recipients from documents
+- Some code cleanup
+
+
 0.5.1:
 - Added console only add on
 - Changed URLs from yajhfc.berlios.de to www.yajhfc.de
