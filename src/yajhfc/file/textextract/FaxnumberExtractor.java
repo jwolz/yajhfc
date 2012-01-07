@@ -69,7 +69,7 @@ public class FaxnumberExtractor {
 
     public FaxnumberExtractor(HylaToTextConverter converter) {
         this(converter,
-                Pattern.compile("@@\\s*recipient\\s*:?\\s*(.*?)@@", Pattern.CASE_INSENSITIVE));
+                Pattern.compile("@@\\s*(?:recipient|fax)\\s*:?(.+?)@@", Pattern.CASE_INSENSITIVE));
     }
 
     public FaxnumberExtractor() {
@@ -155,8 +155,11 @@ public class FaxnumberExtractor {
             if (Utils.debugMode) {
                 log.fine("Found match: " + m);
             }
-            listToAddTo.add(m.group(captureGroup));
-            n++;
+            String num = m.group(captureGroup).trim();
+            if (num.length() > 0) {
+                listToAddTo.add(num);
+                n++;
+            }
         }
         if (Utils.debugMode) {
             log.fine("No more matches; " + n + " matches found in total.");
