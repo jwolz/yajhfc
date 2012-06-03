@@ -72,7 +72,8 @@ CHANGES
 - Custom display styles for phone books
 - Named pipe printer support for Win32
 - Support to extract recipients from documents
-- Some code cleanup
+- Different behaviour for resend fax and multi select (send window called individually for each selected fax)
+- Some code cleanup, minor enhancements and bug fixes
 
 
 0.5.1:
