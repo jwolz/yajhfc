@@ -155,6 +155,9 @@ public class ServerOptions extends IDAndNameOptions {
      * Configuration of the method to save the read/unread state
      */
     public String persistenceConfig = "";
+    
+    
+    public static final int MAX_KILLTIME = 142560; // 99 days * 24 h * 60 min
     /**
      * The default kill time in minutes
      */

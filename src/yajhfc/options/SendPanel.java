@@ -158,7 +158,7 @@ public class SendPanel extends AbstractOptionsPanel<ServerOptions> {
         
         spinMaxDial = new JSpinner(new SpinnerNumberModel(12, 1, 100, 1));
         spinMaxTry = new JSpinner(new SpinnerNumberModel(6, 1, 100, 1));
-        spinKillTime= new JSpinner(new SpinnerNumberModel(180, 0, 2000, 15));
+        spinKillTime= new JSpinner(new SpinnerNumberModel(180, 0, ServerOptions.MAX_KILLTIME, 15));
         
         checkArchiveSentFaxes = new JCheckBox(_("Archive sent fax jobs"));
         
