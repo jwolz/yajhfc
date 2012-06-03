@@ -129,6 +129,7 @@ import yajhfc.print.PhonebooksPrinter;
 import yajhfc.util.AbstractQuickSearchHelper;
 import yajhfc.util.AcceleratorKeyDialog;
 import yajhfc.util.AcceleratorKeys;
+import yajhfc.util.ActionJCheckBoxMenuItem;
 import yajhfc.util.ClipboardPopup;
 import yajhfc.util.ExampleFileFilter;
 import yajhfc.util.ExcDialogAbstractAction;
@@ -137,6 +138,7 @@ import yajhfc.util.MultiButtonGroup;
 import yajhfc.util.ProgressPanel;
 import yajhfc.util.ProgressWorker;
 import yajhfc.util.SafeJFileChooser;
+import yajhfc.util.SelectedActionPropertyChangeListener;
 
 public final class NewPhoneBookWin extends JDialog implements ActionListener {
 
@@ -166,6 +168,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     
     Action listRemoveAction, addEntryAction, removeEntryAction, searchEntryAction, selectAction;
     Action addDistListAction, viewPopupMenuAction, printAction, exportHTMLAction, closeAction, editAcceleratorsAction;
+    Action expandAllAction, collapseAllAction, expandOnLoadAction;
     
     MultiButtonGroup nameStyleGroup, viewGroup, sortGroup;
     
@@ -695,6 +698,10 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             treePopup.add(viewMenu);
             treePopup.addSeparator();
             treePopup.add(new JMenuItem(searchEntryAction));
+            treePopup.addSeparator();
+            treePopup.add(new JMenuItem(collapseAllAction));
+            treePopup.add(new JMenuItem(expandAllAction));
+            treePopup.add(new ActionJCheckBoxMenuItem(expandOnLoadAction));
             treePopup.addPopupMenuListener(new PopupMenuListener() {
 
                 public void popupMenuCanceled(PopupMenuEvent e) {
@@ -822,6 +829,10 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         for (JRadioButtonMenuItem item : sortGroup.createMenuItems()) {
             viewMenu.add(item);
         }
+        viewMenu.addSeparator();
+        viewMenu.add(new JMenuItem(collapseAllAction));
+        viewMenu.add(new JMenuItem(expandAllAction));
+        viewMenu.add(new ActionJCheckBoxMenuItem(expandOnLoadAction));
         return viewMenu;
     }
     
@@ -1139,6 +1150,44 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         editAcceleratorsAction.putValue(Action.NAME, _("Edit keyboard shortcuts") + "...");
         editAcceleratorsAction.putValue(Action.SHORT_DESCRIPTION, _("Customize the keyboard shortcuts"));
         putAvailableAction("EditAccelerators", editAcceleratorsAction);
+        
+        expandAllAction = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(java.awt.event.ActionEvent e) {
+                expandAllPhonebooks();
+            }
+        };
+        expandAllAction.putValue(Action.NAME, _("Expand all"));
+        expandAllAction.putValue(Action.SHORT_DESCRIPTION, _("Expand all phone books"));
+        expandAllAction.putValue(Action.SMALL_ICON, Utils.loadCustomIcon("expandAll.png"));
+        putAvailableAction("ExpandAll", expandAllAction);
+        
+        collapseAllAction = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(java.awt.event.ActionEvent e) {
+                collapseAllPhonebooks();
+            }
+        };
+        collapseAllAction.putValue(Action.NAME, _("Collapse all"));
+        collapseAllAction.putValue(Action.SHORT_DESCRIPTION, _("Collapse all phone books"));
+        collapseAllAction.putValue(Action.SMALL_ICON, Utils.loadCustomIcon("collapseAll.png"));
+        putAvailableAction("CollapseAll", collapseAllAction);
+        
+        expandOnLoadAction = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(ActionEvent e) {
+                Boolean state = (Boolean)getValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY);
+                boolean newState;
+                if (state == null)
+                    newState = true;
+                else
+                    newState = !state;
+                
+                Utils.getFaxOptions().expandPhoneBooksOnLoad = newState;
+                putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, newState);
+            };
+        };
+        expandOnLoadAction.putValue(Action.NAME, _("Expand on load"));
+        expandOnLoadAction.putValue(Action.SHORT_DESCRIPTION, _("Expand all phone books when dialog is opened"));
+        expandOnLoadAction.putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, Utils.getFaxOptions().expandPhoneBooksOnLoad);
+        putAvailableAction("ExpandOnLoad", expandOnLoadAction);
     }
 
     void setSelectedSortOrder() {
@@ -1313,6 +1362,22 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         }
     }
 
+    protected void expandAllPhonebooks() {
+        for (PhoneBook pb : treeModel.getPhoneBooks()) {
+            if (Utils.debugMode)
+                log.finest("Expanding tree node for phone book " + pb.getDescriptor());
+            phoneBookTree.expandPath(new TreePath(new Object[] { treeModel.getRootNode(), pb }));
+        }
+    }
+
+    protected void collapseAllPhonebooks() {
+        for (PhoneBook pb : treeModel.getPhoneBooks()) {
+            if (Utils.debugMode)
+                log.finest("Collapsing tree node for phone book " + pb.getDescriptor());
+            phoneBookTree.collapsePath(new TreePath(new Object[] { treeModel.getRootNode(), pb }));
+        }
+    }
+    
     static List<PhoneBookEntry> resolveDistributionLists(List<PhoneBookEntry> entries) {
         List<PhoneBookEntry> result = new ArrayList<PhoneBookEntry>(entries.size() + 20);
         for (PhoneBookEntry entry : entries) {
@@ -1604,10 +1669,8 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             synchronized (NewPhoneBookWin.this) {
                 if (--openCounter == 0) {
                     treeModel.sortPhonebooks();
-                    for (PhoneBook pb : treeModel.getPhoneBooks()) {
-                        if (Utils.debugMode)
-                            log.finest("Expanding tree node for phone book " + pb.getDescriptor());
-                        phoneBookTree.expandPath(new TreePath(new Object[] { treeModel.getRootNode(), pb }));
+                    if (Utils.getFaxOptions().expandPhoneBooksOnLoad) {
+                        expandAllPhonebooks();
                     }
                     if (phoneBookTree.getSelectionPath() == null) {
                         phoneBookTree.setSelectionRow(1);

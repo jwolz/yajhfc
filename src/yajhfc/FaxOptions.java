@@ -517,8 +517,10 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
      */
     public String pdftotextPath = "pdftotext";
     
-    
-    
+    /**
+     * Expand phone books on load
+     */
+    public boolean expandPhoneBooksOnLoad = true;
     
     public FaxOptions() {
         super(null);
