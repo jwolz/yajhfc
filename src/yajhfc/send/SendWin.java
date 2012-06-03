@@ -453,7 +453,7 @@ final class SendWin extends JDialog implements SendWinControl  {
             
             comboResolution = new JComboBox(FaxResolution.values());
             
-            spinKillTime = new JSpinner(new SpinnerNumberModel(180, 0, 2000, 15));
+            spinKillTime = new JSpinner(new SpinnerNumberModel(180, 0, ServerOptions.MAX_KILLTIME, 15));
             
             spinMaxTries = new JSpinner(new SpinnerNumberModel(12, 1, 100, 1));
             
