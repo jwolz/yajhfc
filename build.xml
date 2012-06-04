@@ -212,6 +212,12 @@
 			<arg value="./fmtall.sh"/>
 		</exec>
 	</target>
+		
+	<target name="merge-po" description="Run xgettext and merge po files">	
+		<exec executable="/bin/sh" dir="${src}/src/yajhfc/i18n/" osfamily="unix">
+			<arg value="./mergeall.sh"/>
+		</exec>
+	</target>
 
 	<target name="dist" depends="compile,i18n,doc" description="generate the distribution" >
 		<jar jarfile="${jar-output}" manifest="${src}/src/MANIFEST.MF">
