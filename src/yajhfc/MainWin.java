@@ -69,6 +69,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -1522,6 +1523,20 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         actExport = new ExportAction(this);
         putAvailableAction("ExportTable", actExport);
         
+        // Add actions from plugins
+        for (PluginUI pu : PluginManager.pluginUIs) {
+            try {
+                Map<String,Action> actMap = pu.createToolbarActions();
+                if (actMap != null) {
+                    String prefix = pu.getUniqueName();
+                    for (Map.Entry<String, Action>  entry :  actMap.entrySet()) {
+                        putAvailableAction(prefix + '.' + entry.getKey(), entry.getValue());
+                    }
+                }
+            } catch (Exception ex) {
+                log.log(Level.WARNING, "Error initializing plugin " + pu, ex);
+            }
+        }
         menuViewListener = new MenuViewListener();
         
         actChecker = new ActionEnabler();
@@ -1583,7 +1598,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     }
     
     
-    JPopupMenu getTblPopup() {
+    public JPopupMenu getTablePopupMenu() {
         if (tblPopup == null) {
             tblPopup = new JPopupMenu(_("Fax"));
             tblPopup.add(new JMenuItem(actShow));
@@ -1663,7 +1678,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                             if (!src.isRowSelected(row)) {
                                 src.setRowSelectionInterval(row, row);
                             }
-                            getTblPopup().show(src, e.getX(), e.getY());
+                            getTablePopupMenu().show(src, e.getX(), e.getY());
                         }
                     }
                 }
@@ -1748,7 +1763,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         return toolbar;
     }
     
-    private JMenu getMenuView() {
+    public JMenu getMenuView() {
         if (menuView == null) {
             menuView = new JMenu(_("View"));
             
@@ -1845,6 +1860,16 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         
         showOrHideTrayIcon();
         setDisconnectedUI();
+        
+        // Allow plugins to configure MainWin
+        for (PluginUI pu : PluginManager.pluginUIs) {
+            try {
+                pu.configureMainWin(this);
+            } catch (Exception ex) {
+                log.log(Level.WARNING, "Error initializing plugin " + pu, ex);
+            }
+        }
+        
         if (myopts.automaticallyCheckForUpdate) {
             UpdateChecker.startSilentUpdateCheck();
         }
@@ -2109,7 +2134,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         return jJMenuBar;
     }
 
-    private JMenu getHelpMenu() {
+    public JMenu getHelpMenu() {
         if (helpMenu == null) {
             helpMenu = new JMenu();
             helpMenu.setText(_("Help"));
@@ -2162,7 +2187,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         return scrollRecv;
     }
 
-    private TooltipJTable<RecvFormat> getTableRecv() {
+    public TooltipJTable<RecvFormat> getTableRecv() {
         if (tableRecv == null) {
             tableRecv = new TooltipJTable<RecvFormat>(getRecvTableModel());
             doCommonTableSetup(tableRecv);
@@ -2228,7 +2253,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         toFront();
     }
     
-    ReadStateFaxListTableModel<RecvFormat> getRecvTableModel() {
+    public ReadStateFaxListTableModel<RecvFormat> getRecvTableModel() {
         if (recvTableModel == null) {
             recvTableModel = new ReadStateFaxListTableModel<RecvFormat>(connection.getReceivedJobs(), currentServer.getPersistence());
             recvTableModel.addUnreadItemListener(new UnreadItemListener<RecvFormat>() {
@@ -2287,7 +2312,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         return scrollSent;
     }
 
-    private TooltipJTable<JobFormat> getTableSent() {
+    public TooltipJTable<JobFormat> getTableSent() {
         if (tableSent == null) {
             tableSent = new TooltipJTable<JobFormat>(getSentTableModel());
             doCommonTableSetup(tableSent);
@@ -2295,7 +2320,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         return tableSent;
     }
 
-    FaxListTableModel<JobFormat> getSentTableModel() {
+    public FaxListTableModel<JobFormat> getSentTableModel() {
         if (sentTableModel == null) {
             sentTableModel = new FaxListTableModel<JobFormat>(connection.getSentJobs());
         }
@@ -2313,7 +2338,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         return scrollSending;
     }
 
-    private TooltipJTable<JobFormat> getTableSending() {
+    public TooltipJTable<JobFormat> getTableSending() {
         if (tableSending == null) {
             tableSending = new TooltipJTable<JobFormat>(getSendingTableModel());
             doCommonTableSetup(tableSending);
@@ -2340,7 +2365,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         JTableTABAction.replaceTABWithNextRow(table);
     }
     
-    FaxListTableModel<JobFormat> getSendingTableModel() {
+    public FaxListTableModel<JobFormat> getSendingTableModel() {
         if (sendingTableModel == null) {
             sendingTableModel = new FaxListTableModel<JobFormat>(connection.getSendingJobs());
         }
@@ -2365,7 +2390,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         return scrollArchive;
     }
     
-    private JMenu getMenuFax() {
+    public JMenu getMenuFax() {
         if (menuFax == null) {
             menuFax = new JMenu();
             menuFax.setText(_("Fax"));
@@ -2393,7 +2418,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         return menuFax;
     }
     
-    private JMenu getMenuTable() {
+    public JMenu getMenuTable() {
         if (menuTable == null) {
             menuTable = new JMenu(_("Table"));
             menuTable.add(new JMenuItem(actSearchFax));
@@ -2405,7 +2430,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         return menuTable;
     }
 
-    private JMenu getMenuExtras() {
+    public JMenu getMenuExtras() {
         if (menuExtras == null) {
             menuExtras = new JMenu(_("Extras"));
             menuExtras.add(actPhonebook);
