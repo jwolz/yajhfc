@@ -36,15 +36,20 @@
  */
 package yajhfc.plugin;
 
+import java.util.Map;
 import java.util.Properties;
 
+import javax.swing.Action;
 import javax.swing.JMenuItem;
 
+import yajhfc.MainWin;
 import yajhfc.options.PanelTreeNode;
 
 /**
  * This abstract class is used to create an UI for plugins.
  * The default implementation of all methods just do nothing.
+ * 
+ * N.B.: This is an abstract class and not an interface to allow extending it without breaking existing plugins.
  * @author jonas
  *
  */
@@ -84,12 +89,44 @@ public abstract class PluginUI {
     public static final int OPTION_PANEL_TABLES = 7;
     
     /**
-     * Creates menu items shown in the options menu of MainWin. <br>
+     * Creates menu items shown in the extras menu of MainWin. <br>
      * This method is called in the event dispatching thread when MainWin is constructed.
      * @return the menu items or null
      */
     public JMenuItem[] createMenuItems() {
         return null;
+    }
+    
+    /**
+     * Returns a map of keys to Actions to be added to the available toolbar buttons in the main window
+     * @return a map or null if no Actions are available
+     */
+    public Map<String,Action> createToolbarActions() {
+        return null;
+    }
+    
+    /**
+     * Allows a plugin to add own UI elements, event listeners etc. to the main window
+     * Called after the main window has been completely initialized with the default actions
+     * @param mainWin
+     */
+    public void configureMainWin(MainWin mainWin) {
+        // Do nothing
+    }
+ 
+    /**
+     * Returns a unique name for this plugin usable to save settings, use in mapping keys, ...
+     * @return a unique name
+     */
+    public String getUniqueName() {
+        // By default return the class name if this is a top level class, else the parent class name if this is a nested class
+        String className = this.getClass().getName();
+        int dollarPos = className.indexOf('$');
+        if (dollarPos < 0) {
+            return className;
+        } else {
+            return className.substring(0, dollarPos);
+        }
     }
     
     /**
