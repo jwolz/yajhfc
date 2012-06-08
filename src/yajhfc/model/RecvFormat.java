@@ -158,6 +158,9 @@ public enum RecvFormat implements FmtItem {
         return hylaDateFormat;
     }
     public DateFormat getDisplayDateFormat() {
+        if (displayDateFormat == null)
+            return null;
+        
         return DateKind.getInstanceFromKind(displayDateFormat);
     }
     public Format getFormat() {

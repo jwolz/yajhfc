@@ -293,6 +293,9 @@ public enum JobFormat implements FmtItem {
         return hylaDateFormat;
     }    
     public DateFormat getDisplayDateFormat() {
+        if (displayDateFormat == null)
+            return null;
+        
         return DateKind.getInstanceFromKind(displayDateFormat);
     }
     public Format getFormat() {
