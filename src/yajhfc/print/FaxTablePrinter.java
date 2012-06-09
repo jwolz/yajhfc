@@ -149,53 +149,57 @@ public class FaxTablePrinter extends JDialog {
         Utils.setDefWinPos(this);
     }
     
+    public static TablePrintable getFaxTablePrintable(Frame owner, TooltipJTable<? extends FmtItem> selTable, String caption) {
+        FaxOptions myopts = Utils.getFaxOptions();
+        TableModel model = selTable.getModel();
+        FaxListTableModel<? extends FmtItem> realModel = selTable.getRealModel();
+        boolean showUnreadOptions = realModel.getTableType() == TableType.RECEIVED;
+        FaxTablePrinter ftpDlg = new FaxTablePrinter(owner, selTable, caption, showUnreadOptions);
+        ftpDlg.setVisible(true);
+        if (!ftpDlg.modalResult) {
+            return null;
+        }
+        
+        TablePrintable tp = new TablePrintable(model);
+        tp.getPageHeader().put(Alignment.CENTER, new MessageFormat("'" + caption + "'"));
+        if (myopts.faxprintMarkErrors || (showUnreadOptions && myopts.faxprintMarkUnread)) {
+            Color errorBackground = null;
+            if (myopts.faxprintMarkErrors) {
+                errorBackground = realModel.getErrorColor();
+            }
+            Font unreadFont = null;
+            if (showUnreadOptions && myopts.faxprintMarkUnread) {
+                unreadFont = tp.getTableFont().deriveFont(Font.BOLD);
+            }
+            tp.setFormatModel(new FaxCellFormatModel(errorBackground, unreadFont));
+        }
+        if (myopts.faxprintColumnWidthAsOnScreen) {
+            for (int i=0; i<selTable.getColumnCount(); i++) {
+                TablePrintColumn tpCol = tp.getColumnLayout().getHeaderLayout()[i];
+                TableColumn jtCol = selTable.getColumnModel().getColumn(i);
+                
+                tpCol.setWidth(jtCol.getWidth());
+            }
+        }
+        for (int i=0; i<selTable.getColumnCount(); i++) {
+            int realCol = selTable.getColumnModel().getColumn(i).getModelIndex();
+            FmtItem fi = realModel.getColumns().get(realCol);
+            if (fi.getDataType() == Date.class) {
+                tp.getColumnLayout().getHeaderLayout()[i].setColumnFormat(fi.getDisplayDateFormat());
+            }
+        }
+        tp.getRendererMap().put(IconMap.class, new IconMapCellRenderer());
+        
+        return tp;
+    }
 
     public static void printFaxTable(Frame owner, TooltipJTable<? extends FmtItem> selTable, String caption) {
         try {
-//          MessageFormat header = new MessageFormat(tabMain.getToolTipTextAt(tabMain.getSelectedIndex()));
-//          Date now = new Date();
-//          MessageFormat footer = new MessageFormat("'" + DateFormat.getDateInstance(DateFormat.SHORT, Utils.getLocale()).format(now) + " " + DateFormat.getTimeInstance(DateFormat.SHORT, Utils.getLocale()).format(now) + "' - " + Utils._("page {0}"));
-//          selTable.print(PrintMode.FIT_WIDTH, header, footer);
+          TablePrintable tp = getFaxTablePrintable(owner, selTable, caption);
+          if (tp == null)
+              return;
+          
           FaxOptions myopts = Utils.getFaxOptions();
-          TableModel model = selTable.getModel();
-          FaxListTableModel<? extends FmtItem> realModel = selTable.getRealModel();
-          boolean showUnreadOptions = realModel.getTableType() == TableType.RECEIVED;
-          FaxTablePrinter ftpDlg = new FaxTablePrinter(owner, selTable, caption, showUnreadOptions);
-          ftpDlg.setVisible(true);
-          if (!ftpDlg.modalResult) {
-        	  return;
-          }
-          
-          TablePrintable tp = new TablePrintable(model);
-          tp.getPageHeader().put(Alignment.CENTER, new MessageFormat("'" + caption + "'"));
-          if (myopts.faxprintMarkErrors || (showUnreadOptions && myopts.faxprintMarkUnread)) {
-        	  Color errorBackground = null;
-        	  if (myopts.faxprintMarkErrors) {
-        		  errorBackground = realModel.getErrorColor();
-        	  }
-        	  Font unreadFont = null;
-        	  if (showUnreadOptions && myopts.faxprintMarkUnread) {
-        		  unreadFont = tp.getTableFont().deriveFont(Font.BOLD);
-        	  }
-        	  tp.setFormatModel(new FaxCellFormatModel(errorBackground, unreadFont));
-          }
-          if (myopts.faxprintColumnWidthAsOnScreen) {
-        	  for (int i=0; i<selTable.getColumnCount(); i++) {
-        		  TablePrintColumn tpCol = tp.getColumnLayout().getHeaderLayout()[i];
-        		  TableColumn jtCol = selTable.getColumnModel().getColumn(i);
-        		  
-        		  tpCol.setWidth(jtCol.getWidth());
-        	  }
-          }
-          for (int i=0; i<selTable.getColumnCount(); i++) {
-        	  int realCol = selTable.getColumnModel().getColumn(i).getModelIndex();
-    		  FmtItem fi = realModel.getColumns().get(realCol);
-    		  if (fi.getDataType() == Date.class) {
-    			  tp.getColumnLayout().getHeaderLayout()[i].setColumnFormat(fi.getDisplayDateFormat());
-    		  }
-          }
-          tp.getRendererMap().put(IconMap.class, new IconMapCellRenderer());
-          
           PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
           if (myopts.printAttributes == null) {
               pras.add(OrientationRequested.LANDSCAPE);

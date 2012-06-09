@@ -210,33 +210,42 @@ public class PhonebooksPrinter extends JDialog {
 	    okAction.setEnabled(enablePrint);
 	}
 	
+	public static TablePrintable getPhonebooksTablePrintable(Dialog owner, List<PhoneBook> phonebooks, PhoneBook currentPhonebook, List<PhoneBookEntry> selection, boolean printFilteredResults) {
+	    PhonebooksPrinter printDlg = new PhonebooksPrinter(owner, phonebooks, currentPhonebook, (selection != null && selection.size() > 1));
+	    printDlg.setVisible(true);
+	    if (!printDlg.modalResult)
+	        return null;
+	    final PBEntryField[] selectedColumns = printDlg.colsModel.getSelectedObjects();
+	    FaxOptions myopts = Utils.getFaxOptions();
+	    myopts.pbprintPrintColumns.clear();
+	    myopts.pbprintPrintColumns.addAll(Arrays.asList(selectedColumns));
+
+	    TablePrintable tp;
+	    if (printDlg.radAll.isSelected()) {
+	        tp = new MultiPhonebookPrintable(phonebooks.toArray(new PhoneBook[phonebooks.size()]));
+	    } else if (printDlg.radSelItems.isSelected()) {
+	        tp = new TablePrintable(new PBEntryFieldTableModel(new ArrayList<PBEntryFieldContainer>(selection)));
+	        tp.getPageHeader().put(Alignment.CENTER, new MessageFormat("'" + _("Selected phone book entries") + "'"));
+	    } else {
+	        tp = new MultiPhonebookPrintable(printDlg.pbModel.getSelectedObjects());
+	    }
+	    setColumnLayout(selectedColumns, tp);
+
+	    DistributionListCellRenderer distlistRenderer = new DistributionListCellRenderer();
+	    setColumnLayout(selectedColumns, distlistRenderer);
+	    distlistRenderer.setHeaderFont(tp.getHeaderFont().deriveFont(Font.ITALIC));
+	    tp.getRendererMap().put(DistributionList.class, distlistRenderer);
+
+	    return tp;
+	}
+	
 	public static void printPhonebooks(Dialog owner, List<PhoneBook> phonebooks, PhoneBook currentPhonebook, List<PhoneBookEntry> selection, boolean printFilteredResults) {
-		PhonebooksPrinter printDlg = new PhonebooksPrinter(owner, phonebooks, currentPhonebook, (selection != null && selection.size() > 1));
-		printDlg.setVisible(true);
-		if (!printDlg.modalResult)
+	    TablePrintable tp = getPhonebooksTablePrintable(owner, phonebooks, currentPhonebook, selection, printFilteredResults);
+		if (tp == null)
 		    return;
-		final PBEntryField[] selectedColumns = printDlg.colsModel.getSelectedObjects();
-        FaxOptions myopts = Utils.getFaxOptions();
-        myopts.pbprintPrintColumns.clear();
-        myopts.pbprintPrintColumns.addAll(Arrays.asList(selectedColumns));
-		
-		TablePrintable tp;
-		if (printDlg.radAll.isSelected()) {
-			tp = new MultiPhonebookPrintable(phonebooks.toArray(new PhoneBook[phonebooks.size()]));
-		} else if (printDlg.radSelItems.isSelected()) {
-			tp = new TablePrintable(new PBEntryFieldTableModel(new ArrayList<PBEntryFieldContainer>(selection)));
-			tp.getPageHeader().put(Alignment.CENTER, new MessageFormat("'" + _("Selected phone book entries") + "'"));
-		} else {
-			tp = new MultiPhonebookPrintable(printDlg.pbModel.getSelectedObjects());
-		}
-        setColumnLayout(selectedColumns, tp);
-		
-		DistributionListCellRenderer distlistRenderer = new DistributionListCellRenderer();
-		setColumnLayout(selectedColumns, distlistRenderer);
-		distlistRenderer.setHeaderFont(tp.getHeaderFont().deriveFont(Font.ITALIC));
-		tp.getRendererMap().put(DistributionList.class, distlistRenderer);
 		
 		try {
+		    FaxOptions myopts = Utils.getFaxOptions();
 			PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
 			if (myopts.printAttributes == null) {
 				pras.add(OrientationRequested.LANDSCAPE);

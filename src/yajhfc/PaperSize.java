@@ -83,6 +83,22 @@ public enum PaperSize {
         return size.height/25.4f;
     }
     
+    /**
+     * Returns the papersize's width in points (1/72th inches)
+     * @return
+     */
+    public float getWidthPoints() {
+        return size.width/25.4f*72f;
+    }
+    
+    /**
+     * Returns the papersize's height in points (1/72th inches)
+     * @return
+     */
+    public float getHeightPoints() {
+        return size.height/25.4f*72f;
+    }
+    
     public String getKey() {
         return name();
     }

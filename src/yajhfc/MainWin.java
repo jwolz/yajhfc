@@ -2149,7 +2149,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         return helpMenu;
     }
 
-    JTabbedPane getTabMain() {
+    public JTabbedPane getTabMain() {
         if (tabMain == null) {
             tabMain = new JTabbedPane();
             tabMain.addTab(_("Received"), Utils.loadCustomIcon("received.gif"), getScrollRecv(), _("Received faxes"));
