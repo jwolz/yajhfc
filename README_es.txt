@@ -1,4 +1,4 @@
-LÉAME (README) de YajHFC 0.5.1
+LÉAME (README) de YajHFC 0.5.2
 ==============================
 
 ACERCA DE
@@ -65,6 +65,15 @@ de Java (más avanzado que los programas "Hola mundo") utilizando la IDE Eclipse
 
 CAMBIOS
 -------
+
+0.5.2:
+- Nuevo complemento para PDF
+- Orden personalizado para las agendas telefónicas
+- Estilos de visualización personalizados para las agendas telefónicas
+- Soporte para impresoras de tubería con nombre en sistemas Windows (32 bits)
+- Soporte para extraer destinatarios desde documentos
+- Distinto comportamiento para el reenvío de faxes y selecciones múltiples (ventanas de envío separadas para cada uno de los faxes seleccionados)
+- Limpieza de código, pequeñas mejoras y corrección de errores
 
 0.5.1:
 - Complemento para función en consola

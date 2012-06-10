@@ -125,6 +125,8 @@ import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 import yajhfc.phonebook.convrules.RuleSerializer;
 import yajhfc.phonebook.ui.PhoneBookTreeModel.PBTreeModelListener;
 import yajhfc.phonebook.ui.PhoneBookTreeModel.RootNode;
+import yajhfc.plugin.PluginManager;
+import yajhfc.plugin.PluginUI;
 import yajhfc.print.PhonebooksPrinter;
 import yajhfc.util.AbstractQuickSearchHelper;
 import yajhfc.util.AcceleratorKeyDialog;
@@ -164,6 +166,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
     JButton buttonBrowse;
     
     JMenu pbMenu, importMenu, openMenu, entryMenu, exportMenu;
+    JMenu viewMenu;
     JPopupMenu treePopup;
     
     Action listRemoveAction, addEntryAction, removeEntryAction, searchEntryAction, selectAction;
@@ -282,11 +285,15 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         return selectedItems;
     }
  
-    JTree getPhoneBookTree() {
+    public JTree getPhoneBookTree() {
         return phoneBookTree;
     }
     
-    List<PhoneBook> getAvailablePhoneBooks() {
+    public PhoneBookTreeModel getTreeModel() {
+        return treeModel;
+    }
+    
+    public List<PhoneBook> getAvailablePhoneBooks() {
         return treeModel.getPhoneBooks();
     }
     
@@ -737,7 +744,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         return leftPane;
     }
     
-    private JMenu getPhonebookMenu() {
+    public JMenu getPhonebookMenu() {
         if (pbMenu == null) {
             importMenu = new JMenu(Utils._("Import"));
             importMenu.setIcon(Utils.loadIcon("general/Import"));
@@ -800,7 +807,7 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         return pbMenu;
     }
     
-    private JMenu getEntryMenu() {
+    public JMenu getEntryMenu() {
         if (entryMenu == null) {
             entryMenu = new JMenu(Utils._("Entry"));
 
@@ -814,32 +821,34 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         return entryMenu;
     }
     
-    private JMenu createViewMenu() {
-        JMenu viewMenu = new JMenu(Utils._("View"));
-        JMenu displayStyleMenu = new JMenu(nameStyleGroup.label);
-        for (JMenuItem item : nameStyleGroup.createMenuItems()) {
-            displayStyleMenu.add(item);
+    public JMenu getViewMenu() {
+        if (viewMenu == null) {
+            viewMenu = new JMenu(Utils._("View"));
+            JMenu displayStyleMenu = new JMenu(nameStyleGroup.label);
+            for (JMenuItem item : nameStyleGroup.createMenuItems()) {
+                displayStyleMenu.add(item);
+            }
+            viewMenu.add(displayStyleMenu);
+            viewMenu.addSeparator();
+            for (JRadioButtonMenuItem item : viewGroup.createMenuItems()) {
+                viewMenu.add(item);
+            }
+            viewMenu.addSeparator();
+            for (JRadioButtonMenuItem item : sortGroup.createMenuItems()) {
+                viewMenu.add(item);
+            }
+            viewMenu.addSeparator();
+            viewMenu.add(new JMenuItem(collapseAllAction));
+            viewMenu.add(new JMenuItem(expandAllAction));
+            viewMenu.add(new ActionJCheckBoxMenuItem(expandOnLoadAction));
         }
-        viewMenu.add(displayStyleMenu);
-        viewMenu.addSeparator();
-        for (JRadioButtonMenuItem item : viewGroup.createMenuItems()) {
-            viewMenu.add(item);
-        }
-        viewMenu.addSeparator();
-        for (JRadioButtonMenuItem item : sortGroup.createMenuItems()) {
-            viewMenu.add(item);
-        }
-        viewMenu.addSeparator();
-        viewMenu.add(new JMenuItem(collapseAllAction));
-        viewMenu.add(new JMenuItem(expandAllAction));
-        viewMenu.add(new ActionJCheckBoxMenuItem(expandOnLoadAction));
         return viewMenu;
     }
     
     private JMenuBar getMenu() {
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(getPhonebookMenu());
-        menuBar.add(createViewMenu());
+        menuBar.add(getViewMenu());
         menuBar.add(getEntryMenu());
         return menuBar;
     }
@@ -856,6 +865,10 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
         if (availableActions.put(key, act) != null) {
             log.severe("Action " + key + " already existed!");
         }
+    }
+    
+    public ProgressPanel getProgressPanel() {
+        return progressPanel;
     }
     
     private void createActions() {
@@ -1286,9 +1299,19 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             addPhoneBook(PhoneBookFactory.getDefaultPhonebookDescriptor());
         }
         
+        // Allow plugins to configure this window
+        for (PluginUI pu : PluginManager.pluginUIs) {
+            try {
+                pu.configurePhoneBookWin(this);
+            } catch (Exception ex) {
+                log.log(Level.WARNING, "Error initializing plugin " + pu, ex);
+            }
+        }
+        
 //        if (fopts.lastSelectedPhonebook >= 0 && fopts.lastSelectedPhonebook < tabPhonebooks.getTabCount())
 //            tabPhonebooks.setSelectedIndex(fopts.lastSelectedPhonebook);
         checkMenuEnable();
+        
     }
     
     public NewPhoneBookWin(Dialog owner) {

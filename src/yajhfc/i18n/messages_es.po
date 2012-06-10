@@ -7,16 +7,15 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: messages_es 5.1\n"
+"Project-Id-Version: messages_es 0.5.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-06-04 19:11+0200\n"
-"PO-Revision-Date: 2011-10-23 13:04+0200\n"
+"PO-Revision-Date: 2012-06-08 22:22+0200\n"
 "Last-Translator: Elsa Andrés <e.andres@ist-sci.com>\n"
-"Language-Team: Spanish <yajhfc-translators@googlegroups.com>\n"
-"Language: es\n"
+"Language-Team: Spanish <yajhfc-translators@lists.berlios.de>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: 8bit"
 
 #: ../FaxOptions.java:633 ../FaxOptions.java:641 ../FaxOptions.java:649
 #: ../FaxOptions.java:661 ../options/ServerSettingsPanel.java:161
@@ -465,15 +464,15 @@ msgstr "GMT"
 
 #: ../file/textextract/RecipientExtractionMode.java:46
 msgid "No"
-msgstr ""
+msgstr "No"
 
 #: ../file/textextract/RecipientExtractionMode.java:47
 msgid "Yes, always show send dialog"
-msgstr ""
+msgstr "Sí, mostrar siempre el cuadro de diálogo de envío"
 
 #: ../file/textextract/RecipientExtractionMode.java:48
 msgid "Yes, show send dialog only when no recipients were found"
-msgstr ""
+msgstr "Sí, mostrar el cuadro de diálogo de envío sólo cuando no se encuentren destinatarios"
 
 #: ../file/FormattedFile.java:94
 #, java-format
@@ -1479,7 +1478,7 @@ msgstr "Rutas y visores"
 
 #: ../options/OptionsWin.java:237
 msgid "Recipient extraction"
-msgstr ""
+msgstr "Extracción de destinatarios"
 
 #: ../options/OptionsWin.java:240 ../options/ServerSettingsPanel.java:257
 msgid "Servers"
@@ -1859,72 +1858,72 @@ msgstr "Por favor, introduzca la ubicación del ejecutable tiff2pdf."
 #: ../options/TextExtractorPanel.java:153
 #, java-format
 msgid "Path to {0}:"
-msgstr ""
+msgstr "Ruta a {0}:"
 
 #: ../options/TextExtractorPanel.java:158
 msgid "No path settings necessary"
-msgstr ""
+msgstr "No se precisan ajustes para la ruta"
 
 #: ../options/TextExtractorPanel.java:168
 msgid ""
 "By activating this option YajHFC will try to extract the recipients from "
 "documents given on the command line or fax printer."
-msgstr ""
+msgstr "Al activar esta opción, YajHFC intentará extraer los destinatarios desde documentos proporcionados en la línea de comandos o desde la impresora de faxes."
 
 #: ../options/TextExtractorPanel.java:169
 msgid ""
 "To find recipients it searches for <tt>@@recipient:<i>faxnumber</i>@@</tt> "
 "tags in the files."
-msgstr ""
+msgstr "Para encontrar destinatarios busca las etiquetas <tt>@@recipient:<i>faxnumber</i>@@</tt> en los archivos."
 
 #: ../options/TextExtractorPanel.java:170
 msgid ""
 "This behaviour can be overridden by the <tt>--extract-recipients</tt> "
 "command line option."
-msgstr ""
+msgstr "Puede anular este comportamiento mediante la opción <tt>--extract-recipients</tt> desde la línea de comandos."
 
 #: ../options/TextExtractorPanel.java:171
 msgid ""
 "If you want to use this feature a PDF/PostScript to text conversion method "
 "must be selected below."
-msgstr ""
+msgstr "Si desea utilizar esta opción debe seleccionar abajo un sistema de conversión de PDF/PostScript a texto."
 
 #: ../options/TextExtractorPanel.java:188
 msgid "Test..."
-msgstr ""
+msgstr "Probar..."
 
 #: ../options/TextExtractorPanel.java:214
 msgid "Select a file to view as text"
-msgstr ""
+msgstr "Seleccione un archivo para visualizar como texto"
 
 #: ../options/TextExtractorPanel.java:229
 msgid "Settings for the selected conversion method"
-msgstr ""
+msgstr "Ajustes del sistema de conversión seleccionado"
 
 #: ../options/TextExtractorPanel.java:239
 msgid "Extract recipients from documents:"
-msgstr ""
+msgstr "Extraer destinatarios desde documentos:"
 
 #: ../options/TextExtractorPanel.java:240
 msgid "PS/PDF to text conversion method:"
-msgstr ""
+msgstr "Sistema de conversión de PS/PDF a texto:"
 
 #: ../options/TextExtractorPanel.java:260
 #, java-format
 msgid "View as text using {0}"
-msgstr ""
+msgstr "Visualizar como texto usando {0}"
 
 #: ../options/TextExtractorPanel.java:265
 msgid "Converting file to text..."
-msgstr ""
+msgstr "Convirtiendo archivo a texto..."
 
 #: ../options/TextExtractorPanel.java:270
 msgid "Running converter..."
-msgstr ""
+msgstr "Ejecutando el conversor..."
 
 #: ../options/TextExtractorPanel.java:279
 msgid "Error converting file to text"
-msgstr ""
+msgstr "Error al convertir el archivo a texto"
 
 #: ../options/SendPanel.java:137
 msgid "Delivery settings"
@@ -2477,12 +2476,12 @@ msgstr "Nueva agenda telefónica LDAP"
 #: ../phonebook/convrules/RuleParser.java:92
 #, java-format
 msgid "Error: Could not parse input beginning with \"{0}\"."
-msgstr ""
+msgstr "Error: No se puede analizar la entrada que comienza con \"{0}\"."
 
 #: ../phonebook/convrules/RuleParser.java:132
 #, java-format
 msgid "Unknown field \"{0}\"."
-msgstr ""
+msgstr "Campo desconocido \"{0}\"."
 
 #: ../phonebook/convrules/LocationRule.java:85
 msgid "[Location with ZIP code]"
@@ -2750,7 +2749,7 @@ msgstr "Estilo de visualización"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:967
 msgid "Custom"
-msgstr ""
+msgstr "Personalizar"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:979
 msgid "Filter phone book entries"
@@ -2782,13 +2781,13 @@ msgstr "Filtrar entradas"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:1018
 msgid "Default sort order"
-msgstr ""
+msgstr "Orden predeterminado"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:1019
 #: ../phonebook/ui/SortOrderDialog.java:98
 #: ../phonebook/ui/SortOrderDialog.java:103
 msgid "Custom sort order"
-msgstr ""
+msgstr "Orden personalizado"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:1045
 msgid "Filter phone book items"
@@ -2800,27 +2799,27 @@ msgstr "Guardar como HTML"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:1159
 msgid "Expand all"
-msgstr ""
+msgstr "Expandir todo"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:1160
 msgid "Expand all phone books"
-msgstr ""
+msgstr "Expandir todas las agendas telefónicas"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:1169
 msgid "Collapse all"
-msgstr ""
+msgstr "Contraer todo"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:1170
 msgid "Collapse all phone books"
-msgstr ""
+msgstr "Contraer todas las agendas telefónicas"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:1187
 msgid "Expand on load"
-msgstr ""
+msgstr "Expandir al cargar"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:1188
 msgid "Expand all phone books when dialog is opened"
-msgstr ""
+msgstr "Expandir todas las agendas telefónicas cuando el cuadro de diálogo esté abierto"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:1253
 msgid "Error closing the phone books:"
@@ -2896,25 +2895,25 @@ msgstr "Comentarios:"
 
 #: ../phonebook/ui/SortOrderDialog.java:138
 msgid "Selected sort order:"
-msgstr ""
+msgstr "Orden seleccionado:"
 
 #: ../phonebook/ui/SortOrderDialog.java:138
 msgid "Available fields:"
-msgstr ""
+msgstr "Campos disponibles:"
 
 #: ../phonebook/ui/SortOrderDialog.java:145
 #: ../phonebook/ui/SortOrderDialog.java:189
 msgid "descending"
-msgstr ""
+msgstr "descendente"
 
 #: ../phonebook/ui/SortOrderDialog.java:145
 #: ../phonebook/ui/SortOrderDialog.java:188
 msgid "ascending"
-msgstr ""
+msgstr "ascendente"
 
 #: ../phonebook/ui/SortOrderDialog.java:195
 msgid "Sort direction"
-msgstr ""
+msgstr "Dirección para ordenar"
 
 #: ../phonebook/ui/NewSearchWin.java:113
 msgid "No matching phone book entry found."
@@ -2931,37 +2930,37 @@ msgstr "Encontrar una entrada en la agenda telefónica"
 #: ../phonebook/ui/RuleParserDialog.java:189
 #: ../phonebook/ui/RuleParserDialog.java:196
 msgid "Validate"
-msgstr ""
+msgstr "Validar"
 
 #: ../phonebook/ui/RuleParserDialog.java:141
 msgid "Display style is valid."
-msgstr ""
+msgstr "El estilo de visualización no es válido."
 
 #: ../phonebook/ui/RuleParserDialog.java:153
 msgid ""
 "Please enter the desired display style in the text box below. Double click "
 "on the lists to add the selected field/predefined style."
-msgstr ""
+msgstr "Introduzca el estilo de visualización deseado en el campo de texto de abajo. Pulse dos veces sobre las listas para añadir el campo seleccionado o el estilo predefinido."
 
 #: ../phonebook/ui/RuleParserDialog.java:154
 msgid "Available fields"
-msgstr ""
+msgstr "Campos disponibles"
 
 #: ../phonebook/ui/RuleParserDialog.java:155
 msgid "Predefined styles"
-msgstr ""
+msgstr "Estilos predefinidos"
 
 #: ../phonebook/ui/RuleParserDialog.java:175
 msgid "Please enter a display style."
-msgstr ""
+msgstr "Introduzca un estilo de visualización."
 
 #: ../phonebook/ui/RuleParserDialog.java:189
 msgid "The display style must contain at least one field."
-msgstr ""
+msgstr "El estilo de visualización debe contener al menos un campo."
 
 #: ../phonebook/ui/RuleParserDialog.java:196
 msgid "Display style is not valid"
-msgstr ""
+msgstr "El estilo de visualización no es válido"
 
 #: ../phonebook/jdbc/JDBCPhoneBookEntry.java:80
 msgid "<error>"
@@ -4035,7 +4034,7 @@ msgstr "Valor"
 
 #: ../TextViewPanel.java:195 ../send/SimplifiedSendDialog.java:937
 msgid "Error saving the file"
-msgstr ""
+msgstr "Error al guardar el archivo"
 
 #: ../send/SendWinStyle.java:42
 msgid "Traditional"
@@ -4177,7 +4176,7 @@ msgstr "Enviar a la siguiente hora:"
 
 #: ../send/SimplifiedSendDialog.java:946
 msgid "Save a copy as..."
-msgstr ""
+msgstr "Guardar una copia como..."
 
 #: ../send/StreamTFLItem.java:110
 msgid "<stdin>"
