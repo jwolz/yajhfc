@@ -44,10 +44,11 @@ import javax.swing.JMenuItem;
 
 import yajhfc.MainWin;
 import yajhfc.options.PanelTreeNode;
+import yajhfc.phonebook.ui.NewPhoneBookWin;
 
 /**
  * This abstract class is used to create an UI for plugins.
- * The default implementation of all methods just do nothing.
+ * The default implementation of all methods just do nothing. To use it for a plugin, just override the methods you need.
  * 
  * N.B.: This is an abstract class and not an interface to allow extending it without breaking existing plugins.
  * @author jonas
@@ -114,6 +115,15 @@ public abstract class PluginUI {
         // Do nothing
     }
  
+    /**
+     * Allows a plugin to add own UI elements, event listeners etc. to the phone book window
+     * Called after the phone book window has been completely initialized with the default actions
+     * @param mainWin
+     */
+    public void configurePhoneBookWin(NewPhoneBookWin phoneBookWin) {
+        // Do nothing
+    }
+    
     /**
      * Returns a unique name for this plugin usable to save settings, use in mapping keys, ...
      * @return a unique name
