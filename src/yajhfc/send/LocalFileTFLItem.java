@@ -128,6 +128,10 @@ public class LocalFileTFLItem extends HylaTFLItem {
     public String getText() {
         return fileName;
     }
+    
+    public String getFileName() {
+        return fileName;
+    }
 
     @Override
     public void setText(String newText) {

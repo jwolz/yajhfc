@@ -1,4 +1,4 @@
-LEGGIMI per YajHFC 0.5.1
+LEGGIMI per YajHFC 0.5.2
 ========================
 
 INFORMAZIONI
@@ -30,7 +30,7 @@ Requisiti:
      e tiff2pdf (dal pacchetto libtiff-utils)
 
 Per installare YajHFC basta scaricare il file yajhfc-0_5_1.jar su una cartella del proprio disco.
-Per eseguirlo utilizzare: "java -jar yajhfc-0_5_1.jar"
+Per eseguirlo utilizzare: "java -jar yajhfc-0_5_2.jar"
 (In Windows normalmente è anche possibile cliccare due volte sul file jar.)
 
 LICENZA
@@ -64,6 +64,16 @@ YajHFC originariamente era stato scritto come primo progetto Java più complesso
 
 MODIFICHE
 ---------
+
+0.5.2:
+- Aggiunto plugin PDF
+- Ordinamento personalizzato per le rubriche
+- Stili di visualizzazione personalizzati per le rubriche
+- Supporto per stampanti "named pipe" per Win32
+- Supporto per estrazione destinatari dai documenti
+- Comportamento differente per il caso di reinvio fax e selezioni multiple
+  (finestra di invio invocata individualmente per ogni fax selezionato)
+- Qualche pulizia nel codice, miglioramenti e correzioni di errori
 
 0.5.1:
 - Aggiunto add-on per il funzionamento da console (senza interfaccia grafica)

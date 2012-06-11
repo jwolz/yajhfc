@@ -100,8 +100,10 @@ public abstract class ProgressWorker extends Thread{
     }
     
     public void setProgress(int progress) {
-        this.progress = progress;
-        SwingUtilities.invokeLater(new ProgressUpdater(progress, progressMonitor));
+        if (this.progress != progress || progressMonitor.isShowingIndeterminate()) {
+            this.progress = progress;
+            SwingUtilities.invokeLater(new ProgressUpdater(progress, progressMonitor));
+        }
     }
     
     /**

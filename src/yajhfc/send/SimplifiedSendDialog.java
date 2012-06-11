@@ -54,7 +54,10 @@ import java.io.File;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.Callable;
 import java.util.logging.Logger;
 
@@ -97,6 +100,7 @@ import yajhfc.Utils;
 import yajhfc.faxcover.Faxcover;
 import yajhfc.file.FileConverters;
 import yajhfc.file.FormattedFile;
+import yajhfc.file.textextract.FaxnumberExtractor;
 import yajhfc.model.IconMap;
 import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.PhoneBookEntry;
@@ -117,6 +121,7 @@ import yajhfc.util.JTableTABAction;
 import yajhfc.util.LimitedPlainDocument;
 import yajhfc.util.ListComboModel;
 import yajhfc.util.ProgressPanel;
+import yajhfc.util.ProgressWorker;
 import yajhfc.util.SafeJFileChooser;
 
 /**
@@ -387,6 +392,38 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         return progressPanel;
     }
     
+    void extractRecipientsFor(final HylaTFLItem item) {
+        ProgressWorker pw = new ProgressWorker() {
+            private Set<String> numbers;
+            
+            @Override
+            public void doWork() {
+                try {
+                    updateNote(Utils._("Extracting recipients..."));
+                    FaxnumberExtractor extractor = new FaxnumberExtractor();
+                    numbers = new TreeSet<String>();
+                    extractor.extractFromMultipleDocuments(Collections.singleton(item), numbers);
+                } catch (Exception e) {
+                    showExceptionDialog(Utils._("Error extracting recipients"), e);
+                    numbers = null;
+                } 
+            }
+            
+            @Override
+            protected void done() {
+                if (numbers != null) {
+                    for (String number : numbers) {
+                        PBEntryFieldContainer pbe = new DefaultPBEntryFieldContainer("");
+                        pbe.setField(PBEntryField.FaxNumber, number);
+                        getRecipients().add(pbe);
+                    }
+                }
+            }
+        };
+        pw.setProgressMonitor(progressPanel);
+        pw.startWork(this, Utils._("Extracting recipients..."));
+    }
+    
     protected Component createFileEntryList() {
         Box box = Box.createVerticalBox();
         
@@ -420,7 +457,20 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         tflFiles = new TextFieldList<HylaTFLItem>(ftfFileName.getJTextField(), true, sendController.getFiles()) {
             @Override
             protected HylaTFLItem createListItem(String text) {
-                return new LocalFileTFLItem(text);
+                LocalFileTFLItem item = new LocalFileTFLItem(text);
+                
+                // Check if we should extract recipients
+                switch (Utils.getFaxOptions().extractRecipients) {
+                case AUTO:
+                case YES:
+                    extractRecipientsFor(item);
+                    break;
+                default:
+                    // Do not extract
+                    break;
+                }
+                
+                return item;
             }
         };
         tflFiles.addLocalComponent(ftfFileName.getJButton());

@@ -36,10 +36,12 @@
  */
 package yajhfc.plugin;
 
+import java.awt.Component;
 import java.util.Map;
 import java.util.Properties;
 
 import javax.swing.Action;
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 import yajhfc.MainWin;
@@ -164,5 +166,39 @@ public abstract class PluginUI {
      */
     public void saveOptions(Properties p) {
         // Do nothing
+    }
+    
+    /**
+     * Inserts the given menu item after the one with the specified action command
+     * @param menu
+     * @param actionCommandAfter
+     * @param menuItem
+     */
+    public static void insertMenuItemAfter(JMenu menu, String actionCommandAfter, JMenuItem menuItem) {
+        int insertPos = indexOfAction(menu, actionCommandAfter);
+        if (insertPos < 0) {
+            // As fall back, add at the end of the menu
+            insertPos = menu.getMenuComponentCount()-1;
+        }
+        menu.insert(menuItem, insertPos+1);
+    }
+
+    /**
+     * Determines the index of the menu item with the speified action command
+     * @param menu
+     * @param actionCommand
+     * @return
+     */
+    public static int indexOfAction(JMenu menu, String actionCommand) {
+        for (int i=0; i<menu.getMenuComponentCount(); i++) {
+            Component comp = menu.getMenuComponent(i);
+            if (comp instanceof JMenuItem) {
+                JMenuItem item = (JMenuItem)comp;
+                if (actionCommand.equals(item.getActionCommand())) {
+                    return i;
+                }
+            }
+        }
+        return -1;
     }
 }

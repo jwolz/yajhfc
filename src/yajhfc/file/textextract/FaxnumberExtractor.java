@@ -40,6 +40,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -84,7 +86,7 @@ public class FaxnumberExtractor {
      * @throws IOException
      * @throws ConversionException
      */
-    public int extractFromMultipleFileNames(Collection<String> input, List<String> listToAddTo) throws IOException, ConversionException {
+    public int extractFromMultipleFileNames(Collection<String> input, Collection<String> listToAddTo) throws IOException, ConversionException {
         if (input.size() == 0)
             return 0;
         
@@ -103,7 +105,7 @@ public class FaxnumberExtractor {
      * @throws IOException
      * @throws ConversionException
      */
-    public int extractFromMultipleDocuments(Collection<HylaTFLItem> input, List<String> listToAddTo) throws IOException, ConversionException {
+    public int extractFromMultipleDocuments(Collection<HylaTFLItem> input, Collection<String> listToAddTo) throws IOException, ConversionException {
         if (input.size() == 0)
             return 0;
         
@@ -122,15 +124,27 @@ public class FaxnumberExtractor {
      * @throws IOException
      * @throws ConversionException
      */
-    public int extractFromMultipleFiles(List<FormattedFile> input, List<String> listToAddTo) throws IOException, ConversionException {
+    public int extractFromMultipleFiles(List<FormattedFile> input, Collection<String> listToAddTo) throws IOException, ConversionException {
         if (input.size() == 0)
             return 0;
         
-        CharSequence[] texts = converter.convertFilesToText(input);        
+        CharSequence[] texts = converter.convertFilesToText(input);
+        
+        Collection<String> tempColl;
+        // Make sure we dedup the numbers
+        if (listToAddTo instanceof Set) {
+            tempColl = listToAddTo;
+        } else {
+            tempColl = new TreeSet<String>();
+        }
         
         int n = 0;
         for (CharSequence text : texts) {
-            n += getMatchesInText(text, 1, listToAddTo);
+            n += getMatchesInText(text, 1, tempColl);
+        }
+        
+        if (tempColl != listToAddTo) {
+            listToAddTo.addAll(tempColl);
         }
         return n;
     }
@@ -143,7 +157,7 @@ public class FaxnumberExtractor {
      * @return the number of matches found
      * @throws IOException
      */
-    public int getMatchesInText(CharSequence text, int captureGroup, List<String> listToAddTo) throws IOException {
+    public int getMatchesInText(CharSequence text, int captureGroup, Collection<String> listToAddTo) throws IOException {
         if (Utils.debugMode) {
             log.finest("input text is:\n" + text);
         }
