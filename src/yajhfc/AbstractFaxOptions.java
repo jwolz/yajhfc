@@ -74,6 +74,8 @@ import yajhfc.model.FmtItemList;
  * - Rectangle
  * - Point 
  * - List<String>
+ * - List<Enum>
+ * - List<PropertiesSerializable>
  * - Enum
  * - Password
  * - Map<String,String>

@@ -80,10 +80,17 @@ public abstract class HylaToTextConverter {
     }
     
     public static HylaToTextConverter findDefault() {
+        if (Utils.debugMode) {
+            log.fine("Trying to find converter " + Utils.getFaxOptions().hylaToTextConverter);
+        }
         HylaToTextConverter rv = findByString(Utils.getFaxOptions().hylaToTextConverter);
         if (rv != null) {
+            if (Utils.debugMode) {
+                log.fine("Found converter of class " + rv.getClass().getName() + "; description=" + rv.getDescription());
+            }
             return rv;
         } else {
+            log.info("HylaToTextConverter " + Utils.getFaxOptions().hylaToTextConverter + " not found, falling back to " + DEFAULT_CONVERTER);
             rv = findByString(DEFAULT_CONVERTER);
             if (rv != null) {
                 return rv;
