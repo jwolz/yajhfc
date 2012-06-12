@@ -43,6 +43,7 @@ import java.util.Properties;
 import javax.swing.Action;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 
 import yajhfc.MainWin;
 import yajhfc.options.PanelTreeNode;
@@ -192,6 +193,40 @@ public abstract class PluginUI {
     public static int indexOfAction(JMenu menu, String actionCommand) {
         for (int i=0; i<menu.getMenuComponentCount(); i++) {
             Component comp = menu.getMenuComponent(i);
+            if (comp instanceof JMenuItem) {
+                JMenuItem item = (JMenuItem)comp;
+                if (actionCommand.equals(item.getActionCommand())) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+    
+    /**
+     * Inserts the given menu item after the one with the specified action command
+     * @param menu
+     * @param actionCommandAfter
+     * @param menuItem
+     */
+    public static void insertMenuItemAfter(JPopupMenu menu, String actionCommandAfter, JMenuItem menuItem) {
+        int insertPos = indexOfAction(menu, actionCommandAfter);
+        if (insertPos < 0) {
+            // As fall back, add at the end of the menu
+            insertPos = menu.getComponentCount()-1;
+        }
+        menu.insert(menuItem, insertPos+1);
+    }
+
+    /**
+     * Determines the index of the menu item with the speified action command
+     * @param menu
+     * @param actionCommand
+     * @return
+     */
+    public static int indexOfAction(JPopupMenu menu, String actionCommand) {
+        for (int i=0; i<menu.getComponentCount(); i++) {
+            Component comp = menu.getComponent(i);
             if (comp instanceof JMenuItem) {
                 JMenuItem item = (JMenuItem)comp;
                 if (actionCommand.equals(item.getActionCommand())) {
