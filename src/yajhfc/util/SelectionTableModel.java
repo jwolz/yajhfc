@@ -163,6 +163,14 @@ public class SelectionTableModel<T> extends AbstractTableModel {
 	    fireTableDataChanged();
 	}
 	
+	public void selectAll() {
+	    selectAll(true);
+	}
+	
+	public void deselectAll() {
+	    selectAll(false);
+	}
+	
 	public void selectAll(boolean state) {
 		Arrays.fill(selected, state);
 		fireTableDataChanged();

@@ -43,9 +43,9 @@ import yajhfc.Utils;
  *
  */
 public enum RecipientExtractionMode {
-	NO(Utils._("No")),
-	YES(Utils._("Yes, always show send dialog")),
-	AUTO(Utils._("Yes, show send dialog only when no recipients were found"))
+	NO(_("No")),
+	YES(_("Yes, always show send dialog")),
+	AUTO(_("Yes, show send dialog only when no recipients were found"))
 	;
 	
 	private final String description;
@@ -55,11 +55,16 @@ public enum RecipientExtractionMode {
 	}
 	
 	public String getDescription() {
-		return description;
+		return Utils._(description);
 	}
 	
 	@Override
 	public String toString() {
-		return description;
+		return getDescription();
+	}
+	
+	// Dummy function to avoid referencing Utils on load
+	private static String _(String key) {
+	    return key;
 	}
 }
