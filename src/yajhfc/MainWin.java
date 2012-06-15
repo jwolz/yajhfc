@@ -69,7 +69,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -2813,8 +2812,9 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
 
                         sendReady = SendReadyState.Ready;
                         MainWin.this.setEnabled(true);
-
-                        log.info("Finished init work after refresh complete!");
+                        
+                        if (Utils.debugMode)
+                            log.info("Finished init work after refresh complete!");
                         if (loginAction != null) {
                             if (Utils.debugMode) {
                                 log.info("Doing login action: " + loginAction.getClass().getName());

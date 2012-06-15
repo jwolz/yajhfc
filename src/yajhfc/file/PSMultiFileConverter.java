@@ -41,10 +41,7 @@ package yajhfc.file;
  * @author jonas
  *
  */
-public class PSMultiFileConverter extends PDFMultiFileConverter {
-    private static final String[] additionalGSParams = {
-    };
-    
+public class PSMultiFileConverter extends GhostScriptMultiFileConverter {
     @Override
     public FileFormat getTargetFormat() {
         return FileFormat.PostScript;
@@ -52,7 +49,7 @@ public class PSMultiFileConverter extends PDFMultiFileConverter {
     
     @Override
     protected String[] getAdditionalGSParams() {
-        return additionalGSParams;
+        return NO_ADDITIONAL_PARAMETERS;
     }
     
     @Override

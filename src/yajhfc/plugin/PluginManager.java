@@ -108,6 +108,7 @@ public class PluginManager {
     static {
         internalPlugins.add(yajhfc.printerport.EntryPoint.class);   
         internalPlugins.add(yajhfc.customprops.EntryPoint.class);
+        internalPlugins.add(yajhfc.report.EntryPoint.class);
     }
     
     
