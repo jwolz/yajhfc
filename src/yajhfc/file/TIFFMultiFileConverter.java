@@ -42,7 +42,7 @@ import yajhfc.PaperSize;
  * @author jonas
  *
  */
-public class TIFFMultiFileConverter extends PDFMultiFileConverter {
+public class TIFFMultiFileConverter extends GhostScriptMultiFileConverter {
 
     protected static final String[] additionalGSParams = {
         "-dAdjustWidth=1"
