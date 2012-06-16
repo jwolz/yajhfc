@@ -45,6 +45,7 @@ import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.regex.Pattern;
 
+import yajhfc.DesktopManager;
 import yajhfc.Utils;
 
 public class FormattedFile {
@@ -75,26 +76,30 @@ public class FormattedFile {
     
     public void view() throws IOException, UnknownFormatException {
         String execCmd;
+        boolean useCustomViewer;
 
         switch (format) {
         case TIFF:
             execCmd = Utils.getFaxOptions().faxViewer;
+            useCustomViewer = Utils.getFaxOptions().useCustomFaxViewer;
             break;
         case PostScript:
             execCmd = Utils.getFaxOptions().psViewer;
+            useCustomViewer = Utils.getFaxOptions().useCustomPSViewer;
             break;
         case PDF:
-            if (Utils.getFaxOptions().viewPDFAsPS) {
-                execCmd = Utils.getFaxOptions().psViewer;
-            } else {
-                execCmd = Utils.getFaxOptions().pdfViewer;
-            }
+            execCmd = Utils.getFaxOptions().pdfViewer;
+            useCustomViewer = Utils.getFaxOptions().useCustomPDFViewer;
             break;
         default:
             throw new UnknownFormatException(MessageFormat.format(Utils._("File format {0} not supported."), format.toString()));
         }
-
-        Utils.startViewer(execCmd, file);
+        
+        if (useCustomViewer) {
+            Utils.startViewer(execCmd, file);
+        } else {
+            DesktopManager.getDefault().open(file);
+        }
     }
     
     public void detectFormat() throws FileNotFoundException, IOException {

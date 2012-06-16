@@ -42,8 +42,6 @@ import info.clearthought.layout.TableLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -54,12 +52,14 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 
 import yajhfc.FaxOptions;
 import yajhfc.FileTextField;
 import yajhfc.Utils;
 import yajhfc.file.MultiFileConvFormat;
 import yajhfc.util.ClipboardPopup;
+import yajhfc.util.ComponentEnabler;
 
 /**
  * @author jonas
@@ -74,8 +74,9 @@ public class PathAndViewPanel extends AbstractOptionsPanel<FaxOptions> {
     
     FileTextField ftfFaxViewer, ftfPSViewer;
     FileTextField ftfPDFViewer, ftfGSLocation, ftfTIFF2PDFLocation;
-    JCheckBox checkPDFSameAsPS, checkCreateSingleFile, checkCreateAlwaysAsTargetFormat, checkCreateAlwaysAsTargetFormatView;
+    JCheckBox checkCreateSingleFile, checkCreateAlwaysAsTargetFormat, checkCreateAlwaysAsTargetFormatView;
     JCheckBox checkUseTiffPaperSize;
+    JCheckBox checkCustomFaxViewer, checkCustomPSViewer, checkCustomPDFViewer;
     JComboBox comboSendMode, comboTargetFormat, comboTargetFormatView;
     
     public PathAndViewPanel() {
@@ -119,14 +120,14 @@ public class PathAndViewPanel extends AbstractOptionsPanel<FaxOptions> {
         ftfTIFF2PDFLocation.getJTextField().addMouseListener(ClipboardPopup.DEFAULT_POPUP);
         ftfTIFF2PDFLocation.setAlignmentX(JComponent.LEFT_ALIGNMENT);
 
-        checkPDFSameAsPS = new JCheckBox(_("Same as PostScript viewer"));
-        checkPDFSameAsPS.setSelected(true);
-        checkPDFSameAsPS.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                ftfPDFViewer.setEnabled(!checkPDFSameAsPS.isSelected());
-            }
-        });
-        
+//        checkPDFSameAsPS = new JCheckBox(_("Same as PostScript viewer"));
+//        checkPDFSameAsPS.setSelected(true);
+//        checkPDFSameAsPS.addItemListener(new ItemListener() {
+//            public void itemStateChanged(ItemEvent e) {
+//                ftfPDFViewer.setEnabled(!checkPDFSameAsPS.isSelected());
+//            }
+//        });
+                
         JLabel labelTIFF = new JLabel(_("Command line for fax viewer: (insert %s as a placeholder for the filename)"));
         labelTIFF.setAlignmentX(JComponent.LEFT_ALIGNMENT);
         JLabel labelPS = new JLabel(_("Command line for Postscript viewer: (insert %s as a placeholder for the filename)"));
@@ -140,20 +141,36 @@ public class PathAndViewPanel extends AbstractOptionsPanel<FaxOptions> {
         checkUseTiffPaperSize = new JCheckBox(_("Always use paper size from YajHFC options in the PDF"));
         checkUseTiffPaperSize.setAlignmentX(JComponent.LEFT_ALIGNMENT);
         
+        checkCustomFaxViewer = new JCheckBox(_("Use custom fax viewer"));
+        ComponentEnabler.installOn(checkCustomFaxViewer, true, ftfFaxViewer, labelTIFF);
+        checkCustomPSViewer = new JCheckBox(_("Use custom PostScript viewer"));
+        ComponentEnabler.installOn(checkCustomPSViewer, true, ftfPSViewer, labelPS);
+        checkCustomPDFViewer = new JCheckBox(_("Use custom PDF viewer"));
+        ComponentEnabler.installOn(checkCustomPDFViewer, true, ftfPDFViewer, labelPDF);
+        
         //ftfTIFF2PDFLocation.setEnabled(allowTIFF2PDF);
         //labelTIFF2PDF.setEnabled(allowTIFF2PDF);
         //checkUseTiffPaperSize.setEnabled(allowTIFF2PDF);
         
         Dimension filler = new Dimension(OptionsWin.border, OptionsWin.border);
+        panelPaths.add(checkCustomFaxViewer);
         panelPaths.add(labelTIFF);
         panelPaths.add(ftfFaxViewer);
         panelPaths.add(Box.createRigidArea(filler));
+        panelPaths.add(new JSeparator());
+        panelPaths.add(Box.createRigidArea(filler));
+        panelPaths.add(checkCustomPSViewer);
         panelPaths.add(labelPS);
         panelPaths.add(ftfPSViewer);
         panelPaths.add(Box.createRigidArea(filler));
+        panelPaths.add(new JSeparator());
+        panelPaths.add(Box.createRigidArea(filler));
+        panelPaths.add(checkCustomPDFViewer);
         panelPaths.add(labelPDF);
-        panelPaths.add(checkPDFSameAsPS);
+        //panelPaths.add(checkPDFSameAsPS);
         panelPaths.add(ftfPDFViewer);
+        panelPaths.add(Box.createRigidArea(filler));
+        panelPaths.add(new JSeparator());
         panelPaths.add(Box.createRigidArea(filler));
         panelPaths.add(labelGS);
         panelPaths.add(ftfGSLocation);
@@ -263,7 +280,10 @@ public class PathAndViewPanel extends AbstractOptionsPanel<FaxOptions> {
         checkCreateAlwaysAsTargetFormat.setSelected(foEdit.alwaysCreateTargetFormat);
         checkCreateAlwaysAsTargetFormatView.setSelected(foEdit.alwaysCreateTargetFormatForViewing);
         checkCreateSingleFile.setSelected(foEdit.createSingleFilesForViewing);
-        checkPDFSameAsPS.setSelected(foEdit.viewPDFAsPS);
+        //checkPDFSameAsPS.setSelected(foEdit.viewPDFAsPS);
+        checkCustomFaxViewer.setSelected(foEdit.useCustomFaxViewer);
+        checkCustomPSViewer.setSelected(foEdit.useCustomPSViewer);
+        checkCustomPDFViewer.setSelected(foEdit.useCustomPDFViewer);
         
         comboSendMode.setSelectedItem(foEdit.multiFileSendMode);
         comboTargetFormat.setSelectedItem(foEdit.singleFileFormat);
@@ -271,7 +291,7 @@ public class PathAndViewPanel extends AbstractOptionsPanel<FaxOptions> {
         
         checkPanelViewEnabled();
         checkPanelSendEnabled();
-        ftfPDFViewer.setEnabled(!foEdit.viewPDFAsPS);
+        //ftfPDFViewer.setEnabled(!foEdit.viewPDFAsPS);
     }
 
     /* (non-Javadoc)
@@ -288,7 +308,10 @@ public class PathAndViewPanel extends AbstractOptionsPanel<FaxOptions> {
         foEdit.alwaysCreateTargetFormat = checkCreateAlwaysAsTargetFormat.isSelected();
         foEdit.alwaysCreateTargetFormatForViewing = checkCreateAlwaysAsTargetFormatView.isSelected();
         foEdit.createSingleFilesForViewing = checkCreateSingleFile.isSelected();
-        foEdit.viewPDFAsPS = checkPDFSameAsPS.isSelected();
+        //foEdit.viewPDFAsPS = checkPDFSameAsPS.isSelected();
+        foEdit.useCustomFaxViewer = checkCustomFaxViewer.isSelected();
+        foEdit.useCustomPSViewer = checkCustomPSViewer.isSelected();
+        foEdit.useCustomPDFViewer = checkCustomPDFViewer.isSelected();
 
         foEdit.multiFileSendMode = (MultiFileMode)comboSendMode.getSelectedItem();
         foEdit.singleFileFormat = (MultiFileConvFormat)comboTargetFormat.getSelectedItem();
@@ -299,19 +322,19 @@ public class PathAndViewPanel extends AbstractOptionsPanel<FaxOptions> {
      * @see yajhfc.options.OptionsPage#validateSettings(yajhfc.options.OptionsWin)
      */
     public boolean validateSettings(OptionsWin optionsWin) {
-        if (!commandLineOK(ftfFaxViewer.getText())) {
+        if (checkCustomFaxViewer.isSelected() && !commandLineOK(ftfFaxViewer.getText())) {
             optionsWin.focusComponent(ftfFaxViewer.getJTextField());
             JOptionPane.showMessageDialog(optionsWin, _("Please enter the command line for the fax viewer."), _("Error"), JOptionPane.ERROR_MESSAGE);
             return false;
         }
         
-        if (!commandLineOK(ftfPSViewer.getText())) {
+        if (checkCustomPSViewer.isSelected() && !commandLineOK(ftfPSViewer.getText())) {
             optionsWin.focusComponent(ftfPSViewer.getJTextField());
             JOptionPane.showMessageDialog(optionsWin, _("Please enter the command line for the PostScript viewer."), _("Error"), JOptionPane.ERROR_MESSAGE);
             return false;
         }
         
-        if (!checkPDFSameAsPS.isSelected() && !commandLineOK(ftfPDFViewer.getText())) {
+        if (checkCustomPDFViewer.isSelected() && !commandLineOK(ftfPDFViewer.getText())) {
             optionsWin.focusComponent(ftfPDFViewer.getJTextField());
             JOptionPane.showMessageDialog(optionsWin, _("Please enter the command line for the PDF viewer."), _("Error"), JOptionPane.ERROR_MESSAGE);
             return false;

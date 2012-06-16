@@ -70,6 +70,7 @@ import yajhfc.Utils;
 import yajhfc.YajLanguage;
 import yajhfc.send.SendWinStyle;
 import yajhfc.util.ClipboardPopup;
+import yajhfc.util.ComponentEnabler;
 
 /**
  * @author jonas
@@ -226,13 +227,6 @@ public class CommonPanel extends AbstractOptionsPanel<FaxOptions> {
             
             checkShowTrayIcon = new JCheckBox(_("Show tray icon"));
             checkShowTrayIcon.setToolTipText(_("Show a system tray icon (works only with Java 6 or higher)"));
-            checkShowTrayIcon.addItemListener(new ItemListener() {
-                public void itemStateChanged(ItemEvent e) {
-                    final boolean selected = checkShowTrayIcon.isSelected();
-                    checkMinimizeToTray.setEnabled(selected);
-                    checkMinimizeToTrayOnMainWinClose.setEnabled(selected);
-                } 
-            });
             
             checkMinimizeToTray = new JCheckBox(_("Minimize to tray"));
             checkMinimizeToTray.setEnabled(false);
@@ -247,6 +241,8 @@ public class CommonPanel extends AbstractOptionsPanel<FaxOptions> {
                 }
             });
             checkMinimizeToTrayOnMainWinClose.setEnabled(false);
+            
+            ComponentEnabler.installOn(checkShowTrayIcon, true, checkMinimizeToTray, checkMinimizeToTrayOnMainWinClose);
             
             addWithLabel(panelUI, comboLang, _("Language:"), "1, 1, 1, 1, f, c");
             addWithLabel(panelUI, comboLookAndFeel, _("Look and Feel:"), "1, 3, 1, 3, f, c");

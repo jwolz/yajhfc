@@ -79,6 +79,7 @@ import yajhfc.readstate.PersistentReadState;
 import yajhfc.server.ServerOptions;
 import yajhfc.ui.swing.SwingYajOptionPane;
 import yajhfc.util.ClipboardPopup;
+import yajhfc.util.ComponentEnabler;
 import yajhfc.util.ExcDialogAbstractAction;
 import yajhfc.util.IntVerifier;
 import yajhfc.util.ProgressDialog;
@@ -430,17 +431,9 @@ public class SingleServerSettingsPanel extends AbstractOptionsPanel<ServerOption
             textPassword = new JPasswordField();
             textAdminPassword = new JPasswordField();
             checkAskPassword = new JCheckBox(_("Always ask"));
-            checkAskPassword.addItemListener(new ItemListener() {
-               public void itemStateChanged(ItemEvent e) {
-                   textPassword.setEnabled(!checkAskPassword.isSelected());
-                } 
-            });
+            ComponentEnabler.installOn(checkAskPassword, false, textPassword);
             checkAskAdminPassword = new JCheckBox(_("Always ask"));
-            checkAskAdminPassword.addItemListener(new ItemListener() {
-                public void itemStateChanged(ItemEvent e) {
-                    textAdminPassword.setEnabled(!checkAskAdminPassword.isSelected());
-                 } 
-             });
+            ComponentEnabler.installOn(checkAskAdminPassword, false, textAdminPassword);
             checkAskUsername = new JCheckBox(_("Always ask"));
             checkAskUsername.addItemListener(new ItemListener() {
                 public void itemStateChanged(ItemEvent e) {
