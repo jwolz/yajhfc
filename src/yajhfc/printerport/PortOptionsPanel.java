@@ -239,23 +239,23 @@ public class PortOptionsPanel extends AbstractOptionsPanel<FaxOptions> {
         return true;
     }
 
-	void checkFIFOControlsEnable() {
-		boolean enable = checkEnableFIFO.isSelected();
-		   boolean enableMkFIFO = enable && NEED_MKFIFO;
-		   
-		   textFIFO.setEnabled(enable);
-		   textMkfifo.setEnabled(enableMkFIFO);
-		   labelFIFO.setEnabled(enable);
-		   labelMkfifo.setEnabled(enableMkFIFO);
-	}
+    void checkFIFOControlsEnable() {
+        boolean enable = checkEnableFIFO.isSelected();
+        boolean enableMkFIFO = enable && NEED_MKFIFO;
 
-	void checkTCPControlsEnable() {
-		boolean enable = checkEnabled.isSelected();
-		   
-		   textBindAddr.setEnabled(enable);
-		   textPort.setEnabled(enable);
-		   labelBindAddr.setEnabled(enable);
-		   labelPort.setEnabled(enable);
-	}
+        textFIFO.setEnabled(enable);
+        textMkfifo.setEnabled(enableMkFIFO);
+        labelFIFO.setEnabled(enable);
+        labelMkfifo.setEnabled(enableMkFIFO);
+    }
+
+    void checkTCPControlsEnable() {
+        boolean enable = checkEnabled.isSelected();
+
+        textBindAddr.setEnabled(enable);
+        textPort.setEnabled(enable);
+        labelBindAddr.setEnabled(enable);
+        labelPort.setEnabled(enable);
+    }
 
 }

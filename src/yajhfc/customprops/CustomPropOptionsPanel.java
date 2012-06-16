@@ -57,6 +57,7 @@ import yajhfc.FaxOptions;
 import yajhfc.Utils;
 import yajhfc.options.AbstractOptionsPanel;
 import yajhfc.options.OptionsWin;
+import yajhfc.util.ComponentEnabler;
 import yajhfc.util.ExcDialogAbstractAction;
 import yajhfc.util.IntVerifier;
 import yajhfc.util.MapEditorDialog;
@@ -171,20 +172,13 @@ public class CustomPropOptionsPanel extends AbstractOptionsPanel<FaxOptions> {
 			}
 		};
         
-		checkUseSystemProxies = new JCheckBox(Utils._("Use system proxy settings"));
-		checkUseSystemProxies.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				boolean enable = !checkUseSystemProxies.isSelected();
-				
-				textHttpNonProxyHosts.setEnabled(enable);
-				textHttpProxyHost.setEnabled(enable);
-				textHttpProxyPort.setEnabled(enable);
-			}
-		});
 		textHttpNonProxyHosts = new JTextField();
 		textHttpProxyHost = new JTextField();
 		textHttpProxyPort = new JTextField();
 		textHttpProxyPort.setInputVerifier(new IntVerifier(1, 65536, true));
+		
+		checkUseSystemProxies = new JCheckBox(Utils._("Use system proxy settings"));
+		ComponentEnabler.installOn(checkUseSystemProxies, false, textHttpNonProxyHosts, textHttpProxyHost, textHttpProxyPort);
 		
 		double[][] dLay = {
 				{OptionsWin.border, 0.666, OptionsWin.border, TableLayout.FILL, OptionsWin.border},

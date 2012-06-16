@@ -37,26 +37,39 @@
 package yajhfc.options;
 
 import java.awt.LayoutManager;
+import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+
+import yajhfc.Utils;
 
 /**
  * @author jonas
  *
  */
 public abstract class AbstractOptionsPanel<T> extends JPanel implements OptionsPage<T> {
-
+    private static final Logger log = Logger.getLogger(AbstractOptionsPanel.class.getName());
+    
     public AbstractOptionsPanel(LayoutManager layout) {
         super(layout);
+        initialize();
     }
 
     public AbstractOptionsPanel(boolean isDoubleBuffered) {
         super(null, isDoubleBuffered);
+        initialize();
     }
 
     public AbstractOptionsPanel(LayoutManager layout, boolean isDoubleBuffered) {
         super(layout, isDoubleBuffered);
+        initialize();
+    }
+    
+    private void initialize() {
+        if (Utils.debugMode) {
+            log.fine("Created panel " + getClass().getName());
+        }
     }
 
     protected boolean uiCreated = false;
@@ -65,6 +78,9 @@ public abstract class AbstractOptionsPanel<T> extends JPanel implements OptionsP
      */
     public JComponent getPanel() {
         if (!uiCreated) {
+            if (Utils.debugMode) {
+                log.fine("Creating UI for panel " + getClass().getName());
+            }
             createOptionsUI();
             uiCreated = true;
         }

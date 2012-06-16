@@ -83,17 +83,25 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
      */
     public String faxViewer;
     /**
+     * Whether to use a custom fax viewer or the system default
+     */
+    public boolean useCustomFaxViewer = false;
+    /**
      * Command line for the PostScript viewer
      */
     public String psViewer;
+    /**
+     * Whether to use a custom PS viewer or the system default
+     */
+    public boolean useCustomPSViewer = false;
     /**
      * Command line for the PDF viewer
      */
     public String pdfViewer;
     /**
-     * true if PDF files shall be viewed using the psViewer instead of pdfViewer
+     * Whether to use a custom PDF viewer or the system default
      */
-    public boolean viewPDFAsPS = true;
+    public boolean useCustomPDFViewer = false;
     
     /**
      * The screen position of the main window in pixels

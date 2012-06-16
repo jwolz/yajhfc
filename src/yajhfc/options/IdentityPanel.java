@@ -63,6 +63,7 @@ import yajhfc.Utils;
 import yajhfc.faxcover.Faxcover;
 import yajhfc.phonebook.PBEntryField;
 import yajhfc.util.ClipboardPopup;
+import yajhfc.util.ComponentEnabler;
 
 /**
  * @author jonas
@@ -172,16 +173,13 @@ public class IdentityPanel extends AbstractOptionsPanel<SenderIdentity> {
         }
         
         checkUseCustomDefCover = new JCheckBox(_("Use a custom default cover page:"));
-        checkUseCustomDefCover.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                ftfCustomDefCover.setEnabled(checkUseCustomDefCover.isSelected());
-             } 
-         });
         
         ftfCustomDefCover = new FileTextField();
         ftfCustomDefCover.getJTextField().addMouseListener(ClipboardPopup.DEFAULT_POPUP);
         ftfCustomDefCover.setFileFilters(Faxcover.getAcceptedFileFilters());
         ftfCustomDefCover.setEnabled(false);
+        
+        ComponentEnabler.installOn(checkUseCustomDefCover, true, ftfCustomDefCover);
         
         dataPanel.add(checkUseCustomDefCover, new TableLayoutConstraints(1, row-1, 3, row-1, TableLayoutConstraints.FULL, TableLayoutConstraints.CENTER));
         dataPanel.add(ftfCustomDefCover, new TableLayoutConstraints(1, row, 3, row, TableLayoutConstraints.FULL, TableLayoutConstraints.CENTER));
