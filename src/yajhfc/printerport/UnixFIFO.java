@@ -90,7 +90,7 @@ public class UnixFIFO extends FIFO {
             throw new IOException(mkfifo + " failed with exit code " + exitCode);
         }
         log.fine("FIFO created successfully.");
-        fifo.deleteOnExit();
+        yajhfc.shutdown.ShutdownManager.deleteOnExit(fifo);
     }
     
     /* (non-Javadoc)

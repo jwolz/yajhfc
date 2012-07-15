@@ -63,7 +63,7 @@ public class LocalFileTFLItem extends HylaTFLItem {
     private void convertFile(FileConverter fconv) {
         try {
             File tempFile = File.createTempFile("conv", ".ps");
-            tempFile.deleteOnExit();
+            yajhfc.shutdown.ShutdownManager.deleteOnExit(tempFile);
             
             FileOutputStream outStream = new FileOutputStream(tempFile);
             fconv.convertToHylaFormat(new File(fileName), outStream, desiredPaperSize, FileFormat.PDF);

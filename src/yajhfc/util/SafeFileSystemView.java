@@ -263,7 +263,7 @@ public class SafeFileSystemView extends FileSystemView {
         if (_defaultDirectory == null) {
             try {
                 File tempFile = File.createTempFile("filesystemview", "restricted");
-                tempFile.deleteOnExit();
+                yajhfc.shutdown.ShutdownManager.deleteOnExit(tempFile);
                 _defaultDirectory = tempFile.getParentFile();
             } catch (IOException e) {
                 e.printStackTrace();

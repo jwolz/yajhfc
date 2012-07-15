@@ -36,6 +36,7 @@
  */
 package yajhfc.shutdown;
 
+import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -72,6 +73,23 @@ public class ShutdownManager {
     
     public static void setInstance(ShutdownManager instance) {
         INSTANCE = instance;
+    }
+    
+    /**
+     * Registers the specified file to be deleted on exit
+     * @param f
+     */
+    public static void deleteOnExit(File f) {
+        getInstance().registerDeleteOnExit(f);
+    }
+    
+    /**
+     * Registers the specified file to be deleted on exit
+     * @param f
+     */
+    public void registerDeleteOnExit(File f) {
+        // By default just use Java's method
+        f.deleteOnExit();
     }
     
     /**

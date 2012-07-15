@@ -86,7 +86,7 @@ public abstract class MultiFileConverter {
                     throw new UnknownFormatException("Unsupported file format: " + ff.format);
                 } else {
                     File tmpFile = File.createTempFile("multi", ".ps");
-                    tmpFile.deleteOnExit();
+                    yajhfc.shutdown.ShutdownManager.deleteOnExit(tmpFile);
                     
                     FileOutputStream out = new FileOutputStream(tmpFile);
                     FileFormat targetFormat = getTargetFormat();
@@ -158,7 +158,7 @@ public abstract class MultiFileConverter {
                 files.get(0).view();
             } else {
                 File tmpFile = File.createTempFile("view", "." + singleFileFormat.getFileFormat().getDefaultExtension());
-                tmpFile.deleteOnExit();
+                yajhfc.shutdown.ShutdownManager.deleteOnExit(tmpFile);
                 FormattedFile ff = convertMultipleFilesToSingleFile(files, tmpFile, singleFileFormat, paperSize);
                 ff.view();
             }
