@@ -199,7 +199,7 @@ public abstract class HylaToTextConverter {
             
             MultiFileConverter conv = mfcf.getConverter();
             File tempFile = File.createTempFile("textextract", "." + conv.getTargetFormat().getDefaultExtension());
-            tempFile.deleteOnExit();
+            yajhfc.shutdown.ShutdownManager.deleteOnExit(tempFile);
             try {
                 conv.convertMultipleFiles(filesToConvert, tempFile, PaperSize.A4); // Paper size does not actually matter here...
             } catch (UnknownFormatException e) {

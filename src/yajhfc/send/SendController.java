@@ -219,7 +219,7 @@ public class SendController implements FaxSender {
 
         // Create cover:
         coverFile = File.createTempFile("cover", ".ps");
-        coverFile.deleteOnExit();
+        yajhfc.shutdown.ShutdownManager.deleteOnExit(coverFile);
         FileOutputStream fout = new FileOutputStream(coverFile);
         cov.makeCoverSheet(fout);
         fout.close();                       

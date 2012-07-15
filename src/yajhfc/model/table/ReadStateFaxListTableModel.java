@@ -177,14 +177,14 @@ public class ReadStateFaxListTableModel<T extends FmtItem> extends FaxListTableM
 
                         FaxJob<T> oldJob = oldJobIDs.get(jobID);
                         if (oldJob == null) { // Job is new
-                            if (!jobIsInProgress(newJob)) {
-                                // New Job that is not in process (i.e. ready) 
+                            if (!jobIsInProgress(newJob) && !newJob.isRead()) {
+                                // New Job that is not in progress (i.e. ready) and still unread
                                 // -> consider as new job ready for viewing
                                 newUnread.add(newJob);
                             }
                         } else { // Existing job
-                            if (jobIsInProgress(oldJob) && !jobIsInProgress(newJob)) {
-                                // If the old job was in process, but the new one is ready
+                            if (jobIsInProgress(oldJob) && !jobIsInProgress(newJob) && !newJob.isRead()) {
+                                // If the old job was in process, but the new one is ready and still unread
                                 // -> consider as new job ready for viewing
                                 newUnread.add(newJob);
                             }

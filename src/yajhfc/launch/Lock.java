@@ -345,7 +345,7 @@ public class Lock implements SubmitProtocol {
                 Writer filout = new OutputStreamWriter(new FileOutputStream(lock));
                 filout.write("" + port + "\n");
                 filout.close();
-                lock.deleteOnExit();
+                yajhfc.shutdown.ShutdownManager.deleteOnExit(lock);
                 //isLocking = true;
                 lockThread = new LockThread(sockBlock);
             }

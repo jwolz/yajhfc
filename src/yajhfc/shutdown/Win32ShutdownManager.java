@@ -43,8 +43,10 @@ import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import yajhfc.Utils;
 
@@ -58,6 +60,7 @@ import yajhfc.Utils;
  */
 public class Win32ShutdownManager extends ShutdownManager {
     protected final List<Runnable> runnables = new ArrayList<Runnable>();
+    protected final Set<File> deleteOnExitFiles = new HashSet<File>();
     
     // Test code:
     static Writer shutdownLog;
@@ -83,13 +86,33 @@ public class Win32ShutdownManager extends ShutdownManager {
     public Win32ShutdownManager() {
         MySignalHandler.install("TERM", runnables);
         MySignalHandler.install("INT", runnables);
+        
+        registerShutdownHook(new Runnable() {
+           public void run() {
+               synchronized (deleteOnExitFiles) {
+                   for (File f : deleteOnExitFiles) {
+                       f.delete();
+                   }
+                   deleteOnExitFiles.clear();
+               } 
+           }
+        });
+    }
+    
+    @Override
+    public void registerDeleteOnExit(File f) {
+        synchronized (deleteOnExitFiles) {
+            deleteOnExitFiles.add(f);
+        }
     }
 
     @Override
     public void registerShutdownHook(Runnable run) {
         run = new SingleInvocationRunnable(run);
         
-        runnables.add(run);
+        synchronized(runnables) {
+            runnables.add(run);
+        }
         super.registerShutdownHook(run);
     }
 

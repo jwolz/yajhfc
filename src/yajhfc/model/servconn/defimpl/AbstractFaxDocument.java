@@ -89,7 +89,7 @@ public abstract class AbstractFaxDocument<T extends FmtItem> implements FaxDocum
     public FormattedFile getDocument() throws IOException, ServerResponseException {
         if (localDocument == null) {
             File tmpFile = File.createTempFile("fax", "." + getDefaultExtension());
-            tmpFile.deleteOnExit();
+            yajhfc.shutdown.ShutdownManager.deleteOnExit(tmpFile);
             log.fine("Copying " + path + " into " + tmpFile);
             
             FileOutputStream outStream = new FileOutputStream(tmpFile);

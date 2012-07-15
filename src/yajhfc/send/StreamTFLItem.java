@@ -100,7 +100,7 @@ public class StreamTFLItem extends HylaTFLItem {
         File tmp;
         // Copy input stream to a temporary file:
         tmp = File.createTempFile("submit", ".ps");
-        tmp.deleteOnExit();
+        yajhfc.shutdown.ShutdownManager.deleteOnExit(tmp);
         FileOutputStream fOut = new FileOutputStream(tmp);
         Utils.copyStream(inStream, fOut);
         fOut.close();
