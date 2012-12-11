@@ -108,10 +108,18 @@
 		</uptodate>
 		
 		<!-- Find out if we need to recompile the exe wrapper -->
-	    <uptodate property="exewrapper.isUpToDate">
-	    	<srcfiles dir="launch4j" includes="*cfg.xml"/>
-	    	<mapper type="glob" from="launch4j*.cfg.xml" to="${build}/yajhfc*.exe" />
-	    </uptodate>
+	    <condition property="exewrapper.isUpToDate">
+	    	<and>
+	    		<uptodate>
+	    	  		<srcfiles dir="launch4j" includes="*cfg.xml"/>
+	    	 	 	<mapper type="glob" from="launch4j*.cfg.xml" to="${build}/yajhfc*.exe" />
+	    		</uptodate>
+	    		<uptodate>
+					<srcfiles dir="launch4j/hook" includes="*.c"/>
+					<mapper type="glob" from="*.c" to="bin/*.o" />
+	    		</uptodate>
+	    	</and>
+	    </condition>
 
 		<condition property="gnu.hylafax.classFileLocation" value="${gnu.hylafax-dir}" else="${build}/gnu.hylafax">
 			<istrue value="${gnu.hylafax.haveClassDir}"/>

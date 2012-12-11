@@ -37,7 +37,7 @@ static void appendArgsFromRegistry(char* args, const char* prefix)
          } else {
           debug("appendArgsFromRegistry(%s):\t ignored value %s has type %d\n", prefix, name, type);
         }
-         valueSize=nameSize=BUFSIZE;
+        valueSize=nameSize=BUFSIZE;
      }
      
      RegCloseKey(yajKey);
@@ -66,7 +66,7 @@ static void appendArgFromRegistry(char* args, const char* name)
           debug("appendArgFromRegistry(%s):\t value has type %d != REG_SZ\n", name, type);
         }
      } else {
-        debug("appendArgFromRegistry(%s):\t RegQueryValueEx falied:\t%d\n", name, rv);
+        debug("appendArgFromRegistry(%s):\t RegQueryValueEx failed:\t%d\n", name, rv);
      }
      RegCloseKey(yajKey);
 }
@@ -117,12 +117,13 @@ static void loadSavedEnvVars()
         if ((rv=RegQueryValueEx(yajKey, *var, NULL, &type, value, &valueSize)) == ERROR_SUCCESS)
         {
            if (type==REG_SZ) {
-             SetEnvironmentVariable(*var, value);               
+             SetEnvironmentVariable(*var, value);
+             debug("loadSavedEnvVars:\t set %s=%s\n", *var, value);            
            } else {
              debug("loadSavedEnvVars:\t value %s has type %d != REG_SZ\n", *var, type);
            }
         } else {
-           debug("loadSavedEnvVars:\t RegQueryValueEx falied for %s:\t%d\n", *var, rv);
+           debug("loadSavedEnvVars:\t RegQueryValueEx failed for %s:\t%d\n", *var, rv);
         }
      } while (*(++var)==NULL);  
      RegCloseKey(yajKey);
