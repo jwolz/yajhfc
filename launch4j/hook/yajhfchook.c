@@ -39,7 +39,6 @@ static void appendArgsFromRegistry(char* args, const char* prefix)
         }
         valueSize=nameSize=BUFSIZE;
      }
-     
      RegCloseKey(yajKey);
 }
 
@@ -125,7 +124,7 @@ static void loadSavedEnvVars()
         } else {
            debug("loadSavedEnvVars:\t RegQueryValueEx failed for %s:\t%d\n", *var, rv);
         }
-     } while (*(++var)==NULL);  
+     } while (*(++var)!=NULL);  
      RegCloseKey(yajKey);
 }
 
