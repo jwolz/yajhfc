@@ -1,0 +1,22 @@
+<launch4jConfig>
+  <dontWrapJar>true</dontWrapJar>
+  <headerType>console</headerType>
+  <jar>yajhfc.jar</jar>
+  <outfile>..\build\yajhfc-printlaunch.exe</outfile>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <stayAlive>true</stayAlive>
+  <icon>yajhfc.ico</icon>
+  <classPath>
+    <mainClass>yajhfc.Launcher</mainClass>
+    <cp>lib/*.jar</cp>
+  </classPath>
+  <jre>
+    <path></path>
+    <minVersion>1.6.0</minVersion>
+    <maxVersion></maxVersion>
+    <jdkPreference>jreOnly</jdkPreference>
+    <opt>-Duser.home=&quot;%USERPROFILE%&quot; -splash:logo-large.png</opt>
+  </jre>
+  <customHeaderHook>launch4j/hook/bin/yajhfchook-printlaunch.o</customHeaderHook>
+</launch4jConfig>
