@@ -230,8 +230,11 @@
 	-->
 	
 	<target name="compile-l4j-hook" depends="init" description="compile the launch4j hook" >
+		
+		<mkdir dir="launch4j/hook/bin"/>
+		
 		<!-- Compile our custom header hook -->
-		<apply executable="${gcc-win32.command}" dir="launch4j/hook" parallel="false" dest="launch4j/hook/bin">
+		<apply executable="${gcc-win32.command}" dir="launch4j/hook" parallel="false" dest="launch4j/hook/bin" verbose="true">
 			
 			<arg value="-c"/>
 			<srcfile/>
@@ -244,7 +247,7 @@
 			<fileset dir="launch4j/hook" includes="*.c"/>
 			<mapper type="glob" from="*.c" to="*.o" />
 		</apply>
-		<apply executable="${gcc-win32.command}" dir="launch4j/hook" parallel="false" dest="launch4j/hook/bin">
+		<apply executable="${gcc-win32.command}" dir="launch4j/hook" parallel="false" dest="launch4j/hook/bin" verbose="true">
 			
 			<arg value="-c"/>
 			<srcfile/>

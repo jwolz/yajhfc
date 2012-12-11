@@ -236,7 +236,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     protected Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward, actAdminMode;
     protected Action actRefresh, actResend, actPrintTable, actSuspend, actResume, actClipCopy, actShowRowNumbers, actAdjustColumns, actReconnect, actEditToolbar;
     protected Action actSaveAsPDF, actSaveAsTIFF, actUpdateCheck, actAnswerCall, actSearchFax, actViewLog, actLogConsole, actExport;
-    protected Action actShowToolbar, actShowQuickSearchBar, actServerSelectionPopup, actEditAccelerators, actMarkFailedJobs;
+    protected Action actShowToolbar, actShowQuickSearchBar, actServerSelectionPopup, actEditAccelerators, actMarkFailedJobs, actSelectAll;
     protected StatusBarResizeAction actAutoSizeStatus;
     protected ActionEnabler actChecker;
     protected Map<String,Action> availableActions = new HashMap<String,Action>();
@@ -1508,6 +1508,17 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         actServerSelectionPopup.putValue(Action.SHORT_DESCRIPTION, _("Shows/Changes the current server."));
         putAvailableAction("ServerSelectionPopup",actServerSelectionPopup);
         
+        actSelectAll = new ExcDialogAbstractAction() {            
+            public void actualActionPerformed(java.awt.event.ActionEvent e) {
+                TooltipJTable<? extends FmtItem> selTable = getSelectedTable();
+                if (selTable.getRowCount() > 0)
+                    selTable.getSelectionModel().addSelectionInterval(0, selTable.getRowCount()-1);
+            }
+        };
+        actSelectAll.putValue(Action.NAME, _("Select All"));
+        actSelectAll.putValue(Action.SHORT_DESCRIPTION, _("Selects all rows"));
+        putAvailableAction("SelectAll", actSelectAll);
+        
         actAutoSizeStatus = new StatusBarResizeAction();
         actAutoSizeStatus.putValue(Action.NAME, _("Auto-size status bar"));
         actAutoSizeStatus.putValue(Action.SHORT_DESCRIPTION, _("Automatically resize the status bar"));
@@ -1614,6 +1625,8 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             tblPopup.add(new JMenuItem(actDelete));
             tblPopup.addSeparator();
             tblPopup.add(new ActionJCheckBoxMenuItem(actFaxRead));
+            tblPopup.addSeparator();
+            tblPopup.add(new JMenuItem(actSelectAll));
         }
         return tblPopup;
     }
@@ -2425,6 +2438,8 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             menuTable.add(new JMenuItem(actClipCopy));
             menuTable.add(new JMenuItem(actPrintTable));
             menuTable.add(new JMenuItem(actExport));
+            menuTable.addSeparator();
+            menuTable.add(new JMenuItem(actSelectAll));
         }
         return menuTable;
     }
