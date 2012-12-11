@@ -27,6 +27,14 @@
 	<property name="tablelayout.jar" location="../../TableLayout-2007-04/TableLayout-bin-jdk1.5-2007-04-21.jar"/>
 	<property name="commons-logging.jar" location="../../commons-logging-1.1.1.jar"/>
 	<property name="jna-dir" location="../../jna"/>
+	
+	<property name="exewrapper.config" location="launch4j/launch4j.cfg.xml"/>
+	<property name="exewrapper.target" location="${build}/yajhfc.exe"/>
+	<property name="exewrapper.printlaunch.config" location="launch4j/launch4j-printlaunch.cfg.xml"/>
+	<property name="exewrapper.printlaunch.target" location="${build}/yajhfc-printlaunch.exe"/>
+	<property name="launch4j.dir" location="/opt/launch4j" />
+	<property name="gcc-win32.command" location="C:/Dev-Cpp/bin/gcc" />
+	<property name="gcc-win32.sys-include" location="C:/Dev-Cpp/include" />
 
 	<target name="init">
 		<available file="${gnu.hylafax-dir}/gnu/hylafax/HylaFAXClient.class" property="gnu.hylafax.haveClassDir"/>
@@ -98,6 +106,12 @@
 				<mapper type="glob" from="C*.po" to="C*$1.class" /> -->
 			</compositemapper>
 		</uptodate>
+		
+		<!-- Find out if we need to recompile the exe wrapper -->
+	    <uptodate property="exewrapper.isUpToDate">
+	    	<srcfiles dir="launch4j" includes="*cfg.xml"/>
+	    	<mapper type="glob" from="launch4j*.cfg.xml" to="${build}/yajhfc*.exe" />
+	    </uptodate>
 
 		<condition property="gnu.hylafax.classFileLocation" value="${gnu.hylafax-dir}" else="${build}/gnu.hylafax">
 			<istrue value="${gnu.hylafax.haveClassDir}"/>
@@ -206,7 +220,48 @@
 		</copy>
 	</target>
 	-->
+	
+	<target name="compile-l4j-hook" depends="init" description="compile the launch4j hook" >
+		<!-- Compile our custom header hook -->
+		<apply executable="${gcc-win32.command}" dir="launch4j/hook" parallel="false" dest="launch4j/hook/bin">
+			
+			<arg value="-c"/>
+			<srcfile/>
+			<arg value="-o"/>
+			<targetfile/>
+			<arg value="-I${gcc-win32.sys-include}"/>
+			<arg value="-I${launch4j.dir}/head_src"/>
+			<arg value="-O2"/>
+			
+			<fileset dir="launch4j/hook" includes="*.c"/>
+			<mapper type="glob" from="*.c" to="*.o" />
+		</apply>
+		<apply executable="${gcc-win32.command}" dir="launch4j/hook" parallel="false" dest="launch4j/hook/bin">
+			
+			<arg value="-c"/>
+			<srcfile/>
+			<arg value="-o"/>
+			<targetfile/>
+			<arg value="-I${gcc-win32.sys-include}"/>
+			<arg value="-I${launch4j.dir}/head_src"/>
+			<arg value="-O2"/>
+			<arg value="-DPRINTLAUNCH"/>
+			
+			<fileset dir="launch4j/hook" includes="*.c"/>
+			<mapper type="glob" from="*.c" to="*-printlaunch.o" />
+		</apply>
+	</target>
 
+	<target name="exewrapper" depends="compile,compile-l4j-hook" description="generate the exe wrapper for Windows" unless="exewrapper.isUpToDate">
+		<taskdef name="launch4j"
+		    classname="net.sf.launch4j.ant.Launch4jTask"
+		    classpath="${launch4j.dir}/launch4j.jar
+		        :${launch4j.dir}/lib/xstream.jar" />
+		
+		<launch4j configFile="${exewrapper.config}" outfile="${exewrapper.target}" />
+		<launch4j configFile="${exewrapper.printlaunch.config}" outfile="${exewrapper.printlaunch.target}" />
+	</target>
+	
 	<target name="i18n" unless="i18n.havePrecompiled" depends="init" description="compile the translations">
 		<exec executable="/bin/sh" dir="${src}/src/yajhfc/i18n/" osfamily="unix">
 			<arg value="./fmtall.sh"/>
@@ -232,7 +287,7 @@
 		</jar>
 	</target>
 	
-	<target name="sourcedist" depends="init,i18n,doc" description="generate the source distribution" >
+	<target name="sourcedist" depends="init,i18n,doc,compile-l4j-hook" description="generate the source distribution" >
 		<zip destfile="${srczip-output}">
 			<zipfileset dir="${src}" prefix="yajhfc/">
 				<exclude name="bin/"/>
@@ -269,7 +324,7 @@
 		</exec>
 	</target>
 
-	<target name="fulldist" depends="dist,sourcedist" description="generate both source and binary distributions"/>
+	<target name="fulldist" depends="dist,sourcedist,exewrapper" description="generate both source and binary distributions"/>
 
 	<target name="clean" description="clean up" >
 		<!-- Delete the ${build} directory tree and the jar file -->
