@@ -62,6 +62,8 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.FieldPosition;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -77,6 +79,7 @@ import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
 import javax.swing.InputMap;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -494,8 +497,31 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                             }
                             yj.setRead(true);
                         } catch (Exception e1) {
-                            //JOptionPane.showMessageDialog(MainWin.this, MessageFormat.format(_("An error occured displaying the fax \"{0}\":\n"), yj.getIDValue()) + e1.getMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
-                            showExceptionDialog(MessageFormat.format(_("An error occured displaying the fax \"{0}\":"), yj.getIDValue()), e1);
+                            if (e1.getMessage().contains("All fill bits preceding EOL code must be 0.")) {
+                                final String helpURL = "http://www.yajhfc.de/documentation/knowledge-base/134-error-qall-fill-bits-preceding-eol-code-must-be-0q";
+                                final String text = 
+                                        Utils._("It seems the TIFF files of your HylaFAX installation are incompatible with iText (often the case with capi4hylafax).") + "\n\n" +
+                                        Utils._("Please see the following page for more details and how to work around this problem:") + "\n" + helpURL + "\n\n" +
+                                        "Technical info: The following exception was thrown:\n" + e1.toString();
+                                final JButton websiteButton = new JButton(Utils._("Go to website"));
+                                websiteButton.addActionListener(new ActionListener() {
+                                    public void actionPerformed(ActionEvent e) {
+                                        try {
+                                            DesktopManager.getDefault().safeBrowse(new URI(helpURL), MainWin.this);
+                                        } catch (URISyntaxException e1) {
+                                            log.log(Level.SEVERE, "Error on constant URL", e1);
+                                        }
+                                    }
+                                });
+                                Object[] options = new Object[] {
+                                        websiteButton,
+                                        Utils._("Close")
+                                }; 
+
+                                JOptionPane.showOptionDialog(MainWin.this, text, Utils._("Display fax"), JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+                            } else {
+                                showExceptionDialog(MessageFormat.format(_("An error occured displaying the fax \"{0}\":"), yj.getIDValue()), e1);
+                            }
                         }
                     }
                 } finally {
