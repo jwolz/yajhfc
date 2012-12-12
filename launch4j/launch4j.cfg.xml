@@ -3,14 +3,20 @@
   <headerType>gui</headerType>
   <jar></jar>
   <outfile>..\build\yajhfc.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine></cmdLine>
+  <chdir></chdir>
   <priority>normal</priority>
   <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
   <customProcName>false</customProcName>
   <stayAlive>true</stayAlive>
+  <manifest></manifest>
   <icon>yajhfc.ico</icon>
   <classPath>
     <mainClass>yajhfc.Launcher</mainClass>
-    <cp>%EXEDIR%\yajhfc.jar;%EXEDIR%\lib\*.jar</cp>
+    <cp>%EXEDIR%\yajhfc.jar</cp>
+    <cp>%EXEDIR%\lib\*.jar</cp>
   </classPath>
   <jre>
     <path></path>
@@ -19,5 +25,17 @@
     <jdkPreference>jreOnly</jdkPreference>
     <opt>-Duser.home=&quot;%USERPROFILE%&quot; -splash:logo-large.png</opt>
   </jre>
+  <versionInfo>
+    <fileVersion>0.5.3.0</fileVersion>
+    <txtFileVersion>0.5.3beta</txtFileVersion>
+    <fileDescription>YajHFC Java launcher</fileDescription>
+    <copyright>(C) 2012 Jonas Wolz &lt;info@yajhfc.de&gt;</copyright>
+    <productVersion>0.5.3.0</productVersion>
+    <txtProductVersion>0.5.3beta</txtProductVersion>
+    <productName>Yet another Java HylaFAX client</productName>
+    <companyName></companyName>
+    <internalName>yajhfc-launcher</internalName>
+    <originalFilename>yajhfc.exe</originalFilename>
+  </versionInfo>
   <customHeaderHook>launch4j/hook/bin/yajhfchook.o</customHeaderHook>
 </launch4jConfig>

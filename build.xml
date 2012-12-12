@@ -118,6 +118,10 @@
 					<srcfiles dir="launch4j/hook" includes="*.c"/>
 					<mapper type="glob" from="*.c" to="bin/*.o" />
 	    		</uptodate>
+	    		<uptodate>
+					<srcfiles dir="launch4j/hook/bin" includes="*.o"/>
+	    			<mergemapper to="${build}/yajhfc.exe"/>
+	    		</uptodate>
 	    	</and>
 	    </condition>
 
@@ -243,6 +247,7 @@
 			<arg value="-I${gcc-win32.sys-include}"/>
 			<arg value="-I${launch4j.dir}/head_src"/>
 			<arg value="-O2"/>
+			<arg value="-Wall"/>
 			
 			<fileset dir="launch4j/hook" includes="*.c"/>
 			<mapper type="glob" from="*.c" to="*.o" />
@@ -256,6 +261,7 @@
 			<arg value="-I${gcc-win32.sys-include}"/>
 			<arg value="-I${launch4j.dir}/head_src"/>
 			<arg value="-O2"/>
+			<arg value="-Wall"/>
 			<arg value="-DPRINTLAUNCH"/>
 			
 			<fileset dir="launch4j/hook" includes="*.c"/>
@@ -341,16 +347,6 @@
 		<!-- Delete the ${build} directory tree and the jar file -->
 		<delete dir="${build}"/>
 		<delete file="${jar-output}"/>
-	</target>
-
-	<target name="upload-dist" depends="dist" description="upload developer version to ftp.berlios.de">
-		<exec dir="${src}" executable="scp">
-			<arg value="${jar-output}"/>
-			<arg value="jwolz@shell.berlios.de:/home/groups/ftp/pub/yajhfc/temp/"/>
-		</exec>
-		<echo>
-Uploaded yajhfc.jar to ftp://ftp.berlios.de/pub/yajhfc/temp/yajhfc.jar
-		</echo>
 	</target>
 	
 	<target name="run-test" depends="dist" description="run yajhfc with empty configuration">
