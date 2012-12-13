@@ -518,7 +518,7 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
     /**
      * Path to the pstotext executable
      */
-    public String pstotextPath = (Utils.IS_WINDOWS ? "pstotxt3.exe" : "pstotext");
+    public String pstotextPath = (PlatformInfo.IS_WINDOWS ? "pstotxt3.exe" : "pstotext");
     
     /**
      * Path to the pdftotext executable
@@ -529,6 +529,12 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
      * Expand phone books on load
      */
     public boolean expandPhoneBooksOnLoad = true;
+    
+    
+    /**
+     * Dialogs not to ask again
+     */
+    public final List<String> dialogsDoNotAskAgain = new ArrayList<String>();
     
     public FaxOptions() {
         super(null);
@@ -566,8 +572,8 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
         this.archiveFmt.add(QueueFileFormat.state);
         this.archiveFmt.add(QueueFileFormat.status);
         
-        final String defaultViewer = Utils.getSystemViewerCommandLine();
-        if (Utils.IS_WINDOWS) {
+        final String defaultViewer = PlatformInfo.getSystemViewerCommandLine();
+        if (PlatformInfo.IS_WINDOWS) {
             this.psViewer = defaultViewer;  //"rundll32.exe URL.DLL,FileProtocolHandler \"%s\"";//"gsview32.exe";
             this.pdfViewer = defaultViewer;
             

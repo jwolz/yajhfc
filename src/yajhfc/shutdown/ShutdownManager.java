@@ -40,6 +40,7 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import yajhfc.PlatformInfo;
 import yajhfc.Utils;
 
 /**
@@ -55,7 +56,7 @@ public class ShutdownManager {
      */
     public static ShutdownManager getInstance() {
         if (INSTANCE == null) {
-            if (Utils.IS_WINDOWS && Utils.getFaxOptions().useWin32ShutdownManager) {
+            if (PlatformInfo.IS_WINDOWS && Utils.getFaxOptions().useWin32ShutdownManager) {
                 // Work around a bug which results in ShutdownHooks not being run on Vista
                 try {
                     INSTANCE = new Win32ShutdownManager();

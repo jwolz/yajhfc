@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import yajhfc.FaxOptions;
+import yajhfc.PlatformInfo;
 import yajhfc.Utils;
 import yajhfc.file.FileFormat;
 
@@ -39,7 +40,7 @@ public class PSToTextConverter extends ExternalCommandToTextConverter {
         
         // Append ghostscript directory to path
         String pathKey = "PATH";
-        if (Utils.IS_WINDOWS) {
+        if (PlatformInfo.IS_WINDOWS) {
             // Find the key for PATH, as it might be written "Path" or so
             for (String key : env.keySet()) {
                 if (pathKey.equalsIgnoreCase(key)) {

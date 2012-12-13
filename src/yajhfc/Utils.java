@@ -107,7 +107,7 @@ public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2012 by Jonas Wolz";
-    public static final String AppVersion = "0.5.3beta2";
+    public static final String AppVersion = "0.5.3beta3";
     public static final String AuthorName = "Jonas Wolz";
     public static final String AuthorEMail = "info@yajhfc.de";
     public static final String HomepageURL = "http://www.yajhfc.de/"; 
@@ -145,24 +145,6 @@ public final class Utils {
      * Returns an executor service which may be used for various non time critical asynchronous computations
      */
     public static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(2);
-    
-    /**
-     * True if we run under the Windows platform
-     */
-    public static final boolean IS_WINDOWS;
-    /**
-     * True if we run under Mac OS X
-     */
-    public static final boolean IS_MACOSX;
-    private static final boolean buggyLocationByPlatform;
-    static {
-        final String osname = System.getProperty("os.name").toLowerCase();
-        IS_WINDOWS = osname.contains("windows");
-        IS_MACOSX = osname.startsWith("mac os x");
-
-        // Do we have a buggy Java/Windows combination?
-        buggyLocationByPlatform = (IS_WINDOWS && (osname.equals("windows 95") || osname.equals("windows 98") || osname.equals("windows me")));
-    }
 
     static final Logger log = Logger.getLogger(Utils.class.getName());
     
@@ -191,7 +173,7 @@ public final class Utils {
             if (utilURL.getProtocol().equals("file")) {
                 try {
                     URI uri = utilURL.toURI();
-                    if (IS_WINDOWS && uri.getAuthority() != null) {
+                    if (PlatformInfo.IS_WINDOWS && uri.getAuthority() != null) {
                         // Work around a JDK bug with UNC paths
                         uri = new URI("file", null, "////" + uri.getAuthority() + '/' + uri.getPath(), null); 
                     }
@@ -217,7 +199,7 @@ public final class Utils {
      */
     public static File getSystemwideConfigDir() {
         if (!systemwideConfigDirSet) {
-            if (File.separatorChar == '/' && !IS_WINDOWS) { // Probably some flavor of Unix
+            if (File.separatorChar == '/' && !PlatformInfo.IS_WINDOWS) { // Probably some flavor of Unix
                 File configDir = new File("/etc/yajhfc");
                 if (configDir.isDirectory()) {
                     systemwideConfigDir = configDir;
@@ -489,7 +471,7 @@ public final class Utils {
     }
     
     public static void initializeUIProperties() {
-        if (IS_MACOSX) {
+        if (PlatformInfo.IS_MACOSX) {
             MacOSXSupport.setUIProperties();
         }
         AWTExceptionLogger.register();
@@ -593,7 +575,7 @@ public final class Utils {
     
     public static void setDefWinPos(Window win) {
         // Do we have a buggy Java/Windows combination?
-        if (buggyLocationByPlatform)
+        if (PlatformInfo.buggyLocationByPlatform)
             win.setLocationRelativeTo(null);
             //win.setLocation(0,0);
         else
@@ -634,7 +616,7 @@ public final class Utils {
                 target.removeWindowListener(this);
             }
         });
-        if (IS_MACOSX) {
+        if (PlatformInfo.IS_MACOSX) {
         	makeWinAndOwnersVisible(target.getOwner());
         }
     }
@@ -941,7 +923,7 @@ public final class Utils {
         }
         
         // For Windows, try to append .exe, .com, ...
-        if (IS_WINDOWS) {
+        if (PlatformInfo.IS_WINDOWS) {
             String exts = System.getenv("PATHEXT");
             String[] appendExts;
             if (exts != null) {
@@ -974,47 +956,6 @@ public final class Utils {
         return null;
     }
 
-    private static String systemViewer = "";
-    /**
-     * Returns the command line of the default System file viewer or null
-     * if it cannot be determined.
-     * @return
-     */
-    public static String getSystemViewerCommandLine() {
-        if ("".equals(systemViewer)) {
-            if (Utils.IS_WINDOWS) {
-                String startCmd = System.getenv("COMSPEC");
-                if (startCmd == null) startCmd = "COMMAND";
-                startCmd += " /C start \"Viewer\" \"%s\"";
-
-                systemViewer = startCmd;
-            } else if (IS_MACOSX) {
-                systemViewer = "open \"%s\"";
-            } else { // Assume Unix
-                String kde = System.getenv("KDE_FULL_SESSION");
-                if (kde != null && kde.length() > 0) {
-                    systemViewer = "kfmclient exec \"%s\"";
-                } else {
-                    String gnome = System.getenv("GNOME_DESKTOP_SESSION_ID");
-                    if (gnome != null && gnome.length() > 0) {
-                        systemViewer = "gnome-open \"%s\"";
-                    } else {
-                        if (searchExecutableInPath("exo-open") != null) {
-                            systemViewer = "exo-open \"%s\"";
-                        } else if (searchExecutableInPath("gnome-open") != null) {
-                            systemViewer = "gnome-open \"%s\"";
-                        } else if (searchExecutableInPath("kfmclient") != null) {
-                            systemViewer = "kfmclient exec \"%s\"";
-                        } else {
-                            systemViewer = null;
-                        }
-                    }
-                }
-            }
-        }
-        return systemViewer;
-    }
-    
     public static void startViewer(String viewerCommandLine, URI uri) throws IOException {
         startViewer(viewerCommandLine, uri.toString());
     }
@@ -1198,6 +1139,10 @@ public final class Utils {
                 toolkit.getImage(Utils.class.getResource("icon-48x48.png")),              
                 toolkit.getImage(Utils.class.getResource("icon-64x64.png")),              
                 toolkit.getImage(Utils.class.getResource("logo-large.png")));
+    }
+    
+    public static String firstDefined(String s1, String s2) {
+        return (s1 != null) ? s1 : s2;
     }
 }
 

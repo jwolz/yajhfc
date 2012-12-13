@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.logging.Logger;
 
+import yajhfc.PlatformInfo;
 import yajhfc.Utils;
 import yajhfc.launch.Launcher2;
 
@@ -115,7 +116,7 @@ public class ExternalProcessExecutor extends Thread {
      * @return
      */
     public static List<String> splitCommandLine(String str) {
-    	return splitCommandLine(str, !Utils.IS_WINDOWS);
+    	return splitCommandLine(str, !PlatformInfo.IS_WINDOWS);
     }
     
     private static final int STATE_NORMAL = 0;
@@ -210,7 +211,7 @@ public class ExternalProcessExecutor extends Thread {
      * @param commandLine
      */
     public static void quoteCommandLine(List<String> commandLine) {
-        if (Utils.IS_WINDOWS) { // Another special case for Windows...
+        if (PlatformInfo.IS_WINDOWS) { // Another special case for Windows...
             ListIterator<String> it = commandLine.listIterator();
             while (it.hasNext()) {
                 String curArg = it.next();

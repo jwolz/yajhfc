@@ -50,6 +50,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import yajhfc.FaxOptions;
+import yajhfc.PlatformInfo;
 import yajhfc.Utils;
 import yajhfc.options.AbstractOptionsPanel;
 import yajhfc.options.OptionsWin;
@@ -61,7 +62,7 @@ import yajhfc.util.IntVerifier;
  *
  */
 public class PortOptionsPanel extends AbstractOptionsPanel<FaxOptions> {
-    static final boolean NEED_MKFIFO = !Utils.IS_WINDOWS;
+    static final boolean NEED_MKFIFO = !PlatformInfo.IS_WINDOWS;
 
 	private static final int border = 8;    
     

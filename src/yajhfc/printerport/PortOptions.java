@@ -37,7 +37,7 @@
 package yajhfc.printerport;
 
 import yajhfc.AbstractFaxOptions;
-import yajhfc.Utils;
+import yajhfc.PlatformInfo;
 
 public class PortOptions extends AbstractFaxOptions {
     public boolean enabled = false;
@@ -46,7 +46,7 @@ public class PortOptions extends AbstractFaxOptions {
     
     public boolean enableFIFO = false;
     public String mkfifo = "mkfifo -m 0622";
-    public String fifoName = Utils.IS_WINDOWS ? "yajhfc-%u" : "/tmp/yajhfc-%u";
+    public String fifoName = PlatformInfo.IS_WINDOWS ? "yajhfc-%u" : "/tmp/yajhfc-%u";
     
     public PortOptions() {
         super("printerport");

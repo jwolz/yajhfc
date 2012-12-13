@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import yajhfc.Utils;
+import yajhfc.PlatformInfo;
 import yajhfc.printerport.FIFO;
 import yajhfc.util.pipe.win32.Win32NamedPipeInputStream;
 
@@ -29,7 +29,7 @@ public class Win32FIFO extends FIFO {
 	}
 	
 	private static String translateFIFOName(String fifoName) throws IOException {
-		if (!Utils.IS_WINDOWS)
+		if (!PlatformInfo.IS_WINDOWS)
 			throw new IOException("This class only supports Windows!");
 		
 		if (fifoName.startsWith(Win32NamedPipeInputStream.LOCAL_PIPE_PREFIX)) {
@@ -64,7 +64,7 @@ public class Win32FIFO extends FIFO {
 	 * @return
 	 */
 	public static boolean isAvailable() {
-		if (!Utils.IS_WINDOWS)
+		if (!PlatformInfo.IS_WINDOWS)
 			return false;
 		try {
 			// Check if both the base JNA class and the win32 platform classes are available
