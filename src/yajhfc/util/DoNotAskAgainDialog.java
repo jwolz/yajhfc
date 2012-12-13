@@ -70,7 +70,8 @@ public class DoNotAskAgainDialog {
      * @param title
      */
     public static void showMessageDialogAlways(String dialogID, Component parent, String message, String title, int messageType) {
-        JCheckBox checkNotAskAgain = new JCheckBox(Utils._("Do not ask again"));
+        JCheckBox checkNotAskAgain = new JCheckBox(Utils._("Do not show dialog again"));
+        checkNotAskAgain.setSelected(!isAskAgain(dialogID));
         Object[] items = {
                 message,
                 checkNotAskAgain
@@ -80,7 +81,7 @@ public class DoNotAskAgainDialog {
     }
     
     public static boolean isAskAgain(String dialogID) {
-        return (Utils.getFaxOptions().dialogsDoNotAskAgain.contains(dialogID));
+        return (!Utils.getFaxOptions().dialogsDoNotAskAgain.contains(dialogID));
     }
     
     public static void setAskAgain(String dialogID, boolean askAgain) {

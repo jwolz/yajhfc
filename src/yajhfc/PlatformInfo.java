@@ -123,11 +123,15 @@ public final class PlatformInfo {
 //            if (exitCode != 0)
 //                return -1;
             
-            Matcher m = Pattern.compile("^[\\w\\-]+\\s+(\\d+)\\.(\\d+)").matcher(output);
+            String sOutput = output.toString();
+            log.fine(sOutput);
+            Matcher m = Pattern.compile("^[\\w\\-]+\\s+(\\d+)\\.(\\d+)").matcher(sOutput);
             if (m.find()) {
-                return Integer.parseInt(m.group(1));
+                int version=Integer.parseInt(m.group(1));
+                log.fine("Detected gnome version: " + version);
+                return version;
             } else {
-                log.info("Cannot parse 'gnome-session --version'-output: " + output);
+                log.info("Cannot parse 'gnome-session --version'-output: " + sOutput);
                 return -1;
             }
         } catch (Exception e) {
