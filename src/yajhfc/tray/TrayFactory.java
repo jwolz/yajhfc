@@ -40,7 +40,13 @@ import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
+import yajhfc.PlatformInfo;
 import yajhfc.Utils;
+import yajhfc.launch.Launcher2;
+import yajhfc.util.DoNotAskAgainDialog;
 
 /**
  * Returns if the system tray is available and returns a tray manager if it is available.
@@ -107,6 +113,25 @@ public class TrayFactory {
             return trayManager;
         } else {
             return null;
+        }
+    }
+    
+    /**
+     * Checks if we have a "problematic" platform with regard to the tray icon and displays a proper error message
+     */
+    public static void checkForProblematicPlatformAsync() {
+        if (PlatformInfo.isGNOME()) {
+            Utils.executorService.submit(new Runnable() {
+                public void run() {
+                    if (PlatformInfo.getGNOMEMajorVersion() >= 3) {
+                        SwingUtilities.invokeLater(new Runnable() {
+                            public void run() {
+                                DoNotAskAgainDialog.showMessageDialog("GNOME3-TrayIcon", Launcher2.application.getFrame(), Utils._("You seem to be running GNOME3.\nThis environment may cause problems when the tray icon is activated (e.g. after minimizing YajHFC but not restore the main window again).\nIf you experience such problems, please disable the tray icon (Options->General->Show tray icon)."), "GNOME 3", JOptionPane.INFORMATION_MESSAGE);
+                            }
+                        });
+                    }
+                } 
+            });
         }
     }
 }

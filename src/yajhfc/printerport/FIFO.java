@@ -43,7 +43,7 @@ import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import yajhfc.Utils;
+import yajhfc.PlatformInfo;
 
 /**
  * @author jonas
@@ -52,7 +52,7 @@ import yajhfc.Utils;
 public abstract class FIFO {
     public static Class<? extends FIFO> FIFO_IMPLEMENTATION;
     static {
-        if (!Utils.IS_WINDOWS) {
+        if (!PlatformInfo.IS_WINDOWS) {
             FIFO_IMPLEMENTATION = UnixFIFO.class;
         } else {
         	try {

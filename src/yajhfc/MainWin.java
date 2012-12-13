@@ -502,23 +502,28 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                                 final String text = 
                                         Utils._("It seems the TIFF files of your HylaFAX installation are incompatible with iText (often the case with capi4hylafax).") + "\n\n" +
                                         Utils._("Please see the following page for more details and how to work around this problem:") + "\n" + helpURL + "\n\n" +
-                                        "Technical info: The following exception was thrown:\n" + e1.toString();
-                                final JButton websiteButton = new JButton(Utils._("Go to website"));
-                                websiteButton.addActionListener(new ActionListener() {
-                                    public void actionPerformed(ActionEvent e) {
-                                        try {
-                                            DesktopManager.getDefault().safeBrowse(new URI(helpURL), MainWin.this);
-                                        } catch (URISyntaxException e1) {
-                                            log.log(Level.SEVERE, "Error on constant URL", e1);
-                                        }
-                                    }
-                                });
-                                Object[] options = new Object[] {
-                                        websiteButton,
-                                        Utils._("Close")
-                                }; 
+                                                "Technical info: The following exception was thrown:\n" + e1.toString();
+                                SwingUtilities.invokeLater(new Runnable() {
+                                    public void run() {
+                                        final JButton websiteButton = new JButton(Utils._("Go to website"));
+                                        websiteButton.addActionListener(new ActionListener() {
+                                            public void actionPerformed(ActionEvent e) {
+                                                try {
+                                                    DesktopManager.getDefault().safeBrowse(new URI(helpURL), MainWin.this);
+                                                } catch (URISyntaxException e1) {
+                                                    log.log(Level.SEVERE, "Error on constant URL", e1);
+                                                }
+                                            }
+                                        });
+                                        Object[] options = new Object[] {
+                                                websiteButton,
+                                                Utils._("Close")
+                                        }; 
 
-                                JOptionPane.showOptionDialog(MainWin.this, text, Utils._("Display fax"), JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+                                        JOptionPane.showOptionDialog(MainWin.this, text, Utils._("Display fax"), JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+                                    }
+                                }); 
+                                break;
                             } else {
                                 showExceptionDialog(MessageFormat.format(_("An error occured displaying the fax \"{0}\":"), yj.getIDValue()), e1);
                             }
@@ -1538,7 +1543,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             public void actualActionPerformed(java.awt.event.ActionEvent e) {
                 TooltipJTable<? extends FmtItem> selTable = getSelectedTable();
                 if (selTable.getRowCount() > 0)
-                    selTable.getSelectionModel().addSelectionInterval(0, selTable.getRowCount()-1);
+                    selTable.getSelectionModel().addSelectionInterval(0, selTable.getRowCount()-1);                
             }
         };
         actSelectAll.putValue(Action.NAME, _("Select All"));
@@ -1936,7 +1941,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     }
     
     void initializePlatformSpecifics() {
-    	if (Utils.IS_MACOSX) {
+    	if (PlatformInfo.IS_MACOSX) {
     		MacOSXSupport macSup = MacOSXSupport.getInstance();
     		if (macSup != null) {
     			macSup.setApplicationMenuActions(this, actOptions, actAbout, actExit);
@@ -1955,6 +1960,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             if (trayIcon != null && trayIcon.isValid()) {
                 setDefaultCloseOperation(myopts.minimizeToTrayOnMainWinClose ? JFrame.HIDE_ON_CLOSE : JFrame.DISPOSE_ON_CLOSE);
                 trayIcon.setMinimizeToTray(myopts.minimizeToTray);
+                TrayFactory.checkForProblematicPlatformAsync();
             } else {
             	trayIcon = null;
             	setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

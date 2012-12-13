@@ -1,6 +1,6 @@
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005-2011 Jonas Wolz <info@yajhfc.de>
+ * Copyright (C) 2005-2012 Jonas Wolz <info@yajhfc.de>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *  
+ *
  *  Linking YajHFC statically or dynamically with other modules is making 
  *  a combined work based on YajHFC. Thus, the terms and conditions of 
  *  the GNU General Public License cover the whole combination.
@@ -34,79 +34,63 @@
  *  version without this exception; this exception also makes it possible 
  *  to release a modified version which carries forward this exception.
  */
-package yajhfc.macosx;
+package yajhfc.util;
 
-import java.awt.Image;
-import java.awt.PopupMenu;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.awt.Component;
 
-import javax.swing.Action;
+import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
 
-import yajhfc.PlatformInfo;
 import yajhfc.Utils;
-import yajhfc.launch.MainApplicationFrame;
 
 /**
  * @author jonas
  *
  */
-public abstract class MacOSXSupport {
-	private static MacOSXSupport instance;
-	private static final String IMPL_CLASS_NAME = "yajhfc.macosx.MacOSXSupportImpl";
+public class DoNotAskAgainDialog {
 
-	public static MacOSXSupport getInstance() {
-		if (!PlatformInfo.IS_MACOSX)
-			return null;
-		
-		if (instance == null) {
-			try {
-				instance = (MacOSXSupport)Class.forName(IMPL_CLASS_NAME).newInstance();
-			} catch (Exception e) {
-				instance = null;
-				Logger.getLogger(MacOSXSupport.class.getName()).log(Level.WARNING, "Mac OS X support not available:", e);
-			}
-		}
-		return instance;
-	}
-	
-	/**
-	 * Adjusts System properties to make the UI feel more Mac native
-	 */
-	public static void setUIProperties() {
-		System.setProperty("apple.laf.useScreenMenuBar", "true");
-        System.setProperty("com.apple.mrj.application.apple.menu.about.name", Utils.AppShortName);
-	}
-	
-	/**
-	 * Sets the actions to use for the application menu entries
-	 * @param actPreferences
-	 * @param actAbout
-	 * @param actQuit
-	 */
-	public abstract void setApplicationMenuActions(MainApplicationFrame mainWindow, Action actPreferences, Action actAbout, Action actQuit);
-	
-	/**
-	 * Sets the dock icon image
-	 * @param image
-	 */
-	public abstract void setDockIconImage(Image image);
-	
-	/**
-	 * Sets the dock icon badge
-	 * @param badge
-	 */
-	public abstract void setDockIconBadge(String badge);
-	
-	/**
-	 * Sets the dock icon menu
-	 * @param menu
-	 */
-	public abstract void setDockIconMenu(PopupMenu menu);
-	
-	/**
-	 * Returns the currently set dock icon menu
-	 * @return
-	 */
-	public abstract PopupMenu getDockIconMenu();
+    /**
+     * Shows a message dialog with a "do not ask gain" checkbox only if the user did not select "do not ask again" in the past
+     * @param dialogID
+     * @param parent
+     * @param message
+     * @param title
+     */
+    public static void showMessageDialog(String dialogID, Component parent, String message, String title, int messageType) {
+        if (isAskAgain(dialogID)) {
+            showMessageDialogAlways(dialogID, parent, message, title, messageType);
+        }
+    }
+    
+    /**
+     * Shows a message dialog with a "do not ask gain" checkbox (always)
+     * @param dialogID
+     * @param parent
+     * @param message
+     * @param title
+     */
+    public static void showMessageDialogAlways(String dialogID, Component parent, String message, String title, int messageType) {
+        JCheckBox checkNotAskAgain = new JCheckBox(Utils._("Do not ask again"));
+        Object[] items = {
+                message,
+                checkNotAskAgain
+        };
+        JOptionPane.showMessageDialog(parent, items, title, messageType);
+        setAskAgain(dialogID, !checkNotAskAgain.isSelected());
+    }
+    
+    public static boolean isAskAgain(String dialogID) {
+        return (Utils.getFaxOptions().dialogsDoNotAskAgain.contains(dialogID));
+    }
+    
+    public static void setAskAgain(String dialogID, boolean askAgain) {
+        if (askAgain == isAskAgain(dialogID))
+            return;
+        
+        if (askAgain) {
+            Utils.getFaxOptions().dialogsDoNotAskAgain.remove(dialogID);
+        } else {
+            Utils.getFaxOptions().dialogsDoNotAskAgain.add(dialogID);
+        }
+    }
 }

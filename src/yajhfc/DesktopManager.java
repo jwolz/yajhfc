@@ -57,7 +57,7 @@ import yajhfc.util.ExceptionDialog;
  *
  */
 public class DesktopManager {
-    protected final String viewer = Utils.getSystemViewerCommandLine();
+    protected final String viewer = PlatformInfo.getSystemViewerCommandLine();
     
     /**
      * Opens the uri in the default browser and displays an error message if this fails
