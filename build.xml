@@ -35,8 +35,20 @@
 	<property name="launch4j.dir" location="/opt/launch4j" />
 	<property name="gcc-win32.command" location="C:/Dev-Cpp/bin/gcc" />
 	<property name="gcc-win32.sys-include" location="C:/Dev-Cpp/include" />
+	
+	<property name="yajhfc.version" value="0.5.3" />
+    <pathconvert property="yajhfc.version.numeric" dirsep="" pathsep="" description="Make an all numeric version and assign value to new property">
+        <path path="${yajhfc.version}full999" />
+
+        <!--Pathconvert will try to add the root directory to the "path", so replace with empty string -->
+        <map from="${basedir}" to="" />
+
+    	<regexpmapper from="(\d+\.\d+\.\d+)[a-zA-Z]*(\d*)" to="\1.\2"/>
+    </pathconvert>
 
 	<target name="init">
+		<echo>YajHFC version: ${yajhfc.version}; numeric version: ${yajhfc.version.numeric}</echo>
+		
 		<available file="${gnu.hylafax-dir}/gnu/hylafax/HylaFAXClient.class" property="gnu.hylafax.haveClassDir"/>
 		<condition property="gnu.hylafax.haveJars">
 			<and>
@@ -275,8 +287,12 @@
 		    classpath="${launch4j.dir}/launch4j.jar
 		        :${launch4j.dir}/lib/xstream.jar" />
 		
-		<launch4j configFile="${exewrapper.config}" outfile="${exewrapper.target}" />
-		<launch4j configFile="${exewrapper.printlaunch.config}" outfile="${exewrapper.printlaunch.target}" />
+		<launch4j configFile="${exewrapper.config}" outfile="${exewrapper.target}" 
+			fileVersion="${yajhfc.version.numeric}" productVersion="${yajhfc.version.numeric}"
+			txtFileVersion="${yajhfc.version}"      txtProductVersion="${yajhfc.version}" />
+		<launch4j configFile="${exewrapper.printlaunch.config}" outfile="${exewrapper.printlaunch.target}" 
+			fileVersion="${yajhfc.version.numeric}" productVersion="${yajhfc.version.numeric}"
+			txtFileVersion="${yajhfc.version}"      txtProductVersion="${yajhfc.version}" />
 	</target>
 	
 	<target name="i18n" unless="i18n.havePrecompiled" depends="init" description="compile the translations">

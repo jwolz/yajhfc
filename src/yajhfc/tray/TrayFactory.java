@@ -57,7 +57,7 @@ import yajhfc.util.DoNotAskAgainDialog;
  *
  */
 public class TrayFactory {
-    private static final Logger log = Logger.getLogger(TrayFactory.class.getName());
+    static final Logger log = Logger.getLogger(TrayFactory.class.getName());
     
     private static boolean haveAWTSupport = true;
     
@@ -121,17 +121,21 @@ public class TrayFactory {
      */
     public static void checkForProblematicPlatformAsync() {
         if (PlatformInfo.isGNOME()) {
+            log.fine("Running GNOME, check version of it...");
             Utils.executorService.submit(new Runnable() {
                 public void run() {
                     if (PlatformInfo.getGNOMEMajorVersion() >= 3) {
+                        log.info("We have GNOME >= 3, show a warning.");
                         SwingUtilities.invokeLater(new Runnable() {
                             public void run() {
-                                DoNotAskAgainDialog.showMessageDialog("GNOME3-TrayIcon", Launcher2.application.getFrame(), Utils._("You seem to be running GNOME3.\nThis environment may cause problems when the tray icon is activated (e.g. after minimizing YajHFC but not restore the main window again).\nIf you experience such problems, please disable the tray icon (Options->General->Show tray icon)."), "GNOME 3", JOptionPane.INFORMATION_MESSAGE);
+                                DoNotAskAgainDialog.showMessageDialog("GNOME3-TrayIcon", Launcher2.application.getFrame(), Utils._("You seem to be running GNOME3:\nThis environment may cause problems when the tray icon is enabled (e.g. after minimizing YajHFC you may not be able to restore the main window again).\nIf you experience such problems, please disable the tray icon (Options->General->Show tray icon)."), "GNOME 3", JOptionPane.INFORMATION_MESSAGE);
                             }
                         });
                     }
                 } 
             });
+        } else {
+            log.fine("Not a known problematic platform.");
         }
     }
 }
