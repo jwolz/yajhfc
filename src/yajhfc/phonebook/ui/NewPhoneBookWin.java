@@ -383,17 +383,19 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             @Override
             public void doWork() {
                 List<String> pbList = Utils.getFaxOptions().phoneBooks;
-                pbList.clear();
+                synchronized (pbList) {
+                    pbList.clear();
 
-                for (PhoneBook pb : treeModel.getPhoneBooks()) {
-                    try {
-                        if (Utils.debugMode)
-                            log.finest("Closing phone book " + pb.getDescriptor());
-                        updateNote(pb.toString());
-                        pbList.add(pb.getDescriptor());
-                        pb.close();
-                    } catch (Exception e) {
-                        ExceptionDialog.showExceptionDialog(NewPhoneBookWin.this, Utils._("Error saving a phone book:"), e);
+                    for (PhoneBook pb : treeModel.getPhoneBooks()) {
+                        try {
+                            if (Utils.debugMode)
+                                log.finest("Closing phone book " + pb.getDescriptor());
+                            updateNote(pb.toString());
+                            pbList.add(pb.getDescriptor());
+                            pb.close();
+                        } catch (Exception e) {
+                            ExceptionDialog.showExceptionDialog(NewPhoneBookWin.this, Utils._("Error saving a phone book:"), e);
+                        }
                     }
                 }
             };
@@ -1283,12 +1285,16 @@ public final class NewPhoneBookWin extends JDialog implements ActionListener {
             Utils.setDefWinPos(this);
         }
         
-        if (fopts.phoneBooks.size() > 0) {
+        String[] phoneBooks;
+        synchronized (fopts.phoneBooks) {
+            phoneBooks = fopts.phoneBooks.toArray(new String[fopts.phoneBooks.size()]);
+        }
+        if (phoneBooks.length > 0) {
             if (Utils.debugMode)
-                log.finest("Phonebooks found: " + fopts.phoneBooks);
-            
-            Collections.sort(fopts.phoneBooks); // Bring the phone books in a defined order
-            for (String pbdesc : fopts.phoneBooks) {
+                log.finest("Phonebooks found: " + Arrays.toString(phoneBooks));
+
+            Arrays.sort(phoneBooks); // Bring the phone books in a defined order
+            for (String pbdesc : phoneBooks) {
                 if (Utils.debugMode)
                     log.finest("Adding phone book: " + pbdesc);
                 allowSavePhonebooks = false;
