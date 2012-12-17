@@ -2,15 +2,15 @@
 # translation of messages_es.po to
 # This file is distributed under the same license as YajHFC package.
 # Copyright (C) Elsa Andrés.
-# Elsa Andrés <e.andres@ist-sci.com>, 2008, 2009, 2010, 2011.
+# Elsa Andrés <e.andres@ist-sci.com>, 2008, 2009, 2010, 2011, 2012.
 #
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: messages_es 0.5.2\n"
+"Project-Id-Version: messages_es 0.5.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-16 14:12+0100\n"
-"PO-Revision-Date: 2012-06-08 22:22+0200\n"
+"POT-Creation-Date: 2012-12-17 10:40+0100\n"
+"PO-Revision-Date: 2012-12-16 17:45+0100\n"
 "Last-Translator: Elsa Andrés <e.andres@ist-sci.com>\n"
 "Language-Team: Spanish <yajhfc-translators@lists.berlios.de>\n"
 "Language: es\n"
@@ -262,6 +262,12 @@ msgid ""
 "If you experience such problems, please disable the tray icon (Options-"
 ">General->Show tray icon)."
 msgstr ""
+"Parece que está utilizando GNOME 3:\n"
+"Este entorno podría tener problemas cuando el icono de la bandeja del "
+"sistema se encuentra activado (p. ej., es posible que no pueda restaurar la "
+"ventana principal después de minimizar YajHFC).\n"
+"Si experimenta este tipo de problemas, desactive el icono de la bandeja de "
+"entrada (Opciones->General->Mostrar icono en la bandeja del sistema)."
 
 #: ../print/PhonebooksPrinter.java:103
 #: ../phonebook/ui/NewPhoneBookWin.java:1068
@@ -359,135 +365,136 @@ msgstr "Equipos que no van a utilizar un proxy HTTP"
 
 #: ../report/PrintReportAction.java:37
 msgid "Print report"
-msgstr ""
+msgstr "Imprimir informe"
 
 #: ../report/PrintReportAction.java:38
 msgid "Prints a send or receive report for the fax"
-msgstr ""
+msgstr "Imprime un informe de envío o recepción del fax seleccionado"
 
 #: ../report/PrintReportAction.java:81
 msgid "Error generating report:"
-msgstr ""
+msgstr "Error al generar el informe:"
 
 #: ../report/PrintReportAction.java:99
 msgid "Initializing print dialog..."
-msgstr ""
+msgstr "Inicializando cuadro de diálogo de impresión..."
 
 #: ../report/PrintReportAction.java:116
 msgid "Showing print dialog"
-msgstr ""
+msgstr "Mostranado cuadro de diálogo de impresión"
 
 #: ../report/PrintReportAction.java:124
 msgid "Printing..."
-msgstr ""
+msgstr "Imprimiendo..."
 
 #: ../report/PrintReportAction.java:128
 msgid "Cleaning up..."
-msgstr ""
+msgstr "Limpiando..."
 
 #: ../report/PrintReportAction.java:131
 msgid "Error printing report:"
-msgstr ""
+msgstr "Error al imprimir el informe:"
 
 #: ../report/PrintReportAction.java:139
 msgid "Printing reports..."
-msgstr ""
+msgstr "Imprimiendo informes..."
 
 #: ../report/SendReportDialog.java:127
 msgid "All pages"
-msgstr ""
+msgstr "Todas las páginas"
 
 #: ../report/SendReportDialog.java:128
 msgid "Only for the following pages:"
-msgstr ""
+msgstr "Sólo de las siguientes páginas:"
 
 #: ../report/SendReportDialog.java:133
 msgid "Unlimited (put all on one page)"
-msgstr ""
+msgstr "Ilimitado (incluir todo en una página)"
 
 #: ../report/SendReportDialog.java:134
 msgid "At most:"
-msgstr ""
+msgstr "Limitado a:"
 
 #: ../report/SendReportDialog.java:184
 msgid "Number of thumbnails per page"
-msgstr ""
+msgstr "Número de miniaturas por página"
 
 #: ../report/SendReportDialog.java:188
 msgid "thumbnails per page"
-msgstr ""
+msgstr "miniaturas por página"
 
 #: ../report/SendReportDialog.java:195
 msgid "Fax pages to print thumbnails for"
-msgstr ""
+msgstr "Imprimir miniaturas de las páginas de fax para"
 
 #: ../report/SendReportDialog.java:199
 msgid " to "
-msgstr ""
+msgstr "a"
 
 #: ../report/SendReportDialog.java:212
 msgid "Information to print on report"
-msgstr ""
+msgstr "Información para imprimir en el informe"
 
 #: ../report/SendReportDialog.java:254
 msgid "The number of thumbnails per page must be between 1 and 9999."
 msgstr ""
+"El número de miniaturas por página debe estar comprendido entre 1 y 9999."
 
 #: ../report/SendReportDialog.java:255
 msgid "The start page must be between 1 and 9999."
-msgstr ""
+msgstr "La página de inicio debe estar comprendida entre 1 y 9999."
 
 #: ../report/SendReportDialog.java:256
-msgid "The end page per page must be between 1 and 9999."
-msgstr ""
+msgid "The end page must be between 1 and 9999."
+msgstr "La página final debe estar comprendida entre 1 y 9999."
 
 #: ../report/SendReportDialog.java:267 ../report/SendReportDialog.java:321
 msgid "Fax receive report"
-msgstr ""
+msgstr "Informe de fax recibido"
 
 #: ../report/SendReportDialog.java:271 ../report/SendReportDialog.java:326
 #: ../report/SendReport.java:69
 msgid "Fax send report"
-msgstr ""
+msgstr "Informe de fax enviado"
 
 #: ../report/SendReport.java:197
 #, java-format
 msgid "Fax {0}: "
-msgstr ""
+msgstr "Fax {0}:"
 
 #: ../report/SendReport.java:199
 msgid "Calculating information..."
-msgstr ""
+msgstr "Calculando información..."
 
 #: ../report/SendReport.java:216
 msgid "yes"
-msgstr ""
+msgstr "sí"
 
 #: ../report/SendReport.java:216
 msgid "no"
-msgstr ""
+msgstr "no"
 
 #: ../report/SendReport.java:226
 msgid "Retrieving list of documents..."
-msgstr ""
+msgstr "Obteniendo lista de documentos..."
 
 #: ../report/SendReport.java:234
 msgid "Downloading documents..."
-msgstr ""
+msgstr "Descargando documentos..."
 
 #: ../report/SendReport.java:243
 msgid "Converting documents to PNG..."
-msgstr ""
+msgstr "Convirtiendo documentos a PNG..."
 
 #: ../report/SendReport.java:274
 #, java-format
 msgid "Page {0} of {1}"
-msgstr ""
+msgstr "Página {0} de {1}"
 
 #: ../report/SendReport.java:493
 #, java-format
 msgid "Printing page {0}"
-msgstr ""
+msgstr "Imprimiendo página {0}"
 
 #: ../LogViewWorker.java:79
 #, java-format
@@ -814,12 +821,16 @@ msgid ""
 "It seems the TIFF files of your HylaFAX installation are incompatible with "
 "iText (often the case with capi4hylafax)."
 msgstr ""
+"Parece que los archivos TIFF de su servidor HylaFAX son incompatibles con "
+"iTex (suele ocurrir con capi4hylafax)."
 
 #: ../MainWin.java:504
 msgid ""
 "Please see the following page for more details and how to work around this "
 "problem:"
 msgstr ""
+"Consulte la siguiente página para obtener más detalles y cómo solucionar "
+"este problema:"
 
 #: ../MainWin.java:528
 #, java-format
@@ -1282,7 +1293,7 @@ msgstr "Seleccionar todo"
 
 #: ../MainWin.java:1550
 msgid "Selects all rows"
-msgstr ""
+msgstr "Selecciona todas las filas"
 
 #: ../MainWin.java:1554
 msgid "Auto-size status bar"
@@ -1968,15 +1979,15 @@ msgstr ""
 
 #: ../options/PathAndViewPanel.java:144
 msgid "Use custom fax viewer"
-msgstr ""
+msgstr "Utilizar visor de fax personalizado"
 
 #: ../options/PathAndViewPanel.java:146
 msgid "Use custom PostScript viewer"
-msgstr ""
+msgstr "Utilizar visor PostScript personalizado"
 
 #: ../options/PathAndViewPanel.java:148
 msgid "Use custom PDF viewer"
-msgstr ""
+msgstr "Utilizar visor PDF personalizado"
 
 #: ../options/PathAndViewPanel.java:200
 msgid "View settings"
@@ -4152,7 +4163,7 @@ msgstr "Se ha producido un error al ejecutar la acción deseada:"
 
 #: ../util/DoNotAskAgainDialog.java:73
 msgid "Do not show dialog again"
-msgstr ""
+msgstr "No volver a mostrar el cuadro de diálogo"
 
 #: ../util/ClipboardPopup.java:72
 msgid "Cut"
@@ -4319,11 +4330,11 @@ msgstr "Identidad"
 
 #: ../send/SimplifiedSendDialog.java:402 ../send/SimplifiedSendDialog.java:424
 msgid "Extracting recipients..."
-msgstr ""
+msgstr "Extrayendo destinatarios..."
 
 #: ../send/SimplifiedSendDialog.java:407
 msgid "Error extracting recipients"
-msgstr ""
+msgstr "Error al extraer destinatarios"
 
 #: ../send/SimplifiedSendDialog.java:485
 msgid "File(s) to send:"

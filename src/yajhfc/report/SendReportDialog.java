@@ -253,7 +253,7 @@ public class SendReportDialog<T extends FmtItem> extends JDialog {
 	protected boolean validateInput() {
 	    return  validateNumericInput(textThumbnailsPerPage, 1, 9999, _("The number of thumbnails per page must be between 1 and 9999.")) &&
 	            validateNumericInput(textPageFrom, 1, 9999, _("The start page must be between 1 and 9999.")) &&
-	            validateNumericInput(textPageTo, 1, 9999, _("The end page per page must be between 1 and 9999.")) ;
+	            validateNumericInput(textPageTo, 1, 9999, _("The end page must be between 1 and 9999.")) ;
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
