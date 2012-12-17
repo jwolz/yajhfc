@@ -1,4 +1,4 @@
-LÉAME (README) de YajHFC 0.5.2
+LÉAME (README) de YajHFC 0.5.3
 ==============================
 
 ACERCA DE
@@ -65,6 +65,11 @@ de Java (más avanzado que los programas "Hola mundo") utilizando la IDE Eclipse
 
 CAMBIOS
 -------
+
+0.5.3:
+- Nueva opción para "Imprimir informe de envío/recepción"
+- El lanzador de la aplicación para Windows ahora es un archivo exe en lugar de vbs (basado en launch4j parcheado)
+- Varias mejoras de características menores y corrección de errores
 
 0.5.2:
 - Nuevo complemento para PDF
