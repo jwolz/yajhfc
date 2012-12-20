@@ -51,6 +51,7 @@ import yajhfc.launch.CommandLineOpts;
 import yajhfc.launch.Launcher2;
 import yajhfc.launch.MainApplicationFrame;
 import yajhfc.launch.SendControllerSubmitProtocol;
+import yajhfc.launch.SendWinSubmitProtocol;
 import yajhfc.launch.SubmitProtocol;
 import yajhfc.ui.YajOptionPane;
 import yajhfc.ui.swing.SwingYajOptionPane;
@@ -143,6 +144,15 @@ public class NoGUISender implements MainApplicationFrame {
 
             opts.fillSubmitProtocol(submitProto);
             submitProto.setCloseAfterSubmit(true);
+            
+            if (submitProto instanceof SendWinSubmitProtocol) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        sender.getProgressPanel().showIndeterminateProgress(Utils._("Opening send dialog..."), null);
+                    }
+                });
+            }
+            
             submitProto.submit(true);
 
             System.exit(submitProto.waitReady() ? 0 : 1);
