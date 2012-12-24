@@ -1,4 +1,4 @@
-LEGGIMI per YajHFC 0.5.2
+LEGGIMI per YajHFC 0.5.3
 ========================
 
 INFORMAZIONI
@@ -29,8 +29,8 @@ Requisiti:
 * Opzionale: un visualizzatore PostScript (es. Ghostview), GhostScript
      e tiff2pdf (dal pacchetto libtiff-utils)
 
-Per installare YajHFC basta scaricare il file yajhfc-0_5_1.jar su una cartella del proprio disco.
-Per eseguirlo utilizzare: "java -jar yajhfc-0_5_2.jar"
+Per installare YajHFC basta scaricare il file yajhfc-0_5_3.jar su una cartella del proprio disco.
+Per eseguirlo utilizzare: "java -jar yajhfc-0_5_3.jar"
 (In Windows normalmente è anche possibile cliccare due volte sul file jar.)
 
 LICENZA
@@ -64,6 +64,11 @@ YajHFC originariamente era stato scritto come primo progetto Java più complesso
 
 MODIFICHE
 ---------
+
+0.5.3:
+- Aggiunto il report invio/ricezione
+- Il programma di avvio su Windows è ora un exe invece di vbs (basato su launch4j modificato)
+- Molti miglioranenti minori e correzioni di errori
 
 0.5.2:
 - Aggiunto plugin PDF
