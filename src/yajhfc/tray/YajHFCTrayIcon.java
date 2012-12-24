@@ -43,6 +43,8 @@ import java.awt.PopupMenu;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
@@ -80,7 +82,7 @@ public class YajHFCTrayIcon implements UnreadItemListener<RecvFormat>, WindowLis
     
     ITrayIcon trayIcon = null;
     MainWin mainw;
-    Action showAction;
+    ShowAction showAction;
     boolean connected = false;
     boolean minimizeToTray = false;
     ReadStateFaxListTableModel<RecvFormat> recvModel;
@@ -104,14 +106,7 @@ public class YajHFCTrayIcon implements UnreadItemListener<RecvFormat>, WindowLis
         
         try {
             if (TrayFactory.trayIsAvailable()) {
-                showAction = new ExcDialogAbstractAction() {
-                    @Override
-                    protected void actualActionPerformed(ActionEvent e) {
-                        lastShowTime = System.currentTimeMillis();
-                        YajHFCTrayIcon.this.mainw.bringToFront();
-                    }
-                };
-                showAction.putValue(Action.NAME, Utils._("Restore"));
+                showAction = new ShowAction();
 
                 PopupMenu popup = new PopupMenu();
                 popup.add(createMenuItemForAction(showAction));
@@ -134,7 +129,8 @@ public class YajHFCTrayIcon implements UnreadItemListener<RecvFormat>, WindowLis
                 emptyImage = new BufferedImage(traySize.width, traySize.height, BufferedImage.TRANSLUCENT);
                 
                 trayIcon = manager.installTrayIcon(faxIcon, Utils.AppShortName, popup, showAction);
-
+                trayIcon.addMouseListener(showAction);
+                
                 recvModel.addUnreadItemListener(this);
                 mainw.addWindowListener(this);
 
@@ -293,6 +289,35 @@ public class YajHFCTrayIcon implements UnreadItemListener<RecvFormat>, WindowLis
         }
     }
     
+    final class ShowAction extends ExcDialogAbstractAction implements MouseListener {
+        public ShowAction() {
+            this.putValue(Action.NAME, Utils._("Restore"));
+        }
+        
+        @Override
+        protected void actualActionPerformed(ActionEvent e) {
+            if (System.currentTimeMillis() < lastShowTime+100)
+                return; // Ignore the event if we have recently been displayed
+            
+            lastShowTime = System.currentTimeMillis();
+            YajHFCTrayIcon.this.mainw.bringToFront();
+        }
+
+        public void mouseClicked(MouseEvent e) {
+            if (e.getButton() == MouseEvent.BUTTON1) {
+                actionPerformed(null);
+            }
+        }
+
+        public void mousePressed(MouseEvent e) { }
+
+        public void mouseReleased(MouseEvent e) { }
+
+        public void mouseEntered(MouseEvent e) { }
+
+        public void mouseExited(MouseEvent e) { }
+    }
+
     private static class MenuItemActionPropChangeListener implements PropertyChangeListener {
         private final Action action;
         private final WeakReference<MenuItem> itemRef;
