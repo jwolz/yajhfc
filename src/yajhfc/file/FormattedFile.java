@@ -43,6 +43,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import yajhfc.DesktopManager;
@@ -128,6 +129,10 @@ public class FormattedFile {
     private static final short[] TIFFSignature2 = { 'I', 'I', 42, 0 };
 
     private static final short[] PostScriptSignature = { '%', '!' };
+    
+    private static final short[] PJLSignature = { 27, '%', '-', '1', '2', '3', '4', '5', 'X', '@', 'P', 'J', 'L' };
+    private static final short[] PJLSignature2 = { '@', 'P', 'J', 'L', ' ' };
+    private static final Pattern PJL_EnterLangPattern = Pattern.compile("@PJL\\s+ENTER\\s+LANGUAGE\\s*=\\s*(\\w+)\\s*\r?\n", Pattern.CASE_INSENSITIVE);
 
     private static final short[] PDFSignature = { '%', 'P', 'D', 'F', '-' };
 
@@ -138,8 +143,9 @@ public class FormattedFile {
     private static final String ODTMimeString = "mimetypeapplication/vnd.oasis.opendocument.text";
     private static final short[] ODTSignature;
     static {
+        final char[] odtMime = ODTMimeString.toCharArray();
         // See http://lists.oasis-open.org/archives/office/200505/msg00006.html
-        ODTSignature = new short[30 + ODTMimeString.length()];
+        ODTSignature = new short[30 + odtMime.length];
         ODTSignature[0] = 'P';
         ODTSignature[1] = 'K';
         ODTSignature[2] = 3;
@@ -147,8 +153,8 @@ public class FormattedFile {
         for (int i = 4; i < 30; i++) {
             ODTSignature[i] = -1;
         }
-        for (int i = 0; i < ODTMimeString.length(); i++) {
-            ODTSignature[30+i] = (short)ODTMimeString.charAt(i);
+        for (int i = 0; i < odtMime.length; i++) {
+            ODTSignature[30+i] = (short)odtMime[i];
         }
     }
     
@@ -207,6 +213,24 @@ public class FormattedFile {
                     return FileFormat.FOP;
                 } else {
                     return FileFormat.XML;
+                }
+            }
+            
+            if (matchesSignature(data, PJLSignature) || matchesSignature(data, PJLSignature2)) {
+                // Check the language entered
+                String startOfFile = new String(data, "ISO-8859-1");
+                Matcher m = PJL_EnterLangPattern.matcher(startOfFile);
+                if (m.find()) {
+                    String lang = m.group(1);
+                    if ("POSTSCRIPT".equalsIgnoreCase(lang)) {
+                        return FileFormat.PostScript;
+                    } else if ("PCL".equalsIgnoreCase(lang)) {
+                        return FileFormat.PCL;
+                    } else {
+                        return FileFormat.PJL;
+                    }
+                } else {
+                    return FileFormat.PJL;
                 }
             }
             

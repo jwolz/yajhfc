@@ -58,6 +58,7 @@ public enum FileFormat {
     HTML(Utils._("HTML documents"), "html", "htm"),
     RTF(Utils._("RTF documents"), "rtf"),
     CSV(Utils._("CSV files"), "csv", "txt"),
+    PJL(Utils._("PJL printer job"), "pjl"),
     Any(Utils._("Any files"), "dat", ExampleFileFilter.ANY_EXTENSION),
     Unknown(Utils._("Unknown files"), "");
     
