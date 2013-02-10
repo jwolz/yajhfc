@@ -1,6 +1,6 @@
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005-2011 Jonas Wolz <info@yajhfc.de>
+ * Copyright (C) 2005-2013 Jonas Wolz <info@yajhfc.de>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *  
+ *
  *  Linking YajHFC statically or dynamically with other modules is making 
  *  a combined work based on YajHFC. Thus, the terms and conditions of 
  *  the GNU General Public License cover the whole combination.
@@ -34,71 +34,65 @@
  *  version without this exception; this exception also makes it possible 
  *  to release a modified version which carries forward this exception.
  */
-package yajhfc.printerport;
+package yajhfc.send;
 
-import java.io.IOException;
-import java.io.PushbackInputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import yajhfc.launch.SendWinSubmitProtocol;
-import yajhfc.launch.SubmitProtocol;
+import java.util.Collection;
+import java.util.regex.Pattern;
 
 /**
+ * A stub to support sending mails instead of faxes
+ * 
  * @author jonas
  *
  */
-public class FIFOThread extends Thread {
-    private static final Logger log = Logger.getLogger(FIFOThread.class.getName());
+public abstract class SendControllerMailer {
 
-    protected final String fifoName;
-    protected FIFO fifo;
+    /**
+     * The SendControllerMailer implementation instance or null if no such implementation is available
+     */
+    public static SendControllerMailer INSTANCE = null;
     
-    public FIFOThread(String fifoName) {
-        super("PrinterFIFO-" + fifoName);
-        this.fifoName = fifoName;
+    /**
+     * Determines if an instance is available
+     * @return
+     */
+    public static boolean isAvailable() {
+        return INSTANCE != null;
     }
     
-    public void close() {
-        interrupt();
-        if (fifo != null) {
-            fifo.close();
-            fifo = null;
+    public static Pattern getDefaultMailPattern() {
+        return Pattern.compile("@@\\s*mail(?:recipient)?\\s*:?(.+?)@@", Pattern.CASE_INSENSITIVE);
+    }
+    
+    /**
+     * Mails the documents from the specified SendController as PDF attachment to the specified addresses
+     * @param controller
+     * @param mailAdresses
+     * @return true if the message has been sent successfully
+     */
+    public abstract boolean mailToRecipients(SendController controller, Collection<String> mailAdresses) throws MailException;
+    
+    /**
+     * An exception sending the mail
+     * @author jonas
+     *
+     */
+    public static class MailException extends Exception {
+
+        public MailException() {
         }
-    }
-    
-    
-    
-    @Override
-    public void run() {
-        try {
-            fifo = FIFO.createFIFO(fifoName);
-        } catch (IOException e1) {
-          log.log(Level.SEVERE, "Could not create FIFO, not created printer port", e1);
-          return;
+
+        public MailException(String message) {
+            super(message);
         }
 
-        try {
-            while (!isInterrupted()) {
-                PushbackInputStream inStream = new PushbackInputStream(fifo.openInputStream());
-                int b = inStream.read();
-                if (b != -1) {
-                    inStream.unread(b);
-                    submitFax(inStream);
-                }
-                inStream.close();               
-            }
-        } catch (IOException e) {
-            log.log(Level.WARNING, "Error waiting for a document to be printed:", e);
-        } finally {
-            close();
+        public MailException(Throwable cause) {
+            super(cause);
         }
-    }
 
-    protected void submitFax(PushbackInputStream inStream) throws IOException {
-        SubmitProtocol sp = new SendWinSubmitProtocol();
-        sp.setInputStream(inStream, fifo.toString());
-        sp.submit(true);
-    }
+        public MailException(String message, Throwable cause) {
+            super(message, cause);
+        }
 
+    }
 }

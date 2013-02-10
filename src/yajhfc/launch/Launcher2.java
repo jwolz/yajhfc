@@ -539,7 +539,7 @@ public class Launcher2 {
             
             mainWin.setVisible(setVisible);            
             
-            mainWin.reconnectToServer(loginRunner);
+            mainWin.reconnectToServer(loginRunner, true);
             if (selectedTab >= 0) {
                 mainWin.setSelectedTab(selectedTab);
             }

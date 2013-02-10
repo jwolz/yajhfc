@@ -40,6 +40,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -48,6 +49,7 @@ import yajhfc.PaperSize;
 import yajhfc.Utils;
 import yajhfc.file.FileConverter.ConversionException;
 import yajhfc.options.MultiFileMode;
+import yajhfc.send.HylaTFLItem;
 
 /**
  * @author jonas
@@ -187,6 +189,14 @@ public abstract class MultiFileConverter {
             conv.convertMultipleFiles(files, targetName, paperSize);
             return new FormattedFile(targetName, conv.getTargetFormat());
         }
+    }
+    
+    public static FormattedFile convertTFLItemsToSingleFile(List<HylaTFLItem> files, File targetName, MultiFileConvFormat targetFormat, PaperSize paperSize) throws IOException, UnknownFormatException, ConversionException {
+        List<FormattedFile> ffs = new ArrayList<FormattedFile>(files.size());
+        for (HylaTFLItem item : files) {
+            ffs.add(item.getPreviewFilename());
+        }
+        return convertMultipleFilesToSingleFile(ffs, targetName, targetFormat, paperSize);
     }
 
     public static void main(String[] args) throws IOException, UnknownFormatException, ConversionException {

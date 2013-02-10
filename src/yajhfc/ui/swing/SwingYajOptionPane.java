@@ -82,6 +82,17 @@ public class SwingYajOptionPane extends YajOptionPane {
     public void showExceptionDialog(String message, Exception exc) {
         ExceptionDialog.showExceptionDialog(parent, message, exc);
     }
+    
+    @Override
+    public void showExceptionDialog(String title, String message,
+            Exception exc, int timeout) {
+        ExceptionDialog.showExceptionDialog(parent, title, message, exc, timeout);
+    }
+
+    @Override
+    public void showExceptionDialog(String message, Exception exc, int timeout) {
+        ExceptionDialog.showExceptionDialog(parent, message, exc, timeout);
+    }
 
     /* (non-Javadoc)
      * @see yajhfc.ui.YajOptionPane#showPasswordDialog(java.lang.String, java.lang.String, java.lang.String, boolean)

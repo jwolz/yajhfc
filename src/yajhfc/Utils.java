@@ -57,6 +57,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -107,7 +108,7 @@ public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2012 by Jonas Wolz";
-    public static final String AppVersion = "0.5.3";
+    public static final String AppVersion = "0.5.4beta1";
     public static final String AuthorName = "Jonas Wolz";
     public static final String AuthorEMail = "info@yajhfc.de";
     public static final String HomepageURL = "http://www.yajhfc.de/"; 
@@ -1143,6 +1144,24 @@ public final class Utils {
     
     public static String firstDefined(String s1, String s2) {
         return (s1 != null) ? s1 : s2;
+    }
+    
+    /**
+     * Reads all content from the specified Reader and returns it as String
+     * @param r
+     * @return
+     * @throws IOException 
+     */
+    public static String readFully(Reader r) throws IOException {
+        char[] buf = new char[4000];
+        StringBuilder rv = new StringBuilder();
+        int len;
+        while ((len=r.read(buf)) >= 0) {
+            if (len>0) {
+                rv.append(buf, 0, len);
+            }
+        }
+        return rv.toString();
     }
 }
 

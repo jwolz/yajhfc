@@ -23,7 +23,7 @@ import yajhfc.file.UnknownFormatException;
  *
  */
 public class Fax2ImageConverter {
-    private static String FILENAME_PATTERN = "page%d.png";
+    private static final String FILENAME_PATTERN = "page%d.png";
     
     protected File tempDir = null;
     protected List<File> pngFiles = null;
