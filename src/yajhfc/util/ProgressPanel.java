@@ -178,6 +178,7 @@ public class ProgressPanel extends JLayeredPane implements ProgressWorker.Progre
     }
     
     public void hideProgress() {
+        progressBar.setIndeterminate(false);
         progressPanel.setVisible(false);
         alphaPanel.setVisible(false);
         contentComponent.setEnabled(true);

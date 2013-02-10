@@ -183,6 +183,13 @@ final class SendWin extends JDialog implements SendWinControl  {
         this.setTitle(_("Send Fax"));
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         sendController = new SendController(server, this, pollMode);
+        sendController.addSendControllerListener(new SendControllerListener() {
+            public void sendOperationComplete(boolean success) {
+                if (success) {
+                    dispose();
+                } 
+            } 
+        });
         
         this.setContentPane(getJContentPane());
         

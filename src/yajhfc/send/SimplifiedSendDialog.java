@@ -209,12 +209,16 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         this.setSize(640, initiallyHideFiles ? 400 : 480);
         createAdvancedPane();
         setAdvancedView(Utils.getFaxOptions().sendWinIsAdvanced);
-        
+
         sendController.setProgressMonitor(progressPanel);
         sendController.addSendControllerListener(new SendControllerListener() {
-           public void sendOperationComplete(boolean success) {
-               actSend.setEnabled(true);
-               SimplifiedSendDialog.this.setEnabled(true);
+            public void sendOperationComplete(boolean success) {
+                if (success) {
+                    dispose();
+                } else {
+                    actSend.setEnabled(true);
+                    SimplifiedSendDialog.this.setEnabled(true);
+                }
             } 
         });
         
@@ -370,7 +374,8 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         
         textSubject = new JTextField();
         textSubject.addMouseListener(ClipboardPopup.DEFAULT_POPUP);
-        textSubject.setDocument(new LimitedPlainDocument(60));
+        //XXX: Check if this limitation is necessary...
+        //textSubject.setDocument(new LimitedPlainDocument(60));
         
         textComments = new JTextArea();
         textComments.setWrapStyleWord(true);

@@ -61,11 +61,26 @@ public abstract class YajOptionPane {
     public abstract void showExceptionDialog(String title, String message, Exception exc);
     
     /**
+     * Shows an exception dialog with a timeout
+     * @param title
+     * @param message
+     * @param exc
+     */
+    public abstract void showExceptionDialog(String title, String message, Exception exc, int timeout);
+    
+    /**
      * Shows an exception dialog
      * @param message
      * @param exc
      */
     public abstract void showExceptionDialog(String message, Exception exc);
+    
+    /**
+     * Shows an exception dialog with a timeout
+     * @param message
+     * @param exc
+     */
+    public abstract void showExceptionDialog(String message, Exception exc, int timeout);
     
     /**
      * Shows the password dialog and returns a tuple (username, password)

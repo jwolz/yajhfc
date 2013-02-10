@@ -1316,7 +1316,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 if (connection.getConnectionState() != ConnectionState.DISCONNECTED) {
                     doLogout(false);
                 } else {
-                    reconnectToServer(null);
+                    reconnectToServer(null, true);
                 }
                 Utils.unsetWaitCursor(null);
             }
@@ -2027,7 +2027,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                                if (intermediateAction != null)
                                    intermediateAction.run();
                                if (immediateReconnect) {
-                                   reconnectToServer(null);
+                                   reconnectToServer(null, true);
                                } else {
                                    tablePanel.hideProgress();
                                }
@@ -2040,7 +2040,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 if (intermediateAction != null)
                     intermediateAction.run();
                 if (immediateReconnect) {
-                    reconnectToServer(null);
+                    reconnectToServer(null, true);
                 }
             }
             
@@ -2095,7 +2095,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             tableArchive.setColumnCfgString(myopts.archiveColState);
     }
     
-    public void reconnectToServer(Runnable loginAction) {        
+    public void reconnectToServer(Runnable loginAction, boolean showErrorDialogs) {        
         stopReconnectTimer();
         
         if (currentServer.getOptions().host == null || currentServer.getOptions().host.length() == 0) { // Prompt for server if not set
@@ -2107,7 +2107,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         tablePanel.showIndeterminateProgress(_("Logging in..."));
         
         userInitiatedLogout = false;
-        Utils.executorService.submit(new LoginThread((Boolean)actAdminMode.getValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY), loginAction));
+        Utils.executorService.submit(new LoginThread((Boolean)actAdminMode.getValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY), loginAction, showErrorDialogs));
         
     }
     
@@ -2825,7 +2825,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         protected boolean wantAdmin;
         protected Runnable loginAction;
         protected boolean refreshComplete = false;
-        
+        protected boolean showErrorDialogs = true;
         
         public void run() {  
             try {
@@ -2875,6 +2875,9 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 };
                 
                 connection.addFaxListConnectionListener(new RefreshCompleteHider(tablePanel, connection, refreshCompleteAction));
+                if (connection.getClientManager() != null) {
+                    connection.getClientManager().setShowErrorsUsingGUI(showErrorDialogs);
+                }
                 if (!connection.connect(wantAdmin)) {
                     log.info("Login failed, bailing out");
                     doErrorCleanup();
@@ -2906,6 +2909,9 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                         log.fine("Finished init work after connect!");
                     } 
                 });
+                if (connection.getClientManager() != null) {
+                    connection.getClientManager().setShowErrorsUsingGUI(true);
+                }
             } catch (Exception e) {
                 ExceptionDialog.showExceptionDialog(MainWin.this, _("An error occured connecting to the server:"), e);
                 doErrorCleanup();
@@ -2918,6 +2924,9 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             }
             connection.disconnect();
             sendReady = SendReadyState.NotReady;
+            if (connection.getClientManager() != null) {
+                connection.getClientManager().setShowErrorsUsingGUI(true);
+            }
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     tablePanel.hideProgress();
@@ -2926,9 +2935,10 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
              });
         }
         
-        public LoginThread(boolean wantAdmin, Runnable loginAction) {
+        public LoginThread(boolean wantAdmin, Runnable loginAction, boolean showErrorDialogs) {
             this.wantAdmin = wantAdmin;
             this.loginAction = loginAction;
+            this.showErrorDialogs = showErrorDialogs;
         }
     }    
 
@@ -3065,16 +3075,17 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             reconnectTimer.setInitialDelay(0);
             reconnectTimer.addActionListener(new ActionListener() {
                 private int counter = RECONNECT_DELAY;
-                MessageFormat reconnectFmt = new MessageFormat(_("Disconnected, will try to reconnect in {0} seconds..."));
+                private MessageFormat reconnectFmt = new MessageFormat(_("Disconnected, will try to reconnect in {0} seconds..."));
 
                 public void actionPerformed(ActionEvent e) {
-                    textStatus.setText(reconnectFmt.format(new Object[] {counter}));
                     if (counter > 0) {
+                        textStatus.setText(reconnectFmt.format(new Object[] {counter}));
                         counter--;
                     } else {
+                        textStatus.setText(_("Trying to reconnect..."));
                         reconnectTimer.stop();
                         reconnectTimer = null;
-                        reconnectToServer(null);
+                        reconnectToServer(null, false);
                     }
                 }
             });

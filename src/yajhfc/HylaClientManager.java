@@ -67,6 +67,7 @@ public class HylaClientManager {
     protected static final String modemListPrefix = "$$$";    
     
     private static final Logger log = Logger.getLogger(HylaClientManager.class.getName());
+    private static final int DIALOG_TIMEOUT = 60;
     
     public HylaClientManager(ServerOptions myopts) {
         super();
@@ -224,21 +225,21 @@ public class HylaClientManager {
                     return client;
                 } catch (ServerResponseException sre) {
                     if (showErrorsUsingGUI) {
-                        dialogs.showExceptionDialog(Utils._("The HylaFAX server responded with an error:"), sre);
+                        dialogs.showExceptionDialog(Utils._("The HylaFAX server responded with an error:"), sre, DIALOG_TIMEOUT);
                     } else {
                         log.log(Level.WARNING, "The HylaFAX server responded with an error:", sre);
                     }
                     return null;
                 } catch (UnknownHostException uhe) {
                     if (showErrorsUsingGUI) {
-                        dialogs.showExceptionDialog(Utils._("The server's host name was not found:"), uhe);
+                        dialogs.showExceptionDialog(Utils._("The server's host name was not found:"), uhe, DIALOG_TIMEOUT);
                     } else {
                         log.log(Level.WARNING, "The server's host name was not found:", uhe);
                     }
                     return null;
                 } catch (Exception e) {
                     if (showErrorsUsingGUI) {
-                        dialogs.showExceptionDialog(Utils._("An error occured connecting to the server:"), e);
+                        dialogs.showExceptionDialog(Utils._("An error occured connecting to the server:"), e, DIALOG_TIMEOUT);
                     } else {
                         log.log(Level.WARNING, "An error occured connecting to the server:", e);
                     }

@@ -49,7 +49,7 @@ import yajhfc.launch.SubmitProtocol;
 
 public class ListenThread extends Thread {
     private static final Logger log = Logger.getLogger(ListenThread.class.getName());
-    private final ServerSocket printerSock;
+    protected final ServerSocket printerSock;
 
     public ListenThread(String listenAddress, int listenPort) throws UnknownHostException, IOException {
         super("PrinterPort-" + listenAddress);
@@ -72,9 +72,7 @@ public class ListenThread extends Thread {
             while (!isInterrupted()) {
                 Socket sock = printerSock.accept();
                 try {
-                    SubmitProtocol sp = new SendWinSubmitProtocol();
-                    sp.setInputStream(sock.getInputStream(), "[" + printerSock.getInetAddress().toString() + ':' + printerSock.getLocalPort() + ']');
-                    sp.submit(true);
+                    submitFax(sock);
                     sock.close();
                 } catch (Exception e) {
                     log.log(Level.WARNING, "Error accepting a connection:", e);
@@ -85,5 +83,15 @@ public class ListenThread extends Thread {
         } finally {
             close();
         }
+    }
+
+    protected void submitFax(Socket sock) throws IOException {
+        SubmitProtocol sp = new SendWinSubmitProtocol();
+        sp.setInputStream(sock.getInputStream(), getPrinterSockText());
+        sp.submit(true);
+    }
+
+    protected String getPrinterSockText() {
+        return "[" + printerSock.getInetAddress().toString() + ':' + printerSock.getLocalPort() + ']';
     }
 }

@@ -64,6 +64,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 
 import yajhfc.Utils;
@@ -83,6 +84,8 @@ public class ExceptionDialog extends JDialog implements ActionListener {
     private Component strutStacktrace;
     private boolean detailState = false;
     private String fullMessage;
+    private int timeout = 0;
+    private Timer timeoutTimer = null;
     
     private static final Logger log = Logger.getLogger(ExceptionDialog.class.getName());
     
@@ -225,8 +228,10 @@ public class ExceptionDialog extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         if (source == btnOK) {
+            setTimeout(-1);
             dispose();
         } else if (source == btnDetails) {
+            setTimeout(-1);
             detailState = !detailState;
             if (detailState) {
                 contentPane.add(strutStacktrace, "1, 4, 3, 4");
@@ -239,11 +244,40 @@ public class ExceptionDialog extends JDialog implements ActionListener {
             this.setResizable(detailState);
             this.pack();
         } else if (source == btnCopy) {
+            setTimeout(-1);
             StringSelection contents = new StringSelection(fullMessage);
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(contents, contents);
+        } else if (source == timeoutTimer) {
+            setTimeout(timeout-1);
+            if (timeout <= 0) {
+                dispose();
+            }
         }
     }
     
+    /**
+     * Sets the (remaining) timeout to close this dialog.
+     * A value <= 0 will disable the timeout without closing the dialog.
+     * @param timeout
+     */
+    public void setTimeout(int timeout) {
+        if (this.timeout != timeout) {
+            this.timeout = timeout;
+            if (timeout > 0) {
+                btnOK.setText(Utils._("OK") + " (" + timeout + ")");
+                if (timeoutTimer == null) {
+                    timeoutTimer = new Timer(1000, this);
+                    timeoutTimer.start();
+                }
+            } else {
+                btnOK.setText(Utils._("OK"));
+                if (timeoutTimer != null) {
+                    timeoutTimer.stop();
+                    timeoutTimer = null;
+                }
+            }
+        }
+    }
  
     public ExceptionDialog(Dialog owner, String title, String message, Exception exc) {
         super(owner, title, true);
@@ -258,10 +292,18 @@ public class ExceptionDialog extends JDialog implements ActionListener {
     }
 
     public static void showExceptionDialog(Component owner, String message, Exception exc) {
-        showExceptionDialog(owner, Utils._("Error"), message, exc);
+        showExceptionDialog(owner, Utils._("Error"), message, exc, -1);
+    }
+    
+    public static void showExceptionDialog(Component owner, String message, Exception exc, int timeout) {
+        showExceptionDialog(owner, Utils._("Error"), message, exc, timeout);
     }
     
     public static void showExceptionDialog(Component owner, String title, String message, Exception exc) {
+        showExceptionDialog(owner, title, message, exc, -1);
+    }
+    
+    public static void showExceptionDialog(Component owner, String title, String message, Exception exc, int timeout) {
         if (SwingUtilities.isEventDispatchThread()) {
             ExceptionDialog eDlg;
             if (!(owner instanceof Window)) {
@@ -273,7 +315,6 @@ public class ExceptionDialog extends JDialog implements ActionListener {
                 }
             }
 
-
             if (owner instanceof Dialog) {
                 eDlg = new ExceptionDialog((Dialog)owner, title, message, exc);
             } else if (owner instanceof Frame) {
@@ -282,10 +323,13 @@ public class ExceptionDialog extends JDialog implements ActionListener {
                 JOptionPane.showMessageDialog(owner, message + "\n" + exc.getMessage(), Utils._("Error"), JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            if (timeout > 0) {
+                eDlg.setTimeout(timeout);
+            }
             eDlg.setVisible(true);
         } else {
             try {
-                SwingUtilities.invokeAndWait(new DisplayRunnable(owner, title, message, exc));
+                SwingUtilities.invokeAndWait(new DisplayRunnable(owner, title, message, exc, timeout));
             } catch (InterruptedException e) {
                 log.log(Level.WARNING, "Error showing exception dialog.", e);
             } catch (InvocationTargetException e) {
@@ -322,16 +366,18 @@ public class ExceptionDialog extends JDialog implements ActionListener {
         private Exception ex;
         private String msg;
         private String title;
+        private int timeout;
         
-        public DisplayRunnable(Component parent, String title, String msg, Exception ex) {
+        public DisplayRunnable(Component parent, String title, String msg, Exception ex, int timeout) {
             this.parent = parent;
             this.ex = ex;
             this.msg = msg;
             this.title = title;
+            this.timeout = timeout;
         }
         
         public void run() {
-            showExceptionDialog(parent, title, msg, ex);
+            showExceptionDialog(parent, title, msg, ex, timeout);
         }
     }
 }

@@ -458,11 +458,11 @@ public class SendController implements FaxSender {
         @Override
         protected void done() {
             fireSendOperationComplete(success);
-            if (success) {
-                if (SendController.this.dialogUI.getParent() != null) {
-                    SendController.this.dialogUI.getParent().dispose();
-                }
-            }
+//            if (success) {
+//                if (SendController.this.dialogUI.getParent() != null) {
+//                    SendController.this.dialogUI.getParent().dispose();
+//                }
+//            }
         }
         
         public SendWorker() {

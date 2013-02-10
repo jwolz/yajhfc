@@ -59,23 +59,31 @@ public class FaxnumberExtractor {
 
     private static final Logger log = Logger.getLogger(FaxnumberExtractor.class.getName());
     
-    protected final Pattern faxnumberPattern;
+    protected final Pattern[] faxnumberPatterns;
     protected final HylaToTextConverter converter;
        
     public FaxnumberExtractor(HylaToTextConverter converter,
-            Pattern faxnumberPattern) {
+            Pattern... faxnumberPatterns) {
         super();
         this.converter = converter;
-        this.faxnumberPattern = faxnumberPattern;
+        this.faxnumberPatterns = faxnumberPatterns;
     }
 
     public FaxnumberExtractor(HylaToTextConverter converter) {
         this(converter,
-                Pattern.compile("@@\\s*(?:recipient|fax)\\s*:?(.+?)@@", Pattern.CASE_INSENSITIVE));
+                getDefaultPattern());
+    }
+    
+    public FaxnumberExtractor(Pattern... faxnumberPatterns) {
+        this(HylaToTextConverter.findDefault(), faxnumberPatterns);
     }
 
     public FaxnumberExtractor() {
         this(HylaToTextConverter.findDefault());
+    }
+    
+    public static Pattern getDefaultPattern() {
+        return Pattern.compile("@@\\s*(?:recipient|fax)\\s*:?(.+?)@@", Pattern.CASE_INSENSITIVE);
     }
     
     /**
@@ -86,7 +94,7 @@ public class FaxnumberExtractor {
      * @throws IOException
      * @throws ConversionException
      */
-    public int extractFromMultipleFileNames(Collection<String> input, Collection<String> listToAddTo) throws IOException, ConversionException {
+    public int extractFromMultipleFileNames(Collection<String> input, Collection<String>... listsToAddTo) throws IOException, ConversionException {
         if (input.size() == 0)
             return 0;
         
@@ -94,7 +102,7 @@ public class FaxnumberExtractor {
         for (String f : input) {
             formattedInput.add(new FormattedFile(f));
         }
-        return extractFromMultipleFiles(formattedInput, listToAddTo);
+        return extractFromMultipleFiles(formattedInput, listsToAddTo);
     }
 
     /**
@@ -105,7 +113,7 @@ public class FaxnumberExtractor {
      * @throws IOException
      * @throws ConversionException
      */
-    public int extractFromMultipleDocuments(Collection<HylaTFLItem> input, Collection<String> listToAddTo) throws IOException, ConversionException {
+    public int extractFromMultipleDocuments(Collection<HylaTFLItem> input, Collection<String>... listsToAddTo) throws IOException, ConversionException {
         if (input.size() == 0)
             return 0;
         
@@ -113,7 +121,7 @@ public class FaxnumberExtractor {
         for (HylaTFLItem f : input) {
             formattedInput.add(f.getPreviewFilename());
         }
-        return extractFromMultipleFiles(formattedInput, listToAddTo);
+        return extractFromMultipleFiles(formattedInput, listsToAddTo);
     }
     
     /**
@@ -124,27 +132,35 @@ public class FaxnumberExtractor {
      * @throws IOException
      * @throws ConversionException
      */
-    public int extractFromMultipleFiles(List<FormattedFile> input, Collection<String> listToAddTo) throws IOException, ConversionException {
+    public int extractFromMultipleFiles(List<FormattedFile> input, Collection<String>... listsToAddTo) throws IOException, ConversionException {
         if (input.size() == 0)
             return 0;
+        if (listsToAddTo.length != faxnumberPatterns.length) {
+            throw new IllegalArgumentException("The number of output lists must match the number of patterns!");
+        }
         
         CharSequence[] texts = converter.convertFilesToText(input);
         
-        Collection<String> tempColl;
-        // Make sure we dedup the numbers
-        if (listToAddTo instanceof Set) {
-            tempColl = listToAddTo;
-        } else {
-            tempColl = new TreeSet<String>();
-        }
-        
         int n = 0;
-        for (CharSequence text : texts) {
-            n += getMatchesInText(text, 1, tempColl);
-        }
-        
-        if (tempColl != listToAddTo) {
-            listToAddTo.addAll(tempColl);
+        for (int i=0; i<listsToAddTo.length; i++) {
+            Collection<String> listToAddTo = listsToAddTo[i];
+            Pattern pattern = faxnumberPatterns[i];
+            
+            Collection<String> tempColl;
+            // Make sure we dedup the numbers
+            if (listToAddTo instanceof Set) {
+                tempColl = listToAddTo;
+            } else {
+                tempColl = new TreeSet<String>();
+            }
+
+            for (CharSequence text : texts) {
+                n += getMatchesInText(text, pattern, 1, tempColl);
+            }
+
+            if (tempColl != listToAddTo) {
+                listToAddTo.addAll(tempColl);
+            }
         }
         return n;
     }
@@ -157,12 +173,12 @@ public class FaxnumberExtractor {
      * @return the number of matches found
      * @throws IOException
      */
-    public int getMatchesInText(CharSequence text, int captureGroup, Collection<String> listToAddTo) throws IOException {
+    public int getMatchesInText(CharSequence text, Pattern pattern, int captureGroup, Collection<String> listToAddTo) throws IOException {
         if (Utils.debugMode) {
             log.finest("input text is:\n" + text);
         }
         //System.out.println(text);
-        Matcher m = faxnumberPattern.matcher(text);
+        Matcher m = pattern.matcher(text);
         int n = 0;
         
         while (m.find()) {
