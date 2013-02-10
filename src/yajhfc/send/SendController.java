@@ -282,9 +282,9 @@ public class SendController implements FaxSender {
         
     }
     class SendWorker extends ProgressWorker {
-        private final Logger log = Logger.getLogger(SendWorker.class.getName());    
-        private final SendFileManager fileManager;
-        private boolean success = false;
+        final Logger log = Logger.getLogger(SendWorker.class.getName());    
+        final SendFileManager fileManager;
+        boolean success = false;
         
         private void setIfNotEmpty(Job j, String prop, String val) {
             try {
@@ -446,7 +446,6 @@ public class SendController implements FaxSender {
                 }
 
                 updateNote(Utils._("Cleaning up"));
-                fileManager.cleanup();
                 success = true;
             } catch (Exception e1) {
                 //JOptionPane.showMessageDialog(ButtonSend, _("An error occured while submitting the fax: ") + "\n" + e1.getLocalizedMessage(), _("Error"), JOptionPane.ERROR_MESSAGE);
@@ -458,6 +457,11 @@ public class SendController implements FaxSender {
         @Override
         protected void done() {
             fireSendOperationComplete(success);
+            Utils.executorService.submit(new Runnable() {
+               public void run() {
+                   fileManager.cleanup();
+                } 
+            });
 //            if (success) {
 //                if (SendController.this.dialogUI.getParent() != null) {
 //                    SendController.this.dialogUI.getParent().dispose();
