@@ -36,8 +36,12 @@
  */
 package yajhfc.send;
 
+import java.io.File;
+import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.regex.Pattern;
+
+import yajhfc.SenderIdentity;
 
 /**
  * A stub to support sending mails instead of faxes
@@ -70,7 +74,29 @@ public abstract class SendControllerMailer {
      * @param mailAdresses
      * @return true if the message has been sent successfully
      */
+    public abstract boolean mailToRecipients(String subject, String body, Collection<String> mailAdresses, File attachment, String attachmentName, SenderIdentity fromIdentity) throws MailException;
+    
+    /**
+     * Mails the documents from the specified SendController as PDF attachment to the specified addresses
+     * @param controller
+     * @param mailAdresses
+     * @return true if the message has been sent successfully
+     */
+    public abstract boolean mailToRecipients(SendController controller, String subject, String body, Collection<String> mailAdresses) throws MailException;
+    
+    /**
+     * Mails the documents from the specified SendController as PDF attachment to the specified addresses
+     * @param controller
+     * @param mailAdresses
+     * @return true if the message has been sent successfully
+     */
     public abstract boolean mailToRecipients(SendController controller, Collection<String> mailAdresses) throws MailException;
+    
+    /**
+     * Returns a message format to automatically generate an attachment PDF file name from the send time.
+     * @return
+     */
+    public abstract MessageFormat getAttachmentNameFormat();
     
     /**
      * An exception sending the mail
