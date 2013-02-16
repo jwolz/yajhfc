@@ -40,12 +40,17 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 
+import javax.swing.JOptionPane;
+
+import yajhfc.Utils;
+import yajhfc.file.FileConverter.ConversionException;
 import yajhfc.file.MultiFileConvFormat;
 import yajhfc.file.MultiFileConverter;
 import yajhfc.file.UnknownFormatException;
-import yajhfc.file.FileConverter.ConversionException;
+import yajhfc.shutdown.ShutdownManager;
 import yajhfc.ui.YajOptionPane;
 
 /**
@@ -57,19 +62,22 @@ public class SendFaxArchiver implements SendControllerListener {
     protected final YajOptionPane dialogs;
     protected final String errorDir;
     protected final String successDir;
+    protected final String errorMail;
+
     /**
      * An Object we can call toString() on to get a log
      */
     protected final Object logger;
-    
-    public SendFaxArchiver(SendController sendController, YajOptionPane dialogs, String successDir, String errorDir, Object logger) {
+
+    public SendFaxArchiver(SendController sendController, YajOptionPane dialogs, String successDir, String errorDir, String errorMail, Object logger) {
         super();
         this.sendController = sendController;
         this.dialogs = dialogs;
         this.successDir = successDir;
         this.errorDir = errorDir;
         this.logger = logger;
-        
+        this.errorMail = errorMail;
+
         sendController.addSendControllerListener(this);
     }
 
@@ -81,7 +89,7 @@ public class SendFaxArchiver implements SendControllerListener {
             outFile = new File(outDir, baseName + "-" + (++num) + ".pdf");
         }
         MultiFileConverter.convertTFLItemsToSingleFile(sendController.getFiles(), outFile, MultiFileConvFormat.PDF, sendController.getPaperSize());
-        
+
         // Write the log
         if (logText != null && logText.length() > 0) {
             String logName = outFile.getName();
@@ -94,10 +102,10 @@ public class SendFaxArchiver implements SendControllerListener {
             fw.write(logText);
             fw.close();
         }
-        
+
         return outFile;
     }
-    
+
     public void saveFaxAsSuccess() {
         if (successDir != null) {
             try {
@@ -107,17 +115,50 @@ public class SendFaxArchiver implements SendControllerListener {
             } 
         }
     }
-    
+
     public void saveFaxAsError() {
+        File pdf = null;
         if (errorDir != null) {
             try {
-                saveFaxAsPDF(sendController, (logger!=null) ? logger.toString() : null, errorDir);
+                pdf = saveFaxAsPDF(sendController, (logger!=null) ? logger.toString() : null, errorDir);
             } catch (Exception e) {
                 dialogs.showExceptionDialog("Error saving fax as PDF", e);
             } 
         }
+        if (errorMail != null) {
+            if (!SendControllerMailer.isAvailable()) {
+                dialogs.showMessageDialog("Mail plugin not installed, cannot send error mail.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                try {
+                    boolean tempPDF = (pdf == null);
+                    if (tempPDF) {
+                        pdf = File.createTempFile("attachment", ".pdf");
+                        ShutdownManager.deleteOnExit(pdf);
+                        MultiFileConverter.convertTFLItemsToSingleFile(sendController.getFiles(), pdf, MultiFileConvFormat.PDF, sendController.getPaperSize());
+                    }
+                    String body = Utils._("The attached fax could not be submitted successfully to HylaFAX.");
+                    if (logger != null) {
+                        body = body + "\n\n" + 
+                                Utils._("Send log:") + "\n" +
+                                "-------------------------------------------------\n" + 
+                                logger;
+                    }
+                    
+                    SendControllerMailer.INSTANCE.mailToRecipients("YajHFC: " + Utils._("Fax failed to send"), body,
+                            Collections.singletonList(errorMail), pdf, 
+                            SendControllerMailer.INSTANCE.getAttachmentNameFormat().format(new Object[] { new Date() }),
+                            sendController.getIdentity());
+
+                    if (tempPDF)
+                        pdf.delete();
+                } catch (Exception e) {
+                    dialogs.showExceptionDialog("Error sending mail for failed fax", e);
+                }     
+            }
+        }
     }
-    
+
+
 
     /* (non-Javadoc)
      * @see yajhfc.send.SendControllerListener#sendOperationComplete(boolean)

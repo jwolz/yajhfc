@@ -43,6 +43,8 @@ import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
 /**
+ * A combo box model wrapping a list model.
+ * 
  * @author jonas
  *
  */

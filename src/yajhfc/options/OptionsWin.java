@@ -554,4 +554,8 @@ public class OptionsWin extends JDialog {
             }
         }
     }
+    
+    public PanelTreeNode getRootNode() {
+        return rootNode;
+    }
 }
