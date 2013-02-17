@@ -81,8 +81,12 @@ public class SendFaxArchiver implements SendControllerListener {
         sendController.addSendControllerListener(this);
     }
 
-    public static File saveFaxAsPDF(SendController sendController, String logText, String outDir) throws IOException, UnknownFormatException, ConversionException {
-        String baseName = new SimpleDateFormat("yyyy-MM-dd_HHmmss").format(new Date());
+    protected String getPDFFileName() {
+        return new SimpleDateFormat("yyyy-MM-dd_HHmmss").format(new Date());
+    }
+    
+    public File saveFaxAsPDF(String logText, String outDir) throws IOException, UnknownFormatException, ConversionException {
+        String baseName = getPDFFileName();
         File outFile = new File(outDir, baseName + ".pdf");
         int num = 0;
         while (!outFile.createNewFile()) {
@@ -109,7 +113,7 @@ public class SendFaxArchiver implements SendControllerListener {
     public void saveFaxAsSuccess() {
         if (successDir != null) {
             try {
-                saveFaxAsPDF(sendController, (logger!=null) ? logger.toString() : null, successDir);
+                saveFaxAsPDF((logger!=null) ? logger.toString() : null, successDir);
             } catch (Exception e) {
                 dialogs.showExceptionDialog("Error saving fax as PDF", e);
             } 
@@ -120,7 +124,7 @@ public class SendFaxArchiver implements SendControllerListener {
         File pdf = null;
         if (errorDir != null) {
             try {
-                pdf = saveFaxAsPDF(sendController, (logger!=null) ? logger.toString() : null, errorDir);
+                pdf = saveFaxAsPDF((logger!=null) ? logger.toString() : null, errorDir);
             } catch (Exception e) {
                 dialogs.showExceptionDialog("Error saving fax as PDF", e);
             } 
@@ -146,7 +150,7 @@ public class SendFaxArchiver implements SendControllerListener {
                     
                     SendControllerMailer.INSTANCE.mailToRecipients("YajHFC: " + Utils._("Fax failed to send"), body,
                             Collections.singletonList(errorMail), pdf, 
-                            SendControllerMailer.INSTANCE.getAttachmentNameFormat().format(new Object[] { new Date() }),
+                            getPDFFileName(),
                             sendController.getIdentity());
 
                     if (tempPDF)

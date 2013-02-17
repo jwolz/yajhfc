@@ -182,7 +182,7 @@ public class YajLanguage extends MsgBundle {
     }
     
     public YajLanguage(Locale locale) {
-        super("yajhfc.i18n.Messages");
+        super("yajhfc.i18n.Messages", YajLanguage.class.getClassLoader());
         this.locale = locale;
     }
 }

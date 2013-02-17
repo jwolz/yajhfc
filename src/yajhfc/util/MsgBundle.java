@@ -34,6 +34,7 @@ public class MsgBundle {
     private static final Logger log = Logger.getLogger(MsgBundle.class.getName());
     
     protected final String resourceBundleName;
+    protected final ClassLoader classLoader;
     protected ResourceBundle msgs = null;
     protected boolean triedMsgLoad = false;
     
@@ -107,11 +108,12 @@ public class MsgBundle {
      * @return
      */
     protected ClassLoader getClassLoader() {
-        return getClass().getClassLoader();
+        return classLoader;
     }
     
-    public MsgBundle(String resourceBundleName) {
+    public MsgBundle(String resourceBundleName, ClassLoader classLoader) {
         super();
         this.resourceBundleName = resourceBundleName;
+        this.classLoader = classLoader;
     }
 }
