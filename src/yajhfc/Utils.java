@@ -76,7 +76,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
-import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -150,8 +149,6 @@ public final class Utils {
     static final Logger log = Logger.getLogger(Utils.class.getName());
     
     private static FaxOptions theoptions = null;
-    private static ResourceBundle msgs = null;
-    private static boolean triedMsgLoad = false;
     private static File configDir = null;
     
     private static File applicationDir;
@@ -253,6 +250,7 @@ public final class Utils {
             String locale = prop.getProperty("locale", "auto");
             yajhfcLang = YajLanguage.languageFromLangCode(locale);
             Locale.setDefault(yajhfcLang.getLocale());
+            UIManager.getDefaults().addResourceBundle("yajhfc.i18n.UIDefaults");
         }
         return yajhfcLang;
     }
@@ -439,7 +437,7 @@ public final class Utils {
      * @return
      */
     public static String _(String key) {
-        return _(key, key);
+        return getYajHFCLanguage()._(key, key);
     }
     
     /**
@@ -450,26 +448,9 @@ public final class Utils {
      * @return
      */
     public static String _(String key, String defaultValue) {
-        if (msgs == null)
-            if (triedMsgLoad)
-                return defaultValue;
-            else {
-                loadMessages();
-                return _(key, defaultValue);
-            }                
-        else
-            try {
-                return msgs.getString(key);
-            } catch (Exception e) {
-                return defaultValue;
-            }
+        return getYajHFCLanguage()._(key, defaultValue);
     }
-    
-    private static void loadMessages() {
-        triedMsgLoad = true;
-        msgs = getYajHFCLanguage().getMessagesResourceBundle();
-        UIManager.getDefaults().addResourceBundle("yajhfc.i18n.UIDefaults");
-    }
+
     
     public static void initializeUIProperties() {
         if (PlatformInfo.IS_MACOSX) {

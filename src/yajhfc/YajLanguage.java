@@ -40,11 +40,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class YajLanguage  {
+import yajhfc.util.MsgBundle;
+
+public class YajLanguage extends MsgBundle {
 //    SYSTEM_DEFAULT(null),
 //    CHINESE(Locale.CHINESE),
 //    ENGLISH(Locale.ENGLISH),
@@ -127,47 +127,12 @@ public class YajLanguage  {
     }
     
     /**
-     * Returns the class loader to load resources for this language
-     * @return
-     */
-    protected ClassLoader getClassLoader() {
-        return getClass().getClassLoader();
-    }
-    
-    /**
      * Loads the specified resource
      * @param path
      * @return
      */
     protected URL getResource(String path) {
         return getClass().getResource(path);
-    }
-    
-    
-    /**
-     * Returns the messages resource bundle for this language
-     * @return the resource bundle or null
-     */
-    public ResourceBundle getMessagesResourceBundle() {
-        // Use special handling for english locale as we don't use
-        // a ResourceBundle for it
-        final Locale myLocale = getLocale();
-        if (myLocale.getLanguage().equals(Locale.ENGLISH.getLanguage())) {
-            if (Utils.debugMode) {
-                log.fine("Not loading messages for language " + myLocale);
-            }
-            return null;
-        } else {
-            try {
-                if (Utils.debugMode) {
-                    log.fine("Trying to load messages for language " + myLocale);
-                }
-                return ResourceBundle.getBundle("yajhfc.i18n.Messages", myLocale, getClassLoader());
-            } catch (Exception e) {
-                log.log(Level.WARNING, "Error loading messages for " + myLocale, e);
-                return null;
-            }
-        }
     }
     
     
@@ -217,6 +182,7 @@ public class YajLanguage  {
     }
     
     public YajLanguage(Locale locale) {
+        super("yajhfc.i18n.Messages");
         this.locale = locale;
     }
 }
