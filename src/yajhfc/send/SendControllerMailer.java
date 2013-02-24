@@ -54,7 +54,7 @@ public abstract class SendControllerMailer {
     /**
      * The SendControllerMailer implementation instance or null if no such implementation is available
      */
-    public static SendControllerMailer INSTANCE = null;
+    protected static SendControllerMailer INSTANCE = null;
     
     /**
      * Determines if an instance is available
@@ -63,8 +63,12 @@ public abstract class SendControllerMailer {
     public static boolean isAvailable() {
         return INSTANCE != null;
     }
-    
-    public static Pattern getDefaultMailPattern() {
+
+	public static SendControllerMailer getInstance() {
+		return INSTANCE;
+	}
+
+	public static Pattern getDefaultMailPattern() {
         return Pattern.compile("@@\\s*mail(?:recipient)?\\s*:?(.+?)@@", Pattern.CASE_INSENSITIVE);
     }
     

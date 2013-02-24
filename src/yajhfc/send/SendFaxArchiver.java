@@ -42,6 +42,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
@@ -58,6 +59,8 @@ import yajhfc.ui.YajOptionPane;
  *
  */
 public class SendFaxArchiver implements SendControllerListener {
+	private static final Logger log = Logger.getLogger(SendFaxArchiver.class.getName());
+	
     protected final SendController sendController;
     protected final YajOptionPane dialogs;
     protected final String errorDir;
@@ -92,6 +95,7 @@ public class SendFaxArchiver implements SendControllerListener {
         while (!outFile.createNewFile()) {
             outFile = new File(outDir, baseName + "-" + (++num) + ".pdf");
         }
+        log.fine("Saving fax as " + outFile);
         MultiFileConverter.convertTFLItemsToSingleFile(sendController.getFiles(), outFile, MultiFileConvFormat.PDF, sendController.getPaperSize());
 
         // Write the log
@@ -111,6 +115,7 @@ public class SendFaxArchiver implements SendControllerListener {
     }
 
     public void saveFaxAsSuccess() {
+    	log.info("Fax has been sent successfully...");
         if (successDir != null) {
             try {
                 saveFaxAsPDF((logger!=null) ? logger.toString() : null, successDir);
@@ -121,6 +126,7 @@ public class SendFaxArchiver implements SendControllerListener {
     }
 
     public void saveFaxAsError() {
+    	log.info("Fax has not been sent successfully...");
         File pdf = null;
         if (errorDir != null) {
             try {
@@ -148,7 +154,7 @@ public class SendFaxArchiver implements SendControllerListener {
                                 logger;
                     }
                     
-                    SendControllerMailer.INSTANCE.mailToRecipients("YajHFC: " + Utils._("Fax failed to send"), body,
+                    SendControllerMailer.getInstance().mailToRecipients("YajHFC: " + Utils._("Fax failed to send"), body,
                             Collections.singletonList(errorMail), pdf, 
                             getPDFFileName(),
                             sendController.getIdentity());
