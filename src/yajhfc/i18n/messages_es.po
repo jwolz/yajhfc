@@ -3,19 +3,20 @@
 # This file is distributed under the same license as YajHFC package.
 # Copyright (C) Elsa Andrés.
 # Elsa Andrés <e.andres@ist-sci.com>, 2008, 2009, 2010, 2011, 2012.
-# 
-# 
+#
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: messages_es 0.5.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-16 14:12+0100\n"
+"POT-Creation-Date: 2013-02-17 13:18+0100\n"
 "PO-Revision-Date: 2012-12-17 11:23+0100\n"
 "Last-Translator: Elsa Andrés <e.andres@ist-sci.com>\n"
 "Language-Team: Spanish <yajhfc-translators@lists.berlios.de>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit"
+"Content-Transfer-Encoding: 8bit\n"
 
 #: ../FaxOptions.java:647 ../FaxOptions.java:655 ../FaxOptions.java:663
 #: ../FaxOptions.java:675 ../options/ServerSettingsPanel.java:161
@@ -55,9 +56,11 @@ msgstr "Traducción en $LANGUAGE$ por {0}"
 #: ../phonebook/csv/CSVDialog.java:151
 #: ../phonebook/ui/SortOrderDialog.java:108
 #: ../phonebook/ui/RuleParserDialog.java:126
-#: ../phonebook/jdbc/ConnectionDialog.java:215 ../util/ExceptionDialog.java:98
-#: ../util/ToolbarEditorDialog.java:155 ../util/PasswordDialog.java:89
-#: ../util/MapEditorDialog.java:109 ../util/AcceleratorKeyDialog.java:145
+#: ../phonebook/jdbc/ConnectionDialog.java:215
+#: ../util/ExceptionDialog.java:101 ../util/ExceptionDialog.java:267
+#: ../util/ExceptionDialog.java:273 ../util/ToolbarEditorDialog.java:155
+#: ../util/PasswordDialog.java:89 ../util/MapEditorDialog.java:109
+#: ../util/AcceleratorKeyDialog.java:145
 msgid "OK"
 msgstr "Aceptar"
 
@@ -230,27 +233,27 @@ msgstr "No se puede encontrar el comando mkfifo introducido."
 msgid "Any modem"
 msgstr "Cualquier módem"
 
-#: ../tray/YajHFCTrayIcon.java:114
-msgid "Restore"
-msgstr "Restablecer"
-
-#: ../tray/YajHFCTrayIcon.java:171
+#: ../tray/YajHFCTrayIcon.java:167
 #, java-format
 msgid "{0} fax(es) received ({1} unread fax(es)):"
 msgstr "{0} fax(es) recibido(s) ({1} fax(es) sin leer):"
 
-#: ../tray/YajHFCTrayIcon.java:180
+#: ../tray/YajHFCTrayIcon.java:176
 msgid "New fax received"
 msgstr "Nuevo fax recibido"
 
-#: ../tray/YajHFCTrayIcon.java:203
+#: ../tray/YajHFCTrayIcon.java:199
 #, java-format
 msgid "{0} unread fax(es)"
 msgstr "{0} fax(es) sin leer"
 
-#: ../tray/YajHFCTrayIcon.java:206
+#: ../tray/YajHFCTrayIcon.java:202
 msgid "Disconnected"
 msgstr "Desconectado"
+
+#: ../tray/YajHFCTrayIcon.java:294
+msgid "Restore"
+msgstr "Restablecer"
 
 #: ../tray/TrayFactory.java:131
 msgid ""
@@ -260,9 +263,13 @@ msgid ""
 "again).\n"
 "If you experience such problems, please disable the tray icon (Options-"
 ">General->Show tray icon)."
-msgstr "Parece que está utilizando GNOME 3:\n"
-"Este entorno podría tener problemas cuando el icono de la bandeja del sistema se encuentra activado (p. ej., es posible que no pueda restaurar la ventana principal después de minimizar YajHFC).\n"
-"Si experimenta este tipo de problemas, desactive el icono de la bandeja de entrada (Opciones->General->Mostrar icono en la bandeja del sistema)."
+msgstr ""
+"Parece que está utilizando GNOME 3:\n"
+"Este entorno podría tener problemas cuando el icono de la bandeja del "
+"sistema se encuentra activado (p. ej., es posible que no pueda restaurar la "
+"ventana principal después de minimizar YajHFC).\n"
+"Si experimenta este tipo de problemas, desactive el icono de la bandeja de "
+"entrada (Opciones->General->Mostrar icono en la bandeja del sistema)."
 
 #: ../print/PhonebooksPrinter.java:103
 #: ../phonebook/ui/NewPhoneBookWin.java:1068
@@ -432,15 +439,16 @@ msgstr "Información para imprimir en el informe"
 
 #: ../report/SendReportDialog.java:254
 msgid "The number of thumbnails per page must be between 1 and 9999."
-msgstr "El número de miniaturas por página debe estar comprendido entre 1 y 9999."
+msgstr ""
+"El número de miniaturas por página debe estar comprendido entre 1 y 9999."
 
 #: ../report/SendReportDialog.java:255
 msgid "The start page must be between 1 and 9999."
 msgstr "La página de inicio debe estar comprendida entre 1 y 9999."
 
 #: ../report/SendReportDialog.java:256
-msgid "The end page per page must be between 1 and 9999."
-msgstr "La página final debe estar comprendida entre 1 y 9999."
+msgid "The end page must be between 1 and 9999."
+msgstr ""
 
 #: ../report/SendReportDialog.java:267 ../report/SendReportDialog.java:321
 msgid "Fax receive report"
@@ -501,7 +509,7 @@ msgid "Fax job {0} ({1})"
 msgstr "Trabajo de fax {0} ({1})"
 
 #: ../LogViewWorker.java:93 ../phonebook/AbstractConnectionSettings.java:62
-#: ../util/KeyStrokeTextField.java:89 ../send/SendWin.java:214
+#: ../util/KeyStrokeTextField.java:89 ../send/SendWin.java:221
 msgid "<none>"
 msgstr "<ninguno>"
 
@@ -522,7 +530,7 @@ msgid "YajHFC log console"
 msgstr "Consola de registros de YajHFC"
 
 #: ../logconsole/LogConsole.java:115 ../MainWin.java:1242 ../MainWin.java:2274
-#: ../util/ExceptionDialog.java:102 ../util/ClipboardPopup.java:74
+#: ../util/ExceptionDialog.java:105 ../util/ClipboardPopup.java:74
 #: ../TextViewPanel.java:211
 msgid "Copy"
 msgstr "Copiar"
@@ -574,8 +582,8 @@ msgstr "{0}-archivos"
 msgid "Export to XML"
 msgstr "Exportar a un archivo XML"
 
-#: ../export/ExportAction.java:163 ../MainWin.java:3256
-#: ../send/SimplifiedSendDialog.java:356
+#: ../export/ExportAction.java:163 ../MainWin.java:3267
+#: ../send/SimplifiedSendDialog.java:360
 msgid "Server"
 msgstr "Servidor"
 
@@ -622,7 +630,7 @@ msgstr ""
 "Sí, mostrar el cuadro de diálogo de envío sólo cuando no se encuentren "
 "destinatarios"
 
-#: ../file/FormattedFile.java:95
+#: ../file/FormattedFile.java:96
 #, java-format
 msgid "File format {0} not supported."
 msgstr "Formato de archivo {0} no admitido."
@@ -655,7 +663,7 @@ msgstr "Imágenes GIF"
 msgid "TIFF pictures"
 msgstr "Imágenes TIFF"
 
-#: ../file/FileFormat.java:54 ../send/SimplifiedSendDialog.java:586
+#: ../file/FileFormat.java:54 ../send/SimplifiedSendDialog.java:591
 msgid "Text files"
 msgstr "Archivos de texto"
 
@@ -684,14 +692,18 @@ msgid "CSV files"
 msgstr "Archivos CSV"
 
 #: ../file/FileFormat.java:61
+msgid "PJL printer job"
+msgstr ""
+
+#: ../file/FileFormat.java:62
 msgid "Any files"
 msgstr "Cualquier archivo"
 
-#: ../file/FileFormat.java:62
+#: ../file/FileFormat.java:63
 msgid "Unknown files"
 msgstr "Archivos desconocidos"
 
-#: ../file/FileFormat.java:125
+#: ../file/FileFormat.java:126
 msgid "All supported file formats"
 msgstr "Todos los formatos de archivo admitidos"
 
@@ -814,13 +826,17 @@ msgstr "Lanzando el visor"
 msgid ""
 "It seems the TIFF files of your HylaFAX installation are incompatible with "
 "iText (often the case with capi4hylafax)."
-msgstr "Parece que los archivos TIFF de su servidor HylaFAX son incompatibles con iTex (suele ocurrir con capi4hylafax)."
+msgstr ""
+"Parece que los archivos TIFF de su servidor HylaFAX son incompatibles con "
+"iTex (suele ocurrir con capi4hylafax)."
 
 #: ../MainWin.java:504
 msgid ""
 "Please see the following page for more details and how to work around this "
 "problem:"
-msgstr "Consulte la siguiente página para obtener más detalles y cómo solucionar este problema:"
+msgstr ""
+"Consulte la siguiente página para obtener más detalles y cómo solucionar "
+"este problema:"
 
 #: ../MainWin.java:528
 #, java-format
@@ -912,8 +928,8 @@ msgstr ""
 "descarga)."
 
 #: ../MainWin.java:797 ../filters/ui/CustomFilterDialog.java:237
-#: ../filters/ui/CustomFilterDialog.java:241 ../options/IdentityPanel.java:216
-#: ../options/IdentityPanel.java:222 ../options/PathAndViewPanel.java:327
+#: ../filters/ui/CustomFilterDialog.java:241 ../options/IdentityPanel.java:214
+#: ../options/IdentityPanel.java:220 ../options/PathAndViewPanel.java:327
 #: ../options/PathAndViewPanel.java:333 ../options/PathAndViewPanel.java:339
 #: ../options/PathAndViewPanel.java:347 ../options/PathAndViewPanel.java:353
 #: ../options/CommonPanel.java:405 ../options/CommonPanel.java:413
@@ -931,9 +947,9 @@ msgstr ""
 #: ../phonebook/jdbc/ConnectionDialog.java:291
 #: ../phonebook/jdbc/ConnectionDialog.java:295
 #: ../phonebook/jdbc/ConnectionDialog.java:413
-#: ../util/ExceptionDialog.java:261 ../util/ExceptionDialog.java:282
-#: ../util/AcceleratorKeyDialog.java:150 ../send/SendController.java:168
-#: ../send/SendController.java:173
+#: ../util/ExceptionDialog.java:295 ../util/ExceptionDialog.java:299
+#: ../util/ExceptionDialog.java:323 ../util/AcceleratorKeyDialog.java:150
+#: ../send/SendController.java:168 ../send/SendController.java:173
 msgid "Error"
 msgstr "Error"
 
@@ -970,8 +986,8 @@ msgstr "Opciones"
 msgid "Shows the Options dialog"
 msgstr "Muestra el cuadro de diálogo de opciones"
 
-#: ../MainWin.java:872 ../send/SendWin.java:541
-#: ../send/SimplifiedSendDialog.java:267
+#: ../MainWin.java:872 ../send/SendWin.java:548
+#: ../send/SimplifiedSendDialog.java:271
 msgid "Send"
 msgstr "Enviar"
 
@@ -979,7 +995,7 @@ msgstr "Enviar"
 msgid "Shows the send fax dialog"
 msgstr "Muestra el cuadro de diálogo de envío de fax"
 
-#: ../MainWin.java:885 ../send/SendWin.java:538
+#: ../MainWin.java:885 ../send/SendWin.java:545
 msgid "Poll"
 msgstr "Transmisión bajo demanda"
 
@@ -1100,7 +1116,7 @@ msgstr "Actualizar las tablas y el estado del servidor"
 msgid "Getting information for job {0}..."
 msgstr "Obteniendo información del trabajo {0}..."
 
-#: ../MainWin.java:1154
+#: ../MainWin.java:1154 ../NoGUISender.java:151
 msgid "Opening send dialog..."
 msgstr "Abriendo el cuadro de diálogo de envío..."
 
@@ -1305,7 +1321,7 @@ msgstr "Desconectar"
 msgid "Fax"
 msgstr "Fax"
 
-#: ../MainWin.java:1666 ../MainWin.java:2892
+#: ../MainWin.java:1666 ../MainWin.java:2895
 msgid "Fetching fax list..."
 msgstr "Obteniendo lista de faxes..."
 
@@ -1405,16 +1421,20 @@ msgstr ""
 "(Pista: Debe mantener el mismo formato que el utilizado en la tabla de "
 "trabajos de fax)"
 
-#: ../MainWin.java:2910 ../HylaClientManager.java:241
+#: ../MainWin.java:2916 ../HylaClientManager.java:242
 msgid "An error occured connecting to the server:"
 msgstr "Ha ocurrido un error al conectar con el servidor:"
 
-#: ../MainWin.java:3068
+#: ../MainWin.java:3078
 #, java-format
 msgid "Disconnected, will try to reconnect in {0} seconds..."
 msgstr "Desconectado, se intentará la reconexión en {0} segundos..."
 
-#: ../MainWin.java:3142
+#: ../MainWin.java:3085
+msgid "Trying to reconnect..."
+msgstr ""
+
+#: ../MainWin.java:3153
 msgid ""
 "Type here parts of the sender, recipient or file name in order to search for "
 "a fax."
@@ -1422,7 +1442,7 @@ msgstr ""
 "Introduzca aquí el destinatario, remitente o el nombre de archivo para "
 "buscar un fax."
 
-#: ../MainWin.java:3143
+#: ../MainWin.java:3154
 msgid "Reset quick search and show all faxes."
 msgstr "Restablecer la búsqueda rápida y mostrar todos los faxes."
 
@@ -1497,7 +1517,7 @@ msgstr "Cancelar"
 #: ../options/MultiEditPanel.java:123 ../phonebook/ui/NewPhoneBookWin.java:886
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:348
 #: ../phonebook/ui/RuleParserDialog.java:306
-#: ../send/SimplifiedSendDialog.java:554 ../send/TextFieldList.java:145
+#: ../send/SimplifiedSendDialog.java:559 ../send/TextFieldList.java:145
 msgid "Add"
 msgstr "Añadir"
 
@@ -1573,41 +1593,41 @@ msgstr "termina con"
 msgid "matches"
 msgstr "coincide"
 
-#: ../HylaClientManager.java:152
+#: ../HylaClientManager.java:153
 msgid "Log in"
 msgstr "Inicio de sesión"
 
-#: ../HylaClientManager.java:152
+#: ../HylaClientManager.java:153
 msgid "Please enter the credentials to log into the HylaFAX server:"
 msgstr ""
 "Por favor, introduzca las credenciales para iniciar sesión en el servidor "
 "HylaFAX:"
 
-#: ../HylaClientManager.java:175
+#: ../HylaClientManager.java:176
 msgid "User password"
 msgstr "Contraseña de usuario"
 
-#: ../HylaClientManager.java:175
+#: ../HylaClientManager.java:176
 msgid "Please enter the user password:"
 msgstr "Por favor, introduzca la contraseña de usuario:"
 
-#: ../HylaClientManager.java:188 ../HylaClientManager.java:210
+#: ../HylaClientManager.java:189 ../HylaClientManager.java:211
 msgid "An error occured in response to the password:"
 msgstr "Ha ocurrido un error en respuesta a la contraseña:"
 
-#: ../HylaClientManager.java:201
+#: ../HylaClientManager.java:202
 msgid "Admin password"
 msgstr "Contraseña de administrador"
 
-#: ../HylaClientManager.java:201
+#: ../HylaClientManager.java:202
 msgid "Please enter the administrative password:"
 msgstr "Por favor, introduzca la contraseña de administrador:"
 
-#: ../HylaClientManager.java:227
+#: ../HylaClientManager.java:228
 msgid "The HylaFAX server responded with an error:"
 msgstr "El servidor HylaFAX devolvió el siguiente error:"
 
-#: ../HylaClientManager.java:234
+#: ../HylaClientManager.java:235
 msgid "The server's host name was not found:"
 msgstr "No se ha encontrado el nombre del equipo del servidor:"
 
@@ -1636,7 +1656,7 @@ msgid "Plugin"
 msgstr "Complemento"
 
 #: ../options/OptionsWin.java:233 ../options/CoverPanel.java:172
-#: ../send/SendWin.java:480
+#: ../send/SendWin.java:487
 msgid "General"
 msgstr "General"
 
@@ -1849,7 +1869,7 @@ msgid "Login successful, logging out."
 msgstr "Inicio de sesión correcto, saliendo."
 
 #: ../options/ModemsPanel.java:176 ../options/MultiEditPanel.java:143
-#: ../options/MultiEditPanel.java:151 ../send/SimplifiedSendDialog.java:571
+#: ../options/MultiEditPanel.java:151 ../send/SimplifiedSendDialog.java:576
 #: ../send/TextFieldList.java:167
 msgid "Remove"
 msgstr "Eliminar"
@@ -1906,24 +1926,24 @@ msgstr "Archivo único excepto para la portada (necesita GhostScript+tiff2pdf)"
 msgid "Complete fax as single file (needs GhostScript+tiff2pdf)"
 msgstr "Fax completo como archivo único (necesita GhostScript+tiff2pdf)"
 
-#: ../options/IdentityPanel.java:110
+#: ../options/IdentityPanel.java:108
 msgid "Name for this identity:"
 msgstr "Nombre de la identidad:"
 
-#: ../options/IdentityPanel.java:111
+#: ../options/IdentityPanel.java:109
 #: ../options/SingleServerSettingsPanel.java:195
 msgid "ID:"
 msgstr "ID:"
 
-#: ../options/IdentityPanel.java:175
+#: ../options/IdentityPanel.java:173
 msgid "Use a custom default cover page:"
 msgstr "Utilizar página de portada personalizada:"
 
-#: ../options/IdentityPanel.java:216
+#: ../options/IdentityPanel.java:214
 msgid "There already exists another identity with this name!"
 msgstr "¡Ya existe otra identidad con este nombre!"
 
-#: ../options/IdentityPanel.java:222
+#: ../options/IdentityPanel.java:220
 msgid "The selected default cover page can not be read."
 msgstr ""
 "No se puede leer la portada de fax predeterminada que se ha seleccionado."
@@ -2129,7 +2149,7 @@ msgid "Archive sent fax jobs"
 msgstr "Archivar los trabajos de fax enviados"
 
 #: ../options/SendPanel.java:172 ../send/JobPropsEditorDialog.java:52
-#: ../send/SimplifiedSendDialog.java:310
+#: ../send/SimplifiedSendDialog.java:314
 msgid "Job properties"
 msgstr "Propiedades del trabajo"
 
@@ -2137,23 +2157,23 @@ msgstr "Propiedades del trabajo"
 msgid "E-mail address for notifications:"
 msgstr "Dirección de correo electrónico para notificaciones:"
 
-#: ../options/SendPanel.java:178 ../send/SendWin.java:466
-#: ../send/SimplifiedSendDialog.java:741
+#: ../options/SendPanel.java:178 ../send/SendWin.java:473
+#: ../send/SimplifiedSendDialog.java:746
 msgid "Notify when:"
 msgstr "Notificar cuando:"
 
-#: ../options/SendPanel.java:179 ../send/SendWin.java:467
-#: ../send/SimplifiedSendDialog.java:742
+#: ../options/SendPanel.java:179 ../send/SendWin.java:474
+#: ../send/SimplifiedSendDialog.java:747
 msgid "Modem:"
 msgstr "Módem:"
 
-#: ../options/SendPanel.java:180 ../send/SendWin.java:469
-#: ../send/SimplifiedSendDialog.java:744
+#: ../options/SendPanel.java:180 ../send/SendWin.java:476
+#: ../send/SimplifiedSendDialog.java:749
 msgid "Paper size:"
 msgstr "Tamaño de papel:"
 
-#: ../options/SendPanel.java:181 ../send/SendWin.java:468
-#: ../send/SimplifiedSendDialog.java:743
+#: ../options/SendPanel.java:181 ../send/SendWin.java:475
+#: ../send/SimplifiedSendDialog.java:748
 msgid "Resolution:"
 msgstr "Resolución:"
 
@@ -2161,8 +2181,8 @@ msgstr "Resolución:"
 msgid "Maximum dials:"
 msgstr "Número máximo de llamadas:"
 
-#: ../options/SendPanel.java:183 ../send/SendWin.java:470
-#: ../send/SimplifiedSendDialog.java:745
+#: ../options/SendPanel.java:183 ../send/SendWin.java:477
+#: ../send/SimplifiedSendDialog.java:750
 msgid "Cancel job after (minutes):"
 msgstr "Cancelar trabajo después de (minutos):"
 
@@ -2170,8 +2190,8 @@ msgstr "Cancelar trabajo después de (minutos):"
 msgid "Filter from fax number:"
 msgstr "Filtrar desde el número de fax:"
 
-#: ../options/SendPanel.java:185 ../send/SendWin.java:471
-#: ../send/SimplifiedSendDialog.java:746
+#: ../options/SendPanel.java:185 ../send/SendWin.java:478
+#: ../send/SimplifiedSendDialog.java:751
 msgid "Maximum tries:"
 msgstr "Número máximo de intentos:"
 
@@ -2789,9 +2809,9 @@ msgstr "Columna {0}"
 msgid "Error previewing your settings:"
 msgstr "Error al previsualizar los ajustes:"
 
-#: ../phonebook/csv/CSVDialog.java:334 ../send/SendWin.java:568
-#: ../send/SendWin.java:573 ../send/SimplifiedSendDialog.java:280
-#: ../send/SimplifiedSendDialog.java:299
+#: ../phonebook/csv/CSVDialog.java:334 ../send/SendWin.java:575
+#: ../send/SendWin.java:580 ../send/SimplifiedSendDialog.java:284
+#: ../send/SimplifiedSendDialog.java:303
 msgid "Preview"
 msgstr "Previsualizar"
 
@@ -3075,8 +3095,8 @@ msgid "Please select the items to add to the distribution list:"
 msgstr ""
 "Por favor, seleccione los elementos para añadir a la lista de distribución:"
 
-#: ../phonebook/ui/SingleEntryPhonebookPanel.java:133 ../send/SendWin.java:329
-#: ../send/SimplifiedSendDialog.java:387
+#: ../phonebook/ui/SingleEntryPhonebookPanel.java:133 ../send/SendWin.java:336
+#: ../send/SimplifiedSendDialog.java:392
 msgid "Comments:"
 msgstr "Comentarios:"
 
@@ -3320,12 +3340,12 @@ msgstr ""
 msgid "Local file"
 msgstr "Archivo local"
 
-#: ../NoGUISender.java:103 ../util/ProgressWorker.java:170
+#: ../NoGUISender.java:104 ../util/ProgressWorker.java:170
 #: ../util/ProgressWorker.java:173 ../util/ProgressWorker.java:176
 msgid "Initializing..."
 msgstr "Inicializando..."
 
-#: ../NoGUISender.java:150
+#: ../NoGUISender.java:160
 msgid "Error sending the fax:"
 msgstr "Error al enviar el fax:"
 
@@ -4121,7 +4141,7 @@ msgstr "dd/MM/yyyy"
 msgid "HH:mm:ss"
 msgstr "HH:mm:ss"
 
-#: ../util/ExceptionDialog.java:100 ../util/ExceptionDialog.java:238
+#: ../util/ExceptionDialog.java:103 ../util/ExceptionDialog.java:243
 msgid "Details"
 msgstr "Detalles"
 
@@ -4222,7 +4242,7 @@ msgstr "Clave"
 msgid "Value"
 msgstr "Valor"
 
-#: ../TextViewPanel.java:195 ../send/SimplifiedSendDialog.java:987
+#: ../TextViewPanel.java:195 ../send/SimplifiedSendDialog.java:992
 msgid "Error saving the file"
 msgstr "Error al guardar el archivo"
 
@@ -4238,51 +4258,51 @@ msgstr "Simplificado"
 msgid "Send Fax"
 msgstr "Enviar fax"
 
-#: ../send/SendWin.java:217
+#: ../send/SendWin.java:224
 msgid "Poll fax"
 msgstr "Transmisión de fax bajo demanda"
 
-#: ../send/SendWin.java:276 ../send/SimplifiedSendDialog.java:363
+#: ../send/SendWin.java:283 ../send/SimplifiedSendDialog.java:367
 msgid "Use cover page"
 msgstr "Utilizar página de portada"
 
-#: ../send/SendWin.java:284 ../send/SimplifiedSendDialog.java:684
+#: ../send/SendWin.java:291 ../send/SimplifiedSendDialog.java:689
 msgid "Use custom cover page:"
 msgstr "Utilizar página de portada personalizada:"
 
-#: ../send/SendWin.java:324
+#: ../send/SendWin.java:331
 msgid "Recipient Name:"
 msgstr "Nombre del destinatario:"
 
-#: ../send/SendWin.java:325
+#: ../send/SendWin.java:332
 msgid "Company:"
 msgstr "Empresa:"
 
-#: ../send/SendWin.java:326
+#: ../send/SendWin.java:333
 msgid "Location:"
 msgstr "Ubicación:"
 
-#: ../send/SendWin.java:327
+#: ../send/SendWin.java:334
 msgid "Voice number:"
 msgstr "Número de teléfono:"
 
-#: ../send/SendWin.java:328 ../send/SimplifiedSendDialog.java:386
+#: ../send/SendWin.java:335 ../send/SimplifiedSendDialog.java:391
 msgid "Subject:"
 msgstr "Asunto:"
 
-#: ../send/SendWin.java:368
+#: ../send/SendWin.java:375
 msgid "File(s):"
 msgstr "Archivo(s):"
 
-#: ../send/SendWin.java:463
+#: ../send/SendWin.java:470
 msgid "Fax number(s):"
 msgstr "Número(s) de fax(es):"
 
-#: ../send/SendWin.java:481
+#: ../send/SendWin.java:488
 msgid "Cover page"
 msgstr "Página de portada"
 
-#: ../send/SendWin.java:573 ../send/SimplifiedSendDialog.java:280
+#: ../send/SendWin.java:580 ../send/SimplifiedSendDialog.java:284
 msgid ""
 "Nothing to preview! (Neither a cover page nor a file to send has been "
 "selected.)"
@@ -4290,7 +4310,7 @@ msgstr ""
 "¡No hay nada para previsualizar! (No se ha seleccionado ninguna portada ni "
 "archivo para enviar.)"
 
-#: ../send/SendWin.java:635 ../send/SimplifiedSendDialog.java:522
+#: ../send/SendWin.java:642 ../send/SimplifiedSendDialog.java:527
 msgid "Choose number from phone book"
 msgstr "Seleccionar número desde la agenda telefónica"
 
@@ -4314,65 +4334,65 @@ msgstr "<< Simplificado"
 msgid "Send fax"
 msgstr "Enviar fax"
 
-#: ../send/SimplifiedSendDialog.java:357
+#: ../send/SimplifiedSendDialog.java:361
 msgid "Identity"
 msgstr "Identidad"
 
-#: ../send/SimplifiedSendDialog.java:402 ../send/SimplifiedSendDialog.java:424
+#: ../send/SimplifiedSendDialog.java:407 ../send/SimplifiedSendDialog.java:429
 msgid "Extracting recipients..."
 msgstr "Extrayendo destinatarios..."
 
-#: ../send/SimplifiedSendDialog.java:407
+#: ../send/SimplifiedSendDialog.java:412
 msgid "Error extracting recipients"
 msgstr "Error al extraer destinatarios"
 
-#: ../send/SimplifiedSendDialog.java:485
+#: ../send/SimplifiedSendDialog.java:490
 msgid "File(s) to send:"
 msgstr "Archivo(s) para enviar:"
 
-#: ../send/SimplifiedSendDialog.java:521
+#: ../send/SimplifiedSendDialog.java:526
 msgid "Add from phone book..."
 msgstr "Añadir desde la agenda telefónica..."
 
-#: ../send/SimplifiedSendDialog.java:556
+#: ../send/SimplifiedSendDialog.java:561
 msgid "Add a new recipient"
 msgstr "Añadir un nuevo destinatario"
 
-#: ../send/SimplifiedSendDialog.java:573
+#: ../send/SimplifiedSendDialog.java:578
 msgid "Remove selected recipient"
 msgstr "Eliminar el destinatario seleccionado"
 
-#: ../send/SimplifiedSendDialog.java:594
+#: ../send/SimplifiedSendDialog.java:599
 msgid "Error reading the specified file:"
 msgstr "Error al leer el archivo especificado:"
 
-#: ../send/SimplifiedSendDialog.java:599
+#: ../send/SimplifiedSendDialog.java:604
 msgid "Add from text file..."
 msgstr "Añadir desde archivo de texto..."
 
-#: ../send/SimplifiedSendDialog.java:601
+#: ../send/SimplifiedSendDialog.java:606
 msgid "Adds recipients from a text file containing one recipient per line"
 msgstr ""
 "Añade destinatarios desde un archivo de texto que contiene un destinatario "
 "por línea"
 
-#: ../send/SimplifiedSendDialog.java:654
+#: ../send/SimplifiedSendDialog.java:659
 msgid "Fax number:"
 msgstr "Número de fax:"
 
-#: ../send/SimplifiedSendDialog.java:656
+#: ../send/SimplifiedSendDialog.java:661
 msgid "Recipients:"
 msgstr "Destinatarios:"
 
-#: ../send/SimplifiedSendDialog.java:732
+#: ../send/SimplifiedSendDialog.java:737
 msgid "Archive fax job"
 msgstr "Archivar trabajo de fax"
 
-#: ../send/SimplifiedSendDialog.java:752
+#: ../send/SimplifiedSendDialog.java:757
 msgid "Time to send:"
 msgstr "Enviar a la siguiente hora:"
 
-#: ../send/SimplifiedSendDialog.java:996
+#: ../send/SimplifiedSendDialog.java:1001
 msgid "Save a copy as..."
 msgstr "Guardar una copia como..."
 
@@ -4386,6 +4406,18 @@ msgid ""
 "The document {0} could not be converted to PostScript, PDF or TIFF. Reason:"
 msgstr ""
 "El documento {0} no se puede convertir a PostScript, PDF o TIFF. Motivo:"
+
+#: ../send/SendFaxArchiver.java:143
+msgid "The attached fax could not be submitted successfully to HylaFAX."
+msgstr ""
+
+#: ../send/SendFaxArchiver.java:146
+msgid "Send log:"
+msgstr ""
+
+#: ../send/SendFaxArchiver.java:151
+msgid "Fax failed to send"
+msgstr ""
 
 #: ../send/TimeToSendEntry.java:67 ../send/TimeToSendEntry.java:97
 msgid "Now"
@@ -4460,26 +4492,26 @@ msgstr ""
 msgid "Cleaning up"
 msgstr "Limpiando"
 
-#: ../send/SendController.java:453
+#: ../send/SendController.java:452
 msgid "An error occured while submitting the fax: "
 msgstr "Ha ocurrido un error al enviar el fax: "
 
-#: ../send/SendController.java:508
+#: ../send/SendController.java:512
 msgid "To send a fax you have to enter at least one phone number!"
 msgstr "¡Para enviar un fax debe introducir al menos un número de teléfono!"
 
-#: ../send/SendController.java:508 ../send/SendController.java:515
-#: ../send/SendController.java:525
+#: ../send/SendController.java:512 ../send/SendController.java:519
+#: ../send/SendController.java:529
 msgid "Warning"
 msgstr "Advertencia"
 
-#: ../send/SendController.java:515
+#: ../send/SendController.java:519
 #, java-format
 msgid "For recipient {0} (\"{1}\") no fax number has been entered."
 msgstr ""
 "No se ha introducido ningún número de fax para el destinatario {0} (\"{1}\")."
 
-#: ../send/SendController.java:522
+#: ../send/SendController.java:526
 msgid ""
 "You haven't selected a file to transmit, so your fax will ONLY contain the "
 "cover page.\n"
@@ -4489,19 +4521,19 @@ msgstr ""
 "contendrá la página de portada.\n"
 "¿Desea continuar de todos modos?"
 
-#: ../send/SendController.java:522
+#: ../send/SendController.java:526
 msgid "Continue?"
 msgstr "¿Continuar?"
 
-#: ../send/SendController.java:525
+#: ../send/SendController.java:529
 msgid "To send a fax you must select at least one file!"
 msgstr "¡Para enviar un fax debe seleccionar al menos un archivo!"
 
-#: ../send/SendController.java:535
+#: ../send/SendController.java:539
 msgid "Sending fax"
 msgstr "Enviando fax"
 
-#: ../send/SendController.java:540
+#: ../send/SendController.java:544
 msgid "Previewing fax"
 msgstr "Previsualizando fax"
 
@@ -4532,6 +4564,9 @@ msgstr "Actualiza el elemento seleccionado de la lista"
 #: ../send/MinutesFormatter.java:80
 msgid "minutes"
 msgstr "minutos"
+
+#~ msgid "The end page per page must be between 1 and 9999."
+#~ msgstr "La página final debe estar comprendida entre 1 y 9999."
 
 #~ msgid "Same as PostScript viewer"
 #~ msgstr "Igual que el visor PostScript"

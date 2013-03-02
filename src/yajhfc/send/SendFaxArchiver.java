@@ -40,7 +40,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Date;
 import java.util.logging.Logger;
 
@@ -51,6 +50,7 @@ import yajhfc.file.FileConverter.ConversionException;
 import yajhfc.file.MultiFileConvFormat;
 import yajhfc.file.MultiFileConverter;
 import yajhfc.file.UnknownFormatException;
+import yajhfc.send.email.YajMailer;
 import yajhfc.shutdown.ShutdownManager;
 import yajhfc.ui.YajOptionPane;
 
@@ -84,12 +84,12 @@ public class SendFaxArchiver implements SendControllerListener {
         sendController.addSendControllerListener(this);
     }
 
-    protected String getPDFFileName() {
+    protected String getPdfBaseName() {
         return new SimpleDateFormat("yyyy-MM-dd_HHmmss").format(new Date());
     }
     
     public File saveFaxAsPDF(String logText, String outDir) throws IOException, UnknownFormatException, ConversionException {
-        String baseName = getPDFFileName();
+        String baseName = getPdfBaseName();
         File outFile = new File(outDir, baseName + ".pdf");
         int num = 0;
         while (!outFile.createNewFile()) {
@@ -136,7 +136,7 @@ public class SendFaxArchiver implements SendControllerListener {
             } 
         }
         if (errorMail != null) {
-            if (!SendControllerMailer.isAvailable()) {
+            if (!YajMailer.isAvailable()) {
                 dialogs.showMessageDialog("Mail plugin not installed, cannot send error mail.", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 try {
@@ -154,10 +154,13 @@ public class SendFaxArchiver implements SendControllerListener {
                                 logger;
                     }
                     
-                    SendControllerMailer.getInstance().mailToRecipients("YajHFC: " + Utils._("Fax failed to send"), body,
-                            Collections.singletonList(errorMail), pdf, 
-                            getPDFFileName(),
-                            sendController.getIdentity());
+                    YajMailer mailer = YajMailer.getInstance();
+                    mailer.setSubject("YajHFC: " + Utils._("Fax failed to send"));
+                    mailer.setBody(body);
+                    mailer.setToAddresses(errorMail);
+                    mailer.addAttachment(pdf, getPdfBaseName() + ".pdf");
+                    mailer.setFromIdentity(sendController.getIdentity());
+                    mailer.sendMail();
 
                     if (tempPDF)
                         pdf.delete();
