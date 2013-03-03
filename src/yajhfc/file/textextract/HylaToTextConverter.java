@@ -46,7 +46,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import yajhfc.FaxOptions;
-import yajhfc.PaperSize;
 import yajhfc.Utils;
 import yajhfc.file.FileConverter.ConversionException;
 import yajhfc.file.FileFormat;
@@ -54,6 +53,7 @@ import yajhfc.file.FormattedFile;
 import yajhfc.file.MultiFileConvFormat;
 import yajhfc.file.MultiFileConverter;
 import yajhfc.file.UnknownFormatException;
+import yajhfc.server.ServerManager;
 
 /**
  * @author jonas
@@ -201,7 +201,7 @@ public abstract class HylaToTextConverter {
             File tempFile = File.createTempFile("textextract", "." + conv.getTargetFormat().getDefaultExtension());
             yajhfc.shutdown.ShutdownManager.deleteOnExit(tempFile);
             try {
-                conv.convertMultipleFiles(filesToConvert, tempFile, PaperSize.A4); // Paper size does not actually matter here...
+                conv.convertMultipleFiles(filesToConvert, tempFile, ServerManager.getDefault().getCurrent().getOptions().paperSize); // Paper size does not actually matter here...
             } catch (UnknownFormatException e) {
                 throw new ConversionException(e);
             } 

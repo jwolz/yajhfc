@@ -37,7 +37,6 @@
 package yajhfc.util;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -129,11 +128,7 @@ public class TransactFileOutputStream extends FileOutputStream {
             if (backupFile.exists() && backupFile.length() > 0) {
                 // Recover settings from backup file
                 try {
-                    FileInputStream inStream = new FileInputStream(backupFile);
-                    FileOutputStream outStream = new FileOutputStream(file);
-                    Utils.copyStream(inStream, outStream);
-                    inStream.close();
-                    outStream.close();
+                    Utils.copyFile(backupFile, file);
                 } catch (IOException e) {
                     log.log(Level.WARNING, "Error during recovery", e);
                 }

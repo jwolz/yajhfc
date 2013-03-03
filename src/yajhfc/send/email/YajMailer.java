@@ -38,12 +38,11 @@ package yajhfc.send.email;
 
 import java.io.File;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -97,7 +96,7 @@ public abstract class YajMailer {
 	protected Collection<String> toAddresses = null;
 	protected Collection<String> ccAddresses = null;
 	protected Collection<String> bccAddresses = null;
-	protected Map<File,String> attachments = new HashMap<File, String>();
+	protected List<Attachment> attachments = new ArrayList<Attachment>();
 	protected MessageFormat attachmentNameFormat = null;
 	
     /**
@@ -173,7 +172,16 @@ public abstract class YajMailer {
      * @return
      */
     public void addAttachment(File file, String fileName) {
-        attachments.put(file, fileName);
+        attachments.add(new Attachment(fileName, file, null));
+    }
+    
+    /**
+     * Adds an attachment
+     * @param file
+     * @return
+     */
+    public void addAttachment(String stringContent, String fileName) {
+        attachments.add(new Attachment(fileName, null, stringContent));
     }
 	
 	public SenderIdentity getFromIdentity() {
@@ -200,7 +208,7 @@ public abstract class YajMailer {
         return bccAddresses;
     }
 
-    public Map<File, String> getAttachments() {
+    public List<Attachment> getAttachments() {
         return attachments;
     }
 
@@ -246,5 +254,23 @@ public abstract class YajMailer {
 	 * @return true if successful
 	 */
 	public abstract boolean sendMail() throws MailException;
-    
+ 
+	/**
+	 * Returns the last sent mail's timestamp
+	 * @return
+	 */
+	public abstract Date getLastSendTime();
+	
+	public static final class Attachment {
+	    public final String fileName;
+	    public final File file;
+	    public final String textContent;
+	    
+        protected Attachment(String fileName, File file, String textContent) {
+            super();
+            this.fileName = fileName;
+            this.file = file;
+            this.textContent = textContent;
+        }
+	}
 }

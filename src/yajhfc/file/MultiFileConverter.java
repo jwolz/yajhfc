@@ -37,12 +37,12 @@
 package yajhfc.file;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 import yajhfc.FaxOptions;
 import yajhfc.PaperSize;
@@ -56,7 +56,10 @@ import yajhfc.send.HylaTFLItem;
  *
  */
 public abstract class MultiFileConverter {
-   
+    private static final Logger log = Logger.getLogger(MultiFileConverter.class.getName());
+    
+    protected final FileCache cache = new FileCache();
+    
     public abstract FileFormat getTargetFormat();
     
     public abstract void convertMultiplePSorPDFFiles(File[] files, File targetFile, PaperSize paperSize) throws IOException, ConversionException;
@@ -64,14 +67,17 @@ public abstract class MultiFileConverter {
     public void convertMultipleFiles(List<FormattedFile> files, File targetName, PaperSize paperSize) throws IOException, UnknownFormatException, ConversionException {
         // Do not convert the files if we already have a single file *and* it has the right format
         if ((files.size() == 1 && files.get(0).format == getTargetFormat())) {
-            FileInputStream in = new FileInputStream(files.get(0).file);
-            FileOutputStream out = new FileOutputStream(targetName);
-            Utils.copyStream(in, out);
-            in.close();
-            out.close();
+            Utils.copyFile(files.get(0).file, targetName);
             return;
         }
         
+        File cached = cache.checkCache(files, targetName, paperSize);
+        if (cached != null) {
+            log.fine("Found valid cached file " + cached);
+            Utils.copyFile(cached, targetName);
+            return;
+        }
+        log.fine("Did not find cached file");
         
         File[] target = new File[files.size()];
 
@@ -119,14 +125,11 @@ public abstract class MultiFileConverter {
         }
         // Do not convert the files if we already have a single file *and* it has the right format
         if ((target.length == 1 && FormattedFile.detectFileFormat(target[0]) == getTargetFormat())) {
-            FileInputStream in = new FileInputStream(target[0]);
-            FileOutputStream out = new FileOutputStream(targetName);
-            Utils.copyStream(in, out);
-            in.close();
-            out.close();
+            Utils.copyFile(target[0], targetName);
         } else {
             convertMultiplePSorPDFFiles(target, targetName, paperSize);
         }
+        cache.addToCache(files, targetName, paperSize);
     }
     
     /**

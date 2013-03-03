@@ -10,16 +10,32 @@ public class ComponentEnabler implements ItemListener {
     protected final JComponent[] toEnable;
     protected final JCheckBox checkBox;
     protected final boolean enabledState;
+    protected boolean globalEnable = true;
+    protected ComponentEnabler[] childs = null;
     
     public void itemStateChanged(ItemEvent e) {
         checkEnabled();
     }
 
     public void checkEnabled() {
-        boolean enable = (checkBox.isSelected() == enabledState);
+        boolean enable = globalEnable && (checkBox.isSelected() == enabledState);
         for (JComponent comp : toEnable) {
             comp.setEnabled(enable);
         }
+        if (childs != null) {
+            for (ComponentEnabler comp : childs) {
+                comp.setEnabled(enable);
+            }
+        }
+    }
+    
+    public void setEnabled(boolean enable) {
+        this.globalEnable = enable;
+        checkEnabled();
+    }
+    
+    public void setChilds(ComponentEnabler... childs) {
+        this.childs = childs;
     }
 
     /**
@@ -42,7 +58,7 @@ public class ComponentEnabler implements ItemListener {
      * @param enabledState the isSelected state when the components should be enabled
      * @param toEnable the components to enable
      */
-    public static void installOn(JCheckBox checkBox, boolean enabledState, JComponent... toEnable) {
+    public static ComponentEnabler installOn(JCheckBox checkBox, boolean enabledState, JComponent... toEnable) {
         for (int i=0; i<toEnable.length; i++) {
             if (toEnable[i] == null)
                 throw new IllegalArgumentException("toEnable[" + i + "] == null");
@@ -51,5 +67,6 @@ public class ComponentEnabler implements ItemListener {
         final ComponentEnabler enabler = new ComponentEnabler(checkBox, enabledState, toEnable);
         checkBox.addItemListener(enabler);
         enabler.checkEnabled();
+        return enabler;
     }
 }
