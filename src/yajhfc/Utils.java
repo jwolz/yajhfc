@@ -98,6 +98,7 @@ import yajhfc.model.jobq.QueueFileDateFormat;
 import yajhfc.plugin.PluginManager;
 import yajhfc.plugin.PluginUI;
 import yajhfc.util.AWTExceptionLogger;
+import yajhfc.util.ArrayCharSequence;
 import yajhfc.util.ExampleFileFilter;
 import yajhfc.util.ExternalProcessExecutor;
 import yajhfc.util.TransactFileOutputStream;
@@ -107,7 +108,7 @@ public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2012 by Jonas Wolz";
-    public static final String AppVersion = "0.5.4beta3";
+    public static final String AppVersion = "0.5.4beta4";
     public static final String AuthorName = "Jonas Wolz";
     public static final String AuthorEMail = "info@yajhfc.de";
     public static final String HomepageURL = "http://www.yajhfc.de/"; 
@@ -1134,15 +1135,7 @@ public final class Utils {
      * @throws IOException 
      */
     public static String readFully(Reader r) throws IOException {
-        char[] buf = new char[4000];
-        StringBuilder rv = new StringBuilder();
-        int len;
-        while ((len=r.read(buf)) >= 0) {
-            if (len>0) {
-                rv.append(buf, 0, len);
-            }
-        }
-        return rv.toString();
+        return ArrayCharSequence.readCompletely(r).toString();
     }
 }
 

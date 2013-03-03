@@ -112,6 +112,16 @@ public class FormattedFile {
     public String toString() {
         return file + " [format=" + format.name() + "]";
     }
+    
+    @Override
+    public int hashCode() {
+        return file.hashCode();
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        return file.equals(((FormattedFile)obj).file);
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Static fields & methods:
