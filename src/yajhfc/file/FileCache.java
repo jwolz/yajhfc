@@ -38,10 +38,16 @@ package yajhfc.file;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.WeakHashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import yajhfc.PaperSize;
+import yajhfc.Utils;
 
 /**
  * A cache for converted files
@@ -50,30 +56,68 @@ import yajhfc.PaperSize;
  *
  */
 public class FileCache {
-    protected final WeakHashMap<List<FormattedFile>, ConvFileInfo> cache = new WeakHashMap<List<FormattedFile>, FileCache.ConvFileInfo>();
-    
-    public void addToCache(List<FormattedFile> source, File targetName, PaperSize paperSize) {
+    static final Logger log = Logger.getLogger(FileCache.class.getName());
+
+    protected final Map<List<FormattedFile>, ConvFileInfo> cache = new HashMap<List<FormattedFile>, FileCache.ConvFileInfo>();
+
+    /**
+     * Creates a cache entry
+     * @param source
+     * @param targetName
+     * @param paperSize
+     */
+    public synchronized void addToCache(List<FormattedFile> source, File targetName, PaperSize paperSize) {
         cache.put(source, new ConvFileInfo(source, targetName, paperSize));
+        Cleaner.checkInstall();
     }
-    
-    public File checkCache(List<FormattedFile> source, File targetName, PaperSize paperSize) {
+
+    /**
+     * Checks if there is a valid cache entry for the specified source files.
+     * @param source
+     * @param targetName
+     * @param paperSize
+     * @return a cached file or null if nothing was found
+     */
+    public File checkCache(List<FormattedFile> source, PaperSize paperSize) {
         ConvFileInfo cfi = cache.get(source);
         if (cfi != null) {
+            log.fine("Found file in cache...");
             if (paperSize.equals(cfi.paperSize) && cfi.checkValid()) {
+                log.fine("File is valid.");
                 return cfi.file;
             } else {
-                cache.remove(source);
+                log.fine("File is invalid, removing it.");
+                synchronized (this) {
+                    cache.remove(source);
+                }
                 return null;
             }
         } else {
+            log.fine("Found nothing in cache.");
             return null;
         }
     }
-    
+
+    /**
+     * Revalidates all entries in the cache
+     */
+    public synchronized void validateCache() {
+        if (cache.size() > 0) {
+            Iterator<Map.Entry<List<FormattedFile>, ConvFileInfo>> it = cache.entrySet().iterator();
+            Map.Entry<List<FormattedFile>, ConvFileInfo> entry;
+            while (it.hasNext()) {
+                entry = it.next();
+                if (!entry.getValue().checkValid()) {
+                    it.remove();
+                }
+            }
+        }
+    }
+
     public static class ConvFileInfo  extends FileInfo {
         public final List<FileInfo> sourceFiles = new ArrayList<FileInfo>();
         public final PaperSize paperSize;
-        
+
         @Override
         public boolean checkValid() {
             if (!super.checkValid())
@@ -84,12 +128,12 @@ public class FileCache {
             }
             return true;
         }
-        
+
         @Override
         public int hashCode() {
             return sourceFiles.hashCode() ^ paperSize.hashCode() ^ file.hashCode();
         }
-        
+
         @Override
         public boolean equals(Object obj) {
             if (obj==this)
@@ -97,12 +141,12 @@ public class FileCache {
             if (obj instanceof ConvFileInfo) {
                 final ConvFileInfo convFileInfo = (ConvFileInfo)obj;
                 return paperSize.equals(convFileInfo.paperSize)
-                    && file.equals(convFileInfo.file)
-                    && sourceFiles.equals(convFileInfo.sourceFiles);
+                        && file.equals(convFileInfo.file)
+                        && sourceFiles.equals(convFileInfo.sourceFiles);
             }
             return false;
         }
-        
+
         public ConvFileInfo(List<FormattedFile> sourceFiles, File targetFile, PaperSize paperSize) {
             super(targetFile);
             this.paperSize = paperSize;
@@ -111,28 +155,28 @@ public class FileCache {
             }
         } 
     }
-    
+
     public static class FileInfo {
         public final File file;
         public long size;
         public long timestamp;
-        
+
         protected void readFileInfo() {
             this.size = file.length();
             this.timestamp = file.lastModified();
         }
-        
+
         public boolean checkValid() {
             return (file.exists() &&
                     file.length() == size &&
                     file.lastModified() == timestamp);
         }
-        
+
         @Override
         public int hashCode() {
             return file.hashCode();
         }
-        
+
         @Override
         public boolean equals(Object obj) {
             if (obj==this)
@@ -146,6 +190,32 @@ public class FileCache {
             super();
             this.file = file;
             readFileInfo();
+        }
+    }
+
+    public static class Cleaner implements Runnable {
+        private static final long FREQUENCY=31;
+        private static boolean INSTALLED = false;
+        
+        public void run() {
+            try {
+                log.fine("Validating caches...");
+                for (MultiFileConvFormat mcf : MultiFileConvFormat.values()) {
+                    final MultiFileConverter converter = mcf.getConverter();
+                    if (converter.cache != null)
+                        converter.cache.validateCache();
+                }
+            } catch (Exception ex) {
+                log.log(Level.WARNING, "Error cleaning caches", ex);
+            }
+        }
+        
+        public static synchronized void checkInstall() {
+            if (!INSTALLED) {
+                log.fine("Installing global cache cleaner...");
+                Utils.executorService.scheduleWithFixedDelay(new Cleaner(), FREQUENCY, FREQUENCY, TimeUnit.SECONDS);
+                INSTALLED = true;
+            }
         }
     }
 }

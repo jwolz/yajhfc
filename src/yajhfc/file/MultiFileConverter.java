@@ -58,8 +58,18 @@ import yajhfc.send.HylaTFLItem;
 public abstract class MultiFileConverter {
     private static final Logger log = Logger.getLogger(MultiFileConverter.class.getName());
     
-    protected final FileCache cache = new FileCache();
+    protected FileCache cache;
     
+    /**
+     * @return the cache
+     */
+    protected FileCache getCache() {
+        if (cache == null) {
+            cache = new FileCache();
+        }
+        return cache;
+    }
+
     public abstract FileFormat getTargetFormat();
     
     public abstract void convertMultiplePSorPDFFiles(File[] files, File targetFile, PaperSize paperSize) throws IOException, ConversionException;
@@ -71,7 +81,7 @@ public abstract class MultiFileConverter {
             return;
         }
         
-        File cached = cache.checkCache(files, targetName, paperSize);
+        File cached = getCache().checkCache(files, paperSize);
         if (cached != null) {
             log.fine("Found valid cached file " + cached);
             Utils.copyFile(cached, targetName);
@@ -129,7 +139,7 @@ public abstract class MultiFileConverter {
         } else {
             convertMultiplePSorPDFFiles(target, targetName, paperSize);
         }
-        cache.addToCache(files, targetName, paperSize);
+        getCache().addToCache(files, targetName, paperSize);
     }
     
     /**
