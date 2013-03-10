@@ -66,6 +66,7 @@ import yajhfc.FaxOptions;
 import yajhfc.FaxResolution;
 import yajhfc.HylaClientManager;
 import yajhfc.HylaModem;
+import yajhfc.MainWin.SendReadyState;
 import yajhfc.PaperSize;
 import yajhfc.SenderIdentity;
 import yajhfc.Utils;
@@ -535,6 +536,9 @@ public class SendController implements FaxSender {
     }
     
     public void sendFax() {
+        if (Launcher2.application.getSendReadyState() != SendReadyState.Ready) {
+            throw new IllegalStateException("Application is not ready to send! (SendReadyState=" + Launcher2.application.getSendReadyState() + ")");
+        }
         SendWorker wrk = new SendWorker();
         wrk.startWork(dialogUI, Utils._("Sending fax"));
     }
