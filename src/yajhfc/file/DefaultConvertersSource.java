@@ -36,6 +36,7 @@
  */
 package yajhfc.file;
 
+import java.awt.Font;
 import java.util.Map;
 
 import javax.print.DocFlavor;
@@ -61,7 +62,9 @@ public class DefaultConvertersSource extends FileConverterSource {
         
         converters.put(FileFormat.HTML, EditorPaneFileConverter.HTML_CONVERTER);
         // Doesn't work very well
-        //fileConverters.put(FileFormat.RTF, new EditorPaneFileConverter("text/rtf"));
+        //converters.put(FileFormat.RTF, new EditorPaneFileConverter("text/rtf"));
+        
+        converters.put(FileFormat.PlainText, new EditorPaneFileConverter("text/plain", new Font("Courier", Font.PLAIN, 10)));
     }
 
     @Override
