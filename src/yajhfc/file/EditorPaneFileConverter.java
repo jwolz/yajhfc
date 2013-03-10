@@ -38,6 +38,7 @@ package yajhfc.file;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.print.PageFormat;
@@ -60,11 +61,12 @@ import javax.swing.text.ViewFactory;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.ImageView;
 import javax.swing.text.html.HTMLEditorKit.HTMLFactory;
+import javax.swing.text.html.ImageView;
 
 import yajhfc.PaperSize;
 import yajhfc.Utils;
+import yajhfc.util.BOMInputStream;
 
 /**
  * @author jonas
@@ -74,10 +76,17 @@ public class EditorPaneFileConverter extends PrintServiceFileConverter {
     public static final EditorPaneFileConverter HTML_CONVERTER = new EditorPaneFileConverter("text/html");
     
     protected String contentType;
+    protected Font baseFont;
     
     public EditorPaneFileConverter(String contentType) {
         super(DocFlavor.SERVICE_FORMATTED.PRINTABLE);
         this.contentType = contentType;
+    }
+    
+    public EditorPaneFileConverter(String contentType, Font baseFont) {
+        super(DocFlavor.SERVICE_FORMATTED.PRINTABLE);
+        this.contentType = contentType;
+        this.baseFont = baseFont;
     }
     
     
@@ -96,7 +105,9 @@ public class EditorPaneFileConverter extends PrintServiceFileConverter {
             PaperSize paperSize, URL baseURL) throws ConversionException {
         try {            
             PrintableEditorPane pep = new PrintableEditorPane(paperSize.getSize());
-     
+            if (baseFont != null)
+            	pep.setFont(baseFont);
+            
             pep.loadURL(inURL, contentType, baseURL);
             convertUsingPrintService(pep, destination, paperSize);
         } catch (IOException e) {
@@ -114,14 +125,15 @@ public class EditorPaneFileConverter extends PrintServiceFileConverter {
         }
 
         public void loadURL(URL url, String contentType, URL baseURL)  throws IOException {
-            setContentType(contentType);
             if (contentType.contains("text/html")) {
                 setEditorKit(new SyncHTMLEditorKit());
                 HTMLDocument hdoc = new FixedBaseHTMLDocument(baseURL);
                 hdoc.putProperty(Document.StreamDescriptionProperty, url);
                 read(url.openStream(), hdoc);
             } else {
-                read(url.openStream(), baseURL);
+            	BOMInputStream bomStream = new BOMInputStream(url.openStream());
+                setContentType(contentType + "; charset=" + Utils.firstDefined(bomStream.getDetectedCharset(), System.getProperty("file.encoding", "utf-8")));
+                read(bomStream, baseURL);
             }
         }
         
