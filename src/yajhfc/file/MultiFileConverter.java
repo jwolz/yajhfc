@@ -76,7 +76,7 @@ public abstract class MultiFileConverter {
 
     public void convertMultipleFiles(List<FormattedFile> files, File targetName, PaperSize paperSize) throws IOException, UnknownFormatException, ConversionException {
         // Do not convert the files if we already have a single file *and* it has the right format
-        if ((files.size() == 1 && files.get(0).format == getTargetFormat())) {
+        if ((files.size() == 1 && files.get(0).getFormat() == getTargetFormat())) {
             Utils.copyFile(files.get(0).file, targetName);
             return;
         }
@@ -93,15 +93,15 @@ public abstract class MultiFileConverter {
 
         for (int i=0; i<files.size(); i++) {
             FormattedFile ff = files.get(i);
-            switch (ff.format) {
+            switch (ff.getFormat()) {
             case PDF:
             case PostScript:
                 target[i] = ff.file;
                 break;
             default:
-                FileConverter conv = FileConverters.getConverterFor(ff.format);
+                FileConverter conv = FileConverters.getConverterFor(ff.getFormat());
                 if (conv == null || conv == FileConverter.IDENTITY_CONVERTER) {
-                    throw new UnknownFormatException("Unsupported file format: " + ff.format);
+                    throw new UnknownFormatException("Unsupported file format: " + ff.getFormat());
                 } else {
                     File tmpFile = File.createTempFile("multi", ".ps");
                     yajhfc.shutdown.ShutdownManager.deleteOnExit(tmpFile);
@@ -169,7 +169,7 @@ public abstract class MultiFileConverter {
         
 		if (createSingleFile) {
 			if (files.size() == 1 && 
-                    (files.get(0).format == singleFileFormat.getFileFormat() || !alwaysCreateTargetFormat)) {
+                    (files.get(0).getFormat() == singleFileFormat.getFileFormat() || !alwaysCreateTargetFormat)) {
                 files.get(0).view();
             } else {
                 File tmpFile = File.createTempFile("view", "." + singleFileFormat.getFileFormat().getDefaultExtension());

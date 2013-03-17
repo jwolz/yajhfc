@@ -178,7 +178,7 @@ public abstract class HylaToTextConverter {
         List<File> okFiles = new ArrayList<File>();
         List<FormattedFile> filesToConvert = new ArrayList<FormattedFile>();
         for (FormattedFile ff : input) {
-            if (Utils.indexOfArray(allowedFormats, ff.format) >= 0) {
+            if (Utils.indexOfArray(allowedFormats, ff.getFormat()) >= 0) {
                 okFiles.add(ff.file); // File has an allowed format -> do not convert
             } else {
                 filesToConvert.add(ff); // File needs conversion

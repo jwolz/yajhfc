@@ -66,7 +66,7 @@ public abstract class HylaTFLItem extends TFLItem {
             } else { 
                 FileInputStream inStream = new FileInputStream(inFile.file);
                 if (Utils.getFaxOptions().sendFORMCommand)
-                    hyfc.form(inFile.format.getHylaFAXFormatString());
+                    hyfc.form(inFile.getFormat().getHylaFAXFormatString());
                 serverName = hyfc.putTemporary(inStream);
                 inStream.close();
             }

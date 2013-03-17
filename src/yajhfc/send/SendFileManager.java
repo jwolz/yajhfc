@@ -137,12 +137,12 @@ public class SendFileManager {
         
         if (ffs.size() == 0) {
             return null; 
-        } else if (ffs.size() == 1 && (!createAlwaysTargetFormat || ffs.get(0).format == targetFormat.getFileFormat())) {
+        } else if (ffs.size() == 1 && (!createAlwaysTargetFormat || ffs.get(0).getFormat() == targetFormat.getFileFormat())) {
             toUpdate.updateNote(Utils._("Uploading document"));
             FileInputStream fi = new FileInputStream(ffs.get(0).file);
             hyfc.type(HylaFAXClient.TYPE_IMAGE);
             if (Utils.getFaxOptions().sendFORMCommand)
-                hyfc.form(ffs.get(0).format.getHylaFAXFormatString());
+                hyfc.form(ffs.get(0).getFormat().getHylaFAXFormatString());
             String serverName = hyfc.putTemporary(fi);
             fi.close();
             
