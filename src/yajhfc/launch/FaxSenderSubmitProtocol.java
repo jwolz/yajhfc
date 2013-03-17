@@ -12,6 +12,9 @@ import java.util.logging.Logger;
 import yajhfc.IDAndNameOptions;
 import yajhfc.SenderIdentity;
 import yajhfc.Utils;
+import yajhfc.file.FileFormat;
+import yajhfc.file.FileUtils;
+import yajhfc.file.FormattedFile;
 import yajhfc.file.textextract.FaxnumberExtractor;
 import yajhfc.file.textextract.RecipientExtractionMode;
 import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
@@ -98,9 +101,26 @@ public abstract class FaxSenderSubmitProtocol implements SubmitProtocol {
         if (preparedSubmit)
             return;
     
-        if (inStream != null)
+        if (inStream != null) {
             tflInStream = new StreamTFLItem(inStream, streamDesc);
-        
+
+            if (subject == null) {
+                log.fine("No subject specified, trying to extract one from the file...");
+                try {
+                    final FormattedFile docFile = tflInStream.getPreviewFilename();
+                    if (docFile.getFormat() == FileFormat.PostScript) {
+                        log.fine("File is PostScript.");
+                        String extractedSubject = FileUtils.extractTitleFromPSFile(docFile.file);
+                        if (extractedSubject != null) {
+                            this.subject = extractedSubject;
+                        }
+                    }
+                } catch (Exception e1) {
+                    log.log(Level.WARNING, "Error extracting title from document.", e1);
+                }
+            }
+        }
+
         if (Utils.debugMode)
             log.fine("Check for extracting recipients: extractRecipients=" + extractRecipients + "; Utils.getFaxOptions().extractRecipients=" + Utils.getFaxOptions().extractRecipients);
         RecipientExtractionMode effExtractRecipients = getEffectiveExtractRecipients();

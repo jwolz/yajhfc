@@ -981,7 +981,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
                 FormattedFile selFile = selection.getPreviewFilename();
                 JFileChooser chooser = new SafeJFileChooser();
                 chooser.setSelectedFile(selFile.file);
-                FileFilter ff = selFile.format.createFileFilter();
+                FileFilter ff = selFile.getFormat().createFileFilter();
                 chooser.addChoosableFileFilter(ff);
                 chooser.setFileFilter(ff);
                 if (chooser.showSaveDialog(target) == JFileChooser.APPROVE_OPTION) {
