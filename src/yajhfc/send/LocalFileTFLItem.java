@@ -69,7 +69,7 @@ public class LocalFileTFLItem extends HylaTFLItem {
             fconv.convertToHylaFormat(new File(fileName), outStream, desiredPaperSize, FileFormat.PDF);
             outStream.close();
             
-            preparedFile = new FormattedFile(tempFile);
+            preparedFile = FormattedFile.getTempFileWithCorrectExtension(tempFile);
             switch (preparedFile.format) {
             case PDF:
             case PostScript:

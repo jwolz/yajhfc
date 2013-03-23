@@ -48,6 +48,7 @@ import java.util.regex.Pattern;
 
 import yajhfc.DesktopManager;
 import yajhfc.Utils;
+import yajhfc.shutdown.ShutdownManager;
 
 public class FormattedFile {
     public final File file;
@@ -310,6 +311,54 @@ public class FormattedFile {
         default:
             return false;
         }
+    }
+    
+    /**
+     * Returns a temporary file that has the correct extension given its format
+     * @param tempFile
+     * @return
+     * @throws IOException
+     */
+    public static FormattedFile getTempFileWithCorrectExtension(File tempFile) throws IOException {
+    	FileFormat ff = detectFileFormat(tempFile);
+    	File file;
+    	if (ff==FileFormat.Any || ff==FileFormat.Unknown) {
+    		file = tempFile;
+    	} else {
+    		String fileName = tempFile.getName();
+    		int pos = fileName.lastIndexOf('.');
+    		String fileExt;
+    		if (pos >= 0) {
+    			fileExt = fileName.substring(pos+1);
+    		} else {
+    			fileExt = "";
+    		}
+    		
+    		boolean matches = false;
+    		for (String ext : ff.getPossibleExtensions()) {
+    			if (ext.equalsIgnoreCase(fileExt)) {
+    				matches = true;
+    				break;
+    			}
+    		}
+    		
+    		if (matches) {
+    			file=tempFile;
+    		} else {
+    			File newTempFile = File.createTempFile("temp"+ff.name(), "."+ff.getDefaultExtension());
+    			ShutdownManager.deleteOnExit(newTempFile);
+    			file = newTempFile;
+    			if (!tempFile.renameTo(newTempFile)) {
+    				// First try overwriting the file, if that fails, try deleting it first...
+    				newTempFile.delete();
+    				if (!tempFile.renameTo(newTempFile)) {
+    					// If everything fails, keep the old file
+    					file = tempFile;
+    				}
+    			}
+    		}
+    	}
+    	return new FormattedFile(file, ff);
     }
     
     public static void main(String[] args) throws Exception {

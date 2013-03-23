@@ -105,7 +105,7 @@ public class StreamTFLItem extends HylaTFLItem {
         Utils.copyStream(inStream, fOut);
         fOut.close();
         
-        tempFile = new FormattedFile(tmp);
+        tempFile = FormattedFile.getTempFileWithCorrectExtension(tmp);
         if (streamSource == null)
             streamSource = Utils._("<stdin>");
         text = streamSource + " – " + DateKind.TIME_ONLY.getFormat().format(new Date());
