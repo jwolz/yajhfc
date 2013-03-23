@@ -36,13 +36,10 @@
  */
 package yajhfc.file;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -80,7 +77,7 @@ public class ExternalProcessConverter implements FileConverter {
         cmdLine = addArgument(cmdLine, "%F", desiredFormat.name(), false);
         cmdLine = addArgument(cmdLine, "%s", inFile.getAbsolutePath(), true);
         
-        List<String> commandLineArgs = ExternalProcessExecutor.splitCommandLine(cmdLine);
+        final List<String> commandLineArgs = ExternalProcessExecutor.splitCommandLine(cmdLine);
         ExternalProcessExecutor.quoteCommandLine(commandLineArgs);
         if (Utils.debugMode) {
             log.fine("Invoking " + commandLineArgs.get(0) + " with the following command line:");
@@ -88,22 +85,13 @@ public class ExternalProcessConverter implements FileConverter {
                 log.fine(item);
             }
         }
-        Process filter = new ProcessBuilder(commandLineArgs).start();
+        final Process filter = new ProcessBuilder(commandLineArgs).start();
 
+        StdErrThread errLogger = new StdErrThread(commandLineArgs.get(0), filter.getErrorStream());
+        
         final InputStream inputStream = filter.getInputStream();
         Utils.copyStream(inputStream, destination);
-        
-        BufferedReader errReader = new BufferedReader(new InputStreamReader(filter.getErrorStream()));
-        String line;
-        LinkedList<String> tail = new LinkedList<String>();
-        while ((line = errReader.readLine()) != null) {
-            log.info(commandLineArgs.get(0) + " output: " + line);
-            tail.offer(line);
-            while (tail.size() > 10) {
-                tail.poll();
-            }
-        }
-        errReader.close();
+
         filter.getOutputStream().close();
         try {
             int exitVal = filter.waitFor();
@@ -111,7 +99,7 @@ public class ExternalProcessConverter implements FileConverter {
                 StringBuilder excText = new StringBuilder();
                 if (exitVal != 111) // Magic value to suppress the printing of the header
                     excText.append("Non-zero exit code of ").append(commandLineArgs.get(0)).append(" (").append(exitVal).append("):\n");
-                for (String text : tail) {
+                for (String text : errLogger.getTail()) {
                     excText.append(text).append('\n');
                 }
                 throw new ConversionException(excText.toString());
