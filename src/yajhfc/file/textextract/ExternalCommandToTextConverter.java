@@ -1,11 +1,9 @@
 package yajhfc.file.textextract;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -13,6 +11,7 @@ import java.util.logging.Logger;
 import yajhfc.FaxOptions;
 import yajhfc.Utils;
 import yajhfc.file.FileConverter.ConversionException;
+import yajhfc.file.StdErrThread;
 import yajhfc.util.ArrayCharSequence;
 import yajhfc.util.ExternalProcessExecutor;
 
@@ -93,7 +92,8 @@ public abstract class ExternalCommandToTextConverter extends HylaToTextConverter
         ProcessBuilder childBuilder = new ProcessBuilder(cmdList);
         modifyEnvironment(childBuilder.environment());        
         Process child = childBuilder.start();
-
+        StdErrThread errLogger = new StdErrThread(cmdList.get(0), child.getErrorStream(), LINES_OF_ERROR_OUTPUT);
+        
         InputStreamReader r = new InputStreamReader(child.getInputStream(), streamEncoding);
         ArrayCharSequence csq = ArrayCharSequence.readCompletely(r);
         r.close();
@@ -101,23 +101,12 @@ public abstract class ExternalCommandToTextConverter extends HylaToTextConverter
         // Close the child's stdin
         child.getOutputStream().close();
 
-        BufferedReader bufR = new BufferedReader(new InputStreamReader(child.getErrorStream()));
-        String line;
-        LinkedList<String> tail = new LinkedList<String>();
-        while ((line = bufR.readLine()) != null) {
-            log.info(cmdList.get(0) + " output: " + line);
-            tail.offer(line);
-            while (tail.size() > LINES_OF_ERROR_OUTPUT) {
-                tail.poll();
-            }
-        }
-        bufR.close();
         try {
             int exitVal = child.waitFor();
             if (exitVal != 0) {
                 StringBuilder excText = new StringBuilder();
                 excText.append("Non-zero exit code of ").append(cmdList.get(0)).append(" (").append(exitVal).append("):\n");
-                for (String text : tail) {
+                for (String text : errLogger.getTail()) {
                     excText.append(text).append('\n');
                 }
                 throw new ConversionException(excText.toString());

@@ -37,12 +37,10 @@
 package yajhfc.file;
 
 import java.awt.Dimension;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,6 +83,7 @@ public class TIFFLibConverter implements FileConverter {
             }
         }
         Process tiff2PDF = new ProcessBuilder(commandLine).start();
+        new StdErrThread(commandLine.get(0), tiff2PDF.getErrorStream());
         //tiff2PDF.getOutputStream().close();
 
         final InputStream inputStream = tiff2PDF.getInputStream();
@@ -122,12 +121,6 @@ public class TIFFLibConverter implements FileConverter {
         }
         Utils.copyStream(inputStream, destination);
         
-        BufferedReader errReader = new BufferedReader(new InputStreamReader(tiff2PDF.getErrorStream()));
-        String line;
-        while ((line = errReader.readLine()) != null) {
-            log.info(commandLine.get(0) + " output: " + line);
-        }
-        errReader.close();
         try {
             int exitVal = tiff2PDF.waitFor();
             if (exitVal != 0) {
