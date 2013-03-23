@@ -46,6 +46,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.MouseInfo;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
@@ -3183,7 +3184,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             //statusSplitter.resetToPreferredSizes();
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
-                    statusSplitter.setDividerLocation(getAutoDividerLocation());
+                	setDividerLocationNoEvent(getAutoDividerLocation());
                     //System.out.println("makePreferredSize: " + getAutoDividerLocation());
                 }
             });
@@ -3209,19 +3210,24 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             }
         }
         
-        private boolean initialAdjustments = true;
+        private boolean programmaticAdjustment = true;
+        public void setDividerLocationNoEvent(int location) {
+        	programmaticAdjustment = true;
+        	statusSplitter.setDividerLocation(location);
+        }
+        
         public void propertyChange(PropertyChangeEvent evt) {
+        	if (programmaticAdjustment) {
+        		programmaticAdjustment = false;
+        		return;
+        	}
             if (!MainWin.this.isVisible())
                 return;
             
             if (isSelected() && 
-                    Math.abs((Integer)evt.getNewValue() - getAutoDividerLocation()) > RESET_THRESHOLD) {
-                if (!initialAdjustments) {
-                    setSelected(false);
-                }
-            } else {
-                initialAdjustments = false;
-            }
+            		Math.abs((Integer)evt.getNewValue() - getAutoDividerLocation()) > RESET_THRESHOLD) {
+            	setSelected(false);
+            } 
             //System.out.println("Reset: " + ((Integer)evt.getNewValue() - getAutoDividerLocation()));
         }
 
@@ -3247,7 +3253,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             if (firstDisplay) {
                 setSelected(myopts.statusBarSize < 0);
                 if (myopts.statusBarSize >= 0) {
-                    statusSplitter.setDividerLocation(statusSplitter.getHeight() - myopts.statusBarSize);
+                	setDividerLocationNoEvent(statusSplitter.getHeight() - myopts.statusBarSize);
                 }
                 firstDisplay = false;
             } else if (isSelected()) {
