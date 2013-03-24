@@ -73,6 +73,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -1136,6 +1137,26 @@ public final class Utils {
      */
     public static String readFully(Reader r) throws IOException {
         return ArrayCharSequence.readCompletely(r).toString();
+    }
+    
+    /**
+     * Deduplicates the specified list
+     * @param sortedList
+     * @return the number of duplicates removed
+     */
+    public static <T> int dedupSortedList(List<T> sortedList) {
+        Iterator<T> it = sortedList.iterator();
+        T lastItem = null;
+        int numDups = 0;
+        while (it.hasNext()) {
+            T item = it.next();
+            if (lastItem != null && lastItem.equals(item)) {
+                it.remove();
+                numDups++;
+            }
+            lastItem = item;
+        }
+        return numDups;
     }
 }
 

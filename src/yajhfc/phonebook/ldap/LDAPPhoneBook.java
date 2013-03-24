@@ -183,6 +183,7 @@ public class LDAPPhoneBook extends PhoneBook {
         res.close();
         
         Collections.sort(targetList);
+        Utils.dedupSortedList(targetList);
     }
 
     @Override
