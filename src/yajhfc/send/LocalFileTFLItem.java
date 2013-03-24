@@ -70,12 +70,12 @@ public class LocalFileTFLItem extends HylaTFLItem {
             outStream.close();
             
             preparedFile = FormattedFile.getTempFileWithCorrectExtension(tempFile);
-            switch (preparedFile.format) {
+            switch (preparedFile.getFormat()) {
             case PDF:
             case PostScript:
                 break;
             default:
-                throw new ConversionException("Converter output for file " + fileName + " has an unsupported file format " + preparedFile.format + " (converter=" + fconv + ")");
+                throw new ConversionException("Converter output for file " + fileName + " has an unsupported file format " + preparedFile.getFormat() + " (converter=" + fconv + ")");
             }
         }  catch (Exception e) {
             Launcher2.application.getDialogUI().showExceptionDialog(MessageFormat.format(Utils._("The document {0} could not be converted to PostScript, PDF or TIFF. Reason:"), getText()), e);

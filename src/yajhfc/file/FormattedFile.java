@@ -52,7 +52,7 @@ import yajhfc.shutdown.ShutdownManager;
 
 public class FormattedFile {
     public final File file;
-    public FileFormat format = FileFormat.Unknown;
+    protected FileFormat format = null;
 
     public FormattedFile(String fileName, FileFormat format) {
         this(new File(fileName), format);
@@ -69,18 +69,13 @@ public class FormattedFile {
         
     public FormattedFile(File file) {
         this.file = file;
-        try {
-            detectFormat();
-        } catch (Exception e) {
-            format = FileFormat.Unknown;
-        }
     }
     
     public void view() throws IOException, UnknownFormatException {
         String execCmd;
         boolean useCustomViewer;
 
-        switch (format) {
+        switch (getFormat()) {
         case TIFF:
             execCmd = Utils.getFaxOptions().faxViewer;
             useCustomViewer = Utils.getFaxOptions().useCustomFaxViewer;
@@ -94,7 +89,7 @@ public class FormattedFile {
             useCustomViewer = Utils.getFaxOptions().useCustomPDFViewer;
             break;
         default:
-            throw new UnknownFormatException(MessageFormat.format(Utils._("File format {0} not supported."), format.toString()));
+            throw new UnknownFormatException(MessageFormat.format(Utils._("File format {0} not supported."), format));
         }
         
         if (useCustomViewer) {
@@ -103,15 +98,29 @@ public class FormattedFile {
             DesktopManager.getDefault().open(file);
         }
     }
-    
-    public void detectFormat() throws FileNotFoundException, IOException {
-        format = detectFileFormat(file.getPath());
+
+    /**
+     * Returns (and detects if necessary) the file's format
+     * @return the format
+     */
+    public FileFormat getFormat() {
+        if (format == null) {
+            try {
+                format = detectFileFormat(file.getPath());
+            } catch (Exception e) {
+                format = FileFormat.Unknown;
+            }
+        }
+        return format;
     }
     
+    public File getFile() {
+        return file;
+    }
 
     @Override
     public String toString() {
-        return file + " [format=" + format.name() + "]";
+        return file + " [format=" + ((format==null) ? "<not yet detected>" : format.name()) + "]";
     }
     
     @Override
