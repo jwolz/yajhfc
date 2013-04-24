@@ -109,7 +109,8 @@ public class ListListModel<T> extends AbstractListModel implements Collection<T>
         min = list.size();
         list.addAll(elements);
         max = list.size() - 1;
-        fireIntervalAdded(this, min, max);
+        if (max >= 0)
+            fireIntervalAdded(this, min, max);
         return true;
     }
     

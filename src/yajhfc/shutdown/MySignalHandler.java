@@ -43,6 +43,7 @@ import java.util.logging.Logger;
 import sun.misc.Signal;
 import sun.misc.SignalHandler;
 
+@SuppressWarnings("restriction")
 public class MySignalHandler implements SignalHandler {
     private static final Logger log = Logger.getLogger(MySignalHandler.class.getName());
     

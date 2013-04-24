@@ -121,7 +121,7 @@ public abstract class AbstractFaxOptions implements PropertiesSerializable {
      * @param p
      * @param f
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void storeToProperties(Properties p, java.lang.reflect.Field[] f, String prefix) {
         
         for (int i = 0; i < f.length; i++) {
@@ -208,7 +208,7 @@ public abstract class AbstractFaxOptions implements PropertiesSerializable {
         loadFromProperties(p, propertyPrefix);
     }
     
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void loadFromProperties(Properties p, String prefix) {
 
         if (p.size() == 0) {
@@ -428,7 +428,7 @@ public abstract class AbstractFaxOptions implements PropertiesSerializable {
      * Copies this class's public attributes from the specified other class
      * @param other
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void copyFrom(AbstractFaxOptions other) {
         if (!this.getClass().isAssignableFrom(other.getClass())) {
             throw new IllegalArgumentException("Can only copy attributes from the same class or sub classes.");

@@ -39,15 +39,14 @@ package yajhfc.filters;
 
 public class ComparableFilter<V extends FilterableObject, K extends FilterKey> implements Filter<V,K> {
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     protected Comparable compareValue;
     protected ComparableFilterOperator operator;
     protected K column = null;
     
     protected Object colIdx = null;
     
-    @SuppressWarnings("unchecked")
-    public ComparableFilter(K col, ComparableFilterOperator op, Comparable compareValue) {
+    public ComparableFilter(K col, ComparableFilterOperator op, @SuppressWarnings("rawtypes") Comparable compareValue) {
         super();
         this.column = col;
         this.operator = op;

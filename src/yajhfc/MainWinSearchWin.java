@@ -74,7 +74,7 @@ public class MainWinSearchWin extends
     /* (non-Javadoc)
      * @see yajhfc.filters.ui.SearchWin#performSearch(yajhfc.filters.Filter, boolean, boolean)
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     protected void performSearch(Filter<FaxJob<FmtItem>, FmtItem> selectedFilter,
             boolean searchBackwards, boolean wrapAroundSearch) {
