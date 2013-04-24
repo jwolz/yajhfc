@@ -44,10 +44,6 @@ import java.awt.BorderLayout;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -232,14 +228,15 @@ public class CommonPanel extends AbstractOptionsPanel<FaxOptions> {
             checkMinimizeToTray.setEnabled(false);
             //checkMinimizeToTray.setToolTipText(_("Minimize to system tray (works only with Java 6 or higher)"));
 
-            checkMinimizeToTrayOnMainWinClose = new JCheckBox("<html>" + _("Minimize to tray when main window is closed") + "</html>");
-            checkMinimizeToTrayOnMainWinClose.addPropertyChangeListener("enabled", new PropertyChangeListener() {
-                public void propertyChange(PropertyChangeEvent evt) {
-                    checkMinimizeToTrayOnMainWinClose.setForeground((Boolean)evt.getNewValue() ? 
-                            UIManager.getColor("CheckBox.foreground") :
-                            UIManager.getColor("CheckBox.disabledText"));
-                }
-            });
+            checkMinimizeToTrayOnMainWinClose = new JCheckBox(_("Minimize to tray when main window is closed"));
+            checkMinimizeToTrayOnMainWinClose.setToolTipText(_("Minimize to tray when main window is closed"));
+//            checkMinimizeToTrayOnMainWinClose.addPropertyChangeListener("enabled", new PropertyChangeListener() {
+//                public void propertyChange(PropertyChangeEvent evt) {
+//                    checkMinimizeToTrayOnMainWinClose.setForeground((Boolean)evt.getNewValue() ? 
+//                            UIManager.getColor("CheckBox.foreground") :
+//                            UIManager.getColor("CheckBox.disabledText"));
+//                }
+//            });
             checkMinimizeToTrayOnMainWinClose.setEnabled(false);
             
             ComponentEnabler.installOn(checkShowTrayIcon, true, checkMinimizeToTray, checkMinimizeToTrayOnMainWinClose);

@@ -118,7 +118,6 @@ import yajhfc.util.ExampleFileFilter;
 import yajhfc.util.ExcDialogAbstractAction;
 import yajhfc.util.ExceptionDialog;
 import yajhfc.util.JTableTABAction;
-import yajhfc.util.LimitedPlainDocument;
 import yajhfc.util.ListComboModel;
 import yajhfc.util.ProgressPanel;
 import yajhfc.util.ProgressWorker;
@@ -226,7 +225,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
             @Override
             public void windowClosed(WindowEvent e) {
                 final FaxOptions faxOptions = Utils.getFaxOptions();
-                faxOptions.sendWinBounds = getBounds();
+                faxOptions.sendWinBounds = SimplifiedSendDialog.this.getBounds();
                 faxOptions.sendWinIsAdvanced = isAdvancedView;
                 List<String> numberLRU = faxOptions.faxNumbersLRU;
                 numberLRU.clear();
@@ -401,6 +400,7 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         ProgressWorker pw = new ProgressWorker() {
             private Set<String> numbers;
             
+            @SuppressWarnings("unchecked")
             @Override
             public void doWork() {
                 try {

@@ -109,7 +109,7 @@ public class RecvQFaxJob extends DirectAccessFaxJob<RecvFormat> {
                 resultData[i] = Integer.valueOf(r.getPageLength());
                 break;
             case m:
-            case q:
+            //case q:
                 resultData[i] = getProtection(hyda.getProtection(fileName));
                 break;
             case n:

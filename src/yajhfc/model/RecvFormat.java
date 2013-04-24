@@ -109,7 +109,7 @@ public enum RecvFormat implements FmtItem {
     /**
      * Protection
      */
-    q("q", _("Protection"), _("UNIX-style protection flags")), 
+    //q("q", _("Protection"), _("UNIX-style protection flags")), 
     /**
      * Resolution
      */
