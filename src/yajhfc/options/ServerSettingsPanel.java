@@ -145,6 +145,8 @@ public class ServerSettingsPanel extends AbstractOptionsPanel<FaxOptions> {
         foEdit.pclBug = checkPCLBug.isSelected();
         
         foEdit.useFaxListCache = checkUseCache.isSelected();
+        
+        panelServers.saveSettingsCalled(null, foEdit);
     }
     
     @Override
