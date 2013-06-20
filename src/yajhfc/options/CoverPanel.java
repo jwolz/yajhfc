@@ -240,6 +240,7 @@ public class CoverPanel extends AbstractOptionsPanel<FaxOptions> {
         foEdit.coverLocationRule = (LocationRule)comboLocationRule.getSelectedItem();
         foEdit.coverZIPCodeRule = (ZIPCodeRule)comboZIPCodeRule.getSelectedItem();
         
+        coverPanel.saveSettingsCalled(null, foEdit);
     }
 
 }

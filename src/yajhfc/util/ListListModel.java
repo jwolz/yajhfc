@@ -107,11 +107,14 @@ public class ListListModel<T> extends AbstractListModel implements Collection<T>
     public boolean addAll(Collection<? extends T> elements) {
         int min, max;
         min = list.size();
-        list.addAll(elements);
-        max = list.size() - 1;
-        if (max >= 0)
-            fireIntervalAdded(this, min, max);
-        return true;
+        if (list.addAll(elements)) {
+            max = list.size() - 1;
+            if (max >= 0)
+                fireIntervalAdded(this, min, max);
+            return true;
+        } else {
+            return false;
+        }
     }
     
     /**

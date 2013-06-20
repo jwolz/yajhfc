@@ -156,6 +156,17 @@ public abstract class AbstractFaxJob<T extends FmtItem> implements SerializableF
         }
     }    
 
+    
+    private static int parseInt(String s) {
+        long v = Long.parseLong(s);
+        if (v <= (long)Integer.MAX_VALUE) {
+            return (int)v;
+        } else {
+            // Make two's complement of value and return it as a negative integer
+            return -((int)(v ^ 0xffffffffl) + 1);
+        }
+    }
+    
     /**
      * Parses the String value data into the dataClass of the given FmtItem.
      * This is called by getData, its result is cached so this is only called once
@@ -183,7 +194,7 @@ public abstract class AbstractFaxJob<T extends FmtItem> implements SerializableF
                 } else if (data.length() > 0) {
                     try {
                         if (dataClass == Integer.class)
-                            return Integer.valueOf(Integer.parseInt(data));
+                            return Integer.valueOf(parseInt(data));
                         else if (dataClass == Float.class)
                             return  Float.valueOf(data);
                         else if (dataClass == Double.class)
