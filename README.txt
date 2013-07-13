@@ -66,6 +66,10 @@ YajHFC was originally written as a first more complicated
 CHANGES
 -------
 
+0.5.4:
+- New batch printer and mailer plugin
+- Several minor enhancements and bug fixes
+
 0.5.3:
 - Added "Print report"-feature for sent and received faxes
 - Windows launcher is now an exe instead of vbs (based on patched launch4j)

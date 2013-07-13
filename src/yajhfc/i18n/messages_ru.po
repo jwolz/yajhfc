@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YajHFC 0.5.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-03 11:18+0100\n"
+"POT-Creation-Date: 2013-07-13 10:24+0200\n"
 "PO-Revision-Date: 2012-12-17 11:59+0400\n"
 "Last-Translator: Alexander Moisseev <moiseev@mezonplus.ru>\n"
 "Language-Team: RUSSIAN <moiseev@mezonplus.ru>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "X-Generator: Poedit 1.5.4\n"
 
 #: ../FaxOptions.java:647 ../FaxOptions.java:655 ../FaxOptions.java:663
-#: ../FaxOptions.java:675 ../options/ServerSettingsPanel.java:161
+#: ../FaxOptions.java:675 ../options/ServerSettingsPanel.java:163
 #: ../options/CoverPanel.java:232
 msgid "Default"
 msgstr "Основной"
@@ -129,7 +129,7 @@ msgstr "Больше не напоминать"
 #: ../MainWin.java:520 ../filters/ui/SearchWin.java:184
 #: ../phonebook/ui/NewPhoneBookWin.java:1152
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:353
-#: ../TextViewPanel.java:136
+#: ../TextViewPanel.java:135
 msgid "Close"
 msgstr "Закрыть"
 
@@ -330,12 +330,12 @@ msgstr "страница {0}"
 msgid "Proxies and system properties"
 msgstr "Параметры прокси и системы"
 
-#: ../customprops/CustomPropOptionsPanel.java:137
-#: ../customprops/CustomPropOptionsPanel.java:144
+#: ../customprops/CustomPropOptionsPanel.java:135
+#: ../customprops/CustomPropOptionsPanel.java:142
 msgid "Define system properties"
 msgstr "Задать параметры системы"
 
-#: ../customprops/CustomPropOptionsPanel.java:148
+#: ../customprops/CustomPropOptionsPanel.java:146
 msgid ""
 "Here you can define Java system properties. Only do this if you know what "
 "you are doing."
@@ -343,19 +343,19 @@ msgstr ""
 "Здесь можно задать системные настройки Java. Изменяйте их, только если "
 "понимаете, что делаете."
 
-#: ../customprops/CustomPropOptionsPanel.java:180
+#: ../customprops/CustomPropOptionsPanel.java:178
 msgid "Use system proxy settings"
 msgstr "Использовать системные настройки прокси"
 
-#: ../customprops/CustomPropOptionsPanel.java:190
+#: ../customprops/CustomPropOptionsPanel.java:188
 msgid "HTTP proxy server"
 msgstr "HTTP прокси-сервер"
 
-#: ../customprops/CustomPropOptionsPanel.java:191
+#: ../customprops/CustomPropOptionsPanel.java:189
 msgid "HTTP proxy port"
 msgstr "Порт HTTP прокси"
 
-#: ../customprops/CustomPropOptionsPanel.java:192
+#: ../customprops/CustomPropOptionsPanel.java:190
 msgid "HTTP non proxy hosts"
 msgstr "Не использовать прокси-сервер HTTP для хостов"
 
@@ -524,11 +524,11 @@ msgstr "с YajHFC"
 
 #: ../logconsole/LogConsole.java:115 ../MainWin.java:1242 ../MainWin.java:2274
 #: ../util/ExceptionDialog.java:105 ../util/ClipboardPopup.java:74
-#: ../TextViewPanel.java:211
+#: ../TextViewPanel.java:210
 msgid "Copy"
 msgstr "Копировать"
 
-#: ../logconsole/LogConsole.java:127 ../TextViewPanel.java:179
+#: ../logconsole/LogConsole.java:127 ../TextViewPanel.java:178
 msgid "Log files"
 msgstr "Файлы журналов"
 
@@ -536,7 +536,7 @@ msgstr "Файлы журналов"
 msgid "Error saving the log file"
 msgstr "Ошибка сохранения файла журнала"
 
-#: ../logconsole/LogConsole.java:146 ../TextViewPanel.java:200
+#: ../logconsole/LogConsole.java:146 ../TextViewPanel.java:199
 msgid "Save"
 msgstr "Сохранить"
 
@@ -575,8 +575,8 @@ msgstr "{0}-файлы"
 msgid "Export to XML"
 msgstr "Экспорт в XML"
 
-#: ../export/ExportAction.java:163 ../MainWin.java:3267
-#: ../send/SimplifiedSendDialog.java:360
+#: ../export/ExportAction.java:163 ../MainWin.java:3272
+#: ../send/SimplifiedSendDialog.java:359
 msgid "Server"
 msgstr "Сервер"
 
@@ -621,7 +621,7 @@ msgstr "Да, всегда показывать окно отправки"
 msgid "Yes, show send dialog only when no recipients were found"
 msgstr "Да, показывать окно отправки, только если получатели не обнаружены"
 
-#: ../file/FormattedFile.java:96
+#: ../file/FormattedFile.java:92
 #, java-format
 msgid "File format {0} not supported."
 msgstr "Формат файла {0} не поддерживается."
@@ -806,7 +806,7 @@ msgstr "Отображение факса"
 msgid "An error occured displaying the file {0} (job {1}):\n"
 msgstr "Произошла ошибка при отображении файла {0} (job {1}):\n"
 
-#: ../MainWin.java:492 ../send/SendController.java:275
+#: ../MainWin.java:492 ../send/SendController.java:276
 msgid "Launching viewer"
 msgstr "Запуск программы просмотра"
 
@@ -917,7 +917,7 @@ msgstr ""
 #: ../options/IdentityPanel.java:220 ../options/PathAndViewPanel.java:327
 #: ../options/PathAndViewPanel.java:333 ../options/PathAndViewPanel.java:339
 #: ../options/PathAndViewPanel.java:347 ../options/PathAndViewPanel.java:353
-#: ../options/CommonPanel.java:405 ../options/CommonPanel.java:413
+#: ../options/CommonPanel.java:402 ../options/CommonPanel.java:410
 #: ../options/SingleServerSettingsPanel.java:293
 #: ../options/SingleServerSettingsPanel.java:300
 #: ../options/SingleServerSettingsPanel.java:307
@@ -934,7 +934,7 @@ msgstr ""
 #: ../phonebook/jdbc/ConnectionDialog.java:413
 #: ../util/ExceptionDialog.java:295 ../util/ExceptionDialog.java:299
 #: ../util/ExceptionDialog.java:323 ../util/AcceleratorKeyDialog.java:150
-#: ../send/SendController.java:168 ../send/SendController.java:173
+#: ../send/SendController.java:169 ../send/SendController.java:174
 msgid "Error"
 msgstr "Ошибка"
 
@@ -963,7 +963,7 @@ msgid "Saves the selected fax(es) as single {0} file"
 msgstr "Сохранить выделенныный(е) факс(ы) как один {0} файл"
 
 #: ../MainWin.java:855 ../options/OptionsWin.java:120
-#: ../options/CommonPanel.java:372
+#: ../options/CommonPanel.java:369
 msgid "Options"
 msgstr "Настройки"
 
@@ -972,7 +972,7 @@ msgid "Shows the Options dialog"
 msgstr "Показать диалоговое окно настроек"
 
 #: ../MainWin.java:872 ../send/SendWin.java:548
-#: ../send/SimplifiedSendDialog.java:271
+#: ../send/SimplifiedSendDialog.java:270
 msgid "Send"
 msgstr "Отправить"
 
@@ -1648,7 +1648,7 @@ msgstr "Пути и просмотр"
 msgid "Recipient extraction"
 msgstr "Извлечение получателей"
 
-#: ../options/OptionsWin.java:240 ../options/ServerSettingsPanel.java:257
+#: ../options/OptionsWin.java:240 ../options/ServerSettingsPanel.java:259
 msgid "Servers"
 msgstr "Серверы"
 
@@ -1715,64 +1715,64 @@ msgstr "(внутренний {0})"
 msgid "{0} KB"
 msgstr "{0} KБ"
 
-#: ../options/ServerSettingsPanel.java:175
+#: ../options/ServerSettingsPanel.java:177
 #, java-format
 msgid "Server {0}"
 msgstr "Сервер {0}"
 
-#: ../options/ServerSettingsPanel.java:176
+#: ../options/ServerSettingsPanel.java:178
 #, java-format
 msgid "Modems for server {0}"
 msgstr "Модемы для сервера {0}"
 
-#: ../options/ServerSettingsPanel.java:177
+#: ../options/ServerSettingsPanel.java:179
 #, java-format
 msgid "Delivery settings for server {0}"
 msgstr "Параметры доставки для сервера {0}"
 
-#: ../options/ServerSettingsPanel.java:187
+#: ../options/ServerSettingsPanel.java:189
 msgid "Delivery"
 msgstr "Доставка"
 
-#: ../options/ServerSettingsPanel.java:191
+#: ../options/ServerSettingsPanel.java:193
 msgid "Modems"
 msgstr "Модемы"
 
-#: ../options/ServerSettingsPanel.java:221 ../options/CoverPanel.java:107
+#: ../options/ServerSettingsPanel.java:223 ../options/CoverPanel.java:107
 #, java-format
 msgid "Copy of {0}"
 msgstr "Копия {0}"
 
-#: ../options/ServerSettingsPanel.java:227
+#: ../options/ServerSettingsPanel.java:229
 #, java-format
 msgid "Do you really want to remove the server \"{0}\"?"
 msgstr "Действительно хотите удалить сервер \"{0}\"?"
 
-#: ../options/ServerSettingsPanel.java:263
+#: ../options/ServerSettingsPanel.java:265
 msgid "Clear cache"
 msgstr "Очистить кэш"
 
-#: ../options/ServerSettingsPanel.java:274
+#: ../options/ServerSettingsPanel.java:276
 msgid "Locally cache fax lists"
 msgstr "Локально кэшировать списки факсов"
 
-#: ../options/ServerSettingsPanel.java:282
+#: ../options/ServerSettingsPanel.java:284
 msgid "Cache settings"
 msgstr "Параметры кэша"
 
-#: ../options/ServerSettingsPanel.java:284
+#: ../options/ServerSettingsPanel.java:286
 msgid "Current Cache size:"
 msgstr "Текущий размер кэша:"
 
-#: ../options/ServerSettingsPanel.java:309
+#: ../options/ServerSettingsPanel.java:311
 msgid "Global settings"
 msgstr "Глобальные настройки"
 
-#: ../options/ServerSettingsPanel.java:311
+#: ../options/ServerSettingsPanel.java:313
 msgid "Use PCL file type bugfix"
 msgstr "Исправлять ошибку распознавания PCL файлов"
 
-#: ../options/ServerSettingsPanel.java:317
+#: ../options/ServerSettingsPanel.java:319
 msgid ""
 "The maximum time to wait for a interaction with the server to complete. "
 "Values below 5 are not recommended; 0 disables this timeout."
@@ -1780,15 +1780,15 @@ msgstr ""
 "Максимальное время ожидания завершения взаимодействия с сервером. Значения "
 "менее 5 не рекомендуются; 0 отключает тайм-аут."
 
-#: ../options/ServerSettingsPanel.java:321
+#: ../options/ServerSettingsPanel.java:323
 msgid "Table refresh interval (secs.):"
 msgstr "Интервал обновления таблиц (сек.):"
 
-#: ../options/ServerSettingsPanel.java:322
+#: ../options/ServerSettingsPanel.java:324
 msgid "Server status refresh interval (secs.):"
 msgstr "Интервал обновления состояния сервера (сек.):"
 
-#: ../options/ServerSettingsPanel.java:323
+#: ../options/ServerSettingsPanel.java:325
 msgid "Server socket timeout (secs):"
 msgstr "Время ожидания сервера (сек.):"
 
@@ -2121,7 +2121,7 @@ msgid "Archive sent fax jobs"
 msgstr "Архивировать отправленные задания"
 
 #: ../options/SendPanel.java:172 ../send/JobPropsEditorDialog.java:52
-#: ../send/SimplifiedSendDialog.java:314
+#: ../send/SimplifiedSendDialog.java:313
 msgid "Job properties"
 msgstr "Свойства задания"
 
@@ -2175,104 +2175,104 @@ msgstr "Префикс номера:"
 msgid "Default identity:"
 msgstr "Персональные данные по умолчанию:"
 
-#: ../options/CommonPanel.java:119
+#: ../options/CommonPanel.java:115
 msgid "(System native)"
 msgstr "(Системная)"
 
-#: ../options/CommonPanel.java:120
+#: ../options/CommonPanel.java:116
 msgid "(Crossplatform)"
 msgstr "(Кроссплатформенная)"
 
-#: ../options/CommonPanel.java:174
+#: ../options/CommonPanel.java:170
 msgid "Update check"
 msgstr "Проверка обновлений"
 
-#: ../options/CommonPanel.java:176
+#: ../options/CommonPanel.java:172
 msgid "Automatically check for updates"
 msgstr "Автоматически проверять обновления"
 
-#: ../options/CommonPanel.java:204
+#: ../options/CommonPanel.java:200
 msgid "User interface"
 msgstr "Пользовательский интерфейс"
 
-#: ../options/CommonPanel.java:228
+#: ../options/CommonPanel.java:224
 msgid "Show tray icon"
 msgstr "Показывать иконку в трее"
 
-#: ../options/CommonPanel.java:229
+#: ../options/CommonPanel.java:225
 msgid "Show a system tray icon (works only with Java 6 or higher)"
 msgstr "Показывать иконку в системном трее (работает только с Java 6 или выше)"
 
-#: ../options/CommonPanel.java:231
+#: ../options/CommonPanel.java:227
 msgid "Minimize to tray"
 msgstr "Сворачивать в трей"
 
-#: ../options/CommonPanel.java:235
+#: ../options/CommonPanel.java:231 ../options/CommonPanel.java:232
 msgid "Minimize to tray when main window is closed"
 msgstr "При закрытии главного окна сворачивать в трей "
 
-#: ../options/CommonPanel.java:247
+#: ../options/CommonPanel.java:244
 msgid "Language:"
 msgstr "Язык:"
 
-#: ../options/CommonPanel.java:248
+#: ../options/CommonPanel.java:245
 msgid "Look and Feel:"
 msgstr "Тема:"
 
-#: ../options/CommonPanel.java:249
+#: ../options/CommonPanel.java:246
 msgid "Style of send dialog:"
 msgstr "Стиль окна отправки:"
 
-#: ../options/CommonPanel.java:273
+#: ../options/CommonPanel.java:270
 msgid "Actions after receiving a new fax:"
 msgstr "Действия после приема нового факса:"
 
-#: ../options/CommonPanel.java:275
+#: ../options/CommonPanel.java:272
 msgid "Beep"
 msgstr "Звуковой сигнал"
 
-#: ../options/CommonPanel.java:276
+#: ../options/CommonPanel.java:273
 msgid "Bring to front"
 msgstr "Переместить на передний план"
 
-#: ../options/CommonPanel.java:277
+#: ../options/CommonPanel.java:274
 msgid "Open in viewer"
 msgstr "Открыть в программе просмотра"
 
-#: ../options/CommonPanel.java:283
+#: ../options/CommonPanel.java:280
 msgid "And mark as read"
 msgstr "Пометить как прочитанный"
 
-#: ../options/CommonPanel.java:285
+#: ../options/CommonPanel.java:282
 msgid "Show flashing tray icon"
 msgstr "Показывать мигающую иконку в трее"
 
-#: ../options/CommonPanel.java:286
+#: ../options/CommonPanel.java:283
 msgid "Display tray icon message"
 msgstr "Показывать сообщение иконки трея"
 
-#: ../options/CommonPanel.java:305
+#: ../options/CommonPanel.java:302
 msgid "Date and Time Format:"
 msgstr "Формат даты и времени:"
 
-#: ../options/CommonPanel.java:314
+#: ../options/CommonPanel.java:311
 msgid "Date format:"
 msgstr "Формат даты:"
 
-#: ../options/CommonPanel.java:315
+#: ../options/CommonPanel.java:312
 msgid "Time format:"
 msgstr "Формат времени:"
 
-#: ../options/CommonPanel.java:372
+#: ../options/CommonPanel.java:369
 msgid ""
 "You must restart the program for the change of the language to take effect."
 msgstr "Перезапустите программу, чтобы измениение языка вступило в силу."
 
-#: ../options/CommonPanel.java:405
+#: ../options/CommonPanel.java:402
 msgid "Please enter a valid date format:"
 msgstr "Пожалуйста, введите правильный формат даты:"
 
-#: ../options/CommonPanel.java:413
+#: ../options/CommonPanel.java:410
 msgid "Please enter a valid time format."
 msgstr "Пожалуйста, введите правильный формат времени:"
 
@@ -2554,7 +2554,7 @@ msgstr "Пароль LDAP"
 msgid "Please enter the LDAP password:"
 msgstr "Пожалуйста, введите пароль LDAP:"
 
-#: ../phonebook/ldap/LDAPPhoneBook.java:198
+#: ../phonebook/ldap/LDAPPhoneBook.java:199
 msgid "Error executing the search:"
 msgstr "Ошибка выполнения поиска:"
 
@@ -2774,8 +2774,8 @@ msgid "Error previewing your settings:"
 msgstr "Ошибка предпросмотра настроек:"
 
 #: ../phonebook/csv/CSVDialog.java:334 ../send/SendWin.java:575
-#: ../send/SendWin.java:580 ../send/SimplifiedSendDialog.java:284
-#: ../send/SimplifiedSendDialog.java:303
+#: ../send/SendWin.java:580 ../send/SimplifiedSendDialog.java:283
+#: ../send/SimplifiedSendDialog.java:302
 msgid "Preview"
 msgstr "Просмотр"
 
@@ -3053,7 +3053,7 @@ msgid "Please select the items to add to the distribution list:"
 msgstr "Пожалуйста, выберите элементы для добавления к списку рассылки:"
 
 #: ../phonebook/ui/SingleEntryPhonebookPanel.java:133 ../send/SendWin.java:336
-#: ../send/SimplifiedSendDialog.java:392
+#: ../send/SimplifiedSendDialog.java:391
 msgid "Comments:"
 msgstr "Комментарии:"
 
@@ -4035,14 +4035,6 @@ msgstr "Владелец файла"
 msgid "Number of pages in document"
 msgstr "Количество страниц в документе"
 
-#: ../model/RecvFormat.java:112
-msgid "Protection"
-msgstr "Права"
-
-#: ../model/RecvFormat.java:112
-msgid "UNIX-style protection flags"
-msgstr "Флаги прав доступа в UNIX-стиле"
-
 #: ../model/RecvFormat.java:116
 msgid "Resolution of received data"
 msgstr "Разрешение принятых документов"
@@ -4190,7 +4182,7 @@ msgstr "Ключ"
 msgid "Value"
 msgstr "Значение"
 
-#: ../TextViewPanel.java:195 ../send/SimplifiedSendDialog.java:992
+#: ../TextViewPanel.java:194 ../send/SimplifiedSendDialog.java:992
 msgid "Error saving the file"
 msgstr "Ошибка сохранения файла"
 
@@ -4210,7 +4202,7 @@ msgstr "Отправить Факс"
 msgid "Poll fax"
 msgstr "Запросить факс"
 
-#: ../send/SendWin.java:283 ../send/SimplifiedSendDialog.java:367
+#: ../send/SendWin.java:283 ../send/SimplifiedSendDialog.java:366
 msgid "Use cover page"
 msgstr "Использовать титульный лист"
 
@@ -4234,7 +4226,7 @@ msgstr "Адрес:"
 msgid "Voice number:"
 msgstr "Телефон:"
 
-#: ../send/SendWin.java:335 ../send/SimplifiedSendDialog.java:391
+#: ../send/SendWin.java:335 ../send/SimplifiedSendDialog.java:390
 msgid "Subject:"
 msgstr "Тема:"
 
@@ -4250,7 +4242,7 @@ msgstr "Номер(а) факс(а|ов):"
 msgid "Cover page"
 msgstr "Титульный лист"
 
-#: ../send/SendWin.java:580 ../send/SimplifiedSendDialog.java:284
+#: ../send/SendWin.java:580 ../send/SimplifiedSendDialog.java:283
 msgid ""
 "Nothing to preview! (Neither a cover page nor a file to send has been "
 "selected.)"
@@ -4268,19 +4260,19 @@ msgstr ""
 "Это окно позволяет непосредственно устанавливать свойства заданий HylaFAX. "
 "Используйте его, только если понимаете что делаете!"
 
-#: ../send/SimplifiedSendDialog.java:183
+#: ../send/SimplifiedSendDialog.java:182
 msgid ">> Advanced"
 msgstr ">> Дополнительно"
 
-#: ../send/SimplifiedSendDialog.java:184
+#: ../send/SimplifiedSendDialog.java:183
 msgid "<< Simplified"
 msgstr "<< Упрощённый"
 
-#: ../send/SimplifiedSendDialog.java:191
+#: ../send/SimplifiedSendDialog.java:190
 msgid "Send fax"
 msgstr "Отправить факс"
 
-#: ../send/SimplifiedSendDialog.java:361
+#: ../send/SimplifiedSendDialog.java:360
 msgid "Identity"
 msgstr "Персональные данные"
 
@@ -4396,35 +4388,35 @@ msgstr "Выгрузка документа"
 msgid "Creating {0} from documents to send"
 msgstr "Создается {0} из документов для отправки"
 
-#: ../send/SendController.java:168
+#: ../send/SendController.java:169
 #, java-format
 msgid "Can not read file \"{0}\"!"
 msgstr "Невозможно прочитать файл \"{0}\"!"
 
-#: ../send/SendController.java:173
+#: ../send/SendController.java:174
 #, java-format
 msgid "Can not read default cover page file \"{0}\"!"
 msgstr "Невозможно прочитать файл титульного листа по умолчанию  \"{0}\"!"
 
-#: ../send/SendController.java:251
+#: ../send/SendController.java:252
 msgid "Creating cover page"
 msgstr "Создание титульного листа"
 
-#: ../send/SendController.java:265
+#: ../send/SendController.java:266
 #, java-format
 msgid "Formatting {0}"
 msgstr "Форматирование {0}"
 
-#: ../send/SendController.java:279
+#: ../send/SendController.java:280
 msgid "Error previewing the documents:"
 msgstr "Ошибка просмотра докуметнтов:"
 
-#: ../send/SendController.java:357
+#: ../send/SendController.java:358
 #, java-format
 msgid "Creating job to {0}"
 msgstr "Создание задания для {0}"
 
-#: ../send/SendController.java:444
+#: ../send/SendController.java:445
 #, java-format
 msgid ""
 "An error occured while submitting the fax job for phone number \"{0}\" (will "
@@ -4433,29 +4425,29 @@ msgstr ""
 "Произошла ошибка при отправке факса на номер \"{0}\" (будет сделана попытка "
 "доставки факса на остальные номера):"
 
-#: ../send/SendController.java:448
+#: ../send/SendController.java:449
 msgid "Cleaning up"
 msgstr "Очистка"
 
-#: ../send/SendController.java:452
+#: ../send/SendController.java:453
 msgid "An error occured while submitting the fax: "
 msgstr "Произошла ошибка при отправке факса:"
 
-#: ../send/SendController.java:512
+#: ../send/SendController.java:513
 msgid "To send a fax you have to enter at least one phone number!"
 msgstr "Чтобы отправить факс, введите хотя бы один телефонный номер!"
 
-#: ../send/SendController.java:512 ../send/SendController.java:519
-#: ../send/SendController.java:529
+#: ../send/SendController.java:513 ../send/SendController.java:520
+#: ../send/SendController.java:530
 msgid "Warning"
 msgstr "Предупреждение"
 
-#: ../send/SendController.java:519
+#: ../send/SendController.java:520
 #, java-format
 msgid "For recipient {0} (\"{1}\") no fax number has been entered."
 msgstr "Для получателя {0} (\"{1}\") не был указан номер факса."
 
-#: ../send/SendController.java:526
+#: ../send/SendController.java:527
 msgid ""
 "You haven't selected a file to transmit, so your fax will ONLY contain the "
 "cover page.\n"
@@ -4464,19 +4456,19 @@ msgstr ""
 "Вы не выбрали файл для отправки, Ваш факс содержит ТОЛЬКО титульный лист.\n"
 "Продолжить?"
 
-#: ../send/SendController.java:526
+#: ../send/SendController.java:527
 msgid "Continue?"
 msgstr "Продолжить?"
 
-#: ../send/SendController.java:529
+#: ../send/SendController.java:530
 msgid "To send a fax you must select at least one file!"
 msgstr "Чтобы отправить факс, выберите хотя бы один файл!"
 
-#: ../send/SendController.java:539
+#: ../send/SendController.java:543
 msgid "Sending fax"
 msgstr "Передача факса"
 
-#: ../send/SendController.java:544
+#: ../send/SendController.java:548
 msgid "Previewing fax"
 msgstr "Просмотр факса"
 
@@ -4507,6 +4499,12 @@ msgstr "Обновить выбранный элемент списка"
 #: ../send/MinutesFormatter.java:80
 msgid "minutes"
 msgstr "минут"
+
+#~ msgid "Protection"
+#~ msgstr "Права"
+
+#~ msgid "UNIX-style protection flags"
+#~ msgstr "Флаги прав доступа в UNIX-стиле"
 
 #~ msgid "Same as PostScript viewer"
 #~ msgstr "Такая же как и для программы просмотра PostScript"

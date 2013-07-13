@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-03 11:18+0100\n"
+"POT-Creation-Date: 2013-07-13 10:24+0200\n"
 "PO-Revision-Date: 2011-10-22 23:34+0200\n"
 "Last-Translator: Mesut Güler <maxut@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../FaxOptions.java:647 ../FaxOptions.java:655 ../FaxOptions.java:663
-#: ../FaxOptions.java:675 ../options/ServerSettingsPanel.java:161
+#: ../FaxOptions.java:675 ../options/ServerSettingsPanel.java:163
 #: ../options/CoverPanel.java:232
 msgid "Default"
 msgstr "Varsayılan"
@@ -127,7 +127,7 @@ msgstr "Tekrar hatırlatma"
 #: ../MainWin.java:520 ../filters/ui/SearchWin.java:184
 #: ../phonebook/ui/NewPhoneBookWin.java:1152
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:353
-#: ../TextViewPanel.java:136
+#: ../TextViewPanel.java:135
 msgid "Close"
 msgstr "Kapat"
 
@@ -323,12 +323,12 @@ msgstr "sayfa {0}"
 msgid "Proxies and system properties"
 msgstr "Vekil sunucu ve sistem özellikleri"
 
-#: ../customprops/CustomPropOptionsPanel.java:137
-#: ../customprops/CustomPropOptionsPanel.java:144
+#: ../customprops/CustomPropOptionsPanel.java:135
+#: ../customprops/CustomPropOptionsPanel.java:142
 msgid "Define system properties"
 msgstr "Sistem özelliklerini tanımla"
 
-#: ../customprops/CustomPropOptionsPanel.java:148
+#: ../customprops/CustomPropOptionsPanel.java:146
 msgid ""
 "Here you can define Java system properties. Only do this if you know what "
 "you are doing."
@@ -336,19 +336,19 @@ msgstr ""
 "Burada Java sistem özelliklerini tanımlayabilirsiniz. Ne yaptığınızı "
 "biliyorsanız bu işlemi yapın."
 
-#: ../customprops/CustomPropOptionsPanel.java:180
+#: ../customprops/CustomPropOptionsPanel.java:178
 msgid "Use system proxy settings"
 msgstr "Sistem vekil sunucu ayarlarını kullan"
 
-#: ../customprops/CustomPropOptionsPanel.java:190
+#: ../customprops/CustomPropOptionsPanel.java:188
 msgid "HTTP proxy server"
 msgstr "HTTP vekil sunucusu"
 
-#: ../customprops/CustomPropOptionsPanel.java:191
+#: ../customprops/CustomPropOptionsPanel.java:189
 msgid "HTTP proxy port"
 msgstr "HTTP vekil sunucu bağlantı noktası"
 
-#: ../customprops/CustomPropOptionsPanel.java:192
+#: ../customprops/CustomPropOptionsPanel.java:190
 msgid "HTTP non proxy hosts"
 msgstr "Vekil sunucusu kullanılmayacak HTTP ana makinaları"
 
@@ -517,11 +517,11 @@ msgstr "YajHFC günlük uçbirimi"
 
 #: ../logconsole/LogConsole.java:115 ../MainWin.java:1242 ../MainWin.java:2274
 #: ../util/ExceptionDialog.java:105 ../util/ClipboardPopup.java:74
-#: ../TextViewPanel.java:211
+#: ../TextViewPanel.java:210
 msgid "Copy"
 msgstr "Kopyala"
 
-#: ../logconsole/LogConsole.java:127 ../TextViewPanel.java:179
+#: ../logconsole/LogConsole.java:127 ../TextViewPanel.java:178
 msgid "Log files"
 msgstr "Günlük dosyaları"
 
@@ -529,7 +529,7 @@ msgstr "Günlük dosyaları"
 msgid "Error saving the log file"
 msgstr "Günlük dosyasını kayderken hata"
 
-#: ../logconsole/LogConsole.java:146 ../TextViewPanel.java:200
+#: ../logconsole/LogConsole.java:146 ../TextViewPanel.java:199
 msgid "Save"
 msgstr "Kaydet"
 
@@ -568,8 +568,8 @@ msgstr "{0}-dosyaları"
 msgid "Export to XML"
 msgstr "XML e aktar"
 
-#: ../export/ExportAction.java:163 ../MainWin.java:3267
-#: ../send/SimplifiedSendDialog.java:360
+#: ../export/ExportAction.java:163 ../MainWin.java:3272
+#: ../send/SimplifiedSendDialog.java:359
 msgid "Server"
 msgstr "Sunucu"
 
@@ -614,7 +614,7 @@ msgstr ""
 msgid "Yes, show send dialog only when no recipients were found"
 msgstr ""
 
-#: ../file/FormattedFile.java:96
+#: ../file/FormattedFile.java:92
 #, java-format
 msgid "File format {0} not supported."
 msgstr "{0} dosya biçimi desteklenmiyor."
@@ -799,7 +799,7 @@ msgstr "Faksı göster"
 msgid "An error occured displaying the file {0} (job {1}):\n"
 msgstr "{0} dosyasını görüntülerken bir hata oldu (işlem {1}):\n"
 
-#: ../MainWin.java:492 ../send/SendController.java:275
+#: ../MainWin.java:492 ../send/SendController.java:276
 msgid "Launching viewer"
 msgstr "Görüntüleyici başlatılıyor"
 
@@ -908,7 +908,7 @@ msgstr ""
 #: ../options/IdentityPanel.java:220 ../options/PathAndViewPanel.java:327
 #: ../options/PathAndViewPanel.java:333 ../options/PathAndViewPanel.java:339
 #: ../options/PathAndViewPanel.java:347 ../options/PathAndViewPanel.java:353
-#: ../options/CommonPanel.java:405 ../options/CommonPanel.java:413
+#: ../options/CommonPanel.java:402 ../options/CommonPanel.java:410
 #: ../options/SingleServerSettingsPanel.java:293
 #: ../options/SingleServerSettingsPanel.java:300
 #: ../options/SingleServerSettingsPanel.java:307
@@ -925,7 +925,7 @@ msgstr ""
 #: ../phonebook/jdbc/ConnectionDialog.java:413
 #: ../util/ExceptionDialog.java:295 ../util/ExceptionDialog.java:299
 #: ../util/ExceptionDialog.java:323 ../util/AcceleratorKeyDialog.java:150
-#: ../send/SendController.java:168 ../send/SendController.java:173
+#: ../send/SendController.java:169 ../send/SendController.java:174
 msgid "Error"
 msgstr "Hata"
 
@@ -954,7 +954,7 @@ msgid "Saves the selected fax(es) as single {0} file"
 msgstr "Seçili faks(lar)ı tek dosya {0} olarak kaydeder"
 
 #: ../MainWin.java:855 ../options/OptionsWin.java:120
-#: ../options/CommonPanel.java:372
+#: ../options/CommonPanel.java:369
 msgid "Options"
 msgstr "Seçenekler"
 
@@ -963,7 +963,7 @@ msgid "Shows the Options dialog"
 msgstr "Seçenekler iletişimini göster"
 
 #: ../MainWin.java:872 ../send/SendWin.java:548
-#: ../send/SimplifiedSendDialog.java:271
+#: ../send/SimplifiedSendDialog.java:270
 msgid "Send"
 msgstr "Gönder"
 
@@ -1637,7 +1637,7 @@ msgstr "Yollar ve görüntüleyiciler"
 msgid "Recipient extraction"
 msgstr ""
 
-#: ../options/OptionsWin.java:240 ../options/ServerSettingsPanel.java:257
+#: ../options/OptionsWin.java:240 ../options/ServerSettingsPanel.java:259
 msgid "Servers"
 msgstr "Sunucular"
 
@@ -1704,64 +1704,64 @@ msgstr "(dahili {0})"
 msgid "{0} KB"
 msgstr "{0} KB"
 
-#: ../options/ServerSettingsPanel.java:175
+#: ../options/ServerSettingsPanel.java:177
 #, java-format
 msgid "Server {0}"
 msgstr "Sunucu {0}"
 
-#: ../options/ServerSettingsPanel.java:176
+#: ../options/ServerSettingsPanel.java:178
 #, java-format
 msgid "Modems for server {0}"
 msgstr "{0} sunucusu için modemler"
 
-#: ../options/ServerSettingsPanel.java:177
+#: ../options/ServerSettingsPanel.java:179
 #, java-format
 msgid "Delivery settings for server {0}"
 msgstr "{0} sunucusu için gönderi ayarları"
 
-#: ../options/ServerSettingsPanel.java:187
+#: ../options/ServerSettingsPanel.java:189
 msgid "Delivery"
 msgstr "Gönderme"
 
-#: ../options/ServerSettingsPanel.java:191
+#: ../options/ServerSettingsPanel.java:193
 msgid "Modems"
 msgstr "Modemler"
 
-#: ../options/ServerSettingsPanel.java:221 ../options/CoverPanel.java:107
+#: ../options/ServerSettingsPanel.java:223 ../options/CoverPanel.java:107
 #, java-format
 msgid "Copy of {0}"
 msgstr "{0} kopyası"
 
-#: ../options/ServerSettingsPanel.java:227
+#: ../options/ServerSettingsPanel.java:229
 #, java-format
 msgid "Do you really want to remove the server \"{0}\"?"
 msgstr "\"{0}\" sunucusunu gerçekten silmek istiyor musunuz?"
 
-#: ../options/ServerSettingsPanel.java:263
+#: ../options/ServerSettingsPanel.java:265
 msgid "Clear cache"
 msgstr "Önbelleği temizle"
 
-#: ../options/ServerSettingsPanel.java:274
+#: ../options/ServerSettingsPanel.java:276
 msgid "Locally cache fax lists"
 msgstr "Faks listesini yerelde sakla"
 
-#: ../options/ServerSettingsPanel.java:282
+#: ../options/ServerSettingsPanel.java:284
 msgid "Cache settings"
 msgstr "Saklama ayarları"
 
-#: ../options/ServerSettingsPanel.java:284
+#: ../options/ServerSettingsPanel.java:286
 msgid "Current Cache size:"
 msgstr "Şu anki saklama boyutu:"
 
-#: ../options/ServerSettingsPanel.java:309
+#: ../options/ServerSettingsPanel.java:311
 msgid "Global settings"
 msgstr "Genel ayarlar"
 
-#: ../options/ServerSettingsPanel.java:311
+#: ../options/ServerSettingsPanel.java:313
 msgid "Use PCL file type bugfix"
 msgstr "PCL dosya türü hata düzeltme kullan"
 
-#: ../options/ServerSettingsPanel.java:317
+#: ../options/ServerSettingsPanel.java:319
 msgid ""
 "The maximum time to wait for a interaction with the server to complete. "
 "Values below 5 are not recommended; 0 disables this timeout."
@@ -1769,15 +1769,15 @@ msgstr ""
 "Sunucu ile etkileşimin tamamlanması için beklenecek en fazla süre. Aşağıdaki "
 "5 değeri tavsiye edilmez; 0 zaman aşımını devre dışı bırakır."
 
-#: ../options/ServerSettingsPanel.java:321
+#: ../options/ServerSettingsPanel.java:323
 msgid "Table refresh interval (secs.):"
 msgstr "Tablo tazeleme sıklığı (saniye):"
 
-#: ../options/ServerSettingsPanel.java:322
+#: ../options/ServerSettingsPanel.java:324
 msgid "Server status refresh interval (secs.):"
 msgstr "Sunucu durumu tazeleme sıklığı (saniye):"
 
-#: ../options/ServerSettingsPanel.java:323
+#: ../options/ServerSettingsPanel.java:325
 msgid "Server socket timeout (secs):"
 msgstr "Sunucu bağlantı noktası zaman aşımı (sn.):"
 
@@ -2101,7 +2101,7 @@ msgid "Archive sent fax jobs"
 msgstr "gönderilmiş faks işlemlerini arşive ekle"
 
 #: ../options/SendPanel.java:172 ../send/JobPropsEditorDialog.java:52
-#: ../send/SimplifiedSendDialog.java:314
+#: ../send/SimplifiedSendDialog.java:313
 msgid "Job properties"
 msgstr "İş özellikleri"
 
@@ -2155,106 +2155,106 @@ msgstr "Çevirme öneki:"
 msgid "Default identity:"
 msgstr "Varsayılan kimlik:"
 
-#: ../options/CommonPanel.java:119
+#: ../options/CommonPanel.java:115
 msgid "(System native)"
 msgstr "(Sistem varsayılanı)"
 
-#: ../options/CommonPanel.java:120
+#: ../options/CommonPanel.java:116
 msgid "(Crossplatform)"
 msgstr "(Çoklu platform)"
 
-#: ../options/CommonPanel.java:174
+#: ../options/CommonPanel.java:170
 msgid "Update check"
 msgstr "Güncelleme kontrolü"
 
-#: ../options/CommonPanel.java:176
+#: ../options/CommonPanel.java:172
 msgid "Automatically check for updates"
 msgstr "Otomatik olarak güncellemeleri kontrol et"
 
-#: ../options/CommonPanel.java:204
+#: ../options/CommonPanel.java:200
 msgid "User interface"
 msgstr "Kullanıcı arabirimi"
 
-#: ../options/CommonPanel.java:228
+#: ../options/CommonPanel.java:224
 msgid "Show tray icon"
 msgstr "Sistem çekmece simgesi göster"
 
-#: ../options/CommonPanel.java:229
+#: ../options/CommonPanel.java:225
 msgid "Show a system tray icon (works only with Java 6 or higher)"
 msgstr ""
 "Sistem çekmecesi simgesi göster (sadece Java 6 yada daha üst sürümü ile "
 "çalışır)"
 
-#: ../options/CommonPanel.java:231
+#: ../options/CommonPanel.java:227
 msgid "Minimize to tray"
 msgstr "sistem çekmecesine küçült"
 
-#: ../options/CommonPanel.java:235
+#: ../options/CommonPanel.java:231 ../options/CommonPanel.java:232
 msgid "Minimize to tray when main window is closed"
 msgstr "Ana pencere kapatıldığında sistem çekmecesine küçült"
 
-#: ../options/CommonPanel.java:247
+#: ../options/CommonPanel.java:244
 msgid "Language:"
 msgstr "Dil:"
 
-#: ../options/CommonPanel.java:248
+#: ../options/CommonPanel.java:245
 msgid "Look and Feel:"
 msgstr "Görünüm:"
 
-#: ../options/CommonPanel.java:249
+#: ../options/CommonPanel.java:246
 msgid "Style of send dialog:"
 msgstr "Gönderme iletişim tipi:"
 
-#: ../options/CommonPanel.java:273
+#: ../options/CommonPanel.java:270
 msgid "Actions after receiving a new fax:"
 msgstr "Yeni faks aldıktan sonra yapılacak işlem:"
 
-#: ../options/CommonPanel.java:275
+#: ../options/CommonPanel.java:272
 msgid "Beep"
 msgstr "Bip"
 
-#: ../options/CommonPanel.java:276
+#: ../options/CommonPanel.java:273
 msgid "Bring to front"
 msgstr "Öne getir"
 
-#: ../options/CommonPanel.java:277
+#: ../options/CommonPanel.java:274
 msgid "Open in viewer"
 msgstr "Görüntüleyicide aç"
 
-#: ../options/CommonPanel.java:283
+#: ../options/CommonPanel.java:280
 msgid "And mark as read"
 msgstr "Ve okunmuş olarak işaretle"
 
-#: ../options/CommonPanel.java:285
+#: ../options/CommonPanel.java:282
 msgid "Show flashing tray icon"
 msgstr "Sistem çekmecesi simgesini ışıklı göster"
 
-#: ../options/CommonPanel.java:286
+#: ../options/CommonPanel.java:283
 msgid "Display tray icon message"
 msgstr "Sistem çekmecesi simgesi mesajını göster"
 
-#: ../options/CommonPanel.java:305
+#: ../options/CommonPanel.java:302
 msgid "Date and Time Format:"
 msgstr "Tarih ve Saat Biçimi:"
 
-#: ../options/CommonPanel.java:314
+#: ../options/CommonPanel.java:311
 msgid "Date format:"
 msgstr "Tarih biçimi:"
 
-#: ../options/CommonPanel.java:315
+#: ../options/CommonPanel.java:312
 msgid "Time format:"
 msgstr "Saat biçimi:"
 
-#: ../options/CommonPanel.java:372
+#: ../options/CommonPanel.java:369
 msgid ""
 "You must restart the program for the change of the language to take effect."
 msgstr "Dil değişikliğinin etkin olması için programı yeniden başlatmalısınız."
 
-#: ../options/CommonPanel.java:405
+#: ../options/CommonPanel.java:402
 msgid "Please enter a valid date format:"
 msgstr "Lütfen geçerli bir tarih biçimi girin:"
 
-#: ../options/CommonPanel.java:413
+#: ../options/CommonPanel.java:410
 msgid "Please enter a valid time format."
 msgstr "Lütfen geçerli bir saat biçimi girin."
 
@@ -2536,7 +2536,7 @@ msgstr "LDAP parolası"
 msgid "Please enter the LDAP password:"
 msgstr "Lütfen LDAP parolasını girin:"
 
-#: ../phonebook/ldap/LDAPPhoneBook.java:198
+#: ../phonebook/ldap/LDAPPhoneBook.java:199
 msgid "Error executing the search:"
 msgstr "Arama yaparken hata:"
 
@@ -2755,8 +2755,8 @@ msgid "Error previewing your settings:"
 msgstr "Ayarlarınızı önizlemede hata: "
 
 #: ../phonebook/csv/CSVDialog.java:334 ../send/SendWin.java:575
-#: ../send/SendWin.java:580 ../send/SimplifiedSendDialog.java:284
-#: ../send/SimplifiedSendDialog.java:303
+#: ../send/SendWin.java:580 ../send/SimplifiedSendDialog.java:283
+#: ../send/SimplifiedSendDialog.java:302
 msgid "Preview"
 msgstr "Önizleme"
 
@@ -3032,7 +3032,7 @@ msgid "Please select the items to add to the distribution list:"
 msgstr "Lütfen dağıtım listesine eklenecek öğeleri seçin:"
 
 #: ../phonebook/ui/SingleEntryPhonebookPanel.java:133 ../send/SendWin.java:336
-#: ../send/SimplifiedSendDialog.java:392
+#: ../send/SimplifiedSendDialog.java:391
 msgid "Comments:"
 msgstr "Yorumlar:"
 
@@ -4012,14 +4012,6 @@ msgstr "Dosya Sahibi"
 msgid "Number of pages in document"
 msgstr "Belgedeki sayfa sayısı"
 
-#: ../model/RecvFormat.java:112
-msgid "Protection"
-msgstr "Koruma"
-
-#: ../model/RecvFormat.java:112
-msgid "UNIX-style protection flags"
-msgstr "Unix tipi koruma bayrakları"
-
 #: ../model/RecvFormat.java:116
 msgid "Resolution of received data"
 msgstr "Alınan verinin çözünürlüğü"
@@ -4167,7 +4159,7 @@ msgstr "Tuş"
 msgid "Value"
 msgstr "Değer"
 
-#: ../TextViewPanel.java:195 ../send/SimplifiedSendDialog.java:992
+#: ../TextViewPanel.java:194 ../send/SimplifiedSendDialog.java:992
 msgid "Error saving the file"
 msgstr ""
 
@@ -4187,7 +4179,7 @@ msgstr "Faks gönder"
 msgid "Poll fax"
 msgstr "Yoklama çağrısı gönder"
 
-#: ../send/SendWin.java:283 ../send/SimplifiedSendDialog.java:367
+#: ../send/SendWin.java:283 ../send/SimplifiedSendDialog.java:366
 msgid "Use cover page"
 msgstr "Kapak sayfası kullan"
 
@@ -4211,7 +4203,7 @@ msgstr "Yer:"
 msgid "Voice number:"
 msgstr "Telefon numarası:"
 
-#: ../send/SendWin.java:335 ../send/SimplifiedSendDialog.java:391
+#: ../send/SendWin.java:335 ../send/SimplifiedSendDialog.java:390
 msgid "Subject:"
 msgstr "Konu:"
 
@@ -4227,7 +4219,7 @@ msgstr "Faks numarası:"
 msgid "Cover page"
 msgstr "Kapak Sayfası"
 
-#: ../send/SendWin.java:580 ../send/SimplifiedSendDialog.java:284
+#: ../send/SendWin.java:580 ../send/SimplifiedSendDialog.java:283
 msgid ""
 "Nothing to preview! (Neither a cover page nor a file to send has been "
 "selected.)"
@@ -4247,19 +4239,19 @@ msgstr ""
 "Bu iletişim HylaFAX iş özelliklerini doğrudan ayarlamanıza izin verir. Ne "
 "yaptığınızı biliyorsanız kullanın!"
 
-#: ../send/SimplifiedSendDialog.java:183
+#: ../send/SimplifiedSendDialog.java:182
 msgid ">> Advanced"
 msgstr ">>Gelişmiş"
 
-#: ../send/SimplifiedSendDialog.java:184
+#: ../send/SimplifiedSendDialog.java:183
 msgid "<< Simplified"
 msgstr "<<Basit"
 
-#: ../send/SimplifiedSendDialog.java:191
+#: ../send/SimplifiedSendDialog.java:190
 msgid "Send fax"
 msgstr "Faks gönder"
 
-#: ../send/SimplifiedSendDialog.java:361
+#: ../send/SimplifiedSendDialog.java:360
 msgid "Identity"
 msgstr "Kimlik"
 
@@ -4372,35 +4364,35 @@ msgstr "Belge yükleniyor"
 msgid "Creating {0} from documents to send"
 msgstr "Göndermek için belgelerden {0} oluşturuluyor"
 
-#: ../send/SendController.java:168
+#: ../send/SendController.java:169
 #, java-format
 msgid "Can not read file \"{0}\"!"
 msgstr "Dosya \"{0}\" okunamıyor! "
 
-#: ../send/SendController.java:173
+#: ../send/SendController.java:174
 #, java-format
 msgid "Can not read default cover page file \"{0}\"!"
 msgstr "Öntanımlı kapak sayfası dosyası \"{0}\" okunamıyor!"
 
-#: ../send/SendController.java:251
+#: ../send/SendController.java:252
 msgid "Creating cover page"
 msgstr "Kapak sayfası oluşturuluyor"
 
-#: ../send/SendController.java:265
+#: ../send/SendController.java:266
 #, java-format
 msgid "Formatting {0}"
 msgstr "Biçimleniyor {0}"
 
-#: ../send/SendController.java:279
+#: ../send/SendController.java:280
 msgid "Error previewing the documents:"
 msgstr "Belge önizlemede hata"
 
-#: ../send/SendController.java:357
+#: ../send/SendController.java:358
 #, java-format
 msgid "Creating job to {0}"
 msgstr "İş {0} için oluşturuluyor"
 
-#: ../send/SendController.java:444
+#: ../send/SendController.java:445
 #, java-format
 msgid ""
 "An error occured while submitting the fax job for phone number \"{0}\" (will "
@@ -4409,29 +4401,29 @@ msgstr ""
 "\"{0}\" telefon numarasına faks gönderilirken bir hata oluştu. (faks, diğer "
 "telefon numaralara gönderilmeye çalışılacak)"
 
-#: ../send/SendController.java:448
+#: ../send/SendController.java:449
 msgid "Cleaning up"
 msgstr "Temizle"
 
-#: ../send/SendController.java:452
+#: ../send/SendController.java:453
 msgid "An error occured while submitting the fax: "
 msgstr "Faks gönderirken bir hata oluştu:"
 
-#: ../send/SendController.java:512
+#: ../send/SendController.java:513
 msgid "To send a fax you have to enter at least one phone number!"
 msgstr "Faks göndermek için en az bir tane telefon numarası girmeniz gerekli!"
 
-#: ../send/SendController.java:512 ../send/SendController.java:519
-#: ../send/SendController.java:529
+#: ../send/SendController.java:513 ../send/SendController.java:520
+#: ../send/SendController.java:530
 msgid "Warning"
 msgstr "Uyarı"
 
-#: ../send/SendController.java:519
+#: ../send/SendController.java:520
 #, java-format
 msgid "For recipient {0} (\"{1}\") no fax number has been entered."
 msgstr "Alıcı {0} (\"{1}\") için faks numarası girilmedi."
 
-#: ../send/SendController.java:526
+#: ../send/SendController.java:527
 msgid ""
 "You haven't selected a file to transmit, so your fax will ONLY contain the "
 "cover page.\n"
@@ -4441,19 +4433,19 @@ msgstr ""
 "içerecek:\n"
 "Yine de devam edecek misiniz?"
 
-#: ../send/SendController.java:526
+#: ../send/SendController.java:527
 msgid "Continue?"
 msgstr "Devam?"
 
-#: ../send/SendController.java:529
+#: ../send/SendController.java:530
 msgid "To send a fax you must select at least one file!"
 msgstr "Faks göndermek için en az bir tane dosya seçmek zorundasınız!"
 
-#: ../send/SendController.java:539
+#: ../send/SendController.java:543
 msgid "Sending fax"
 msgstr "Faks gönderme"
 
-#: ../send/SendController.java:544
+#: ../send/SendController.java:548
 msgid "Previewing fax"
 msgstr "Faks önizleme"
 
@@ -4484,6 +4476,12 @@ msgstr "Seçilen liste öğelerini güncelle"
 #: ../send/MinutesFormatter.java:80
 msgid "minutes"
 msgstr "dakika"
+
+#~ msgid "Protection"
+#~ msgstr "Koruma"
+
+#~ msgid "UNIX-style protection flags"
+#~ msgstr "Unix tipi koruma bayrakları"
 
 #~ msgid "Same as PostScript viewer"
 #~ msgstr "PostScript görüntüleyici ile aynı"
