@@ -1,22 +1,21 @@
 # translation of messages_es.po to Spanish
-# translation of messages_es.po to
 # This file is distributed under the same license as YajHFC package.
 # Copyright (C) Elsa Andrés.
-# Elsa Andrés <e.andres@ist-sci.com>, 2008, 2009, 2010, 2011, 2012.
-#
-#
+# Elsa Andrés <e.andres@ist-sci.com>, 2008, 2009, 2010, 2011, 2012, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: messages_es 0.5.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-13 10:24+0200\n"
-"PO-Revision-Date: 2012-12-17 11:23+0100\n"
+"PO-Revision-Date: 2013-07-16 13:00+0200\n"
 "Last-Translator: Elsa Andrés <e.andres@ist-sci.com>\n"
 "Language-Team: Spanish <yajhfc-translators@lists.berlios.de>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Virtaal 0.7.1\n"
 
 #: ../FaxOptions.java:647 ../FaxOptions.java:655 ../FaxOptions.java:663
 #: ../FaxOptions.java:675 ../options/ServerSettingsPanel.java:163
@@ -431,7 +430,7 @@ msgstr "Imprimir miniaturas de las páginas de fax para"
 
 #: ../report/SendReportDialog.java:199
 msgid " to "
-msgstr "a"
+msgstr " a "
 
 #: ../report/SendReportDialog.java:212
 msgid "Information to print on report"
@@ -448,7 +447,7 @@ msgstr "La página de inicio debe estar comprendida entre 1 y 9999."
 
 #: ../report/SendReportDialog.java:256
 msgid "The end page must be between 1 and 9999."
-msgstr ""
+msgstr "La página de finalización debe estar comprendida entre 1 y 9999."
 
 #: ../report/SendReportDialog.java:267 ../report/SendReportDialog.java:321
 msgid "Fax receive report"
@@ -462,7 +461,7 @@ msgstr "Informe de envío de fax"
 #: ../report/SendReport.java:197
 #, java-format
 msgid "Fax {0}: "
-msgstr "Fax {0}:"
+msgstr "Fax {0}: "
 
 #: ../report/SendReport.java:199
 msgid "Calculating information..."
@@ -693,7 +692,7 @@ msgstr "Archivos CSV"
 
 #: ../file/FileFormat.java:61
 msgid "PJL printer job"
-msgstr ""
+msgstr "Trabajo de impresión PJL"
 
 #: ../file/FileFormat.java:62
 msgid "Any files"
@@ -816,7 +815,7 @@ msgstr "Mostrar fax"
 #: ../MainWin.java:488
 #, java-format
 msgid "An error occured displaying the file {0} (job {1}):\n"
-msgstr "Ha ocurrido un error al visualizar el archivo {0} (trabajo {1}:\n"
+msgstr "Ha ocurrido un error al visualizar el archivo {0} (trabajo {1}):\n"
 
 #: ../MainWin.java:492 ../send/SendController.java:276
 msgid "Launching viewer"
@@ -1432,7 +1431,7 @@ msgstr "Desconectado, se intentará la reconexión en {0} segundos..."
 
 #: ../MainWin.java:3085
 msgid "Trying to reconnect..."
-msgstr ""
+msgstr "Reconectando..."
 
 #: ../MainWin.java:3153
 msgid ""
@@ -2462,8 +2461,8 @@ msgid ""
 "work around some bugs."
 msgstr ""
 "Conectar al servidor e iniciar sesión para cada acción (p. ej. visualizar un "
-"fax, actualizar las tablas...) y desconectar después. Esto resta rendimiento "
-"pero podría solucionar algunos errores."
+"fax, actualizar las tablas...) y desconectar después. Esto resta "
+"rendimiento pero podría solucionar algunos errores."
 
 #: ../options/SingleServerSettingsPanel.java:525
 msgid "Date/Time offset:"
@@ -2602,9 +2601,8 @@ msgid ""
 "RFC 2254 Filter expression (e.g. \"objectClass=person\") selecting the "
 "directory entries to include. Leave blank to include all."
 msgstr ""
-"Filtro de expresión RFC 2254 (p. ej., \"objectClass=person\") para "
-"seleccionar entradas del directorio a incluir. Dejar en blanco para incluir "
-"todas."
+"Filtro de expresión RFC 2254 (p. ej., \"objectClass=person\") para seleccionar "
+"entradas del directorio a incluir. Dejar en blanco para incluir todas."
 
 #: ../phonebook/ldap/ConnectionDialog.java:161
 msgid "Also search subtrees"
@@ -4106,8 +4104,8 @@ msgstr "En progreso"
 #: ../model/RecvFormat.java:132
 msgid "A ``*'' if receive is going on; otherwise `` '' (space)"
 msgstr ""
-"Un ''*'' si la recepción se está llevando a cabo; de lo contrario '' "
-"'' (espacio)"
+"Un ''*'' si la recepción se está llevando a cabo; de lo contrario '' '' "
+"(espacio)"
 
 #: ../model/RecvFormat.java:136
 msgid "Time/Date (UNIX)"
@@ -4401,15 +4399,15 @@ msgstr ""
 
 #: ../send/SendFaxArchiver.java:149
 msgid "The attached fax could not be submitted successfully to HylaFAX."
-msgstr ""
+msgstr "No se ha podido enviar correctamente el fax adjunto a HylaFAX."
 
 #: ../send/SendFaxArchiver.java:152
 msgid "Send log:"
-msgstr ""
+msgstr "Registro de envío:"
 
 #: ../send/SendFaxArchiver.java:158
 msgid "Fax failed to send"
-msgstr ""
+msgstr "Error en el envío del fax"
 
 #: ../send/TimeToSendEntry.java:67 ../send/TimeToSendEntry.java:97
 msgid "Now"

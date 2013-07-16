@@ -1,4 +1,4 @@
-LÉAME (README) de YajHFC 0.5.3
+LÉAME (README) de YajHFC 0.5.4
 ==============================
 
 ACERCA DE
@@ -65,6 +65,10 @@ de Java (más avanzado que los programas "Hola mundo") utilizando la IDE Eclipse
 
 CAMBIOS
 -------
+
+0.5.4:
+- Nuevos complementos para impresión por lotes y envío de mensajes mediante correo electrónico
+- Corrección de errores y algunas mejoras de menor importancia
 
 0.5.3:
 - Nueva opción para "Imprimir informe de envío/recepción"
