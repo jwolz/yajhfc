@@ -1,4 +1,4 @@
-README for YajHFC 0.5.3
+README for YajHFC 0.5.4
 =======================
 
 ABOUT
@@ -23,7 +23,7 @@ INSTALLATION
 ------------
 
 Requirements:
-* JRE 5.0 or higher (Java 6 recommended)
+* JRE 5.0 or higher (Java 6 or 7 recommended)
 * A running HylaFAX server in your network (of course ;-) )
 * Some program to view TIFF files (also see the FAQ)
 * Optional: A PostScript viewer (e.g. Ghostview), GhostScript
