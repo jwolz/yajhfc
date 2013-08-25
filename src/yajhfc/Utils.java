@@ -82,6 +82,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -109,7 +110,7 @@ public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2013 by Jonas Wolz";
-    public static final String AppVersion = "0.5.4rc5";
+    public static final String AppVersion = "0.5.4";
     public static final String AuthorName = "Jonas Wolz";
     public static final String AuthorEMail = "info@yajhfc.de";
     public static final String HomepageURL = "http://www.yajhfc.de/"; 
@@ -368,7 +369,7 @@ public final class Utils {
             }
             if (Utils.debugMode) {
                 log.config("---- BEGIN preferences dump");
-                Utils.dumpProperties(p, log, "pass", "AdminPassword", "pass-obfuscated", "AdminPassword-obfuscated");
+                Utils.dumpProperties(p, log, "pass", "AdminPassword", Pattern.compile(".+-obfuscated$"));
                 log.config("---- END preferences dump");
             }
             settingsProperties = p;
@@ -705,6 +706,7 @@ public final class Utils {
      * Dumps the content of the specified properties object to the Logger
      * @param prop
      * @param out
+     * @param censorKeys Keys not to output. May be of type String or Pattern
      */
     public static void dumpProperties(Properties prop, Logger out, Object... censorKeys) {
         List<String> keys = new ArrayList<String>(prop.size());
@@ -720,7 +722,7 @@ public final class Utils {
         for (String key : keys) {
             //s.setLength(0);
             s.append(key).append('=');
-            if (indexOfArray(censorKeys, key) == -1) {
+            if (indexOfPatternArray(censorKeys, key) == -1) {
                 s.append(prop.getProperty(key));
             } else {
                 Object val = prop.getProperty(key);
@@ -746,6 +748,29 @@ public final class Utils {
         for (int i = 0; i < array.length; i++) {
             Object arrayItem = array[i];
             if (arrayItem == element || (element != null && element.equals(arrayItem))) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    
+    /**
+     * Returns the index of the given object in the given array or -1 if it is not found
+     * @param array an array of Strings or Pattern
+     * @param element the element to search for. 
+     * @return
+     */
+    public static int indexOfPatternArray(Object[] array, Object element) {
+        String stringElement = (element == null) ? "" : element.toString();
+        
+        for (int i = 0; i < array.length; i++) {
+            Object arrayItem = array[i];
+            
+            if (arrayItem instanceof Pattern) {
+                if (((Pattern) arrayItem).matcher(stringElement).matches()) {
+                    return i;
+                }
+            } else if (arrayItem == element || (element != null && element.equals(arrayItem))) {
                 return i;
             }
         }
