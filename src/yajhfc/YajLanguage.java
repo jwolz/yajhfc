@@ -65,7 +65,8 @@ public class YajLanguage extends MsgBundle {
     static {
         supportedLanguages = new ArrayList<YajLanguage>();
         supportedLanguages.add(SYSTEM_DEFAULT = new YajLanguage(null));
-        supportedLanguages.add(new YajLanguage(Locale.CHINESE));
+        supportedLanguages.add(new YajLanguage(Locale.TRADITIONAL_CHINESE));
+        supportedLanguages.add(new YajLanguage(Locale.SIMPLIFIED_CHINESE));
         supportedLanguages.add(new YajLanguage(Locale.ENGLISH));
         supportedLanguages.add(new YajLanguage(Locale.FRENCH));
         supportedLanguages.add(new YajLanguage(Locale.GERMAN));
@@ -79,7 +80,7 @@ public class YajLanguage extends MsgBundle {
         
     public static YajLanguage languageFromLangCode(String langCode) {
         for (YajLanguage lang : supportedLanguages) {
-            if (lang.getLangCode().equals(langCode)) {
+            if (lang.matchesLangCode(langCode)) {
                 return lang;
             }
         }
@@ -90,6 +91,7 @@ public class YajLanguage extends MsgBundle {
     
     protected final Locale locale;
     private String description = null;
+    private final String langCode;
     
     public String toString() {
         if (description == null) {
@@ -104,9 +106,9 @@ public class YajLanguage extends MsgBundle {
             return Utils._("(System default)");
         } else {
             if (Utils.getLocale().getLanguage().equals(locale.getLanguage())) 
-                return locale.getDisplayLanguage(Utils.getLocale());
+                return locale.getDisplayName(Utils.getLocale());
             else 
-                return locale.getDisplayLanguage(locale) + " (" + locale.getDisplayLanguage(Utils.getLocale()) + ")";
+                return locale.getDisplayName(locale) + " (" + locale.getDisplayName(Utils.getLocale()) + ")";
         }
     }
     
@@ -118,12 +120,27 @@ public class YajLanguage extends MsgBundle {
         }
     }
     
+    /**
+     * Returns the language code for this language (e.g. de or zh_TW)
+     * @return
+     */
     public String getLangCode() {
-        if (locale == null) {
-            return "auto";
-        } else {
-            return locale.getLanguage();
-        }
+        return langCode;
+    }
+    
+    /**
+     * Returns if the language is at least as specific as the given language code.
+     * For example: 
+     *  - zh_CN will match "zh" or "zh_CN" 
+     *  - de will match "de", "de_DE" or "de_AT"
+     * @param langCode
+     * @return
+     */
+    public boolean matchesLangCode(String langCode) {
+        if (this.langCode.length() >= langCode.length())
+            return this.langCode.startsWith(langCode);
+        else
+            return langCode.startsWith(this.langCode);
     }
     
     /**
@@ -184,5 +201,11 @@ public class YajLanguage extends MsgBundle {
     public YajLanguage(Locale locale) {
         super("yajhfc.i18n.Messages", YajLanguage.class.getClassLoader());
         this.locale = locale;
+        
+        if (locale == null) {
+            langCode = "auto";
+        } else {
+            langCode = locale.toString();
+        }
     }
 }
