@@ -17,7 +17,7 @@ fi
 # Usage compile FILE CLASSNAME
 compile() {
 	PO=$1
-  	LANG=${PO##*_}
+  	LANG=${PO#*_}
   	LANG=${LANG%.po}
 	if [ $LANG != ${PO%.po} ]; then
 		CLASSOUT="$2_$LANG.class"
@@ -43,7 +43,7 @@ compile() {
 # Usage compile FILE PROPERTYNAME
 catprops() {
 	PO=$1
-  	LANG=${PO##*_}
+  	LANG=${PO#*_}
   	LANG=${LANG%.po}
 	if [ $LANG != ${PO%.po} ]; then
 		PROPOUT="$2_$LANG.properties"

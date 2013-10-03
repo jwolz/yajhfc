@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-13 10:24+0200\n"
+"POT-Creation-Date: 2013-10-03 18:02+0200\n"
 "PO-Revision-Date: 2010-11-06 09:17+0100\n"
 "Last-Translator: Jonas Wolz <jonas.wolz@freenet.de>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,7 +22,7 @@ msgstr ""
 #: ../FaxOptions.java:675 ../options/ServerSettingsPanel.java:163
 #: ../options/CoverPanel.java:232
 msgid "Default"
-msgstr "預設"
+msgstr "预设"
 
 #: ../AboutDialog.java:211
 #, java-format
@@ -31,11 +31,11 @@ msgstr "版本 {0}"
 
 #: ../AboutDialog.java:221
 msgid "YajHFC is a client for the HylaFAX fax server."
-msgstr "YajHFC是Hlyafax伺服器的客戶端"
+msgstr "YajHFC是Hlyafax服务器的客户端"
 
 #: ../AboutDialog.java:224
 msgid "Homepage"
-msgstr "首頁"
+msgstr "首页"
 
 #: ../AboutDialog.java:231
 msgid "Author"
@@ -62,24 +62,24 @@ msgstr "$LANGUAGE$ translation by {0}"
 #: ../util/PasswordDialog.java:89 ../util/MapEditorDialog.java:109
 #: ../util/AcceleratorKeyDialog.java:145
 msgid "OK"
-msgstr "確定"
+msgstr "确定"
 
 #: ../AboutDialog.java:305 ../MainWin.java:947
 msgid "About"
-msgstr "關於"
+msgstr "关于"
 
 #: ../AboutDialog.java:306
 msgid "License"
-msgstr "版權"
+msgstr "版权"
 
 #: ../AboutDialog.java:307
 msgid "System properties"
-msgstr "系統資訊"
+msgstr "系统信息"
 
 #: ../AboutDialog.java:308
 #, java-format
 msgid "About {0}"
-msgstr "關於 {0}"
+msgstr "关于 {0}"
 
 #: ../AboutDialog.java:322 ../MainWin.java:975
 msgid "Documentation"
@@ -87,18 +87,18 @@ msgstr "文件"
 
 #: ../launch/Launcher2.java:263
 msgid "There already is a running instance!"
-msgstr "已經執行中。"
+msgstr "已经执行中。"
 
 #: ../launch/Launcher2.java:468
 msgid "The new instance did not start after 20 seconds."
-msgstr " 20秒後程式沒有執行。"
+msgstr " 20秒后程序没有执行。"
 
 #: ../launch/Launcher2.java:483
 msgid ""
 "Cannot launch new program instance, continuing with the existing one!\n"
 "Reason: "
 msgstr ""
-"已執行,無法執行Yajhfc程式!\n"
+"已执行,无法执行Yajhfc程序!\n"
 "理由:"
 
 #: ../UpdateChecker.java:96
@@ -111,11 +111,11 @@ msgstr "版本"
 
 #: ../UpdateChecker.java:98
 msgid "Release date"
-msgstr "發布日期"
+msgstr "发布日期"
 
 #: ../UpdateChecker.java:99 ../MainWin.java:508
 msgid "Go to website"
-msgstr "進入網站"
+msgstr "进入网站"
 
 #: ../UpdateChecker.java:109
 msgid "Remind me again"
@@ -131,19 +131,19 @@ msgstr "不要提醒我"
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:353
 #: ../TextViewPanel.java:135
 msgid "Close"
-msgstr "關閉"
+msgstr "关闭"
 
 #: ../UpdateChecker.java:119 ../UpdateChecker.java:246 ../MainWin.java:1358
 msgid "Check for update"
-msgstr "檢查更新"
+msgstr "检查更新"
 
 #: ../UpdateChecker.java:229
 msgid "Connecting to server..."
-msgstr "連線到伺服器"
+msgstr "连线到服务器"
 
 #: ../UpdateChecker.java:234
 msgid "Error checking for updates:"
-msgstr "檢查更新失敗"
+msgstr "检查更新失败"
 
 #: ../UpdateChecker.java:246
 msgid "Your version of YajHFC is up to date."
@@ -151,17 +151,17 @@ msgstr "您的YajHFC已最新"
 
 #: ../UpdateChecker.java:252
 msgid "Checking for updates..."
-msgstr "檢查更新中"
+msgstr "检查更新中"
 
 #: ../printerport/EntryPoint.java:85
 msgid "Printer port"
-msgstr "印表機port："
+msgstr "打印机port："
 
 #: ../printerport/PortOptionsPanel.java:91
 msgid ""
 "YajHFC supports listening for new PostScript documents to send on a TCP port "
 "or a named pipe."
-msgstr "YajHFC支援新的PostScript文件發送一個 TCP端口或命名管道。"
+msgstr "YajHFC支持新的PostScript文件发送一个 TCP端口或命名管道。"
 
 #: ../printerport/PortOptionsPanel.java:92
 msgid ""
@@ -170,7 +170,7 @@ msgid ""
 "printer."
 msgstr ""
 "TCP port可以使用 <i>AppSocket</i> port (<i>socket:</i> protocol) in CUPS 或 "
-"<i>standard TCP/IP port</i> 在Windows建立虛擬印表機."
+"<i>standard TCP/IP port</i> 在Windows建立虚拟打印机."
 
 #: ../printerport/PortOptionsPanel.java:93
 msgid ""
@@ -178,12 +178,12 @@ msgid ""
 "with a special CUPS backend to get fax printer support for multiple "
 "simultaneously logged in users."
 msgstr ""
-"命名管道是在Unix特別有用，在那裡可以一起使用一個特殊CUPS的後端得到傳真打印機"
-"支持多種用戶同時登錄。"
+"命名管道是在Unix特别有用，在那里可以一起使用一个特殊CUPS的后端得到传真打印机"
+"支持多种用户同时登录。"
 
 #: ../printerport/PortOptionsPanel.java:96
 msgid "Enable TCP/IP printer port for YajHFC"
-msgstr "YajHFC啟用印表機TCP/IP port"
+msgstr "YajHFC启用打印机TCP/IP port"
 
 #: ../printerport/PortOptionsPanel.java:104
 msgid "Enable FIFO/named pipe printer port for YajHFC"
@@ -210,11 +210,11 @@ msgstr "mkfifo command:"
 #: ../printerport/PortOptionsPanel.java:210
 #: ../printerport/PortOptionsPanel.java:215
 msgid "Please enter a number between 1 and 65536 as port number!"
-msgstr "請輸入port號,1到65536"
+msgstr "请输入port号,1到65536"
 
 #: ../printerport/PortOptionsPanel.java:225
 msgid "Invalid bind address: "
-msgstr "無效的位址："
+msgstr "无效的位址："
 
 #: ../printerport/PortOptionsPanel.java:235
 msgid "The mkfifo command entered cannot be found."
@@ -222,29 +222,29 @@ msgstr "The mkfifo command entered cannot be found."
 
 #: ../HylaModem.java:53
 msgid "Any modem"
-msgstr "任何數據機"
+msgstr "任何数据机"
 
 #: ../tray/YajHFCTrayIcon.java:167
 #, java-format
 msgid "{0} fax(es) received ({1} unread fax(es)):"
-msgstr "{0} 已接收傳真 ({1} 未讀傳真(es)):"
+msgstr "{0} 已接收传真 ({1} 未读传真(es)):"
 
 #: ../tray/YajHFCTrayIcon.java:176
 msgid "New fax received"
-msgstr "新收到傳真"
+msgstr "新收到传真"
 
 #: ../tray/YajHFCTrayIcon.java:199
 #, java-format
 msgid "{0} unread fax(es)"
-msgstr "{0}未讀傳真"
+msgstr "{0}未读传真"
 
 #: ../tray/YajHFCTrayIcon.java:202
 msgid "Disconnected"
-msgstr "斷線"
+msgstr "断线"
 
 #: ../tray/YajHFCTrayIcon.java:294
 msgid "Restore"
-msgstr "還原"
+msgstr "还原"
 
 #: ../tray/TrayFactory.java:131
 msgid ""
@@ -254,95 +254,95 @@ msgid ""
 "again).\n"
 "If you experience such problems, please disable the tray icon (Options-"
 ">General->Show tray icon)."
-msgstr "如果是使用GNOME3,可能會有使用上的問題"
+msgstr "如果是使用GNOME3,可能会有使用上的问题"
 
 #: ../print/PhonebooksPrinter.java:103
 #: ../phonebook/ui/NewPhoneBookWin.java:1068
 msgid "Print phone books"
-msgstr "列印通訊錄"
+msgstr "打印通讯录"
 
 #: ../print/PhonebooksPrinter.java:108 ../print/FaxTablePrinter.java:105
 #: ../MainWin.java:1207
 msgid "Print"
-msgstr "列印"
+msgstr "打印"
 
 #: ../print/PhonebooksPrinter.java:129
 #: ../phonebook/ui/PhoneBookTreeModel.java:422
 msgid "All phone books"
-msgstr "所有通訊錄"
+msgstr "所有通讯录"
 
 #: ../print/PhonebooksPrinter.java:130 ../print/PhonebooksPrinter.java:228
 msgid "Selected phone book entries"
-msgstr "所選通訊錄"
+msgstr "所选通讯录"
 
 #: ../print/PhonebooksPrinter.java:132
 msgid "Only the following phone book(s):"
-msgstr "只有下列通訊錄:"
+msgstr "只有下列通讯录:"
 
 #: ../print/PhonebooksPrinter.java:185
 msgid "Columns to print:"
-msgstr "列印欄"
+msgstr "打印栏"
 
 #: ../print/PhonebooksPrinter.java:261 ../print/FaxTablePrinter.java:215
 msgid "Error printing the table:"
-msgstr "清單列印錯誤:"
+msgstr "清单打印错误:"
 
 #: ../print/FaxTablePrinter.java:87
 msgid "Fit to contents"
-msgstr "符合內容"
+msgstr "符合内容"
 
 #: ../print/FaxTablePrinter.java:88
 msgid "Same as on screen"
-msgstr "與畫面相同"
+msgstr "与画面相同"
 
 #: ../print/FaxTablePrinter.java:99
 #, java-format
 msgid "Print {0}"
-msgstr "列印 {0}"
+msgstr "打印 {0}"
 
 #: ../print/FaxTablePrinter.java:131
 msgid "Use a bold font for unread faxes"
-msgstr "未讀傳真使用粗體顯示"
+msgstr "未读传真使用粗体显示"
 
 #: ../print/FaxTablePrinter.java:134 ../MainWin.java:1283
 msgid "Mark failed jobs"
-msgstr "標示失敗的作業"
+msgstr "标示失败的作业"
 
 #: ../print/FaxTablePrinter.java:137
 msgid "Column widths:"
-msgstr "欄位寬度"
+msgstr "栏位宽度"
 
 #: ../print/tableprint/TablePrintable.java:119
 #, java-format
 msgid "page {0}"
-msgstr "頁 {0}"
+msgstr "页 {0}"
 
 #: ../customprops/EntryPoint.java:125
 msgid "Proxies and system properties"
-msgstr "代理伺服器及系統內容"
+msgstr "代理服务器及系统内容"
 
 #: ../customprops/CustomPropOptionsPanel.java:135
 #: ../customprops/CustomPropOptionsPanel.java:142
 msgid "Define system properties"
-msgstr "定義系統內容"
+msgstr "定义系统内容"
 
 #: ../customprops/CustomPropOptionsPanel.java:146
 msgid ""
 "Here you can define Java system properties. Only do this if you know what "
 "you are doing."
-msgstr "如果您了解Java系統,您可以設定Java"
+msgstr "如果您了解Java系统,您可以设定Java"
 
 #: ../customprops/CustomPropOptionsPanel.java:178
 msgid "Use system proxy settings"
-msgstr "使用系統預設Proxy"
+msgstr "使用系统预设Proxy"
 
 #: ../customprops/CustomPropOptionsPanel.java:188
 msgid "HTTP proxy server"
-msgstr "代理伺服器"
+msgstr "代理服务器"
 
 #: ../customprops/CustomPropOptionsPanel.java:189
 msgid "HTTP proxy port"
-msgstr "代理伺服器port"
+msgstr "代理服务器port"
 
 #: ../customprops/CustomPropOptionsPanel.java:190
 msgid "HTTP non proxy hosts"
@@ -350,27 +350,27 @@ msgstr "HTTP non proxy hosts"
 
 #: ../report/PrintReportAction.java:37
 msgid "Print report"
-msgstr "列印報告"
+msgstr "打印报告"
 
 #: ../report/PrintReportAction.java:38
 msgid "Prints a send or receive report for the fax"
-msgstr "列印傳送或接收傳真報告"
+msgstr "打印发送或接收传真报告"
 
 #: ../report/PrintReportAction.java:81
 msgid "Error generating report:"
-msgstr "一般報告錯誤:"
+msgstr "一般报告错误:"
 
 #: ../report/PrintReportAction.java:99
 msgid "Initializing print dialog..."
-msgstr "列印對話框初始中..."
+msgstr "打印对话框初始中..."
 
 #: ../report/PrintReportAction.java:116
 msgid "Showing print dialog"
-msgstr "顯示列印對話框"
+msgstr "显示打印对话框"
 
 #: ../report/PrintReportAction.java:124
 msgid "Printing..."
-msgstr "列印中..."
+msgstr "打印中..."
 
 #: ../report/PrintReportAction.java:128
 msgid "Cleaning up..."
@@ -378,23 +378,23 @@ msgstr "清除中..."
 
 #: ../report/PrintReportAction.java:131
 msgid "Error printing report:"
-msgstr "列印報告錯誤:"
+msgstr "打印报告错误:"
 
 #: ../report/PrintReportAction.java:139
 msgid "Printing reports..."
-msgstr "列印報告..."
+msgstr "打印报告..."
 
 #: ../report/SendReportDialog.java:127
 msgid "All pages"
-msgstr "全部頁面"
+msgstr "全部页面"
 
 #: ../report/SendReportDialog.java:128
 msgid "Only for the following pages:"
-msgstr "只有下列頁面"
+msgstr "只有下列页面"
 
 #: ../report/SendReportDialog.java:133
 msgid "Unlimited (put all on one page)"
-msgstr "無限制(全部放在一頁)"
+msgstr "无限制(全部放在一页)"
 
 #: ../report/SendReportDialog.java:134
 msgid "At most:"
@@ -402,15 +402,15 @@ msgstr "在最:"
 
 #: ../report/SendReportDialog.java:184
 msgid "Number of thumbnails per page"
-msgstr "每頁縮圖數量"
+msgstr "每页缩图数量"
 
 #: ../report/SendReportDialog.java:188
 msgid "thumbnails per page"
-msgstr "每頁縮圖"
+msgstr "每页缩图"
 
 #: ../report/SendReportDialog.java:195
 msgid "Fax pages to print thumbnails for"
-msgstr "列印傳真縮圖"
+msgstr "打印传真缩图"
 
 #: ../report/SendReportDialog.java:199
 msgid " to "
@@ -418,37 +418,37 @@ msgstr " 到 "
 
 #: ../report/SendReportDialog.java:212
 msgid "Information to print on report"
-msgstr "列印資訊報表"
+msgstr "打印信息报表"
 
 #: ../report/SendReportDialog.java:254
 msgid "The number of thumbnails per page must be between 1 and 9999."
-msgstr "每頁縮圖數量必須在1到9999之間"
+msgstr "每页缩图数量必须在1到9999之间"
 
 #: ../report/SendReportDialog.java:255
 msgid "The start page must be between 1 and 9999."
-msgstr "啟始頁碼必須在1到9999之間"
+msgstr "启始页码必须在1到9999之间"
 
 #: ../report/SendReportDialog.java:256
 msgid "The end page must be between 1 and 9999."
-msgstr "結尾頁碼必須在1到9999之間"
+msgstr "结尾页码必须在1到9999之间"
 
 #: ../report/SendReportDialog.java:267 ../report/SendReportDialog.java:321
 msgid "Fax receive report"
-msgstr "接收報表"
+msgstr "接收报表"
 
 #: ../report/SendReportDialog.java:271 ../report/SendReportDialog.java:326
 #: ../report/SendReport.java:69
 msgid "Fax send report"
-msgstr "傳送報表"
+msgstr "发送报表"
 
 #: ../report/SendReport.java:197
 #, java-format
 msgid "Fax {0}: "
-msgstr "傳真{0}:"
+msgstr "传真{0}:"
 
 #: ../report/SendReport.java:199
 msgid "Calculating information..."
-msgstr "計算資訊..."
+msgstr "计算信息..."
 
 #: ../report/SendReport.java:216
 msgid "yes"
@@ -460,84 +460,84 @@ msgstr "No"
 
 #: ../report/SendReport.java:226
 msgid "Retrieving list of documents..."
-msgstr "檢索文件清單..."
+msgstr "检索文件清单..."
 
 #: ../report/SendReport.java:234
 msgid "Downloading documents..."
-msgstr "下載文件..."
+msgstr "下载文件..."
 
 #: ../report/SendReport.java:243
 msgid "Converting documents to PNG..."
-msgstr "轉換至PNG..."
+msgstr "转换至PNG..."
 
 #: ../report/SendReport.java:274
 #, java-format
 msgid "Page {0} of {1}"
-msgstr "頁 {0} of {1}"
+msgstr "页 {0} of {1}"
 
 #: ../report/SendReport.java:493
 #, java-format
 msgid "Printing page {0}"
-msgstr "列印頁 {0}"
+msgstr "打印页 {0}"
 
 #: ../LogViewWorker.java:79
 #, java-format
 msgid "Getting log for {0}"
-msgstr "取得 {0} 記錄檔"
+msgstr "取得 {0} 记录档"
 
 #: ../LogViewWorker.java:80
 #, java-format
 msgid "Fax job {0} ({1})"
-msgstr "傳真工作 {0} ({1})"
+msgstr "传真工作 {0} ({1})"
 
 #: ../LogViewWorker.java:93 ../phonebook/AbstractConnectionSettings.java:62
 #: ../util/KeyStrokeTextField.java:89 ../send/SendWin.java:221
 msgid "<none>"
-msgstr "<無>"
+msgstr "<无>"
 
 #: ../LogViewWorker.java:93
 msgid "There is no log file available for this fax job."
-msgstr "此傳真工作無記錄檔"
+msgstr "此传真工作无记录档"
 
 #: ../LogViewWorker.java:103 ../LogViewWorker.java:112
 msgid "Error retrieving the log:"
-msgstr "檢索記錄檔錯誤"
+msgstr "检索记录档错误"
 
 #: ../LogViewWorker.java:118 ../MainWin.java:1460
 msgid "View log"
-msgstr "瀏覽記錄檔"
+msgstr "浏览记录档"
 
 #: ../logconsole/LogConsole.java:102
 msgid "YajHFC log console"
-msgstr "YajHFC記錄控制台"
+msgstr "YajHFC记录控制台"
 
 #: ../logconsole/LogConsole.java:115 ../MainWin.java:1242 ../MainWin.java:2274
 #: ../util/ExceptionDialog.java:105 ../util/ClipboardPopup.java:74
 #: ../TextViewPanel.java:210
 msgid "Copy"
-msgstr "複製"
+msgstr "复制"
 
 #: ../logconsole/LogConsole.java:127 ../TextViewPanel.java:178
 msgid "Log files"
-msgstr "記錄檔"
+msgstr "记录档"
 
 #: ../logconsole/LogConsole.java:141
 msgid "Error saving the log file"
-msgstr "儲存記錄檔錯誤"
+msgstr "保存记录档错误"
 
 #: ../logconsole/LogConsole.java:146 ../TextViewPanel.java:199
 msgid "Save"
-msgstr "儲存"
+msgstr "保存"
 
 #: ../export/HTMLExporter.java:181
 #, java-format
 msgid "List saved at {0}."
-msgstr "清單儲存在 {0}."
+msgstr "清单保存在 {0}."
 
 #: ../export/ExportCSVAction.java:64
 #, java-format
 msgid "Save to CSV file {0}"
-msgstr "儲存到CSV檔 {0}"
+msgstr "保存到CSV档 {0}"
 
 #: ../export/ExportCSVAction.java:80 ../export/ExportXMLAction.java:84
 #: ../export/ExportAction.java:162 ../phonebook/ui/NewPhoneBookWin.java:1121
@@ -549,16 +549,16 @@ msgstr ""
 #: ../phonebook/ui/NewPhoneBookWin.java:1105
 #: ../phonebook/ui/NewPhoneBookWin.java:1129
 msgid "Error saving the table:"
-msgstr "儲存表錯誤:"
+msgstr "保存表错误:"
 
 #: ../export/ExportCSVAction.java:96
 msgid "Save to CSV"
-msgstr "儲存成CSV檔"
+msgstr "保存成CSV档"
 
 #: ../export/ImageExportManager.java:114
 #, java-format
 msgid "{0}-files"
-msgstr "{0}-檔案"
+msgstr "{0}-文件"
 
 #: ../export/ExportXMLAction.java:97
 msgid "Export to XML"
@@ -567,19 +567,19 @@ msgstr ""
 #: ../export/ExportAction.java:163 ../MainWin.java:3272
 #: ../send/SimplifiedSendDialog.java:359
 msgid "Server"
-msgstr "伺服器"
+msgstr "服务器"
 
 #: ../export/ExportAction.java:176 ../phonebook/ui/NewPhoneBookWin.java:1137
 msgid "Export to HTML"
-msgstr "匯出成HTML"
+msgstr "导出成HTML"
 
 #: ../export/ExportAction.java:180 ../phonebook/ui/NewPhoneBookWin.java:755
 msgid "Export"
-msgstr "匯出"
+msgstr "导出"
 
 #: ../export/ExportAction.java:181
 msgid "Exports the list of faxes in CSV, HTML or XML format"
-msgstr "匯出清單到CSV,HTML,或XML格式"
+msgstr "导出清单到CSV,HTML,或XML格式"
 
 #: ../DesktopManager.java:74
 #, java-format
@@ -587,12 +587,12 @@ msgid ""
 "Could not start the default browser for the URL \"{0}\".\n"
 "The URL has been copied to the clipboard instead."
 msgstr ""
-"無法使用預設瀏覽器開啟網址 \"{0}\".\n"
-"網址已複製到剪貼簿."
+"无法使用预设浏览器开启网址 \"{0}\".\n"
+"网址已复制到剪贴簿."
 
 #: ../FaxTimezone.java:46
 msgid "Local timezone"
-msgstr "本地時區"
+msgstr "本地时区"
 
 #: ../FaxTimezone.java:47
 msgid "GMT"
@@ -604,16 +604,16 @@ msgstr "否"
 
 #: ../file/textextract/RecipientExtractionMode.java:47
 msgid "Yes, always show send dialog"
-msgstr "確定,顯示傳送對話框"
+msgstr "确定,显示发送对话框"
 
 #: ../file/textextract/RecipientExtractionMode.java:48
 msgid "Yes, show send dialog only when no recipients were found"
-msgstr "確定,當無接收文件時,顯示傳送對話框"
+msgstr "确定,当无接收文件时,显示发送对话框"
 
 #: ../file/FormattedFile.java:92
 #, java-format
 msgid "File format {0} not supported."
-msgstr "檔案格 {0} 不支援."
+msgstr "文件格 {0} 不支持."
 
 #: ../file/FileFormat.java:47
 msgid "Postscript documents"
@@ -625,31 +625,31 @@ msgstr "PDF文件"
 
 #: ../file/FileFormat.java:49
 msgid "PCL files"
-msgstr "PCL檔案"
+msgstr "PCL文件"
 
 #: ../file/FileFormat.java:50
 msgid "JPEG pictures"
-msgstr "JPEG 圖"
+msgstr "JPEG 图"
 
 #: ../file/FileFormat.java:51
 msgid "PNG pictures"
-msgstr "PNG圖"
+msgstr "PNG图"
 
 #: ../file/FileFormat.java:52
 msgid "GIF pictures"
-msgstr "GIF 圖"
+msgstr "GIF 图"
 
 #: ../file/FileFormat.java:53
 msgid "TIFF pictures"
-msgstr "TIFF 圖"
+msgstr "TIFF 图"
 
 #: ../file/FileFormat.java:54 ../send/SimplifiedSendDialog.java:591
 msgid "Text files"
-msgstr "文字檔"
+msgstr "文本文件"
 
 #: ../file/FileFormat.java:55
 msgid "XML documents"
-msgstr "XML檔"
+msgstr "XML档"
 
 #: ../file/FileFormat.java:56
 msgid "XSL:FO documents"
@@ -657,7 +657,7 @@ msgstr "XSL:FO 文件"
 
 #: ../file/FileFormat.java:57
 msgid "OpenDocument text documents"
-msgstr "OpenDocument文字檔案"
+msgstr "OpenDocument文字文件"
 
 #: ../file/FileFormat.java:58
 msgid "HTML documents"
@@ -677,149 +677,149 @@ msgstr ""
 
 #: ../file/FileFormat.java:62
 msgid "Any files"
-msgstr "所有檔案"
+msgstr "所有文件"
 
 #: ../file/FileFormat.java:63
 msgid "Unknown files"
-msgstr "未知檔案"
+msgstr "未知文件"
 
 #: ../file/FileFormat.java:126
 msgid "All supported file formats"
-msgstr "支援的檔案格式。"
+msgstr "支持的文件格式。"
 
 #: ../file/PrintServiceFileConverter.java:108
 #, java-format
 msgid "Cannot find a PrintService to convert files of type {0} to Postscript!"
-msgstr "無法找到 PrintService 轉換檔案格式 {0} to Postscript!"
+msgstr "无法找到 PrintService 转换文件格式 {0} to Postscript!"
 
 #: ../file/PrintServiceFileConverter.java:152
 msgid "An error occured while converting the document to PostScript."
-msgstr "文件轉換PostScript,發生錯誤"
+msgstr "文件转换PostScript,发生错误"
 
 #: ../MainWin.java:279
 #, java-format
 msgid "Deleting fax {0}"
-msgstr "刪除傳真 {0}"
+msgstr "删除传真 {0}"
 
 #: ../MainWin.java:290
 msgid "Error deleting a fax:\n"
-msgstr "删除傳真:\n"
+msgstr "删除传真:\n"
 
 #: ../MainWin.java:292
 #, java-format
 msgid "Error deleting the fax \"{0}\":\n"
-msgstr "删除傳真錯誤 \"{0}\":\n"
+msgstr "删除传真错误 \"{0}\":\n"
 
 #: ../MainWin.java:302
 msgid "Error deleting faxes:"
-msgstr "刪除傳真錯誤:"
+msgstr "删除传真错误:"
 
 #: ../MainWin.java:336 ../MainWin.java:700
 #, java-format
 msgid "Saving fax {0}"
-msgstr "儲存傳真 {0}"
+msgstr "保存传真 {0}"
 
 #: ../MainWin.java:344 ../MainWin.java:464
 #, java-format
 msgid "No accessible document files are available for the fax \"{0}\"."
-msgstr "傳真無權限 \"{0}\""
+msgstr "传真无权限 \"{0}\""
 
 #: ../MainWin.java:347 ../MainWin.java:467
 msgid "The following files were inaccessible:"
-msgstr "下面的文件是不可訪問："
+msgstr "下面的文件是不可访问："
 
 #: ../MainWin.java:353
 msgid "Save fax"
-msgstr "儲存傳真"
+msgstr "保存传真"
 
 #: ../MainWin.java:369
 #, java-format
 msgid "Save {0} to"
-msgstr "儲存{0}到.."
+msgstr "保存{0}到.."
 
 #: ../MainWin.java:382 ../MainWin.java:484 ../MainWin.java:709
 #, java-format
 msgid ""
 "While downloading the file {0} (job {1}), the server gave back an error code:"
-msgstr "下載檔案 {0} (job {1}), 伺服器回覆錯誤::"
+msgstr "下载文件 {0} (job {1}), 服务器回覆错误::"
 
 #: ../MainWin.java:384 ../MainWin.java:486 ../MainWin.java:711
 #, java-format
 msgid ""
 "The file {0} (job {1}) could not be opened for reading (probably you lack "
 "the necessary access permissions):"
-msgstr "檔案{0} (job {1}) 不能開啟 (也許需要權限)"
+msgstr "文件{0} (job {1}) 不能开启 (也许需要权限)"
 
 #: ../MainWin.java:387 ../MainWin.java:713
 #, java-format
 msgid "An error occured saving the file {0} (job {1}):"
-msgstr "存檔發生錯誤 {0} (job {1}):"
+msgstr "存档发生错误 {0} (job {1}):"
 
 #: ../MainWin.java:395 ../MainWin.java:743
 msgid "An error occured saving the fax:"
-msgstr "發生錯誤儲存傳真："
+msgstr "发生错误保存传真："
 
 #: ../MainWin.java:404 ../MainWin.java:753
 msgid "Error saving faxes:"
-msgstr "儲存傳真錯誤:"
+msgstr "保存传真错误:"
 
 #: ../MainWin.java:421 ../MainWin.java:774
 #, java-format
 msgid "{0} files saved to directory {1}."
-msgstr "{0} 檔案儲存到目錄 {1}."
+msgstr "{0} 文件保存到目录 {1}."
 
 #: ../MainWin.java:421 ../MainWin.java:774
 msgid "Faxes saved"
-msgstr "傳真已儲存"
+msgstr "传真已保存"
 
 #: ../MainWin.java:450
 #, java-format
 msgid "Displaying fax {0}"
-msgstr "顯示傳真中{0}"
+msgstr "显示传真中{0}"
 
 #: ../MainWin.java:451
 #, java-format
 msgid "Downloading {0}"
-msgstr "下載中{0}"
+msgstr "下载中{0}"
 
 #: ../MainWin.java:473 ../MainWin.java:523
 msgid "Display fax"
-msgstr "顯示傳真"
+msgstr "显示传真"
 
 #: ../MainWin.java:488
 #, java-format
 msgid "An error occured displaying the file {0} (job {1}):\n"
-msgstr "顯示檔案錯誤 {0} (job {1}):\n"
+msgstr "显示文件错误 {0} (job {1}):\n"
 
 #: ../MainWin.java:492 ../send/SendController.java:276
 msgid "Launching viewer"
-msgstr "瀏覽"
+msgstr "浏览"
 
 #: ../MainWin.java:503
 msgid ""
 "It seems the TIFF files of your HylaFAX installation are incompatible with "
 "iText (often the case with capi4hylafax)."
-msgstr "可能是HylaFAX TIFF檔"
+msgstr "可能是HylaFAX TIFF档"
 
 #: ../MainWin.java:504
 msgid ""
 "Please see the following page for more details and how to work around this "
 "problem:"
-msgstr "詳細操作,請參考下面頁面"
+msgstr "详细操作,请参考下面页面"
 
 #: ../MainWin.java:528
 #, java-format
 msgid "An error occured displaying the fax \"{0}\":"
-msgstr "顯示傳真錯誤 \"{0}\":"
+msgstr "显示传真错误 \"{0}\":"
 
 #: ../MainWin.java:536
 msgid "Error displaying faxes:"
-msgstr "顯示傳真錯誤:"
+msgstr "显示传真错误:"
 
 #: ../MainWin.java:580
 #, java-format
 msgid "Suspending job {0}"
-msgstr "暫停job {0}"
+msgstr "暂停job {0}"
 
 #: ../MainWin.java:587
 #, java-format
@@ -827,30 +827,30 @@ msgid ""
 "Suspending the currently running job {0} may block until it is done (or "
 "switch to another \"non running state\"). Try to suspend it anyway?"
 msgstr ""
-"暫停目前進行工作 job {0} 可能被阻止直到完成 (or switch to another \"non "
-"running state\"). 不管如何暫停它?"
+"暂停目前进行工作 job {0} 可能被阻止直到完成 (or switch to another \"non "
+"running state\"). 不管如何暂停它?"
 
 #: ../MainWin.java:588
 msgid "Suspend fax job"
-msgstr "暫停傳真任務"
+msgstr "暂停传真任务"
 
 #: ../MainWin.java:599
 msgid "Error suspending a fax job:\n"
-msgstr "暫停傳真作錯誤:\n"
+msgstr "暂停传真作错误:\n"
 
 #: ../MainWin.java:601
 #, java-format
 msgid "Error suspending the fax job \"{0}\":\n"
-msgstr "暫停傳真作錯誤 \"{0}\":\n"
+msgstr "暂停传真作错误 \"{0}\":\n"
 
 #: ../MainWin.java:609
 msgid "Error suspending faxes:"
-msgstr "取消傳真錯誤:"
+msgstr "取消传真错误:"
 
 #: ../MainWin.java:637
 #, java-format
 msgid "Resuming job {0}"
-msgstr "恢復任務 {0}"
+msgstr "恢复任务 {0}"
 
 #: ../MainWin.java:644
 #, java-format
@@ -858,29 +858,29 @@ msgid ""
 "Job {0} is not in state \"Suspended\" so resuming it probably will not work. "
 "Try to resume it anyway?"
 msgstr ""
-"Job {0} is not in state \"Suspended\"所以恢復它可能不會工作。嘗試恢復它呢？"
+"Job {0} is not in state \"Suspended\"所以恢复它可能不会工作。尝试恢复它呢？"
 
 #: ../MainWin.java:645
 msgid "Resume fax job"
-msgstr "恢復任務中 {0}"
+msgstr "恢复任务中 {0}"
 
 #: ../MainWin.java:656
 msgid "Error resuming a fax job:\n"
-msgstr "恢復傳真錯誤工作:\n"
+msgstr "恢复传真错误工作:\n"
 
 #: ../MainWin.java:658
 #, java-format
 msgid "Error resuming the fax job \"{0}\":\n"
-msgstr "恢復傳真錯誤工作 \"{0}\":\n"
+msgstr "恢复传真错误工作 \"{0}\":\n"
 
 #: ../MainWin.java:666
 msgid "Error resuming faxes:"
-msgstr "重送傳真錯誤:"
+msgstr "重送传真错误:"
 
 #: ../MainWin.java:730
 #, java-format
 msgid "File name to save fax {0}"
-msgstr "儲存傳真檔名 {0}"
+msgstr "保存传真档名 {0}"
 
 #: ../MainWin.java:797
 #, java-format
@@ -889,8 +889,8 @@ msgid ""
 "Please specify the location of these tools in the options dialog (see the "
 "FAQ for download locations)."
 msgstr ""
-"儲存 {0} 需要 GhostScript and tiff2pdf.\n"
-"請在選項設定這些檔案所在位置"
+"保存 {0} 需要 GhostScript and tiff2pdf.\n"
+"请在选项设定这些文件所在位置"
 
 #: ../MainWin.java:797 ../filters/ui/CustomFilterDialog.java:237
 #: ../filters/ui/CustomFilterDialog.java:241 ../options/IdentityPanel.java:214
@@ -916,49 +916,49 @@ msgstr ""
 #: ../util/ExceptionDialog.java:323 ../util/AcceleratorKeyDialog.java:150
 #: ../send/SendController.java:169 ../send/SendController.java:174
 msgid "Error"
-msgstr "錯誤"
+msgstr "错误"
 
 #: ../MainWin.java:803 ../MainWin.java:1019
 msgid "Select a directory to save the faxes in"
-msgstr "選擇一個目錄儲存傳真"
+msgstr "选择一个目录保存传真"
 
 #: ../MainWin.java:804 ../MainWin.java:1020
 #: ../phonebook/ui/NewPhoneBookWin.java:1344
 msgid "Select"
-msgstr "選擇"
+msgstr "选择"
 
 #: ../MainWin.java:811 ../MainWin.java:816 ../MainWin.java:1027
 #: ../MainWin.java:1032
 msgid "Saving faxes"
-msgstr "儲存傳真中"
+msgstr "保存传真中"
 
 #: ../MainWin.java:824
 #, java-format
 msgid "Save fax as {0}..."
-msgstr "儲存傳真為{0}..."
+msgstr "保存传真为{0}..."
 
 #: ../MainWin.java:825
 #, java-format
 msgid "Saves the selected fax(es) as single {0} file"
-msgstr "儲存所選傳真{0}至1個檔"
+msgstr "保存所选传真{0}至1个档"
 
 #: ../MainWin.java:855 ../options/OptionsWin.java:120
 #: ../options/CommonPanel.java:369
 msgid "Options"
-msgstr "選項"
+msgstr "选项"
 
 #: ../MainWin.java:856
 msgid "Shows the Options dialog"
-msgstr "顯示選項對話框"
+msgstr "显示选项对话框"
 
 #: ../MainWin.java:872 ../send/SendWin.java:548
 #: ../send/SimplifiedSendDialog.java:270
 msgid "Send"
-msgstr "發送"
+msgstr "发送"
 
 #: ../MainWin.java:873
 msgid "Shows the send fax dialog"
-msgstr "顯示傳送視窗"
+msgstr "显示发送视窗"
 
 #: ../MainWin.java:885 ../send/SendWin.java:545
 msgid "Poll"
@@ -966,23 +966,23 @@ msgstr "poll"
 
 #: ../MainWin.java:886
 msgid "Shows the poll fax dialog"
-msgstr "顯示Poll視窗"
+msgstr "显示Poll视窗"
 
 #: ../MainWin.java:897
 msgid "Do you really want to cancel the selected fax jobs?"
-msgstr "是否要取消所選傳真工作?"
+msgstr "是否要取消所选传真工作?"
 
 #: ../MainWin.java:899
 msgid "Do you really want to delete the selected faxes?"
-msgstr "是否要刪除所選傳真工作?"
+msgstr "是否要删除所选传真工作?"
 
 #: ../MainWin.java:901
 msgid "Delete faxes"
-msgstr "删除傳真"
+msgstr "删除传真"
 
 #: ../MainWin.java:903
 msgid "Deleting faxes"
-msgstr "删除傳真中"
+msgstr "删除传真中"
 
 #: ../MainWin.java:908 ../phonebook/ui/NewPhoneBookWin.java:928
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:208
@@ -992,72 +992,72 @@ msgstr "删除"
 
 #: ../MainWin.java:909
 msgid "Deletes the selected fax"
-msgstr "删除所選傳真"
+msgstr "删除所选传真"
 
 #: ../MainWin.java:918
 msgid "Viewing faxes"
-msgstr "檢視傳真"
+msgstr "查看传真"
 
 #: ../MainWin.java:921
 msgid "Show"
-msgstr "顯示"
+msgstr "显示"
 
 #: ../MainWin.java:922
 msgid "Displays the selected fax"
-msgstr "顯示所選傳真"
+msgstr "显示所选传真"
 
 #: ../MainWin.java:932
 msgid "Exit"
-msgstr "離開"
+msgstr "离开"
 
 #: ../MainWin.java:933
 msgid "Exits the application"
-msgstr "退出程式"
+msgstr "退出程序"
 
 #: ../MainWin.java:948
 msgid "Shows the about dialog"
-msgstr "顯示關於對話框"
+msgstr "显示关于对话框"
 
 #: ../MainWin.java:961 ../phonebook/ui/NewPhoneBookWin.java:795
 #: ../phonebook/ui/NewPhoneBookWin.java:1241
 msgid "Phone book"
-msgstr "通訊錄"
+msgstr "通讯录"
 
 #: ../MainWin.java:962
 msgid "Display/edit the phone book"
-msgstr "瀏覽/編輯通訊錄"
+msgstr "浏览/编辑通讯录"
 
 #: ../MainWin.java:976
 msgid "Shows the README files"
-msgstr "顯示 README文件"
+msgstr "显示 README文件"
 
 #: ../MainWin.java:1004
 msgid "Marked as read"
-msgstr "標記為已讀"
+msgstr "标记为已读"
 
 #: ../MainWin.java:1005
 msgid "Marks the selected fax as read/unread"
-msgstr "標示所選傳真為已讀/未讀"
+msgstr "标示所选传真为已读/未读"
 
 #: ../MainWin.java:1036
 msgid "Save fax..."
-msgstr "儲存傳真 ..."
+msgstr "保存传真 ..."
 
 #: ../MainWin.java:1037
 msgid "Saves the selected fax on disk"
-msgstr "儲存所選傳真到硬碟"
+msgstr "保存所选传真到硬碟"
 
 #: ../MainWin.java:1053
 msgid "Couldn't get a filename for the fax:"
-msgstr "傳真無法取得檔案名稱"
+msgstr "传真无法取得文件名称"
 
 #: ../MainWin.java:1066
 msgid "Forward fax..."
-msgstr "轉發傳真.."
+msgstr "转发传真.."
 
 #: ../MainWin.java:1067
 msgid "Forwards the fax"
-msgstr "轉發傳真"
+msgstr "转发传真"
 
 #: ../MainWin.java:1087
 msgid "Admin mode"
@@ -1065,7 +1065,7 @@ msgstr "管理模式"
 
 #: ../MainWin.java:1088
 msgid "Connect to the server in admin mode (e.g. to delete faxes)"
-msgstr "管理模式連線(例:刪除傳真)"
+msgstr "管理模式连线(例:删除传真)"
 
 #: ../MainWin.java:1100
 msgid "Refresh"
@@ -1073,189 +1073,189 @@ msgstr "重新整理"
 
 #: ../MainWin.java:1101
 msgid "Refresh tables and server status"
-msgstr "更新狀態"
+msgstr "更新状态"
 
 #: ../MainWin.java:1125
 #, java-format
 msgid "Getting information for job {0}..."
-msgstr "取得工作{0}資訊"
+msgstr "取得工作{0}信息"
 
 #: ../MainWin.java:1154 ../NoGUISender.java:151
 msgid "Opening send dialog..."
-msgstr "開啟傳送對話框"
+msgstr "开启发送对话框"
 
 #: ../MainWin.java:1158
 msgid "Could not get all of the job information necessary to resend the fax:"
-msgstr "無法獲取所有工作必需的信息重新發送傳真："
+msgstr "无法获取所有工作必需的信息重新发送传真："
 
 #: ../MainWin.java:1164
 msgid "Error resending faxes:"
-msgstr "重送傳真錯誤:"
+msgstr "重送传真错误:"
 
 #: ../MainWin.java:1193
 msgid "Resending fax..."
-msgstr "重送傳真..."
+msgstr "重送传真..."
 
 #: ../MainWin.java:1196
 msgid "Resend fax..."
-msgstr "傳真重送"
+msgstr "传真重送"
 
 #: ../MainWin.java:1197
 msgid "Resend the fax"
-msgstr "重送傳真"
+msgstr "重送传真"
 
 #: ../MainWin.java:1208
 msgid "Prints the currently displayed table"
-msgstr "列印目前顯示的表"
+msgstr "打印目前显示的表"
 
 #: ../MainWin.java:1216
 msgid "Suspending jobs"
-msgstr "暫停工作中"
+msgstr "暂停工作中"
 
 #: ../MainWin.java:1219
 msgid "Suspend"
-msgstr "暫不實行"
+msgstr "暂不实行"
 
 #: ../MainWin.java:1220
 msgid "Suspends the transfer of the selected fax"
-msgstr "暫停轉換所選傳真"
+msgstr "暂停转换所选传真"
 
 #: ../MainWin.java:1228
 msgid "Resuming jobs"
-msgstr "恢復工作"
+msgstr "恢复工作"
 
 #: ../MainWin.java:1231
 msgid "Resume"
-msgstr "恢復"
+msgstr "恢复"
 
 #: ../MainWin.java:1232
 msgid "Resumes the transfer of the selected fax"
-msgstr "恢復轉換所選傳真"
+msgstr "恢复转换所选传真"
 
 #: ../MainWin.java:1243
 msgid "Copies the selected table items to the clipboard"
-msgstr "複製所選清單到剪貼簿"
+msgstr "复制所选清单到剪贴簿"
 
 #: ../MainWin.java:1263 ../MainWin.java:1264
 msgid "Show row numbers"
-msgstr "顯示行號"
+msgstr "显示行号"
 
 #: ../MainWin.java:1307
 msgid "Adjust column widths"
-msgstr "調整列寬"
+msgstr "调整列宽"
 
 #: ../MainWin.java:1308
 msgid "Adjust column widths to fit the window size"
-msgstr "調整列寬度以適合視窗大小"
+msgstr "调整列宽度以适合视窗大小"
 
 #: ../MainWin.java:1324
 msgid "Connect or disconnect to the HylaFAX server"
-msgstr " HylaFAX 連線or斷線"
+msgstr " HylaFAX 连线or断线"
 
 #: ../MainWin.java:1334 ../util/ToolbarEditorDialog.java:133
 msgid "Customize toolbar"
-msgstr "自定義工具欄"
+msgstr "自定义工具栏"
 
 #: ../MainWin.java:1335
 msgid "Customize the toolbar"
-msgstr "自定義工具欄"
+msgstr "自定义工具栏"
 
 #: ../MainWin.java:1348 ../phonebook/ui/NewPhoneBookWin.java:1165
 #: ../util/AcceleratorKeyDialog.java:93 ../util/AcceleratorKeyDialog.java:99
 msgid "Edit keyboard shortcuts"
-msgstr "編輯鍵盤捷徑"
+msgstr "编辑键盘捷径"
 
 #: ../MainWin.java:1349 ../phonebook/ui/NewPhoneBookWin.java:1166
 msgid "Customize the keyboard shortcuts"
-msgstr "自訂鍵盤捷徑"
+msgstr "自定义键盘捷径"
 
 #: ../MainWin.java:1359
 msgid "Checks if there is a newer version of YajHFC available"
-msgstr "檢查是否有更新的版本可用的YajHFC"
+msgstr "检查是否有更新的版本可用的YajHFC"
 
 #: ../MainWin.java:1367
 msgid ""
 "Answering a phone call requires a direct connection to the HylaFAX server "
 "which is not available."
-msgstr "回應語音電話需要直接連線HylaFAx server不可使用"
+msgstr "回应语音电话需要直接连线HylaFAx server不可使用"
 
 #: ../MainWin.java:1367 ../MainWin.java:1380 ../MainWin.java:1385
 #: ../MainWin.java:1402 ../MainWin.java:1406
 msgid "Answer call"
-msgstr "回答來電"
+msgstr "回答来电"
 
 #: ../MainWin.java:1380
 msgid "No valid modem found."
-msgstr "沒有找到正確的數據機"
+msgstr "没有找到正确的数据机"
 
 #: ../MainWin.java:1385
 msgid "Please select which modem shall answer a phone call:"
-msgstr "請選擇要用那台數據機回答來電"
+msgstr "请选择要用那台数据机回答来电"
 
 #: ../MainWin.java:1397
 msgid "Error answering the phone call:"
-msgstr "回答來電錯誤:"
+msgstr "回答来电错误:"
 
 #: ../MainWin.java:1402
 msgid ""
 "Answering a phone call requires administrative privileges.\n"
 "Please enable admin mode first."
 msgstr ""
-"回答來電,需要管理者權限\n"
-"請使用管理模式"
+"回答来电,需要管理者权限\n"
+"请使用管理模式"
 
 #: ../MainWin.java:1407
 msgid "Manually answer a phone call with a modem"
-msgstr "手動回答來電"
+msgstr "手动回答来电"
 
 #: ../MainWin.java:1421 ../MainWinSearchWin.java:126
 #: ../MainWinSearchWin.java:146
 msgid "Search fax"
-msgstr "尋找傳真"
+msgstr "寻找传真"
 
 #: ../MainWin.java:1422
 msgid "Searches for a fax"
-msgstr "尋找傳真"
+msgstr "寻找传真"
 
 #: ../MainWin.java:1456
 msgid "Viewing logs"
-msgstr "瀏覽記錄檔"
+msgstr "浏览记录档"
 
 #: ../MainWin.java:1461
 msgid "Displays the communication log of the selected fax"
-msgstr "顯示所選傳真的通訊記錄"
+msgstr "显示所选传真的通讯记录"
 
 #: ../MainWin.java:1484
 msgid "Log console"
-msgstr "記錄控制台"
+msgstr "记录控制台"
 
 #: ../MainWin.java:1485
 msgid "Displays the YajHFC log in real time"
-msgstr "即時顯示YajHFC記錄"
+msgstr "即时显示YajHFC记录"
 
 #: ../MainWin.java:1503
 msgid "Show Toolbar"
-msgstr "顯示工具列"
+msgstr "显示工具栏"
 
 #: ../MainWin.java:1504
 msgid "Shows or hides the toolbar."
-msgstr "顯示/隱藏工具列"
+msgstr "显示/隐藏工具栏"
 
 #: ../MainWin.java:1523
 msgid "Show Quick Search bar"
-msgstr "顯示快搜列"
+msgstr "显示快搜列"
 
 #: ../MainWin.java:1524
 msgid "Show or hides the Quick Search toolbar."
-msgstr "顯示/隱藏快搜列"
+msgstr "显示/隐藏快搜列"
 
 #: ../MainWin.java:1539
 msgid "Shows/Changes the current server."
-msgstr "顯示/更改目前伺服器"
+msgstr "显示/更改目前服务器"
 
 #: ../MainWin.java:1549 ../util/ClipboardPopup.java:80
 msgid "Select All"
-msgstr "全部選取"
+msgstr "全部选取"
 
 #: ../MainWin.java:1550
 msgid "Selects all rows"
@@ -1263,31 +1263,31 @@ msgstr ""
 
 #: ../MainWin.java:1554
 msgid "Auto-size status bar"
-msgstr "狀態列自動大小"
+msgstr "状态列自动大小"
 
 #: ../MainWin.java:1555
 msgid "Automatically resize the status bar"
-msgstr "自動變更狀態列大小"
+msgstr "自动变更状态列大小"
 
 #: ../MainWin.java:1637
 msgid "Connect"
-msgstr "連接"
+msgstr "连接"
 
 #: ../MainWin.java:1637
 msgid "Disconnect"
-msgstr "斷線"
+msgstr "断线"
 
 #: ../MainWin.java:1644 ../MainWin.java:2440
 msgid "Fax"
-msgstr "傳真"
+msgstr "传真"
 
 #: ../MainWin.java:1666 ../MainWin.java:2895
 msgid "Fetching fax list..."
-msgstr "擷取傳真清單..."
+msgstr "撷取传真清单..."
 
 #: ../MainWin.java:1811 ../phonebook/ui/NewPhoneBookWin.java:828
 msgid "View"
-msgstr "檢視"
+msgstr "查看"
 
 #: ../MainWin.java:2019
 msgid "Logging out..."
@@ -1296,7 +1296,7 @@ msgstr "登出..."
 #: ../MainWin.java:2056
 #: ../model/servconn/hylafax/HylaFaxListConnection.java:211
 msgid "Disconnected."
-msgstr "已離線"
+msgstr "已离线"
 
 #: ../MainWin.java:2107 ../options/ModemsPanel.java:109
 #: ../options/SingleServerSettingsPanel.java:114
@@ -1305,7 +1305,7 @@ msgstr "登入中.."
 
 #: ../MainWin.java:2184
 msgid "Help"
-msgstr "幫助"
+msgstr "帮助"
 
 #: ../MainWin.java:2199 ../options/OptionsWin.java:252
 msgid "Received"
@@ -1313,79 +1313,79 @@ msgstr "已接收"
 
 #: ../MainWin.java:2199
 msgid "Received faxes"
-msgstr "接收的傳真"
+msgstr "接收的传真"
 
 #: ../MainWin.java:2200 ../options/OptionsWin.java:253
 msgid "Sent"
-msgstr "已傳送"
+msgstr "已发送"
 
 #: ../MainWin.java:2200
 msgid "Sent faxes"
-msgstr "已送傳真"
+msgstr "已送传真"
 
 #: ../MainWin.java:2201 ../options/OptionsWin.java:254
 msgid "Transmitting"
-msgstr "傳送中"
+msgstr "发送中"
 
 #: ../MainWin.java:2201
 msgid "Faxes in the output queue"
-msgstr "傳真輸出列"
+msgstr "传真输出列"
 
 #: ../MainWin.java:2214 ../options/OptionsWin.java:255
 msgid "Archive"
-msgstr "檔案"
+msgstr "文件"
 
 #: ../MainWin.java:2467
 msgid "Table"
-msgstr "清單"
+msgstr "清单"
 
 #: ../MainWin.java:2481
 msgid "Extras"
-msgstr "設定"
+msgstr "设定"
 
 #: ../MainWin.java:2542
 msgid "All faxes"
-msgstr "所有傳真"
+msgstr "所有传真"
 
 #: ../MainWin.java:2547
 msgid "Only own faxes"
-msgstr "只有自己的傳真"
+msgstr "只有自己的传真"
 
 #: ../MainWin.java:2551
 msgid "Custom filter..."
-msgstr "自定義篩選..."
+msgstr "自定义筛选..."
 
 #: ../MainWin.java:2582
 #, java-format
 msgid "Custom filter for table {0}"
-msgstr "自定義篩選表{0}"
+msgstr "自定义筛选表{0}"
 
 #: ../MainWin.java:2583
 msgid "Only display fax jobs fulfilling:"
-msgstr "只顯示完成傳真作業："
+msgstr "只显示完成传真作业："
 
 #: ../MainWin.java:2584
 msgid ""
 "You have entered no filtering conditions. Do you want to show all faxes "
 "instead?"
-msgstr "你有沒有輸入篩選條件。你想顯示所有傳真呢？"
+msgstr "你有没有输入筛选条件。你想显示所有传真呢？"
 
 #: ../MainWin.java:2585
 msgid ""
 "Please enter a valid date/time!\n"
 "(Hint: Exactly the same format as in the fax job table is expected)"
 msgstr ""
-"請輸入正確的日期/時間！\n"
-"(提示：相同的格式如表傳真作業)"
+"请输入正确的日期/时间！\n"
+"(提示：相同的格式如表传真作业)"
 
 #: ../MainWin.java:2916 ../HylaClientManager.java:242
 msgid "An error occured connecting to the server:"
-msgstr "連接到伺服器發生錯誤："
+msgstr "连接到服务器发生错误："
 
 #: ../MainWin.java:3078
 #, java-format
 msgid "Disconnected, will try to reconnect in {0} seconds..."
-msgstr "連不到,將在{0}秒後重試"
+msgstr "连不到,将在{0}秒后重试"
 
 #: ../MainWin.java:3085
 msgid "Trying to reconnect..."
@@ -1395,19 +1395,19 @@ msgstr ""
 msgid ""
 "Type here parts of the sender, recipient or file name in order to search for "
 "a fax."
-msgstr "在這裡輸入部分的寄件人，收件人或文件名，以尋找一個傳真。"
+msgstr "在这里输入部分的寄件人，收件人或文件名，以寻找一个传真。"
 
 #: ../MainWin.java:3154
 msgid "Reset quick search and show all faxes."
-msgstr "重置快速尋找,並顯示所有傳真"
+msgstr "重置快速寻找,并显示所有传真"
 
-#: ../YajLanguage.java:104 ../DateStyle.java:85
+#: ../YajLanguage.java:106 ../DateStyle.java:85
 msgid "(System default)"
-msgstr "(系統預設)"
+msgstr "(系统预设)"
 
 #: ../FileTextField.java:177
 msgid "Choose a file using a dialog"
-msgstr "選擇一個文件使用對話框"
+msgstr "选择一个文件使用对话框"
 
 #: ../FaxNotification.java:50
 msgid "Never"
@@ -1419,49 +1419,49 @@ msgstr "已交付"
 
 #: ../FaxNotification.java:52
 msgid "Requeued"
-msgstr "已佇列"
+msgstr "已伫列"
 
 #: ../FaxNotification.java:53
 msgid "Delivered or requeued"
-msgstr "交付或佇列"
+msgstr "交付或伫列"
 
 #: ../filters/FilterCreator.java:53
 msgid "is set"
-msgstr "設置"
+msgstr "设置"
 
 #: ../filters/FilterCreator.java:54
 msgid "is not set"
-msgstr "未設置"
+msgstr "未设置"
 
 #: ../filters/ComparableFilterOperator.java:42
 #: ../filters/StringFilterOperator.java:42
 msgid "equals"
-msgstr "等於"
+msgstr "等于"
 
 #: ../filters/ComparableFilterOperator.java:43
 #: ../filters/StringFilterOperator.java:43
 msgid "not equals"
-msgstr "不等於"
+msgstr "不等于"
 
 #: ../filters/ComparableFilterOperator.java:44
 msgid "less than"
-msgstr "小於"
+msgstr "小于"
 
 #: ../filters/ComparableFilterOperator.java:45
 msgid "greater than"
-msgstr "大於"
+msgstr "大于"
 
 #: ../filters/ComparableFilterOperator.java:46
 msgid "less or equal"
-msgstr "小於等於"
+msgstr "小于等于"
 
 #: ../filters/ComparableFilterOperator.java:47
 msgid "greater or equal"
-msgstr "大於等於"
+msgstr "大于等于"
 
 #: ../filters/ui/CustomFilterDialog.java:88
 msgid "Please enter a valid number!"
-msgstr "請輸入正確的數字！"
+msgstr "请输入正确的数字！"
 
 #: ../filters/ui/CustomFilterDialog.java:117 ../util/CancelAction.java:58
 #: ../util/ProgressDialog.java:78
@@ -1478,15 +1478,15 @@ msgstr "新增"
 
 #: ../filters/ui/CustomFilterDialog.java:150
 msgid "Any of the following conditions"
-msgstr "任何下列條件"
+msgstr "任何下列条件"
 
 #: ../filters/ui/CustomFilterDialog.java:152
 msgid "All of the following conditions"
-msgstr "所有以下條件"
+msgstr "所有以下条件"
 
 #: ../filters/ui/CustomFilterDialog.java:248
 msgid "Question"
-msgstr "問題"
+msgstr "问题"
 
 #: ../filters/ui/FilterPanel.java:76 ../options/ConvertersPage.java:287
 msgid "(none)"
@@ -1494,31 +1494,31 @@ msgstr "(none)"
 
 #: ../filters/ui/FilterPanel.java:226 ../filters/ui/SearchWin.java:196
 msgid "Case sensitive"
-msgstr "區分大小寫"
+msgstr "区分大小写"
 
 #: ../filters/ui/FilterPanel.java:230
 msgid "Remove this condition"
-msgstr "刪除此條件"
+msgstr "删除此条件"
 
 #: ../filters/ui/SearchWin.java:122
 msgid "Please enter a valid compare value."
-msgstr "請輸入正確的比較值。"
+msgstr "请输入正确的比较值。"
 
 #: ../filters/ui/SearchWin.java:175 ../util/AbstractQuickSearchHelper.java:190
 msgid "Search"
-msgstr "尋找"
+msgstr "寻找"
 
 #: ../filters/ui/SearchWin.java:189
 msgid "Forward"
-msgstr "前進"
+msgstr "前进"
 
 #: ../filters/ui/SearchWin.java:191
 msgid "Backward"
-msgstr "後退"
+msgstr "后退"
 
 #: ../filters/ui/SearchWin.java:197
 msgid "Wrap Search"
-msgstr "來回尋找"
+msgstr "来回寻找"
 
 #: ../filters/ui/SearchWin.java:200
 msgid "Direction:"
@@ -1526,7 +1526,7 @@ msgstr "方向："
 
 #: ../filters/ui/SearchWin.java:205
 msgid "Search options:"
-msgstr "尋找選項："
+msgstr "寻找选项："
 
 #: ../filters/StringFilterOperator.java:44
 msgid "contains"
@@ -1538,11 +1538,11 @@ msgstr "不包含"
 
 #: ../filters/StringFilterOperator.java:46
 msgid "starts with"
-msgstr "開頭"
+msgstr "开头"
 
 #: ../filters/StringFilterOperator.java:47
 msgid "ends with"
-msgstr "結尾"
+msgstr "结尾"
 
 #: ../filters/StringFilterOperator.java:48
 msgid "matches"
@@ -1554,35 +1554,35 @@ msgstr "登入"
 
 #: ../HylaClientManager.java:153
 msgid "Please enter the credentials to log into the HylaFAX server:"
-msgstr "請輸入憑據登錄到HylaFAX伺服器："
+msgstr "请输入凭据登录到HylaFAX服务器："
 
 #: ../HylaClientManager.java:176
 msgid "User password"
-msgstr "使用者密碼"
+msgstr "使用者密码"
 
 #: ../HylaClientManager.java:176
 msgid "Please enter the user password:"
-msgstr "輸入使用者密碼:"
+msgstr "输入使用者密码:"
 
 #: ../HylaClientManager.java:189 ../HylaClientManager.java:211
 msgid "An error occured in response to the password:"
-msgstr "密碼回覆錯誤:"
+msgstr "密码回覆错误:"
 
 #: ../HylaClientManager.java:202
 msgid "Admin password"
-msgstr "管理密碼"
+msgstr "管理密码"
 
 #: ../HylaClientManager.java:202
 msgid "Please enter the administrative password:"
-msgstr "請輸入管理密碼:"
+msgstr "请输入管理密码:"
 
 #: ../HylaClientManager.java:228
 msgid "The HylaFAX server responded with an error:"
-msgstr "HylaFAX server回應錯誤:"
+msgstr "HylaFAX server回应错误:"
 
 #: ../HylaClientManager.java:235
 msgid "The server's host name was not found:"
-msgstr "伺服器名稱找不到"
+msgstr "服务器名称找不到"
 
 #: ../plugin/PluginTableModel.java:61
 msgid "File name"
@@ -1590,7 +1590,7 @@ msgstr "文件名"
 
 #: ../plugin/PluginTableModel.java:61
 msgid "Type"
-msgstr "類型"
+msgstr "类型"
 
 #: ../plugin/PluginTableModel.java:61
 msgid "Loaded"
@@ -1606,7 +1606,7 @@ msgstr "JDBC driver"
 
 #: ../plugin/PluginTableModel.java:67
 msgid "Plugin"
-msgstr "外掛"
+msgstr "外挂"
 
 #: ../options/OptionsWin.java:233 ../options/CoverPanel.java:172
 #: ../send/SendWin.java:487
@@ -1615,15 +1615,15 @@ msgstr "一般"
 
 #: ../options/OptionsWin.java:236
 msgid "Paths and viewers"
-msgstr "路徑和瀏覽"
+msgstr "路径和浏览"
 
 #: ../options/OptionsWin.java:237
 msgid "Recipient extraction"
-msgstr "解壓縮"
+msgstr "解压缩"
 
 #: ../options/OptionsWin.java:240 ../options/ServerSettingsPanel.java:259
 msgid "Servers"
-msgstr "伺服器"
+msgstr "服务器"
 
 #: ../options/OptionsWin.java:243
 msgid "Cover page & Identities"
@@ -1631,52 +1631,52 @@ msgstr "封面&ident"
 
 #: ../options/OptionsWin.java:246 ../options/PluginPanel.java:94
 msgid "Plugins & JDBC"
-msgstr "外掛& JDBC"
+msgstr "外挂& JDBC"
 
 #: ../options/OptionsWin.java:249
 msgid "Please select on the left which table you want to edit."
-msgstr "請在清單左邊選取要編輯的傳真"
+msgstr "请在清单左边选取要编辑的传真"
 
 #: ../options/OptionsWin.java:250
 msgid "Tables"
-msgstr "清單"
+msgstr "清单"
 
 #: ../options/OptionsWin.java:251
 #, java-format
 msgid "Table \"{0}\""
-msgstr "清單 \"{0}\""
+msgstr "清单 \"{0}\""
 
 #: ../options/OptionsWin.java:259
 msgid "These settings normally need not to be changed."
-msgstr "這些設置一般不需要改變。"
+msgstr "这些设置一般不需要改变。"
 
 #: ../options/OptionsWin.java:260 ../options/AdminSettingsPage.java:102
 msgid "Advanced settings"
-msgstr "進階設定"
+msgstr "高级设定"
 
 #: ../options/OptionsWin.java:261
 msgid "Administrative settings"
-msgstr "管理設定"
+msgstr "管理设定"
 
 #: ../options/OptionsWin.java:262
 msgid "File converters"
-msgstr "檔案轉換"
+msgstr "文件转换"
 
 #: ../options/OptionsWin.java:472
 msgid "Error saving the settings:"
-msgstr "儲存設置錯誤："
+msgstr "保存设置错误："
 
 #: ../options/ConvertersPage.java:103
 msgid "For information on how to use this page, please see the Wiki at:"
-msgstr "如何使用此頁面的資訊,請參考wiki:"
+msgstr "如何使用此页面的信息,请参考wiki:"
 
 #: ../options/ConvertersPage.java:156
 msgid "File format"
-msgstr "檔案格式"
+msgstr "文件格式"
 
 #: ../options/ConvertersPage.java:157
 msgid "Converter"
-msgstr "轉換器"
+msgstr "转换器"
 
 #: ../options/ConvertersPage.java:249
 #, java-format
@@ -1691,35 +1691,35 @@ msgstr "{0} KB"
 #: ../options/ServerSettingsPanel.java:177
 #, java-format
 msgid "Server {0}"
-msgstr "伺服器 {0}"
+msgstr "服务器 {0}"
 
 #: ../options/ServerSettingsPanel.java:178
 #, java-format
 msgid "Modems for server {0}"
-msgstr "數據機伺服器 {0}"
+msgstr "数据机服务器 {0}"
 
 #: ../options/ServerSettingsPanel.java:179
 #, java-format
 msgid "Delivery settings for server {0}"
-msgstr "伺服器傳送設定 {0}"
+msgstr "服务器发送设定 {0}"
 
 #: ../options/ServerSettingsPanel.java:189
 msgid "Delivery"
-msgstr "傳遞"
+msgstr "传递"
 
 #: ../options/ServerSettingsPanel.java:193
 msgid "Modems"
-msgstr "數據機"
+msgstr "数据机"
 
 #: ../options/ServerSettingsPanel.java:223 ../options/CoverPanel.java:107
 #, java-format
 msgid "Copy of {0}"
-msgstr "複製 {0}"
+msgstr "复制 {0}"
 
 #: ../options/ServerSettingsPanel.java:229
 #, java-format
 msgid "Do you really want to remove the server \"{0}\"?"
-msgstr "真的要移除伺服器\"{0}\"?"
+msgstr "真的要移除服务器\"{0}\"?"
 
 #: ../options/ServerSettingsPanel.java:265
 msgid "Clear cache"
@@ -1727,11 +1727,11 @@ msgstr "清除快取"
 
 #: ../options/ServerSettingsPanel.java:276
 msgid "Locally cache fax lists"
-msgstr "本地傳真快取清單"
+msgstr "本地传真快取清单"
 
 #: ../options/ServerSettingsPanel.java:284
 msgid "Cache settings"
-msgstr "快取設定"
+msgstr "快取设定"
 
 #: ../options/ServerSettingsPanel.java:286
 msgid "Current Cache size:"
@@ -1739,7 +1739,7 @@ msgstr "快取大小:"
 
 #: ../options/ServerSettingsPanel.java:311
 msgid "Global settings"
-msgstr "全球設定"
+msgstr "全球设定"
 
 #: ../options/ServerSettingsPanel.java:313
 msgid "Use PCL file type bugfix"
@@ -1749,45 +1749,45 @@ msgstr "Use PCL file type bugfix"
 msgid ""
 "The maximum time to wait for a interaction with the server to complete. "
 "Values below 5 are not recommended; 0 disables this timeout."
-msgstr "伺服器完成等待最大時間. 建議不低於 5，; 0禁用."
+msgstr "服务器完成等待最大时间. 建议不低于 5，; 0禁用."
 
 #: ../options/ServerSettingsPanel.java:323
 msgid "Table refresh interval (secs.):"
-msgstr "清單刷新間隔(秒):"
+msgstr "清单刷新间隔(秒):"
 
 #: ../options/ServerSettingsPanel.java:324
 msgid "Server status refresh interval (secs.):"
-msgstr "伺服器狀態刷新間隔(秒):"
+msgstr "服务器状态刷新间隔(秒):"
 
 #: ../options/ServerSettingsPanel.java:325
 msgid "Server socket timeout (secs):"
-msgstr "伺服器Socket時間結束(秒):"
+msgstr "服务器Socket时间结束(秒):"
 
 #: ../options/FmtEditorPanel.java:77
 msgid "Selected columns:"
-msgstr "選擇欄位"
+msgstr "选择栏位"
 
 #: ../options/FmtEditorPanel.java:77
 msgid "Available columns:"
-msgstr "可用欄位"
+msgstr "可用栏位"
 
 #: ../options/CoverPanel.java:100
 #, java-format
 msgid "Do you really want to remove the identity \"{0}\"?"
-msgstr "是否真的要移除認證\"{0}\"?"
+msgstr "是否真的要移除认证\"{0}\"?"
 
 #: ../options/CoverPanel.java:116
 #, java-format
 msgid "Identity {0}"
-msgstr "認證{0}"
+msgstr "认证{0}"
 
 #: ../options/CoverPanel.java:163
 msgid "Identities"
-msgstr "認證"
+msgstr "认证"
 
 #: ../options/CoverPanel.java:185
 msgid "Name format:"
-msgstr "名稱格式："
+msgstr "名称格式："
 
 #: ../options/CoverPanel.java:187
 msgid "Company format:"
@@ -1799,15 +1799,15 @@ msgstr "位置格式："
 
 #: ../options/CoverPanel.java:191
 msgid "ZIP code format:"
-msgstr "郵遞區號格式："
+msgstr "邮递区号格式："
 
 #: ../options/ModemsPanel.java:100 ../options/ModemsPanel.java:104
 msgid "Refreshing modem list"
-msgstr "更新數據機"
+msgstr "更新数据机"
 
 #: ../options/ModemsPanel.java:113
 msgid "Retrieving modem list..."
-msgstr "重試數據機清單"
+msgstr "重试数据机清单"
 
 #: ../options/ModemsPanel.java:117
 #: ../options/SingleServerSettingsPanel.java:118
@@ -1832,7 +1832,7 @@ msgstr "下"
 
 #: ../options/ModemsPanel.java:213
 msgid "Reset the list of modems?"
-msgstr "重置數據機清單?"
+msgstr "重置数据机清单?"
 
 #: ../options/ModemsPanel.java:213 ../options/ModemsPanel.java:218
 #: ../util/AbstractQuickSearchHelper.java:184
@@ -1842,39 +1842,39 @@ msgstr "重置"
 
 #: ../options/ModemsPanel.java:245
 msgid "Automatically get the list of modems"
-msgstr "自動取得數據機清單"
+msgstr "自动取得数据机清单"
 
 #: ../options/ModemsPanel.java:248
 msgid "Use the following list of modems:"
-msgstr "使用下列數據機清單"
+msgstr "使用下列数据机清单"
 
 #: ../options/ModemsPanel.java:382
 msgid "HylaFAX name"
-msgstr "HylaFAX名稱"
+msgstr "HylaFAX名称"
 
 #: ../options/ModemsPanel.java:383
 msgid "Number/Description"
-msgstr "號碼/敘述"
+msgstr "号码/描述"
 
 #: ../options/ModemsPanel.java:384
 msgid "Full Description"
-msgstr "詳細敘述"
+msgstr "详细描述"
 
 #: ../options/MultiFileMode.java:46
 msgid "Multiple files, no conversion"
-msgstr "多個檔案，無轉換"
+msgstr "多个文件，无转换"
 
 #: ../options/MultiFileMode.java:47
 msgid "Single file except for cover (needs GhostScript+tiff2pdf)"
-msgstr "單一檔案,封面除外（需要Ghostscript的+ tiff2pdf）"
+msgstr "单一文件,封面除外（需要Ghostscript的+ tiff2pdf）"
 
 #: ../options/MultiFileMode.java:48
 msgid "Complete fax as single file (needs GhostScript+tiff2pdf)"
-msgstr "完整的傳真為單一文件（需要Ghostscript的+ tiff2pdf）"
+msgstr "完整的传真为单一文件（需要Ghostscript的+ tiff2pdf）"
 
 #: ../options/IdentityPanel.java:108
 msgid "Name for this identity:"
-msgstr "此識別名稱"
+msgstr "此识别名称"
 
 #: ../options/IdentityPanel.java:109
 #: ../options/SingleServerSettingsPanel.java:195
@@ -1883,190 +1883,190 @@ msgstr ""
 
 #: ../options/IdentityPanel.java:173
 msgid "Use a custom default cover page:"
-msgstr "使用自定義預設封面："
+msgstr "使用自定义预设封面："
 
 #: ../options/IdentityPanel.java:214
 msgid "There already exists another identity with this name!"
-msgstr "此名稱識別已存在"
+msgstr "此名称识别已存在"
 
 #: ../options/IdentityPanel.java:220
 msgid "The selected default cover page can not be read."
-msgstr "選定的預設封面無法讀取。"
+msgstr "选定的预设封面无法读取。"
 
 #: ../options/PathAndViewPanel.java:106
 msgid "Path settings"
-msgstr "路徑設置"
+msgstr "路径设置"
 
 #: ../options/PathAndViewPanel.java:131
 msgid ""
 "Command line for fax viewer: (insert %s as a placeholder for the filename)"
-msgstr "檢視傳真命令列：（（參數%s 代表檔名）"
+msgstr "查看传真命令列：（（参数%s 代表档名）"
 
 #: ../options/PathAndViewPanel.java:133
 msgid ""
 "Command line for Postscript viewer: (insert %s as a placeholder for the "
 "filename)"
-msgstr "Postscript檢視指令列：（參數%s 代表檔名）"
+msgstr "Postscript查看指令列：（参数%s 代表档名）"
 
 #: ../options/PathAndViewPanel.java:135
 msgid ""
 "Command line for PDF viewer: (insert %s as a placeholder for the filename)"
-msgstr "PDF檢視命令列：（參數%s 代表檔名）"
+msgstr "PDF查看命令列：（参数%s 代表档名）"
 
 #: ../options/PathAndViewPanel.java:137
 msgid "Location of GhostScript executable (optional):"
-msgstr "Ghostscript的執行檔位置（可選）："
+msgstr "Ghostscript的执行档位置（可选）："
 
 #: ../options/PathAndViewPanel.java:139
 msgid "Location of tiff2pdf executable (optional):"
-msgstr "tiff2pdft的執行檔位置（可選）："
+msgstr "tiff2pdft的执行档位置（可选）："
 
 #: ../options/PathAndViewPanel.java:141
 msgid "Always use paper size from YajHFC options in the PDF"
-msgstr "pdf以YajHFC內定紙張大小"
+msgstr "pdf以YajHFC内定纸张大小"
 
 #: ../options/PathAndViewPanel.java:144
 msgid "Use custom fax viewer"
-msgstr "使用預設傳真瀏覽"
+msgstr "使用预设传真浏览"
 
 #: ../options/PathAndViewPanel.java:146
 msgid "Use custom PostScript viewer"
-msgstr "使用預設PostScript 瀏覽"
+msgstr "使用预设PostScript 浏览"
 
 #: ../options/PathAndViewPanel.java:148
 msgid "Use custom PDF viewer"
-msgstr "使用預設Pdf 瀏覽 "
+msgstr "使用预设Pdf 浏览 "
 
 #: ../options/PathAndViewPanel.java:200
 msgid "View settings"
-msgstr "瀏覽設定"
+msgstr "浏览设定"
 
 #: ../options/PathAndViewPanel.java:202
 msgid "View faxes as single file (needs GhostScript+tiff2pdf)"
-msgstr "以檔案檢視傳真（需要Ghostscript的+ tiff2pdf）"
+msgstr "以文件查看传真（需要Ghostscript的+ tiff2pdf）"
 
 #: ../options/PathAndViewPanel.java:203
 msgid "View faxes always in this format"
-msgstr "總是以此格式瀏覽"
+msgstr "总是以此格式浏览"
 
 #: ../options/PathAndViewPanel.java:215
 msgid "Format for viewing:"
-msgstr "瀏覽格式"
+msgstr "浏览格式"
 
 #: ../options/PathAndViewPanel.java:236
 msgid "Send settings"
-msgstr "傳送設定"
+msgstr "发送设定"
 
 #: ../options/PathAndViewPanel.java:238
 msgid "Send faxes always in this format"
-msgstr "總是以此格式傳送"
+msgstr "总是以此格式发送"
 
 #: ../options/PathAndViewPanel.java:250
 msgid "Send multiple files as:"
-msgstr "發送多個文件為："
+msgstr "发送多个文件为："
 
 #: ../options/PathAndViewPanel.java:251
 msgid "Format for sending:"
-msgstr "傳送格式"
+msgstr "发送格式"
 
 #: ../options/PathAndViewPanel.java:327
 msgid "Please enter the command line for the fax viewer."
-msgstr "請輸入傳真檢視命令列。"
+msgstr "请输入传真查看命令列。"
 
 #: ../options/PathAndViewPanel.java:333
 msgid "Please enter the command line for the PostScript viewer."
-msgstr "請輸入PostScript檢視傳真命令列。"
+msgstr "请输入PostScript查看传真命令列。"
 
 #: ../options/PathAndViewPanel.java:339
 msgid "Please enter the command line for the PDF viewer."
-msgstr "請輸入PDF檢視傳真命令列。"
+msgstr "请输入PDF查看传真命令列。"
 
 #: ../options/PathAndViewPanel.java:347
 msgid "Please enter the location of the GhostScript executable."
-msgstr "請輸入Ghostscript的執行檔位置"
+msgstr "请输入Ghostscript的执行档位置"
 
 #: ../options/PathAndViewPanel.java:353
 msgid "Please enter the location of the tiff2pdf executable."
-msgstr "請輸入 tiff2pdf的執行檔位置"
+msgstr "请输入 tiff2pdf的执行档位置"
 
 #: ../options/TextExtractorPanel.java:153
 #, java-format
 msgid "Path to {0}:"
-msgstr "路徑{0}:"
+msgstr "路径{0}:"
 
 #: ../options/TextExtractorPanel.java:158
 msgid "No path settings necessary"
-msgstr "無設定路徑"
+msgstr "无设定路径"
 
 #: ../options/TextExtractorPanel.java:168
 msgid ""
 "By activating this option YajHFC will try to extract the recipients from "
 "documents given on the command line or fax printer."
 msgstr ""
-"通過啟動這個的選項,YajHFC將嘗試在命令列上給定的文件或傳真印表機提取收件人。"
+"通过启动这个的选项,YajHFC将尝试在命令列上给定的文件或传真打印机提取收件人。"
 
 #: ../options/TextExtractorPanel.java:169
 msgid ""
 "To find recipients it searches for <tt>@@recipient:<i>faxnumber</i>@@</tt> "
 "tags in the files."
-msgstr "搜索<tt>@@recipient:<i>faxnumber</i>@@</tt>找到收件人,在文件中的標記。"
+msgstr "搜索<tt>@@recipient:<i>faxnumber</i>@@</tt>找到收件人,在文件中的标记。"
 
 #: ../options/TextExtractorPanel.java:170
 msgid ""
 "This behaviour can be overridden by the <tt>--extract-recipients</tt> "
 "command line option."
-msgstr "這種操作可以由<tt>--extract-recipients</tt>的命令列選項。"
+msgstr "这种操作可以由<tt>--extract-recipients</tt>的命令列选项。"
 
 #: ../options/TextExtractorPanel.java:171
 msgid ""
 "If you want to use this feature a PDF/PostScript to text conversion method "
 "must be selected below."
-msgstr "如果你想使用PDF/ PostScript的文件轉換功能的方法必須選擇以下。"
+msgstr "如果你想使用PDF/ PostScript的文件转换功能的方法必须选择以下。"
 
 #: ../options/TextExtractorPanel.java:188
 msgid "Test..."
-msgstr "測試..."
+msgstr "测试..."
 
 #: ../options/TextExtractorPanel.java:214
 msgid "Select a file to view as text"
-msgstr "以文字檔瀏覽所選的檔案"
+msgstr "以文本文件浏览所选的文件"
 
 #: ../options/TextExtractorPanel.java:229
 msgid "Settings for the selected conversion method"
-msgstr "設置所選的轉換方法"
+msgstr "设置所选的转换方法"
 
 #: ../options/TextExtractorPanel.java:239
 msgid "Extract recipients from documents:"
-msgstr "從文件中提取收件人："
+msgstr "从文件中提取收件人："
 
 #: ../options/TextExtractorPanel.java:240
 msgid "PS/PDF to text conversion method:"
-msgstr "PS/ PDF轉文字的轉換方法："
+msgstr "PS/ PDF转文字的转换方法："
 
 #: ../options/TextExtractorPanel.java:260
 #, java-format
 msgid "View as text using {0}"
-msgstr "以文字檔瀏覽 {0}"
+msgstr "以文本文件浏览 {0}"
 
 #: ../options/TextExtractorPanel.java:265
 msgid "Converting file to text..."
-msgstr "轉換檔案成文字..."
+msgstr "转换文件成文字..."
 
 #: ../options/TextExtractorPanel.java:270
 msgid "Running converter..."
-msgstr "轉換中..."
+msgstr "转换中..."
 
 #: ../options/TextExtractorPanel.java:279
 msgid "Error converting file to text"
-msgstr "文字轉換錯誤"
+msgstr "文字转换错误"
 
 #: ../options/SendPanel.java:137
 msgid "Delivery settings"
-msgstr "傳送設置"
+msgstr "发送设置"
 
 #: ../options/SendPanel.java:144
 msgid "Characters filtered from the fax number sent to HylaFAX."
-msgstr "字符篩選的傳真號碼發送到HylaFAX"
+msgstr "字符筛选的传真号码发送到HylaFAX"
 
 #: ../options/SendPanel.java:148
 msgid "Characters put in front of the fax number before sending it to HylaFAX."
@@ -2074,12 +2074,12 @@ msgstr ""
 
 #: ../options/SendPanel.java:163
 msgid "Archive sent fax jobs"
-msgstr "檔案櫃已發送傳真"
+msgstr "归档已发送传真"
 
 #: ../options/SendPanel.java:172 ../send/JobPropsEditorDialog.java:52
 #: ../send/SimplifiedSendDialog.java:313
 msgid "Job properties"
-msgstr "工作性質"
+msgstr "任务属性"
 
 #: ../options/SendPanel.java:177
 msgid "E-mail address for notifications:"
@@ -2088,17 +2088,17 @@ msgstr "E - mail通知:"
 #: ../options/SendPanel.java:178 ../send/SendWin.java:473
 #: ../send/SimplifiedSendDialog.java:746
 msgid "Notify when:"
-msgstr "通知時："
+msgstr "通知时："
 
 #: ../options/SendPanel.java:179 ../send/SendWin.java:474
 #: ../send/SimplifiedSendDialog.java:747
 msgid "Modem:"
-msgstr "數據機:"
+msgstr "数据机:"
 
 #: ../options/SendPanel.java:180 ../send/SendWin.java:476
 #: ../send/SimplifiedSendDialog.java:749
 msgid "Paper size:"
-msgstr "紙張尺寸："
+msgstr "纸张尺寸："
 
 #: ../options/SendPanel.java:181 ../send/SendWin.java:475
 #: ../send/SimplifiedSendDialog.java:748
@@ -2107,21 +2107,21 @@ msgstr "解析度："
 
 #: ../options/SendPanel.java:182
 msgid "Maximum dials:"
-msgstr "最大撥號數："
+msgstr "最大拨号数："
 
 #: ../options/SendPanel.java:183 ../send/SendWin.java:477
 #: ../send/SimplifiedSendDialog.java:750
 msgid "Cancel job after (minutes):"
-msgstr "幾(分鐘)後取消傳真:"
+msgstr "几(分钟)后取消传真:"
 
 #: ../options/SendPanel.java:184
 msgid "Filter from fax number:"
-msgstr "從傳真號碼篩選:"
+msgstr "从传真号码筛选:"
 
 #: ../options/SendPanel.java:185 ../send/SendWin.java:478
 #: ../send/SimplifiedSendDialog.java:751
 msgid "Maximum tries:"
-msgstr "最大重試數："
+msgstr "最大重试数："
 
 #: ../options/SendPanel.java:186
 msgid "Dial prefix:"
@@ -2129,11 +2129,11 @@ msgstr ""
 
 #: ../options/SendPanel.java:187
 msgid "Default identity:"
-msgstr "預設識別:"
+msgstr "预设识别:"
 
 #: ../options/CommonPanel.java:115
 msgid "(System native)"
-msgstr "（系統設定）"
+msgstr "（系统设定）"
 
 #: ../options/CommonPanel.java:116
 msgid "(Crossplatform)"
@@ -2141,75 +2141,75 @@ msgstr "（跨平台）"
 
 #: ../options/CommonPanel.java:170
 msgid "Update check"
-msgstr "更新檢查"
+msgstr "更新检查"
 
 #: ../options/CommonPanel.java:172
 msgid "Automatically check for updates"
-msgstr "自動檢查更新"
+msgstr "自动检查更新"
 
 #: ../options/CommonPanel.java:200
 msgid "User interface"
-msgstr "用戶界面"
+msgstr "用户界面"
 
 #: ../options/CommonPanel.java:224
 msgid "Show tray icon"
-msgstr "顯示系統列圖示"
+msgstr "显示系统列图示"
 
 #: ../options/CommonPanel.java:225
 msgid "Show a system tray icon (works only with Java 6 or higher)"
-msgstr "顯示系統列圖示（只能使用Java 6或更高）"
+msgstr "显示系统列图示（只能使用Java 6或更高）"
 
 #: ../options/CommonPanel.java:227
 msgid "Minimize to tray"
-msgstr "最小化到工具列"
+msgstr "最小化到工具栏"
 
 #: ../options/CommonPanel.java:231 ../options/CommonPanel.java:232
 msgid "Minimize to tray when main window is closed"
-msgstr "視窗關閉時,最小化到工具列"
+msgstr "视窗关闭时,最小化到工具栏"
 
 #: ../options/CommonPanel.java:244
 msgid "Language:"
-msgstr "語言："
+msgstr "语言："
 
 #: ../options/CommonPanel.java:245
 msgid "Look and Feel:"
-msgstr "外觀："
+msgstr "外观："
 
 #: ../options/CommonPanel.java:246
 msgid "Style of send dialog:"
-msgstr "傳送話框風格："
+msgstr "发送话框风格："
 
 #: ../options/CommonPanel.java:270
 msgid "Actions after receiving a new fax:"
-msgstr "收到新傳真的動作："
+msgstr "收到新传真的动作："
 
 #: ../options/CommonPanel.java:272
 msgid "Beep"
-msgstr "蜂鳴"
+msgstr "蜂鸣"
 
 #: ../options/CommonPanel.java:273
 msgid "Bring to front"
-msgstr "顯示在上層"
+msgstr "显示在上层"
 
 #: ../options/CommonPanel.java:274
 msgid "Open in viewer"
-msgstr "開啟瀏覽"
+msgstr "开启浏览"
 
 #: ../options/CommonPanel.java:280
 msgid "And mark as read"
-msgstr "標記為已讀"
+msgstr "标记为已读"
 
 #: ../options/CommonPanel.java:282
 msgid "Show flashing tray icon"
-msgstr "系統列圖示顯示閃動"
+msgstr "系统列图示显示闪动"
 
 #: ../options/CommonPanel.java:283
 msgid "Display tray icon message"
-msgstr "顯示圖示訊息"
+msgstr "显示图示讯息"
 
 #: ../options/CommonPanel.java:302
 msgid "Date and Time Format:"
-msgstr "日期和時間格式："
+msgstr "日期和时间格式："
 
 #: ../options/CommonPanel.java:311
 msgid "Date format:"
@@ -2217,48 +2217,48 @@ msgstr "日期格式："
 
 #: ../options/CommonPanel.java:312
 msgid "Time format:"
-msgstr "時間格式："
+msgstr "时间格式："
 
 #: ../options/CommonPanel.java:369
 msgid ""
 "You must restart the program for the change of the language to take effect."
-msgstr "您必須重新啟動程式,改變語言才能生效。"
+msgstr "您必须重新启动程序,改变语言才能生效。"
 
 #: ../options/CommonPanel.java:402
 msgid "Please enter a valid date format:"
-msgstr "請輸入正確的日期格式："
+msgstr "请输入正确的日期格式："
 
 #: ../options/CommonPanel.java:410
 msgid "Please enter a valid time format."
-msgstr "請輸入正確的時間格式。"
+msgstr "请输入正确的时间格式。"
 
 #: ../options/PluginPanel.java:94
 msgid ""
 "You will need to restart the program for the changes to the list of plugins "
 "and JDBC drivers to take full effect."
-msgstr "您將需要重新啟動該程序的改動清單外掛和JDBC驅動程序的全面生效。"
+msgstr "您将需要重新启动该程序的改动清单外挂和JDBC驱动程序的全面生效。"
 
 #: ../options/PluginPanel.java:150
 msgid "JAR files"
-msgstr "JAR 檔案"
+msgstr "JAR 文件"
 
 #: ../options/PluginPanel.java:163 ../options/PluginPanel.java:187
 msgid "Add JDBC driver"
-msgstr "新增 JDBC 驅動"
+msgstr "新增 JDBC 驱动"
 
 #: ../options/PluginPanel.java:169 ../options/PluginPanel.java:174
 #: ../options/PluginPanel.java:190
 msgid "Add plugin"
-msgstr "新增外掛"
+msgstr "新增外挂"
 
 #: ../options/PluginPanel.java:174
 #, java-format
 msgid "The file {0} is not a valid YajHFC plugin!"
-msgstr " {0}不是正確的YajHFC外掛！"
+msgstr " {0}不是正确的YajHFC外挂！"
 
 #: ../options/PluginPanel.java:193
 msgid "Remove item"
-msgstr "刪除項目"
+msgstr "删除项目"
 
 #: ../options/SingleServerSettingsPanel.java:105
 #: ../options/SingleServerSettingsPanel.java:122
@@ -2266,76 +2266,76 @@ msgstr "刪除項目"
 #: ../phonebook/ldap/ConnectionDialog.java:177
 #: ../phonebook/jdbc/ConnectionDialog.java:218
 msgid "Test connection"
-msgstr "測試連線"
+msgstr "测试连线"
 
 #: ../options/SingleServerSettingsPanel.java:109
 #, java-format
 msgid "Testing connection to {0}"
-msgstr "測試連線到{0}"
+msgstr "测试连线到{0}"
 
 #: ../options/SingleServerSettingsPanel.java:122
 msgid "Connection to the HylaFAX server successful."
-msgstr "連線到HylaFAX server成功"
+msgstr "连线到HylaFAX server成功"
 
 #: ../options/SingleServerSettingsPanel.java:194
 msgid "Name for this server:"
-msgstr "伺服器名稱:"
+msgstr "服务器名称:"
 
 #: ../options/SingleServerSettingsPanel.java:293
 msgid "There already exists another server with this name!"
-msgstr "有伺服器已使用此名稱"
+msgstr "有服务器已使用此名称"
 
 #: ../options/SingleServerSettingsPanel.java:300
 msgid "Please enter a host name."
-msgstr "請輸入主機名稱。"
+msgstr "请输入主机名称。"
 
 #: ../options/SingleServerSettingsPanel.java:307
 msgid "Please enter a user name."
-msgstr "請輸入用戶名。"
+msgstr "请输入用户名。"
 
 #: ../options/SingleServerSettingsPanel.java:326
 msgid "Please enter a valid port number."
-msgstr "請輸入正確的port號。"
+msgstr "请输入正确的port号。"
 
 #: ../options/SingleServerSettingsPanel.java:333
 #: ../options/SingleServerSettingsPanel.java:350
 #, java-format
 msgid "Directory {0} does not exist!"
-msgstr "目錄{0}不存在"
+msgstr "目录{0}不存在"
 
 #: ../options/SingleServerSettingsPanel.java:333
 msgid "Archive directory"
-msgstr "目的目錄"
+msgstr "目的目录"
 
 #: ../options/SingleServerSettingsPanel.java:350
 msgid "Invalid spool directory"
-msgstr "不合法目錄"
+msgstr "不合法目录"
 
 #: ../options/SingleServerSettingsPanel.java:377
 msgid "Show archive table"
-msgstr "顯示檔案表"
+msgstr "显示文件表"
 
 #: ../options/SingleServerSettingsPanel.java:392
 msgid "Fax lists"
-msgstr "傳真清單"
+msgstr "传真清单"
 
 #: ../options/SingleServerSettingsPanel.java:394
 msgid "Access method for the fax lists"
-msgstr "傳真列表權限"
+msgstr "传真列表权限"
 
 #: ../options/SingleServerSettingsPanel.java:395
 msgid ""
 "Location of spool directory for direct access (must contain recvq, doneq and "
 "docq)"
-msgstr "佇列所在位置權限(必須包含recvq,doneq及docq)"
+msgstr "伫列所在位置权限(必须包含recvq,doneq及docq)"
 
 #: ../options/SingleServerSettingsPanel.java:398
 msgid "Location of archive directory:"
-msgstr "檔案目錄位置："
+msgstr "文件目录位置："
 
 #: ../options/SingleServerSettingsPanel.java:422
 msgid "Connection settings:"
-msgstr "連線設置："
+msgstr "连线设置："
 
 #: ../options/SingleServerSettingsPanel.java:433
 #: ../options/SingleServerSettingsPanel.java:435
@@ -2343,38 +2343,38 @@ msgstr "連線設置："
 #: ../phonebook/ldap/ConnectionDialog.java:143
 #: ../phonebook/jdbc/ConnectionDialog.java:205
 msgid "Always ask"
-msgstr "總是問"
+msgstr "总是问"
 
 #: ../options/SingleServerSettingsPanel.java:452
 msgid "Use passive mode to fetch faxes"
-msgstr "使用被動模式獲取傳真"
+msgstr "使用被动模式获取传真"
 
 #: ../options/SingleServerSettingsPanel.java:468
 msgid "Host name:"
-msgstr "主機名："
+msgstr "主机名："
 
 #: ../options/SingleServerSettingsPanel.java:470
 #: ../phonebook/jdbc/ConnectionDialog.java:226 ../util/PasswordDialog.java:108
 msgid "Username:"
-msgstr "用戶名："
+msgstr "用户名："
 
 #: ../options/SingleServerSettingsPanel.java:472
 #: ../phonebook/ldap/ConnectionDialog.java:187
 #: ../phonebook/jdbc/ConnectionDialog.java:229 ../util/PasswordDialog.java:111
 msgid "Password:"
-msgstr "密碼："
+msgstr "密码："
 
 #: ../options/SingleServerSettingsPanel.java:474
 msgid "Admin Password:"
-msgstr "管理密碼:"
+msgstr "管理密码:"
 
 #: ../options/SingleServerSettingsPanel.java:508
 msgid "General settings:"
-msgstr "一般設置："
+msgstr "一般设置："
 
 #: ../options/SingleServerSettingsPanel.java:516
 msgid "Create new session for every action"
-msgstr "每個動作都新增Session"
+msgstr "每个动作都新增Session"
 
 #: ../options/SingleServerSettingsPanel.java:517
 msgid ""
@@ -2382,30 +2382,30 @@ msgid ""
 "tables, ...) and disconnect afterwards. This impairs performance but might "
 "work around some bugs."
 msgstr ""
-"連接到伺服器和日誌，為每個行動（例如檢視傳真，更新表，...）和斷線後。這些資"
-"料，但可能解決一些錯誤。"
+"连接到服务器和日志，为每个行动（例如查看传真，更新表，...）和断线后。这些资"
+"料，但可能解决一些错误。"
 
 #: ../options/SingleServerSettingsPanel.java:525
 msgid "Date/Time offset:"
-msgstr "日期/時間偏移："
+msgstr "日期/时间偏移："
 
 #: ../options/SingleServerSettingsPanel.java:526
 msgid ""
 "Offset to be added to dates received from the HylaFAX server before "
 "displaying them."
-msgstr "加入日期收到HylaFAX伺服器，然後顯示它們。"
+msgstr "加入日期收到HylaFAX服务器，然后显示它们。"
 
 #: ../options/SingleServerSettingsPanel.java:528
 msgid "Character set:"
-msgstr "字元設定:"
+msgstr "符设定:"
 
 #: ../options/SingleServerSettingsPanel.java:529
 msgid "Time zone:"
-msgstr "時區："
+msgstr "时区："
 
 #: ../options/SingleServerSettingsPanel.java:549
 msgid "Read/Unread state of faxes"
-msgstr "已讀 /未讀傳真狀態"
+msgstr "已读 /未读传真状态"
 
 #: ../options/SingleServerSettingsPanel.java:583
 msgid "Configure..."
@@ -2413,7 +2413,7 @@ msgstr "配置..."
 
 #: ../options/SingleServerSettingsPanel.java:587
 msgid "Save location:"
-msgstr "儲存位置："
+msgstr "保存位置："
 
 #: ../options/AdminSettingsPage.java:92
 msgid ""
@@ -2421,16 +2421,16 @@ msgid ""
 "advanced settings (change them only if you know what you are doing; you may "
 "need to restart YajHFC for them to take effect)."
 msgstr ""
-"此頁面允許匯出/匯入設定及其它項目進階設定(當你知道如何設定時,才能變更設定,完"
-"成後,你可能需要重新啟動YajHFC"
+"此页面允许导出/导入设定及其它项目高级设定(当你知道如何设定时,才能变更设定,完"
+"成后,你可能需要重新启动YajHFC"
 
 #: ../options/AdminSettingsPage.java:105
 msgid "Allow the user to change the fax job filter (View menu)"
-msgstr "允許使用者變更傳真過濾條件(瀏覽選單)"
+msgstr "允许使用者变更传真过滤条件(浏览选单)"
 
 #: ../options/AdminSettingsPage.java:106
 msgid "Use the fax's subject as HylaFAX USRKEY property"
-msgstr "使用傳真標題當索引"
+msgstr "使用传真标题当索引"
 
 #: ../options/AdminSettingsPage.java:107
 msgid "Repair PostScript generated by JDK 1.6 PrintService classes"
@@ -2450,27 +2450,27 @@ msgstr "送出FORM指令"
 
 #: ../options/AdminSettingsPage.java:136 ../options/AdminSettingsPage.java:140
 msgid "Import settings"
-msgstr "匯入設定"
+msgstr "导入设定"
 
 #: ../options/AdminSettingsPage.java:152
 msgid "Settings imported successfully."
-msgstr "設定匯入成功"
+msgstr "设定导入成功"
 
 #: ../options/AdminSettingsPage.java:154
 msgid "Error importing settings:"
-msgstr "設定匯入錯誤"
+msgstr "设定导入错误"
 
 #: ../options/AdminSettingsPage.java:160 ../options/AdminSettingsPage.java:164
 msgid "Export settings"
-msgstr "匯出設定"
+msgstr "导出设定"
 
 #: ../options/AdminSettingsPage.java:182
 msgid "Error exporting settings:"
-msgstr "設定匯出錯誤"
+msgstr "设定导出错误"
 
 #: ../options/AdminSettingsPage.java:193
 msgid "Import/Export"
-msgstr "匯入/匯出"
+msgstr "导入/导出"
 
 #: ../options/MultiEditPanel.java:131
 msgid "Duplicate"
@@ -2478,68 +2478,68 @@ msgstr "副本"
 
 #: ../options/MultiEditPanel.java:157
 msgid "Edit"
-msgstr "編輯"
+msgstr "编辑"
 
 #: ../phonebook/PhoneBookFactory.java:79
 msgid "Personal phone book"
-msgstr "個人通訊錄"
+msgstr "个人通讯录"
 
 #: ../phonebook/ldap/LDAPPhoneBook.java:72
 msgid "LDAP phone book (read only)"
-msgstr "LDAP的通訊錄（只讀）"
+msgstr "LDAP的通讯录（只读）"
 
 #: ../phonebook/ldap/LDAPPhoneBook.java:73
 msgid "A phone book reading its entries from an LDAP directory."
-msgstr "從 LDAP 讀取通訊錄。"
+msgstr "从 LDAP 读取通讯录。"
 
 #: ../phonebook/ldap/LDAPPhoneBook.java:137
 #: ../phonebook/ldap/ConnectionDialog.java:278
 msgid "LDAP password"
-msgstr "LDAP密碼"
+msgstr "LDAP密码"
 
 #: ../phonebook/ldap/LDAPPhoneBook.java:137
 #: ../phonebook/ldap/ConnectionDialog.java:278
 msgid "Please enter the LDAP password:"
-msgstr "請輸入 LDAP密碼："
+msgstr "请输入 LDAP密码："
 
 #: ../phonebook/ldap/LDAPPhoneBook.java:199
 msgid "Error executing the search:"
-msgstr "執行尋找錯誤："
+msgstr "执行寻找错误："
 
 #: ../phonebook/ldap/ConnectionDialog.java:133
 msgid "Use authentication"
-msgstr "使用驗證"
+msgstr "使用验证"
 
 #: ../phonebook/ldap/ConnectionDialog.java:159
 msgid ""
 "RFC 2254 Filter expression (e.g. \"objectClass=person\") selecting the "
 "directory entries to include. Leave blank to include all."
 msgstr ""
-"RFC 2254中篩選表達式(如: \"objectClass=person\")選擇目錄項，包括。保留空白，"
+"RFC 2254中筛选表达式(如: \"objectClass=person\")选择目录项，包括。保留空白，"
 "包括所有的。"
 
 #: ../phonebook/ldap/ConnectionDialog.java:161
 msgid "Also search subtrees"
-msgstr "尋找子目錄"
+msgstr "寻找子目录"
 
 #: ../phonebook/ldap/ConnectionDialog.java:166
 msgid "The maximum number of items loaded"
-msgstr "該項目的最大數量載入"
+msgstr "该项目的最大数量载入"
 
 #: ../phonebook/ldap/ConnectionDialog.java:168
 msgid "Load all entries when opened"
-msgstr "當開啟時載入所有項目"
+msgstr "当开启时载入所有项目"
 
 #: ../phonebook/ldap/ConnectionDialog.java:169
 msgid ""
 "If checked, all entries in the directory are loaded when the phone book is "
 "opened. If not, entries are loaded only if a quick search is performed."
 msgstr ""
-"如果選中，所有項目載入的目錄時，通訊錄開啟。如果沒有，只有快速執行尋找載入"
+"如果选中，所有项目载入的目录时，通讯录开启。如果没有，只有快速执行寻找载入"
 
 #: ../phonebook/ldap/ConnectionDialog.java:181
 msgid "Server name:"
-msgstr "伺服器名稱："
+msgstr "服务器名称："
 
 #: ../phonebook/ldap/ConnectionDialog.java:183
 msgid "Root (Base DN):"
@@ -2547,58 +2547,58 @@ msgstr "Root (Base DN):"
 
 #: ../phonebook/ldap/ConnectionDialog.java:186
 msgid "User name (Bind DN):"
-msgstr "用戶名(Bind DN):"
+msgstr "用户名(Bind DN):"
 
 #: ../phonebook/ldap/ConnectionDialog.java:191
 #: ../phonebook/xml/XMLPhoneBook.java:348 ../phonebook/csv/CSVDialog.java:142
 #: ../phonebook/jdbc/JDBCPhoneBook.java:112
 msgid "Phone book name to display:"
-msgstr "通訊錄名稱顯示："
+msgstr "通讯录名称显示："
 
 #: ../phonebook/ldap/ConnectionDialog.java:195
 msgid "Object filter:"
-msgstr "篩選物件:"
+msgstr "筛选物件:"
 
 #: ../phonebook/ldap/ConnectionDialog.java:199
 msgid "Count limit:"
-msgstr "限制數："
+msgstr "限制数："
 
 #: ../phonebook/ldap/ConnectionDialog.java:203
 msgid ""
 "Please enter which LDAP attributes correspond to the phone book entry fields "
 "of YajHFC (default should usually work):"
-msgstr "請輸入哪個 LDAP屬性對應通訊錄項目領域 YajHFC（預設值通常應該工作）："
+msgstr "请输入哪个 LDAP属性对应通讯录项目领域 YajHFC（预设值通常应该工作）："
 
 #: ../phonebook/ldap/ConnectionDialog.java:253
 msgid "You have to specify a server name and port."
-msgstr "你必須指定伺服器名稱和port。"
+msgstr "你必须指定服务器名称和port。"
 
 #: ../phonebook/ldap/ConnectionDialog.java:313
 msgid "Could not connect to the LDAP server:"
-msgstr "無法連接到LDAP伺服器："
+msgstr "无法连接到LDAP服务器："
 
 #: ../phonebook/ldap/ConnectionDialog.java:332
 msgid "Connection to the LDAP server succeeded."
-msgstr "連接到LDAP伺服器的成功。"
+msgstr "连接到LDAP服务器的成功。"
 
 #: ../phonebook/ldap/ConnectionDialog.java:380
 #: ../phonebook/ldap/ConnectionDialog.java:385
 msgid "New LDAP phone book"
-msgstr "新的LDAP通訊錄"
+msgstr "新的LDAP通讯录"
 
 #: ../phonebook/convrules/RuleParser.java:92
 #, java-format
 msgid "Error: Could not parse input beginning with \"{0}\"."
-msgstr "錯誤:無法解析輸入 \"{0}\"."
+msgstr "错误:无法解析输入 \"{0}\"."
 
 #: ../phonebook/convrules/RuleParser.java:132
 #, java-format
 msgid "Unknown field \"{0}\"."
-msgstr "不明欄位 \"{0}\"."
+msgstr "不明栏位 \"{0}\"."
 
 #: ../phonebook/convrules/LocationRule.java:85
 msgid "[Location with ZIP code]"
-msgstr "[位置+郵政區號]"
+msgstr "[位置+邮政区号]"
 
 #: ../phonebook/PBEntryField.java:48
 msgid "First name"
@@ -2606,11 +2606,11 @@ msgstr ""
 
 #: ../phonebook/PBEntryField.java:49
 msgid "Last Name#(please translate as short form of surname)#"
-msgstr "名稱"
+msgstr "名称"
 
 #: ../phonebook/PBEntryField.java:50
 msgid "Title"
-msgstr "職稱"
+msgstr "职称"
 
 #: ../phonebook/PBEntryField.java:51 ../model/jobq/QueueFileFormat.java:57
 #: ../model/JobFormat.java:64
@@ -2623,7 +2623,7 @@ msgstr "位置"
 
 #: ../phonebook/PBEntryField.java:53
 msgid "Department"
-msgstr "部門"
+msgstr "部门"
 
 #: ../phonebook/PBEntryField.java:54
 msgid "Street"
@@ -2635,167 +2635,167 @@ msgstr "城市"
 
 #: ../phonebook/PBEntryField.java:56
 msgid "Country"
-msgstr "縣"
+msgstr "县"
 
 #: ../phonebook/PBEntryField.java:57
 msgid "ZIP code"
-msgstr "郵遞區號"
+msgstr "邮递区号"
 
 #: ../phonebook/PBEntryField.java:58
 msgid "State/Region"
-msgstr "國家 /地區"
+msgstr "国家 /地区"
 
 #: ../phonebook/PBEntryField.java:59
 msgid "e-mail address"
-msgstr "電子郵件"
+msgstr "电子邮件"
 
 #: ../phonebook/PBEntryField.java:60
 msgid "Website"
-msgstr "網站"
+msgstr "网站"
 
 #: ../phonebook/PBEntryField.java:61
 msgid "Fax number"
-msgstr "傳真號碼"
+msgstr "传真号码"
 
 #: ../phonebook/PBEntryField.java:62
 msgid "Voice number"
-msgstr "語音號碼"
+msgstr "语音号码"
 
 #: ../phonebook/PBEntryField.java:63
 msgid "Comments"
-msgstr "註解"
+msgstr "注解"
 
 #: ../phonebook/WrapperDistributionList.java:201
 #: ../phonebook/xml/XMLDistributionList.java:164
 #: ../phonebook/PhoneBook.java:74
 msgid "<no name>"
-msgstr "<無名稱>"
+msgstr "<无名称>"
 
 #: ../phonebook/xml/XMLPhoneBook.java:89
 msgid "XML phone book"
-msgstr "XML的通訊錄"
+msgstr "XML的通讯录"
 
 #: ../phonebook/xml/XMLPhoneBook.java:90
 msgid "A phone book saving its entries as a XML file."
-msgstr "通訊錄儲存為 XML文件。"
+msgstr "通讯录保存为 XML文件。"
 
 #: ../phonebook/xml/XMLPhoneBook.java:181
 msgid "Error saving the phone book: "
-msgstr "儲存通訊錄錯誤："
+msgstr "保存通讯录错误："
 
 #: ../phonebook/xml/XMLPhoneBook.java:339
 msgid "Phone book files"
-msgstr "通訊錄文件"
+msgstr "通讯录文件"
 
 #: ../phonebook/csv/CSVDialog.java:104
 #, java-format
 msgid "Open CSV file {0}"
-msgstr "開啟 CSV文件{0}"
+msgstr "开启 CSV文件{0}"
 
 #: ../phonebook/csv/CSVDialog.java:132
 msgid "First line contains headers"
-msgstr "第一行包含標題"
+msgstr "第一行包含标题"
 
 #: ../phonebook/csv/CSVDialog.java:134
 msgid "Charset:"
-msgstr "編碼："
+msgstr "编码："
 
 #: ../phonebook/csv/CSVDialog.java:135
 msgid "Separator:"
-msgstr "分隔字元:"
+msgstr "分隔符:"
 
 #: ../phonebook/csv/CSVDialog.java:136
 msgid "Quote character:"
-msgstr "引號字符："
+msgstr "引号字符："
 
 #: ../phonebook/csv/CSVDialog.java:276
 #, java-format
 msgid "Column {0}"
-msgstr "欄位 {0}"
+msgstr "栏位 {0}"
 
 #: ../phonebook/csv/CSVDialog.java:303
 msgid "Error previewing your settings:"
-msgstr "錯誤預覽您的設置："
+msgstr "错误预览您的设置："
 
 #: ../phonebook/csv/CSVDialog.java:334 ../send/SendWin.java:575
 #: ../send/SendWin.java:580 ../send/SimplifiedSendDialog.java:283
 #: ../send/SimplifiedSendDialog.java:302
 msgid "Preview"
-msgstr "預覽"
+msgstr "预览"
 
 #: ../phonebook/csv/CSVDialog.java:336
 msgid ""
 "Please select which columns in the CSV file represent the phone book fields:"
-msgstr "請選擇其中列的CSV文件代表通訊錄欄位："
+msgstr "请选择其中列的CSV文件代表通讯录栏位："
 
 #: ../phonebook/csv/CSVPhoneBook.java:77
 msgid "CSV file"
-msgstr "CSV檔"
+msgstr "CSV档"
 
 #: ../phonebook/csv/CSVPhoneBook.java:78
 msgid "A CSV/text file containing phone book entries."
-msgstr "一個 CSV /文字檔，包含通訊錄項目。"
+msgstr "一个 CSV /文本文件，包含通讯录项目。"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:265
 msgid "Current phone book:"
-msgstr "目前通訊錄："
+msgstr "目前通讯录："
 
 #: ../phonebook/ui/NewPhoneBookWin.java:308
 msgid "This phone book has already been added."
-msgstr "通訊錄已經增加。"
+msgstr "通讯录已经增加。"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:308
 #: ../phonebook/ui/NewPhoneBookWin.java:753
 msgid "Add to list"
-msgstr "新增到清單"
+msgstr "新增到清单"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:314
 msgid "Opening phone books..."
-msgstr "開啟通訊錄 ..."
+msgstr "开启通讯录 ..."
 
 #: ../phonebook/ui/NewPhoneBookWin.java:360
 #: ../phonebook/ui/NewPhoneBookWin.java:501
 #: ../phonebook/ui/NewPhoneBookWin.java:528
 #: ../phonebook/ui/NewPhoneBookWin.java:1686
 msgid "Error loading the phone book: "
-msgstr "載入通訊錄錯誤："
+msgstr "载入通讯录错误："
 
 #: ../phonebook/ui/NewPhoneBookWin.java:397
 msgid "Error saving a phone book:"
-msgstr "儲存通訊錄錯誤："
+msgstr "保存通讯录错误："
 
 #: ../phonebook/ui/NewPhoneBookWin.java:422
 msgid "Closing phone books..."
-msgstr "關閉通訊錄 ..."
+msgstr "关闭通讯录 ..."
 
 #: ../phonebook/ui/NewPhoneBookWin.java:463
 msgid "Please enter the phone book descriptor to open."
-msgstr "請輸入通訊錄描述"
+msgstr "请输入通讯录描述"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:467
 msgid "Open by descriptor"
-msgstr "由描述開啟"
+msgstr "由描述开启"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:477
 msgid "Import by descriptor"
-msgstr "由描述匯入"
+msgstr "由描述导入"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:489
 #: ../phonebook/ui/NewPhoneBookWin.java:511
 msgid "Unsupported phone book format."
-msgstr "通訊錄不支援的格式。"
+msgstr "通讯录不支持的格式。"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:545
 msgid "Reset quick search and show all phone book entries."
-msgstr "重設快速查詢並顯示所有通訊錄"
+msgstr "重设快速查询并显示所有通讯录"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:625
 msgid "Multiple or no phone books selected"
-msgstr "多個ior沒有通訊錄被選取"
+msgstr "多个ior没有通讯录被选取"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:751
 msgid "Import"
-msgstr "匯入"
+msgstr "导入"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:781
 #: ../phonebook/ui/NewPhoneBookWin.java:788
@@ -2804,111 +2804,111 @@ msgstr "按描述..."
 
 #: ../phonebook/ui/NewPhoneBookWin.java:814
 msgid "Entry"
-msgstr "項目"
+msgstr "项目"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:888
 msgid "Add new entry"
-msgstr "新增新項目"
+msgstr "新增新项目"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:904
 msgid "Add distribution list"
-msgstr "新增通訊組清單"
+msgstr "新增通讯组清单"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:906
 msgid "Add a new distribution list"
-msgstr "新增一個新的通訊組清單"
+msgstr "新增一个新的通讯组清单"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:915
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:201
 msgid "Do you want to delete the selected entries?"
-msgstr "是否要刪除選定的項目？"
+msgstr "是否要删除选定的项目？"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:915
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:201
 msgid "Delete entries"
-msgstr "刪除項目"
+msgstr "删除项目"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:930
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:210
 msgid "Delete selected entry"
-msgstr "刪除選定的項"
+msgstr "删除选定的项"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:945
 msgid "Find..."
-msgstr "尋找..."
+msgstr "寻找..."
 
 #: ../phonebook/ui/NewPhoneBookWin.java:947
 msgid "Search for an entry"
-msgstr "搜尋文章"
+msgstr "搜寻文章"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:952
 msgid "Do you want to remove the current phone book from the list?"
-msgstr "是否要刪除目前的通訊錄從清單？"
+msgstr "是否要删除目前的通讯录从清单？"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:952
 #: ../phonebook/ui/NewPhoneBookWin.java:957
 msgid "Remove from list"
-msgstr "從名單中刪除"
+msgstr "从名单中删除"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:978
 msgid "Display style"
-msgstr "顯示樣式"
+msgstr "显示样式"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:982
 msgid "Custom"
-msgstr "自訂"
+msgstr "自定义"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:994
 msgid "Filter phone book entries"
-msgstr "篩選通訊錄"
+msgstr "筛选通讯录"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:995
 msgid "Only display phone book items fulfilling:"
-msgstr "僅顯示完整通訊錄項目"
+msgstr "仅显示完整通讯录项目"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:996
 msgid ""
 "You have entered no filtering conditions. Do you want to show all phone book "
 "entries instead?"
-msgstr "你有沒有輸入篩選條件。你想顯示所有通訊錄項目呢？"
+msgstr "你有没有输入筛选条件。你想显示所有通讯录项目呢？"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:997
 msgid "Please enter a valid date/time!"
-msgstr "請輸入正確的日期/時間"
+msgstr "请输入正确的日期/时间"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:1011
 msgid "Show all entries"
-msgstr "顯示所有項目"
+msgstr "显示所有项目"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:1012
 msgid "Filter entries"
-msgstr "篩選項"
+msgstr "筛选项"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:1033
 msgid "Default sort order"
-msgstr "預設排序"
+msgstr "预设排序"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:1034
 #: ../phonebook/ui/SortOrderDialog.java:98
 #: ../phonebook/ui/SortOrderDialog.java:103
 msgid "Custom sort order"
-msgstr "自訂排序"
+msgstr "自定义排序"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:1060
 msgid "Filter phone book items"
-msgstr "篩選通訊錄項目"
+msgstr "筛选通讯录项目"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:1140
 msgid "Save as HTML"
-msgstr "儲存成HTML"
+msgstr "保存成HTML"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:1174
 msgid "Expand all"
-msgstr "展開全部"
+msgstr "展开全部"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:1175
 msgid "Expand all phone books"
-msgstr "展開全部通訊錄"
+msgstr "展开全部通讯录"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:1184
 msgid "Collapse all"
@@ -2916,35 +2916,35 @@ msgstr "收合全部"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:1185
 msgid "Collapse all phone books"
-msgstr "收合全部通訊錄"
+msgstr "收合全部通讯录"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:1202
 msgid "Expand on load"
-msgstr "展開載入"
+msgstr "展开载入"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:1203
 msgid "Expand all phone books when dialog is opened"
-msgstr "當對話框開啟時,展開全部通訊錄"
+msgstr "当对话框开启时,展开全部通讯录"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:1268
 msgid "Error closing the phone books:"
-msgstr "關閉通訊錄錯誤"
+msgstr "关闭通讯录错误"
 
 #: ../phonebook/ui/NewPhoneBookWin.java:1571
 msgid "Error executing the desired action:"
-msgstr "執行所需的操作錯誤："
+msgstr "执行所需的操作错误："
 
 #: ../phonebook/ui/NewPhoneBookWin.java:1667
 msgid "Loading..."
-msgstr "載入中..."
+msgstr "载入中..."
 
 #: ../phonebook/ui/NewPhoneBookWin.java:1676
 msgid "Unknown phone book type selected."
-msgstr "未知的通訊錄類型選擇。"
+msgstr "未知的通讯录类型选择。"
 
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:145
 msgid "Create new distribution list from selection"
-msgstr "建立新的通訊組清單的選擇"
+msgstr "建立新的通讯组清单的选择"
 
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:148
 msgid "Name"
@@ -2952,66 +2952,66 @@ msgstr "名字"
 
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:172
 msgid "Add new item"
-msgstr "新增新項目"
+msgstr "新增新项目"
 
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:174
 msgid "Add a new entry to the distribution list"
-msgstr "新增一個新加入的通訊組清單"
+msgstr "新增一个新加入的通讯组清单"
 
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:191
 msgid "Add existing item"
-msgstr "新增現有項目"
+msgstr "新增现有项目"
 
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:193
 msgid "Add an existing phone book entry to the distribution list"
-msgstr "新增現有通訊錄項目的通訊組清單"
+msgstr "新增现有通讯录项目的通讯组清单"
 
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:291
 msgid "Items in the distribution list:"
-msgstr "項目中的通訊組清單："
+msgstr "项目中的通讯组清单："
 
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:292
 msgid "Items in the current selection:"
-msgstr "在目前的項目選擇："
+msgstr "在目前的项目选择："
 
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:314
 msgid "Current selection"
-msgstr "目前選擇"
+msgstr "目前选择"
 
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:327
 msgid "Items to add"
-msgstr "項目新增"
+msgstr "项目新增"
 
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:350
 msgid "Add the selected entry to the distribution list"
-msgstr "新增所選項目到分發清單"
+msgstr "新增所选项目到分发清单"
 
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:359
 msgid "Please select the items to add to the distribution list:"
-msgstr "請選擇項目新增到通訊組清單："
+msgstr "请选择项目新增到通讯组清单："
 
 #: ../phonebook/ui/SingleEntryPhonebookPanel.java:133 ../send/SendWin.java:336
 #: ../send/SimplifiedSendDialog.java:391
 msgid "Comments:"
-msgstr "註解："
+msgstr "注解："
 
 #: ../phonebook/ui/SortOrderDialog.java:138
 msgid "Selected sort order:"
-msgstr "選擇排序方式"
+msgstr "选择排序方式"
 
 #: ../phonebook/ui/SortOrderDialog.java:138
 msgid "Available fields:"
-msgstr "可得欄位"
+msgstr "可得栏位"
 
 #: ../phonebook/ui/SortOrderDialog.java:145
 #: ../phonebook/ui/SortOrderDialog.java:189
 msgid "descending"
-msgstr "降冪"
+msgstr "降序"
 
 #: ../phonebook/ui/SortOrderDialog.java:145
 #: ../phonebook/ui/SortOrderDialog.java:188
 msgid "ascending"
-msgstr "升冪"
+msgstr "升序"
 
 #: ../phonebook/ui/SortOrderDialog.java:195
 msgid "Sort direction"
@@ -3019,161 +3019,161 @@ msgstr "排序方向"
 
 #: ../phonebook/ui/NewSearchWin.java:113
 msgid "No matching phone book entry found."
-msgstr "沒有符合的通訊錄項發現。"
+msgstr "没有符合的通讯录项发现。"
 
 #: ../phonebook/ui/NewSearchWin.java:123
 msgid "Find phone book entry"
-msgstr "尋找通訊錄項目"
+msgstr "寻找通讯录项目"
 
 #: ../phonebook/ui/RuleParserDialog.java:136
 #: ../phonebook/ui/RuleParserDialog.java:175
 #: ../phonebook/ui/RuleParserDialog.java:189
 #: ../phonebook/ui/RuleParserDialog.java:196
 msgid "Validate"
-msgstr "驗證"
+msgstr "验证"
 
 #: ../phonebook/ui/RuleParserDialog.java:141
 msgid "Display style is valid."
-msgstr "顯示方式是有效的"
+msgstr "显示方式是有效的"
 
 #: ../phonebook/ui/RuleParserDialog.java:153
 msgid ""
 "Please enter the desired display style in the text box below. Double click "
 "on the lists to add the selected field/predefined style."
 msgstr ""
-"請在文字對話視窗中輸入所需的顯示樣式。在清單上雙擊以增加選定的字段/預定義的樣"
+"请在文字对话视窗中输入所需的显示样式。在清单上双击以增加选定的字段/预定义的样"
 "式。"
 
 #: ../phonebook/ui/RuleParserDialog.java:154
 msgid "Available fields"
-msgstr "可用欄位"
+msgstr "可用栏位"
 
 #: ../phonebook/ui/RuleParserDialog.java:155
 msgid "Predefined styles"
-msgstr "預設樣式"
+msgstr "预设样式"
 
 #: ../phonebook/ui/RuleParserDialog.java:175
 msgid "Please enter a display style."
-msgstr "請輸入顯示樣式"
+msgstr "请输入显示样式"
 
 #: ../phonebook/ui/RuleParserDialog.java:189
 msgid "The display style must contain at least one field."
-msgstr "顯示樣式必須至少包含一個欄位。"
+msgstr "显示样式必须至少包含一个栏位。"
 
 #: ../phonebook/ui/RuleParserDialog.java:196
 msgid "Display style is not valid"
-msgstr "顯示方式是無效的"
+msgstr "显示方式是无效的"
 
 #: ../phonebook/jdbc/JDBCPhoneBookEntry.java:80
 msgid "<error>"
-msgstr "<錯誤>"
+msgstr "<错误>"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:111
 msgid "Open as read only"
-msgstr "唯讀開啟"
+msgstr "只读开启"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:113
 msgid "Allow distribution list entries"
-msgstr "允許分發清單項"
+msgstr "允许分发清单项"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:117
 msgid "JDBC phone book"
-msgstr "JDBC的通訊錄"
+msgstr "JDBC的通讯录"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:118
 msgid "A phone book saving its entries in a relational database using JDBC."
-msgstr "通訊錄儲存其作品在關係資料庫中使用JDBC。"
+msgstr "通讯录保存其作品在关系资料库中使用JDBC。"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:161
 msgid "New JDBC phone book"
-msgstr "新的JDBC通訊錄"
+msgstr "新的JDBC通讯录"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:162
 msgid ""
 "Please select which database fields correspond to the phone book entry "
 "fields of YajHFC:"
-msgstr "請選擇對應的資料庫欄位的通訊錄項目領域 YajHFC："
+msgstr "请选择对应的资料库栏位的通讯录项目领域 YajHFC："
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:281
 #: ../phonebook/jdbc/ConnectionDialog.java:313
 msgid "Could not load the specified driver class:"
-msgstr "無法載入指定的驅動程序類："
+msgstr "无法载入指定的驱动程序类："
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:286
 #: ../phonebook/jdbc/ConnectionDialog.java:319
 #: ../readstate/JDBCPersistentReadState.java:108
 msgid "Database password"
-msgstr "資料庫密碼"
+msgstr "资料库密码"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:286
 #: ../phonebook/jdbc/ConnectionDialog.java:319
 #: ../readstate/JDBCPersistentReadState.java:108
 #, java-format
 msgid "Please enter the database password (database: {0}):"
-msgstr "請輸入資料庫密碼(資料庫: {0}):"
+msgstr "请输入资料库密码(资料库: {0}):"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:298
 #: ../phonebook/jdbc/ConnectionDialog.java:346
 msgid "Could not connect to the database:"
-msgstr "無法連接到資料庫："
+msgstr "无法连接到资料库："
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:342
 msgid "Could not load the phone book:"
-msgstr "無法載入通訊錄："
+msgstr "无法载入通讯录："
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:359
 msgid "Cannot open phone book since no database fields were selected!"
-msgstr "無法開啟通訊錄，因為沒有選定的資料庫欄位！"
+msgstr "无法开启通讯录，因为没有选定的资料库栏位！"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:412
 #: ../phonebook/jdbc/JDBCPhoneBook.java:415
 msgid "Could not save the phone book:"
-msgstr "無法儲存的通訊錄："
+msgstr "无法保存的通讯录："
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:437
 #: ../phonebook/jdbc/JDBCPhoneBook.java:447
 #: ../phonebook/jdbc/JDBCPhoneBook.java:457
 #, java-format
 msgid "Could not save the changes: No valid {0} query."
-msgstr "無法儲存更改：沒有正確的 {0} 查詢。"
+msgstr "无法保存更改：没有正确的 {0} 查询。"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:468
 #: ../phonebook/jdbc/JDBCPhoneBook.java:475
 #, java-format
 msgid "Could not save the changes for entry {0}:"
-msgstr "無法儲存更改項目 {0}:"
+msgstr "无法保存更改项目 {0}:"
 
 #: ../phonebook/jdbc/ConnectionDialog.java:222
 msgid "Driver class:"
-msgstr "驅動程序類："
+msgstr "驱动程序类："
 
 #: ../phonebook/jdbc/ConnectionDialog.java:224
 msgid "Database URL:"
-msgstr "資料庫網址："
+msgstr "资料库网址："
 
 #: ../phonebook/jdbc/ConnectionDialog.java:234
 msgid "Table:"
-msgstr "清單:"
+msgstr "清单:"
 
 #: ../phonebook/jdbc/ConnectionDialog.java:291
 msgid "You have to specify a driver class."
-msgstr "你必須指定一個驅動程序類。"
+msgstr "你必须指定一个驱动程序类。"
 
 #: ../phonebook/jdbc/ConnectionDialog.java:295
 msgid "You have to specify a database URL."
-msgstr "你必須指定一個資料庫 URL。"
+msgstr "你必须指定一个资料库 URL。"
 
 #: ../phonebook/jdbc/ConnectionDialog.java:401
 msgid "Could not get the field names:"
-msgstr "無法獲取欄位名稱："
+msgstr "无法获取栏位名称："
 
 #: ../phonebook/jdbc/ConnectionDialog.java:413
 msgid "You have to specify a database table."
-msgstr "你必須指定一個資料庫表。"
+msgstr "你必须指定一个资料库表。"
 
 #: ../phonebook/jdbc/ConnectionDialog.java:421
 msgid "Connection to the database succeeded."
-msgstr "連接到資料庫成功。"
+msgstr "连接到资料库成功。"
 
 #: ../FaxResolution.java:46
 msgid "Extended (> 196 lpi)"
@@ -3189,11 +3189,11 @@ msgstr "低(98 lpi)"
 
 #: ../readstate/JDBCPersistentReadState.java:95
 msgid "Fax filename:"
-msgstr "傳真文件名："
+msgstr "传真文件名："
 
 #: ../readstate/JDBCPersistentReadState.java:96
 msgid "Read/Unread State:"
-msgstr "已讀 /未讀狀態："
+msgstr "已读 /未读状态："
 
 #: ../readstate/JDBCPersistentReadState.java:165
 msgid ""
@@ -3201,26 +3201,26 @@ msgid ""
 "current read/unread state will not be saved.\n"
 " Reason:"
 msgstr ""
-"無法開啟資料庫表來存儲讀 /未讀狀態。目前的讀 /未讀狀態將不會被儲存。\n"
+"无法开启资料库表来存储读 /未读状态。目前的读 /未读状态将不会被保存。\n"
 "理由:"
 
 #: ../readstate/JDBCPersistentReadState.java:403
 msgid "Database table"
-msgstr "資料庫表"
+msgstr "资料库表"
 
 #: ../readstate/JDBCPersistentReadState.java:417
 msgid "JDBC settings to save read/unread state"
-msgstr "JDBC設置儲存已讀 /未讀狀態"
+msgstr "JDBC设置保存已读 /未读状态"
 
 #: ../readstate/JDBCPersistentReadState.java:418
 msgid ""
 "Please select which fields in the table correspond to the necessary fields "
 "to save the read/unread state"
-msgstr "請選擇哪些欄位表中的對應必要的欄位來儲存已讀 /未讀狀態"
+msgstr "请选择哪些栏位表中的对应必要的栏位来保存已读 /未读状态"
 
 #: ../readstate/LocalPersistentReadState.java:192
 msgid "Local file"
-msgstr "本地檔案"
+msgstr "本地文件"
 
 #: ../NoGUISender.java:104 ../util/ProgressWorker.java:170
 #: ../util/ProgressWorker.java:173 ../util/ProgressWorker.java:176
@@ -3229,39 +3229,39 @@ msgstr "正在初始化"
 
 #: ../NoGUISender.java:160
 msgid "Error sending the fax:"
-msgstr "發送傳真錯誤："
+msgstr "发送传真错误："
 
 #: ../model/jobq/QueueFileFormat.java:55 ../model/JobFormat.java:136
 msgid "Page chopping threshold (inches)"
-msgstr "頁面截斷臨界(英吋)"
+msgstr "页面截断临界(英寸)"
 
 #: ../model/jobq/QueueFileFormat.java:56
 msgid "Communication identifier for last call"
-msgstr "最後一通通訊確認"
+msgstr "最后一通通讯确认"
 
 #: ../model/jobq/QueueFileFormat.java:57 ../model/JobFormat.java:64
 msgid "Destination company name"
-msgstr "目標公司名稱"
+msgstr "目标公司名称"
 
 #: ../model/jobq/QueueFileFormat.java:58
 msgid "Host that submitted the job"
-msgstr "主機提交的工作"
+msgstr "主机提交的工作"
 
 #: ../model/jobq/QueueFileFormat.java:59
 msgid "Continuation coverpage file"
-msgstr "連續封面文件"
+msgstr "连续封面文件"
 
 #: ../model/jobq/QueueFileFormat.java:60
 msgid "Data format used to transmit a facsimile"
-msgstr "數據格式，用於傳送傳真"
+msgstr "数据格式，用于发送传真"
 
 #: ../model/jobq/QueueFileFormat.java:61
 msgid "Desired transmit speed"
-msgstr "傳輸速度"
+msgstr "传输速度"
 
 #: ../model/jobq/QueueFileFormat.java:62 ../model/JobFormat.java:84
 msgid "Desired data format"
-msgstr "數據格式"
+msgstr "数据格式"
 
 #: ../model/jobq/QueueFileFormat.java:63
 msgid "ECM"
@@ -3269,39 +3269,39 @@ msgstr "ECM"
 
 #: ../model/jobq/QueueFileFormat.java:63
 msgid "Desired use of Error Correction Mode (ECM)"
-msgstr "期望使用糾錯模式（ECM）"
+msgstr "期望使用纠错模式（ECM）"
 
 #: ../model/jobq/QueueFileFormat.java:64 ../model/JobFormat.java:80
 msgid "Desired min-scanline time"
-msgstr "所需的最低掃描線時間"
+msgstr "所需的最低扫描线时间"
 
 #: ../model/jobq/QueueFileFormat.java:64 ../model/JobFormat.java:80
 msgid "Desired minimum scanline time"
-msgstr "所需的最低掃描線時間"
+msgstr "所需的最低扫描线时间"
 
 #: ../model/jobq/QueueFileFormat.java:65
 msgid "Tagline"
-msgstr "標題行"
+msgstr "标题行"
 
 #: ../model/jobq/QueueFileFormat.java:65
 msgid "Whether or not to use tagline parameter"
-msgstr "是否使用口號參數"
+msgstr "是否使用口号参数"
 
 #: ../model/jobq/QueueFileFormat.java:66 ../model/JobFormat.java:140
 msgid "Job done operation"
-msgstr "完成任務操作"
+msgstr "完成任务操作"
 
 #: ../model/jobq/QueueFileFormat.java:66 ../model/JobFormat.java:140
 msgid "Operation to perform when job is done"
-msgstr "操作時要執行任務完成"
+msgstr "操作时要执行任务完成"
 
 #: ../model/jobq/QueueFileFormat.java:67 ../model/JobFormat.java:176
 msgid "Number"
-msgstr "號碼"
+msgstr "号码"
 
 #: ../model/jobq/QueueFileFormat.java:67 ../model/JobFormat.java:176
 msgid "Public (external) format of dialstring"
-msgstr "公用(額外)掛斷格式"
+msgstr "公用(额外)挂断格式"
 
 #: ../model/jobq/QueueFileFormat.java:68
 msgid "Ready"
@@ -3309,15 +3309,15 @@ msgstr "就绪"
 
 #: ../model/jobq/QueueFileFormat.java:68
 msgid "Document ready for transmission"
-msgstr "文件傳輸準備就緒"
+msgstr "文件传输准备就绪"
 
 #: ../model/jobq/QueueFileFormat.java:69 ../model/JobFormat.java:184
 msgid "Group identifier"
-msgstr "群組識別"
+msgstr "群组识别"
 
 #: ../model/jobq/QueueFileFormat.java:69
 msgid "HylaFAX job group identifier"
-msgstr "HylaFAX工作群組"
+msgstr "HylaFAX工作群组"
 
 #: ../model/jobq/QueueFileFormat.java:70 ../model/JobFormat.java:196
 msgid "ID"
@@ -3329,15 +3329,15 @@ msgstr "HylaFAX job identifier"
 
 #: ../model/jobq/QueueFileFormat.java:71 ../model/JobFormat.java:92
 msgid "Tag string"
-msgstr "標記字符串"
+msgstr "标记字符串"
 
 #: ../model/jobq/QueueFileFormat.java:71 ../model/JobFormat.java:92
 msgid "Client-specified job tag string"
-msgstr "指定的作業標記字符串"
+msgstr "指定的作业标记字符串"
 
 #: ../model/jobq/QueueFileFormat.java:72 ../model/JobFormat.java:148
 msgid "Job type"
-msgstr "作業類型"
+msgstr "作业类型"
 
 #: ../model/jobq/QueueFileFormat.java:72
 msgid "Job type identification string"
@@ -3345,11 +3345,11 @@ msgstr "Job type identification string"
 
 #: ../model/jobq/QueueFileFormat.java:73 ../model/JobFormat.java:200
 msgid "Job kill time"
-msgstr "作業刪除時間"
+msgstr "作业删除时间"
 
 #: ../model/jobq/QueueFileFormat.java:73 ../model/JobFormat.java:200
 msgid "Time to give up trying to send job"
-msgstr "放棄發送工作"
+msgstr "放弃发送工作"
 
 #: ../model/jobq/QueueFileFormat.java:74 ../model/JobFormat.java:100
 msgid "Location"
@@ -3357,31 +3357,31 @@ msgstr "位置"
 
 #: ../model/jobq/QueueFileFormat.java:74 ../model/JobFormat.java:100
 msgid "Destination geographic location"
-msgstr "目標地理位置"
+msgstr "目标地理位置"
 
 #: ../model/jobq/QueueFileFormat.java:75 ../model/JobFormat.java:104
 msgid "Sender e-mail"
-msgstr "發件人電子郵件"
+msgstr "发件人电子邮件"
 
 #: ../model/jobq/QueueFileFormat.java:75
 msgid "Email address of sender"
-msgstr "發件人的電子郵件地址"
+msgstr "发件人的电子邮件地址"
 
 #: ../model/jobq/QueueFileFormat.java:76 ../model/JobFormat.java:252
 msgid "Maximum # dials"
-msgstr "最大撥號數 # "
+msgstr "最大拨号数 # "
 
 #: ../model/jobq/QueueFileFormat.java:76 ../model/JobFormat.java:252
 msgid "Maximum number of times to dial"
-msgstr "最大撥號數"
+msgstr "最大拨号数"
 
 #: ../model/jobq/QueueFileFormat.java:77 ../model/JobFormat.java:240
 msgid "Max. tries"
-msgstr "最大重試次"
+msgstr "最大重试次"
 
 #: ../model/jobq/QueueFileFormat.java:77 ../model/JobFormat.java:240
 msgid "Maximum number of attempts to send job"
-msgstr "傳真工作重試最大次數"
+msgstr "传真工作重试最大次数"
 
 #: ../model/jobq/QueueFileFormat.java:78
 msgid "Minimum speed"
@@ -3389,23 +3389,23 @@ msgstr "最低速度"
 
 #: ../model/jobq/QueueFileFormat.java:78
 msgid "Minimum required transmit speed"
-msgstr "所需的最低傳輸速度"
+msgstr "所需的最低传输速度"
 
 #: ../model/jobq/QueueFileFormat.java:79 ../model/JobFormat.java:208
 msgid "Modem"
-msgstr "數據機"
+msgstr "数据机"
 
 #: ../model/jobq/QueueFileFormat.java:79
 msgid "Outgoing modem to use"
-msgstr "使用數據機"
+msgstr "使用数据机"
 
 #: ../model/jobq/QueueFileFormat.java:80 ../model/JobFormat.java:164
 msgid "# consecutive failed tries"
-msgstr "#連續失敗的嘗試"
+msgstr "#连续失败的尝试"
 
 #: ../model/jobq/QueueFileFormat.java:80 ../model/JobFormat.java:164
 msgid "Number of consecutive failed attempts to place call"
-msgstr "失敗嘗試次數"
+msgstr "失败尝试次数"
 
 #: ../model/jobq/QueueFileFormat.java:81 ../model/JobFormat.java:212
 msgid "Notification"
@@ -3413,31 +3413,31 @@ msgstr "通知"
 
 #: ../model/jobq/QueueFileFormat.java:81
 msgid "Email notification specification"
-msgstr "電子郵件通知規範"
+msgstr "电子邮件通知规范"
 
 #: ../model/jobq/QueueFileFormat.java:82 ../model/JobFormat.java:220
 msgid "# pages"
-msgstr "# 頁"
+msgstr "# 页"
 
 #: ../model/jobq/QueueFileFormat.java:82 ../model/JobFormat.java:220
 msgid "Number of pages transmitted"
-msgstr "傳送頁數"
+msgstr "发送页数"
 
 #: ../model/jobq/QueueFileFormat.java:83
 msgid "Tries (current page)"
-msgstr "重試（本頁）"
+msgstr "重试（本页）"
 
 #: ../model/jobq/QueueFileFormat.java:83
 msgid "Number of attempts to send current page"
-msgstr "重發送本頁次數"
+msgstr "重发送本页次数"
 
 #: ../model/jobq/QueueFileFormat.java:84 ../model/JobFormat.java:244
 msgid "Specified number"
-msgstr "指定號碼"
+msgstr "指定号码"
 
 #: ../model/jobq/QueueFileFormat.java:84 ../model/JobFormat.java:244
 msgid "Client-specified dialstring"
-msgstr "指定掛斷"
+msgstr "指定挂断"
 
 #: ../model/jobq/QueueFileFormat.java:85 ../model/JobFormat.java:216
 #: ../model/RecvFormat.java:104
@@ -3446,7 +3446,7 @@ msgstr "所有者"
 
 #: ../model/jobq/QueueFileFormat.java:85 ../model/JobFormat.java:216
 msgid "Job owner"
-msgstr "作業所有者"
+msgstr "作业所有者"
 
 #: ../model/jobq/QueueFileFormat.java:86
 msgid "Page PIN"
@@ -3458,59 +3458,59 @@ msgstr "PIN in a page operation"
 
 #: ../model/jobq/QueueFileFormat.java:87 ../model/JobFormat.java:188
 msgid "Page chop handling"
-msgstr "頁面印章處理"
+msgstr "页面印章处理"
 
 #: ../model/jobq/QueueFileFormat.java:87 ../model/JobFormat.java:188
 msgid "Whitespace truncation handling"
-msgstr "截斷空白處理"
+msgstr "截断空白处理"
 
 #: ../model/jobq/QueueFileFormat.java:88
 msgid "Page handling"
-msgstr "頁面處理"
+msgstr "页面处理"
 
 #: ../model/jobq/QueueFileFormat.java:88
 msgid "Page analysis information"
-msgstr "頁分析資料"
+msgstr "页分析资料"
 
 #: ../model/jobq/QueueFileFormat.java:89 ../model/JobFormat.java:204
 #: ../model/RecvFormat.java:92
 msgid "Page length"
-msgstr "頁面長度"
+msgstr "页面长度"
 
 #: ../model/jobq/QueueFileFormat.java:89 ../model/JobFormat.java:204
 #: ../model/RecvFormat.java:92
 msgid "Page length in mm"
-msgstr "頁面長度公制"
+msgstr "页面长度公制"
 
 #: ../model/jobq/QueueFileFormat.java:90 ../model/JobFormat.java:248
 #: ../model/RecvFormat.java:128
 msgid "Page width"
-msgstr "頁面寬度"
+msgstr "页面宽度"
 
 #: ../model/jobq/QueueFileFormat.java:90 ../model/JobFormat.java:248
 #: ../model/RecvFormat.java:128
 msgid "Page width in mm"
-msgstr "頁面寬度毫米"
+msgstr "页面宽度毫米"
 
 #: ../model/jobq/QueueFileFormat.java:91 ../model/JobFormat.java:60
 msgid "Password"
-msgstr "密碼"
+msgstr "密码"
 
 #: ../model/jobq/QueueFileFormat.java:91 ../model/JobFormat.java:60
 msgid "Destination Password"
-msgstr "目的地密碼"
+msgstr "目的地密码"
 
 #: ../model/jobq/QueueFileFormat.java:92
 msgid "Polling request"
-msgstr "輪詢請求"
+msgstr "轮询请求"
 
 #: ../model/jobq/QueueFileFormat.java:93 ../model/JobFormat.java:88
 msgid "Priority"
-msgstr "優先"
+msgstr "优先"
 
 #: ../model/jobq/QueueFileFormat.java:93 ../model/JobFormat.java:88
 msgid "Client-specified scheduling priority"
-msgstr "指定調度優先級"
+msgstr "指定调度优先级"
 
 #: ../model/jobq/QueueFileFormat.java:94 ../model/JobFormat.java:124
 msgid "Receiver"
@@ -3527,40 +3527,40 @@ msgstr "解析度"
 
 #: ../model/jobq/QueueFileFormat.java:95 ../model/JobFormat.java:228
 msgid "Document resolution in lines/inch"
-msgstr "文件解析度 行 /英吋"
+msgstr "文件解析度 行 /英寸"
 
 #: ../model/jobq/QueueFileFormat.java:96 ../model/JobFormat.java:224
 msgid "Retry time"
-msgstr "重試時間"
+msgstr "重试时间"
 
 #: ../model/jobq/QueueFileFormat.java:96
 msgid "Time to use between job retries"
-msgstr "使用時間重試之間的工作"
+msgstr "使用时间重试之间的工作"
 
 #: ../model/jobq/QueueFileFormat.java:97
 msgid "Returned status"
-msgstr "回覆狀態"
+msgstr "回覆状态"
 
 #: ../model/jobq/QueueFileFormat.java:97
 msgid "Indicates status return value for the job"
-msgstr "指示狀態返回值的工作"
+msgstr "指示状态返回值的工作"
 
 #: ../model/jobq/QueueFileFormat.java:98 ../model/JobFormat.java:192
 msgid "Scheduling priority"
-msgstr "調度優先級"
+msgstr "调度优先级"
 
 #: ../model/jobq/QueueFileFormat.java:98 ../model/JobFormat.java:192
 msgid "Current scheduling priority"
-msgstr "目前的調度優先級"
+msgstr "目前的调度优先级"
 
 #: ../model/jobq/QueueFileFormat.java:99 ../model/JobFormat.java:128
 #: ../model/RecvFormat.java:120
 msgid "Sender"
-msgstr "發件人"
+msgstr "发件人"
 
 #: ../model/jobq/QueueFileFormat.java:99 ../model/JobFormat.java:128
 msgid "Sender's identity"
-msgstr "發件人的身份"
+msgstr "发件人的身份"
 
 #: ../model/jobq/QueueFileFormat.java:100 ../model/JobFormat.java:72
 #: ../model/RecvFormat.java:64
@@ -3569,19 +3569,19 @@ msgstr "速度"
 
 #: ../model/jobq/QueueFileFormat.java:100
 msgid "Signalling rate at which a facsimile was sent"
-msgstr "信令速率發出一份傳真"
+msgstr "信令速率发出一份传真"
 
 #: ../model/jobq/QueueFileFormat.java:101 ../model/JobFormat.java:160
 msgid "Job state"
-msgstr "工作狀態"
+msgstr "工作状态"
 
 #: ../model/jobq/QueueFileFormat.java:102 ../model/JobFormat.java:232
 msgid "Status"
-msgstr "狀態"
+msgstr "状态"
 
 #: ../model/jobq/QueueFileFormat.java:102 ../model/JobFormat.java:232
 msgid "Job status information from last failure"
-msgstr "最後失敗作業狀態信息"
+msgstr "最后失败作业状态信息"
 
 #: ../model/jobq/QueueFileFormat.java:103 ../model/JobFormat.java:56
 #: ../model/RecvFormat.java:60
@@ -3594,7 +3594,7 @@ msgstr "目的地子地址"
 
 #: ../model/jobq/QueueFileFormat.java:104 ../model/JobFormat.java:76
 msgid "Tagline format"
-msgstr "標題行格式"
+msgstr "标题行格式"
 
 #: ../model/jobq/QueueFileFormat.java:104 ../model/JobFormat.java:76
 msgid "Client-specific tagline format string"
@@ -3602,40 +3602,40 @@ msgstr "特定的格式字符串"
 
 #: ../model/jobq/QueueFileFormat.java:105 ../model/JobFormat.java:172
 msgid "Total # dials"
-msgstr "共撥號#次"
+msgstr "共拨号#次"
 
 #: ../model/jobq/QueueFileFormat.java:105 ../model/JobFormat.java:172
 msgid "Total number of phone calls"
-msgstr "電話總通數"
+msgstr "电话总通数"
 
 #: ../model/jobq/QueueFileFormat.java:106 ../model/JobFormat.java:256
 #: ../model/RecvFormat.java:108
 msgid "Pages"
-msgstr "張數"
+msgstr "张数"
 
 #: ../model/jobq/QueueFileFormat.java:106 ../model/JobFormat.java:256
 msgid "Total # pages to transmit"
-msgstr "傳送總頁數#"
+msgstr "发送总页数#"
 
 #: ../model/jobq/QueueFileFormat.java:107 ../model/JobFormat.java:236
 msgid "Tries"
-msgstr "重試"
+msgstr "重试"
 
 #: ../model/jobq/QueueFileFormat.java:107 ../model/JobFormat.java:236
 msgid "Total number of attempts to send job"
-msgstr "發送工作重試次數"
+msgstr "发送工作重试次数"
 
 #: ../model/jobq/QueueFileFormat.java:108 ../model/JobFormat.java:260
 msgid "Time to send job"
-msgstr "傳送工作時間"
+msgstr "发送工作时间"
 
 #: ../model/jobq/QueueFileFormat.java:109 ../model/JobFormat.java:112
 msgid "Use continuation cover"
-msgstr "繼續使用覆蓋"
+msgstr "继续使用覆盖"
 
 #: ../model/jobq/QueueFileFormat.java:109
 msgid "Whether or not to use a continuation cover page"
-msgstr "是否繼續使用封面頁"
+msgstr "是否继续使用封面页"
 
 #: ../model/jobq/QueueFileFormat.java:110
 msgid "Use max. vertical resolution"
@@ -3647,47 +3647,47 @@ msgstr "是否使用最高的垂直解析度"
 
 #: ../model/jobq/QueueFileFormat.java:111 ../model/JobFormat.java:264
 msgid "State"
-msgstr "狀態"
+msgstr "状态"
 
 #: ../model/jobq/QueueFileFormat.java:111 ../model/JobFormat.java:264
 msgid "Job state (long description)"
-msgstr "工作狀態"
+msgstr "工作状态"
 
 #: ../model/jobq/QueueFileFormat.java:112 ../model/JobFormat.java:268
 msgid "Notification when"
-msgstr "當..通知"
+msgstr "当..通知"
 
 #: ../model/jobq/QueueFileFormat.java:112 ../model/JobFormat.java:268
 msgid "E-mail notification handling (long description)"
-msgstr "電子郵件通知處理"
+msgstr "电子邮件通知处理"
 
 #: ../model/jobq/QueueFileFormat.java:114
 msgid "Recipient phone"
-msgstr "收件人電話"
+msgstr "收件人电话"
 
 #: ../model/jobq/QueueFileFormat.java:114
 msgid "Recipient's telephone (voice) number"
-msgstr "接收電話號碼"
+msgstr "接收电话号码"
 
 #: ../model/jobq/QueueFileFormat.java:115
 msgid "Subject"
-msgstr "主題"
+msgstr "主题"
 
 #: ../model/jobq/QueueFileFormat.java:115
 msgid "Subject (\"Regarding\") of the fax"
-msgstr "主題 (\"Regarding\")"
+msgstr "主题 (\"Regarding\")"
 
 #: ../model/JobFormat.java:68
 msgid "Dials: total/max."
-msgstr "撥號: 共/最大"
+msgstr "拨号: 共/最大"
 
 #: ../model/JobFormat.java:68
 msgid "Total # dials/maximum # dials"
-msgstr "撥號共#次/撥號最大#次"
+msgstr "拨号共#次/拨号最大#次"
 
 #: ../model/JobFormat.java:72
 msgid "Desired signalling rate"
-msgstr "信號傳輸率"
+msgstr "信号传输率"
 
 #: ../model/JobFormat.java:96
 msgid "Use ECM?"
@@ -3699,11 +3699,11 @@ msgstr "Desired use of ECM (one-character symbol)"
 
 #: ../model/JobFormat.java:104
 msgid "Notification e-mail address"
-msgstr "通知的電子郵件地址"
+msgstr "通知的电子邮件地址"
 
 #: ../model/JobFormat.java:108
 msgid "Private Tagline?"
-msgstr "私人標題行？"
+msgstr "私人标题行？"
 
 #: ../model/JobFormat.java:108
 msgid "Desired use of private tagline (one-character symbol)"
@@ -3711,71 +3711,71 @@ msgstr "Desired use of private tagline (one-character symbol)"
 
 #: ../model/JobFormat.java:112
 msgid "Whether to use continuation cover page (one-character symbol)"
-msgstr "是否使用連續封面（1字符號）"
+msgstr "是否使用连续封面（1字符号）"
 
 #: ../model/JobFormat.java:116
 msgid "Pages done/total"
-msgstr "頁數 完成/共"
+msgstr "页数 完成/共"
 
 #: ../model/JobFormat.java:116
 msgid "# pages transmitted/total # pages to transmit"
-msgstr "#頁傳送 /共傳輸#頁"
+msgstr "#页发送 /共传输#页"
 
 #: ../model/JobFormat.java:120
 msgid "Minimal signalling rate"
-msgstr "最小傳輸率"
+msgstr "最小传输率"
 
 #: ../model/JobFormat.java:120
 msgid "Client-specified minimum acceptable signalling rate"
-msgstr "最低可接受的信號傳輸率"
+msgstr "最低可接受的信号传输率"
 
 #: ../model/JobFormat.java:132
 msgid "Tries: done/max."
-msgstr "重試: 完成/最大數"
+msgstr "重试: 完成/最大数"
 
 #: ../model/JobFormat.java:132
 msgid "Total # tries/maximum # tries"
-msgstr "重試#次 /最多重試#次"
+msgstr "重试#次 /最多重试#次"
 
 #: ../model/JobFormat.java:144
 msgid "Communication identifier"
-msgstr "通信標識"
+msgstr "通信标识"
 
 #: ../model/JobFormat.java:148
 msgid "Job type (one-character symbol)"
-msgstr "作業類型(one-character symbol)"
+msgstr "作业类型(one-character symbol)"
 
 #: ../model/JobFormat.java:152
 msgid "Scheduled time"
-msgstr "預定時間"
+msgstr "预定时间"
 
 #: ../model/JobFormat.java:152
 msgid "Scheduled date and time"
-msgstr "排程日期和時間"
+msgstr "排程日期和时间"
 
 #: ../model/JobFormat.java:156
 msgid "Scheduled time (UNIX)"
-msgstr "預定時間 (UNIX)"
+msgstr "预定时间 (UNIX)"
 
 #: ../model/JobFormat.java:156
 msgid "Scheduled time in seconds since the UNIX epoch"
-msgstr "預定時間以秒UNIX"
+msgstr "预定时间以秒UNIX"
 
 #: ../model/JobFormat.java:160
 msgid "Job state (one-character symbol)"
-msgstr "工作狀態"
+msgstr "工作状态"
 
 #: ../model/JobFormat.java:168
 msgid "Client machine name"
-msgstr "客戶機名稱"
+msgstr "客户机名称"
 
 #: ../model/JobFormat.java:180
 msgid "# consecutive failed dials"
-msgstr "# 連續的失敗撥號"
+msgstr "# 连续的失败拨号"
 
 #: ../model/JobFormat.java:196
 msgid "Job identifier"
-msgstr "作業識別"
+msgstr "作业识别"
 
 #: ../model/JobFormat.java:208
 msgid "Assigned modem"
@@ -3783,11 +3783,11 @@ msgstr "指派modem"
 
 #: ../model/JobFormat.java:212
 msgid "E-mail notification handling (one-character symbol)"
-msgstr "電子郵件通知處理（1字符號）"
+msgstr "电子邮件通知处理（1字符号）"
 
 #: ../model/JobFormat.java:224
 msgid "Job retry time"
-msgstr "工作重試時間"
+msgstr "工作重试时间"
 
 #: ../model/JobFormat.java:270
 msgid "Use XVRES?"
@@ -3799,35 +3799,35 @@ msgstr "使用延伸解析"
 
 #: ../model/servconn/FaxListConnectionType.java:49
 msgid "Using the HylaFAX protocol"
-msgstr "使用HylaFax協議"
+msgstr "使用HylaFax协议"
 
 #: ../model/servconn/FaxListConnectionType.java:50
 msgid "Directly accessing the spool area (experimental)"
-msgstr "直接訪問的暫存區"
+msgstr "直接访问的暂存区"
 
 #: ../model/servconn/JobState.java:49
 msgid "Undefined"
-msgstr "未定義"
+msgstr "未定义"
 
 #: ../model/servconn/JobState.java:50
 msgid "Failed"
-msgstr "失敗"
+msgstr "失败"
 
 #: ../model/servconn/JobState.java:51
 msgid "Suspended"
-msgstr "已暫停"
+msgstr "已暂停"
 
 #: ../model/servconn/JobState.java:51
 msgid "Suspended (not being scheduled)"
-msgstr "暫停（不安排）"
+msgstr "暂停（不安排）"
 
 #: ../model/servconn/JobState.java:52
 msgid "Pending"
-msgstr "待認中"
+msgstr "待认中"
 
 #: ../model/servconn/JobState.java:52
 msgid "Pending (waiting for the time to send to arrive)"
-msgstr "等待（等待時間派遣到達）"
+msgstr "等待（等待时间派遣到达）"
 
 #: ../model/servconn/JobState.java:53
 msgid "Sleeping"
@@ -3837,15 +3837,15 @@ msgstr "休息中"
 msgid ""
 "Sleeping (waiting for a scheduled timeout such as a delay between attempts "
 "to send)"
-msgstr "睡眠（等待安排超時，如嘗試之間的時間間隔發送）"
+msgstr "睡眠（等待安排超时，如尝试之间的时间间隔发送）"
 
 #: ../model/servconn/JobState.java:54
 msgid "Blocked"
-msgstr "已封鎖"
+msgstr "已封锁"
 
 #: ../model/servconn/JobState.java:54
 msgid "Blocked (by concurrent activity to the same destination)"
-msgstr "封鎖（通過目前正在進行的活動到同一目標）"
+msgstr "封锁（通过目前正在进行的活动到同一目标）"
 
 #: ../model/servconn/JobState.java:55
 msgid "Waiting"
@@ -3853,11 +3853,11 @@ msgstr "等待中"
 
 #: ../model/servconn/JobState.java:55
 msgid "Waiting (for resources such as a free modem)"
-msgstr "等待（資源，閒置數據機）"
+msgstr "等待（资源，闲置数据机）"
 
 #: ../model/servconn/JobState.java:56
 msgid "Running"
-msgstr "執行中"
+msgstr "执行中"
 
 #: ../model/servconn/JobState.java:57
 msgid "Done"
@@ -3865,31 +3865,31 @@ msgstr "完成"
 
 #: ../model/servconn/hylafax/HylaFaxListConnection.java:173
 msgid "Connecting..."
-msgstr "連線中..."
+msgstr "连线中..."
 
 #: ../model/servconn/hylafax/HylaFaxListConnection.java:415
 msgid "Could not log in"
-msgstr "無法登錄"
+msgstr "无法登录"
 
 #: ../model/servconn/hylafax/HylaFaxListConnection.java:435
 msgid "Error refreshing the status:"
-msgstr "狀態重新整理錯誤："
+msgstr "状态重新整理错误："
 
 #: ../model/RecvFormat.java:56
 msgid "Time/Date"
-msgstr "時間/日期"
+msgstr "时间/日期"
 
 #: ../model/RecvFormat.java:56
 msgid "Extended representation of the time when the receive happened"
-msgstr "擴展代表性的接收時發生"
+msgstr "扩展代表性的接收时发生"
 
 #: ../model/RecvFormat.java:60
 msgid "SubAddress received from sender (if any)"
-msgstr "子地址收到發件人（如有"
+msgstr "子地址收到发件人（如有"
 
 #: ../model/RecvFormat.java:64
 msgid "Signalling rate used during receive"
-msgstr "用信號在接收率"
+msgstr "用信号在接收率"
 
 #: ../model/RecvFormat.java:68
 msgid "Format"
@@ -3897,79 +3897,79 @@ msgstr "格式"
 
 #: ../model/RecvFormat.java:68
 msgid "Data format used during receive"
-msgstr "數據格式接收過程中使用"
+msgstr "数据格式接收过程中使用"
 
 #: ../model/RecvFormat.java:72
 msgid "Error description"
-msgstr "錯誤內容"
+msgstr "错误内容"
 
 #: ../model/RecvFormat.java:72
 msgid "Error description if an error occurred during receive"
-msgstr "錯誤描述如果發生錯誤在接收"
+msgstr "错误描述如果发生错误在接收"
 
 #: ../model/RecvFormat.java:76
 msgid "Filename"
-msgstr "檔案名稱"
+msgstr "文件名称"
 
 #: ../model/RecvFormat.java:76
 msgid "Document filename (relative to the recvq directory)"
-msgstr "文件名（相對於 recvq目錄）"
+msgstr "文件名（相对于 recvq目录）"
 
 #: ../model/RecvFormat.java:80
 msgid "Time to receive"
-msgstr "接收時間"
+msgstr "接收时间"
 
 #: ../model/RecvFormat.java:80
 msgid "Time spent receiving document (HH:MM:SS)"
-msgstr "接收文件的時間花(HH:MM:SS)"
+msgstr "接收文件的时间花(HH:MM:SS)"
 
 #: ../model/RecvFormat.java:84
 msgid "CIDName"
-msgstr "CID名稱"
+msgstr "CID名称"
 
 #: ../model/RecvFormat.java:84
 msgid "CIDName value for received fax"
-msgstr "CIDName 收到的傳真"
+msgstr "CIDName 收到的传真"
 
 #: ../model/RecvFormat.java:88
 msgid "CIDNumber"
-msgstr "CID號碼"
+msgstr "CID号码"
 
 #: ../model/RecvFormat.java:88
 msgid "CIDNumber value for received fax"
-msgstr "CIDNumber 收到的傳真"
+msgstr "CIDNumber 收到的传真"
 
 #: ../model/RecvFormat.java:96
 msgid "Fax Protection"
-msgstr "傳真保護"
+msgstr "传真保护"
 
 #: ../model/RecvFormat.java:96
 msgid "Fax-style protection mode string (``-rwxrwx'')"
-msgstr "Fax-style 字元保護模式 (``-rwxrwx'')"
+msgstr "Fax-style 符保护模式 (``-rwxrwx'')"
 
 #: ../model/RecvFormat.java:100
 msgid "File size"
-msgstr "檔案大小"
+msgstr "文件大小"
 
 #: ../model/RecvFormat.java:100
 msgid "File size (number of bytes)"
-msgstr "檔案大小( bytes))"
+msgstr "文件大小( bytes))"
 
 #: ../model/RecvFormat.java:104
 msgid "File owner"
-msgstr "檔案擁有者"
+msgstr "文件拥有者"
 
 #: ../model/RecvFormat.java:108
 msgid "Number of pages in document"
-msgstr "文件頁數"
+msgstr "文件页数"
 
 #: ../model/RecvFormat.java:116
 msgid "Resolution of received data"
-msgstr "接收數據解析度"
+msgstr "接收数据解析度"
 
 #: ../model/RecvFormat.java:120
 msgid "Sender identity (TSI)"
-msgstr "發件人的身份（TSI）的"
+msgstr "发件人的身份（TSI）的"
 
 #: ../model/RecvFormat.java:124
 msgid "Date"
@@ -3977,31 +3977,31 @@ msgstr "日期"
 
 #: ../model/RecvFormat.java:124
 msgid "Compact representation of the time when the receive happened"
-msgstr "緊湊代表性的接收時發生"
+msgstr "紧凑代表性的接收时发生"
 
 #: ../model/RecvFormat.java:132
 msgid "In progress"
-msgstr "進行中"
+msgstr "进行中"
 
 #: ../model/RecvFormat.java:132
 msgid "A ``*'' if receive is going on; otherwise `` '' (space)"
-msgstr "``*''如果接收是怎麼回事，否則 `` '' (space)"
+msgstr "``*''如果接收是怎么回事，否则 `` '' (space)"
 
 #: ../model/RecvFormat.java:136
 msgid "Time/Date (UNIX)"
-msgstr "時間/日期(UNIX)"
+msgstr "时间/日期(UNIX)"
 
 #: ../model/RecvFormat.java:136
 msgid "Time in seconds since the UNIX epoch"
-msgstr "在幾秒鐘的時間，因為 UNIX的時代"
+msgstr "在几秒钟的时间，因为 UNIX的时代"
 
 #: ../MainWinSearchWin.java:126
 msgid "No matching fax found."
-msgstr "無符合傳真"
+msgstr "无符合传真"
 
 #: ../DateStyle.java:84
 msgid "(Language default)"
-msgstr "預設語言"
+msgstr "预设语言"
 
 #: ../DateStyle.java:113
 msgid "dd/MM/yyyy"
@@ -4013,37 +4013,37 @@ msgstr "HH:mm:ss"
 
 #: ../util/ExceptionDialog.java:103 ../util/ExceptionDialog.java:243
 msgid "Details"
-msgstr "詳細"
+msgstr "详细"
 
 #: ../util/ProgressWorker.java:161 ../util/ProgressWorker.java:191
 #: ../util/ProgressWorker.java:199 ../util/ProgressWorker.java:211
 msgid "Error performing the operation:"
-msgstr "操作錯誤"
+msgstr "操作错误"
 
 #: ../util/ExternalProcessExecutor.java:97
 #, java-format
 msgid "Error executing {0}:"
-msgstr "錯誤執行 {0}:"
+msgstr "错误执行 {0}:"
 
 #: ../util/ToolbarEditorDialog.java:88
 msgid "Separator"
-msgstr "分隔符號"
+msgstr "分隔符号"
 
 #: ../util/ToolbarEditorDialog.java:209
 msgid "Selected toolbar buttons:"
-msgstr "選擇工具列按鈕："
+msgstr "选择工具栏按钮："
 
 #: ../util/ToolbarEditorDialog.java:209
 msgid "Available toolbar buttons:"
-msgstr "可用工具列按鈕："
+msgstr "可用工具栏按钮："
 
 #: ../util/MultiButtonGroup.java:148 ../util/ExcDialogAbstractAction.java:94
 msgid "An Error occurred executing the desired action:"
-msgstr "執行所需的操作錯誤："
+msgstr "执行所需的操作错误："
 
 #: ../util/DoNotAskAgainDialog.java:73
 msgid "Do not show dialog again"
-msgstr "不要再顯示對話框"
+msgstr "不要再显示对话框"
 
 #: ../util/ClipboardPopup.java:72
 msgid "Cut"
@@ -4051,27 +4051,27 @@ msgstr "剪下"
 
 #: ../util/ClipboardPopup.java:76
 msgid "Paste"
-msgstr "貼上"
+msgstr "粘贴"
 
 #: ../util/fmtEditor.java:131
 msgid "Moves the selected item up"
-msgstr "所選項目向上移"
+msgstr "所选项目向上移"
 
 #: ../util/fmtEditor.java:138
 msgid "Adds the selected item"
-msgstr "新增選取項目"
+msgstr "新增选取项目"
 
 #: ../util/fmtEditor.java:145
 msgid "Removes the selected item"
-msgstr "刪除選取項目"
+msgstr "删除选取项目"
 
 #: ../util/fmtEditor.java:152
 msgid "Moves the selected item down"
-msgstr "所選項目向下"
+msgstr "所选项目向下"
 
 #: ../util/MapEditorDialog.java:99
 msgid "Remove row"
-msgstr "刪除列"
+msgstr "删除列"
 
 #: ../util/AcceleratorKeyDialog.java:109
 msgid "Clear"
@@ -4079,30 +4079,30 @@ msgstr "清除"
 
 #: ../util/AcceleratorKeyDialog.java:120
 msgid "Use default"
-msgstr "使用預設:"
+msgstr "使用预设:"
 
 #: ../util/AcceleratorKeyDialog.java:150
 #, java-format
 msgid "Duplicate shortcut {0} found for actions \"{1}\" and \"{2}\"!"
-msgstr "複製{0}捷徑,從\"{1}\" 和 \"{2}\"！"
+msgstr "复制{0}捷径,从\"{1}\" 和 \"{2}\"！"
 
 #: ../util/AcceleratorKeyDialog.java:215 ../util/AcceleratorKeyDialog.java:255
 msgid "Accelerator key"
-msgstr "快捷鍵"
+msgstr "快捷键"
 
 #: ../util/AcceleratorKeyDialog.java:216
 msgid ""
 "Click on the text field above and press the key (combination) to be used as "
 "the selected action's keyboard shortcut."
-msgstr "點選文字方塊,所選動作捷徑"
+msgstr "点选文字方块,所选动作捷径"
 
 #: ../util/AcceleratorKeyDialog.java:254
 msgid "Action"
-msgstr "執行"
+msgstr "执行"
 
 #: ../util/MapTableModel.java:55
 msgid "Key"
-msgstr "關鍵"
+msgstr "主键"
 
 #: ../util/MapTableModel.java:56
 msgid "Value"
@@ -4110,23 +4110,23 @@ msgstr "值"
 
 #: ../TextViewPanel.java:194 ../send/SimplifiedSendDialog.java:992
 msgid "Error saving the file"
-msgstr "儲存文件出錯"
+msgstr "保存文件出错"
 
 #: ../send/SendWinStyle.java:42
 msgid "Traditional"
-msgstr "傳統"
+msgstr "传统"
 
 #: ../send/SendWinStyle.java:43
 msgid "Simplified"
-msgstr "簡化"
+msgstr "简化"
 
 #: ../send/SendWin.java:183
 msgid "Send Fax"
-msgstr "送出傳真"
+msgstr "送出传真"
 
 #: ../send/SendWin.java:224
 msgid "Poll fax"
-msgstr "取得傳真"
+msgstr "取得传真"
 
 #: ../send/SendWin.java:283 ../send/SimplifiedSendDialog.java:366
 msgid "Use cover page"
@@ -4134,15 +4134,15 @@ msgstr "使用封面"
 
 #: ../send/SendWin.java:291 ../send/SimplifiedSendDialog.java:689
 msgid "Use custom cover page:"
-msgstr "使用自定義封面："
+msgstr "使用自定义封面："
 
 #: ../send/SendWin.java:331
 msgid "Recipient Name:"
-msgstr "接收者名稱:"
+msgstr "接收者名称:"
 
 #: ../send/SendWin.java:332
 msgid "Company:"
-msgstr "公司名稱："
+msgstr "公司名称："
 
 #: ../send/SendWin.java:333
 msgid "Location:"
@@ -4150,19 +4150,19 @@ msgstr "位置："
 
 #: ../send/SendWin.java:334
 msgid "Voice number:"
-msgstr "電話號碼:"
+msgstr "电话号码:"
 
 #: ../send/SendWin.java:335 ../send/SimplifiedSendDialog.java:390
 msgid "Subject:"
-msgstr "主題："
+msgstr "主题："
 
 #: ../send/SendWin.java:375
 msgid "File(s):"
-msgstr "檔案:"
+msgstr "文件:"
 
 #: ../send/SendWin.java:470
 msgid "Fax number(s):"
-msgstr "傳真號碼:"
+msgstr "传真号码:"
 
 #: ../send/SendWin.java:488
 msgid "Cover page"
@@ -4172,30 +4172,30 @@ msgstr "封面"
 msgid ""
 "Nothing to preview! (Neither a cover page nor a file to send has been "
 "selected.)"
-msgstr "沒有預覽！ （無論封面，也不是要發送的文件已被選中。）"
+msgstr "没有预览！ （无论封面，也不是要发送的文件已被选中。）"
 
 #: ../send/SendWin.java:642 ../send/SimplifiedSendDialog.java:527
 msgid "Choose number from phone book"
-msgstr "選擇從通訊錄"
+msgstr "选择从通讯录"
 
 #: ../send/JobPropsEditorDialog.java:126
 msgid ""
 "This dialog allows you to set HylaFAX job properties directly. Use it only "
 "if you know what you are doing!"
 msgstr ""
-"該對話框允許你設置 HylaFAX工作性質，直接。使用它只有當你知道你在做什麼！"
+"该对话框允许你设置 HylaFAX任务属性，直接。使用它只有当你知道你在做什么！"
 
 #: ../send/SimplifiedSendDialog.java:182
 msgid ">> Advanced"
-msgstr ">>進階"
+msgstr ">>高级"
 
 #: ../send/SimplifiedSendDialog.java:183
 msgid "<< Simplified"
-msgstr "<<簡化"
+msgstr "<<简化"
 
 #: ../send/SimplifiedSendDialog.java:190
 msgid "Send fax"
-msgstr "送出傳真"
+msgstr "送出传真"
 
 #: ../send/SimplifiedSendDialog.java:360
 msgid "Identity"
@@ -4203,19 +4203,19 @@ msgstr "身分"
 
 #: ../send/SimplifiedSendDialog.java:407 ../send/SimplifiedSendDialog.java:429
 msgid "Extracting recipients..."
-msgstr "解析傳真.."
+msgstr "解析传真.."
 
 #: ../send/SimplifiedSendDialog.java:412
 msgid "Error extracting recipients"
-msgstr "解析傳真錯誤"
+msgstr "解析传真错误"
 
 #: ../send/SimplifiedSendDialog.java:490
 msgid "File(s) to send:"
-msgstr "傳送檔案"
+msgstr "发送文件"
 
 #: ../send/SimplifiedSendDialog.java:526
 msgid "Add from phone book..."
-msgstr "從通訊錄新增"
+msgstr "从通讯录新增"
 
 #: ../send/SimplifiedSendDialog.java:561
 msgid "Add a new recipient"
@@ -4223,23 +4223,23 @@ msgstr "新增收件人"
 
 #: ../send/SimplifiedSendDialog.java:578
 msgid "Remove selected recipient"
-msgstr "刪傳所選傳真"
+msgstr "删传所选传真"
 
 #: ../send/SimplifiedSendDialog.java:599
 msgid "Error reading the specified file:"
-msgstr "讀取檔案錯誤："
+msgstr "读取文件错误："
 
 #: ../send/SimplifiedSendDialog.java:604
 msgid "Add from text file..."
-msgstr "從文字檔新增"
+msgstr "从文本文件新增"
 
 #: ../send/SimplifiedSendDialog.java:606
 msgid "Adds recipients from a text file containing one recipient per line"
-msgstr "新增收件人從文字檔，其中包含收件人，每一行"
+msgstr "新增收件人从文本文件，其中包含收件人，每一行"
 
 #: ../send/SimplifiedSendDialog.java:659
 msgid "Fax number:"
-msgstr "傳真號碼:"
+msgstr "传真号码:"
 
 #: ../send/SimplifiedSendDialog.java:661
 msgid "Recipients:"
@@ -4247,37 +4247,37 @@ msgstr "收件人："
 
 #: ../send/SimplifiedSendDialog.java:737
 msgid "Archive fax job"
-msgstr "歸檔傳真"
+msgstr "归档传真"
 
 #: ../send/SimplifiedSendDialog.java:757
 msgid "Time to send:"
-msgstr "傳送時間"
+msgstr "发送时间"
 
 #: ../send/SimplifiedSendDialog.java:1001
 msgid "Save a copy as..."
-msgstr "儲存複本"
+msgstr "保存复本"
 
 #: ../send/StreamTFLItem.java:110
 msgid "<stdin>"
-msgstr "<標準輸入>"
+msgstr "<标准输入>"
 
 #: ../send/LocalFileTFLItem.java:81
 #, java-format
 msgid ""
 "The document {0} could not be converted to PostScript, PDF or TIFF. Reason:"
-msgstr "該文件{0}不能轉換成PostScript，PDF或TIFF。原因："
+msgstr "该文件{0}不能转换成PostScript，PDF或TIFF。原因："
 
 #: ../send/SendFaxArchiver.java:149
 msgid "The attached fax could not be submitted successfully to HylaFAX."
-msgstr "傳真無法送至HylaFAX"
+msgstr "传真无法送至HylaFAX"
 
 #: ../send/SendFaxArchiver.java:152
 msgid "Send log:"
-msgstr "傳送log"
+msgstr "发送log"
 
 #: ../send/SendFaxArchiver.java:158
 msgid "Fax failed to send"
-msgstr "傳送失敗"
+msgstr "发送失败"
 
 #: ../send/TimeToSendEntry.java:67 ../send/TimeToSendEntry.java:97
 msgid "Now"
@@ -4285,40 +4285,40 @@ msgstr "立即"
 
 #: ../send/TimeToSendEntry.java:68
 msgid "In (timespan)"
-msgstr "在（時間間隔）"
+msgstr "在（时间间隔）"
 
 #: ../send/TimeToSendEntry.java:69
 msgid "At (exact time)"
-msgstr "在 (準確時間)"
+msgstr "在 (准确时间)"
 
 #: ../send/SendFileManager.java:83 ../send/SendFileManager.java:157
 #, java-format
 msgid "Uploading {0}"
-msgstr "傳傳中 {0}"
+msgstr "传传中 {0}"
 
 #: ../send/SendFileManager.java:129
 #, java-format
 msgid "Converting {0}"
-msgstr "轉換中{0}"
+msgstr "转换中{0}"
 
 #: ../send/SendFileManager.java:141
 msgid "Uploading document"
-msgstr "上傳文件"
+msgstr "上传文件"
 
 #: ../send/SendFileManager.java:152
 #, java-format
 msgid "Creating {0} from documents to send"
-msgstr "建立 {0}從文檔發送"
+msgstr "建立 {0}从文档发送"
 
 #: ../send/SendController.java:169
 #, java-format
 msgid "Can not read file \"{0}\"!"
-msgstr "無法讀取檔案\"{0}\"!"
+msgstr "无法读取文件\"{0}\"!"
 
 #: ../send/SendController.java:174
 #, java-format
 msgid "Can not read default cover page file \"{0}\"!"
-msgstr "無法讀取預設的封面頁文件\"{0}\"!"
+msgstr "无法读取预设的封面页文件\"{0}\"!"
 
 #: ../send/SendController.java:252
 msgid "Creating cover page"
@@ -4331,12 +4331,12 @@ msgstr "格式 {0}"
 
 #: ../send/SendController.java:280
 msgid "Error previewing the documents:"
-msgstr "文件預覽錯誤"
+msgstr "文件预览错误"
 
 #: ../send/SendController.java:358
 #, java-format
 msgid "Creating job to {0}"
-msgstr "建立任務到  {0}"
+msgstr "建立任务到  {0}"
 
 #: ../send/SendController.java:445
 #, java-format
@@ -4344,7 +4344,7 @@ msgid ""
 "An error occured while submitting the fax job for phone number \"{0}\" (will "
 "try to submit the fax to the other numbers anyway): "
 msgstr ""
-"發生錯誤時提交傳真作業的電話號碼  \"{0}\"(將嘗試提交傳真給其他數字無論如何)："
+"发生错误时提交传真作业的电话号码  \"{0}\"(将尝试提交传真给其他数字无论如何)："
 
 #: ../send/SendController.java:449
 msgid "Cleaning up"
@@ -4352,11 +4352,11 @@ msgstr "清理"
 
 #: ../send/SendController.java:453
 msgid "An error occured while submitting the fax: "
-msgstr "發生錯誤時提交傳真："
+msgstr "发生错误时提交传真："
 
 #: ../send/SendController.java:513
 msgid "To send a fax you have to enter at least one phone number!"
-msgstr "發送傳真您必須至少輸入一個電話號碼！"
+msgstr "发送传真您必须至少输入一个电话号码！"
 
 #: ../send/SendController.java:513 ../send/SendController.java:520
 #: ../send/SendController.java:530
@@ -4366,7 +4366,7 @@ msgstr "警告"
 #: ../send/SendController.java:520
 #, java-format
 msgid "For recipient {0} (\"{1}\") no fax number has been entered."
-msgstr "為收件人 {0} (\"{1}\") 沒有傳真號碼已輸入。"
+msgstr "为收件人 {0} (\"{1}\") 没有传真号码已输入。"
 
 #: ../send/SendController.java:527
 msgid ""
@@ -4374,40 +4374,40 @@ msgid ""
 "cover page.\n"
 "Continue anyway?"
 msgstr ""
-"您沒有選擇一個文件傳輸，這樣你的傳真將只包含封面頁\n"
-"繼續嗎?"
+"您没有选择一个文件传输，这样你的传真将只包含封面页\n"
+"继续吗?"
 
 #: ../send/SendController.java:527
 msgid "Continue?"
-msgstr "繼續嗎？"
+msgstr "继续吗？"
 
 #: ../send/SendController.java:530
 msgid "To send a fax you must select at least one file!"
-msgstr "發送傳真，您必須至少選擇一個文件！"
+msgstr "发送传真，您必须至少选择一个文件！"
 
 #: ../send/SendController.java:543
 msgid "Sending fax"
-msgstr "傳送傳真"
+msgstr "发送传真"
 
 #: ../send/SendController.java:548
 msgid "Previewing fax"
-msgstr "預覽傳真"
+msgstr "预览传真"
 
 #: ../send/TextFieldList.java:102
 msgid "Moves the item upwards"
-msgstr "項目向上移動"
+msgstr "项目向上移动"
 
 #: ../send/TextFieldList.java:127
 msgid "Moves the item downwards"
-msgstr "項目向下移動"
+msgstr "项目向下移动"
 
 #: ../send/TextFieldList.java:146
 msgid "Adds the text to the list"
-msgstr "新增文字檔到清單"
+msgstr "新增文本文件到清单"
 
 #: ../send/TextFieldList.java:168
 msgid "Removes the selected item from the list"
-msgstr "刪除選定的項目從清單"
+msgstr "删除选定的项目从清单"
 
 #: ../send/TextFieldList.java:187
 msgid "Update"
@@ -4415,44 +4415,44 @@ msgstr "更新"
 
 #: ../send/TextFieldList.java:188
 msgid "Updates the selected list item"
-msgstr "目前選取的選單項目"
+msgstr "目前选取的选单项目"
 
 #: ../send/MinutesFormatter.java:80
 msgid "minutes"
-msgstr "分鐘"
+msgstr "分钟"
 
 #~ msgid "Protection"
-#~ msgstr "保護"
+#~ msgstr "保护"
 
 #~ msgid "UNIX-style protection flags"
-#~ msgstr "Unix風格保護標誌"
+#~ msgstr "Unix风格保护标志"
 
 #~ msgid "Same as PostScript viewer"
-#~ msgstr "瀏覽與PostScript相同"
+#~ msgstr "浏览与PostScript相同"
 
 #~ msgid "Error submitting fax"
-#~ msgstr "送出傳真錯誤"
+#~ msgstr "送出传真错误"
 
 #~ msgid "An error occured reading the input: "
-#~ msgstr "讀取輸入發生錯誤："
+#~ msgstr "读取输入发生错误："
 
 #~ msgid "Print table..."
-#~ msgstr "列印清單..."
+#~ msgstr "打印清单..."
 
 #~ msgid "Sender data"
-#~ msgstr "發送數據"
+#~ msgstr "发送数据"
 
 #~ msgid "First Name"
-#~ msgstr "給定名稱"
+#~ msgstr "给定名称"
 
 #~ msgid "View and send settings"
-#~ msgstr "檢視和發送設置"
+#~ msgstr "查看和发送设置"
 
 #~ msgid "View/send faxes always in this format"
-#~ msgstr "總是以此格式檢視/發送傳真"
+#~ msgstr "总是以此格式查看/发送传真"
 
 #~ msgid "Format for viewing/sending:"
-#~ msgstr "檢視/發送格式："
+#~ msgstr "查看/发送格式："
 
 #~ msgid "Plain text files"
-#~ msgstr "純文字檔"
+#~ msgstr "纯文本文件"
