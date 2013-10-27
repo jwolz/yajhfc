@@ -99,7 +99,7 @@ public class FTPHylaDirAccessor implements HylaDirAccessor {
      * Group 3 : date/time
      * Group 4 : file name
      */
-    //Output will look like this:
+    //Output will look like this on a Fritz!Box (others might need a different pattern)
     // drwxrwxrwx 4 ftp ftp 144 Oct 27 08:51 Online-Speicher
     // -r--r--r-- 1 ftp ftp 6640 Jan 10 13:07 FRITZ-NAS.txt
     protected Pattern ftpFileListPattern = Pattern.compile("([a-z-]+)\\s+\\d+\\s+\\w+\\s+\\w+\\s+(\\d+)\\s+([A-Za-z]+\\s+\\d+\\s+\\d+:\\d+)\\s+(.+)$");

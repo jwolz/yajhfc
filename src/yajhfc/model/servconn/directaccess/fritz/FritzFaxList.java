@@ -37,7 +37,10 @@
 package yajhfc.model.servconn.directaccess.fritz;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import yajhfc.model.FmtItemList;
 import yajhfc.model.RecvFormat;
@@ -53,6 +56,18 @@ import yajhfc.server.ServerOptions;
  *
  */
 public class FritzFaxList extends DirectAccessFaxJobList<RecvFormat> {
+
+    /** 
+      * Files are called like "18.10.13_11.51_Telefax.unbekannt.pdf"
+      * Group 1 is the date/time
+      * Group 2 is the sender
+     */
+    protected Pattern faxPattern = Pattern.compile("(\\d{2}\\.\\d{2}\\.\\d{2}_(?:\\d{2}\\.){1,2}\\d{2})\\_Telefax\\.(.+)\\.pdf", Pattern.CASE_INSENSITIVE);
+    /**
+     * Date format of the fax in the PDF file name
+     */
+    protected DateFormat faxDateFormat = new SimpleDateFormat("dd.MM.yy_HH.mm");
+    
 
     public FritzFaxList(FaxListConnection parent,
             FmtItemList<RecvFormat> columns, ServerOptions fo, String directory) {
@@ -91,5 +106,36 @@ public class FritzFaxList extends DirectAccessFaxJobList<RecvFormat> {
     @Override
     public HylaDirAccessor getDirAccessor() {
         return ((FritzFaxListConnection)parent).getDirAccessor();
+    }
+    
+    /**
+     * Returns the Pattern to parse the PDF file names
+     * 
+     * @return the faxPattern
+     */
+    public Pattern getFaxPattern() {
+        return faxPattern;
+    }
+
+    /**
+     * @param faxPattern the faxPattern to set
+     */
+    public void setFaxPattern(Pattern faxPattern) {
+        this.faxPattern = faxPattern;
+    }
+
+    /**
+     * Returns the Date format of the fax in the PDF file name
+     * @return the faxDateFormat
+     */
+    public DateFormat getFaxDateFormat() {
+        return faxDateFormat;
+    }
+
+    /**
+     * @param faxDateFormat the faxDateFormat to set
+     */
+    public void setFaxDateFormat(DateFormat faxDateFormat) {
+        this.faxDateFormat = faxDateFormat;
     }
 }
