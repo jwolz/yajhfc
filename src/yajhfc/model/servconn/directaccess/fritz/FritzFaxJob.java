@@ -41,7 +41,6 @@ import gnu.inet.ftp.ServerResponseException;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -68,18 +67,6 @@ public class FritzFaxJob extends DirectAccessFaxJob<RecvFormat> {
     private static final long serialVersionUID = 1;
     static final Logger log = Logger.getLogger(FritzFaxJob.class.getName());
 
-    /** Files are called like "18.10.13_11.51_Telefax.unbekannt.pdf"
-      * Group 1 is the date/time
-      * Group 2 is the sender
-      * 
-     */
-    static final Pattern faxPattern = Pattern.compile("(\\d{2}\\.\\d{2}\\.\\d{2}_(?:\\d{2}\\.){1,2}\\d{2})\\_Telefax\\.(.+)\\.pdf", Pattern.CASE_INSENSITIVE);
-
-    /**
-     * date format for the faxes
-     */
-    static final DateFormat faxDateFormat = new SimpleDateFormat("dd.MM.yy_HH.mm");
-    
     protected FritzFaxJob(DirectAccessFaxJobList<RecvFormat> parent,
             String queueNr, String fileName) throws IOException {
         super(parent, queueNr, fileName);
@@ -99,12 +86,12 @@ public class FritzFaxJob extends DirectAccessFaxJob<RecvFormat> {
         }
         String sender = "<unknown>";
         Date   modTime = null;
-        Matcher m = faxPattern.matcher(fileName);
+        Matcher m = ((FritzFaxList)parent).getFaxPattern().matcher(fileName);
         if (m.matches()) {
             sender = m.group(2);
             
             try {
-                modTime = faxDateFormat.parse(m.group(1));
+                modTime = ((FritzFaxList)parent).getFaxDateFormat().parse(m.group(1));
             } catch (ParseException e) {
                 log.log(Level.WARNING, "Unparseable file date for \"" + fileName + "\": " + m.group(1), e);
             }
@@ -192,5 +179,7 @@ public class FritzFaxJob extends DirectAccessFaxJob<RecvFormat> {
     protected JobState calculateJobState() {
         return JobState.DONE;
     }
+
+
 
 }
