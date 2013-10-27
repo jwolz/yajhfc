@@ -1,6 +1,6 @@
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005-2011 Jonas Wolz <info@yajhfc.de>
+ * Copyright (C) 2005-2013 Jonas Wolz <info@yajhfc.de>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *  
+ *
  *  Linking YajHFC statically or dynamically with other modules is making 
  *  a combined work based on YajHFC. Thus, the terms and conditions of 
  *  the GNU General Public License cover the whole combination.
@@ -34,52 +34,52 @@
  *  version without this exception; this exception also makes it possible 
  *  to release a modified version which carries forward this exception.
  */
-package yajhfc.model.servconn;
+package yajhfc.model.servconn.directaccess.fritz;
 
-import yajhfc.Utils;
-import yajhfc.model.servconn.directaccess.DirectAccessFaxListConnection;
-import yajhfc.model.servconn.directaccess.fritz.FritzFaxListConnection;
+import yajhfc.model.RecvFormat;
+import yajhfc.model.jobq.FTPHylaDirAccessor;
+import yajhfc.model.jobq.HylaDirAccessor;
 import yajhfc.model.servconn.hylafax.HylaFaxListConnection;
+import yajhfc.model.servconn.hylafax.ManagedFaxJobList;
+import yajhfc.server.ServerOptions;
+import yajhfc.ui.YajOptionPane;
 
 /**
- * Connection types to access the fax lists
  * @author jonas
  *
  */
-public enum FaxListConnectionType {
-    HYLAFAX(Utils._("Using the HylaFAX protocol"), HylaFaxListConnection.class),
-    DIRECTACCESS(Utils._("Directly accessing the spool area (experimental)"), DirectAccessFaxListConnection.class),
-    FRITZBOX(Utils._("Fritz!Box for received, HylaFAX for outgoing faxes"), FritzFaxListConnection.class);
+public class FritzFaxListConnection extends HylaFaxListConnection {
+    protected HylaDirAccessor hyda;
     
-    private final Class<? extends FaxListConnection> implementingClass;
-    private final String description;
-    
-    private FaxListConnectionType(String description,
-            Class<? extends FaxListConnection> implementingClass) {
-        this.description = description;
-        this.implementingClass = implementingClass;
+    public FritzFaxListConnection(ServerOptions fo, YajOptionPane dialogUI) {
+        super(fo, dialogUI);
+        refreshDirAccessor();
     }
-    
-    /**
-     * Returns a user readable description for this connection type
-     * @return
-     */
-    public String getDescription() {
-        return description;
+
+    @Override
+    protected ManagedFaxJobList<RecvFormat> createRecvdList() {
+        return new FritzFaxList(this, fo.getParent().recvfmt, fo, null);
     }
-    
-    /**
-     * The class implementing the FaxListConnection.
-     * This class must have a constructor (like HylaFaxListConnection) with the signature 
-     * public ImplementingClass(FaxOptions fo, Window parentWindow, ProgressUI progressUI)
-     * @return
-     */
-    public Class<? extends FaxListConnection> getImplementingClass() {
-        return implementingClass;
+
+    protected void refreshDirAccessor() {
+        if (hyda == null || !fo.directAccessSpoolPath.equals(hyda.getBasePath())) {
+            //hyda = new FileHylaDirAccessor(new File(fo.directAccessSpoolPath), fo);
+            // TODO XXX FIXME!
+            hyda = new FTPHylaDirAccessor("fritz.box", 21, "jonas", "geheim", "/JetFlash-Transcend32GB-01/FRITZ/faxbox");
+        }
     }
     
     @Override
-    public String toString() {
-        return description;
+    public void setOptions(ServerOptions so) {
+        refreshDirAccessor();
+        super.setOptions(so);
     }
+    
+    /**
+     * @return the hyda
+     */
+    public HylaDirAccessor getDirAccessor() {
+        return hyda;
+    }
+
 }

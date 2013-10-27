@@ -1,6 +1,6 @@
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005-2011 Jonas Wolz <info@yajhfc.de>
+ * Copyright (C) 2005-2013 Jonas Wolz <info@yajhfc.de>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *  
+ *
  *  Linking YajHFC statically or dynamically with other modules is making 
  *  a combined work based on YajHFC. Thus, the terms and conditions of 
  *  the GNU General Public License cover the whole combination.
@@ -34,17 +34,21 @@
  *  version without this exception; this exception also makes it possible 
  *  to release a modified version which carries forward this exception.
  */
-package yajhfc.model.servconn.directaccess.recvq;
+package yajhfc.model.servconn.directaccess.fritz;
 
 import gnu.inet.ftp.ServerResponseException;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import yajhfc.Utils;
 import yajhfc.file.FileFormat;
@@ -53,92 +57,126 @@ import yajhfc.model.jobq.HylaDirAccessor;
 import yajhfc.model.servconn.JobState;
 import yajhfc.model.servconn.directaccess.DirectAccessFaxDoc;
 import yajhfc.model.servconn.directaccess.DirectAccessFaxJob;
-import yajhfc.tiff.RecvTIFFReader;
+import yajhfc.model.servconn.directaccess.DirectAccessFaxJobList;
+import yajhfc.model.servconn.directaccess.recvq.RecvQFaxJob;
 
 /**
  * @author jonas
  *
  */
-public class RecvQFaxJob extends DirectAccessFaxJob<RecvFormat> {
+public class FritzFaxJob extends DirectAccessFaxJob<RecvFormat> {
     private static final long serialVersionUID = 1;
-    static final Logger log = Logger.getLogger(RecvQFaxJob.class.getName());
+    static final Logger log = Logger.getLogger(FritzFaxJob.class.getName());
+
+    /** Files are called like "18.10.13_11.51_Telefax.unbekannt.pdf"
+      * Group 1 is the date/time
+      * Group 2 is the sender
+      * 
+     */
+    static final Pattern faxPattern = Pattern.compile("(\\d{2}\\.\\d{2}\\.\\d{2}_(?:\\d{2}\\.){1,2}\\d{2})\\_Telefax\\.(.+)\\.pdf", Pattern.CASE_INSENSITIVE);
+
+    /**
+     * date format for the faxes
+     */
+    static final DateFormat faxDateFormat = new SimpleDateFormat("dd.MM.yy_HH.mm");
     
-    protected RecvQFaxJob(RecvQFaxJobList parent,
+    protected FritzFaxJob(DirectAccessFaxJobList<RecvFormat> parent,
             String queueNr, String fileName) throws IOException {
         super(parent, queueNr, fileName);
+        
         documents.clear();
-        documents.add(new DirectAccessFaxDoc<RecvFormat>(this, fileName, FileFormat.TIFF));
+        documents.add(new DirectAccessFaxDoc<RecvFormat>(this, fileName, FileFormat.PDF));
+    }
+
+    public void delete() throws IOException, ServerResponseException {
+        getDirAccessor().deleteFile(fileName);
     }
 
     @Override
-    protected void readSpoolFile(HylaDirAccessor hyda) throws IOException {        
-        RecvTIFFReader r = new RecvTIFFReader();
-        FileInputStream inStream = new FileInputStream(hyda.getFile(fileName));
-        r.read(inStream);
-        inStream.close();
+    protected void readSpoolFile(HylaDirAccessor hyda) throws IOException {
+        if (Utils.debugMode) {
+            log.fine("Parsing file name " + fileName);
+        }
+        String sender = "<unknown>";
+        Date   modTime = null;
+        Matcher m = faxPattern.matcher(fileName);
+        if (m.matches()) {
+            sender = m.group(2);
+            
+            try {
+                modTime = faxDateFormat.parse(m.group(1));
+            } catch (ParseException e) {
+                log.log(Level.WARNING, "Unparseable file date for \"" + fileName + "\": " + m.group(1), e);
+            }
+        } else {
+            log.warning("File name \"" + fileName + "\" does not match the expected pattern!");
+        }
+        
+        if (modTime == null)
+            modTime = new Date(hyda.getLastModified(fileName));
         
         List<RecvFormat> desiredCols = parent.getColumns().getCompleteView();
         Object[] resultData = new Object[desiredCols.size()];
         for (int i = 0; i < desiredCols.size(); i++) {
             switch (desiredCols.get(i)) {
             case a: 
-                resultData[i] = r.getSubAddress();
+                resultData[i] = "";
                 break;
             case b:
-                resultData[i] = Integer.valueOf(r.getBitRate());
+                resultData[i] = Integer.valueOf(-1);
                 break;
             case d:
-                resultData[i] = r.getDataFormatName();
+                resultData[i] = "PDF";
                 break;
             case e:
-                resultData[i] = r.getReason();
+                resultData[i] = "";
                 break;
             case f:
                 resultData[i] = jobID;
                 break;
             case h:
-                resultData[i] = new Date(1000L * r.getRecvTime());
+                resultData[i] = null;
                 break;
             case i:
-                resultData[i] = r.getCallIDName();
+                resultData[i] = "";
                 break;
             case j:
-                resultData[i] = r.getCallIDNumber();
+                resultData[i] = sender;
                 break;
             case l:
-                resultData[i] = Integer.valueOf(r.getPageLength());
+                resultData[i] = Integer.valueOf(-1);
                 break;
             case m:
             //case q:
-                resultData[i] = getProtection(hyda.getProtection(fileName));
+                resultData[i] = RecvQFaxJob.getProtection(hyda.getProtection(fileName));
                 break;
             case n:
                 resultData[i] = Integer.valueOf((int)hyda.getSize(fileName));
                 break;
             case o:
-                resultData[i] = "<unknown>";
+                resultData[i] = "<unknown>"; // XXX: Would be possible to determine
                 break;
             case p:
-                resultData[i] = Integer.valueOf(r.getNumberOfPages());
+                resultData[i] = Integer.valueOf(-1); // XXX: Would be possible to determine
                 break;
             case r:
-                resultData[i] = Integer.valueOf(r.getVerticalRes());
+                resultData[i] = Integer.valueOf(-1);
                 break;
             case s:
-                resultData[i] = r.getSender();
+                resultData[i] = sender;
                 break;
             case t:
-                resultData[i] = DateFormat.getDateTimeInstance().format(r.getDate());
+                resultData[i] = DateFormat.getDateTimeInstance().format(modTime);
                 break;
             case w:
-                resultData[i] = Integer.valueOf(r.getPageWidth());
+                resultData[i] = Integer.valueOf(-1); // TODO: Would be possible to determine
                 break;
             case z:
-                resultData[i] = Boolean.valueOf(r.isInProgress());
+                resultData[i] = Boolean.FALSE;
                 break;
             case Y:
             case Z:
-                resultData[i] = r.getDate();
+                resultData[i] = modTime;
                 break;
             }
         }
@@ -147,38 +185,12 @@ public class RecvQFaxJob extends DirectAccessFaxJob<RecvFormat> {
             log.finest(jobID + " data after reading: " + Arrays.toString(resultData));
         }
 
-        // Calculate status
-        String errorDesc = r.getReason();
-        if ((errorDesc != null) && (errorDesc.length() > 0)) {
-            state = JobState.FAILED;
-        } else {
-            if (r.isInProgress()) { // If in progress...
-                state = JobState.RUNNING;
-            } else {
-                state = JobState.DONE;
-            }
-        }
+        state = JobState.DONE;
     }
 
-    public static String getProtection(int mode) {
-        char[] p = new char[7];
-        p[0] = '-';
-        p[1] = ((mode & 040) != 0) ? 'r' : '-';
-        p[2] = ((mode & 020) != 0) ? 'w' : '-';
-        p[3] = ((mode & 010) != 0) ? 'x' : '-';
-        p[4] = ((mode & 004) != 0) ? 'r' : '-';
-        p[5] = ((mode & 002) != 0) ? 'w' : '-';
-        p[6] = ((mode & 001) != 0) ? 'x' : '-';
-        return new String(p);
-    }
-    
     @Override
     protected JobState calculateJobState() {
         return JobState.DONE;
-    }
-
-    public void delete() throws IOException, ServerResponseException {
-        getDirAccessor().deleteFile(fileName);
     }
 
 }
