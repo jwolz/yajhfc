@@ -124,7 +124,12 @@ public abstract class DirectAccessFaxJobList<T extends FmtItem> extends Abstract
 
     @SuppressWarnings("unchecked")
     public List<FaxJob<T>> updateQueueFiles() throws IOException {
-        String[] listing = getDirAccessor().listDirectory(directory);
+        String[] listing;
+        if (directory == null) {
+            listing = getDirAccessor().listDirectory();
+        } else {
+            listing = getDirAccessor().listDirectory(directory);
+        }
         if (Utils.debugMode) {
             log.finer(directory + " entries: " + Arrays.toString(listing));
         }

@@ -1,6 +1,6 @@
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005-2011 Jonas Wolz <info@yajhfc.de>
+ * Copyright (C) 2005-2013 Jonas Wolz <info@yajhfc.de>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *  
+ *
  *  Linking YajHFC statically or dynamically with other modules is making 
  *  a combined work based on YajHFC. Thus, the terms and conditions of 
  *  the GNU General Public License cover the whole combination.
@@ -34,52 +34,62 @@
  *  version without this exception; this exception also makes it possible 
  *  to release a modified version which carries forward this exception.
  */
-package yajhfc.model.servconn;
+package yajhfc.model.servconn.directaccess.fritz;
 
-import yajhfc.Utils;
-import yajhfc.model.servconn.directaccess.DirectAccessFaxListConnection;
-import yajhfc.model.servconn.directaccess.fritz.FritzFaxListConnection;
-import yajhfc.model.servconn.hylafax.HylaFaxListConnection;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import yajhfc.model.FmtItemList;
+import yajhfc.model.RecvFormat;
+import yajhfc.model.TableType;
+import yajhfc.model.jobq.HylaDirAccessor;
+import yajhfc.model.servconn.FaxListConnection;
+import yajhfc.model.servconn.directaccess.DirectAccessFaxJob;
+import yajhfc.model.servconn.directaccess.DirectAccessFaxJobList;
+import yajhfc.server.ServerOptions;
 
 /**
- * Connection types to access the fax lists
  * @author jonas
  *
  */
-public enum FaxListConnectionType {
-    HYLAFAX(Utils._("Using the HylaFAX protocol"), HylaFaxListConnection.class),
-    DIRECTACCESS(Utils._("Directly accessing the spool area (experimental)"), DirectAccessFaxListConnection.class),
-    FRITZBOX(Utils._("Fritz!Box for received, HylaFAX for outgoing faxes"), FritzFaxListConnection.class);
-    
-    private final Class<? extends FaxListConnection> implementingClass;
-    private final String description;
-    
-    private FaxListConnectionType(String description,
-            Class<? extends FaxListConnection> implementingClass) {
-        this.description = description;
-        this.implementingClass = implementingClass;
+public class FritzFaxList extends DirectAccessFaxJobList<RecvFormat> {
+
+    public FritzFaxList(FaxListConnection parent,
+            FmtItemList<RecvFormat> columns, ServerOptions fo, String directory) {
+        super(parent, columns, fo, directory);
     }
-    
-    /**
-     * Returns a user readable description for this connection type
-     * @return
-     */
-    public String getDescription() {
-        return description;
+
+    public void reloadSettings(ServerOptions fo) {
+        // NOP
     }
-    
-    /**
-     * The class implementing the FaxListConnection.
-     * This class must have a constructor (like HylaFaxListConnection) with the signature 
-     * public ImplementingClass(FaxOptions fo, Window parentWindow, ProgressUI progressUI)
-     * @return
-     */
-    public Class<? extends FaxListConnection> getImplementingClass() {
-        return implementingClass;
+
+    public TableType getJobType() {
+        return TableType.RECEIVED;
     }
-    
+
     @Override
-    public String toString() {
-        return description;
+    protected DirectAccessFaxJob<RecvFormat> createJob(String jobID)
+            throws IOException {
+        return new FritzFaxJob(this, jobID, jobID);
+    }
+
+    @Override
+    protected String[] translateDirectoryEntries(String[] listing) {
+        if (listing == null || listing.length == 0) {
+            return null;
+        }
+        ArrayList<String> result = new ArrayList<String>(listing.length);
+        for (String file : listing) {
+            String fileLower = file.toLowerCase();
+            if (fileLower.contains("fax") && fileLower.endsWith(".pdf")) {
+                result.add(file);
+            }
+        }
+        return result.toArray(new String[result.size()]);
+    }
+
+    @Override
+    public HylaDirAccessor getDirAccessor() {
+        return ((FritzFaxListConnection)parent).getDirAccessor();
     }
 }
