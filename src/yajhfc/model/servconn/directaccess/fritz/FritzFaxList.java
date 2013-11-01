@@ -57,21 +57,30 @@ import yajhfc.server.ServerOptions;
  */
 public class FritzFaxList extends DirectAccessFaxJobList<RecvFormat> {
 
+    public static final String DEFAULT_FAX_DATE_FORMAT = "dd.MM.yy_HH.mm";
+    public static final String DEFAULT_FAX_PATTERN = "(\\d{2}\\.\\d{2}\\.\\d{2}_(?:\\d{2}\\.){1,2}\\d{2})\\_Telefax\\.(.+)\\.pdf";
+    protected static final int GROUP_DATE_TIME = 1;
+    protected static final int GROUP_SENDER = 2;
+    
     /** 
       * Files are called like "18.10.13_11.51_Telefax.unbekannt.pdf"
       * Group 1 is the date/time
       * Group 2 is the sender
      */
-    protected Pattern faxPattern = Pattern.compile("(\\d{2}\\.\\d{2}\\.\\d{2}_(?:\\d{2}\\.){1,2}\\d{2})\\_Telefax\\.(.+)\\.pdf", Pattern.CASE_INSENSITIVE);
+    protected Pattern faxPattern;
     /**
      * Date format of the fax in the PDF file name
      */
-    protected DateFormat faxDateFormat = new SimpleDateFormat("dd.MM.yy_HH.mm");
+    protected DateFormat faxDateFormat;
     
 
     public FritzFaxList(FaxListConnection parent,
-            FmtItemList<RecvFormat> columns, ServerOptions fo, String directory) {
+            FmtItemList<RecvFormat> columns, ServerOptions fo, String directory,
+            String faxPattern, String faxDateFormat) {
         super(parent, columns, fo, directory);
+        
+        this.faxPattern = Pattern.compile(faxPattern, Pattern.CASE_INSENSITIVE);
+        this.faxDateFormat = new SimpleDateFormat(faxDateFormat);
     }
 
     public void reloadSettings(ServerOptions fo) {

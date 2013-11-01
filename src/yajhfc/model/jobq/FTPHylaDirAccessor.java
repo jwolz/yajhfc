@@ -77,6 +77,7 @@ public class FTPHylaDirAccessor implements HylaDirAccessor {
     public final String user;
     public final String pass;
     public final String baseDir;
+    public final boolean pasv;
     
     /**
      * maximum age before a new directory listing is retrieved
@@ -95,14 +96,21 @@ public class FTPHylaDirAccessor implements HylaDirAccessor {
      * Pattern to recognize the fields in a FTP listing
      * 
      * Group 1 : mode
-     * Group 2 : size
-     * Group 3 : date/time
-     * Group 4 : file name
+     * Group 2 : owner
+     * Group 3 : size
+     * Group 4 : date/time
+     * Group 5 : file name
      */
     //Output will look like this on a Fritz!Box (others might need a different pattern)
     // drwxrwxrwx 4 ftp ftp 144 Oct 27 08:51 Online-Speicher
     // -r--r--r-- 1 ftp ftp 6640 Jan 10 13:07 FRITZ-NAS.txt
-    protected Pattern ftpFileListPattern = Pattern.compile("([a-z-]+)\\s+\\d+\\s+\\w+\\s+\\w+\\s+(\\d+)\\s+([A-Za-z]+\\s+\\d+\\s+\\d+:\\d+)\\s+(.+)$");
+    protected Pattern ftpFileListPattern = Pattern.compile("([a-z-]+)\\s+\\d+\\s+(\\w+)\\s+\\w+\\s+(\\d+)\\s+([A-Za-z]+\\s+\\d+\\s+\\d+:\\d+)\\s+(.+)$");
+    
+    private static final int GROUP_MODE      = 1;
+    private static final int GROUP_OWNER     = 2;
+    private static final int GROUP_SIZE      = 3;
+    private static final int GROUP_DATE_TIME = 4;
+    private static final int GROUP_FILENAME  = 5;
     
     /**
      * DateFormat to parse the date/time in a FTP listing
@@ -117,13 +125,14 @@ public class FTPHylaDirAccessor implements HylaDirAccessor {
     protected FtpClient ftpClient;
     protected long lastActionTime;
     
-    public FTPHylaDirAccessor(String server, int port, String user, String pass, String baseDir) {
+    public FTPHylaDirAccessor(String server, int port, String user, String pass, String baseDir, boolean pasv) {
         super();
         this.server = server;
         this.port = port;
         this.user = user;
         this.pass = pass;
         this.baseDir = baseDir;
+        this.pasv = pasv;
     }
     
     protected ScheduledFuture<?> logoutChecker;
@@ -159,6 +168,7 @@ public class FTPHylaDirAccessor implements HylaDirAccessor {
                 ftpClient.pass(pass);
             }
             ftpClient.cwd(baseDir);
+            ftpClient.setPassive(pasv);
             initializeLogoutChecker();
         }
         return ftpClient;
@@ -204,21 +214,21 @@ public class FTPHylaDirAccessor implements HylaDirAccessor {
                     continue;
                 }
                 
-                String fileName = m.group(4);
+                String fileName = m.group(GROUP_FILENAME);
                 Date   modTime;
                 try {
-                    modTime = ftpFileListDateFormat.parse(m.group(3));
+                    modTime = ftpFileListDateFormat.parse(m.group(GROUP_DATE_TIME));
                 } catch (Exception e1) {
-                    log.log(Level.WARNING, "Unparseable file date for \"" + line + "\": " + m.group(3), e1);
+                    log.log(Level.WARNING, "Unparseable file date for \"" + line + "\": " + m.group(GROUP_DATE_TIME), e1);
                     modTime = new Date(0);
                 }
                 long size = -1;
                 try {
-                    size = Long.parseLong(m.group(2));
+                    size = Long.parseLong(m.group(GROUP_SIZE));
                 } catch (Exception e) {
-                    log.warning("Unparseable file size for \"" + line + "\": " + m.group(2));
+                    log.warning("Unparseable file size for \"" + line + "\": " + m.group(GROUP_SIZE));
                 }
-                String stat    = m.group(1);
+                String stat    = m.group(GROUP_MODE);
                 int mode;
                 boolean isDirectory;
                 // Result will look like: -r--r--r-- 
@@ -231,7 +241,10 @@ public class FTPHylaDirAccessor implements HylaDirAccessor {
                     mode = 0;
                     isDirectory = false;
                 } 
-                fileCache.put(fileName, new FTPFile(fileName, isDirectory, mode, size, modTime));
+                
+                String owner = m.group(GROUP_OWNER);
+                
+                fileCache.put(fileName, new FTPFile(fileName, isDirectory, mode, size, modTime, owner));
             }
             cacheTime = System.currentTimeMillis();
             return fileCache;
@@ -345,6 +358,13 @@ public class FTPHylaDirAccessor implements HylaDirAccessor {
     public int getProtection(String fileName) throws IOException {
         return getFtpFile(fileName).mode;
     }
+    
+    /* (non-Javadoc)
+     * @see yajhfc.model.jobq.HylaDirAccessor#getProtection(java.lang.String)
+     */
+    public String getOwner(String fileName) throws IOException {
+        return getFtpFile(fileName).owner;
+    }
 
     /* (non-Javadoc)
      * @see yajhfc.model.jobq.HylaDirAccessor#getBasePath()
@@ -401,17 +421,19 @@ public class FTPHylaDirAccessor implements HylaDirAccessor {
         public final long size;
         public final Date modificationTime;
         public final boolean isDirectory;
+        public final String owner;
         protected File tempFile;
         
 
         public FTPFile(String name, boolean isDirectory, int mode, long size,
-                Date modificationTime) {
+                Date modificationTime, String owner) {
             super();
             this.name = name;
             this.isDirectory = isDirectory;
             this.mode = mode;
             this.size = size;
             this.modificationTime = modificationTime;
+            this.owner = owner;
             
             if (Utils.debugMode)
                 log.finer("new FTPFile: " + this);
@@ -434,6 +456,7 @@ public class FTPHylaDirAccessor implements HylaDirAccessor {
             return name + 
                     " (mode=" + Integer.toOctalString(mode) + 
                     "; size=" +  size + 
+                    "; owner=" + owner +
                     "; modificationTime=" + modificationTime +
                     "; isDirectory=" + isDirectory +
                     "; tempFile=" + tempFile + ")";

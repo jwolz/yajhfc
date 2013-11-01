@@ -114,6 +114,11 @@ public class ServerOptions extends IDAndNameOptions {
     public String directAccessSpoolPath = "";
     
     /**
+     * Additional configuration for the selected faxListConnectionType
+     */
+    public String connectionConfig = "";
+    
+    /**
      * Use custom (user-specified) modems?
      */
     public boolean useCustomModems = false;

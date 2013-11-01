@@ -36,6 +36,10 @@
  */
 package yajhfc.model.servconn;
 
+import java.lang.reflect.Method;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import yajhfc.Utils;
 import yajhfc.model.servconn.directaccess.DirectAccessFaxListConnection;
 import yajhfc.model.servconn.directaccess.fritz.FritzFaxListConnection;
@@ -53,11 +57,17 @@ public enum FaxListConnectionType {
     
     private final Class<? extends FaxListConnection> implementingClass;
     private final String description;
+    private Method showConfigDialog;
     
     private FaxListConnectionType(String description,
             Class<? extends FaxListConnection> implementingClass) {
         this.description = description;
         this.implementingClass = implementingClass;
+        try {
+            this.showConfigDialog = implementingClass.getMethod("showConfigDialog", String.class);
+        } catch (Exception e) {
+            this.showConfigDialog = null;
+        }
     }
     
     /**
@@ -76,6 +86,29 @@ public enum FaxListConnectionType {
      */
     public Class<? extends FaxListConnection> getImplementingClass() {
         return implementingClass;
+    }
+    
+    /**
+     * Returns true if this FaxListConnectionType has additional configuration
+     * @return
+     */
+    public boolean canConfigure() {
+        return (showConfigDialog != null);
+    }
+    
+    /**
+     * Shows a configuration dialog for this FaxListConnectionType
+     * Calls a method static String showConfigDialog(String)
+     * @param oldConfig
+     * @return
+     */
+    public String showConfigDialog(String oldConfig) {
+        try {
+            return (String)showConfigDialog.invoke(null, oldConfig);
+        } catch (Exception e) {
+            Logger.getLogger(FaxListConnectionType.class.getName()).log(Level.SEVERE, "Could not successfully show config dialog", e);
+            return null;
+        }
     }
     
     @Override

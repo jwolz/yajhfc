@@ -50,6 +50,7 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -160,6 +161,8 @@ public class SingleServerSettingsPanel extends AbstractOptionsPanel<ServerOption
     JLabel archiveLabel;
     
     FileTextField ftfSpoolLocation;
+    JButton configButton;
+    Map<FaxListConnectionType,String> configs = new EnumMap<FaxListConnectionType, String>(FaxListConnectionType.class);
     JComboBox comboConnectionType;
     
     JLabel labelSpoolLocation;
@@ -242,6 +245,8 @@ public class SingleServerSettingsPanel extends AbstractOptionsPanel<ServerOption
         comboConnectionType.setSelectedItem(foEdit.faxListConnectionType);
         ftfSpoolLocation.setText(foEdit.directAccessSpoolPath);
         
+        configs.put(foEdit.faxListConnectionType, foEdit.connectionConfig);
+        
         checkEnable();
     }
 
@@ -263,6 +268,8 @@ public class SingleServerSettingsPanel extends AbstractOptionsPanel<ServerOption
         
         foEdit.faxListConnectionType = (FaxListConnectionType)comboConnectionType.getSelectedItem();
         foEdit.directAccessSpoolPath = ftfSpoolLocation.getText();
+        
+        foEdit.connectionConfig = configs.get(foEdit.faxListConnectionType);
     }
 
     protected void saveSettingsWithOutPersistence(ServerOptions foEdit) {
@@ -368,9 +375,15 @@ public class SingleServerSettingsPanel extends AbstractOptionsPanel<ServerOption
             public void actionPerformed(ActionEvent e) {
                 Object selection = comboConnectionType.getSelectedItem();
                 boolean enableDirectAccess = (selection == FaxListConnectionType.DIRECTACCESS);
+                boolean enableConfigButton = ((FaxListConnectionType)selection).canConfigure();
 
                 ftfSpoolLocation.setEnabled(enableDirectAccess);
                 labelSpoolLocation.setEnabled(enableDirectAccess);
+                ftfSpoolLocation.setVisible(enableDirectAccess);
+                labelSpoolLocation.setVisible(enableDirectAccess);
+                
+                configButton.setVisible(!enableDirectAccess);
+                configButton.setEnabled(enableConfigButton);
             }
         });
         
@@ -383,7 +396,19 @@ public class SingleServerSettingsPanel extends AbstractOptionsPanel<ServerOption
         ftfArchiveLocation = new FileTextField();
         ftfArchiveLocation.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         ftfArchiveLocation.getJTextField().addMouseListener(ClipboardPopup.DEFAULT_POPUP);
-                
+
+        configButton = new JButton(_("Configure access method..."));
+        configButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                FaxListConnectionType selection = (FaxListConnectionType)comboConnectionType.getSelectedItem();
+                String newConfig = selection.showConfigDialog(configs.get(selection));
+                if (newConfig != null)
+                    configs.put(selection, newConfig);
+            }
+        });
+        configButton.setVisible(false);
+        
+        
         double[][] dLay = {
                 {border, TableLayout.FILL, border},
                 {border, TableLayout.PREFERRED, TableLayout.PREFERRED, border, TableLayout.PREFERRED, TableLayout.PREFERRED, border, TableLayout.PREFERRED, border, TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.FILL, border}
@@ -393,6 +418,7 @@ public class SingleServerSettingsPanel extends AbstractOptionsPanel<ServerOption
         
         Utils.addWithLabel(connTypePanel, comboConnectionType, _("Access method for the fax lists"), "1,2");
         labelSpoolLocation = Utils.addWithLabel(connTypePanel, ftfSpoolLocation, _("Location of spool directory for direct access (must contain recvq, doneq and docq)"), "1,5");
+        connTypePanel.add(configButton, "1,4,1,5,f,f");
         
         connTypePanel.add(checkUseArchive, "1,7");
         archiveLabel = Utils.addWithLabel(connTypePanel, ftfArchiveLocation, Utils._("Location of archive directory:"), "1,10,1,10,f,f");
