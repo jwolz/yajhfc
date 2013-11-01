@@ -47,11 +47,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import yajhfc.Utils;
 import yajhfc.file.FileFormat;
 import yajhfc.model.RecvFormat;
+import yajhfc.model.jobq.FTPHylaDirAccessor;
 import yajhfc.model.jobq.HylaDirAccessor;
 import yajhfc.model.servconn.JobState;
 import yajhfc.model.servconn.directaccess.DirectAccessFaxDoc;
@@ -88,12 +88,12 @@ public class FritzFaxJob extends DirectAccessFaxJob<RecvFormat> {
         Date   modTime = null;
         Matcher m = ((FritzFaxList)parent).getFaxPattern().matcher(fileName);
         if (m.matches()) {
-            sender = m.group(2);
+            sender = m.group(FritzFaxList.GROUP_SENDER);
             
             try {
-                modTime = ((FritzFaxList)parent).getFaxDateFormat().parse(m.group(1));
+                modTime = ((FritzFaxList)parent).getFaxDateFormat().parse(m.group(FritzFaxList.GROUP_DATE_TIME));
             } catch (ParseException e) {
-                log.log(Level.WARNING, "Unparseable file date for \"" + fileName + "\": " + m.group(1), e);
+                log.log(Level.WARNING, "Unparseable file date for \"" + fileName + "\": " + m.group(FritzFaxList.GROUP_DATE_TIME), e);
             }
         } else {
             log.warning("File name \"" + fileName + "\" does not match the expected pattern!");
@@ -141,7 +141,11 @@ public class FritzFaxJob extends DirectAccessFaxJob<RecvFormat> {
                 resultData[i] = Integer.valueOf((int)hyda.getSize(fileName));
                 break;
             case o:
-                resultData[i] = "<unknown>"; // XXX: Would be possible to determine
+                if (hyda instanceof FTPHylaDirAccessor) {
+                    resultData[i] = ((FTPHylaDirAccessor) hyda).getOwner(fileName);
+                } else {
+                    resultData[i] = "<unknown>"; 
+                }
                 break;
             case p:
                 resultData[i] = Integer.valueOf(-1); // XXX: Would be possible to determine

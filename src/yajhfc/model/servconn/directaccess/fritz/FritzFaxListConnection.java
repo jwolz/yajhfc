@@ -36,6 +36,8 @@
  */
 package yajhfc.model.servconn.directaccess.fritz;
 
+import yajhfc.Utils;
+import yajhfc.launch.Launcher2;
 import yajhfc.model.RecvFormat;
 import yajhfc.model.jobq.FTPHylaDirAccessor;
 import yajhfc.model.jobq.HylaDirAccessor;
@@ -43,6 +45,7 @@ import yajhfc.model.servconn.hylafax.HylaFaxListConnection;
 import yajhfc.model.servconn.hylafax.ManagedFaxJobList;
 import yajhfc.server.ServerOptions;
 import yajhfc.ui.YajOptionPane;
+import yajhfc.util.PasswordDialog;
 
 /**
  * @author jonas
@@ -50,6 +53,12 @@ import yajhfc.ui.YajOptionPane;
  */
 public class FritzFaxListConnection extends HylaFaxListConnection {
     protected HylaDirAccessor hyda;
+    protected boolean invalidatedHyda = true;
+    private FritzFaxConfig config;
+    
+    public static String showConfigDialog(String oldConfig) {
+        return null;
+    }
     
     public FritzFaxListConnection(ServerOptions fo, YajOptionPane dialogUI) {
         super(fo, dialogUI);
@@ -58,28 +67,57 @@ public class FritzFaxListConnection extends HylaFaxListConnection {
 
     @Override
     protected ManagedFaxJobList<RecvFormat> createRecvdList() {
-        return new FritzFaxList(this, fo.getParent().recvfmt, fo, null);
+        return new FritzFaxList(this, fo.getParent().recvfmt, fo, null, getConfig().faxPattern, getConfig().faxDateFormat);
     }
 
     protected void refreshDirAccessor() {
-        if (hyda == null || !fo.directAccessSpoolPath.equals(hyda.getBasePath())) {
-            //hyda = new FileHylaDirAccessor(new File(fo.directAccessSpoolPath), fo);
-            // TODO XXX FIXME!
-            hyda = new FTPHylaDirAccessor("fritz.box", 21, "jonas", "geheim", "/JetFlash-Transcend32GB-01/FRITZ/faxbox");
+        final FritzFaxConfig ffc = getConfig();
+        if (hyda == null || !ffc.faxboxDir.equals(hyda.getBasePath())) {
+            String password, user;
+            user = ffc.user;
+            if (ffc.alwaysAsk) {
+                String[] res = PasswordDialog.showPasswordDialog(Launcher2.application.getFrame(), Utils._("Fritz!Box connection"), Utils._("Please enter user name and password to connect to the Fritz!Box"), user, true);
+                if (res == null) {
+                    password = "";
+                } else {
+                    user = res[0];
+                    password = res[1];
+                }
+            } else {
+                password = ffc.pass.getPassword();
+            }
+            hyda = new FTPHylaDirAccessor(ffc.hostname, ffc.port, user, password, ffc.faxboxDir, ffc.passive);
         }
+        invalidatedHyda = false;
     }
     
     @Override
     public void setOptions(ServerOptions so) {
-        refreshDirAccessor();
         super.setOptions(so);
+        invalidatedHyda = true;
+        config = null;
     }
+
     
     /**
      * @return the hyda
      */
     public HylaDirAccessor getDirAccessor() {
+        if (invalidatedHyda) {
+            refreshDirAccessor();
+        }
         return hyda;
     }
+
+    /**
+     * @return the config
+     */
+    protected FritzFaxConfig getConfig() {
+        if (config==null) {
+            config = new FritzFaxConfig(this.fo.connectionConfig);
+        }
+        return config;
+    }
+
 
 }
