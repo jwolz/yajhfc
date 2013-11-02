@@ -49,7 +49,7 @@ public class FritzFaxConfig extends AbstractConnectionSettings {
     public String user = "ftpuser";
     public final Password pass = new Password();
     public boolean alwaysAsk = true;
-    public String faxboxDir = "/JetFlash-Transcend32GB-01/FRITZ/faxbox";
+    public String faxboxDir = "/FlashDisk/FRITZ/faxbox";
     public boolean passive = true;
     
     public String faxPattern = FritzFaxList.DEFAULT_FAX_PATTERN;

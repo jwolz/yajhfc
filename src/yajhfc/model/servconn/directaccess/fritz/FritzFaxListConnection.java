@@ -36,6 +36,8 @@
  */
 package yajhfc.model.servconn.directaccess.fritz;
 
+import java.awt.Window;
+
 import yajhfc.Utils;
 import yajhfc.launch.Launcher2;
 import yajhfc.model.RecvFormat;
@@ -53,16 +55,18 @@ import yajhfc.util.PasswordDialog;
  */
 public class FritzFaxListConnection extends HylaFaxListConnection {
     protected HylaDirAccessor hyda;
-    protected boolean invalidatedHyda = true;
     private FritzFaxConfig config;
     
-    public static String showConfigDialog(String oldConfig) {
-        return null;
+    public static String showConfigDialog(Window parent, String oldConfig) {
+        FritzFaxConfig ffc = new FritzFaxConfig(oldConfig);
+        if (FritzConfigDialog.showConfigDialog(parent, ffc))
+            return ffc.saveToString();
+        else
+            return null;
     }
     
     public FritzFaxListConnection(ServerOptions fo, YajOptionPane dialogUI) {
         super(fo, dialogUI);
-        refreshDirAccessor();
     }
 
     @Override
@@ -70,9 +74,18 @@ public class FritzFaxListConnection extends HylaFaxListConnection {
         return new FritzFaxList(this, fo.getParent().recvfmt, fo, null, getConfig().faxPattern, getConfig().faxDateFormat);
     }
 
-    protected void refreshDirAccessor() {
-        final FritzFaxConfig ffc = getConfig();
-        if (hyda == null || !ffc.faxboxDir.equals(hyda.getBasePath())) {
+    
+    @Override
+    public void setOptions(ServerOptions so) {
+        super.setOptions(so);
+        config = null;
+        hyda = null;
+    }
+
+    
+    public HylaDirAccessor getDirAccessor() {
+        if (hyda==null) {
+            final FritzFaxConfig ffc = getConfig();
             String password, user;
             user = ffc.user;
             if (ffc.alwaysAsk) {
@@ -87,24 +100,6 @@ public class FritzFaxListConnection extends HylaFaxListConnection {
                 password = ffc.pass.getPassword();
             }
             hyda = new FTPHylaDirAccessor(ffc.hostname, ffc.port, user, password, ffc.faxboxDir, ffc.passive);
-        }
-        invalidatedHyda = false;
-    }
-    
-    @Override
-    public void setOptions(ServerOptions so) {
-        super.setOptions(so);
-        invalidatedHyda = true;
-        config = null;
-    }
-
-    
-    /**
-     * @return the hyda
-     */
-    public HylaDirAccessor getDirAccessor() {
-        if (invalidatedHyda) {
-            refreshDirAccessor();
         }
         return hyda;
     }
