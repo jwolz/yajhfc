@@ -36,6 +36,7 @@
  */
 package yajhfc.model.servconn;
 
+import java.awt.Window;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,7 +65,7 @@ public enum FaxListConnectionType {
         this.description = description;
         this.implementingClass = implementingClass;
         try {
-            this.showConfigDialog = implementingClass.getMethod("showConfigDialog", String.class);
+            this.showConfigDialog = implementingClass.getMethod("showConfigDialog", Window.class, String.class);
         } catch (Exception e) {
             this.showConfigDialog = null;
         }
@@ -98,13 +99,13 @@ public enum FaxListConnectionType {
     
     /**
      * Shows a configuration dialog for this FaxListConnectionType
-     * Calls a method static String showConfigDialog(String)
+     * Calls a method static String showConfigDialog(Window, String)
      * @param oldConfig
      * @return
      */
-    public String showConfigDialog(String oldConfig) {
+    public String showConfigDialog(Window parent, String oldConfig) {
         try {
-            return (String)showConfigDialog.invoke(null, oldConfig);
+            return (String)showConfigDialog.invoke(null, parent, oldConfig);
         } catch (Exception e) {
             Logger.getLogger(FaxListConnectionType.class.getName()).log(Level.SEVERE, "Could not successfully show config dialog", e);
             return null;

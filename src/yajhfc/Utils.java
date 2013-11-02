@@ -110,7 +110,7 @@ public final class Utils {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
     public static final String AppCopyright = "Copyright © 2005-2013 by Jonas Wolz";
-    public static final String AppVersion = "0.5.5beta1";
+    public static final String AppVersion = "0.5.5beta2";
     public static final String AuthorName = "Jonas Wolz";
     public static final String AuthorEMail = "info@yajhfc.de";
     public static final String HomepageURL = "http://www.yajhfc.de/"; 

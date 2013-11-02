@@ -382,7 +382,7 @@ public class SingleServerSettingsPanel extends AbstractOptionsPanel<ServerOption
                 ftfSpoolLocation.setVisible(enableDirectAccess);
                 labelSpoolLocation.setVisible(enableDirectAccess);
                 
-                configButton.setVisible(!enableDirectAccess);
+                configButton.setVisible(enableConfigButton);
                 configButton.setEnabled(enableConfigButton);
             }
         });
@@ -401,7 +401,7 @@ public class SingleServerSettingsPanel extends AbstractOptionsPanel<ServerOption
         configButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 FaxListConnectionType selection = (FaxListConnectionType)comboConnectionType.getSelectedItem();
-                String newConfig = selection.showConfigDialog(configs.get(selection));
+                String newConfig = selection.showConfigDialog(SwingUtilities.getWindowAncestor(SingleServerSettingsPanel.this), configs.get(selection));
                 if (newConfig != null)
                     configs.put(selection, newConfig);
             }
