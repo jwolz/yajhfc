@@ -1865,7 +1865,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         this.setJMenuBar(getJJMenuBar());
         this.setSize(644, 466);
         this.setContentPane(getJContentPane());
-        this.setTitle(Utils.AppName);
+        this.setTitle(VersionInfo.AppName);
         this.addWindowListener(new java.awt.event.WindowAdapter() {
             //private boolean saved = false;
             
@@ -2061,7 +2061,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         actAnswerCall.setEnabled(false);
         
         setActReconnectState(true);
-        this.setTitle("Disconnected - " + Utils.AppName);
+        this.setTitle("Disconnected - " + VersionInfo.AppName);
         if (trayIcon != null) {
             trayIcon.setConnectedState(false);
         }
@@ -2895,7 +2895,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                             tablePanel.showIndeterminateProgress(_("Fetching fax list..."));
                         
                         final HylaClientManager clientManager = connection.getClientManager();
-                        MainWin.this.setTitle(clientManager.getUser() + "@" + currentServer.getOptions().host + (clientManager.isAdminMode() ? " (admin)" : "") + " - " + Utils.AppName);
+                        MainWin.this.setTitle(clientManager.getUser() + "@" + currentServer.getOptions().host + (clientManager.isAdminMode() ? " (admin)" : "") + " - " + VersionInfo.AppName);
                         if (trayIcon != null) {
                             trayIcon.setConnectedState(true);
                         }

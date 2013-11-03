@@ -61,6 +61,7 @@ import javax.swing.Timer;
 import yajhfc.FaxOptions;
 import yajhfc.MainWin;
 import yajhfc.Utils;
+import yajhfc.VersionInfo;
 import yajhfc.model.RecvFormat;
 import yajhfc.model.servconn.FaxJob;
 import yajhfc.model.table.ReadStateFaxListTableModel;
@@ -128,7 +129,7 @@ public class YajHFCTrayIcon implements UnreadItemListener<RecvFormat>, WindowLis
                 faxIcon = Toolkit.getDefaultToolkit().getImage(YajHFCTrayIcon.class.getResource("/yajhfc/logo-large.png")).getScaledInstance(traySize.width, traySize.height, Image.SCALE_SMOOTH);
                 emptyImage = new BufferedImage(traySize.width, traySize.height, BufferedImage.TRANSLUCENT);
                 
-                trayIcon = manager.installTrayIcon(faxIcon, Utils.AppShortName, popup, showAction);
+                trayIcon = manager.installTrayIcon(faxIcon, VersionInfo.AppShortName, popup, showAction);
                 trayIcon.addMouseListener(showAction);
                 
                 recvModel.addUnreadItemListener(this);

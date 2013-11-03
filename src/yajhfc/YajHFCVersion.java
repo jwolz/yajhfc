@@ -110,7 +110,7 @@ public class YajHFCVersion implements Comparable<YajHFCVersion> {
     }
     
     public YajHFCVersion() {
-        this(Utils.AppVersion);
+        this(VersionInfo.AppVersion);
     }
     
     public YajHFCVersion(String stringVersion) {

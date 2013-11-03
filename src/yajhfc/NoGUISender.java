@@ -90,7 +90,7 @@ public class NoGUISender implements MainApplicationFrame {
     }
     
     protected void createUI() {
-        frame = new JFrame(Utils.AppShortName);
+        frame = new JFrame(VersionInfo.AppShortName);
         dialogUI = new SwingYajOptionPane(frame);        
 
         progressPanel = new ProgressContentPane();

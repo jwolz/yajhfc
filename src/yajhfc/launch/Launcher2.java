@@ -61,6 +61,7 @@ import javax.swing.SwingUtilities;
 import yajhfc.MainWin;
 import yajhfc.NoGUISender;
 import yajhfc.Utils;
+import yajhfc.VersionInfo;
 import yajhfc.logconsole.SwingLogHandler;
 import yajhfc.plugin.PluginManager;
 import yajhfc.plugin.PluginManager.PluginInfo;
@@ -160,7 +161,7 @@ public class Launcher2 {
 
             //ConsoleLogger.setAllOutputStreams(Utils.debugOut);
 
-            launchLog.config("YajHFC version: " + Utils.AppVersion);
+            launchLog.config("YajHFC version: " + VersionInfo.AppVersion);
             launchLog.config("---- BEGIN System.getProperties() dump");
             Utils.dumpProperties(System.getProperties(), launchLog);
             launchLog.config("---- END System.getProperties() dump");

@@ -51,6 +51,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import yajhfc.Utils;
+import yajhfc.VersionInfo;
 import yajhfc.util.TransactFileOutputStream;
 
 /**
@@ -112,7 +113,7 @@ public class LocalPersistentReadState extends PersistentReadState {
         try {
             BufferedWriter bOut = new BufferedWriter(new OutputStreamWriter(new TransactFileOutputStream(file, true)));
             
-            bOut.write("# " + Utils.AppShortName + " " + Utils.AppVersion + " configuration file\n");
+            bOut.write("# " + VersionInfo.AppShortName + " " + VersionInfo.AppVersion + " configuration file\n");
             bOut.write("# This file contains a list of faxes considered read\n\n");
             
             for ( Map.Entry<String, Boolean> entry : readStateMap.entrySet()) {
