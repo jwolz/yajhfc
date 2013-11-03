@@ -70,6 +70,8 @@ import yajhfc.shutdown.ShutdownManager;
  *
  */
 public class FTPHylaDirAccessor implements HylaDirAccessor {
+    private static final String[] EMPTY_STRING_ARRAY = new String[0];
+
     static final Logger log = Logger.getLogger(FileHylaDirAccessor.class.getName());
     
     public final String server;
@@ -80,9 +82,9 @@ public class FTPHylaDirAccessor implements HylaDirAccessor {
     public final boolean pasv;
     
     /**
-     * maximum age before a new directory listing is retrieved
+     * maximum age in milliseconds before a new directory listing is retrieved
      */
-    protected long maxCacheAge = 30000;
+    protected long maxCacheAge = 5000;
     /**
      * Last time a directory listing has been retrieved
      */
@@ -118,9 +120,9 @@ public class FTPHylaDirAccessor implements HylaDirAccessor {
     protected DateFormat ftpFileListDateFormat = new SimpleDateFormat("MMM dd HH:mm", Locale.US);
     
     /**
-     * Logout when nothing has happened for this many seconds
+     * Logout when nothing has happened for this many milliseconds
      */
-    protected int logoutTimeout = 30;
+    protected long logoutTimeout = 30000;
 
     protected FtpClient ftpClient;
     protected long lastActionTime;
@@ -142,7 +144,7 @@ public class FTPHylaDirAccessor implements HylaDirAccessor {
                 public void run() {
                     if (ftpClient != null) {
                         synchronized (FTPHylaDirAccessor.this) {
-                            if (System.currentTimeMillis()-lastActionTime > (long)logoutTimeout*1000) {
+                            if (System.currentTimeMillis()-lastActionTime > logoutTimeout) {
                                 log.fine("Closing FTP connection...");
                                 try {
                                     ftpClient.quit();
@@ -170,6 +172,7 @@ public class FTPHylaDirAccessor implements HylaDirAccessor {
             ftpClient.cwd(baseDir);
             ftpClient.setPassive(pasv);
             initializeLogoutChecker();
+            lastActionTime = System.currentTimeMillis();
         }
         return ftpClient;
     }
@@ -257,7 +260,7 @@ public class FTPHylaDirAccessor implements HylaDirAccessor {
      * @see yajhfc.model.jobq.HylaDirAccessor#listDirectory()
      */
     public synchronized String[] listDirectory() throws IOException {
-        return getFileList().keySet().toArray(new String[0]);
+        return getFileList().keySet().toArray(EMPTY_STRING_ARRAY);
     }
 
     /* (non-Javadoc)
@@ -267,8 +270,7 @@ public class FTPHylaDirAccessor implements HylaDirAccessor {
         try {
             FtpClient cli = getFtpClient();
             Vector<?> list = cli.getNameList(dir);
-            String[] result = new String[list.size()];
-            list.toArray(result);
+            String[] result = list.toArray(EMPTY_STRING_ARRAY);
             for (int i=0; i<result.length; i++) {
                 int slashPos = result[i].lastIndexOf('/');
                 if (slashPos >= 0) {
@@ -315,12 +317,18 @@ public class FTPHylaDirAccessor implements HylaDirAccessor {
         try {
             FtpClient cli = getFtpClient();
             cli.dele(fileName);
+            invalidateCache();
         } catch (Exception e) {
             throw new IOException(e);
         }
     }
     
-
+    /**
+     * Invalidates the file cache (i.e. forces a reload on the next action)
+     */
+    public void invalidateCache() {
+        cacheTime = -1;
+    }
 
     /* (non-Javadoc)
      * @see yajhfc.model.jobq.HylaDirAccessor#deleteTree(java.lang.String)
@@ -342,7 +350,7 @@ public class FTPHylaDirAccessor implements HylaDirAccessor {
      * @see yajhfc.model.jobq.HylaDirAccessor#getLastModified(java.lang.String)
      */
     public long getLastModified(String fileName) throws IOException {
-        return getFtpFile(fileName).modificationTime.getTime();
+        return getFtpFile(fileName).modificationTime;
     }
 
     /* (non-Javadoc)
@@ -404,12 +412,15 @@ public class FTPHylaDirAccessor implements HylaDirAccessor {
         this.ftpFileListDateFormat = ftpFileListDateFormat;
     }
     
-    
-    public int getLogoutTimeout() {
+    /**
+     * Returns the logout timeout in milliseconds
+     * @return
+     */
+    public long getLogoutTimeout() {
         return logoutTimeout;
     }
 
-    public void setLogoutTimeout(int logoutTimeout) {
+    public void setLogoutTimeout(long logoutTimeout) {
         this.logoutTimeout = logoutTimeout;
     }
 
@@ -419,7 +430,7 @@ public class FTPHylaDirAccessor implements HylaDirAccessor {
         public final String name;
         public final int mode;
         public final long size;
-        public final Date modificationTime;
+        public final long modificationTime;
         public final boolean isDirectory;
         public final String owner;
         protected File tempFile;
@@ -432,7 +443,7 @@ public class FTPHylaDirAccessor implements HylaDirAccessor {
             this.isDirectory = isDirectory;
             this.mode = mode;
             this.size = size;
-            this.modificationTime = modificationTime;
+            this.modificationTime = modificationTime.getTime();
             this.owner = owner;
             
             if (Utils.debugMode)
@@ -457,7 +468,7 @@ public class FTPHylaDirAccessor implements HylaDirAccessor {
                     " (mode=" + Integer.toOctalString(mode) + 
                     "; size=" +  size + 
                     "; owner=" + owner +
-                    "; modificationTime=" + modificationTime +
+                    "; modificationTime=" + new Date(modificationTime) +
                     "; isDirectory=" + isDirectory +
                     "; tempFile=" + tempFile + ")";
         }
