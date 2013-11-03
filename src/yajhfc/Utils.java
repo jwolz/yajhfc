@@ -107,14 +107,6 @@ import yajhfc.util.TransactFileOutputStream;
 
 
 public final class Utils {
-    public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
-    public static final String AppShortName = "YajHFC";
-    public static final String AppCopyright = "Copyright © 2005-2013 by Jonas Wolz";
-    public static final String AppVersion = "0.5.5beta2";
-    public static final String AuthorName = "Jonas Wolz";
-    public static final String AuthorEMail = "info@yajhfc.de";
-    public static final String HomepageURL = "http://www.yajhfc.de/"; 
-    
     /**
      * Input format for "long" HylaFax dates
      */
@@ -425,7 +417,7 @@ public final class Utils {
             }
             try {
                 FileOutputStream filout = new TransactFileOutputStream(file, true);
-                p.store(filout, Utils.AppShortName + " " + Utils.AppVersion + " configuration file");
+                p.store(filout, VersionInfo.AppShortName + " " + VersionInfo.AppVersion + " configuration file");
                 filout.close();
             } catch (Exception e) {
                 log.log(Level.WARNING, "Couldn't save file '" + file + "': ", e);

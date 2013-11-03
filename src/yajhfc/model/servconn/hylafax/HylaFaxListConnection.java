@@ -52,6 +52,7 @@ import java.util.logging.Logger;
 
 import yajhfc.HylaClientManager;
 import yajhfc.Utils;
+import yajhfc.VersionInfo;
 import yajhfc.cache.Cache;
 import yajhfc.model.JobFormat;
 import yajhfc.model.RecvFormat;
@@ -339,7 +340,7 @@ public class HylaFaxListConnection implements FaxListConnection {
     protected void putDefaultCacheCheckData() {
         Map<String,Object> checkData = listCache.getCheckData();
         checkData.clear();
-        checkData.put("AppVersion", Utils.AppVersion);
+        checkData.put("AppVersion", VersionInfo.AppVersion);
         checkData.put("host", fo.host);
         checkData.put("port", fo.port);
         checkData.put("user", fo.user);

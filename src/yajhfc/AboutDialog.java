@@ -205,10 +205,10 @@ public class AboutDialog extends JDialog implements HyperlinkListener {
             
             JLabel lblImg = new JLabel(new ImageIcon(AboutDialog.class.getResource("logo-large.png")));
             
-            JLabel lblApp = new JLabel("<html>" + Utils.AppName + "</html>");
+            JLabel lblApp = new JLabel("<html>" + VersionInfo.AppName + "</html>");
             lblApp.setFont(new Font("Serif", Font.BOLD, 18));
             
-            JLabel lblVer = new JLabel(MessageFormat.format(_("Version {0}"), Utils.AppVersion));
+            JLabel lblVer = new JLabel(MessageFormat.format(_("Version {0}"), VersionInfo.AppVersion));
             lblVer.setFont(new Font("Dialog", Font.ITALIC, 11));
             
             Box boxApp = new Box(BoxLayout.PAGE_AXIS);
@@ -216,21 +216,21 @@ public class AboutDialog extends JDialog implements HyperlinkListener {
             boxApp.add(Box.createVerticalStrut(4));
             boxApp.add(lblVer);
             
-            JLabel lblCopyright = new JLabel(Utils.AppCopyright);
+            JLabel lblCopyright = new JLabel(VersionInfo.AppCopyright);
             
             JLabel lblInfo = new JLabel("<html>" + _("YajHFC is a client for the HylaFAX fax server.") + "</html>");
             
             JPanel panelHomepage = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0), false);
             panelHomepage.add(new JLabel(Utils._("Homepage") + ": "));
-            JLabel homepageLabel = new JLabel("<html><a href=\"http://www.yajhfc.de\">" + Utils.HomepageURL + "</a></html>");
-            homepageLabel.addMouseListener(new URIClickListener(Utils.HomepageURL));
+            JLabel homepageLabel = new JLabel("<html><a href=\"http://www.yajhfc.de\">" + VersionInfo.HomepageURL + "</a></html>");
+            homepageLabel.addMouseListener(new URIClickListener(VersionInfo.HomepageURL));
             homepageLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             panelHomepage.add(homepageLabel);
             
             JPanel panelEMail = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0), false);
-            panelEMail.add(new JLabel(Utils._("Author") + ": " + Utils.AuthorName));
-            JLabel emailLabel = new JLabel("<html>&lt;<a href=\"mailto:"+Utils.AuthorEMail+"\">" + Utils.AuthorEMail + "</a>&gt;</html>");
-            emailLabel.addMouseListener(new URIClickListener("mailto:"+Utils.AuthorEMail));
+            panelEMail.add(new JLabel(Utils._("Author") + ": " + VersionInfo.AuthorName));
+            JLabel emailLabel = new JLabel("<html>&lt;<a href=\"mailto:"+VersionInfo.AuthorEMail+"\">" + VersionInfo.AuthorEMail + "</a>&gt;</html>");
+            emailLabel.addMouseListener(new URIClickListener("mailto:"+VersionInfo.AuthorEMail));
             emailLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             panelEMail.add(emailLabel);
             
@@ -305,7 +305,7 @@ public class AboutDialog extends JDialog implements HyperlinkListener {
             tabMain.addTab(_("About"), getAboutPane());
             tabMain.addTab(_("License"), addScrollTxt("/COPYING", false));
             tabMain.addTab(_("System properties"), addSysPropTxt());
-            this.setTitle(MessageFormat.format(_("About {0}"), Utils.AppShortName));
+            this.setTitle(MessageFormat.format(_("About {0}"), VersionInfo.AppShortName));
             break;
         case READMES:
             for (int i = 0; i < readmeFiles.length; i++) {

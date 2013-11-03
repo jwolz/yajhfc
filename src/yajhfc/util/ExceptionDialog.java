@@ -68,6 +68,7 @@ import javax.swing.Timer;
 import javax.swing.UIManager;
 
 import yajhfc.Utils;
+import yajhfc.VersionInfo;
 import yajhfc.launch.Launcher2;
 
 public class ExceptionDialog extends JDialog implements ActionListener {
@@ -137,7 +138,7 @@ public class ExceptionDialog extends JDialog implements ActionListener {
         
         //Append some system info:
         stringBuf.append("\n\n");
-        stringBuf.append(Utils.AppShortName).append(' ').append(Utils.AppVersion).append('\n');
+        stringBuf.append(VersionInfo.AppShortName).append(' ').append(VersionInfo.AppVersion).append('\n');
         stringBuf.append("Java ")
             .append(System.getProperty("java.version")).append(" (")
             .append(System.getProperty("java.vendor")).append(")\n")

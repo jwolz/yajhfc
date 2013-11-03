@@ -62,6 +62,7 @@ import org.w3c.dom.Text;
 
 import yajhfc.DateKind;
 import yajhfc.Utils;
+import yajhfc.VersionInfo;
 import yajhfc.model.IconMap;
 
 /**
@@ -180,8 +181,8 @@ public class HTMLExporter {
         Text text1 = doc.createTextNode(footer);
         Text text2 = doc.createTextNode(MessageFormat.format(Utils._("List saved at {0}."), DateKind.DATE_AND_TIME.getFormat().format(new Date())));
         Element app = doc.createElement("a");
-        app.setAttribute("href", Utils.HomepageURL);
-        app.setTextContent(Utils.AppShortName + " " + Utils.AppVersion);
+        app.setAttribute("href", VersionInfo.HomepageURL);
+        app.setTextContent(VersionInfo.AppShortName + " " + VersionInfo.AppVersion);
         
         p.appendChild(text1);
         p.appendChild(doc.createElement("br"));

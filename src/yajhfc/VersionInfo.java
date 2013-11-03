@@ -1,6 +1,6 @@
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005-2011 Jonas Wolz <info@yajhfc.de>
+ * Copyright (C) 2005-2013 Jonas Wolz <info@yajhfc.de>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *  
+ *
  *  Linking YajHFC statically or dynamically with other modules is making 
  *  a combined work based on YajHFC. Thus, the terms and conditions of 
  *  the GNU General Public License cover the whole combination.
@@ -34,79 +34,22 @@
  *  version without this exception; this exception also makes it possible 
  *  to release a modified version which carries forward this exception.
  */
-package yajhfc.macosx;
-
-import java.awt.Image;
-import java.awt.PopupMenu;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.swing.Action;
-
-import yajhfc.PlatformInfo;
-import yajhfc.VersionInfo;
-import yajhfc.launch.MainApplicationFrame;
+package yajhfc;
 
 /**
+ * Holds version information about this build of YajHFC
+ * 
  * @author jonas
  *
  */
-public abstract class MacOSXSupport {
-	private static MacOSXSupport instance;
-	private static final String IMPL_CLASS_NAME = "yajhfc.macosx.MacOSXSupportImpl";
+public final class VersionInfo {
+    public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
+    public static final String AppShortName = "YajHFC";
+    public static final String AppCopyright = "Copyright © 2005-2013 by Jonas Wolz";
+    public static final String AppVersion = "0.5.5beta3";
+    public static final String AuthorName = "Jonas Wolz";
+    public static final String AuthorEMail = "info@yajhfc.de";
+    public static final String HomepageURL = "http://www.yajhfc.de/";
 
-	public static MacOSXSupport getInstance() {
-		if (!PlatformInfo.IS_MACOSX)
-			return null;
-		
-		if (instance == null) {
-			try {
-				instance = (MacOSXSupport)Class.forName(IMPL_CLASS_NAME).newInstance();
-			} catch (Exception e) {
-				instance = null;
-				Logger.getLogger(MacOSXSupport.class.getName()).log(Level.WARNING, "Mac OS X support not available:", e);
-			}
-		}
-		return instance;
-	}
-	
-	/**
-	 * Adjusts System properties to make the UI feel more Mac native
-	 */
-	public static void setUIProperties() {
-		System.setProperty("apple.laf.useScreenMenuBar", "true");
-        System.setProperty("com.apple.mrj.application.apple.menu.about.name", VersionInfo.AppShortName);
-	}
-	
-	/**
-	 * Sets the actions to use for the application menu entries
-	 * @param actPreferences
-	 * @param actAbout
-	 * @param actQuit
-	 */
-	public abstract void setApplicationMenuActions(MainApplicationFrame mainWindow, Action actPreferences, Action actAbout, Action actQuit);
-	
-	/**
-	 * Sets the dock icon image
-	 * @param image
-	 */
-	public abstract void setDockIconImage(Image image);
-	
-	/**
-	 * Sets the dock icon badge
-	 * @param badge
-	 */
-	public abstract void setDockIconBadge(String badge);
-	
-	/**
-	 * Sets the dock icon menu
-	 * @param menu
-	 */
-	public abstract void setDockIconMenu(PopupMenu menu);
-	
-	/**
-	 * Returns the currently set dock icon menu
-	 * @return
-	 */
-	public abstract PopupMenu getDockIconMenu();
+    private VersionInfo() { }
 }

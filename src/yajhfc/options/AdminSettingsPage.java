@@ -58,7 +58,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import yajhfc.FaxOptions;
-import yajhfc.Utils;
+import yajhfc.VersionInfo;
 import yajhfc.util.ExcDialogAbstractAction;
 import yajhfc.util.ExceptionDialog;
 import yajhfc.util.SafeJFileChooser;
@@ -175,7 +175,7 @@ public class AdminSettingsPage extends AbstractOptionsPanel<FaxOptions> {
                             newOpts.storeToProperties(p);
                             
                             FileOutputStream out = new FileOutputStream(chooser.getSelectedFile());
-                            p.store(out, Utils.AppShortName + " " + Utils.AppVersion + " configuration file; exported from the options dialog");
+                            p.store(out, VersionInfo.AppShortName + " " + VersionInfo.AppVersion + " configuration file; exported from the options dialog");
                             out.close();
                         }
                     } catch (Exception ex) {
