@@ -36,7 +36,7 @@
  */
 package yajhfc.tiff;
 
-public class TIFFConstants {
+public interface TIFFConstants {
     /**
      * Bytes. Value is byte[]
      */
@@ -1740,7 +1740,5 @@ public class TIFFConstants {
      **/
     public static final int EXIFTAG_IMAGEUNIQUEID = 42016;
 
-
-    private TIFFConstants() {};
 
 }
