@@ -563,4 +563,41 @@ public class Launcher2 {
             this.server = server;
         }
     }
+
+	/**
+	 * Checks if the given system property is true.
+	 * Defaults to false if the property is unset
+	 * @param propName the property to check
+	 * @return
+	 */
+	public static boolean isPropertyTrue(String propName) {
+		return isPropertyTrue(propName, false);
+	}
+	
+	/**
+	 * Checks if the given system property is true
+	 * @param propName the property to check
+	 * @param defValue the default value to return if the property is not set or set to an unparseable value
+	 * @return
+	 */
+	public static boolean isPropertyTrue(String propName, boolean defValue) {
+	    String value = System.getProperty(propName);
+	    if (value != null) {
+	        if ("true".equals(value) || "yes".equals(value))
+	            return true;
+	        if ("false".equals(value) || "no".equals(value))
+	            return false;
+	        
+	        int i_val;
+	        try {
+	            i_val = Integer.parseInt(value);
+		        return (i_val != 0);
+	        } catch (NumberFormatException e) {
+	            launchLog.log(Level.WARNING, "Error parsing " + propName, e);
+	            return defValue;
+	        }
+	    } else {
+	        return defValue;
+	    }
+	}
 }
