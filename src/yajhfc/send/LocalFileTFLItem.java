@@ -48,6 +48,7 @@ import yajhfc.PaperSize;
 import yajhfc.Utils;
 import yajhfc.file.FileConverter;
 import yajhfc.file.FileConverter.ConversionException;
+import yajhfc.file.FileConverterToFile;
 import yajhfc.file.FileConverters;
 import yajhfc.file.FileFormat;
 import yajhfc.file.FormattedFile;
@@ -65,9 +66,13 @@ public class LocalFileTFLItem extends HylaTFLItem {
             File tempFile = File.createTempFile("conv", ".ps");
             yajhfc.shutdown.ShutdownManager.deleteOnExit(tempFile);
             
-            FileOutputStream outStream = new FileOutputStream(tempFile);
-            fconv.convertToHylaFormat(new File(fileName), outStream, desiredPaperSize, FileFormat.PDF);
-            outStream.close();
+            if (fconv instanceof FileConverterToFile) {
+                ((FileConverterToFile) fconv).convertToHylaFormatFile(new File(fileName), tempFile, desiredPaperSize, FileFormat.PDF);
+            } else {
+                FileOutputStream outStream = new FileOutputStream(tempFile);
+                fconv.convertToHylaFormat(new File(fileName), outStream, desiredPaperSize, FileFormat.PDF);
+                outStream.close();
+            }
             
             preparedFile = FormattedFile.getTempFileWithCorrectExtension(tempFile);
             switch (preparedFile.getFormat()) {

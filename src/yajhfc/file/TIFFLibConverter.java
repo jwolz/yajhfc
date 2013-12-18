@@ -39,6 +39,7 @@ package yajhfc.file;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -58,7 +59,7 @@ import yajhfc.util.ExternalProcessExecutor;
  * @author jonas
  *
  */
-public class TIFFLibConverter implements FileConverter {
+public class TIFFLibConverter implements FileConverterToFile {
     private static final Logger log = Logger.getLogger(TIFFLibConverter.class.getName());
     
     protected static final String[] tiff2pdfParams = {
@@ -68,13 +69,33 @@ public class TIFFLibConverter implements FileConverter {
         "-a1",
     };
     
-    /* (non-Javadoc)
-     * @see yajhfc.file.FileConverter#convertToHylaFormat(java.io.File, java.io.OutputStream, yajhfc.PaperSize)
-     */
+    
     public void convertToHylaFormat(File inFile, OutputStream destination,
+            PaperSize paperSize, FileFormat desiredFormat)
+            throws ConversionException, IOException {
+        convertToHylaFormatInternal(inFile, destination, null, paperSize, desiredFormat);
+    }
+    
+    public void convertToHylaFormatFile(File inFile, File outFile,
+            PaperSize paperSize, FileFormat desiredFormat)
+            throws ConversionException, IOException {
+        convertToHylaFormatInternal(inFile, null, outFile, paperSize, desiredFormat);
+    }
+
+    /**
+     * Do the actual conversion. outFile and destination parameters are mutually exclusive!
+     * @param inFile
+     * @param destination
+     * @param outFile
+     * @param paperSize
+     * @param desiredFormat
+     * @throws ConversionException
+     * @throws IOException
+     */
+    public void convertToHylaFormatInternal(File inFile, OutputStream destination, File outFile,
             PaperSize paperSize, FileFormat desiredFormat) throws ConversionException, IOException {
         
-        List<String> commandLine = getCommandLine(desiredFormat, inFile, paperSize);
+        List<String> commandLine = getCommandLine(desiredFormat, inFile, outFile, paperSize);
         ExternalProcessExecutor.quoteCommandLine(commandLine);
         if (Utils.debugMode) {
             log.fine("Invoking tiff2pdf with the following command line:");
@@ -85,41 +106,52 @@ public class TIFFLibConverter implements FileConverter {
         Process tiff2PDF = new ProcessBuilder(commandLine).start();
         new StdErrThread(commandLine.get(0), tiff2PDF.getErrorStream());
         //tiff2PDF.getOutputStream().close();
+        
+        
+        if (desiredFormat == FileFormat.PostScript && destination==null) {
+            //tiff2ps only writes to stdout
+            destination = new FileOutputStream(outFile);
+        }
+        if (destination != null) {
+            final InputStream inputStream = tiff2PDF.getInputStream();
+            if (desiredFormat == FileFormat.PDF) {
+                // Work around a strange bug which results in garbage (a TIFF signature followed by NULs)
+                // at the beginning of the stream
+                final byte[] buf = new byte[1000];
+                int readLen;
+                int buflen = readLen = inputStream.read(buf);
 
-        final InputStream inputStream = tiff2PDF.getInputStream();
-        if (desiredFormat == FileFormat.PDF) {
-            // Work around a strange bug which results in garbage (a TIFF signature followed by NULs)
-            // at the beginning of the stream
-            final byte[] buf = new byte[1000];
-            int readLen;
-            int buflen = readLen = inputStream.read(buf);
+                while (readLen >=0 && buflen < 3) {
+                    readLen = inputStream.read(buf, buflen, buf.length-buflen);
+                    if (readLen > 0)
+                        buflen += readLen;
+                }
+                if (readLen < 0 || buflen < 0)
+                    throw new IOException("Premature end of stream reading stdout from tiff2pdf (readLen=" + readLen + ", buflen=" + buflen + ").");
 
-            while (readLen >=0 && buflen < 3) {
-                readLen = inputStream.read(buf, buflen, buf.length-buflen);
-                if (readLen > 0)
-                    buflen += readLen;
-            }
-            if (readLen < 0 || buflen < 0)
-                throw new IOException("Premature end of stream reading stdout from tiff2pdf (readLen=" + readLen + ", buflen=" + buflen + ").");
-            
-            if (buf[0] == 'I' && buf[1] == 'I' && buf[2] == '*') {
-                int offset = 3;
-                readLoop: 
-                    do {
-                        for (int i=offset; i<buflen; i++) {
-                            if (buf[i] != 0) { //Strip everything up to the first non-NUL char
-                                destination.write(buf, i, buflen-i);
-                                break readLoop;
+                if (buf[0] == 'I' && buf[1] == 'I' && buf[2] == '*') {
+                    int offset = 3;
+                    readLoop: 
+                        do {
+                            for (int i=offset; i<buflen; i++) {
+                                if (buf[i] != 0) { //Strip everything up to the first non-NUL char
+                                    destination.write(buf, i, buflen-i);
+                                    break readLoop;
+                                }
                             }
-                        }
-                        offset = 0;
-                        buflen = inputStream.read(buf);
-                    } while (buflen >= 0);
-            } else {
-                destination.write(buf, 0, buflen);
+                            offset = 0;
+                            buflen = inputStream.read(buf);
+                        } while (buflen >= 0);
+                } else {
+                    destination.write(buf, 0, buflen);
+                }
+            }
+            Utils.copyStream(inputStream, destination);
+            if (desiredFormat == FileFormat.PostScript && outFile!=null) {
+                //tiff2ps only writes to stdout
+                destination.close();
             }
         }
-        Utils.copyStream(inputStream, destination);
         
         try {
             int exitVal = tiff2PDF.waitFor();
@@ -131,11 +163,12 @@ public class TIFFLibConverter implements FileConverter {
         }
 
     }
-    
-    protected List<String> getCommandLine(FileFormat targetFormat, File input, PaperSize paperSize) throws ConversionException {
+
+    protected List<String> getCommandLine(FileFormat targetFormat, File input, File output, PaperSize paperSize) throws ConversionException {
         List<String> commandLine = new ArrayList<String>();
         switch (targetFormat) {
         case PDF:
+        default:
             commandLine.add(Utils.getFaxOptions().tiff2PDFLocation);
             for (String opt : tiff2pdfParams) {
                 commandLine.add(opt);
@@ -144,15 +177,18 @@ public class TIFFLibConverter implements FileConverter {
                 commandLine.add("-p");
                 commandLine.add(paperSize.name().toLowerCase());
             }
+            if (output != null) {
+                commandLine.add("-o");
+                commandLine.add(output.getAbsolutePath());
+            }
             commandLine.add(input.getAbsolutePath());
             break;
         case PostScript:
-        default:
             // Try to find tiff2ps by the simple minded logic that it will be in the same directory as tiff2pdf
             File tiff2ps = Utils.searchExecutableInPath(new File(new File(Utils.getFaxOptions().tiff2PDFLocation).getParentFile(), "tiff2ps").getPath());
             if (tiff2ps == null) {
-                // Use tiff2pdf instead
-                return getCommandLine(FileFormat.PDF, input, paperSize);
+                // Not found, use tiff2pdf instead
+                return getCommandLine(FileFormat.PDF, input, null, paperSize);
             }
             commandLine.add(tiff2ps.getPath());
             for (String opt : tiff2psParams) {

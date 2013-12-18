@@ -106,7 +106,6 @@ public abstract class MultiFileConverter {
                     File tmpFile = File.createTempFile("multi", ".ps");
                     yajhfc.shutdown.ShutdownManager.deleteOnExit(tmpFile);
                     
-                    FileOutputStream out = new FileOutputStream(tmpFile);
                     FileFormat targetFormat = getTargetFormat();
                     switch (targetFormat) {
                     case PDF:
@@ -117,8 +116,13 @@ public abstract class MultiFileConverter {
                         targetFormat = FileFormat.PDF;
                         break;
                     }
-                    conv.convertToHylaFormat(ff.file, out, paperSize, targetFormat);
-                    out.close();
+                    if (conv instanceof FileConverterToFile) {
+                        ((FileConverterToFile) conv).convertToHylaFormatFile(ff.file, tmpFile, paperSize, targetFormat);
+                    } else {
+                        FileOutputStream out = new FileOutputStream(tmpFile);
+                        conv.convertToHylaFormat(ff.file, out, paperSize, targetFormat);
+                        out.close();
+                    }
                     
                     FileFormat tempFmt = FormattedFile.detectFileFormat(tmpFile);
                     switch (tempFmt) {

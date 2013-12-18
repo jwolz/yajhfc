@@ -34,22 +34,29 @@
  *  version without this exception; this exception also makes it possible 
  *  to release a modified version which carries forward this exception.
  */
-package yajhfc;
+package yajhfc.file;
+
+import java.io.File;
+import java.io.IOException;
+
+import yajhfc.PaperSize;
 
 /**
- * Holds version information about this build of YajHFC
+ * A file converter that can and prefers to convert directly to a file.
  * 
  * @author jonas
  *
  */
-public final class VersionInfo {
-    public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
-    public static final String AppShortName = "YajHFC";
-    public static final String AppCopyright = "Copyright © 2005-2013 by Jonas Wolz";
-    public static final String AppVersion = "0.5.5rc";
-    public static final String AuthorName = "Jonas Wolz";
-    public static final String AuthorEMail = "info@yajhfc.de";
-    public static final String HomepageURL = "http://www.yajhfc.de/";
-
-    private VersionInfo() { }
+public interface FileConverterToFile extends FileConverter {
+    /**
+     * Converts the input from inStream to a format HylaFAX and GhostScript understand.
+     * This means PostScript or PDF.
+     * @param inFile the input file
+     * @param outFile the file the converted data shall be written to
+     * @param desiredFormat the desired format (PS or PDF). This is only a hint, i.e. this method may convert to any of these formats.
+     * @throws ConversionException
+     * @throws IOException
+     */
+    public void convertToHylaFormatFile(File inFile, File outFile, PaperSize paperSize, FileFormat desiredFormat) throws ConversionException, IOException;
+    
 }
