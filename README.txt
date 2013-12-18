@@ -66,6 +66,12 @@ YajHFC was originally written as a first more complicated
 CHANGES
 -------
 
+0.5.5:
+- Support to use native libtiff in the PDF plugin (offers JBIG support and better compatibility with not 100% clean TIFFs)
+- Support to read received faxes from AVM Fritz!Box routers (outgoing faxes are still sent over HylaFAX)
+- Several minor enhancements and bug fixes
+
+
 0.5.4:
 - New batch printer and mailer plugin
 - Several minor enhancements and bug fixes

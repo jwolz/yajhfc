@@ -400,8 +400,9 @@ public class PhoneBookSorter implements PhonebookEventListener, PhoneBookEntryLi
     public void detach() {
         phoneBook.removePhonebookEventListener(this);
         sortedList.clear();
-        filteredList.clear();
         originalList.clear();
+        
+        filteredList = null;
     }
 
     private static class RowComparator implements Comparator<Row> {
