@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: messages_de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-03 18:02+0200\n"
+"POT-Creation-Date: 2013-12-18 10:31+0100\n"
 "PO-Revision-Date: 2013-02-17 13:20+0100\n"
 "Last-Translator: Jonas Wolz <jonas.wolz@freenet.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
@@ -59,8 +59,9 @@ msgstr "Deutsche Übersetzung durch {0}"
 #: ../phonebook/ui/SortOrderDialog.java:108
 #: ../phonebook/ui/RuleParserDialog.java:126
 #: ../phonebook/jdbc/ConnectionDialog.java:215
-#: ../util/ExceptionDialog.java:101 ../util/ExceptionDialog.java:267
-#: ../util/ExceptionDialog.java:273 ../util/ToolbarEditorDialog.java:155
+#: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:118
+#: ../util/ExceptionDialog.java:102 ../util/ExceptionDialog.java:268
+#: ../util/ExceptionDialog.java:274 ../util/ToolbarEditorDialog.java:155
 #: ../util/PasswordDialog.java:89 ../util/MapEditorDialog.java:109
 #: ../util/AcceleratorKeyDialog.java:145
 msgid "OK"
@@ -87,15 +88,15 @@ msgstr "Über {0}"
 msgid "Documentation"
 msgstr "Dokumentation"
 
-#: ../launch/Launcher2.java:263
+#: ../launch/Launcher2.java:264
 msgid "There already is a running instance!"
 msgstr "Es läuft bereits eine Programminstanz!"
 
-#: ../launch/Launcher2.java:468
+#: ../launch/Launcher2.java:469
 msgid "The new instance did not start after 20 seconds."
 msgstr "Die neue Instanz ist nach 20 Sekunden immer noch nicht gestartet."
 
-#: ../launch/Launcher2.java:483
+#: ../launch/Launcher2.java:484
 msgid ""
 "Cannot launch new program instance, continuing with the existing one!\n"
 "Reason: "
@@ -201,8 +202,9 @@ msgid "Bind address:"
 msgstr "Bind-Adresse:"
 
 #: ../printerport/PortOptionsPanel.java:128
-#: ../options/SingleServerSettingsPanel.java:469
+#: ../options/SingleServerSettingsPanel.java:495
 #: ../phonebook/ldap/ConnectionDialog.java:182
+#: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:135
 msgid "Port:"
 msgstr "Port:"
 
@@ -231,25 +233,25 @@ msgstr "Der angegebene mkfifo-Befehl kann nicht gefunden werden."
 msgid "Any modem"
 msgstr "Beliebiges Modem"
 
-#: ../tray/YajHFCTrayIcon.java:167
+#: ../tray/YajHFCTrayIcon.java:168
 #, java-format
 msgid "{0} fax(es) received ({1} unread fax(es)):"
 msgstr "{0} Fax(e) empfangen ({1} ungelesene(s) Fax(e)):"
 
-#: ../tray/YajHFCTrayIcon.java:176
+#: ../tray/YajHFCTrayIcon.java:177
 msgid "New fax received"
 msgstr "Neues Fax empfangen"
 
-#: ../tray/YajHFCTrayIcon.java:199
+#: ../tray/YajHFCTrayIcon.java:200
 #, java-format
 msgid "{0} unread fax(es)"
 msgstr "{0} ungelesene(s) Fax(e)"
 
-#: ../tray/YajHFCTrayIcon.java:202
+#: ../tray/YajHFCTrayIcon.java:203
 msgid "Disconnected"
 msgstr "Nicht verbunden"
 
-#: ../tray/YajHFCTrayIcon.java:294
+#: ../tray/YajHFCTrayIcon.java:295
 msgid "Restore"
 msgstr "Wiederherstellen"
 
@@ -527,7 +529,7 @@ msgid "YajHFC log console"
 msgstr "YajHFC-Log-Konsole"
 
 #: ../logconsole/LogConsole.java:115 ../MainWin.java:1242 ../MainWin.java:2274
-#: ../util/ExceptionDialog.java:105 ../util/ClipboardPopup.java:74
+#: ../util/ExceptionDialog.java:106 ../util/ClipboardPopup.java:74
 #: ../TextViewPanel.java:210
 msgid "Copy"
 msgstr "Kopieren"
@@ -544,7 +546,7 @@ msgstr "Fehler beim Speichern der Logdatei"
 msgid "Save"
 msgstr "Speichern"
 
-#: ../export/HTMLExporter.java:181
+#: ../export/HTMLExporter.java:182
 #, java-format
 msgid "List saved at {0}."
 msgstr "Liste gespeichert am {0}"
@@ -929,10 +931,10 @@ msgstr ""
 #: ../options/PathAndViewPanel.java:333 ../options/PathAndViewPanel.java:339
 #: ../options/PathAndViewPanel.java:347 ../options/PathAndViewPanel.java:353
 #: ../options/CommonPanel.java:402 ../options/CommonPanel.java:410
-#: ../options/SingleServerSettingsPanel.java:293
 #: ../options/SingleServerSettingsPanel.java:300
 #: ../options/SingleServerSettingsPanel.java:307
-#: ../options/SingleServerSettingsPanel.java:326
+#: ../options/SingleServerSettingsPanel.java:314
+#: ../options/SingleServerSettingsPanel.java:333
 #: ../phonebook/ldap/ConnectionDialog.java:253
 #: ../phonebook/ui/NewPhoneBookWin.java:489
 #: ../phonebook/ui/NewPhoneBookWin.java:511
@@ -943,8 +945,11 @@ msgstr ""
 #: ../phonebook/jdbc/ConnectionDialog.java:291
 #: ../phonebook/jdbc/ConnectionDialog.java:295
 #: ../phonebook/jdbc/ConnectionDialog.java:413
-#: ../util/ExceptionDialog.java:295 ../util/ExceptionDialog.java:299
-#: ../util/ExceptionDialog.java:323 ../util/AcceleratorKeyDialog.java:150
+#: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:201
+#: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:207
+#: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:225
+#: ../util/ExceptionDialog.java:296 ../util/ExceptionDialog.java:300
+#: ../util/ExceptionDialog.java:324 ../util/AcceleratorKeyDialog.java:150
 #: ../send/SendController.java:169 ../send/SendController.java:174
 msgid "Error"
 msgstr "Fehler"
@@ -1330,12 +1335,12 @@ msgid "Logging out..."
 msgstr "Ausloggen läuft..."
 
 #: ../MainWin.java:2056
-#: ../model/servconn/hylafax/HylaFaxListConnection.java:211
+#: ../model/servconn/hylafax/HylaFaxListConnection.java:212
 msgid "Disconnected."
 msgstr "Nicht verbunden."
 
 #: ../MainWin.java:2107 ../options/ModemsPanel.java:109
-#: ../options/SingleServerSettingsPanel.java:114
+#: ../options/SingleServerSettingsPanel.java:115
 msgid "Logging in..."
 msgstr "Einloggen läuft..."
 
@@ -1858,7 +1863,7 @@ msgid "Retrieving modem list..."
 msgstr "Hole Modemliste..."
 
 #: ../options/ModemsPanel.java:117
-#: ../options/SingleServerSettingsPanel.java:118
+#: ../options/SingleServerSettingsPanel.java:119
 msgid "Login successful, logging out."
 msgstr "Login erfolgreich, logge aus."
 
@@ -1925,7 +1930,7 @@ msgid "Name for this identity:"
 msgstr "Name dieser Identität:"
 
 #: ../options/IdentityPanel.java:109
-#: ../options/SingleServerSettingsPanel.java:195
+#: ../options/SingleServerSettingsPanel.java:198
 msgid "ID:"
 msgstr "ID:"
 
@@ -2327,70 +2332,77 @@ msgstr "Die Datei {0} ist kein gültiges YajHFC-Plugin!"
 msgid "Remove item"
 msgstr "Element entfernen"
 
-#: ../options/SingleServerSettingsPanel.java:105
-#: ../options/SingleServerSettingsPanel.java:122
-#: ../options/SingleServerSettingsPanel.java:454
+#: ../options/SingleServerSettingsPanel.java:106
+#: ../options/SingleServerSettingsPanel.java:123
+#: ../options/SingleServerSettingsPanel.java:480
 #: ../phonebook/ldap/ConnectionDialog.java:177
 #: ../phonebook/jdbc/ConnectionDialog.java:218
 msgid "Test connection"
 msgstr "Verbindung testen"
 
-#: ../options/SingleServerSettingsPanel.java:109
+#: ../options/SingleServerSettingsPanel.java:110
 #, java-format
 msgid "Testing connection to {0}"
 msgstr "Teste Verbindung zu {0}"
 
-#: ../options/SingleServerSettingsPanel.java:122
+#: ../options/SingleServerSettingsPanel.java:123
 msgid "Connection to the HylaFAX server successful."
 msgstr "Die Verbindung zum HylaFAX-Server war erfolgreich."
 
-#: ../options/SingleServerSettingsPanel.java:194
+#: ../options/SingleServerSettingsPanel.java:197
 msgid "Name for this server:"
 msgstr "Name dieses Servers:"
 
-#: ../options/SingleServerSettingsPanel.java:293
+#: ../options/SingleServerSettingsPanel.java:300
 msgid "There already exists another server with this name!"
 msgstr "Es gibt bereits einen Server mit diesem Namen!"
 
-#: ../options/SingleServerSettingsPanel.java:300
+#: ../options/SingleServerSettingsPanel.java:307
+#: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:201
 msgid "Please enter a host name."
 msgstr "Bitte geben Sie einen Hostnamen ein."
 
-#: ../options/SingleServerSettingsPanel.java:307
+#: ../options/SingleServerSettingsPanel.java:314
+#: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:207
 msgid "Please enter a user name."
 msgstr "Bitte geben Sie einen Benutzernamen ein."
 
-#: ../options/SingleServerSettingsPanel.java:326
+#: ../options/SingleServerSettingsPanel.java:333
+#: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:225
 msgid "Please enter a valid port number."
 msgstr "Bitte geben Sie eine gültige Portnummer ein."
 
-#: ../options/SingleServerSettingsPanel.java:333
-#: ../options/SingleServerSettingsPanel.java:350
+#: ../options/SingleServerSettingsPanel.java:340
+#: ../options/SingleServerSettingsPanel.java:357
 #, java-format
 msgid "Directory {0} does not exist!"
 msgstr "Das Verzeichnis {0} existiert nicht!"
 
-#: ../options/SingleServerSettingsPanel.java:333
+#: ../options/SingleServerSettingsPanel.java:340
 msgid "Archive directory"
 msgstr "Archivverzeichnis"
 
-#: ../options/SingleServerSettingsPanel.java:350
+#: ../options/SingleServerSettingsPanel.java:357
 msgid "Invalid spool directory"
 msgstr "Ungültiges Spoolverzeichnis"
 
-#: ../options/SingleServerSettingsPanel.java:377
+#: ../options/SingleServerSettingsPanel.java:390
 msgid "Show archive table"
 msgstr "Zeige Archiv-Tabelle an"
 
-#: ../options/SingleServerSettingsPanel.java:392
+#: ../options/SingleServerSettingsPanel.java:400
+msgid "Configure access method..."
+msgstr ""
+
+#: ../options/SingleServerSettingsPanel.java:417
 msgid "Fax lists"
 msgstr "Faxlisten"
 
-#: ../options/SingleServerSettingsPanel.java:394
+#: ../options/SingleServerSettingsPanel.java:419
 msgid "Access method for the fax lists"
 msgstr "Zugriffsmethode für die Faxlisten"
 
-#: ../options/SingleServerSettingsPanel.java:395
+#: ../options/SingleServerSettingsPanel.java:420
 msgid ""
 "Location of spool directory for direct access (must contain recvq, doneq and "
 "docq)"
@@ -2398,54 +2410,60 @@ msgstr ""
 "Ort des Spoolverzeichnisses für Diektzugriff (muss recvq, doneq und docq "
 "enthalten)"
 
-#: ../options/SingleServerSettingsPanel.java:398
+#: ../options/SingleServerSettingsPanel.java:424
 msgid "Location of archive directory:"
 msgstr "Ort des Archivverzeichnisses:"
 
-#: ../options/SingleServerSettingsPanel.java:422
+#: ../options/SingleServerSettingsPanel.java:448
 msgid "Connection settings:"
 msgstr "Verbindungseinstellungen"
 
-#: ../options/SingleServerSettingsPanel.java:433
-#: ../options/SingleServerSettingsPanel.java:435
-#: ../options/SingleServerSettingsPanel.java:437
+#: ../options/SingleServerSettingsPanel.java:459
+#: ../options/SingleServerSettingsPanel.java:461
+#: ../options/SingleServerSettingsPanel.java:463
 #: ../phonebook/ldap/ConnectionDialog.java:143
 #: ../phonebook/jdbc/ConnectionDialog.java:205
+#: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:114
 msgid "Always ask"
 msgstr "Immer fragen"
 
-#: ../options/SingleServerSettingsPanel.java:452
+#: ../options/SingleServerSettingsPanel.java:478
 msgid "Use passive mode to fetch faxes"
 msgstr "\"Passive mode\" zum Abholen der Faxe benutzen"
 
-#: ../options/SingleServerSettingsPanel.java:468
+#: ../options/SingleServerSettingsPanel.java:494
+#: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:134
 msgid "Host name:"
 msgstr "Hostname:"
 
-#: ../options/SingleServerSettingsPanel.java:470
-#: ../phonebook/jdbc/ConnectionDialog.java:226 ../util/PasswordDialog.java:108
+#: ../options/SingleServerSettingsPanel.java:496
+#: ../phonebook/jdbc/ConnectionDialog.java:226
+#: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:137
+#: ../util/PasswordDialog.java:108
 msgid "Username:"
 msgstr "Benutzername:"
 
-#: ../options/SingleServerSettingsPanel.java:472
+#: ../options/SingleServerSettingsPanel.java:498
 #: ../phonebook/ldap/ConnectionDialog.java:187
-#: ../phonebook/jdbc/ConnectionDialog.java:229 ../util/PasswordDialog.java:111
+#: ../phonebook/jdbc/ConnectionDialog.java:229
+#: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:138
+#: ../util/PasswordDialog.java:111
 msgid "Password:"
 msgstr "Passwort:"
 
-#: ../options/SingleServerSettingsPanel.java:474
+#: ../options/SingleServerSettingsPanel.java:500
 msgid "Admin Password:"
 msgstr "Admin-Passwort:"
 
-#: ../options/SingleServerSettingsPanel.java:508
+#: ../options/SingleServerSettingsPanel.java:534
 msgid "General settings:"
 msgstr "Allgemeine Einstellungen:"
 
-#: ../options/SingleServerSettingsPanel.java:516
+#: ../options/SingleServerSettingsPanel.java:542
 msgid "Create new session for every action"
 msgstr "Erstelle neue Sitzung für jede Aktion"
 
-#: ../options/SingleServerSettingsPanel.java:517
+#: ../options/SingleServerSettingsPanel.java:543
 msgid ""
 "Connect to the server and log in for every action (e.g. view a fax, update "
 "tables, ...) and disconnect afterwards. This impairs performance but might "
@@ -2455,11 +2473,11 @@ msgstr ""
 "anzeigen, Tabellen aktualisieren, ...) und trenne Verbindung hinterher. Dies "
 "beeinträchtigt die Performance aber umgeht einige Bugs."
 
-#: ../options/SingleServerSettingsPanel.java:525
+#: ../options/SingleServerSettingsPanel.java:551
 msgid "Date/Time offset:"
 msgstr "Offset für Datum/Zeit:"
 
-#: ../options/SingleServerSettingsPanel.java:526
+#: ../options/SingleServerSettingsPanel.java:552
 msgid ""
 "Offset to be added to dates received from the HylaFAX server before "
 "displaying them."
@@ -2467,23 +2485,23 @@ msgstr ""
 "Ein Offset/Versatz, der vor dem Anzeigen zu vom HylaFAX-Server empfangenen "
 "Datumswerten hinzuaddiert wird."
 
-#: ../options/SingleServerSettingsPanel.java:528
+#: ../options/SingleServerSettingsPanel.java:554
 msgid "Character set:"
 msgstr "Zeichensatz:"
 
-#: ../options/SingleServerSettingsPanel.java:529
+#: ../options/SingleServerSettingsPanel.java:555
 msgid "Time zone:"
 msgstr "Zeitzone:"
 
-#: ../options/SingleServerSettingsPanel.java:549
+#: ../options/SingleServerSettingsPanel.java:575
 msgid "Read/Unread state of faxes"
 msgstr "Gelesen/Ungelesen-Status der Faxe"
 
-#: ../options/SingleServerSettingsPanel.java:583
+#: ../options/SingleServerSettingsPanel.java:609
 msgid "Configure..."
 msgstr "Konfigurieren..."
 
-#: ../options/SingleServerSettingsPanel.java:587
+#: ../options/SingleServerSettingsPanel.java:613
 msgid "Save location:"
 msgstr "Speicherort:"
 
@@ -3315,7 +3333,7 @@ msgstr ""
 "Bitte wählen Sie, welche Tabellenfeldern den zum Speichern des gelesen/"
 "ungelesen-Status nötigen Feldern entsprechen."
 
-#: ../readstate/LocalPersistentReadState.java:192
+#: ../readstate/LocalPersistentReadState.java:193
 msgid "Local file"
 msgstr "Lokale Datei"
 
@@ -3895,13 +3913,17 @@ msgstr "XVRES verwenden?"
 msgid "Use extended resolution?"
 msgstr "Erweiterte Auflösung verwenden?"
 
-#: ../model/servconn/FaxListConnectionType.java:49
+#: ../model/servconn/FaxListConnectionType.java:55
 msgid "Using the HylaFAX protocol"
 msgstr "Mittels des HylaFAX-Protokolls"
 
-#: ../model/servconn/FaxListConnectionType.java:50
+#: ../model/servconn/FaxListConnectionType.java:56
 msgid "Directly accessing the spool area (experimental)"
 msgstr "Direktzugriff auf den Spool-Bereich (experimentell)"
+
+#: ../model/servconn/FaxListConnectionType.java:57
+msgid "Fritz!Box for received, HylaFAX for outgoing faxes"
+msgstr ""
 
 #: ../model/servconn/JobState.java:49
 msgid "Undefined"
@@ -3963,17 +3985,45 @@ msgstr "Aktiv"
 msgid "Done"
 msgstr "Fertig"
 
-#: ../model/servconn/hylafax/HylaFaxListConnection.java:173
+#: ../model/servconn/hylafax/HylaFaxListConnection.java:174
 msgid "Connecting..."
 msgstr "Verbinde..."
 
-#: ../model/servconn/hylafax/HylaFaxListConnection.java:415
+#: ../model/servconn/hylafax/HylaFaxListConnection.java:416
 msgid "Could not log in"
 msgstr "Konnte mich nicht einloggen."
 
-#: ../model/servconn/hylafax/HylaFaxListConnection.java:435
+#: ../model/servconn/hylafax/HylaFaxListConnection.java:436
 msgid "Error refreshing the status:"
 msgstr "Fehler beim Aktualisieren des Status:"
+
+#: ../model/servconn/directaccess/fritz/FritzFaxListConnection.java:92
+msgid "Fritz!Box connection"
+msgstr ""
+
+#: ../model/servconn/directaccess/fritz/FritzFaxListConnection.java:92
+msgid "Please enter user name and password to connect to the Fritz!Box"
+msgstr ""
+
+#: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:91
+msgid "Fritz!Box configuration"
+msgstr ""
+
+#: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:115
+msgid "Use passive mode"
+msgstr ""
+
+#: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:140
+msgid "Path to \"faxbox\" directory:"
+msgstr ""
+
+#: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:141
+msgid "File name pattern:"
+msgstr ""
+
+#: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:142
+msgid "Date format in file name:"
+msgstr ""
 
 #: ../model/RecvFormat.java:56
 msgid "Time/Date"
@@ -4111,7 +4161,7 @@ msgstr "dd.MM.yyyy"
 msgid "HH:mm:ss"
 msgstr "HH:mm:ss"
 
-#: ../util/ExceptionDialog.java:103 ../util/ExceptionDialog.java:243
+#: ../util/ExceptionDialog.java:104 ../util/ExceptionDialog.java:244
 msgid "Details"
 msgstr "Details"
 
@@ -4369,7 +4419,7 @@ msgstr "Speichere eine Kopie als..."
 msgid "<stdin>"
 msgstr "<stdin>"
 
-#: ../send/LocalFileTFLItem.java:81
+#: ../send/LocalFileTFLItem.java:86
 #, java-format
 msgid ""
 "The document {0} could not be converted to PostScript, PDF or TIFF. Reason:"

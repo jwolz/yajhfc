@@ -72,16 +72,23 @@ public interface FileConverter {
     /**
      * A dummy file converter that just copies the input to the output
      */
-    public static final FileConverter IDENTITY_CONVERTER = new FileConverter() {
-      public void convertToHylaFormat(File inFile,
+    public static final FileConverter IDENTITY_CONVERTER = new FileConverterToFile() {
+        public void convertToHylaFormat(File inFile,
                 OutputStream destination, PaperSize paperSize, FileFormat desiredFormat) throws ConversionException, IOException {
             InputStream in = new FileInputStream(inFile);
             Utils.copyStream(in, destination);
             in.close();
         }  
-      
-      public boolean isOverridable() {
+
+        public boolean isOverridable() {
             return false;
+        }
+
+        public void convertToHylaFormatFile(File inFile, File outFile,
+                PaperSize paperSize, FileFormat desiredFormat)
+                        throws ConversionException, IOException {
+            Utils.copyFile(inFile, outFile);
+
         }
     };
     
