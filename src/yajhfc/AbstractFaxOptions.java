@@ -159,6 +159,7 @@ public abstract class AbstractFaxOptions implements PropertiesSerializable {
                         for (Object o : lst) {
                             p.setProperty(propertyName + '.' + (++idx), (String)o);
                         }
+                        p.setProperty(propertyName, String.valueOf(lst.size()));
                     } else if (Enum.class.isAssignableFrom(elementClass)){
                         StringBuilder res = new StringBuilder();
                         List<? extends Enum> lst = (List<? extends Enum>)val;
@@ -234,13 +235,14 @@ public abstract class AbstractFaxOptions implements PropertiesSerializable {
                     final Class<?> elementClass = typeParams[0];
                     if (elementClass == String.class) {
                         final List<String> list = (List<String>)f.get(this);
-                        list.clear();
-
-                        int i = 1;
-                        String val;
-                        while ((val = p.getProperty(propertyName + '.' + i)) != null) {
-                            list.add(val);
-                            i++;
+                        if (p.containsKey(propertyName) || p.containsKey(propertyName + ".1")) { // Check if the list property has previously been saved
+                            list.clear();
+                            int i = 1;
+                            String val;
+                            while ((val = p.getProperty(propertyName + '.' + i)) != null) {
+                                list.add(val);
+                                i++;
+                            }
                         }
                     } else if (Enum.class.isAssignableFrom(elementClass)){
                         String val = p.getProperty(propertyName);

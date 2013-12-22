@@ -38,6 +38,7 @@ package yajhfc;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -536,6 +537,23 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
      */
     public final List<String> dialogsDoNotAskAgain = new ArrayList<String>();
     
+    
+    public static final String[] DEFAULT_RECIPIENT_EXTRACTION_TAGS = {
+        "Ffax",
+        "Frecipient",
+        "Mmail",
+        "Mmailrecipient"
+    };
+    /**
+     * Tag names for recipient extraction
+     */
+    public final List<String> recipientExtractionTags = new ArrayList<String>();
+    
+    /**
+     * Is the colon mandatory in the tags?
+     */
+    public boolean recipientExtractionTagMandatoryColon = false;
+    
     public FaxOptions() {
         super(null);
         
@@ -609,6 +627,8 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
         
         keyboardAccelerators.putAll(AcceleratorKeys.DEFAULT_MAINWIN_MAPPING);
         pbwinKeyboardAccelerators.putAll(AcceleratorKeys.DEFAULT_PBWIN_MAPPING);
+        
+        Collections.addAll(recipientExtractionTags, DEFAULT_RECIPIENT_EXTRACTION_TAGS);
     }
     
     /**

@@ -45,7 +45,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
 import yajhfc.PaperSize;
 import yajhfc.SenderIdentity;
@@ -86,10 +85,6 @@ public abstract class YajMailer {
         } 
 	}
 
-	public static Pattern getDefaultMailPattern() {
-        return Pattern.compile("@@\\s*mail(?:recipient)?\\s*:?(.+?)@@", Pattern.CASE_INSENSITIVE);
-    }
-    
 	protected SenderIdentity fromIdentity = null;
 	protected String subject = null;
 	protected String body = null;

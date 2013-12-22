@@ -39,28 +39,47 @@ package yajhfc.options;
 import static yajhfc.Utils._;
 import info.clearthought.layout.TableLayout;
 
+import java.awt.Color;
 import java.awt.Dialog;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.regex.Pattern;
 
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.JTable;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.table.AbstractTableModel;
 
 import yajhfc.FaxOptions;
 import yajhfc.FileTextField;
@@ -69,12 +88,14 @@ import yajhfc.TextViewPanel.Text;
 import yajhfc.Utils;
 import yajhfc.file.FileConverters;
 import yajhfc.file.FormattedFile;
+import yajhfc.file.textextract.FaxnumberExtractor;
 import yajhfc.file.textextract.HylaToTextConverter;
 import yajhfc.file.textextract.PDFToTextConverter;
 import yajhfc.file.textextract.PSToTextConverter;
 import yajhfc.file.textextract.RecipientExtractionMode;
 import yajhfc.util.ClipboardPopup;
 import yajhfc.util.ExcDialogAbstractAction;
+import yajhfc.util.JTableTABAction;
 import yajhfc.util.ProgressDialog;
 import yajhfc.util.ProgressWorker;
 import yajhfc.util.SafeJFileChooser;
@@ -89,7 +110,11 @@ public class TextExtractorPanel extends AbstractOptionsPanel<FaxOptions> {
     JComboBox comboExtractionMethod;
     JLabel labelPath;
     FileTextField ftfPath;
-    Action actView;
+    Action actView, actRemoveRow, actUseDefault;
+    TagNameTableModel tagTableModel;
+    JTable tagTable;
+    JCheckBox checkMandatoryColon;
+    JLabel labelTagNameWarning;
     
     Map<String,String> pathMap = new HashMap<String,String>();
     private HylaToTextConverter lastSelection = null;
@@ -115,6 +140,9 @@ public class TextExtractorPanel extends AbstractOptionsPanel<FaxOptions> {
         
         lastSelection = null;
         selectNewPath((HylaToTextConverter)comboExtractionMethod.getSelectedItem());
+        
+        checkMandatoryColon.setSelected(foEdit.recipientExtractionTagMandatoryColon);
+        tagTableModel.setListContents(foEdit.recipientExtractionTags);
     }
 
     public void saveSettings(FaxOptions foEdit) {
@@ -126,13 +154,45 @@ public class TextExtractorPanel extends AbstractOptionsPanel<FaxOptions> {
         
         foEdit.pdftotextPath = pathMap.get(PDFToTextConverter.class.getName());
         foEdit.pstotextPath = pathMap.get(PSToTextConverter.class.getName());
+        
+        foEdit.recipientExtractionTagMandatoryColon = checkMandatoryColon.isSelected();
+        foEdit.recipientExtractionTags.clear();
+        foEdit.recipientExtractionTags.addAll(tagTableModel.getTags());
     }
     
     @Override
     public boolean validateSettings(OptionsWin optionsWin) {
         savePath();
         
-        return super.validateSettings(optionsWin);
+        if (tagTable.isEditing()) {
+            tagTable.getCellEditor().stopCellEditing();
+        }
+        int faxCount = 0;
+        int mailCount = 0;
+        for (String tag : tagTableModel.getTags() ) {
+            if (tag.length() <= 1) {
+                JOptionPane.showMessageDialog(optionsWin, _("Empty tag names are not allowed."));
+                return false;
+            }
+            switch (tag.charAt(0)) {
+            case FaxnumberExtractor.PATTERN_PREFIX_FAX:
+                faxCount++;
+                break;
+            case FaxnumberExtractor.PATTERN_PREFIX_MAIL:
+                mailCount++;
+                break;
+            }
+        }
+        if (faxCount==0) {
+            JOptionPane.showMessageDialog(optionsWin, _("You have to define at least one tag name for fax numbers."));
+            return false;
+        }
+        if (mailCount==0) {
+            JOptionPane.showMessageDialog(optionsWin, _("You have to define at least one tag name for email addresses."));
+            return false;
+        }
+        
+        return true;
     }
 
     void savePath() {
@@ -229,9 +289,76 @@ public class TextExtractorPanel extends AbstractOptionsPanel<FaxOptions> {
         panelConverterSettings.setBorder(BorderFactory.createTitledBorder(_("Settings for the selected conversion method")));
         labelPath = Utils.addWithLabel(panelConverterSettings, ftfPath, "path", "1,2");
         
+        double[][] dLay3 = {
+                {OptionsWin.border, TableLayout.FILL, OptionsWin.border, 0.4, OptionsWin.border, },
+                {OptionsWin.border, TableLayout.PREFERRED, OptionsWin.border, TableLayout.PREFERRED, OptionsWin.border, TableLayout.PREFERRED, TableLayout.FILL, TableLayout.PREFERRED, OptionsWin.border}
+        };
+        JPanel panelTags = new JPanel(new TableLayout(dLay3));
+        panelTags.setBorder(BorderFactory.createTitledBorder(_("Recognized tag names")));
+        actRemoveRow = new ExcDialogAbstractAction() {
+            @Override
+            protected void actualActionPerformed(ActionEvent e) {
+                int row = tagTable.getSelectedRow();
+                if (row >= 0 && tagTableModel.rowIsRemovable(row)) {
+                    if (tagTable.isEditing())
+                        tagTable.getCellEditor().cancelCellEditing();
+                    tagTableModel.removeRow(row);
+                } else {
+                    Toolkit.getDefaultToolkit().beep();
+                }
+            }
+        };
+        actRemoveRow.putValue(Action.NAME, Utils._("Remove row"));
+        
+        actUseDefault = new ExcDialogAbstractAction() {
+            @Override
+            protected void actualActionPerformed(ActionEvent e) {
+                tagTableModel.setListContents(FaxOptions.DEFAULT_RECIPIENT_EXTRACTION_TAGS);
+            }
+        };
+        actUseDefault.putValue(Action.NAME, Utils._("Reset"));
+        
+        tagTableModel = new TagNameTableModel();
+        tagTable = new JTable(tagTableModel);
+        tagTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                actRemoveRow.setEnabled(e.getFirstIndex() >= 0 && tagTableModel.rowIsRemovable(e.getFirstIndex()));
+            }
+        });
+        JPopupMenu tablePopup = new JPopupMenu();
+        tablePopup.add(actRemoveRow);
+        tagTable.setComponentPopupMenu(tablePopup);
+        JComboBox comboTagType = new JComboBox(TagNameTableModel.getAvailableTagTypes());
+        tagTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(comboTagType));
+        tagTable.getActionMap().put(actRemoveRow.getClass().getName(), actRemoveRow);
+        tagTable.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), actRemoveRow.getClass().getName());
+        JTableTABAction.wrapDefTabAction(tagTable);
+        
+        checkMandatoryColon = new JCheckBox(Utils._("Colon (:) after name is mandatory"));
+        
+        labelTagNameWarning = new JLabel("<html>"+_("Some tag names contain characters other than A-Z or 0-9. This is not recommended.") + "</html>");
+        labelTagNameWarning.setForeground(Color.RED);
+        labelTagNameWarning.setVisible(false);
+        tagTableModel.addTableModelListener(new TableModelListener() {
+            private Pattern validatePattern = Pattern.compile(".[a-zA-Z0-9]*");
+            public void tableChanged(TableModelEvent e) {
+                boolean visible = false;
+                for (String s : tagTableModel.getTags()) {
+                    visible = visible || !validatePattern.matcher(s).matches();
+                }
+                labelTagNameWarning.setVisible(visible);
+            }
+        });
+        
+        panelTags.add(new JScrollPane(tagTable), "1,1,1,7,f,f");
+        panelTags.add(checkMandatoryColon, "3,1,f,c");
+        panelTags.add(new JButton(actRemoveRow), "3,3,f,c");
+        panelTags.add(new JButton(actUseDefault), "3,5,f,c");
+        panelTags.add(labelTagNameWarning, "3,7,f,b");
+        
         double[][] dLay = {
                 {OptionsWin.border, TableLayout.PREFERRED, OptionsWin.border, TableLayout.PREFERRED, OptionsWin.border, TableLayout.FILL, OptionsWin.border},
-                {OptionsWin.border, TableLayout.PREFERRED, OptionsWin.border*2, TableLayout.PREFERRED, OptionsWin.border*2,  TableLayout.PREFERRED, TableLayout.PREFERRED, OptionsWin.border, TableLayout.PREFERRED, TableLayout.PREFERRED, OptionsWin.border, TableLayout.PREFERRED, TableLayout.FILL, OptionsWin.border}
+                {OptionsWin.border, TableLayout.PREFERRED, OptionsWin.border*2, TableLayout.PREFERRED, OptionsWin.border*2,  TableLayout.PREFERRED, TableLayout.PREFERRED, OptionsWin.border, TableLayout.PREFERRED, TableLayout.PREFERRED, OptionsWin.border, TableLayout.PREFERRED, OptionsWin.border, TableLayout.FILL, OptionsWin.border}
         };
         setLayout(new TableLayout(dLay));
         add(lblExplanation, "1,1,5,1,f,t");
@@ -240,6 +367,7 @@ public class TextExtractorPanel extends AbstractOptionsPanel<FaxOptions> {
         Utils.addWithLabel(this, comboExtractionMethod, _("PS/PDF to text conversion method:"), "1,9");
         add(new JButton(actView), "3,9");
         add(panelConverterSettings, "1,11,5,11,f,f");
+        add(panelTags, "1,13,5,13,f,f");
     }
 
     
@@ -291,6 +419,148 @@ public class TextExtractorPanel extends AbstractOptionsPanel<FaxOptions> {
             //cancelled = true;
             interrupt();
             getProgressMonitor().close();
+        }
+    }
+    
+    protected static class TagNameTableModel extends AbstractTableModel {
+        private final List<String> tags = new ArrayList<String>();
+        
+        protected static final String TAG_TYPE_MAIL = Utils._("e-mail address");
+        protected static final String TAG_TYPE_FAX = Utils._("Fax number");
+        
+        public static String[] getAvailableTagTypes() {
+            return new String[] { TAG_TYPE_FAX, TAG_TYPE_MAIL };
+        }
+        
+        @Override
+        public String getColumnName(int column) {
+            switch (column) {
+            case 0:
+                return Utils._("Tag name");
+            case 1:
+                return Utils._("Type");
+            default:
+                return "X";
+            }
+        }
+        
+        public int getRowCount() {
+            return tags.size() + 1;
+        }
+
+        public int getColumnCount() {
+            return 2;
+        }
+
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            if (rowIndex >= tags.size())
+                return "";
+            
+            String tag = tags.get(rowIndex);
+            if (tag.length() < 1)
+                return "";
+            
+            switch (columnIndex) {
+            case 0:
+                return tag.substring(1);
+            case 1:
+                switch (tag.charAt(0)) {
+                case FaxnumberExtractor.PATTERN_PREFIX_FAX:
+                default:
+                    return TAG_TYPE_FAX;
+                case FaxnumberExtractor.PATTERN_PREFIX_MAIL:
+                    return TAG_TYPE_MAIL;
+                }
+            default:
+                return null;
+            }
+        }
+        
+        @Override
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+            return true;
+        }
+        
+        @Override
+        public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+            String oldTag;
+            if (rowIndex >= tags.size())
+                oldTag = " ";
+            else
+                oldTag = tags.get(rowIndex);
+            
+            String newTag;
+            switch (columnIndex) {
+            case 0:
+                if ("".equals(aValue) && rowIsRemovable(rowIndex)) { // Delete the row if the user enters an empty string
+                    removeRow(rowIndex);
+                    return;
+                } else {
+                    newTag = oldTag.charAt(0) + (String)aValue;
+                }
+                break;
+            case 1:
+                char prefix;
+                if (TAG_TYPE_FAX.equals(aValue)) {
+                    prefix = FaxnumberExtractor.PATTERN_PREFIX_FAX;
+                } else if (TAG_TYPE_MAIL.equals(aValue)) {
+                    prefix = FaxnumberExtractor.PATTERN_PREFIX_MAIL;
+                } else {
+                    prefix = FaxnumberExtractor.PATTERN_PREFIX_FAX;
+                }
+                char[] oldTagArray = oldTag.toCharArray();
+                oldTagArray[0] = prefix;
+                newTag = new String(oldTagArray);
+                break;
+            default:
+                return;
+            }
+
+            if (rowIndex >= tags.size()) {
+                tags.add(newTag);
+                fireTableRowsInserted(rowIndex+1, rowIndex+1);
+            } else {
+                tags.set(rowIndex, newTag);
+            }
+            fireTableCellUpdated(rowIndex, columnIndex);
+        }
+        
+        @Override
+        public Class<?> getColumnClass(int columnIndex) {
+            return String.class;
+        }
+
+        public void setListContents(String[] newContent) {
+            tags.clear();
+            Collections.addAll(tags, newContent);
+            fireTableDataChanged();
+        }
+        
+        public void setListContents(Collection<String> newContent) {
+            tags.clear();
+            tags.addAll(newContent);
+            fireTableDataChanged();
+        }
+        
+        public void removeRow(int rowIndex) {
+            tags.remove(rowIndex);
+            fireTableRowsDeleted(rowIndex, rowIndex);
+        }
+        
+        public boolean rowIsRemovable(int rowIndex) {
+            return (rowIndex < tags.size());
+        }
+        
+        /**
+         * Returns the backing list. DO NOT MODIFY directly!
+         * @return
+         */
+        public List<String> getTags() {
+            return tags;
+        }
+        
+        public TagNameTableModel() {
+            super();
         }
     }
 }

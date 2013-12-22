@@ -69,6 +69,7 @@ CHANGES
 0.5.5:
 - Support to use native libtiff in the PDF plugin (offers JBIG support and better compatibility with not 100% clean TIFFs)
 - Support to read received faxes from AVM Fritz!Box routers (outgoing faxes are still sent over HylaFAX)
+- New translation: Chinese simplified (zh_CN). 
 - Several minor enhancements and bug fixes
 
 

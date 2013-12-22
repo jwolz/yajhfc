@@ -46,6 +46,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import yajhfc.FaxOptions;
 import yajhfc.Utils;
 import yajhfc.file.FileConverter.ConversionException;
 import yajhfc.file.FormattedFile;
@@ -83,7 +84,39 @@ public class FaxnumberExtractor {
     }
     
     public static Pattern getDefaultPattern() {
-        return Pattern.compile("@@\\s*(?:recipient|fax)\\s*:?(.+?)@@", Pattern.CASE_INSENSITIVE);
+        //return Pattern.compile("@@\\s*(?:recipient|fax)\\s*:?(.+?)@@", Pattern.CASE_INSENSITIVE);
+        return buildPatternFromOptions(Utils.getFaxOptions(), PATTERN_PREFIX_FAX);
+    }
+    
+    public static Pattern getDefaultMailPattern() {
+        //return Pattern.compile("@@\\s*mail(?:recipient)?\\s*:?(.+?)@@", Pattern.CASE_INSENSITIVE);
+        return buildPatternFromOptions(Utils.getFaxOptions(), PATTERN_PREFIX_MAIL);
+    }
+    
+    public static final char PATTERN_PREFIX_FAX  = 'F';
+    public static final char PATTERN_PREFIX_MAIL = 'M';
+    
+    public static Pattern buildPatternFromOptions(FaxOptions fo, char prefix) {
+        StringBuilder result = new StringBuilder();
+        boolean first = true;
+        
+        result.append("@@\\s*(?:");
+        for (String s : fo.recipientExtractionTags) {
+            if (s.length() > 1 && s.charAt(0) == prefix) {
+                if (first)
+                    first=false;
+                else
+                    result.append('|');
+                result.append(Pattern.quote(s.substring(1)));
+            }
+        }
+        result.append(")\\s*:");
+        if (!fo.recipientExtractionTagMandatoryColon)
+            result.append('?');
+        result.append("(.+?)@@");
+        
+        log.fine("Built pattern for prefix " + prefix + ": " + result);
+        return Pattern.compile(result.toString(), Pattern.CASE_INSENSITIVE);
     }
     
     /**
@@ -196,4 +229,5 @@ public class FaxnumberExtractor {
         }
         return n;
     }
+
 }
