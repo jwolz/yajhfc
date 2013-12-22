@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YajHFC 0.5.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-18 10:31+0100\n"
+"POT-Creation-Date: 2013-12-22 13:24+0100\n"
 "PO-Revision-Date: 2013-07-16 10:25+0400\n"
 "Last-Translator: Alexander Moisseev <moiseev@mezonplus.ru>\n"
 "Language-Team: RUSSIAN <moiseev@mezonplus.ru>\n"
@@ -18,8 +18,8 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Generator: Poedit 1.5.4\n"
 
-#: ../FaxOptions.java:647 ../FaxOptions.java:655 ../FaxOptions.java:663
-#: ../FaxOptions.java:675 ../options/ServerSettingsPanel.java:163
+#: ../FaxOptions.java:667 ../FaxOptions.java:675 ../FaxOptions.java:683
+#: ../FaxOptions.java:695 ../options/ServerSettingsPanel.java:163
 #: ../options/CoverPanel.java:232
 msgid "Default"
 msgstr "Основной"
@@ -1620,7 +1620,7 @@ msgstr "Не найдено имя сервера:"
 msgid "File name"
 msgstr "Имя файла"
 
-#: ../plugin/PluginTableModel.java:61
+#: ../plugin/PluginTableModel.java:61 ../options/TextExtractorPanel.java:441
 msgid "Type"
 msgstr "Тип"
 
@@ -1869,6 +1869,7 @@ msgid "Reset the list of modems?"
 msgstr "Сбросить список модемов?"
 
 #: ../options/ModemsPanel.java:213 ../options/ModemsPanel.java:218
+#: ../options/TextExtractorPanel.java:319
 #: ../util/AbstractQuickSearchHelper.java:184
 #: ../util/ToolbarEditorDialog.java:163 ../util/AcceleratorKeyDialog.java:133
 msgid "Reset"
@@ -2030,16 +2031,28 @@ msgstr "Пожалуйста, введите расположение испол
 msgid "Please enter the location of the tiff2pdf executable."
 msgstr "Пожалуйста, введите расположение исполняемого файла tiff2pdf."
 
-#: ../options/TextExtractorPanel.java:153
+#: ../options/TextExtractorPanel.java:174
+msgid "Empty tag names are not allowed."
+msgstr ""
+
+#: ../options/TextExtractorPanel.java:187
+msgid "You have to define at least one tag name for fax numbers."
+msgstr ""
+
+#: ../options/TextExtractorPanel.java:191
+msgid "You have to define at least one tag name for email addresses."
+msgstr ""
+
+#: ../options/TextExtractorPanel.java:213
 #, java-format
 msgid "Path to {0}:"
 msgstr "Путь к {0}:"
 
-#: ../options/TextExtractorPanel.java:158
+#: ../options/TextExtractorPanel.java:218
 msgid "No path settings necessary"
 msgstr "Указание пути не требуется"
 
-#: ../options/TextExtractorPanel.java:168
+#: ../options/TextExtractorPanel.java:228
 msgid ""
 "By activating this option YajHFC will try to extract the recipients from "
 "documents given on the command line or fax printer."
@@ -2047,7 +2060,7 @@ msgstr ""
 "Если этот режим активирован, YajHFC будет пытаться извлечь получателей из "
 "документов, указанных в командной строке или напечатанных на факс-принтер."
 
-#: ../options/TextExtractorPanel.java:169
+#: ../options/TextExtractorPanel.java:229
 msgid ""
 "To find recipients it searches for <tt>@@recipient:<i>faxnumber</i>@@</tt> "
 "tags in the files."
@@ -2055,7 +2068,7 @@ msgstr ""
 "Для того чтобы обнаружить получателей, он ищет в файлах теги <tt>@@recipient:"
 "<i>номер_факса</i>@@</tt>."
 
-#: ../options/TextExtractorPanel.java:170
+#: ../options/TextExtractorPanel.java:230
 msgid ""
 "This behaviour can be overridden by the <tt>--extract-recipients</tt> "
 "command line option."
@@ -2063,7 +2076,7 @@ msgstr ""
 "Этот режим может быть переопределен параметром командной строки <tt>--"
 "extract-recipients</tt>."
 
-#: ../options/TextExtractorPanel.java:171
+#: ../options/TextExtractorPanel.java:231
 msgid ""
 "If you want to use this feature a PDF/PostScript to text conversion method "
 "must be selected below."
@@ -2071,42 +2084,72 @@ msgstr ""
 "Если Вы хотите использовать эту функцию,  ниже должен быть выбран метод "
 "преобразования PDF/PostScript в текст."
 
-#: ../options/TextExtractorPanel.java:188
+#: ../options/TextExtractorPanel.java:248
 msgid "Test..."
 msgstr "Проверка..."
 
-#: ../options/TextExtractorPanel.java:214
+#: ../options/TextExtractorPanel.java:274
 msgid "Select a file to view as text"
 msgstr "Выберите файл для просмотра в виде текста"
 
-#: ../options/TextExtractorPanel.java:229
+#: ../options/TextExtractorPanel.java:289
 msgid "Settings for the selected conversion method"
 msgstr "Настройки выбранного метода преобразования"
 
-#: ../options/TextExtractorPanel.java:239
+#: ../options/TextExtractorPanel.java:297
+msgid "Recognized tag names"
+msgstr ""
+
+#: ../options/TextExtractorPanel.java:311 ../util/MapEditorDialog.java:99
+msgid "Remove row"
+msgstr "Удалить строку"
+
+#: ../options/TextExtractorPanel.java:337
+msgid "Colon (:) after name is mandatory"
+msgstr ""
+
+#: ../options/TextExtractorPanel.java:339
+msgid ""
+"Some tag names contain characters other than A-Z or 0-9. This is not "
+"recommended."
+msgstr ""
+
+#: ../options/TextExtractorPanel.java:366
 msgid "Extract recipients from documents:"
 msgstr "Извлекать получателей из документов:"
 
-#: ../options/TextExtractorPanel.java:240
+#: ../options/TextExtractorPanel.java:367
 msgid "PS/PDF to text conversion method:"
 msgstr "Метод преобразования PS/PDF в текст:"
 
-#: ../options/TextExtractorPanel.java:260
+#: ../options/TextExtractorPanel.java:388
 #, java-format
 msgid "View as text using {0}"
 msgstr "Просмотр в виде текста с помошью {0}"
 
-#: ../options/TextExtractorPanel.java:265
+#: ../options/TextExtractorPanel.java:393
 msgid "Converting file to text..."
 msgstr "Преобразование файла в текст..."
 
-#: ../options/TextExtractorPanel.java:270
+#: ../options/TextExtractorPanel.java:398
 msgid "Running converter..."
 msgstr "Запуск конвертера..."
 
-#: ../options/TextExtractorPanel.java:279
+#: ../options/TextExtractorPanel.java:407
 msgid "Error converting file to text"
 msgstr "Ошибка преобразования файла в текст"
+
+#: ../options/TextExtractorPanel.java:428 ../phonebook/PBEntryField.java:59
+msgid "e-mail address"
+msgstr "e-mail адрес"
+
+#: ../options/TextExtractorPanel.java:429 ../phonebook/PBEntryField.java:61
+msgid "Fax number"
+msgstr "Факс"
+
+#: ../options/TextExtractorPanel.java:439
+msgid "Tag name"
+msgstr ""
 
 #: ../options/SendPanel.java:137
 msgid "Delivery settings"
@@ -2719,17 +2762,9 @@ msgstr "Индекс"
 msgid "State/Region"
 msgstr "Штат/Область"
 
-#: ../phonebook/PBEntryField.java:59
-msgid "e-mail address"
-msgstr "e-mail адрес"
-
 #: ../phonebook/PBEntryField.java:60
 msgid "Website"
 msgstr "Веб-сайт"
-
-#: ../phonebook/PBEntryField.java:61
-msgid "Fax number"
-msgstr "Факс"
 
 #: ../phonebook/PBEntryField.java:62
 msgid "Voice number"
@@ -4190,10 +4225,6 @@ msgstr "Удаляет выделенный элемент"
 #: ../util/fmtEditor.java:152
 msgid "Moves the selected item down"
 msgstr "Перемещает выделенный элемент вниз"
-
-#: ../util/MapEditorDialog.java:99
-msgid "Remove row"
-msgstr "Удалить строку"
 
 #: ../util/AcceleratorKeyDialog.java:109
 msgid "Clear"

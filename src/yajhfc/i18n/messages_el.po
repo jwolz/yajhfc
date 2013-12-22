@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-18 10:31+0100\n"
+"POT-Creation-Date: 2013-12-22 13:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -11,8 +11,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../FaxOptions.java:647 ../FaxOptions.java:655 ../FaxOptions.java:663
-#: ../FaxOptions.java:675 ../options/ServerSettingsPanel.java:163
+#: ../FaxOptions.java:667 ../FaxOptions.java:675 ../FaxOptions.java:683
+#: ../FaxOptions.java:695 ../options/ServerSettingsPanel.java:163
 #: ../options/CoverPanel.java:232
 msgid "Default"
 msgstr ""
@@ -1581,7 +1581,7 @@ msgstr ""
 msgid "File name"
 msgstr "Όνομα αρχείου"
 
-#: ../plugin/PluginTableModel.java:61
+#: ../plugin/PluginTableModel.java:61 ../options/TextExtractorPanel.java:441
 msgid "Type"
 msgstr "Tύπος"
 
@@ -1831,6 +1831,7 @@ msgid "Reset the list of modems?"
 msgstr ""
 
 #: ../options/ModemsPanel.java:213 ../options/ModemsPanel.java:218
+#: ../options/TextExtractorPanel.java:319
 #: ../util/AbstractQuickSearchHelper.java:184
 #: ../util/ToolbarEditorDialog.java:163 ../util/AcceleratorKeyDialog.java:133
 msgid "Reset"
@@ -1990,74 +1991,116 @@ msgstr ""
 msgid "Please enter the location of the tiff2pdf executable."
 msgstr ""
 
-#: ../options/TextExtractorPanel.java:153
+#: ../options/TextExtractorPanel.java:174
+msgid "Empty tag names are not allowed."
+msgstr ""
+
+#: ../options/TextExtractorPanel.java:187
+msgid "You have to define at least one tag name for fax numbers."
+msgstr ""
+
+#: ../options/TextExtractorPanel.java:191
+msgid "You have to define at least one tag name for email addresses."
+msgstr ""
+
+#: ../options/TextExtractorPanel.java:213
 #, java-format
 msgid "Path to {0}:"
 msgstr ""
 
-#: ../options/TextExtractorPanel.java:158
+#: ../options/TextExtractorPanel.java:218
 msgid "No path settings necessary"
 msgstr ""
 
-#: ../options/TextExtractorPanel.java:168
+#: ../options/TextExtractorPanel.java:228
 msgid ""
 "By activating this option YajHFC will try to extract the recipients from "
 "documents given on the command line or fax printer."
 msgstr ""
 
-#: ../options/TextExtractorPanel.java:169
+#: ../options/TextExtractorPanel.java:229
 msgid ""
 "To find recipients it searches for <tt>@@recipient:<i>faxnumber</i>@@</tt> "
 "tags in the files."
 msgstr ""
 
-#: ../options/TextExtractorPanel.java:170
+#: ../options/TextExtractorPanel.java:230
 msgid ""
 "This behaviour can be overridden by the <tt>--extract-recipients</tt> "
 "command line option."
 msgstr ""
 
-#: ../options/TextExtractorPanel.java:171
+#: ../options/TextExtractorPanel.java:231
 msgid ""
 "If you want to use this feature a PDF/PostScript to text conversion method "
 "must be selected below."
 msgstr ""
 
-#: ../options/TextExtractorPanel.java:188
+#: ../options/TextExtractorPanel.java:248
 msgid "Test..."
 msgstr ""
 
-#: ../options/TextExtractorPanel.java:214
+#: ../options/TextExtractorPanel.java:274
 msgid "Select a file to view as text"
 msgstr ""
 
-#: ../options/TextExtractorPanel.java:229
+#: ../options/TextExtractorPanel.java:289
 msgid "Settings for the selected conversion method"
 msgstr ""
 
-#: ../options/TextExtractorPanel.java:239
+#: ../options/TextExtractorPanel.java:297
+msgid "Recognized tag names"
+msgstr ""
+
+#: ../options/TextExtractorPanel.java:311 ../util/MapEditorDialog.java:99
+msgid "Remove row"
+msgstr ""
+
+#: ../options/TextExtractorPanel.java:337
+msgid "Colon (:) after name is mandatory"
+msgstr ""
+
+#: ../options/TextExtractorPanel.java:339
+msgid ""
+"Some tag names contain characters other than A-Z or 0-9. This is not "
+"recommended."
+msgstr ""
+
+#: ../options/TextExtractorPanel.java:366
 msgid "Extract recipients from documents:"
 msgstr ""
 
-#: ../options/TextExtractorPanel.java:240
+#: ../options/TextExtractorPanel.java:367
 msgid "PS/PDF to text conversion method:"
 msgstr ""
 
-#: ../options/TextExtractorPanel.java:260
+#: ../options/TextExtractorPanel.java:388
 #, java-format
 msgid "View as text using {0}"
 msgstr ""
 
-#: ../options/TextExtractorPanel.java:265
+#: ../options/TextExtractorPanel.java:393
 msgid "Converting file to text..."
 msgstr ""
 
-#: ../options/TextExtractorPanel.java:270
+#: ../options/TextExtractorPanel.java:398
 msgid "Running converter..."
 msgstr ""
 
-#: ../options/TextExtractorPanel.java:279
+#: ../options/TextExtractorPanel.java:407
 msgid "Error converting file to text"
+msgstr ""
+
+#: ../options/TextExtractorPanel.java:428 ../phonebook/PBEntryField.java:59
+msgid "e-mail address"
+msgstr "Διεύθυνση e-mail"
+
+#: ../options/TextExtractorPanel.java:429 ../phonebook/PBEntryField.java:61
+msgid "Fax number"
+msgstr "Αριθμός φαξ"
+
+#: ../options/TextExtractorPanel.java:439
+msgid "Tag name"
 msgstr ""
 
 #: ../options/SendPanel.java:137
@@ -2666,17 +2709,9 @@ msgstr "Κωδικός ZIP"
 msgid "State/Region"
 msgstr ""
 
-#: ../phonebook/PBEntryField.java:59
-msgid "e-mail address"
-msgstr "Διεύθυνση e-mail"
-
 #: ../phonebook/PBEntryField.java:60
 msgid "Website"
 msgstr ""
-
-#: ../phonebook/PBEntryField.java:61
-msgid "Fax number"
-msgstr "Αριθμός φαξ"
 
 #: ../phonebook/PBEntryField.java:62
 msgid "Voice number"
@@ -4136,10 +4171,6 @@ msgstr "Μετακινεί το επιλεγμένο στοιχείο"
 #: ../util/fmtEditor.java:152
 msgid "Moves the selected item down"
 msgstr "Mετακινεί το επιλεγμένο στοιχείο προς τα κάτω"
-
-#: ../util/MapEditorDialog.java:99
-msgid "Remove row"
-msgstr ""
 
 #: ../util/AcceleratorKeyDialog.java:109
 msgid "Clear"
