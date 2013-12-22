@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-18 10:31+0100\n"
+"POT-Creation-Date: 2013-12-22 13:24+0100\n"
 "PO-Revision-Date: 2010-11-06 09:17+0100\n"
 "Last-Translator: Jonas Wolz <jonas.wolz@freenet.de>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,8 +18,8 @@ msgstr ""
 "X-Poedit-Language: Chinese\n"
 "X-Poedit-Country: TAIWAN\n"
 
-#: ../FaxOptions.java:647 ../FaxOptions.java:655 ../FaxOptions.java:663
-#: ../FaxOptions.java:675 ../options/ServerSettingsPanel.java:163
+#: ../FaxOptions.java:667 ../FaxOptions.java:675 ../FaxOptions.java:683
+#: ../FaxOptions.java:695 ../options/ServerSettingsPanel.java:163
 #: ../options/CoverPanel.java:232
 msgid "Default"
 msgstr "預設"
@@ -1593,7 +1593,7 @@ msgstr "伺服器名稱找不到"
 msgid "File name"
 msgstr "文件名"
 
-#: ../plugin/PluginTableModel.java:61
+#: ../plugin/PluginTableModel.java:61 ../options/TextExtractorPanel.java:441
 msgid "Type"
 msgstr "類型"
 
@@ -1840,6 +1840,7 @@ msgid "Reset the list of modems?"
 msgstr "重置數據機清單?"
 
 #: ../options/ModemsPanel.java:213 ../options/ModemsPanel.java:218
+#: ../options/TextExtractorPanel.java:319
 #: ../util/AbstractQuickSearchHelper.java:184
 #: ../util/ToolbarEditorDialog.java:163 ../util/AcceleratorKeyDialog.java:133
 msgid "Reset"
@@ -1994,76 +1995,118 @@ msgstr "請輸入Ghostscript的執行檔位置"
 msgid "Please enter the location of the tiff2pdf executable."
 msgstr "請輸入 tiff2pdf的執行檔位置"
 
-#: ../options/TextExtractorPanel.java:153
+#: ../options/TextExtractorPanel.java:174
+msgid "Empty tag names are not allowed."
+msgstr ""
+
+#: ../options/TextExtractorPanel.java:187
+msgid "You have to define at least one tag name for fax numbers."
+msgstr ""
+
+#: ../options/TextExtractorPanel.java:191
+msgid "You have to define at least one tag name for email addresses."
+msgstr ""
+
+#: ../options/TextExtractorPanel.java:213
 #, java-format
 msgid "Path to {0}:"
 msgstr "路徑{0}:"
 
-#: ../options/TextExtractorPanel.java:158
+#: ../options/TextExtractorPanel.java:218
 msgid "No path settings necessary"
 msgstr "無設定路徑"
 
-#: ../options/TextExtractorPanel.java:168
+#: ../options/TextExtractorPanel.java:228
 msgid ""
 "By activating this option YajHFC will try to extract the recipients from "
 "documents given on the command line or fax printer."
 msgstr ""
 "通過啟動這個的選項,YajHFC將嘗試在命令列上給定的文件或傳真印表機提取收件人。"
 
-#: ../options/TextExtractorPanel.java:169
+#: ../options/TextExtractorPanel.java:229
 msgid ""
 "To find recipients it searches for <tt>@@recipient:<i>faxnumber</i>@@</tt> "
 "tags in the files."
 msgstr "搜索<tt>@@recipient:<i>faxnumber</i>@@</tt>找到收件人,在文件中的標記。"
 
-#: ../options/TextExtractorPanel.java:170
+#: ../options/TextExtractorPanel.java:230
 msgid ""
 "This behaviour can be overridden by the <tt>--extract-recipients</tt> "
 "command line option."
 msgstr "這種操作可以由<tt>--extract-recipients</tt>的命令列選項。"
 
-#: ../options/TextExtractorPanel.java:171
+#: ../options/TextExtractorPanel.java:231
 msgid ""
 "If you want to use this feature a PDF/PostScript to text conversion method "
 "must be selected below."
 msgstr "如果你想使用PDF/ PostScript的文件轉換功能的方法必須選擇以下。"
 
-#: ../options/TextExtractorPanel.java:188
+#: ../options/TextExtractorPanel.java:248
 msgid "Test..."
 msgstr "測試..."
 
-#: ../options/TextExtractorPanel.java:214
+#: ../options/TextExtractorPanel.java:274
 msgid "Select a file to view as text"
 msgstr "以文字檔瀏覽所選的檔案"
 
-#: ../options/TextExtractorPanel.java:229
+#: ../options/TextExtractorPanel.java:289
 msgid "Settings for the selected conversion method"
 msgstr "設置所選的轉換方法"
 
-#: ../options/TextExtractorPanel.java:239
+#: ../options/TextExtractorPanel.java:297
+msgid "Recognized tag names"
+msgstr ""
+
+#: ../options/TextExtractorPanel.java:311 ../util/MapEditorDialog.java:99
+msgid "Remove row"
+msgstr "刪除列"
+
+#: ../options/TextExtractorPanel.java:337
+msgid "Colon (:) after name is mandatory"
+msgstr ""
+
+#: ../options/TextExtractorPanel.java:339
+msgid ""
+"Some tag names contain characters other than A-Z or 0-9. This is not "
+"recommended."
+msgstr ""
+
+#: ../options/TextExtractorPanel.java:366
 msgid "Extract recipients from documents:"
 msgstr "從文件中提取收件人："
 
-#: ../options/TextExtractorPanel.java:240
+#: ../options/TextExtractorPanel.java:367
 msgid "PS/PDF to text conversion method:"
 msgstr "PS/ PDF轉文字的轉換方法："
 
-#: ../options/TextExtractorPanel.java:260
+#: ../options/TextExtractorPanel.java:388
 #, java-format
 msgid "View as text using {0}"
 msgstr "以文字檔瀏覽 {0}"
 
-#: ../options/TextExtractorPanel.java:265
+#: ../options/TextExtractorPanel.java:393
 msgid "Converting file to text..."
 msgstr "轉換檔案成文字..."
 
-#: ../options/TextExtractorPanel.java:270
+#: ../options/TextExtractorPanel.java:398
 msgid "Running converter..."
 msgstr "轉換中..."
 
-#: ../options/TextExtractorPanel.java:279
+#: ../options/TextExtractorPanel.java:407
 msgid "Error converting file to text"
 msgstr "文字轉換錯誤"
+
+#: ../options/TextExtractorPanel.java:428 ../phonebook/PBEntryField.java:59
+msgid "e-mail address"
+msgstr "電子郵件"
+
+#: ../options/TextExtractorPanel.java:429 ../phonebook/PBEntryField.java:61
+msgid "Fax number"
+msgstr "傳真號碼"
+
+#: ../options/TextExtractorPanel.java:439
+msgid "Tag name"
+msgstr ""
 
 #: ../options/SendPanel.java:137
 msgid "Delivery settings"
@@ -2663,17 +2706,9 @@ msgstr "郵遞區號"
 msgid "State/Region"
 msgstr "國家 /地區"
 
-#: ../phonebook/PBEntryField.java:59
-msgid "e-mail address"
-msgstr "電子郵件"
-
 #: ../phonebook/PBEntryField.java:60
 msgid "Website"
 msgstr "網站"
-
-#: ../phonebook/PBEntryField.java:61
-msgid "Fax number"
-msgstr "傳真號碼"
 
 #: ../phonebook/PBEntryField.java:62
 msgid "Voice number"
@@ -4118,10 +4153,6 @@ msgstr "刪除選取項目"
 #: ../util/fmtEditor.java:152
 msgid "Moves the selected item down"
 msgstr "所選項目向下"
-
-#: ../util/MapEditorDialog.java:99
-msgid "Remove row"
-msgstr "刪除列"
 
 #: ../util/AcceleratorKeyDialog.java:109
 msgid "Clear"
