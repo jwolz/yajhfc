@@ -89,11 +89,14 @@ public class SingleEntryPhonebookPanel extends PhonebookPanel {
                 {0.5, NewPhoneBookWin.border, TableLayout.FILL},
                 new double[rowCount]
         };
-        final double rowH = 1.0 / (double)(rowCount+3);
-        Arrays.fill(dLay[1], 0, rowCount - 1, rowH);
+        //final double rowH = 1.0 / (double)(rowCount+3);
+        //Arrays.fill(dLay[1], 0, rowCount - 1, rowH);
+        Arrays.fill(dLay[1], 0, rowCount - 1, TableLayout.PREFERRED);
         dLay[1][rowCount - 1] = TableLayout.FILL;
         
-        setLayout(new TableLayout(dLay));
+        TableLayout tl = new TableLayout(dLay);
+        tl.setVGap(NewPhoneBookWin.border);
+        setLayout(tl);
         
         final int STARTCOL = 0;
         final int ENDCOL = 2;
@@ -104,7 +107,7 @@ public class SingleEntryPhonebookPanel extends PhonebookPanel {
                 JTextField textField = createEntryTextField(field);
                 TableLayoutConstraints layout;
                 if (field.isShortLength()) {
-                    layout = new TableLayoutConstraints(col, row, col, row, TableLayoutConstraints.FULL, TableLayoutConstraints.CENTER);
+                    layout = new TableLayoutConstraints(col, row, col, row, TableLayoutConstraints.FULL, TableLayoutConstraints.TOP);
                     if (col == STARTCOL) {
                         col = ENDCOL;
                     } else {
@@ -112,7 +115,7 @@ public class SingleEntryPhonebookPanel extends PhonebookPanel {
                         col  = STARTCOL;
                     }
                 } else {
-                    layout = new TableLayoutConstraints(STARTCOL, row, ENDCOL, row, TableLayoutConstraints.FULL, TableLayoutConstraints.CENTER);
+                    layout = new TableLayoutConstraints(STARTCOL, row, ENDCOL, row, TableLayoutConstraints.FULL, TableLayoutConstraints.TOP);
                     col  = STARTCOL;
                     row += 2;
                 }

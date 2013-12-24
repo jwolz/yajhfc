@@ -483,6 +483,9 @@ public class TextExtractorPanel extends AbstractOptionsPanel<FaxOptions> {
         
         @Override
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+            if (aValue.equals(getValueAt(rowIndex, columnIndex)))
+                return;
+            
             String oldTag;
             if (rowIndex >= tags.size())
                 oldTag = " ";
@@ -533,12 +536,14 @@ public class TextExtractorPanel extends AbstractOptionsPanel<FaxOptions> {
         public void setListContents(String[] newContent) {
             tags.clear();
             Collections.addAll(tags, newContent);
+            Collections.sort(tags);
             fireTableDataChanged();
         }
         
         public void setListContents(Collection<String> newContent) {
             tags.clear();
             tags.addAll(newContent);
+            Collections.sort(tags);
             fireTableDataChanged();
         }
         

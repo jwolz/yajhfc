@@ -154,7 +154,7 @@ public class CommonPanel extends AbstractOptionsPanel<FaxOptions> {
     protected void createOptionsUI() {
             double[][] tablelay = {
                     {OptionsWin.border, 0.4, OptionsWin.border, TableLayout.FILL, OptionsWin.border},
-                    {OptionsWin.border, 0.75, OptionsWin.border, TableLayout.PREFERRED, TableLayout.FILL, OptionsWin.border }
+                    {OptionsWin.border, TableLayout.PREFERRED, OptionsWin.border, TableLayout.PREFERRED, TableLayout.FILL, OptionsWin.border }
             };
             this.setLayout(new TableLayout(tablelay));
             
@@ -196,7 +196,9 @@ public class CommonPanel extends AbstractOptionsPanel<FaxOptions> {
             tablelay[1][rowCount - 3] = tablelay[1][rowCount - 4] = rowh;
             tablelay[1][rowCount - 2] =  TableLayout.FILL;
             
-            panelUI = new JPanel(new TableLayout(tablelay), false);
+            TableLayout tl = new TableLayout(tablelay);
+            tl.setVGap(OptionsWin.border);
+            panelUI = new JPanel(tl, false);
             panelUI.setBorder(BorderFactory.createTitledBorder(_("User interface")));
             
             //comboNewFaxAction = new JComboBox(Utils.newFaxActions);
