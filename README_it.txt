@@ -1,4 +1,4 @@
-LEGGIMI per YajHFC 0.5.4
+LEGGIMI per YajHFC 0.5.5
 ========================
 
 INFORMAZIONI
@@ -23,14 +23,14 @@ INSTALLAZIONE
 -------------
 
 Requisiti:
-* JRE 5.0 o superiore (si raccomanda Java 6)
+* JRE 5.0 o superiore (si raccomanda Java 6 o 7)
 * Un server fax HylaFAX attivo sulla rete (ovviamente ;-) )
 * Un programma per visualizzare i file TIFF (vedere anche la FAQ)
 * Opzionale: un visualizzatore PostScript (es. Ghostview), GhostScript
      e tiff2pdf (dal pacchetto libtiff-utils)
 
-Per installare YajHFC basta scaricare il file yajhfc-0_5_4.jar su una cartella del proprio disco.
-Per eseguirlo utilizzare: "java -jar yajhfc-0_5_4.jar"
+Per installare YajHFC basta scaricare il file yajhfc-0_5_5.jar in una cartella del proprio disco.
+Per eseguirlo utilizzare: "java -jar yajhfc-0_5_5.jar"
 (In Windows normalmente è anche possibile cliccare due volte sul file jar.)
 
 LICENZA
@@ -65,14 +65,23 @@ YajHFC originariamente era stato scritto come primo progetto Java più complesso
 MODIFICHE
 ---------
 
+0.5.5:
+- Supporto per l'utilizzo diretto della libreria libtiff nel plugin PDF (abilita
+  supporto per JBIG e migliore compatibilità con file TIFF non corretti al 100%)
+- Supporto per leggere i fax ricevuti da router AVM Fritz!Box
+  (i fax in uscita sono sempre inviati via HylaFAX)
+- Il nome dei tag per l'estrazione del testo è ora configurabile
+- Nuova traduzione: Cinese semplificato (zh_CN). 
+- Vari miglioramenti minori e correzioni di errori
+
 0.5.4:
 - Nuovo plugin per stampante batch e invio e-mail
-- Molti miglioranenti minori e correzioni di errori
+- Vari miglioramenti minori e correzioni di errori
 
 0.5.3:
 - Aggiunto il report invio/ricezione
 - Il programma di avvio su Windows è ora un exe invece di vbs (basato su launch4j modificato)
-- Molti miglioranenti minori e correzioni di errori
+- Vari miglioramenti minori e correzioni di errori
 
 0.5.2:
 - Aggiunto plugin PDF

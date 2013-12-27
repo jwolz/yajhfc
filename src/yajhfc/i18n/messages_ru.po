@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: YajHFC 0.5.4\n"
+"Project-Id-Version: YajHFC\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-12-22 13:24+0100\n"
-"PO-Revision-Date: 2013-07-16 10:25+0400\n"
+"PO-Revision-Date: 2013-12-26 15:25+0400\n"
 "Last-Translator: Alexander Moisseev <moiseev@mezonplus.ru>\n"
 "Language-Team: RUSSIAN <moiseev@mezonplus.ru>\n"
 "Language: ru_RU\n"
@@ -2033,15 +2033,15 @@ msgstr "Пожалуйста, введите расположение испол
 
 #: ../options/TextExtractorPanel.java:174
 msgid "Empty tag names are not allowed."
-msgstr ""
+msgstr "Пустые имена тегов не допускаются."
 
 #: ../options/TextExtractorPanel.java:187
 msgid "You have to define at least one tag name for fax numbers."
-msgstr ""
+msgstr "Вы должны задать хотя бы одно имя тега для номеров факсов."
 
 #: ../options/TextExtractorPanel.java:191
 msgid "You have to define at least one tag name for email addresses."
-msgstr ""
+msgstr "Вы должны задать хотя бы одно имя тега для адресов e-mail."
 
 #: ../options/TextExtractorPanel.java:213
 #, java-format
@@ -2098,7 +2098,7 @@ msgstr "Настройки выбранного метода преобразо�
 
 #: ../options/TextExtractorPanel.java:297
 msgid "Recognized tag names"
-msgstr ""
+msgstr "Имена тегов"
 
 #: ../options/TextExtractorPanel.java:311 ../util/MapEditorDialog.java:99
 msgid "Remove row"
@@ -2106,13 +2106,15 @@ msgstr "Удалить строку"
 
 #: ../options/TextExtractorPanel.java:337
 msgid "Colon (:) after name is mandatory"
-msgstr ""
+msgstr "Двоеточие (:) после имени тега обязательно"
 
 #: ../options/TextExtractorPanel.java:339
 msgid ""
 "Some tag names contain characters other than A-Z or 0-9. This is not "
 "recommended."
 msgstr ""
+"Некоторые имена тегов содержат символы, отличные от A-Z или 0-9. Это не "
+"рекомендуется."
 
 #: ../options/TextExtractorPanel.java:366
 msgid "Extract recipients from documents:"
@@ -2149,7 +2151,7 @@ msgstr "Факс"
 
 #: ../options/TextExtractorPanel.java:439
 msgid "Tag name"
-msgstr ""
+msgstr "Имя тега"
 
 #: ../options/SendPanel.java:137
 msgid "Delivery settings"
@@ -2414,7 +2416,7 @@ msgstr "Показывать таблицу \"Архив\""
 
 #: ../options/SingleServerSettingsPanel.java:400
 msgid "Configure access method..."
-msgstr ""
+msgstr "Настроить способ доступа..."
 
 #: ../options/SingleServerSettingsPanel.java:417
 msgid "Fax lists"
@@ -3930,7 +3932,7 @@ msgstr "С непосредственным доступом к области �
 
 #: ../model/servconn/FaxListConnectionType.java:57
 msgid "Fritz!Box for received, HylaFAX for outgoing faxes"
-msgstr ""
+msgstr "Fritz!Box для входящих, HylaFAX для исходящих факсов"
 
 #: ../model/servconn/JobState.java:49
 msgid "Undefined"
@@ -4006,31 +4008,32 @@ msgstr "Ошибка обновления состояния:"
 
 #: ../model/servconn/directaccess/fritz/FritzFaxListConnection.java:92
 msgid "Fritz!Box connection"
-msgstr ""
+msgstr "Подключение к Fritz!Box"
 
 #: ../model/servconn/directaccess/fritz/FritzFaxListConnection.java:92
 msgid "Please enter user name and password to connect to the Fritz!Box"
 msgstr ""
+"Пожалуйста, введите имя пользователя и пароль для подключения к Fritz!Box"
 
 #: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:91
 msgid "Fritz!Box configuration"
-msgstr ""
+msgstr "Конфигурация Fritz!Box"
 
 #: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:115
 msgid "Use passive mode"
-msgstr ""
+msgstr "Использовать пассивный режим"
 
 #: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:140
 msgid "Path to \"faxbox\" directory:"
-msgstr ""
+msgstr "Путь к каталогу \"faxbox\":"
 
 #: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:141
 msgid "File name pattern:"
-msgstr ""
+msgstr "Шаблон имен файлов:"
 
 #: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:142
 msgid "Date format in file name:"
-msgstr ""
+msgstr "Формат даты в имени файла:"
 
 #: ../model/RecvFormat.java:56
 msgid "Time/Date"
