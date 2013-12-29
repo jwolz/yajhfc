@@ -4,10 +4,10 @@
 # Elsa Andrés <e.andres@ist-sci.com>, 2008, 2009, 2010, 2011, 2012, 2013.
 msgid ""
 msgstr ""
-"Project-Id-Version: messages_es 0.5.3\n"
+"Project-Id-Version: messages_es 0.5.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-12-22 13:24+0100\n"
-"PO-Revision-Date: 2013-07-16 13:00+0200\n"
+"PO-Revision-Date: 2013-12-29 11:37+0200\n"
 "Last-Translator: Elsa Andrés <e.andres@ist-sci.com>\n"
 "Language-Team: Spanish <yajhfc-translators@lists.berlios.de>\n"
 "Language: es\n"
@@ -2058,15 +2058,17 @@ msgstr "Por favor, introduzca la ubicación del ejecutable tiff2pdf."
 
 #: ../options/TextExtractorPanel.java:174
 msgid "Empty tag names are not allowed."
-msgstr ""
+msgstr "No se permiten nombres de etiquetas vacíos."
 
 #: ../options/TextExtractorPanel.java:187
 msgid "You have to define at least one tag name for fax numbers."
-msgstr ""
+msgstr "Debe definir al menos un nombre de etiqueta para los números de fax."
 
 #: ../options/TextExtractorPanel.java:191
 msgid "You have to define at least one tag name for email addresses."
 msgstr ""
+"Debe definir al menos un nombre de etiqueta para las direcciones de correo "
+"electrónico."
 
 #: ../options/TextExtractorPanel.java:213
 #, java-format
@@ -2124,7 +2126,7 @@ msgstr "Ajustes del sistema de conversión seleccionado"
 
 #: ../options/TextExtractorPanel.java:297
 msgid "Recognized tag names"
-msgstr ""
+msgstr "Nombres de etiquetas reconocidos"
 
 #: ../options/TextExtractorPanel.java:311 ../util/MapEditorDialog.java:99
 msgid "Remove row"
@@ -2132,13 +2134,15 @@ msgstr "Eliminar la fila"
 
 #: ../options/TextExtractorPanel.java:337
 msgid "Colon (:) after name is mandatory"
-msgstr ""
+msgstr "El uso de dos puntos (:) después del nombre es obligatorio"
 
 #: ../options/TextExtractorPanel.java:339
 msgid ""
 "Some tag names contain characters other than A-Z or 0-9. This is not "
 "recommended."
 msgstr ""
+"Algunos nombres de etiquetas contienen caracteres distintos de A-Z o 0-9. "
+"Esto no se recomienda."
 
 #: ../options/TextExtractorPanel.java:366
 msgid "Extract recipients from documents:"
@@ -2175,7 +2179,7 @@ msgstr "Número de fax"
 
 #: ../options/TextExtractorPanel.java:439
 msgid "Tag name"
-msgstr ""
+msgstr "Nombre de la etiqueta"
 
 #: ../options/SendPanel.java:137
 msgid "Delivery settings"
@@ -2444,7 +2448,7 @@ msgstr "Mostrar la tabla del archivador"
 
 #: ../options/SingleServerSettingsPanel.java:400
 msgid "Configure access method..."
-msgstr ""
+msgstr "Configurar el método de acceso..."
 
 #: ../options/SingleServerSettingsPanel.java:417
 msgid "Fax lists"
@@ -3977,7 +3981,7 @@ msgstr "Acceder directamente al almacén (experimental)"
 
 #: ../model/servconn/FaxListConnectionType.java:57
 msgid "Fritz!Box for received, HylaFAX for outgoing faxes"
-msgstr ""
+msgstr "Fritz!Box para los recibidos, HylaFAX para el envío de faxes"
 
 #: ../model/servconn/JobState.java:49
 msgid "Undefined"
@@ -4053,31 +4057,32 @@ msgstr "Error al actualizar el estado:"
 
 #: ../model/servconn/directaccess/fritz/FritzFaxListConnection.java:92
 msgid "Fritz!Box connection"
-msgstr ""
+msgstr "Datos para la conexión de Fritz!Box"
 
 #: ../model/servconn/directaccess/fritz/FritzFaxListConnection.java:92
 msgid "Please enter user name and password to connect to the Fritz!Box"
 msgstr ""
+"Por favor, introduzca el nombre y la contraseña para conectarse a Fritz!Box"
 
 #: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:91
 msgid "Fritz!Box configuration"
-msgstr ""
+msgstr "Datos para la configuración de Fritz!Box"
 
 #: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:115
 msgid "Use passive mode"
-msgstr ""
+msgstr "Utilizar el modo pasivo"
 
 #: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:140
 msgid "Path to \"faxbox\" directory:"
-msgstr ""
+msgstr "Ruta al directorio \"faxbox\":"
 
 #: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:141
 msgid "File name pattern:"
-msgstr ""
+msgstr "Patrón del nombre de archivo:"
 
 #: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:142
 msgid "Date format in file name:"
-msgstr ""
+msgstr "Formato de fecha para el nombre de archivo:"
 
 #: ../model/RecvFormat.java:56
 msgid "Time/Date"
