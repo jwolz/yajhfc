@@ -66,6 +66,13 @@ de Java (más avanzado que los programas "Hola mundo") utilizando la IDE Eclipse
 CAMBIOS
 -------
 
+0.5.5:
+- Soporte nativo de libtiff en el complemento PDF (permite JBIG y una mejor compatibilidad con archivos TIFF no del todo limpios)
+- Soporte de lectura para los faxes recibidos desde los enrutadores AVM Fritz!Box (el envío de faxes se realiza a través HylaFAX)
+- Se puede configurar los nombres de etiquetas para la extracción de texto
+- Nueva traducción: chino simplificado (zh_CN). 
+- Varias mejoras de características menores y corrección de errores
+
 0.5.4:
 - Nuevos complementos para impresión por lotes y envío de mensajes mediante correo electrónico
 - Corrección de errores y algunas mejoras de menor importancia
