@@ -38,7 +38,9 @@ package yajhfc.file.textextract;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -57,8 +59,15 @@ import yajhfc.send.HylaTFLItem;
  *
  */
 public class FaxnumberExtractor {
-
     private static final Logger log = Logger.getLogger(FaxnumberExtractor.class.getName());
+    /**
+     * A comparator to sort strings by length, descending
+     */
+    static final Comparator<String> LENGTH_COMPARATOR_DESC = new Comparator<String>() {
+        public int compare(String o1, String o2) {
+            return o2.length() - o1.length();
+        }
+    };
     
     protected final Pattern[] faxnumberPatterns;
     protected final HylaToTextConverter converter;
@@ -99,9 +108,13 @@ public class FaxnumberExtractor {
     public static Pattern buildPatternFromOptions(FaxOptions fo, char prefix) {
         StringBuilder result = new StringBuilder();
         boolean first = true;
+        String[] tags = fo.recipientExtractionTags.toArray(new String[fo.recipientExtractionTags.size()]);
+        // Sort tags by length, longest first
+        // This ensures that more "specific" tags will match first (e.g. mailrecipient vs. mail)
+        Arrays.sort(tags, LENGTH_COMPARATOR_DESC);
         
         result.append("@@\\s*(?:");
-        for (String s : fo.recipientExtractionTags) {
+        for (String s : tags) {
             if (s.length() > 1 && s.charAt(0) == prefix) {
                 if (first)
                     first=false;
