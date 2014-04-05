@@ -290,7 +290,8 @@ public abstract class AbstractFaxJob<T extends FmtItem> implements SerializableF
     
     @Override
     public String toString() {
-        return getIDValue().toString();
+        Object id = getIDValue();
+        return (id == null) ? "null" : id.toString();
     }
     
 }

@@ -55,7 +55,7 @@ import yajhfc.model.servconn.defimpl.AbstractFaxJobList;
 import yajhfc.server.ServerOptions;
 
 public abstract class AbstractHylaFaxJobList<T extends FmtItem> extends AbstractFaxJobList<T> implements ManagedFaxJobList<T>  {
-    protected static final char SPLIT_CHAR = '|';
+    protected static final char SPLIT_CHAR = '\002';
     static final Logger log = Logger.getLogger(AbstractHylaFaxJobList.class.getName());
     protected final HylaFaxListConnection parent;
     
