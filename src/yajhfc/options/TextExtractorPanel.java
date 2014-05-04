@@ -427,9 +427,10 @@ public class TextExtractorPanel extends AbstractOptionsPanel<FaxOptions> {
         
         protected static final String TAG_TYPE_MAIL = Utils._("e-mail address");
         protected static final String TAG_TYPE_FAX = Utils._("Fax number");
+        protected static final String TAG_TYPE_SUBJECT = Utils._("Subject");
         
         public static String[] getAvailableTagTypes() {
-            return new String[] { TAG_TYPE_FAX, TAG_TYPE_MAIL };
+            return new String[] { TAG_TYPE_FAX, TAG_TYPE_MAIL, TAG_TYPE_SUBJECT };
         }
         
         @Override
@@ -470,6 +471,8 @@ public class TextExtractorPanel extends AbstractOptionsPanel<FaxOptions> {
                     return TAG_TYPE_FAX;
                 case FaxnumberExtractor.PATTERN_PREFIX_MAIL:
                     return TAG_TYPE_MAIL;
+                case FaxnumberExtractor.PATTERN_PREFIX_SUBJECT:
+                    return TAG_TYPE_SUBJECT;
                 }
             default:
                 return null;
@@ -508,6 +511,8 @@ public class TextExtractorPanel extends AbstractOptionsPanel<FaxOptions> {
                     prefix = FaxnumberExtractor.PATTERN_PREFIX_FAX;
                 } else if (TAG_TYPE_MAIL.equals(aValue)) {
                     prefix = FaxnumberExtractor.PATTERN_PREFIX_MAIL;
+                } else if (TAG_TYPE_SUBJECT.equals(aValue)) {
+                    prefix = FaxnumberExtractor.PATTERN_PREFIX_SUBJECT;
                 } else {
                     prefix = FaxnumberExtractor.PATTERN_PREFIX_FAX;
                 }
