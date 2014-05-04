@@ -229,6 +229,11 @@ public class ServerSettingsPanel extends AbstractOptionsPanel<FaxOptions> {
                     return MessageFormat.format(_("Do you really want to remove the server \"{0}\"?"), selectedItem);
                 }
                 
+                @Override
+                protected String getDeletePrompt(int[] selectedItems) {
+                    return MessageFormat.format(_("Do you really want to remove the selected {0} servers?"), selectedItems.length);
+                }
+                
                 private boolean listSaved = false;
                 public void saveSettingsCalled(OptionsPageWrapper<ServerOptions> source,
                         FaxOptions foEdit) {

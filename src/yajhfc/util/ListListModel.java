@@ -38,6 +38,7 @@ package yajhfc.util;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -136,6 +137,15 @@ public class ListListModel<T> extends AbstractListModel implements Collection<T>
         Collections.swap(list, index1, index2);
         fireContentsChanged(this, index1, index1);
         fireContentsChanged(this, index2, index2);
+    }
+        
+    /**
+     * Sort the list using the given comparator
+     * @param comparator
+     */
+    public void sort(Comparator<? super T> comparator) {
+        Collections.sort(list, comparator);
+        fireContentsChanged(this, 0, list.size()-1);
     }
     
     /**

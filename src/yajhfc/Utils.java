@@ -882,6 +882,20 @@ public final class Utils {
     }
     
     /**
+     * Shortens the given String to the desired length (for display to the user)
+     * @param file
+     * @param desiredLen
+     * @return
+     */
+    public static String shortenStringForDisplay(String str, int desiredLen) {
+        if (str.length() > desiredLen) {
+            return str.substring(0, desiredLen-3) + "...";
+        } else {
+            return str;
+        }
+    }
+    
+    /**
      * Extracts the executable name from the given command line
      * @param cmdLine
      * @return
