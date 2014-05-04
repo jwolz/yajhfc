@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-22 13:24+0100\n"
+"POT-Creation-Date: 2014-05-04 11:27+0200\n"
 "PO-Revision-Date: 2010-11-06 09:17+0100\n"
 "Last-Translator: Jonas Wolz <jonas.wolz@freenet.de>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,9 +18,9 @@ msgstr ""
 "X-Poedit-Language: Chinese\n"
 "X-Poedit-Country: China\n"
 
-#: ../FaxOptions.java:667 ../FaxOptions.java:675 ../FaxOptions.java:683
-#: ../FaxOptions.java:695 ../options/ServerSettingsPanel.java:163
-#: ../options/CoverPanel.java:232
+#: ../FaxOptions.java:668 ../FaxOptions.java:676 ../FaxOptions.java:684
+#: ../FaxOptions.java:696 ../options/ServerSettingsPanel.java:163
+#: ../options/CoverPanel.java:237
 msgid "Default"
 msgstr "预设"
 
@@ -566,7 +566,7 @@ msgstr "{0}-文件"
 msgid "Export to XML"
 msgstr "导出到XML"
 
-#: ../export/ExportAction.java:163 ../MainWin.java:3272
+#: ../export/ExportAction.java:163 ../MainWin.java:3277
 #: ../send/SimplifiedSendDialog.java:359
 msgid "Server"
 msgstr "服务器"
@@ -899,7 +899,7 @@ msgstr ""
 #: ../options/IdentityPanel.java:220 ../options/PathAndViewPanel.java:327
 #: ../options/PathAndViewPanel.java:333 ../options/PathAndViewPanel.java:339
 #: ../options/PathAndViewPanel.java:347 ../options/PathAndViewPanel.java:353
-#: ../options/CommonPanel.java:402 ../options/CommonPanel.java:410
+#: ../options/CommonPanel.java:404 ../options/CommonPanel.java:412
 #: ../options/SingleServerSettingsPanel.java:300
 #: ../options/SingleServerSettingsPanel.java:307
 #: ../options/SingleServerSettingsPanel.java:314
@@ -948,7 +948,7 @@ msgid "Saves the selected fax(es) as single {0} file"
 msgstr "保存所选传真{0}至1个档"
 
 #: ../MainWin.java:855 ../options/OptionsWin.java:120
-#: ../options/CommonPanel.java:369
+#: ../options/CommonPanel.java:371
 msgid "Options"
 msgstr "选项"
 
@@ -1474,7 +1474,7 @@ msgid "Cancel"
 msgstr "取消"
 
 #: ../filters/ui/CustomFilterDialog.java:133 ../options/ModemsPanel.java:163
-#: ../options/MultiEditPanel.java:123 ../phonebook/ui/NewPhoneBookWin.java:886
+#: ../options/MultiEditPanel.java:133 ../phonebook/ui/NewPhoneBookWin.java:886
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:348
 #: ../phonebook/ui/RuleParserDialog.java:306
 #: ../send/SimplifiedSendDialog.java:559 ../send/TextFieldList.java:145
@@ -1593,7 +1593,7 @@ msgstr "服务器名称找不到"
 msgid "File name"
 msgstr "文件名"
 
-#: ../plugin/PluginTableModel.java:61 ../options/TextExtractorPanel.java:441
+#: ../plugin/PluginTableModel.java:61 ../options/TextExtractorPanel.java:442
 msgid "Type"
 msgstr "类型"
 
@@ -1613,7 +1613,7 @@ msgstr "JDBC driver"
 msgid "Plugin"
 msgstr "外挂"
 
-#: ../options/OptionsWin.java:233 ../options/CoverPanel.java:172
+#: ../options/OptionsWin.java:233 ../options/CoverPanel.java:177
 #: ../send/SendWin.java:487
 msgid "General"
 msgstr "一般"
@@ -1626,7 +1626,7 @@ msgstr "路径和浏览"
 msgid "Recipient extraction"
 msgstr "解压缩"
 
-#: ../options/OptionsWin.java:240 ../options/ServerSettingsPanel.java:259
+#: ../options/OptionsWin.java:240 ../options/ServerSettingsPanel.java:264
 msgid "Servers"
 msgstr "服务器"
 
@@ -1716,7 +1716,7 @@ msgstr "传递"
 msgid "Modems"
 msgstr "数据机"
 
-#: ../options/ServerSettingsPanel.java:223 ../options/CoverPanel.java:107
+#: ../options/ServerSettingsPanel.java:223 ../options/CoverPanel.java:112
 #, java-format
 msgid "Copy of {0}"
 msgstr "复制 {0}"
@@ -1726,45 +1726,50 @@ msgstr "复制 {0}"
 msgid "Do you really want to remove the server \"{0}\"?"
 msgstr "真的要移除服务器\"{0}\"?"
 
-#: ../options/ServerSettingsPanel.java:265
+#: ../options/ServerSettingsPanel.java:234
+#, java-format
+msgid "Do you really want to remove the selected {0} servers?"
+msgstr ""
+
+#: ../options/ServerSettingsPanel.java:270
 msgid "Clear cache"
 msgstr "清除快取"
 
-#: ../options/ServerSettingsPanel.java:276
+#: ../options/ServerSettingsPanel.java:281
 msgid "Locally cache fax lists"
 msgstr "本地传真快取清单"
 
-#: ../options/ServerSettingsPanel.java:284
+#: ../options/ServerSettingsPanel.java:289
 msgid "Cache settings"
 msgstr "快取设定"
 
-#: ../options/ServerSettingsPanel.java:286
+#: ../options/ServerSettingsPanel.java:291
 msgid "Current Cache size:"
 msgstr "快取大小:"
 
-#: ../options/ServerSettingsPanel.java:311
+#: ../options/ServerSettingsPanel.java:316
 msgid "Global settings"
 msgstr "全球设定"
 
-#: ../options/ServerSettingsPanel.java:313
+#: ../options/ServerSettingsPanel.java:318
 msgid "Use PCL file type bugfix"
 msgstr "Use PCL file type bugfix"
 
-#: ../options/ServerSettingsPanel.java:319
+#: ../options/ServerSettingsPanel.java:324
 msgid ""
 "The maximum time to wait for a interaction with the server to complete. "
 "Values below 5 are not recommended; 0 disables this timeout."
 msgstr "服务器完成等待最大时间. 建议不低于 5，; 0禁用."
 
-#: ../options/ServerSettingsPanel.java:323
+#: ../options/ServerSettingsPanel.java:328
 msgid "Table refresh interval (secs.):"
 msgstr "清单刷新间隔(秒):"
 
-#: ../options/ServerSettingsPanel.java:324
+#: ../options/ServerSettingsPanel.java:329
 msgid "Server status refresh interval (secs.):"
 msgstr "服务器状态刷新间隔(秒):"
 
-#: ../options/ServerSettingsPanel.java:325
+#: ../options/ServerSettingsPanel.java:330
 msgid "Server socket timeout (secs):"
 msgstr "服务器Socket时间结束(秒):"
 
@@ -1781,28 +1786,33 @@ msgstr "可用字段"
 msgid "Do you really want to remove the identity \"{0}\"?"
 msgstr "是否真的要移除认证\"{0}\"?"
 
-#: ../options/CoverPanel.java:116
+#: ../options/CoverPanel.java:105
+#, java-format
+msgid "Do you really want to remove the selected {0} identities?"
+msgstr ""
+
+#: ../options/CoverPanel.java:121
 #, java-format
 msgid "Identity {0}"
 msgstr "认证{0}"
 
-#: ../options/CoverPanel.java:163
+#: ../options/CoverPanel.java:168
 msgid "Identities"
 msgstr "认证"
 
-#: ../options/CoverPanel.java:185
+#: ../options/CoverPanel.java:190
 msgid "Name format:"
 msgstr "名称格式："
 
-#: ../options/CoverPanel.java:187
+#: ../options/CoverPanel.java:192
 msgid "Company format:"
 msgstr "公司格式："
 
-#: ../options/CoverPanel.java:189
+#: ../options/CoverPanel.java:194
 msgid "Location format:"
 msgstr "位置格式："
 
-#: ../options/CoverPanel.java:191
+#: ../options/CoverPanel.java:196
 msgid "ZIP code format:"
 msgstr "邮递区号格式："
 
@@ -1819,18 +1829,18 @@ msgstr "重试数据机清单"
 msgid "Login successful, logging out."
 msgstr "登录成功,退出"
 
-#: ../options/ModemsPanel.java:176 ../options/MultiEditPanel.java:143
-#: ../options/MultiEditPanel.java:151 ../send/SimplifiedSendDialog.java:576
+#: ../options/ModemsPanel.java:176 ../options/MultiEditPanel.java:153
+#: ../options/MultiEditPanel.java:167 ../send/SimplifiedSendDialog.java:576
 #: ../send/TextFieldList.java:167
 msgid "Remove"
 msgstr "删除"
 
-#: ../options/ModemsPanel.java:192 ../options/MultiEditPanel.java:182
+#: ../options/ModemsPanel.java:192 ../options/MultiEditPanel.java:198
 #: ../util/fmtEditor.java:130 ../send/TextFieldList.java:101
 msgid "Up"
 msgstr "上"
 
-#: ../options/ModemsPanel.java:207 ../options/MultiEditPanel.java:170
+#: ../options/ModemsPanel.java:207 ../options/MultiEditPanel.java:186
 #: ../util/fmtEditor.java:151 ../send/TextFieldList.java:126
 msgid "Down"
 msgstr "下"
@@ -2104,7 +2114,12 @@ msgstr "电子邮件"
 msgid "Fax number"
 msgstr "传真号码"
 
-#: ../options/TextExtractorPanel.java:439
+#: ../options/TextExtractorPanel.java:430
+#: ../model/jobq/QueueFileFormat.java:115
+msgid "Subject"
+msgstr "主题"
+
+#: ../options/TextExtractorPanel.java:440
 msgid "Tag name"
 msgstr ""
 
@@ -2195,88 +2210,88 @@ msgstr "更新检查"
 msgid "Automatically check for updates"
 msgstr "自动检查更新"
 
-#: ../options/CommonPanel.java:200
+#: ../options/CommonPanel.java:202
 msgid "User interface"
 msgstr "用户界面"
 
-#: ../options/CommonPanel.java:224
+#: ../options/CommonPanel.java:226
 msgid "Show tray icon"
 msgstr "显示系统列图示"
 
-#: ../options/CommonPanel.java:225
+#: ../options/CommonPanel.java:227
 msgid "Show a system tray icon (works only with Java 6 or higher)"
 msgstr "显示系统列图示（只能使用Java 6或更高）"
 
-#: ../options/CommonPanel.java:227
+#: ../options/CommonPanel.java:229
 msgid "Minimize to tray"
 msgstr "最小化到工具栏"
 
-#: ../options/CommonPanel.java:231 ../options/CommonPanel.java:232
+#: ../options/CommonPanel.java:233 ../options/CommonPanel.java:234
 msgid "Minimize to tray when main window is closed"
 msgstr "视窗关闭时,最小化到工具栏"
 
-#: ../options/CommonPanel.java:244
+#: ../options/CommonPanel.java:246
 msgid "Language:"
 msgstr "语言："
 
-#: ../options/CommonPanel.java:245
+#: ../options/CommonPanel.java:247
 msgid "Look and Feel:"
 msgstr "外观："
 
-#: ../options/CommonPanel.java:246
+#: ../options/CommonPanel.java:248
 msgid "Style of send dialog:"
 msgstr "发送话框风格："
 
-#: ../options/CommonPanel.java:270
+#: ../options/CommonPanel.java:272
 msgid "Actions after receiving a new fax:"
 msgstr "收到新传真的动作："
 
-#: ../options/CommonPanel.java:272
+#: ../options/CommonPanel.java:274
 msgid "Beep"
 msgstr "蜂鸣"
 
-#: ../options/CommonPanel.java:273
+#: ../options/CommonPanel.java:275
 msgid "Bring to front"
 msgstr "显示在上层"
 
-#: ../options/CommonPanel.java:274
+#: ../options/CommonPanel.java:276
 msgid "Open in viewer"
 msgstr "开启浏览"
 
-#: ../options/CommonPanel.java:280
+#: ../options/CommonPanel.java:282
 msgid "And mark as read"
 msgstr "标记为已读"
 
-#: ../options/CommonPanel.java:282
+#: ../options/CommonPanel.java:284
 msgid "Show flashing tray icon"
 msgstr "系统列图示显示闪动"
 
-#: ../options/CommonPanel.java:283
+#: ../options/CommonPanel.java:285
 msgid "Display tray icon message"
 msgstr "显示图示讯息"
 
-#: ../options/CommonPanel.java:302
+#: ../options/CommonPanel.java:304
 msgid "Date and Time Format:"
 msgstr "日期和时间格式："
 
-#: ../options/CommonPanel.java:311
+#: ../options/CommonPanel.java:313
 msgid "Date format:"
 msgstr "日期格式："
 
-#: ../options/CommonPanel.java:312
+#: ../options/CommonPanel.java:314
 msgid "Time format:"
 msgstr "时间格式："
 
-#: ../options/CommonPanel.java:369
+#: ../options/CommonPanel.java:371
 msgid ""
 "You must restart the program for the change of the language to take effect."
 msgstr "您必须重新启动程序,改变语言才能生效。"
 
-#: ../options/CommonPanel.java:402
+#: ../options/CommonPanel.java:404
 msgid "Please enter a valid date format:"
 msgstr "请输入正确的日期格式："
 
-#: ../options/CommonPanel.java:410
+#: ../options/CommonPanel.java:412
 msgid "Please enter a valid time format."
 msgstr "请输入正确的时间格式。"
 
@@ -2533,13 +2548,17 @@ msgstr "设定导出错误"
 msgid "Import/Export"
 msgstr "导入/导出"
 
-#: ../options/MultiEditPanel.java:131
+#: ../options/MultiEditPanel.java:141
 msgid "Duplicate"
 msgstr "副本"
 
-#: ../options/MultiEditPanel.java:157
+#: ../options/MultiEditPanel.java:173
 msgid "Edit"
 msgstr "编辑"
+
+#: ../options/MultiEditPanel.java:210
+msgid "Sort"
+msgstr ""
 
 #: ../phonebook/PhoneBookFactory.java:79
 msgid "Personal phone book"
@@ -3043,7 +3062,7 @@ msgstr "新增所选项目到分发清单"
 msgid "Please select the items to add to the distribution list:"
 msgstr "请选择项目新增到通讯组清单："
 
-#: ../phonebook/ui/SingleEntryPhonebookPanel.java:133 ../send/SendWin.java:336
+#: ../phonebook/ui/SingleEntryPhonebookPanel.java:136 ../send/SendWin.java:336
 #: ../send/SimplifiedSendDialog.java:391
 msgid "Comments:"
 msgstr "注解："
@@ -3721,10 +3740,6 @@ msgstr "收件人电话"
 #: ../model/jobq/QueueFileFormat.java:114
 msgid "Recipient's telephone (voice) number"
 msgstr "接收电话号码"
-
-#: ../model/jobq/QueueFileFormat.java:115
-msgid "Subject"
-msgstr "主题"
 
 #: ../model/jobq/QueueFileFormat.java:115
 msgid "Subject (\"Regarding\") of the fax"
