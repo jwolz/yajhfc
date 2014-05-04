@@ -3264,7 +3264,9 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     class ServerMenu implements ActionListener {
         //private static final String PROP_SERVER = "ServerMenu->Server";
         private static final int ITEMS_PER_SUBMENU = 10;
-        private static final int SUBMENU_THRESHOLD = 15;
+        // max. items per sub menu
+        private static final int SUBMENU_THRESHOLD = 12; 
+        // length of the start and end item description in the sub menu caption
         private static final int SUBMENU_STRLEN = 8;
         
         protected JMenu serverMenu;
@@ -3298,12 +3300,16 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             final List<Server> servers = ServerManager.getDefault().getServers();
             final int serverCount = servers.size();
             JMenu currentMenu = serverMenu;
+            int lastGroup = 0;
             
             for (int i=0; i<serverCount; i++) {
                 Server server=servers.get(i);
                 
-                // Organize servers in submenus if there are too many
-                if (serverCount > SUBMENU_THRESHOLD && (i%ITEMS_PER_SUBMENU)==0) {
+                // Organize servers in submenus if there are too many items
+                // i.e.: if there are more than 12 items left, start a new sub menu
+                //  -> if there are less than 12 items in total, this will never create a sub menu as intended!
+                if ((serverCount-lastGroup) > SUBMENU_THRESHOLD && (i%ITEMS_PER_SUBMENU)==0) {
+                    lastGroup = i;
                     int endIndex = Math.min(i+ITEMS_PER_SUBMENU, serverCount)-1;
                     currentMenu = new JMenu(Utils.shortenStringForDisplay(server.toString(), SUBMENU_STRLEN) + " -> " +  Utils.shortenStringForDisplay(servers.get(endIndex).toString(), SUBMENU_STRLEN));
                     serverMenu.add(currentMenu);
