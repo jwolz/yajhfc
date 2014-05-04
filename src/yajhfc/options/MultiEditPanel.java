@@ -42,6 +42,7 @@ import info.clearthought.layout.TableLayout;
 
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.Action;
@@ -68,9 +69,16 @@ import yajhfc.util.ListListModel;
 public abstract class MultiEditPanel<T> extends JPanel implements Callback<T> {
     PanelTreeNode settingsNode;
     JList list;
-    Action actAdd, actRemove, actEdit, actDuplicate, actUp, actDown;
+    Action actAdd, actRemove, actEdit, actDuplicate, actUp, actDown, actSort;
     
     ListListModel<T> itemsListModel;
+    
+    public static final Comparator<Object> LEXICAL_CASE_INSENSITIVE_COMPARATOR = new Comparator<Object>() {
+        public int compare(Object o1, Object o2) {
+            return o1.toString().compareToIgnoreCase(o2.toString());
+        }
+        
+    };
     
     public MultiEditPanel() {
         this(new ListListModel<T>(new ArrayList<T>()));
@@ -96,6 +104,8 @@ public abstract class MultiEditPanel<T> extends JPanel implements Callback<T> {
     
     protected abstract String getDeletePrompt(T selectedItem);
     
+    protected abstract String getDeletePrompt(int[] selectedItems);
+    
     protected abstract T createNewItem();
     
     protected abstract T duplicateItem(T toDuplicate);
@@ -107,7 +117,7 @@ public abstract class MultiEditPanel<T> extends JPanel implements Callback<T> {
     private void initialize() {
         double[][] tablelay = {
                 {border, TableLayout.FILL, border, TableLayout.PREFERRED, border},
-                {border, TableLayout.PREFERRED, border, TableLayout.PREFERRED, border, TableLayout.PREFERRED, border,TableLayout.PREFERRED, border,TableLayout.PREFERRED, border, TableLayout.PREFERRED, TableLayout.FILL, border }
+                {border, TableLayout.PREFERRED, border, TableLayout.PREFERRED, border, TableLayout.PREFERRED, border,TableLayout.PREFERRED, border,TableLayout.PREFERRED, border, TableLayout.PREFERRED, border, TableLayout.PREFERRED, TableLayout.FILL, border }
         };
         setLayout(new TableLayout(tablelay));
         
@@ -144,12 +154,18 @@ public abstract class MultiEditPanel<T> extends JPanel implements Callback<T> {
             
             @Override
             protected void actualActionPerformed(ActionEvent e) {
-                int selIdx = list.getSelectedIndex();
-                if (selIdx < 0 || itemsListModel.getSize() <= 1)
+                int[] selIndices = list.getSelectedIndices();
+                if (selIndices.length==0 || itemsListModel.getSize() <= 1)
                     return;
                 
-                if (JOptionPane.showConfirmDialog(MultiEditPanel.this, getDeletePrompt(itemsListModel.getList().get(selIdx)), _("Remove"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                    itemsListModel.remove(selIdx);
+                String prompt;
+                if (selIndices.length==1) {
+                    prompt = getDeletePrompt(itemsListModel.getList().get(selIndices[0]));
+                } else {
+                    prompt = getDeletePrompt(selIndices);
+                }
+                if (JOptionPane.showConfirmDialog(MultiEditPanel.this, prompt, _("Remove"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    itemsListModel.removeAll(selIndices);
                 }
             }
         };
@@ -188,6 +204,14 @@ public abstract class MultiEditPanel<T> extends JPanel implements Callback<T> {
                     return;
                 
                 itemsListModel.moveUp(new int[] { selIdx });
+            }
+        };
+        
+        actSort = new ExcDialogAbstractAction(_("Sort"), Utils.loadIcon("text/AlignJustify")) {
+            
+            @Override
+            protected void actualActionPerformed(ActionEvent e) {
+                itemsListModel.sort(LEXICAL_CASE_INSENSITIVE_COMPARATOR);
             }
         };
         
@@ -240,13 +264,14 @@ public abstract class MultiEditPanel<T> extends JPanel implements Callback<T> {
             }
         });
         
-        this.add(new JScrollPane(list), "1,1,1,12,f,f");
+        this.add(new JScrollPane(list), "1,1,1,14,f,f");
         this.add(new JButton(actAdd), "3,1");
         this.add(new JButton(actDuplicate), "3,3");
         this.add(new JButton(actEdit), "3,5");
         this.add(new JButton(actUp), "3,7");
         this.add(new JButton(actDown), "3,9");
-        this.add(new JButton(actRemove), "3,11");
+        this.add(new JButton(actSort), "3,11");
+        this.add(new JButton(actRemove), "3,13");
         
         checkEnable();
     }

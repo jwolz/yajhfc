@@ -101,6 +101,11 @@ public class CoverPanel extends AbstractOptionsPanel<FaxOptions> {
                 }
                 
                 @Override
+                protected String getDeletePrompt(int[] selectedItems) {
+                    return MessageFormat.format(_("Do you really want to remove the selected {0} identities?"), selectedItems.length);
+                }
+                
+                @Override
                 protected SenderIdentity duplicateItem(SenderIdentity toDuplicate) {
                     SenderIdentity newID = new SenderIdentity(toDuplicate);
                     newID.generateNewID();

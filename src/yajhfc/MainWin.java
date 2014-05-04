@@ -3263,6 +3263,9 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     
     class ServerMenu implements ActionListener {
         //private static final String PROP_SERVER = "ServerMenu->Server";
+        private static final int ITEMS_PER_SUBMENU = 10;
+        private static final int SUBMENU_THRESHOLD = 15;
+        private static final int SUBMENU_STRLEN = 8;
         
         protected JMenu serverMenu;
         protected final List<JRadioButtonMenuItem> serverMenuItems = new ArrayList<JRadioButtonMenuItem>();
@@ -3292,7 +3295,20 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             serverMenuItems.clear();
             serverMenu.removeAll();
          
-            for (Server server : ServerManager.getDefault().getServers()) {
+            final List<Server> servers = ServerManager.getDefault().getServers();
+            final int serverCount = servers.size();
+            JMenu currentMenu = serverMenu;
+            
+            for (int i=0; i<serverCount; i++) {
+                Server server=servers.get(i);
+                
+                // Organize servers in submenus if there are too many
+                if (serverCount > SUBMENU_THRESHOLD && (i%ITEMS_PER_SUBMENU)==0) {
+                    int endIndex = Math.min(i+ITEMS_PER_SUBMENU, serverCount)-1;
+                    currentMenu = new JMenu(Utils.shortenStringForDisplay(server.toString(), SUBMENU_STRLEN) + " -> " +  Utils.shortenStringForDisplay(servers.get(endIndex).toString(), SUBMENU_STRLEN));
+                    serverMenu.add(currentMenu);
+                }
+                
                 String actionCommand = String.valueOf(server.getID());
                 
                 JRadioButtonMenuItem newItem = oldMenus.get(actionCommand);
@@ -3307,7 +3323,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 }
                 //newItem.putClientProperty(PROP_SERVER, server);
                 serverMenuItems.add(newItem);
-                serverMenu.add(newItem);
+                currentMenu.add(newItem);
                 
                 if (server == currentServer) {
                     newItem.setSelected(true);
