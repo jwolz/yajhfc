@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: messages_it\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-22 13:24+0100\n"
+"POT-Creation-Date: 2014-05-04 11:27+0200\n"
 "PO-Revision-Date: 2013-12-28 17:32+0100\n"
 "Last-Translator: Giulio Orsero <giulioo@pobox.com>\n"
 "Language-Team: \n"
@@ -17,9 +17,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.6.3\n"
 
-#: ../FaxOptions.java:667 ../FaxOptions.java:675 ../FaxOptions.java:683
-#: ../FaxOptions.java:695 ../options/ServerSettingsPanel.java:163
-#: ../options/CoverPanel.java:232
+#: ../FaxOptions.java:668 ../FaxOptions.java:676 ../FaxOptions.java:684
+#: ../FaxOptions.java:696 ../options/ServerSettingsPanel.java:163
+#: ../options/CoverPanel.java:237
 msgid "Default"
 msgstr "Predefinito"
 
@@ -577,7 +577,7 @@ msgstr "{0}-file"
 msgid "Export to XML"
 msgstr "Esporta in XML"
 
-#: ../export/ExportAction.java:163 ../MainWin.java:3272
+#: ../export/ExportAction.java:163 ../MainWin.java:3277
 #: ../send/SimplifiedSendDialog.java:359
 msgid "Server"
 msgstr "Server"
@@ -926,7 +926,7 @@ msgstr ""
 #: ../options/IdentityPanel.java:220 ../options/PathAndViewPanel.java:327
 #: ../options/PathAndViewPanel.java:333 ../options/PathAndViewPanel.java:339
 #: ../options/PathAndViewPanel.java:347 ../options/PathAndViewPanel.java:353
-#: ../options/CommonPanel.java:402 ../options/CommonPanel.java:410
+#: ../options/CommonPanel.java:404 ../options/CommonPanel.java:412
 #: ../options/SingleServerSettingsPanel.java:300
 #: ../options/SingleServerSettingsPanel.java:307
 #: ../options/SingleServerSettingsPanel.java:314
@@ -975,7 +975,7 @@ msgid "Saves the selected fax(es) as single {0} file"
 msgstr "Salva il/i fax selezionato/i in un singolo file {0}"
 
 #: ../MainWin.java:855 ../options/OptionsWin.java:120
-#: ../options/CommonPanel.java:369
+#: ../options/CommonPanel.java:371
 msgid "Options"
 msgstr "Opzioni"
 
@@ -1509,7 +1509,7 @@ msgid "Cancel"
 msgstr "Annulla"
 
 #: ../filters/ui/CustomFilterDialog.java:133 ../options/ModemsPanel.java:163
-#: ../options/MultiEditPanel.java:123 ../phonebook/ui/NewPhoneBookWin.java:886
+#: ../options/MultiEditPanel.java:133 ../phonebook/ui/NewPhoneBookWin.java:886
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:348
 #: ../phonebook/ui/RuleParserDialog.java:306
 #: ../send/SimplifiedSendDialog.java:559 ../send/TextFieldList.java:145
@@ -1628,7 +1628,7 @@ msgstr "Non è stato trovato il nome host del server:"
 msgid "File name"
 msgstr "Nome file"
 
-#: ../plugin/PluginTableModel.java:61 ../options/TextExtractorPanel.java:441
+#: ../plugin/PluginTableModel.java:61 ../options/TextExtractorPanel.java:442
 msgid "Type"
 msgstr "Tipo"
 
@@ -1648,7 +1648,7 @@ msgstr "Driver JDBC"
 msgid "Plugin"
 msgstr "Plugin"
 
-#: ../options/OptionsWin.java:233 ../options/CoverPanel.java:172
+#: ../options/OptionsWin.java:233 ../options/CoverPanel.java:177
 #: ../send/SendWin.java:487
 msgid "General"
 msgstr "Generale"
@@ -1661,7 +1661,7 @@ msgstr "Percorsi e visualizzatori"
 msgid "Recipient extraction"
 msgstr "Estrazione destinatario"
 
-#: ../options/OptionsWin.java:240 ../options/ServerSettingsPanel.java:259
+#: ../options/OptionsWin.java:240 ../options/ServerSettingsPanel.java:264
 msgid "Servers"
 msgstr "Server"
 
@@ -1751,7 +1751,7 @@ msgstr "Consegna"
 msgid "Modems"
 msgstr "Modem"
 
-#: ../options/ServerSettingsPanel.java:223 ../options/CoverPanel.java:107
+#: ../options/ServerSettingsPanel.java:223 ../options/CoverPanel.java:112
 #, java-format
 msgid "Copy of {0}"
 msgstr "Copia di {0}"
@@ -1761,31 +1761,36 @@ msgstr "Copia di {0}"
 msgid "Do you really want to remove the server \"{0}\"?"
 msgstr "Conferma rimozione del server \"{0}\"?"
 
-#: ../options/ServerSettingsPanel.java:265
+#: ../options/ServerSettingsPanel.java:234
+#, java-format
+msgid "Do you really want to remove the selected {0} servers?"
+msgstr ""
+
+#: ../options/ServerSettingsPanel.java:270
 msgid "Clear cache"
 msgstr "Svuota la cache"
 
-#: ../options/ServerSettingsPanel.java:276
+#: ../options/ServerSettingsPanel.java:281
 msgid "Locally cache fax lists"
 msgstr "Salva localmene (cache) gli elenchi dei fax"
 
-#: ../options/ServerSettingsPanel.java:284
+#: ../options/ServerSettingsPanel.java:289
 msgid "Cache settings"
 msgstr "Impostazioni cache"
 
-#: ../options/ServerSettingsPanel.java:286
+#: ../options/ServerSettingsPanel.java:291
 msgid "Current Cache size:"
 msgstr "Dimensioni correnti cache:"
 
-#: ../options/ServerSettingsPanel.java:311
+#: ../options/ServerSettingsPanel.java:316
 msgid "Global settings"
 msgstr "Impostazioni globali"
 
-#: ../options/ServerSettingsPanel.java:313
+#: ../options/ServerSettingsPanel.java:318
 msgid "Use PCL file type bugfix"
 msgstr "Corregge problema in gestione file PCL"
 
-#: ../options/ServerSettingsPanel.java:319
+#: ../options/ServerSettingsPanel.java:324
 msgid ""
 "The maximum time to wait for a interaction with the server to complete. "
 "Values below 5 are not recommended; 0 disables this timeout."
@@ -1794,15 +1799,15 @@ msgstr ""
 "server. Valori inferiori a 5 non sono raccomandati; 0 disabilita questo "
 "timeout"
 
-#: ../options/ServerSettingsPanel.java:323
+#: ../options/ServerSettingsPanel.java:328
 msgid "Table refresh interval (secs.):"
 msgstr "Intervallo di aggiornamento degli elenchi (sec.):"
 
-#: ../options/ServerSettingsPanel.java:324
+#: ../options/ServerSettingsPanel.java:329
 msgid "Server status refresh interval (secs.):"
 msgstr "Intervallo di aggiornamento dello stato server (sec.):"
 
-#: ../options/ServerSettingsPanel.java:325
+#: ../options/ServerSettingsPanel.java:330
 msgid "Server socket timeout (secs):"
 msgstr "Timeout connessione al server (sec.):"
 
@@ -1819,28 +1824,33 @@ msgstr "Colonne disponibili:"
 msgid "Do you really want to remove the identity \"{0}\"?"
 msgstr "Conferma rimozione dell''identità \"{0}\"?"
 
-#: ../options/CoverPanel.java:116
+#: ../options/CoverPanel.java:105
+#, java-format
+msgid "Do you really want to remove the selected {0} identities?"
+msgstr ""
+
+#: ../options/CoverPanel.java:121
 #, java-format
 msgid "Identity {0}"
 msgstr "Identità {0}"
 
-#: ../options/CoverPanel.java:163
+#: ../options/CoverPanel.java:168
 msgid "Identities"
 msgstr "Identità"
 
-#: ../options/CoverPanel.java:185
+#: ../options/CoverPanel.java:190
 msgid "Name format:"
 msgstr "Formato nome:"
 
-#: ../options/CoverPanel.java:187
+#: ../options/CoverPanel.java:192
 msgid "Company format:"
 msgstr "Formato società:"
 
-#: ../options/CoverPanel.java:189
+#: ../options/CoverPanel.java:194
 msgid "Location format:"
 msgstr "Formato indirizzo:"
 
-#: ../options/CoverPanel.java:191
+#: ../options/CoverPanel.java:196
 msgid "ZIP code format:"
 msgstr "Formato C.A.P.:"
 
@@ -1857,18 +1867,18 @@ msgstr "Recupero elenco modem..."
 msgid "Login successful, logging out."
 msgstr "Login corretto, logout in corso."
 
-#: ../options/ModemsPanel.java:176 ../options/MultiEditPanel.java:143
-#: ../options/MultiEditPanel.java:151 ../send/SimplifiedSendDialog.java:576
+#: ../options/ModemsPanel.java:176 ../options/MultiEditPanel.java:153
+#: ../options/MultiEditPanel.java:167 ../send/SimplifiedSendDialog.java:576
 #: ../send/TextFieldList.java:167
 msgid "Remove"
 msgstr "Elimina"
 
-#: ../options/ModemsPanel.java:192 ../options/MultiEditPanel.java:182
+#: ../options/ModemsPanel.java:192 ../options/MultiEditPanel.java:198
 #: ../util/fmtEditor.java:130 ../send/TextFieldList.java:101
 msgid "Up"
 msgstr "Sù"
 
-#: ../options/ModemsPanel.java:207 ../options/MultiEditPanel.java:170
+#: ../options/ModemsPanel.java:207 ../options/MultiEditPanel.java:186
 #: ../util/fmtEditor.java:151 ../send/TextFieldList.java:126
 msgid "Down"
 msgstr "Giù"
@@ -2158,7 +2168,12 @@ msgstr "Indirizzo e-mail"
 msgid "Fax number"
 msgstr "Fax"
 
-#: ../options/TextExtractorPanel.java:439
+#: ../options/TextExtractorPanel.java:430
+#: ../model/jobq/QueueFileFormat.java:115
+msgid "Subject"
+msgstr "Oggetto"
+
+#: ../options/TextExtractorPanel.java:440
 msgid "Tag name"
 msgstr "Nome marcatore"
 
@@ -2249,90 +2264,90 @@ msgstr "Verifica aggiornamento"
 msgid "Automatically check for updates"
 msgstr "Verifica automaticamente la disponibilità di aggiornamenti"
 
-#: ../options/CommonPanel.java:200
+#: ../options/CommonPanel.java:202
 msgid "User interface"
 msgstr "Interfaccia utente"
 
-#: ../options/CommonPanel.java:224
+#: ../options/CommonPanel.java:226
 msgid "Show tray icon"
 msgstr "Mostra icona nell'area di notifica"
 
-#: ../options/CommonPanel.java:225
+#: ../options/CommonPanel.java:227
 msgid "Show a system tray icon (works only with Java 6 or higher)"
 msgstr "Mostra un'icona nell'area di notifica (richiede Java 6 o superiore)"
 
-#: ../options/CommonPanel.java:227
+#: ../options/CommonPanel.java:229
 msgid "Minimize to tray"
 msgstr "Minimizza nell'area di notifica"
 
-#: ../options/CommonPanel.java:231 ../options/CommonPanel.java:232
+#: ../options/CommonPanel.java:233 ../options/CommonPanel.java:234
 msgid "Minimize to tray when main window is closed"
 msgstr ""
 "Minimizza nell'area di notifica quando la finestra principale viene chiusa"
 
-#: ../options/CommonPanel.java:244
+#: ../options/CommonPanel.java:246
 msgid "Language:"
 msgstr "Lingua:"
 
-#: ../options/CommonPanel.java:245
+#: ../options/CommonPanel.java:247
 msgid "Look and Feel:"
 msgstr "Aspetto:"
 
-#: ../options/CommonPanel.java:246
+#: ../options/CommonPanel.java:248
 msgid "Style of send dialog:"
 msgstr "Stile della finestra di invio:"
 
-#: ../options/CommonPanel.java:270
+#: ../options/CommonPanel.java:272
 msgid "Actions after receiving a new fax:"
 msgstr "Azioni dopo la ricezione di un nuovo fax:"
 
-#: ../options/CommonPanel.java:272
+#: ../options/CommonPanel.java:274
 msgid "Beep"
 msgstr "Beep"
 
-#: ../options/CommonPanel.java:273
+#: ../options/CommonPanel.java:275
 msgid "Bring to front"
 msgstr "Porta in primo piano"
 
-#: ../options/CommonPanel.java:274
+#: ../options/CommonPanel.java:276
 msgid "Open in viewer"
 msgstr "Apri nel visualizzatore"
 
-#: ../options/CommonPanel.java:280
+#: ../options/CommonPanel.java:282
 msgid "And mark as read"
 msgstr "E segna come letto"
 
-#: ../options/CommonPanel.java:282
+#: ../options/CommonPanel.java:284
 msgid "Show flashing tray icon"
 msgstr "Mostra icona lampeggiante nell'area di notifica"
 
-#: ../options/CommonPanel.java:283
+#: ../options/CommonPanel.java:285
 msgid "Display tray icon message"
 msgstr "Visualizza messaggio nell'area di notifica"
 
-#: ../options/CommonPanel.java:302
+#: ../options/CommonPanel.java:304
 msgid "Date and Time Format:"
 msgstr "Formato data e ora:"
 
-#: ../options/CommonPanel.java:311
+#: ../options/CommonPanel.java:313
 msgid "Date format:"
 msgstr "Formato data:"
 
-#: ../options/CommonPanel.java:312
+#: ../options/CommonPanel.java:314
 msgid "Time format:"
 msgstr "Formato ora:"
 
-#: ../options/CommonPanel.java:369
+#: ../options/CommonPanel.java:371
 msgid ""
 "You must restart the program for the change of the language to take effect."
 msgstr ""
 "Riavviare il programma per rendere effettivo il cambiamento della lingua."
 
-#: ../options/CommonPanel.java:402
+#: ../options/CommonPanel.java:404
 msgid "Please enter a valid date format:"
 msgstr "Inserire un formato data valido:"
 
-#: ../options/CommonPanel.java:410
+#: ../options/CommonPanel.java:412
 msgid "Please enter a valid time format."
 msgstr "Inserire un formato ora valido."
 
@@ -2599,13 +2614,17 @@ msgstr "Errore nell'esportazione della configurazione:"
 msgid "Import/Export"
 msgstr "Importa/Esporta"
 
-#: ../options/MultiEditPanel.java:131
+#: ../options/MultiEditPanel.java:141
 msgid "Duplicate"
 msgstr "Duplicato"
 
-#: ../options/MultiEditPanel.java:157
+#: ../options/MultiEditPanel.java:173
 msgid "Edit"
 msgstr "Modifica"
+
+#: ../options/MultiEditPanel.java:210
+msgid "Sort"
+msgstr ""
 
 #: ../phonebook/PhoneBookFactory.java:79
 msgid "Personal phone book"
@@ -3115,7 +3134,7 @@ msgstr "Aggiungi la voce selezionata nella lista di distribuzione"
 msgid "Please select the items to add to the distribution list:"
 msgstr "Selezionare gli elementi da aggiungere nella lista di distribuzione:"
 
-#: ../phonebook/ui/SingleEntryPhonebookPanel.java:133 ../send/SendWin.java:336
+#: ../phonebook/ui/SingleEntryPhonebookPanel.java:136 ../send/SendWin.java:336
 #: ../send/SimplifiedSendDialog.java:391
 msgid "Comments:"
 msgstr "Commenti:"
@@ -3801,10 +3820,6 @@ msgstr "Telefono del destinatario"
 #: ../model/jobq/QueueFileFormat.java:114
 msgid "Recipient's telephone (voice) number"
 msgstr "Numero di telefono (voce) del destinatario"
-
-#: ../model/jobq/QueueFileFormat.java:115
-msgid "Subject"
-msgstr "Oggetto"
 
 #: ../model/jobq/QueueFileFormat.java:115
 msgid "Subject (\"Regarding\") of the fax"
