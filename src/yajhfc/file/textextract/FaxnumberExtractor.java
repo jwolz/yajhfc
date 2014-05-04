@@ -69,8 +69,14 @@ public class FaxnumberExtractor {
         }
     };
     
+    /**
+     * Subject indicating the document title should be used
+     */
+    public static final String SUBJECT_DOCTITLE = "<doctitle>";
+    
     protected final Pattern[] faxnumberPatterns;
     protected final HylaToTextConverter converter;
+
        
     public FaxnumberExtractor(HylaToTextConverter converter,
             Pattern... faxnumberPatterns) {
@@ -102,8 +108,13 @@ public class FaxnumberExtractor {
         return buildPatternFromOptions(Utils.getFaxOptions(), PATTERN_PREFIX_MAIL);
     }
     
+    public static Pattern getDefaultSubjectPattern() {
+        return buildPatternFromOptions(Utils.getFaxOptions(), PATTERN_PREFIX_SUBJECT);
+    }
+    
     public static final char PATTERN_PREFIX_FAX  = 'F';
     public static final char PATTERN_PREFIX_MAIL = 'M';
+    public static final char PATTERN_PREFIX_SUBJECT = 'S';
     
     public static Pattern buildPatternFromOptions(FaxOptions fo, char prefix) {
         StringBuilder result = new StringBuilder();
@@ -122,6 +133,10 @@ public class FaxnumberExtractor {
                     result.append('|');
                 result.append(Pattern.quote(s.substring(1)));
             }
+        }
+        if (first) {
+            log.info("No tag names for prefix " + prefix + " found, returning null as Pattern.");
+            return null;
         }
         result.append(")\\s*:");
         if (!fo.recipientExtractionTagMandatoryColon)
@@ -191,6 +206,10 @@ public class FaxnumberExtractor {
         for (int i=0; i<listsToAddTo.length; i++) {
             Collection<String> listToAddTo = listsToAddTo[i];
             Pattern pattern = faxnumberPatterns[i];
+            if (pattern == null) {
+                log.fine("Null pattern at index " + i + ", not extracting anything.");
+                continue;
+            }
             
             Collection<String> tempColl;
             // Make sure we dedup the numbers

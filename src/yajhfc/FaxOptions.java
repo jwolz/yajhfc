@@ -542,7 +542,8 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
         "Ffax",
         "Frecipient",
         "Mmail",
-        "Mmailrecipient"
+        "Mmailrecipient",
+        "Ssubject"
     };
     /**
      * Tag names for recipient extraction
@@ -698,6 +699,34 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
             int count = IDAndNameOptions.removeDuplicates(identities);
             if (count > 0) {
                 log.severe("" + count + " duplicate identities removed!");
+            }
+        }
+        
+        
+        // Make sure there is at least one entry for each tag type
+        
+        // 1. collect the tag types from the config file
+        char[] configTags = new char[recipientExtractionTags.size()];
+        for (int i=0; i<recipientExtractionTags.size(); i++) {
+            String tag = recipientExtractionTags.get(i);
+            if (tag.length() >= 1) {
+                configTags[i] = tag.charAt(0);
+            }
+        }
+        
+        // 2. check if for each default type there is one available in the config
+        for (String tagStr : DEFAULT_RECIPIENT_EXTRACTION_TAGS) {
+            char tag = tagStr.charAt(0);
+            boolean exists = false;
+            for (char confTag : configTags) {
+                if (tag==confTag) {
+                    exists=true;
+                    break;
+                }
+            }
+            if (!exists) {
+                log.info("Adding recipient extraction tag " + tagStr);
+                recipientExtractionTags.add(tagStr);
             }
         }
     }
