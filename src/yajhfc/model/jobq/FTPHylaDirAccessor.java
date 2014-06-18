@@ -106,18 +106,25 @@ public class FTPHylaDirAccessor implements HylaDirAccessor {
     //Output will look like this on a Fritz!Box (others might need a different pattern)
     // drwxrwxrwx 4 ftp ftp 144 Oct 27 08:51 Online-Speicher
     // -r--r--r-- 1 ftp ftp 6640 Jan 10 13:07 FRITZ-NAS.txt
-    protected Pattern ftpFileListPattern = Pattern.compile("([a-z-]+)\\s+\\d+\\s+(\\w+)\\s+\\w+\\s+(\\d+)\\s+([A-Za-z]+\\s+\\d+\\s+\\d+:\\d+)\\s+(.+)$");
+    // -rwxrwxrwx 1 ftp ftp 13465 Dec 13 2013 13.12.13_17.20_Telefax.080033024246.pdf
+    protected Pattern ftpFileListPattern = Pattern.compile("([a-z-]+)\\s+\\d+\\s+(\\w+)\\s+\\w+\\s+(\\d+)\\s+(?:([A-Za-z]+\\s+\\d+\\s+\\d+:\\d+)|([A-Za-z]+\\s+\\d+\\s+\\d+))\\s+(.+)$");
     
     private static final int GROUP_MODE      = 1;
     private static final int GROUP_OWNER     = 2;
     private static final int GROUP_SIZE      = 3;
     private static final int GROUP_DATE_TIME = 4;
-    private static final int GROUP_FILENAME  = 5;
+    private static final int GROUP_DATE_ONLY = 5;
+    private static final int GROUP_FILENAME  = 6;
     
     /**
      * DateFormat to parse the date/time in a FTP listing
      */
     protected DateFormat ftpFileListDateFormat = new SimpleDateFormat("MMM dd HH:mm", Locale.US);
+    
+    /**
+     * DateFormat to parse the date/time in a FTP listing
+     */
+    protected DateFormat ftpFileListDateOnlyFormat = new SimpleDateFormat("MMM dd yyyy", Locale.US);
     
     /**
      * Logout when nothing has happened for this many milliseconds
@@ -194,7 +201,6 @@ public class FTPHylaDirAccessor implements HylaDirAccessor {
         return file;
     }
     
-
     protected synchronized Map<String,FTPFile> getFileList() throws IOException {
         if (System.currentTimeMillis() - cacheTime < maxCacheAge) {
             log.fine("Using cached file list...");
@@ -205,6 +211,7 @@ public class FTPHylaDirAccessor implements HylaDirAccessor {
             FtpClient cli = getFtpClient();
             Vector<?> list = cli.getList();
             fileCache.clear();
+            final Date nullDate = new Date(0);
             
             for (Object o : list) {
                 String line = (String)o;
@@ -218,13 +225,22 @@ public class FTPHylaDirAccessor implements HylaDirAccessor {
                 }
                 
                 String fileName = m.group(GROUP_FILENAME);
-                Date   modTime;
-                try {
-                    modTime = ftpFileListDateFormat.parse(m.group(GROUP_DATE_TIME));
-                } catch (Exception e1) {
-                    log.log(Level.WARNING, "Unparseable file date for \"" + line + "\": " + m.group(GROUP_DATE_TIME), e1);
-                    modTime = new Date(0);
+                
+                Date   modTime = nullDate;
+                if (m.group(GROUP_DATE_TIME) != null) {
+                    try {
+                        modTime = ftpFileListDateFormat.parse(m.group(GROUP_DATE_TIME));
+                    } catch (Exception e1) {
+                        log.log(Level.WARNING, "Unparseable file date for \"" + line + "\": " + m.group(GROUP_DATE_TIME), e1);
+                    }
+                } else if (m.group(GROUP_DATE_ONLY) != null) {
+                    try {
+                        modTime = ftpFileListDateOnlyFormat.parse(m.group(GROUP_DATE_ONLY));
+                    } catch (Exception e1) {
+                        log.log(Level.WARNING, "Unparseable file date for \"" + line + "\": " + m.group(GROUP_DATE_ONLY), e1);
+                    }
                 }
+                
                 long size = -1;
                 try {
                     size = Long.parseLong(m.group(GROUP_SIZE));
