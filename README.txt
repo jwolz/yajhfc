@@ -66,6 +66,10 @@ YajHFC was originally written as a first more complicated
 CHANGES
 -------
 
+0.5.6:
+- Added @@subject@@-Tag for text extraction (i.e. you can now also set the fax's subject by using a tag)
+- Several small bug fixes
+
 0.5.5:
 - Support to use native libtiff in the PDF plugin (offers JBIG support and better compatibility with not 100% clean TIFFs)
 - Support to read received faxes from AVM Fritz!Box routers (outgoing faxes are still sent over HylaFAX)
