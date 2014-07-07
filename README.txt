@@ -1,4 +1,4 @@
-README for YajHFC 0.5.5
+README for YajHFC 0.5.6
 =======================
 
 ABOUT
@@ -29,9 +29,9 @@ Requirements:
 * Optional: A PostScript viewer (e.g. Ghostview), GhostScript
      and tiff2pdf (from libtiff-utils)
 
-To install YajHFC just download the yajhfc-0_5_5.jar file to some folder on your
+To install YajHFC just download the yajhfc-0_5_6.jar file to some folder on your
 file system.
-To execute it, use: "java -jar yajhfc-0_5_5.jar"
+To execute it, use: "java -jar yajhfc-0_5_6.jar"
 (In Windows you usually can just double click the jar file as well.)
 
 LICENSE
@@ -68,7 +68,7 @@ CHANGES
 
 0.5.6:
 - Added @@subject@@-Tag for text extraction (i.e. you can now also set the fax's subject by using a tag)
-- Several small bug fixes
+- Several small bug fixes and enhancements
 
 0.5.5:
 - Support to use native libtiff in the PDF plugin (offers JBIG support and better compatibility with not 100% clean TIFFs)

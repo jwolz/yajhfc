@@ -66,6 +66,10 @@ de Java (más avanzado que los programas "Hola mundo") utilizando la IDE Eclipse
 CAMBIOS
 -------
 
+0.5.6:
+- Se añade la etiqueta @@subject@@-Tag para la extracción de texto (es decir, ahora también se puede definir el asunto de un fax usando una etiqueta)
+- Varias mejoras de características menores y corrección de errores
+
 0.5.5:
 - Soporte nativo de libtiff en el complemento PDF (permite JBIG y una mejor compatibilidad con archivos TIFF no del todo limpios)
 - Soporte de lectura para los faxes recibidos desde los enrutadores AVM Fritz!Box (el envío de faxes se realiza a través HylaFAX)
