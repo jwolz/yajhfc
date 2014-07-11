@@ -1,4 +1,4 @@
-LEGGIMI per YajHFC 0.5.5
+LEGGIMI per YajHFC 0.5.6
 ========================
 
 INFORMAZIONI
@@ -29,8 +29,8 @@ Requisiti:
 * Opzionale: un visualizzatore PostScript (es. Ghostview), GhostScript
      e tiff2pdf (dal pacchetto libtiff-utils)
 
-Per installare YajHFC basta scaricare il file yajhfc-0_5_5.jar in una cartella del proprio disco.
-Per eseguirlo utilizzare: "java -jar yajhfc-0_5_5.jar"
+Per installare YajHFC basta scaricare il file yajhfc-0_5_6.jar in una cartella del proprio disco.
+Per eseguirlo utilizzare: "java -jar yajhfc-0_5_6.jar"
 (In Windows normalmente è anche possibile cliccare due volte sul file jar.)
 
 LICENZA
@@ -64,6 +64,10 @@ YajHFC originariamente era stato scritto come primo progetto Java più complesso
 
 MODIFICHE
 ---------
+
+0.5.6:
+- Aggiunto il marcatore @@subject@@ per l'estrazione testo (es.: è ora possibile impostare l'oggetto del fax utilizzando un marcatore)
+- Varie correzioni di errori minori e miglioramenti
 
 0.5.5:
 - Supporto per l'utilizzo diretto della libreria libtiff nel plugin PDF (abilita
