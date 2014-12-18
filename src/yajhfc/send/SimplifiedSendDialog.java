@@ -398,16 +398,17 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
     
     void extractRecipientsFor(final HylaTFLItem item) {
         ProgressWorker pw = new ProgressWorker() {
-            private Set<String> numbers;
+            private Set<String> numbers, subjects;
             
             @SuppressWarnings("unchecked")
             @Override
             public void doWork() {
                 try {
                     updateNote(Utils._("Extracting recipients..."));
-                    FaxnumberExtractor extractor = new FaxnumberExtractor();
+                    FaxnumberExtractor extractor = new FaxnumberExtractor(FaxnumberExtractor.getDefaultPattern(), FaxnumberExtractor.getDefaultSubjectPattern());
                     numbers = new TreeSet<String>();
-                    extractor.extractFromMultipleDocuments(Collections.singleton(item), numbers);
+                    subjects = new TreeSet<String>();
+                    extractor.extractFromMultipleDocuments(Collections.singleton(item), numbers, subjects);
                 } catch (Exception e) {
                     showExceptionDialog(Utils._("Error extracting recipients"), e);
                     numbers = null;
@@ -422,6 +423,10 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
                         pbe.setField(PBEntryField.FaxNumber, number);
                         getRecipients().add(pbe);
                     }
+                }
+                if (subjects != null && subjects.size() >= 1) {
+                    // Use the first subject found
+                    textSubject.setText(subjects.iterator().next());
                 }
             }
         };
