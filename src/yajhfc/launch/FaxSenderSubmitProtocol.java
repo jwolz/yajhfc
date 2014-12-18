@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -130,12 +132,22 @@ public abstract class FaxSenderSubmitProtocol implements SubmitProtocol {
             try {
                 if (inStream != null) {
                     log.fine("Extracting recipients from stdin");
-                    FaxnumberExtractor extractor = new FaxnumberExtractor();
-                    numExtractedRecipients = extractor.extractFromMultipleFiles(Collections.singletonList(tflInStream.getPreviewFilename()), recipients);
+                    FaxnumberExtractor extractor = new FaxnumberExtractor(FaxnumberExtractor.getDefaultPattern(), FaxnumberExtractor.getDefaultSubjectPattern());
+                    Set<String> subjects = new TreeSet<String>();
+                    numExtractedRecipients = extractor.extractFromMultipleFiles(Collections.singletonList(tflInStream.getPreviewFilename()), recipients, subjects);
+                    if (subjects.size() >= 1) {
+                        numExtractedRecipients -= subjects.size(); // Subjects are no recipients
+                        subject = subjects.iterator().next(); // Use the first subject found
+                    }
                 } else if (files.size() > 0) {
                     log.fine("Extracting recipients from input files");
-                    FaxnumberExtractor extractor = new FaxnumberExtractor();
-                    numExtractedRecipients = extractor.extractFromMultipleFileNames(files, recipients);
+                    FaxnumberExtractor extractor = new FaxnumberExtractor(FaxnumberExtractor.getDefaultPattern(), FaxnumberExtractor.getDefaultSubjectPattern());
+                    Set<String> subjects = new TreeSet<String>();
+                    numExtractedRecipients = extractor.extractFromMultipleFileNames(files, recipients, subjects);
+                    if (subjects.size() >= 1) {
+                        numExtractedRecipients -= subjects.size(); // Subjects are no recipients
+                        subject = subjects.iterator().next(); // Use the first subject found
+                    }
                 }
             } catch (Exception e) {
                 log.log(Level.WARNING, "Error extracting recipients", e);
@@ -144,6 +156,7 @@ public abstract class FaxSenderSubmitProtocol implements SubmitProtocol {
         
         preparedSubmit = true;
     }
+    
 
     protected RecipientExtractionMode getEffectiveExtractRecipients() {
         RecipientExtractionMode effExtractRecipients = extractRecipients;

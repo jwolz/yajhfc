@@ -42,6 +42,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.logging.Logger;
 
 import yajhfc.Utils;
 import yajhfc.filters.Filter;
@@ -151,7 +152,13 @@ public class PhoneBookSorter implements PhonebookEventListener, PhoneBookEntryLi
             filteredList = new ArrayList<PhoneBookEntry>(filteredEntries.size());
             Row[] rows = originalList.toArray(new Row[originalList.size()]);
             for (PhoneBookEntry e : filteredEntries) {
-                filteredList.add(getRowForEntry(rows, e));
+                Row r = getRowForEntry(rows, e);
+                if (r != null) {
+                    filteredList.add(r);
+                } else {
+                    Logger.getLogger(PhoneBookSorter.class.getName()).warning("No Row found for entry: " + e + " (" + e.getClass() + ")");
+                    filteredList.add(e);
+                }
             }
         }
         refreshFilterSort();
