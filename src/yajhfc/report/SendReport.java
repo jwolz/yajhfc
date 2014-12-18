@@ -245,6 +245,9 @@ public class SendReport<T extends FmtItem> {
             reader = new Fax2ImageConverter();
             reader.readFiles(files, startPage-1, endPage-1);
             
+            if (reader.getNumberOfPages()==0)
+                throw new ConversionException("The report has no pages. Is the selected range of pages valid?");
+            
             if (thumbnailsPerPage == 0) {
                 totalOutPages = 1;
             } else {
@@ -325,6 +328,8 @@ public class SendReport<T extends FmtItem> {
          * @throws IOException
          */
         protected int printNUp(Graphics2D g, float x, float y, float width, float height, int beginPage, int maxPages) throws IOException {
+            if (reader.getNumberOfPages()==0)
+                throw new IOException("No pages in report (reader.NumberOfPages=0).");
             
             BufferedImage firstPage = reader.getImage(0);
             float pageWidth = firstPage.getWidth();
