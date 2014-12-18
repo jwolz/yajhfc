@@ -65,6 +65,7 @@ public class SingleEntryPhonebookPanel extends PhonebookPanel {
     Map<PBEntryField,JTextComponent> entryFields = new EnumMap<PBEntryField, JTextComponent>(PBEntryField.class);
     JScrollPane scrollComment;
     JTextArea textComment;
+    boolean writable;
     
     /**
      * @param parent
@@ -144,6 +145,7 @@ public class SingleEntryPhonebookPanel extends PhonebookPanel {
                 comp.setEnabled(false);
             }
             scrollComment.setEnabled(false);
+            writable = false;
         } else {
             boolean editable = !phoneBook.isReadOnly();
             for (Map.Entry<PBEntryField, JTextComponent> entry : entryFields.entrySet()) {
@@ -156,11 +158,12 @@ public class SingleEntryPhonebookPanel extends PhonebookPanel {
                 ((LimitedPlainDocument)comp.getDocument()).setLimit(phoneBook.getMaxLength(field));
             }
             scrollComment.setEnabled(textComment.isEnabled());
+            writable = editable;
         }
     }
     
     public void readFromTextFields(PhoneBookEntry pb, boolean updateOnly) {
-        if (pb == null || pb.getParent().isReadOnly())
+        if (pb == null || !writable || pb.getParent().isReadOnly())
            return; 
         
         for (Map.Entry<PBEntryField, JTextComponent> entry : entryFields.entrySet()) {

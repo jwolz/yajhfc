@@ -36,7 +36,6 @@
  */
 package yajhfc.phonebook.ui;
 
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -46,6 +45,7 @@ import java.util.List;
 
 import yajhfc.Utils;
 import yajhfc.filters.Filter;
+import yajhfc.phonebook.DistributionList;
 import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.PhoneBook;
 import yajhfc.phonebook.PhoneBookEntry;
@@ -62,7 +62,7 @@ public class PhoneBookSorter implements PhonebookEventListener, PhoneBookEntryLi
     protected final PhoneBook phoneBook;
     protected final ArrayList<Row> originalList = new ArrayList<Row>();
     protected final ArrayList<Row> sortedList = new ArrayList<Row>();
-    protected final RowToPBList sortedView = new RowToPBList(sortedList);
+    protected final List<PhoneBookEntry> sortedView = Collections.<PhoneBookEntry>unmodifiableList(sortedList);
     protected List<PhoneBookEntry> filteredList = null;
     protected final List<PhonebookEventListener> listeners = new ArrayList<PhonebookEventListener>();
     
@@ -126,9 +126,34 @@ public class PhoneBookSorter implements PhonebookEventListener, PhoneBookEntryLi
             firePhonebookReloaded();
         }
     }
+    
+//    private Row getRowForEntry(PhoneBookEntry e) {
+//        for (Row r : originalList) {
+//            if (r.entry == e)
+//                return r;
+//        }
+//        return null;
+//    }
+//    
+    private static Row getRowForEntry(Row[] rows, PhoneBookEntry e) {
+        for (Row r : rows) {
+            if (r.entry == e)
+                return r;
+        }
+        return null;
+    }
 
     private void refreshFilter() {
-        filteredList = phoneBook.applyFilter(filter);
+        List<PhoneBookEntry> filteredEntries = phoneBook.applyFilter(filter);
+        if (filteredEntries == null) {
+            filteredList = null;
+        } else {
+            filteredList = new ArrayList<PhoneBookEntry>(filteredEntries.size());
+            Row[] rows = originalList.toArray(new Row[originalList.size()]);
+            for (PhoneBookEntry e : filteredEntries) {
+                filteredList.add(getRowForEntry(rows, e));
+            }
+        }
         refreshFilterSort();
     }
     
@@ -152,7 +177,7 @@ public class PhoneBookSorter implements PhonebookEventListener, PhoneBookEntryLi
         originalList.ensureCapacity(rows.length);
         int i=0;
         for (PhoneBookEntry entry : entries) {
-            originalList.add(rows[i] = new Row(entry, i));
+            originalList.add(rows[i] = createRow(entry, i));
             i++;
         }
 
@@ -211,6 +236,9 @@ public class PhoneBookSorter implements PhonebookEventListener, PhoneBookEntryLi
             for (int i=rows.length-1; i>=0; i--) {
                 sortedList.remove(rows[i].sortedIndex);
             }
+            for (int i=rows[0].sortedIndex; i<sortedList.size(); i++) {
+                sortedList.get(i).sortedIndex = i;
+            }
             
             if (isShowingFilteredResults()) {
                 // Do something smarter here?
@@ -239,7 +267,7 @@ public class PhoneBookSorter implements PhonebookEventListener, PhoneBookEntryLi
             
             for (int i=0; i<items.length; i++) {
                 final int originalIndex = indices[i];
-                Row row = rows[i] = new Row(items[i], originalIndex);
+                Row row = rows[i] = createRow(items[i], originalIndex);
                 originalList.add(originalIndex, row);
                 if (originalIndex < minOriginalIndex)
                     minOriginalIndex = originalIndex;
@@ -419,13 +447,74 @@ public class PhoneBookSorter implements PhonebookEventListener, PhoneBookEntryLi
 
     }
     
-    private static class Row implements Comparable<Row> {
+    static Row createRow(PhoneBookEntry entry, int originalIndex) {
+        if (entry instanceof DistributionList)
+            return new DistListRow((DistributionList)entry, originalIndex);
+        return new Row(entry, originalIndex);
+    }
+    
+    private static class Row implements Comparable<PhoneBookEntry>, PhoneBookEntry {
         public final PhoneBookEntry entry;
         public int originalIndex;
         public int sortedIndex = -1;
         
-        public int compareTo(Row o) {
-            return this.entry.compareTo(o.entry);
+//        public int compareTo(Row o) {
+//            return this.entry.compareTo(o.entry);
+//        }
+        
+        public int compareTo(PhoneBookEntry o) {
+            return entry.compareTo(o);
+        }
+        
+        public String getField(PBEntryField field) {
+            return entry.getField(field);
+        }
+
+        public Object getFilterData(Object key) {
+            return entry.getFilterData(key);
+        }
+
+        public PhoneBook getParent() {
+            return entry.getParent();
+        }
+
+        public void setField(PBEntryField field, String value) {
+            entry.setField(field, value);
+        }
+
+        public void delete() {
+            entry.delete();
+        }
+
+        public void commit() {
+            entry.commit();
+        }
+
+        public void updateDisplay() {
+            entry.updateDisplay();
+        }
+
+        public void copyFrom(PBEntryFieldContainer other) {
+            entry.copyFrom(other);
+        }
+
+        public void refreshToStringRule() {
+            entry.refreshToStringRule();
+        }
+        
+        @Override
+        public String toString() {
+            return entry.toString();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            // Special equals to make the JTree happy...
+            if (obj == this) 
+                return true;
+            if (obj == this.entry)
+                return true;
+            return false;
         }
         
         public Row(PhoneBookEntry entry, int originalIndex) {
@@ -435,28 +524,70 @@ public class PhoneBookSorter implements PhonebookEventListener, PhoneBookEntryLi
         }
     }
     
-    /**
-     * An unmodifiable view on the row list
-     * @author jonas
-     *
-     */
-    private static class RowToPBList extends AbstractList<PhoneBookEntry> {
-        protected final List<Row> wrapped;
+    private static class DistListRow extends Row implements DistributionList {
         
-        public RowToPBList(List<Row> wrapped) {
-            super();
-            this.wrapped = wrapped;
+        public List<PhoneBookEntry> getEntries() {
+            return ((DistributionList)entry).getEntries();
         }
 
-        @Override
-        public PhoneBookEntry get(int index) {
-            return wrapped.get(index).entry;
+        public void addEntries(Collection<? extends PBEntryFieldContainer> items) {
+            ((DistributionList)entry).addEntries(items);
         }
 
-        @Override
-        public int size() {
-            return wrapped.size();
+
+        public PhoneBookEntry addNewEntry() {
+            return ((DistributionList)entry).addNewEntry();
+        }
+
+
+        public PhoneBookEntry addNewEntry(PBEntryFieldContainer item) {
+            return ((DistributionList)entry).addNewEntry(item);
+        }
+
+
+        public void addPhonebookEventListener(PhonebookEventListener pel) {
+            ((DistributionList)entry).addPhonebookEventListener(pel);
+        }
+
+
+        public void removePhonebookEventListener(PhonebookEventListener pel) {
+            ((DistributionList)entry).removePhonebookEventListener(pel);
+        }
+
+
+        public boolean isReadOnly() {
+            return ((DistributionList)entry).isReadOnly();
+        }
+
+
+        public DistListRow(DistributionList entry, int originalIndex) {
+            super(entry, originalIndex);
         }
         
     }
+    
+//    /**
+//     * An unmodifiable view on the row list
+//     * @author jonas
+//     *
+//     */
+//    private static class RowToPBList extends AbstractList<PhoneBookEntry> {
+//        protected final List<Row> wrapped;
+//        
+//        public RowToPBList(List<Row> wrapped) {
+//            super();
+//            this.wrapped = wrapped;
+//        }
+//
+//        @Override
+//        public PhoneBookEntry get(int index) {
+//            return wrapped.get(index).entry;
+//        }
+//
+//        @Override
+//        public int size() {
+//            return wrapped.size();
+//        }
+//        
+//    }
 }
