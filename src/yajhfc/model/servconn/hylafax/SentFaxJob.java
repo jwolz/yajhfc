@@ -55,6 +55,7 @@ import yajhfc.Utils;
 import yajhfc.file.FileFormat;
 import yajhfc.model.JobFormat;
 import yajhfc.model.servconn.FaxDocument;
+import yajhfc.model.servconn.HylafaxWorker;
 import yajhfc.model.servconn.JobState;
 
 public class SentFaxJob extends AbstractHylaFaxJob<JobFormat> {
@@ -192,6 +193,20 @@ public class SentFaxJob extends AbstractHylaFaxJob<JobFormat> {
 
     public Job getJob(HylaFAXClient hyfc) throws ServerResponseException, IOException {
         return hyfc.getJob((Integer)getData(JobFormat.j));
+    }
+    
+    @Override
+    public Object doHylafaxWork(HylafaxWorker worker)
+            throws IOException, ServerResponseException {
+        HylaFAXClient hyfc = getConnection().beginServerTransaction();
+        try {
+            if (Utils.debugMode)
+                log.fine("doHylafaxWork on " + getIDValue() + ": worker=" + worker);
+            
+            return worker.work(hyfc, getJob(hyfc));
+        } finally {
+            getConnection().endServerTransaction();
+        }
     }
     
     @Override

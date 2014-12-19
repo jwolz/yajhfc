@@ -47,6 +47,7 @@ import yajhfc.model.jobq.QueueFileFormat;
 import yajhfc.model.servconn.FaxDocument;
 import yajhfc.model.servconn.FaxJob;
 import yajhfc.model.servconn.FaxJobList;
+import yajhfc.model.servconn.HylafaxWorker;
 import yajhfc.model.servconn.JobState;
 import yajhfc.model.servconn.defimpl.SerializableFaxJob;
 
@@ -100,6 +101,10 @@ public class PseudoSentFaxJob implements SerializableFaxJob<JobFormat> {
         return wrapped.getJobState();
     }
     
+    public JobState getCurrentJobState() {
+        return wrapped.getCurrentJobState();
+    }
+    
     public void initializeRead(boolean isRead) {
         wrapped.initializeRead(isRead);
     }
@@ -140,6 +145,11 @@ public class PseudoSentFaxJob implements SerializableFaxJob<JobFormat> {
     public void setParent(FaxJobList<JobFormat> parent) {
         this.parent = (PseudoSentFaxJobList)parent;
         ((SerializableFaxJob<QueueFileFormat>)wrapped).setParent(this.parent.wrapped);
+    }
+
+    public Object doHylafaxWork(HylafaxWorker worker)
+            throws IOException, ServerResponseException {
+        return wrapped.doHylafaxWork(worker);
     }
 
 }

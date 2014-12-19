@@ -36,6 +36,9 @@
  */
 package yajhfc.model.servconn;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.swing.ImageIcon;
 
 import yajhfc.Utils;
@@ -196,6 +199,20 @@ public enum JobState implements IconMap {
             return UNDEFINED;
         case JOBSTATE_WAITING:
             return WAITING;
+        }
+    }
+    
+    /**
+     * Returns the job state for the given value 
+     * @param jparmState a value returned from JPARM STATE
+     * @return
+     */
+    public static JobState getJobStateFromJPARMValue(String jparmState) {
+        try {
+            return Enum.valueOf(JobState.class, jparmState);
+        } catch (Exception e) {
+            Logger.getLogger(JobState.class.getName()).log(Level.INFO, "Unknown job state, returning UNDEFINED: " + jparmState);
+            return UNDEFINED;
         }
     }
 }

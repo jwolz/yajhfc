@@ -239,7 +239,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     protected Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward, actAdminMode;
     protected Action actRefresh, actResend, actPrintTable, actSuspend, actResume, actClipCopy, actShowRowNumbers, actAdjustColumns, actReconnect, actEditToolbar;
     protected Action actSaveAsPDF, actSaveAsTIFF, actUpdateCheck, actAnswerCall, actSearchFax, actViewLog, actLogConsole, actExport;
-    protected Action actShowToolbar, actShowQuickSearchBar, actServerSelectionPopup, actEditAccelerators, actMarkFailedJobs, actSelectAll;
+    protected Action actShowToolbar, actShowQuickSearchBar, actServerSelectionPopup, actEditAccelerators, actMarkFailedJobs, actSelectAll, actEditJob;
     protected StatusBarResizeAction actAutoSizeStatus;
     protected ActionEnabler actChecker;
     protected Map<String,Action> availableActions = new HashMap<String,Action>();
@@ -582,7 +582,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                         try {
                             updateNote(infoFormat.format(new Object[]{yj.getIDValue()}));
 
-                            JobState jobstate = yj.getJobState();
+                            JobState jobstate = yj.getCurrentJobState();
                             if (jobstate == JobState.RUNNING) {
                                 if (showConfirmDialog(MessageFormat.format(_("Suspending the currently running job {0} may block until it is done (or switch to another \"non running state\"). Try to suspend it anyway?") , yj.getIDValue()),
                                         _("Suspend fax job"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
@@ -639,7 +639,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                     for (FaxJob<? extends FmtItem> yj : selJobs) {
                         try {
                             updateNote(infoFormat.format(new Object[] { yj.getIDValue() }));
-                            JobState jobstate = yj.getJobState();
+                            JobState jobstate = yj.getCurrentJobState();
                             if (jobstate != JobState.SUSPENDED) {
                                 if (showConfirmDialog(MessageFormat.format(_("Job {0} is not in state \"Suspended\" so resuming it probably will not work. Try to resume it anyway?") , yj.getIDValue()),
                                         _("Resume fax job"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
@@ -1221,6 +1221,18 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         actSuspend.putValue(Action.SMALL_ICON, Utils.loadIcon("media/Pause"));
         putAvailableAction("Suspend", actSuspend);
         
+        actEditJob = new ExcDialogAbstractAction() {
+            public void actualActionPerformed(java.awt.event.ActionEvent e) {
+                TooltipJTable<? extends FmtItem> selTable = getSelectedTable();
+                EditJobWorker wrk = new EditJobWorker(MainWin.this, selTable);
+                wrk.startWork(MainWin.this, _("Editing jobs"));
+            }
+        };
+        actEditJob.putValue(Action.NAME, _("Edit job parameters..."));
+        actEditJob.putValue(Action.SHORT_DESCRIPTION, _("Allows to edit some job parameters"));
+        actEditJob.putValue(Action.SMALL_ICON, Utils.loadIcon("general/Edit"));
+        putAvailableAction("EditJob", actEditJob);
+        
         actResume = new ExcDialogAbstractAction() {
             public void actualActionPerformed(java.awt.event.ActionEvent e) {
                 TooltipJTable<? extends FmtItem> selTable = getSelectedTable();
@@ -1654,6 +1666,10 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             tblPopup.add(new JMenuItem(actResend));
             tblPopup.addSeparator();
             tblPopup.add(new JMenuItem(actDelete));
+            tblPopup.addSeparator();
+            tblPopup.add(new JMenuItem(actSuspend));
+            tblPopup.add(new JMenuItem(actResume));
+            tblPopup.add(new JMenuItem(actEditJob));
             tblPopup.addSeparator();
             tblPopup.add(new ActionJCheckBoxMenuItem(actFaxRead));
             tblPopup.addSeparator();
@@ -2452,6 +2468,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             menuFax.addSeparator();
             menuFax.add(new JMenuItem(actResume));
             menuFax.add(new JMenuItem(actSuspend));
+            menuFax.add(new JMenuItem(actEditJob));
             menuFax.addSeparator();
             menuFax.add(new ActionJCheckBoxMenuItem(actFaxRead));
             if (!hideMenusForMac) {
@@ -2786,6 +2803,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             actResend.setEnabled(resendState);
             actSuspend.setEnabled(suspResumeState);
             actResume.setEnabled(suspResumeState);
+            actEditJob.setEnabled(suspResumeState);
             actClipCopy.setEnabled(showState);
             actViewLog.setEnabled(viewLogState);
 
