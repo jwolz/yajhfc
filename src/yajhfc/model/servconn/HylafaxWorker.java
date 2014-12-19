@@ -1,6 +1,6 @@
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005-2011 Jonas Wolz <info@yajhfc.de>
+ * Copyright (C) 2005-2014 Jonas Wolz <info@yajhfc.de>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *  
+ *
  *  Linking YajHFC statically or dynamically with other modules is making 
  *  a combined work based on YajHFC. Thus, the terms and conditions of 
  *  the GNU General Public License cover the whole combination.
@@ -34,69 +34,29 @@
  *  version without this exception; this exception also makes it possible 
  *  to release a modified version which carries forward this exception.
  */
-package yajhfc.model.servconn.hylafax;
+package yajhfc.model.servconn;
 
 import gnu.hylafax.HylaFAXClient;
 import gnu.hylafax.Job;
 import gnu.inet.ftp.ServerResponseException;
 
 import java.io.IOException;
-import java.util.logging.Level;
 
-import yajhfc.Utils;
-import yajhfc.model.JobFormat;
-import yajhfc.model.servconn.JobState;
+/**
+ * Interface to work on a single HylaFAX job.
+ * 
+ * @author jonas
+ *
+ */
+public interface HylafaxWorker {
 
-public class SendingFaxJob extends SentFaxJob {
-    private static final long serialVersionUID = 1;
-    
-    protected SendingFaxJob(AbstractHylaFaxJobList<JobFormat> parent,
-            String[] data) {
-        super(parent, data);
-    }
-    
-    @Override
-    public void deleteImpl(HylaFAXClient hyfc) throws IOException, ServerResponseException {
-        synchronized (hyfc) {
-            Job job = getJob(hyfc);
-            hyfc.kill(job);
-        }
-    }
-    
-    @Override
-    public void suspendImpl(HylaFAXClient hyfc) throws IOException, ServerResponseException {
-        synchronized (hyfc) {
-            Job job = getJob(hyfc);
-
-            hyfc.suspend(job);
-        }
-    }
-    
-    @Override
-    public void resumeImpl(HylaFAXClient hyfc) throws IOException, ServerResponseException {
-        synchronized (hyfc) {
-            Job job = getJob(hyfc);
-            hyfc.submit(job);
-        }
-    }
-    
-    @Override
-    public JobState getCurrentJobState() {
-        try {
-            HylaFAXClient hyfc = getConnection().beginServerTransaction();
-            try {
-                if (Utils.debugMode)
-                    log.fine("Getting current job state of job " + getIDValue());
-                Job job = getJob(hyfc);
-                String state = job.getProperty("STATE");
-                return JobState.getJobStateFromJPARMValue(state);
-            } finally {
-                getConnection().endServerTransaction();
-            }
-        } catch (Exception e) {
-            log.log(Level.WARNING, "Error getting current job state", e);
-            return getJobState();
-        }
-    }
-    
+    /**
+     * Does some work on a HylaFAX job
+     * @param hyfc a HylaFAXClient instance 
+     * @param job the job to work on
+     * @return a user-defined object. This is passed unchanged as return value of FaxJob.doHylafaxWork
+     * @throws IOException
+     * @throws ServerResponseException
+     */
+    public Object work(HylaFAXClient hyfc, Job job) throws IOException, ServerResponseException;
 }

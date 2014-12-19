@@ -55,6 +55,7 @@ import yajhfc.model.FmtItem;
 import yajhfc.model.IconMap;
 import yajhfc.model.servconn.FaxDocument;
 import yajhfc.model.servconn.FaxJobList;
+import yajhfc.model.servconn.HylafaxWorker;
 import yajhfc.model.servconn.JobState;
 
 public abstract class AbstractFaxJob<T extends FmtItem> implements SerializableFaxJob<T> {
@@ -109,6 +110,11 @@ public abstract class AbstractFaxJob<T extends FmtItem> implements SerializableF
     
     public Map<String, String> getJobProperties(String... properties) {
         return null;
+    }
+    
+    public Object doHylafaxWork(HylafaxWorker worker)
+            throws IOException, ServerResponseException {
+        throw new UnsupportedOperationException("Not a HylaFAX job");
     }
 
     public Collection<FaxDocument> getDocuments() throws IOException, ServerResponseException {
@@ -262,6 +268,10 @@ public abstract class AbstractFaxJob<T extends FmtItem> implements SerializableF
     
     public JobState getJobState() {
         return state;
+    }
+    
+    public JobState getCurrentJobState() {
+        return getJobState();
     }
     
     public boolean isRead() {

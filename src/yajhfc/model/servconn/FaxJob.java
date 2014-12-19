@@ -57,10 +57,16 @@ public interface FaxJob<T extends FmtItem> extends FilterableObject {
     
     /**
      * Returns the "raw" value of the given job properties if available.
-     * @param column
+     * @param properties the properties to retrieve
      * @return A map containing the successfully loaded properties or null
      */
     public Map<String,String> getJobProperties(String... properties);
+    
+    /**
+     * Does some work on the HylaFax job using a HylafaxClient.
+     * Throws an UnsupportedOperationException if the fax job is not a HylafaxJob.
+     */
+    public Object doHylafaxWork(HylafaxWorker worker) throws IOException, ServerResponseException;
     
     /**
      * Returns the data saved in the specified column
@@ -136,10 +142,17 @@ public interface FaxJob<T extends FmtItem> extends FilterableObject {
     public void resume() throws IOException, ServerResponseException;
     
     /**
-     * Returns the JobState 
+     * Returns the JobState (usually a cached value)
      * @return
      */
     public JobState getJobState();
+    
+    /**
+     * Returns the current JobState.
+     * In contrast to getJobState, this call may make a round trip to the server get the most current state.
+     * @return
+     */
+    public JobState getCurrentJobState();
     
     /**
      * Returns the fax job list this job belongs to

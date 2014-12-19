@@ -1200,6 +1200,14 @@ public final class Utils {
         return (s1 != null) ? s1 : s2;
     }
     
+    public static String firstDefined(String s1, String s2, String s3) {
+        if (s1 != null)
+            return s1;
+        if (s2 != null)
+            return s2;
+        return s3;
+    }
+    
     /**
      * Reads all content from the specified Reader and returns it as String
      * @param r

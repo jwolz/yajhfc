@@ -107,7 +107,7 @@ public class TimeToSendEntry extends JPanel {
      * @return
      */
     public Date getSelection() {
-        switch ((TTSType)comboTTSType.getSelectedItem()) {
+        switch (getTTSType()) {
         case NOW:
         default:
             return null;
@@ -116,6 +116,17 @@ public class TimeToSendEntry extends JPanel {
         case IN_MINUTES:
             return new Date(System.currentTimeMillis() - startTime + ((Date)spinMinutes.getValue()).getTime());
         }
+    }
+    
+    public TTSType getTTSType() {
+        return (TTSType)comboTTSType.getSelectedItem();
+    }
+    
+    public void setSelection(Date exactTime) {
+        configureForItem(TTSType.EXACT_TIME);
+        comboTTSType.setSelectedItem(TTSType.EXACT_TIME);
+        
+        spinMinutes.setValue(exactTime);
     }
     
     
