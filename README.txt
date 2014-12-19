@@ -66,6 +66,11 @@ YajHFC was originally written as a first more complicated
 CHANGES
 -------
 
+0.5.7:
+- Bug fixes for phone book: Can now handle identical items, multi-select no longer "kills" entries
+- Changed behaviour of "Filter from fax number": Characters are now removed completely instead of being replaced by spaces
+
+
 0.5.6:
 - Added @@subject@@-Tag for text extraction (i.e. you can now also set the fax's subject by using a tag)
 - Several small bug fixes and enhancements

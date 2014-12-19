@@ -842,6 +842,46 @@ public final class Utils {
     }
     
     /**
+     * "Sanitizes" the given input by removing all characters in forbiddenChars 
+     * @param input the input string
+     * @param forbiddenChars chars to filter out
+     */
+    public static String stringFilterOut(String input, String forbiddenChars) {
+        return stringFilterOut(input, forbiddenChars, 0);
+    }
+    
+    /**
+     * "Sanitizes" the given input by removing all characters in forbiddenChars 
+     * @param input the input string
+     * @param forbiddenChars chars to filter out
+     * @param maxLen the maximum allowed length of the output or 0 for unlimited length 
+     */
+    public static String stringFilterOut(String input, String forbiddenChars, int maxLen) {
+        if (input == null)
+            return null;
+        if (maxLen > 0 && input.length() > maxLen)
+            input = input.substring(0, maxLen);
+        
+        char[] chars = input.toCharArray();
+        StringBuilder out = new StringBuilder(chars.length);
+        boolean changed = false;
+        for (char c : chars) {
+            if (forbiddenChars.indexOf(c) < 0) {
+                // If not a forbidden char, append to output
+                out.append(c);
+            } else {
+                changed = true;
+            }
+        }
+        
+        if (changed) {
+            return out.toString();
+        } else {
+            return input;
+        }
+    }
+    
+    /**
      * Returns the index of the element in the List that is == the given obj 
      * (i.e. returns the index of the given instance, not only that of an equal object).
      * @param list
