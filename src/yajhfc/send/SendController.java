@@ -393,7 +393,7 @@ public class SendController implements FaxSender {
                                 }
                             }
 
-                            String faxNumber = so.numberPrefix + Utils.sanitizeInput(numItem.getField(PBEntryField.FaxNumber), numberFilterChars, ' ', 255);
+                            String faxNumber = so.numberPrefix + Utils.stringFilterOut(numItem.getField(PBEntryField.FaxNumber), numberFilterChars, 255);
                             j.setDialstring(faxNumber);
                             //j.setProperty("EXTERNAL", faxNumber); // needed to fix an error while sending multiple jobs
                             j.setMaximumTries(maxTries);
