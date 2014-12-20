@@ -98,61 +98,62 @@ public class EditJobWorker extends ProgressWorker {
     
     @Override
     public void doWork() {
-            try {
-                MessageFormat infoFormat = new MessageFormat(_("Editing job {0}"));
-                MessageFormat suspendFormat = new MessageFormat(_("Suspending job {0}"));
-                MessageFormat resumeFormat = new MessageFormat(_("Resuming job {0}"));
-                for (FaxJob<? extends FmtItem> job : selJobs) {
-                    try {
-                        String editNote = infoFormat.format(new Object[]{job.getIDValue()});
+        try {
+            MessageFormat infoFormat = new MessageFormat(_("Modifying job {0}"));
+            MessageFormat suspendFormat = new MessageFormat(_("Suspending job {0}"));
+            MessageFormat resumeFormat = new MessageFormat(_("Resuming job {0}"));
+            for (FaxJob<? extends FmtItem> job : selJobs) {
+                try {
+                    String editNote = infoFormat.format(new Object[]{job.getIDValue()});
+                    updateNote(editNote);
+
+                    JobState jobstate = job.getCurrentJobState();
+                    if (Utils.debugMode)
+                        log.fine("Job state is " + jobstate);
+                    if (jobstate == JobState.RUNNING) {
+                        showMessageDialog(MessageFormat.format(_("Job {0} is currently running, cannot modify this job."), job.getIDValue()), _("Modify job parameters"), JOptionPane.WARNING_MESSAGE);
+                        continue;
+                    } else if (jobstate != JobState.SUSPENDED) {
+                        updateNote(suspendFormat.format(new Object[]{job.getIDValue()}));
+                        job.suspend();
                         updateNote(editNote);
-
-                        JobState jobstate = job.getCurrentJobState();
-                        if (Utils.debugMode)
-                            log.fine("Job state is " + jobstate);
-                        if (jobstate == JobState.RUNNING) {
-                            showMessageDialog(MessageFormat.format(_("Job {0} is currently running, cannot edit this job."), job.getIDValue()), _("Edit job"), JOptionPane.WARNING_MESSAGE);
-                            continue;
-                        } else if (jobstate != JobState.SUSPENDED) {
-                            updateNote(suspendFormat.format(new Object[]{job.getIDValue()}));
-                            job.suspend();
-                            updateNote(editNote);
-                        }
-                        Map<String,String> props = job.getJobProperties(EditJobDialog.SUPPORTED_PROPERTIES);
-                        if (Utils.debugMode)
-                            log.fine("Retrieved properties " + props);
-
-                        EditJobDialogRunnable runner = new EditJobDialogRunnable(mw, job, props);
-                        SwingUtilities.invokeAndWait(runner);
-                        final HylafaxWorker res = runner.getResult();
-                        if (res == null) { // User selected Cancel
-                            if (jobstate != JobState.SUSPENDED) { // Job was not suspended before
-                                updateNote(resumeFormat.format(new Object[]{job.getIDValue()}));
-                                job.resume();
-                            }
-                            break;
-                        }
-                        
-                        job.doHylafaxWork(res);
-
-                        if (jobstate == JobState.SUSPENDED) { // Suspend job again if it was suspended when we began
-                            updateNote(suspendFormat.format(new Object[]{job.getIDValue()}));
-                            Thread.sleep(1000);
-                            job.suspend();
-                        }
-
-                        stepProgressBar(10);
-                    } catch (Exception e1) {
-                        String msgText;
-                        if (job == null)
-                            msgText = _("Error editing a fax job:\n");
-                        else
-                            msgText = MessageFormat.format(_("Error editing the fax job \"{0}\":\n"), job.getIDValue());
-                        showExceptionDialog(msgText, e1);
                     }
+                    Map<String,String> props = job.getJobProperties(EditJobDialog.SUPPORTED_PROPERTIES);
+                    if (Utils.debugMode)
+                        log.fine("Retrieved properties " + props);
+
+                    EditJobDialogRunnable runner = new EditJobDialogRunnable(mw, job, props);
+                    SwingUtilities.invokeAndWait(runner);
+                    final HylafaxWorker res = runner.getResult();
+                    if (res == null) { // User selected Cancel
+                        if (jobstate != JobState.SUSPENDED) { // Job was not suspended before
+                            updateNote(resumeFormat.format(new Object[]{job.getIDValue()}));
+                            job.resume();
+                        }
+                        break;
+                    }
+
+                    // Set properties. N.b.: This will resume the job
+                    job.doHylafaxWork(res);
+
+                    if (jobstate == JobState.SUSPENDED) { // Suspend job again if it was suspended when we began
+                        updateNote(suspendFormat.format(new Object[]{job.getIDValue()}));
+                        Thread.sleep(1000);
+                        job.suspend();
+                    }
+
+                    stepProgressBar(10);
+                } catch (Exception e1) {
+                    String msgText;
+                    if (job == null)
+                        msgText = _("Error modifying a fax job") + ":\n";
+                    else
+                        msgText = MessageFormat.format(_("Error modifying the fax job \"{0}\"") + ":\n", job.getIDValue());
+                    showExceptionDialog(msgText, e1);
                 }
+            }
         } catch (Exception ex) {
-            showExceptionDialog(_("Error editing fax jobs:"), ex);
+            showExceptionDialog(_("Error modifying a fax job"), ex);
         }
     }
     @Override
@@ -164,8 +165,8 @@ public class EditJobWorker extends ProgressWorker {
         int kt = Integer.parseInt(killtime);
         // Format is ddhhmm
         return   ( (kt/10000)*24          // days 
-                + ((kt/100)%100) ) * 60  // hours                        
-                + kt%100;                  // minutes 
+                + ((kt/100)%100) ) * 60   // hours                        
+                + kt%100;                 // minutes 
     }
     
     public static Date parseSendtime(String sendtime) throws ParseException {
@@ -244,7 +245,7 @@ public class EditJobWorker extends ProgressWorker {
         boolean modalResult = false;
         
         private static String getTitle(FaxJob<? extends FmtItem> job) {
-            return MessageFormat.format(_("Edit parameters of job {0}"), job.getIDValue());
+            return MessageFormat.format(_("Modify parameters of job {0}"), job.getIDValue());
         }
         
         public EditJobDialog(Dialog owner, FaxJob<? extends FmtItem> job, Map<String,String> properties) {
@@ -359,11 +360,11 @@ public class EditJobWorker extends ProgressWorker {
                 number = null;
             
             if (tts == null) {
-                tts = new Date(System.currentTimeMillis() + 5000); // NOW = In 5 seconds
+                tts = new Date(System.currentTimeMillis() + 5000); // NOW = In 5 seconds (to allow us to suspend the job again)
             } else if (tts.equals(origTTS))
                 tts = null;
             
-            if (killTime == origKillTime && tts==null)
+            if (killTime == origKillTime && tts==null) // Set kill time if it has changed *or* if the time to send has changed (because HylaFAX will reset the kill time if you change the TTS)
                 killTime = -1;
             
             if (maxTries != origMaxTries)

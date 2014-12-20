@@ -1225,11 +1225,11 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             public void actualActionPerformed(java.awt.event.ActionEvent e) {
                 TooltipJTable<? extends FmtItem> selTable = getSelectedTable();
                 EditJobWorker wrk = new EditJobWorker(MainWin.this, selTable);
-                wrk.startWork(MainWin.this, _("Editing jobs"));
+                wrk.startWork(MainWin.this, _("Modifying job parameters"));
             }
         };
-        actEditJob.putValue(Action.NAME, _("Edit job parameters..."));
-        actEditJob.putValue(Action.SHORT_DESCRIPTION, _("Allows to edit some job parameters"));
+        actEditJob.putValue(Action.NAME, _("Modify job parameters") + "...");
+        actEditJob.putValue(Action.SHORT_DESCRIPTION, _("Allows to modify some job parameters"));
         actEditJob.putValue(Action.SMALL_ICON, Utils.loadIcon("general/Edit"));
         putAvailableAction("EditJob", actEditJob);
         
