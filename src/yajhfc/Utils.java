@@ -1196,11 +1196,17 @@ public final class Utils {
                 toolkit.getImage(Utils.class.getResource("logo-large.png")));
     }
     
-    public static String firstDefined(String s1, String s2) {
+    /**
+     * Returns the first value != null or null if all are == null
+     */
+    public static <T> T firstDefined(T s1, T s2) {
         return (s1 != null) ? s1 : s2;
     }
     
-    public static String firstDefined(String s1, String s2, String s3) {
+    /**
+     * Returns the first value != null or null if all are == null
+     */
+    public static <T> T firstDefined(T s1, T s2, T s3) {
         if (s1 != null)
             return s1;
         if (s2 != null)
