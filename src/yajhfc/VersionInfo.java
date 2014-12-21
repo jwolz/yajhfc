@@ -45,8 +45,8 @@ package yajhfc;
 public final class VersionInfo {
     public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
     public static final String AppShortName = "YajHFC";
-    public static final String AppCopyright = "Copyright © 2005-2014 by Jonas Wolz";
-    public static final String AppVersion = "0.5.7beta3";
+    public static final String AppCopyright = "Copyright © 2005-2015 by Jonas Wolz";
+    public static final String AppVersion = "0.5.7beta4";
     public static final String AuthorName = "Jonas Wolz";
     public static final String AuthorEMail = "info@yajhfc.de";
     public static final String HomepageURL = "http://www.yajhfc.de/";
