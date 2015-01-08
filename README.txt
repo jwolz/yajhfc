@@ -68,8 +68,8 @@ CHANGES
 
 0.5.7:
 - Bug fixes for phone book: Can now handle identical items, multi-select no longer "kills" entries
-- Changed behaviour of "Filter from fax number": Characters are now removed completely instead of being replaced by spaces
-- Editing of some parameters (e.g. number and time to send) of jobs in the sending queue is now possible
+- Changed behaviour of "Filter from fax number": Specified characters are now removed completely instead of being replaced by spaces
+- Some parameters (e.g. number and time to send) of jobs in the sending queue can now be edited
 
 0.5.6:
 - Added @@subject@@-Tag for text extraction (i.e. you can now also set the fax's subject by using a tag)

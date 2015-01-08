@@ -1,4 +1,4 @@
-LÉAME (README) de YajHFC 0.5.4
+LÉAME (README) de YajHFC 0.5.7
 ==============================
 
 ACERCA DE
@@ -23,15 +23,15 @@ INSTALACIÓN
 -----------
 
 Requisitos:
-* JRE 5.0 o superior (se recomienda Java 6.0)
+* JRE 5.0 o superior (se recomienda Java 6 o 7)
 * Servidor HylaFAX funcionando en la red (obviamente ;-) )
 * Algún programa para ver archivos TIFF (consultar la FAQ)
 * Opcional: un visor PostScript (p. ej., Ghostview), GhostScript
   y tiff2pdf (integrado en libtiff-utils)
 
-Para instalar YajHFC descargue el archivo yajhfc-0_5_0.jar en algún lugar 
+Para instalar YajHFC descargue el archivo yajhfc-0_5_7.jar en algún lugar 
 de su disco.
-Para ejecutarlo, utilice: "java -jar yajhfc-0_5_0.jar"
+Para ejecutarlo, utilice: "java -jar yajhfc-0_5_7.jar"
 (En Windows seguramente sólo sea necesario ejecutarlo pulsando dos veces sobre el archivo).
 
 LICENCIA
@@ -65,6 +65,11 @@ de Java (más avanzado que los programas "Hola mundo") utilizando la IDE Eclipse
 
 CAMBIOS
 -------
+
+0.5.7:
+- Correcciones en la agenda telefónica: ahora puede gestionar elementos idénticos, las selecciones múltiples ya no "matan" las entradas
+- Cambio del comportamiento de la opción "Filtrar desde el número de fax": eliminación de los caracteres especificados en lugar de ser reemplazados por espacios
+- Algunos parámetros (p. ej., el número de fax y la fecha/hora de envío) de los trabajos de la cola de transmisión se pueden editar
 
 0.5.6:
 - Se añade la etiqueta @@subject@@-Tag para la extracción de texto (es decir, ahora también se puede definir el asunto de un fax usando una etiqueta)
