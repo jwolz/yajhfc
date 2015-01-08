@@ -1,4 +1,4 @@
-LEGGIMI per YajHFC 0.5.6
+LEGGIMI per YajHFC 0.5.7
 ========================
 
 INFORMAZIONI
@@ -29,8 +29,8 @@ Requisiti:
 * Opzionale: un visualizzatore PostScript (es. Ghostview), GhostScript
      e tiff2pdf (dal pacchetto libtiff-utils)
 
-Per installare YajHFC basta scaricare il file yajhfc-0_5_6.jar in una cartella del proprio disco.
-Per eseguirlo utilizzare: "java -jar yajhfc-0_5_6.jar"
+Per installare YajHFC basta scaricare il file yajhfc-0_5_7.jar in una cartella del proprio disco.
+Per eseguirlo utilizzare: "java -jar yajhfc-0_5_7.jar"
 (In Windows normalmente è anche possibile cliccare due volte sul file jar.)
 
 LICENZA
@@ -64,6 +64,13 @@ YajHFC originariamente era stato scritto come primo progetto Java più complesso
 
 MODIFICHE
 ---------
+
+0.5.7:
+- Correzione di difetti relativi alla rubrica: elementi identici sono ora gestiti correttamente,
+  la selezione multipla non elimina più gli elementi
+- Modificato il comportamento di "Filtra/elimina dal numero fax": i caratteri specificati sono ora rimossi
+  completamente invece di essere sostituiti da spazi
+- Alcuni parametri (es. numero fax e ora di invio) dei fax nella coda di invio possono da ora essere modificati
 
 0.5.6:
 - Aggiunto il marcatore @@subject@@ per l'estrazione testo (es.: è ora possibile impostare l'oggetto del fax utilizzando un marcatore)
