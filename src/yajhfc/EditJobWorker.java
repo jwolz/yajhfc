@@ -104,17 +104,17 @@ public class EditJobWorker extends ProgressWorker {
             MessageFormat resumeFormat = new MessageFormat(_("Resuming job {0}"));
             for (FaxJob<? extends FmtItem> job : selJobs) {
                 try {
-                    String editNote = infoFormat.format(new Object[]{job.getIDValue()});
+                    String editNote = infoFormat.format(new Object[]{job.getIDValue().toString()});
                     updateNote(editNote);
 
                     JobState jobstate = job.getCurrentJobState();
                     if (Utils.debugMode)
                         log.fine("Job state is " + jobstate);
                     if (jobstate == JobState.RUNNING) {
-                        showMessageDialog(MessageFormat.format(_("Job {0} is currently running, cannot modify this job."), job.getIDValue()), _("Modify job parameters"), JOptionPane.WARNING_MESSAGE);
+                        showMessageDialog(MessageFormat.format(_("Job {0} is currently running, cannot modify this job."), job.getIDValue().toString()), _("Modify job parameters"), JOptionPane.WARNING_MESSAGE);
                         continue;
                     } else if (jobstate != JobState.SUSPENDED) {
-                        updateNote(suspendFormat.format(new Object[]{job.getIDValue()}));
+                        updateNote(suspendFormat.format(new Object[]{job.getIDValue().toString()}));
                         job.suspend();
                         updateNote(editNote);
                     }
@@ -127,7 +127,7 @@ public class EditJobWorker extends ProgressWorker {
                     final HylafaxWorker res = runner.getResult();
                     if (res == null) { // User selected Cancel
                         if (jobstate != JobState.SUSPENDED) { // Job was not suspended before
-                            updateNote(resumeFormat.format(new Object[]{job.getIDValue()}));
+                            updateNote(resumeFormat.format(new Object[]{job.getIDValue().toString()}));
                             job.resume();
                         }
                         break;
@@ -137,7 +137,7 @@ public class EditJobWorker extends ProgressWorker {
                     job.doHylafaxWork(res);
 
                     if (jobstate == JobState.SUSPENDED) { // Suspend job again if it was suspended when we began
-                        updateNote(suspendFormat.format(new Object[]{job.getIDValue()}));
+                        updateNote(suspendFormat.format(new Object[]{job.getIDValue().toString()}));
                         Thread.sleep(1000);
                         job.suspend();
                     }
@@ -245,7 +245,7 @@ public class EditJobWorker extends ProgressWorker {
         boolean modalResult = false;
         
         private static String getTitle(FaxJob<? extends FmtItem> job) {
-            return MessageFormat.format(_("Modify parameters of job {0}"), job.getIDValue());
+            return MessageFormat.format(_("Modify parameters of job {0}"), job.getIDValue().toString());
         }
         
         public EditJobDialog(Dialog owner, FaxJob<? extends FmtItem> job, Map<String,String> properties) {
