@@ -209,6 +209,9 @@ public enum JobState implements IconMap {
      */
     public static JobState getJobStateFromJPARMValue(String jparmState) {
         try {
+            if ("ACTIVE".equals(jparmState))
+                return RUNNING;
+            
             return Enum.valueOf(JobState.class, jparmState);
         } catch (Exception e) {
             Logger.getLogger(JobState.class.getName()).log(Level.INFO, "Unknown job state, returning UNDEFINED: " + jparmState);
