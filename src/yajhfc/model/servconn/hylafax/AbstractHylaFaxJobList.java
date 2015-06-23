@@ -56,6 +56,8 @@ import yajhfc.server.ServerOptions;
 
 public abstract class AbstractHylaFaxJobList<T extends FmtItem> extends AbstractFaxJobList<T> implements ManagedFaxJobList<T>  {
     protected static final char SPLIT_CHAR = '\002';
+    protected static final String FMT_PREFIX = "X"+SPLIT_CHAR;
+    
     static final Logger log = Logger.getLogger(AbstractHylaFaxJobList.class.getName());
     protected final HylaFaxListConnection parent;
     
@@ -99,4 +101,15 @@ public abstract class AbstractHylaFaxJobList<T extends FmtItem> extends Abstract
     protected abstract FaxJob<T> createFaxJob(String[] data);
     
     protected abstract Vector<?> getJobListing(HylaFAXClient hyfc) throws IOException, ServerResponseException;
+    
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    protected static Vector filterPrefix(Vector output) {
+        for (int i=0; i<output.size(); i++) {
+            String val = (String)output.get(i);
+            if (val.startsWith(FMT_PREFIX)) {
+                output.set(i, val.substring(FMT_PREFIX.length()));
+            }
+        }
+        return output;
+    }
 }
