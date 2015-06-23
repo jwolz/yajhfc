@@ -104,11 +104,12 @@ public class FmtItemList<T extends FmtItem> extends ArrayList<T> implements Filt
     }
     
     /**
-     * Returns a format string suitable for the RECVFMT/JOBFMT commands
+     * Returns a format string suitable for the RECVFMT/JOBFMT commands.
+     * 
      * @return
      */
-    public String getFormatString(char splitChar) {
-        StringBuilder res = new StringBuilder();
+    public String getFormatString(char splitChar, String prefix) {
+        StringBuilder res = new StringBuilder(prefix);
         for (T item : getCompleteView()) {
             res.append('%').append(item.getHylaFmt()).append(splitChar);
         }
