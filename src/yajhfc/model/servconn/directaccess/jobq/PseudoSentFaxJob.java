@@ -105,8 +105,8 @@ public class PseudoSentFaxJob implements SerializableFaxJob<JobFormat> {
         return wrapped.getCurrentJobState();
     }
     
-    public void initializeRead(boolean isRead) {
-        wrapped.initializeRead(isRead);
+    public void setRead(boolean isRead, boolean fireEvent) {
+        wrapped.setRead(isRead, fireEvent);
     }
 
     public boolean isError() {
@@ -130,14 +130,34 @@ public class PseudoSentFaxJob implements SerializableFaxJob<JobFormat> {
     }
 
     public Object getData(int columnIndex) {
+        return getData(getJobFormatFromIndex(columnIndex));
+    }
+
+    private JobFormat getJobFormatFromIndex(int columnIndex) {
         //TODO: Optimize?
-        return getData(parent.getColumns().getCompleteView().get(columnIndex));
+        return parent.getColumns().getCompleteView().get(columnIndex);
     }
 
     public Object getData(JobFormat column) {
         return JobToQueueMapping.getMappingFor(column).mapParsedData(wrapped);
     }
 
+    public void setData(JobFormat column, Object value) {
+        setData(column, value, true);
+    }
+
+    public void setData(JobFormat column, Object value, boolean fireEvent) {
+        JobToQueueMapping.getMappingFor(column).setMappedData(wrapped, value, fireEvent);
+    }
+
+    public void setData(int columnIndex, Object value) {
+        setData(columnIndex, value, true);
+    }
+
+    public void setData(int columnIndex, Object value, boolean fireEvent) {
+        setData(getJobFormatFromIndex(columnIndex), value, fireEvent);
+    }
+    
     public FaxJobList<JobFormat> getParent() {
         return parent;
     }

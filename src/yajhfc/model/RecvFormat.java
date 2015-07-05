@@ -134,6 +134,15 @@ public enum RecvFormat implements FmtItem {
      * Time in seconds since the UNIX epoch (undocumented)
      */
     Z("Z", _("Time/Date (UNIX)"), _("Time in seconds since the UNIX epoch"), Utils.HYLA_UNIX_DATE_FORMAT, DateKind.DATE_AND_TIME),
+    
+    /**
+     * Virtual column: read/unread state
+     */
+    virt_read(null, _("Fax is read"), _("If the fax has been read by a YajHFC user"), Boolean.class, null, null, false, VirtualColumnType.READ),
+    /**
+     * Virtual column: user comment
+     */
+    virt_comment(null, _("User comment"), _("Comment added by a YajHFC user"), String.class, null, null, false, VirtualColumnType.USER_COMMENT),
     ;
     private final String description;
     private final String hylaFmt;
@@ -141,6 +150,8 @@ public enum RecvFormat implements FmtItem {
     private final Class<?> dataType;
     private final DateFormat hylaDateFormat;
     private final DateKind displayDateFormat;
+    private final boolean readOnly;
+    private final VirtualColumnType virtualColumnType;
     
     public String getDescription() {
         return description;
@@ -170,6 +181,12 @@ public enum RecvFormat implements FmtItem {
             return null;
         }
     }
+    public boolean isReadOnly() {
+        return readOnly;
+    }
+    public VirtualColumnType getVirtualColumnType() {
+        return virtualColumnType;
+    }
     
     private RecvFormat(String hylaFmt, String description) {
         this(hylaFmt, description, description);
@@ -197,19 +214,29 @@ public enum RecvFormat implements FmtItem {
     private RecvFormat(String hylaFmt, String description,
             String longDescription, Class<?> dataType,
             DateFormat hylaDateFormat, DateKind displayDateFormat) {
+        this(hylaFmt, description, longDescription, dataType, hylaDateFormat, displayDateFormat, true, VirtualColumnType.NONE);
+    }
+    
+    private RecvFormat(String hylaFmt, String description,
+            String longDescription, Class<?> dataType,
+            DateFormat hylaDateFormat, DateKind displayDateFormat, boolean readOnly, VirtualColumnType virtualColumnType) {
         this.hylaFmt = hylaFmt;
         this.description = description;
         this.longDescription = longDescription;
         this.dataType = dataType;
         this.hylaDateFormat = hylaDateFormat;
         this.displayDateFormat = displayDateFormat;
+        this.readOnly = readOnly;
+        this.virtualColumnType = virtualColumnType;
     }
 
     private static final RecvFormat[] requiredFormats = {
         RecvFormat.f,
         RecvFormat.o,
         RecvFormat.z,
-        RecvFormat.e
+        RecvFormat.e,
+        RecvFormat.virt_comment,
+        RecvFormat.virt_read
     };
     public static RecvFormat[] getRequiredFormats() {
         return requiredFormats;

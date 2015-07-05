@@ -180,7 +180,7 @@ public class FaxListTableModel<T extends FmtItem> extends AbstractTableModel {
     }
         
     public Object getValueAt(int rowIndex, int columnIndex) {
-        return visibleJobs.get(rowIndex).getData(columnIndex);
+        return getJob(rowIndex).getData(columnIndex);
     }
     
     public FaxJob<T> getJob(int rowIndex) {
@@ -192,7 +192,12 @@ public class FaxListTableModel<T extends FmtItem> extends AbstractTableModel {
     }
     
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return false;
+        return !jobs.getColumns().get(columnIndex).isReadOnly();
+    }
+    
+    @Override
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+        getJob(rowIndex).setData(columnIndex, aValue);
     }
     
     public String getColumnName(int column) {
@@ -223,11 +228,18 @@ public class FaxListTableModel<T extends FmtItem> extends AbstractTableModel {
     private FaxJobListListener<T> updateListener;
     private FaxJobListListener<T> getUpdateListener() {
         if (updateListener == null) {
-            updateListener = new SwingFaxJobListListener<T>(true, false) {
+            updateListener = new SwingFaxJobListListener<T>(true, false, true) {
                 @Override
                 protected void faxJobsUpdatedSwing(FaxJobList<T> source,
                         List<FaxJob<T>> oldJobList, List<FaxJob<T>> newJobList) {
                     refreshVisibleJobs();
+                }
+                
+                @Override
+                protected void columnChangedSwing(FaxJobList<T> source,
+                        FaxJob<T> job, T column, int columnIndex,
+                        Object oldValue, Object newValue) {
+                    fireTableCellUpdated(Utils.identityIndexOf(jobs.getJobs(), job), columnIndex);
                 }
             };
         }

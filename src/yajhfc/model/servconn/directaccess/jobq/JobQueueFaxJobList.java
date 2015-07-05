@@ -72,6 +72,8 @@ public class JobQueueFaxJobList extends DirectAccessFaxJobList<QueueFileFormat> 
         //  (e.g. "external" -> [3,7] : value of external is put in the 4th and 8th column)
         for (int i = 0; i < completeCols.size(); i++) {
             String hylaFmt = completeCols.get(i).getHylaFmt();
+            if (hylaFmt == null)
+                continue;
             
             int[] oldVal = desiredItems.get(hylaFmt);
             int[] val;

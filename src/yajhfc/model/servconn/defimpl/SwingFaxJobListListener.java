@@ -53,8 +53,9 @@ import yajhfc.model.servconn.FaxJobListListener;
  */
 public abstract class SwingFaxJobListListener<T extends FmtItem> implements
 FaxJobListListener<T> {
-    public boolean enableFaxJobsUpdated;
-    public boolean enableReadStateChanged;
+    public final boolean enableFaxJobsUpdated;
+    public final boolean enableReadStateChanged;
+    public final boolean enableColumnChanged;
     
 
     public final void faxJobsUpdated(final FaxJobList<T> source,
@@ -95,20 +96,46 @@ FaxJobListListener<T> {
         }
     }
 
-    public void readStateChangedSwing(FaxJobList<T> source, FaxJob<T> job,
+    protected void readStateChangedSwing(FaxJobList<T> source, FaxJob<T> job,
             boolean oldState, boolean newState) {
         // Do nothing
     }
+    
+    public final void columnChanged(final FaxJobList<T> source, final FaxJob<T> job, final T column,
+            final int columnIndex, final Object oldValue, final Object newValue) {
+        if (!enableColumnChanged)
+            return;
+        
+        if (SwingUtilities.isEventDispatchThread()) {
+            columnChangedSwing(source, job, column, columnIndex, oldValue, newValue);
+        } else {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    columnChangedSwing(source, job, column, columnIndex, oldValue, newValue);
+                } 
+            });
+        }
+    }
 
+    protected void columnChangedSwing(FaxJobList<T> source, FaxJob<T> job, T column,
+            int columnIndex, Object oldValue, Object newValue) {
+        // Do nothing
+    }
 
     public SwingFaxJobListListener(boolean enableFaxJobsUpdated,
             boolean enableReadStateChanged) {
+        this(true, true, false);
+    }
+    
+    public SwingFaxJobListListener(boolean enableFaxJobsUpdated,
+            boolean enableReadStateChanged, boolean enableColumnChanged) {
         super();
         this.enableFaxJobsUpdated = enableFaxJobsUpdated;
         this.enableReadStateChanged = enableReadStateChanged;
+        this.enableColumnChanged = enableColumnChanged;
     }
     
     public SwingFaxJobListListener() {
-        this(true, true);
+        this(true, true, true);
     }
 }

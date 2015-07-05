@@ -267,7 +267,11 @@ public enum JobFormat implements FmtItem {
      */
     n_desc("n", _("Notification when"), _("E-mail notification handling (long description)"), IconMap.class),
     
-    _0("0", _("Use XVRES?"), _("Use extended resolution?"), Boolean.class)
+    _0("0", _("Use XVRES?"), _("Use extended resolution?"), Boolean.class),
+    /**
+     * Virtual column: user comment
+     */
+    virt_comment(null, _("User comment"), _("Comment added by a YajHFC user"), String.class, null, null, false, VirtualColumnType.USER_COMMENT),
     ;
     
     private final String description;
@@ -276,6 +280,8 @@ public enum JobFormat implements FmtItem {
     private final Class<?> dataType;
     private final DateFormat hylaDateFormat;
     private final DateKind displayDateFormat;
+    private final boolean readOnly;
+    private final VirtualColumnType virtualColumnType;
     
     public String getDescription() {
         return description;
@@ -304,6 +310,13 @@ public enum JobFormat implements FmtItem {
         } else {
             return null;
         }
+    }
+    
+    public VirtualColumnType getVirtualColumnType() {
+        return virtualColumnType;
+    }
+    public boolean isReadOnly() {
+        return readOnly;
     }
     
     private JobFormat(String hylaFmt, String description) {
@@ -336,12 +349,20 @@ public enum JobFormat implements FmtItem {
     private JobFormat(String hylaFmt, String description,
             String longDescription, Class<?> dataType,
             DateFormat hylaDateFormat, DateKind displayDateFormat) {
+        this(hylaFmt, description, longDescription, dataType, hylaDateFormat, displayDateFormat, true, VirtualColumnType.NONE);
+    }
+    
+    private JobFormat(String hylaFmt, String description,
+            String longDescription, Class<?> dataType,
+            DateFormat hylaDateFormat, DateKind displayDateFormat, boolean readOnly, VirtualColumnType virtualColumnType) {
         this.hylaFmt = hylaFmt;
         this.description = description;
         this.longDescription = longDescription;
         this.dataType = dataType;
         this.hylaDateFormat = hylaDateFormat;
         this.displayDateFormat = displayDateFormat;
+        this.readOnly = readOnly;
+        this.virtualColumnType = virtualColumnType;
     }
 
     private static final JobFormat[] requiredFormats = {

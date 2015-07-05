@@ -46,6 +46,7 @@ import yajhfc.DateKind;
 import yajhfc.Utils;
 import yajhfc.model.FmtItem;
 import yajhfc.model.IconMap;
+import yajhfc.model.VirtualColumnType;
 
 /**
  * @author jonas
@@ -113,6 +114,10 @@ public enum QueueFileFormat implements FmtItem {
         // the following properties are not officially documented in doneq(5)/sendq(5)
         voice("voice", _("Recipient phone"), _("Recipient's telephone (voice) number"), String.class),
         regarding("regarding", _("Subject"), _("Subject (\"Regarding\") of the fax"), String.class),
+        /**
+         * Virtual column: user comment
+         */
+        virt_comment(null, _("User comment"), _("Comment added by a YajHFC user"), String.class, null, null, false, VirtualColumnType.USER_COMMENT),
         ;
         
         private final String description;
@@ -121,6 +126,8 @@ public enum QueueFileFormat implements FmtItem {
         private final Class<?> dataType;
         private final DateFormat hylaDateFormat;
         private final DateKind displayDateFormat;
+        private final boolean readOnly;
+        private final VirtualColumnType virtualColumnType;
         
         public String getDescription() {
             return description;
@@ -148,6 +155,13 @@ public enum QueueFileFormat implements FmtItem {
             }
         }
         
+        public VirtualColumnType getVirtualColumnType() {
+            return virtualColumnType;
+        }
+        public boolean isReadOnly() {
+            return readOnly;
+        }
+        
         private QueueFileFormat(String hylaFmt, String description,
                 DateFormat hylaDateFormat, DateKind displayDateFormat) {
             this(hylaFmt, description, description, Date.class, hylaDateFormat, displayDateFormat);
@@ -170,12 +184,21 @@ public enum QueueFileFormat implements FmtItem {
         private QueueFileFormat(String hylaFmt, String description,
                 String longDescription, Class<?> dataType,
                 DateFormat hylaDateFormat, DateKind displayDateFormat) {
+            this(hylaFmt, description, longDescription, dataType, hylaDateFormat, displayDateFormat, true, VirtualColumnType.NONE);
+        }
+        
+        private QueueFileFormat(String hylaFmt, String description,
+                String longDescription, Class<?> dataType,
+                DateFormat hylaDateFormat, DateKind displayDateFormat, boolean readOnly, VirtualColumnType virtualColumnType) {
             this.hylaFmt = hylaFmt;
             this.description = description;
             this.longDescription = longDescription;
             this.dataType = dataType;
             this.hylaDateFormat = hylaDateFormat;
             this.displayDateFormat = displayDateFormat;
+            this.readOnly = readOnly;
+            this.virtualColumnType = virtualColumnType;
+            
         }
 
         private static final QueueFileFormat[] requiredFormats = {

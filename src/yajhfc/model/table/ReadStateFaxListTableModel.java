@@ -173,7 +173,7 @@ public class ReadStateFaxListTableModel<T extends FmtItem> extends FaxListTableM
 
                     for (FaxJob<T> newJob : newJobList) {
                         Object jobID = newJob.getIDValue();
-                        newJob.initializeRead(persistentReadState.isRead(jobID.toString()));
+                        newJob.setRead(persistentReadState.isRead(jobID.toString()), false);
 
                         FaxJob<T> oldJob = oldJobIDs.get(jobID);
                         if (oldJob == null) { // Job is new
@@ -220,6 +220,12 @@ public class ReadStateFaxListTableModel<T extends FmtItem> extends FaxListTableM
                         }
                     });
                 }
+                
+                public void columnChanged(FaxJobList<T> source, FaxJob<T> job,
+                        T column, int columnIndex, Object oldValue,
+                        Object newValue) {
+                    // Do nothing, handled in FaxListTableModel
+                }
             };
         }
         return jobsListener;
@@ -248,7 +254,7 @@ public class ReadStateFaxListTableModel<T extends FmtItem> extends FaxListTableM
             
             if (changedFaxes.contains(id)) {
                 // Do not use the normal setter here to avoid a unnecessary update of the read state persister
-                job.initializeRead(sender.isRead(id));
+                job.setRead(sender.isRead(id), false);
                 updateRows[updateRowPtr++] = i;
             }
         }

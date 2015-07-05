@@ -53,6 +53,7 @@ import yajhfc.Utils;
 import yajhfc.model.DefaultIconMap;
 import yajhfc.model.FmtItem;
 import yajhfc.model.IconMap;
+import yajhfc.model.VirtualColumnType;
 import yajhfc.model.servconn.FaxDocument;
 import yajhfc.model.servconn.FaxJobList;
 import yajhfc.model.servconn.HylafaxWorker;
@@ -68,7 +69,6 @@ public abstract class AbstractFaxJob<T extends FmtItem> implements SerializableF
     protected List<FaxDocument> documents;
     protected List<String> inaccessibleDocuments = null;
     protected JobState state;
-    protected boolean read;
 
     public FaxDocument getCommunicationsLog() throws IOException {
         return null;
@@ -85,6 +85,36 @@ public abstract class AbstractFaxJob<T extends FmtItem> implements SerializableF
     public Object getData(int columnIndex) {
         return data[columnIndex];
     }
+    
+    public void setData(T column, Object value) {
+        setData(column, value, true);
+    }
+    
+    public void setData(T column, Object value, boolean fireEvent) {
+        setData(parent.getColumns().getCompleteView().indexOf(column), value, fireEvent);
+    }
+    
+    public void setData(int columnIndex, Object value) {
+        setData(columnIndex, value, true);
+    }
+    
+    public void setData(int columnIndex, Object value, boolean fireEvent) {
+        T column = parent.getColumns().getCompleteView().get(columnIndex);
+        if (column.isReadOnly())
+            throw new UnsupportedOperationException("Column " + column.name() + " is read only!");
+        if (value != null && !column.getDataType().isInstance(value))
+            throw new ClassCastException("value is of type " + value.getClass() + ", but column " + column.name() + " has type " + column.getDataType());
+        
+        Object oldValue = data[columnIndex];
+        if (oldValue != value && (oldValue == null || !oldValue.equals(value))) {
+            data[columnIndex] = value;
+            
+            if (fireEvent) {
+                parent.fireColumnChanged(this, column, columnIndex, oldValue, value);
+            }
+        }
+    }
+    
     
     /**
      * Returns the "raw" value of the given column or null if an invalid column is given
@@ -275,18 +305,24 @@ public abstract class AbstractFaxJob<T extends FmtItem> implements SerializableF
     }
     
     public boolean isRead() {
-        return read;
+        final int readColumn = parent.getColumns().getVirtualColumnIndex(VirtualColumnType.READ);
+        if (readColumn < 0)
+            throw new UnsupportedOperationException("This type of fax job doe not support a read/unread state!");
+ 
+        final Boolean isRead = (Boolean)getData(readColumn);
+        return (isRead != null && isRead.booleanValue());
     }
 
     public void setRead(boolean isRead) {
-        if (read != isRead) {
-            read = isRead;
-            parent.fireReadStateChanged(this, !isRead, isRead);
-        }
+        setRead(isRead, true);
     }
 
-    public void initializeRead(boolean isRead) {
-        read = isRead;
+    public void setRead(boolean isRead, boolean fireEvent) {
+        final int readColumn = parent.getColumns().getVirtualColumnIndex(VirtualColumnType.READ);
+        if (readColumn < 0)
+            throw new UnsupportedOperationException("This type of fax job doe not support a read/unread state!");
+        
+        setData(readColumn, Boolean.valueOf(isRead), fireEvent);
     }
     
     protected AbstractFaxJob(AbstractFaxJobList<T> parent) {

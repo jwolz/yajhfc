@@ -101,6 +101,10 @@ public abstract class MapEditorDialog extends JDialog {
         okAction = new ExcDialogAbstractAction() {
             @Override
             protected void actualActionPerformed(ActionEvent e) {
+                if (mapTable.isEditing()) {
+                    mapTable.getCellEditor().stopCellEditing();
+                 }
+                
                 mapToEdit.clear();
                 mapToEdit.putAll(model.getMapToEdit());
                 dispose();
