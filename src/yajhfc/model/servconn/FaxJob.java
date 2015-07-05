@@ -76,6 +76,40 @@ public interface FaxJob<T extends FmtItem> extends FilterableObject {
     public Object getData(int columnIndex);
     
     /**
+     * Sets the data saved in the specified column.
+     * 
+     * @param column
+     * @return
+     */
+    public void setData(T column, Object value);
+    
+    /**
+     * Sets the data saved in the specified column.
+     * 
+     * @param column
+     * @param fireEvent determines if an event should fire if the data changed
+     * @return
+     */
+    public void setData(T column, Object value, boolean fireEvent);
+    
+    /**
+     * Sets the data saved in the specified column.
+     * 
+     * @param column
+     * @return
+     */
+    public void setData(int columnIndex, Object value);
+    
+    /**
+     * Sets the data saved in the specified column.
+     * 
+     * @param column
+     * @param fireEvent determines if an event should fire if the data changed
+     * @return
+     */
+    public void setData(int columnIndex, Object value, boolean fireEvent);
+    
+    /**
      * Returns a value that can be used to uniquely identify this
      * job in its JobList
      * @return
@@ -128,8 +162,9 @@ public interface FaxJob<T extends FmtItem> extends FilterableObject {
      * Sets if this job has been read without firing an event.
      * -> Use with care!
      * @param isRead
+     * @param fireEvent fire an event?
      */
-    public void initializeRead(boolean isRead);
+    public void setRead(boolean isRead, boolean fireEvent);
         
     /**
      * Suspends the transmit of this fax job

@@ -42,7 +42,9 @@ import gnu.inet.ftp.ServerResponseException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
+import yajhfc.Utils;
 import yajhfc.model.FmtItemList;
 import yajhfc.model.JobFormat;
 import yajhfc.model.TableType;
@@ -106,10 +108,39 @@ public class PseudoSentFaxJobList extends AbstractFaxJobList<JobFormat>
 
     public void readStateChanged(FaxJobList<QueueFileFormat> source,
             FaxJob<QueueFileFormat> job, boolean oldState, boolean newState) {
+        // Do nothing, event is handled in columnChanged
+    }
+    
+    public int getJobFormatIndexFromQFF(QueueFileFormat column) {
+        final List<JobFormat> completeView = columns.getCompleteView();
+        
+        for (int i=0; i<completeView.size(); i++) {
+            // Return the first job format that maps on the given column
+            if (Utils.indexOfArray( JobToQueueMapping.getMappingFor(completeView.get(i)).getSourceProperties(), column) >= 0)
+                return i;
+        }
+        return -1;
+    }
+    
+    public void columnChanged(FaxJobList<QueueFileFormat> source,
+            FaxJob<QueueFileFormat> job, QueueFileFormat column,
+            int columnIndex, Object oldValue, Object newValue) {
+
         // TODO: Optimize
+        
+        int jfColumnIndex = getJobFormatIndexFromQFF(column);
+        JobFormat jfColumn;
+        if (jfColumnIndex >= 0) {
+            jfColumn = columns.getCompleteView().get(jfColumnIndex);
+        } else {
+            jfColumn = null;
+            Logger.getLogger(PseudoSentFaxJobList.class.getName()).severe("No mapping for column " + column.name() + " found! This should never happen");
+        }
+            
+
         for (FaxJob<JobFormat> wrapperJob : jobs) {
             if (((PseudoSentFaxJob)wrapperJob).wrapped == job) {
-                fireReadStateChanged(wrapperJob, oldState, newState);
+                fireColumnChanged(wrapperJob, jfColumn, jfColumnIndex, oldValue, newValue);
                 return;
             }
         }

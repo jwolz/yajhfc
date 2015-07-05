@@ -60,6 +60,7 @@ import yajhfc.filters.FilterKey;
 import yajhfc.filters.FilterKeyList;
 import yajhfc.filters.FilterableObject;
 import yajhfc.model.FmtItem;
+import yajhfc.model.VirtualColumnType;
 import yajhfc.model.ui.FmtItemRenderer;
 import yajhfc.util.ClipboardPopup;
 
@@ -105,6 +106,14 @@ public class FilterPanel<V extends FilterableObject,K extends FilterKey> extends
         
         public Format getFormat() {
             return null;
+        }
+        
+        public VirtualColumnType getVirtualColumnType() {
+            return VirtualColumnType.NONE;
+        }
+
+        public boolean isReadOnly() {
+            return true;
         }
         
         @Override

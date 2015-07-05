@@ -45,6 +45,7 @@ import java.util.logging.Logger;
 import yajhfc.Utils;
 import yajhfc.model.FmtItem;
 import yajhfc.model.FmtItemList;
+import yajhfc.model.VirtualColumnType;
 import yajhfc.model.servconn.FaxJob;
 import yajhfc.model.servconn.FaxJobList;
 import yajhfc.model.servconn.FaxJobListListener;
@@ -98,12 +99,23 @@ public abstract class AbstractFaxJobList<T extends FmtItem> implements
         listeners.remove(l);
     }
     
-    public synchronized void fireReadStateChanged(FaxJob<T> job, boolean oldState, boolean newState) {
+//    public synchronized void fireReadStateChanged(FaxJob<T> job, boolean oldState, boolean newState) {
+//        if (Utils.debugMode) {
+//            log.fine("Fire read state changed for " + job + "; oldState=" + oldState + "; newState=" + newState);
+//        }
+//        for (FaxJobListListener<T> l : listeners) {
+//            l.readStateChanged(this, job, oldState, newState);
+//        }
+//    }
+    
+    public synchronized void fireColumnChanged(FaxJob<T> job, T column, int columnIndex, Object oldValue, Object newValue) {
         if (Utils.debugMode) {
-            log.fine("Fire read state changed for " + job + "; oldState=" + oldState + "; newState=" + newState);
+            log.fine("Fire column changed for " + job + "; column=" + column.name() + " (idx=" + columnIndex + "); oldValue=" + oldValue + "; newValue=" + newValue);
         }
         for (FaxJobListListener<T> l : listeners) {
-            l.readStateChanged(this, job, oldState, newState);
+            l.columnChanged(this, job, column, columnIndex, oldValue, newValue);
+            if (column.getVirtualColumnType() == VirtualColumnType.READ)
+                l.readStateChanged(this, job, (oldValue != null && ((Boolean)oldValue).booleanValue()), (newValue != null && ((Boolean)newValue).booleanValue()));
         }
     }
     

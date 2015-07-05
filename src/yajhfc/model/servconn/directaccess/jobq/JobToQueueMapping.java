@@ -37,10 +37,13 @@
 package yajhfc.model.servconn.directaccess.jobq;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
+import yajhfc.Utils;
 import yajhfc.model.FmtItemList;
 import yajhfc.model.JobFormat;
 import yajhfc.model.jobq.QueueFileFormat;
@@ -57,6 +60,10 @@ public class JobToQueueMapping {
     
     public Object mapParsedData(FaxJob<QueueFileFormat> job) {
         return job.getData(sourceProps[0]);
+    }
+    
+    public void setMappedData(FaxJob<QueueFileFormat> job, Object value, boolean fireEvent) {
+        job.setData(sourceProps[0], value, fireEvent);
     }
     
     public JobFormat getJobFormat() {
@@ -166,7 +173,13 @@ public class JobToQueueMapping {
         put(new JobToQueueMapping(JobFormat.y, QueueFileFormat.totpages));
         put(new DateFormatMapping(JobFormat.z, QueueFileFormat.tts, DateFormat.getDateTimeInstance()));
         put(new JobToQueueMapping(JobFormat._0, QueueFileFormat.usexvres));
+        put(new JobToQueueMapping(JobFormat.virt_comment, QueueFileFormat.virt_comment));
         
+        assert (jobToQueueMap.size() == JobFormat.values().length);
+        // Sanity check if all Job Formats are mapped
+        //if (jobToQueueMap.size() < JobFormat.values().length) {
+        //    Logger.getLogger(JobToQueueMapping.class.getName()).severe("jobToQueueMap contains only " + jobToQueueMap.size() + " entries. This is less than the number of JobFormats: " + JobFormat.values().length);
+        //}
     }
     
     private static void put(JobToQueueMapping mapping) {
@@ -175,6 +188,16 @@ public class JobToQueueMapping {
     
     public static JobToQueueMapping getMappingFor(JobFormat jf) {
         return jobToQueueMap.get(jf);
+    }
+    
+    public static List<JobToQueueMapping> getReverseMappingFor(QueueFileFormat qf) {
+        List<JobToQueueMapping> res = new ArrayList<JobToQueueMapping>();
+        for (JobToQueueMapping jtqm : jobToQueueMap.values()) {
+            if (Utils.indexOfArray(jtqm.getSourceProperties(), qf) >= 0) {
+                res.add(jtqm);
+            }
+        }
+        return res;
     }
     
     public static void getRequiredFormats(FmtItemList<JobFormat> src, FmtItemList<QueueFileFormat> dst) {

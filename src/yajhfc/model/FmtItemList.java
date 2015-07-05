@@ -61,6 +61,7 @@ public class FmtItemList<T extends FmtItem> extends ArrayList<T> implements Filt
     protected T[] obligateItems;
     protected List<T> completeView;
     protected Map<T,Integer> itemIndices;
+    protected Map<VirtualColumnType,Integer> virtualColumnIndexes;
     protected boolean haveItemMap = false;
 
     /**
@@ -70,9 +71,15 @@ public class FmtItemList<T extends FmtItem> extends ArrayList<T> implements Filt
     public List<T> getCompleteView() {
         if (completeView == null) {
             itemIndices.clear();
+            virtualColumnIndexes.clear();
             // Rebuild map
             for (int i = 0; i < size(); i++) {
-                itemIndices.put(get(i), Integer.valueOf(i));
+                final T item = get(i);
+                final Integer index = Integer.valueOf(i);
+                
+                itemIndices.put(item, index);
+                virtualColumnIndexes.put(item.getVirtualColumnType(), index);
+                
             }
             haveItemMap = true;
             
@@ -91,7 +98,10 @@ public class FmtItemList<T extends FmtItem> extends ArrayList<T> implements Filt
             for (T fi : obligateItems) {
                 if (!this.contains(fi)) {
                     completeView.add(fi);
-                    itemIndices.put(fi, completeView.size()-1);
+                    
+                    final Integer index = Integer.valueOf(completeView.size()-1);
+                    itemIndices.put(fi, index);
+                    virtualColumnIndexes.put(fi.getVirtualColumnType(), index);
                 }
             }
             if (completeView.size() > size()) {
@@ -111,7 +121,9 @@ public class FmtItemList<T extends FmtItem> extends ArrayList<T> implements Filt
     public String getFormatString(char splitChar, String prefix) {
         StringBuilder res = new StringBuilder(prefix);
         for (T item : getCompleteView()) {
-            res.append('%').append(item.getHylaFmt()).append(splitChar);
+            if (item.getHylaFmt() != null)
+                res.append('%').append(item.getHylaFmt());
+            res.append(splitChar);
         }
         res.deleteCharAt(res.length()-1);
         return res.toString();
@@ -225,6 +237,7 @@ public class FmtItemList<T extends FmtItem> extends ArrayList<T> implements Filt
     protected void resetCompleteView() {
         completeView = null;
         itemIndices.clear();
+        virtualColumnIndexes.clear();
         haveItemMap = false;
     }
 
@@ -248,6 +261,22 @@ public class FmtItemList<T extends FmtItem> extends ArrayList<T> implements Filt
             return index;
     }
     
+    /**
+     * Returns the index if the respective virtual column in the complete view.
+     * @param vtCol
+     * @return the index or -1 if the columnn is not present.
+     */
+    public int getVirtualColumnIndex(VirtualColumnType vtCol) {
+        if (!haveItemMap) {
+            getCompleteView(); // Build the mapping
+        }
+        Integer mapping = virtualColumnIndexes.get(vtCol);
+        if (mapping == null)
+            return -1;
+        else
+            return mapping.intValue();
+    }
+    
     @SuppressWarnings("unchecked")
     public FmtItemList(T[] allItems, T[] obligateItems) {
         super();
@@ -260,6 +289,7 @@ public class FmtItemList<T extends FmtItem> extends ArrayList<T> implements Filt
         } else {
             itemIndices = new HashMap<T,Integer>();
         }
+        virtualColumnIndexes = new EnumMap<VirtualColumnType,Integer>(VirtualColumnType.class);
     }
 
     public boolean containsKey(T key) {

@@ -2415,7 +2415,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         
         table.getActionMap().put("yajhfc-show", actShow);
         table.getActionMap().put("yajhfc-delete", actDelete);
-        final InputMap im = table.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        final InputMap im = table.getInputMap(JComponent.WHEN_FOCUSED);
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "yajhfc-show");
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "yajhfc-delete");
         

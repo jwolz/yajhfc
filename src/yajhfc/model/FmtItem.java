@@ -46,7 +46,9 @@ import yajhfc.filters.FilterKey;
  */
 public interface FmtItem extends FilterKey {
     /**
-     * Returns the format used by HylaFAX
+     * Returns the format used by HylaFAX.
+     * 
+     * null for virtual columns
      * @return
      */
     public String getHylaFmt();
@@ -81,4 +83,19 @@ public interface FmtItem extends FilterKey {
      * @return
      */
     public String name();
+    
+    /**
+     * Returns the type of "virtual" column, i.e. a column containing
+     * data not returned by HylaFAX, but added by YajHFC.
+     * 
+     * Non virtual columns should return VirtualColumnType.NONE.
+     * @return
+     */
+    public VirtualColumnType getVirtualColumnType();
+    
+    /**
+     * Returns true if this column is read only
+     * @return
+     */
+    public boolean isReadOnly();
 }

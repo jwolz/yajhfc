@@ -1,6 +1,6 @@
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005-2011 Jonas Wolz <info@yajhfc.de>
+ * Copyright (C) 2005-2015 Jonas Wolz <info@yajhfc.de>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *  
+ *
  *  Linking YajHFC statically or dynamically with other modules is making 
  *  a combined work based on YajHFC. Thus, the terms and conditions of 
  *  the GNU General Public License cover the whole combination.
@@ -34,38 +34,49 @@
  *  version without this exception; this exception also makes it possible 
  *  to release a modified version which carries forward this exception.
  */
-package yajhfc.model.servconn;
+package yajhfc.model;
 
-import java.util.List;
-
-import yajhfc.model.FmtItem;
-
-public interface FaxJobListListener<T extends FmtItem> {
- 
+/**
+ * The supported virtual columns
+ * 
+ * @author jonas
+ *
+ */
+public enum VirtualColumnType {
     /**
-     * Called when some or all fax jobs have changed.
-     * @param source the list which changed
+     * Not a virtual column (i.e. data comes from HylaFAX)
      */
-    public void faxJobsUpdated(FaxJobList<T> source, List<FaxJob<T>> oldJobList, List<FaxJob<T>> newJobList);
+    NONE(Void.class),
+    /**
+     * Read/unread state
+     */
+    READ(Boolean.class),
+    /**
+     * User comment
+     */
+    USER_COMMENT(String.class);
+
+    private final Class<?> dataType;
     
     /**
-     * Called when the read/unread state of a job changes.
-     * 
-     * n.b.: This is now a special case of columnChanged, i.e. for the read column both methods will be called
-     * @param source
-     * @param job
-     * @param oldState
-     * @param newState
+     * Returns if the value of the column should be persisted
+     * @return
      */
-    public void readStateChanged(FaxJobList<T> source, FaxJob<T> job, boolean oldState, boolean newState);
+    public boolean isSaveable() {
+        return (this != NONE);
+    }
     
     /**
-     * Called when the value of a column changes
-     * @param source
-     * @param job
-     * @param oldState
-     * @param newState
+     * Returns this column's data type
+     * @return
      */
-    public void columnChanged(FaxJobList<T> source, FaxJob<T> job, T column, int columnIndex, Object oldValue, Object newValue);
+    public Class<?> getDataType() {
+        return dataType;
+    }
+
+    private VirtualColumnType(Class<?> dataType) {
+        this.dataType = dataType;
+    }
+    
     
 }
