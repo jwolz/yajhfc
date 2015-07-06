@@ -1,0 +1,589 @@
+/*
+ * YAJHFC - Yet another Java Hylafax client
+ * Copyright (C) 2005-2015 Jonas Wolz <info@yajhfc.de>
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Linking YajHFC statically or dynamically with other modules is making 
+ *  a combined work based on YajHFC. Thus, the terms and conditions of 
+ *  the GNU General Public License cover the whole combination.
+ *  In addition, as a special exception, the copyright holders of YajHFC 
+ *  give you permission to combine YajHFC with modules that are loaded using
+ *  the YajHFC plugin interface as long as such plugins do not attempt to
+ *  change the application's name (for example they may not change the main window title bar 
+ *  and may not replace or change the About dialog).
+ *  You may copy and distribute such a system following the terms of the
+ *  GNU GPL for YajHFC and the licenses of the other code concerned,
+ *  provided that you include the source code of that other code when 
+ *  and as the GNU GPL requires distribution of source code.
+ *  
+ *  Note that people who make modified versions of YajHFC are not obligated to grant 
+ *  this special exception for their modified versions; it is their choice whether to do so.
+ *  The GNU General Public License gives permission to release a modified 
+ *  version without this exception; this exception also makes it possible 
+ *  to release a modified version which carries forward this exception.
+ */
+package yajhfc.virtualcolumnstore;
+
+import java.awt.Dialog;
+import java.awt.Frame;
+import java.awt.Window;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import yajhfc.Password;
+import yajhfc.Utils;
+import yajhfc.launch.Launcher2;
+import yajhfc.model.VirtualColumnType;
+import yajhfc.phonebook.AbstractConnectionSettings;
+import yajhfc.phonebook.jdbc.ConnectionDialog;
+import yajhfc.phonebook.jdbc.ConnectionDialog.FieldMapEntry;
+import yajhfc.plugin.PluginManager;
+
+/**
+ * @author jonas
+ *
+ */
+public class JDBCVirtColPersister extends CachingVirtColPersister {
+    static final Logger log = Logger.getLogger(JDBCVirtColPersister.class.getName());
+
+    protected ConnectionSettings settings;
+    
+    protected Connection connection;
+    protected PreparedStatement selectStmt, updateStmt, insertStmt;
+    protected int updateStmtKeyIdx, insertStmtKeyIdx;
+    protected int[] updateStmtVTCIdx, insertStmtVTCIdx;
+    
+    protected ScheduledFuture<?> updateTask;
+    
+    protected List<VirtColChangeListener> listeners = new ArrayList<VirtColChangeListener>();
+    
+    //private static final String SELECT_TEMPLATE = "SELECT {1}, {2} FROM {0};";
+    //private static final String UPDATE_TEMPLATE = "UPDATE {0} SET {2} = ? WHERE {1} = ?;";
+    //private static final String INSERT_TEMPLATE = "INSERT INTO {0} ({1},{2}) VALUES (?,?);";
+    
+    protected static final Map<String,FieldMapEntry> fieldCaptionMap = new HashMap<String,FieldMapEntry>();
+    static {
+        fieldCaptionMap.put("faxNameField", new FieldMapEntry(Utils._("Key (fax filename):"),0));
+        fieldCaptionMap.put("isReadField", new FieldMapEntry(Utils._("Read/Unread State:"),1));
+        fieldCaptionMap.put("commentField", new FieldMapEntry(Utils._("Comment:"),2));
+    }
+
+    @Override
+    public void shutdown() {
+        disconnect();
+    }
+
+    /* (non-Javadoc)
+     * @see yajhfc.virtualcolumnstore.VirtColPersister#persistValues()
+     */
+    @Override
+    public void persistValues() {
+        // NOP
+    }
+
+    /* (non-Javadoc)
+     * @see yajhfc.virtualcolumnstore.VirtColPersister#addVirtColChangeListener(yajhfc.virtualcolumnstore.VirtColChangeListener)
+     */
+    @Override
+    public synchronized void addVirtColChangeListener(VirtColChangeListener listener) {
+        listeners.add(listener);
+    }
+
+    /* (non-Javadoc)
+     * @see yajhfc.virtualcolumnstore.VirtColPersister#removeVirtColChangeListener(yajhfc.virtualcolumnstore.VirtColChangeListener)
+     */
+    @Override
+    public synchronized void removeVirtColChangeListener(VirtColChangeListener listener) {
+        listeners.remove(listener);
+    }
+
+    protected synchronized void fireColumnsChanged(Set<String> inserts, Set<String> updates, Set<String> deletes) {
+        for (VirtColChangeListener l : listeners) {
+            l.columnsChanged(inserts, updates, deletes);
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see yajhfc.virtualcolumnstore.VirtColPersister#cleanupState(java.util.Collection)
+     */
+    @Override
+    public synchronized void cleanupState(Collection<String> existingFaxes) {
+        if (existingFaxes.size() == 0 || connection == null) {
+            log.info("cleanupState called with empty list or closed connection");
+            return; //"Safety" measure
+        }
+        
+        try {
+            String sql = "DELETE FROM " + settings.table + 
+                    "WHERE " + settings.getKeyFieldName() + " = ?";
+            if (Utils.debugMode) {
+                log.fine("DELETE statement: " + sql);
+            }
+            PreparedStatement deleteStmt = connection.prepareStatement(sql);
+
+            for (String key : data.keySet()) {
+                if (!existingFaxes.contains(key)) {
+                    if (Utils.debugMode) {
+                        log.fine("Deleting key " + key);
+                    }
+                    deleteStmt.setString(1, key);
+                    deleteStmt.execute();
+                    if (Utils.debugMode) {
+                        log.fine("" + deleteStmt.getUpdateCount() + " rows deleted");
+                    }
+                }
+            }
+            
+            deleteStmt.close();
+        } catch (SQLException e) {
+            log.log(Level.WARNING, "Error cleaning up", e);
+        }
+        
+    }
+    
+    @Override
+    protected synchronized void checkInitialized() {
+        if (data==null) {
+            try {
+                data = loadValues();
+            } catch (Exception e) {
+                log.log(Level.WARNING, "Error loading data ", e);
+                data = new HashMap<String,Object[]>();
+            } 
+            
+            Runnable updater = new Runnable() {
+                public void run() {
+                    checkForUpdates();
+                }  
+            };
+            updateTask = Utils.executorService.scheduleAtFixedRate(updater, 
+                    Utils.getFaxOptions().statusUpdateInterval,
+                    Utils.getFaxOptions().statusUpdateInterval,
+                    TimeUnit.MILLISECONDS);
+        }
+    }
+    
+    protected synchronized void openConnection() throws ClassNotFoundException, SQLException {
+        if (Utils.debugMode) {
+            log.fine(String.format("Connecting: driver=%s, URL=%s, username=%s, askForPassword=%s", settings.driver, settings.dbURL, settings.user, settings.askForPWD));
+        }
+        
+        PluginManager.registerJDBCDriver(settings.driver);
+
+        String password;
+        if (settings.askForPWD) {
+            String[] pwd = Launcher2.application.getDialogUI().showPasswordDialog(Utils._("Database password"), MessageFormat.format(Utils._("Please enter the database password (database: {0}):"), settings.dbURL), settings.user, false);
+            if (pwd == null)
+                return;
+            else
+                password = pwd[1];
+        } else {
+            password = settings.pwd.getPassword();
+        }
+        connection = DriverManager.getConnection(settings.dbURL, settings.user, password);
+        connection.setAutoCommit(true);
+        
+        final VirtualColumnType[] vtcs = VirtualColumnType.values();
+        StringBuilder sql = new StringBuilder();
+        int count;
+        
+        sql.append("SELECT ");
+        sql.append(settings.getKeyFieldName());
+        for (VirtualColumnType vtc : vtcs) {
+            if (vtc.isSaveable()) {
+                String field = settings.getFieldNameForVirtualColumnType(vtc);
+                if (field != null && field.length() > 0)
+                    sql.append(", ").append(field);
+            }
+        }
+        sql.append("\nFROM ").append(settings.table);
+        if (Utils.debugMode) {
+            log.fine("SELECT statement: " + sql);
+        }
+        selectStmt = connection.prepareStatement(sql.toString());
+        
+        sql.setLength(0);
+        insertStmtVTCIdx = new int[vtcs.length];
+        sql.append("INSERT INTO ").append(settings.table);
+        sql.append('(').append(settings.getKeyFieldName());
+        insertStmtKeyIdx = 1;
+        count=2;
+        for (int i=0; i<vtcs.length; i++) {
+            VirtualColumnType vtc = vtcs[i];
+            insertStmtVTCIdx[i] = -1;
+            
+            if (vtc.isSaveable()) {
+                String field = settings.getFieldNameForVirtualColumnType(vtc);
+                if (field != null && field.length() > 0) {
+                    sql.append(", ").append(field);
+                    insertStmtVTCIdx[i] = count++;
+                }
+            }
+        }
+        sql.append(")\n VALUES (?");
+        for (VirtualColumnType vtc : vtcs) {
+            if (vtc.isSaveable()) {
+                String field = settings.getFieldNameForVirtualColumnType(vtc);
+                if (field != null && field.length() > 0)
+                    sql.append(", ?");
+            }
+        }
+        sql.append(')');
+        if (Utils.debugMode) {
+            log.fine("INSERT statement: " + sql);
+        }
+        insertStmt = connection.prepareStatement(sql.toString());
+        
+        sql.setLength(0);
+        updateStmtVTCIdx = new int[vtcs.length];
+        sql.append("UPDATE ").append(settings.table);
+        sql.append("\nSET ");
+        boolean first=true;
+        count = 1;
+        for (int i=0; i<vtcs.length; i++) {
+            VirtualColumnType vtc = vtcs[i];
+            updateStmtVTCIdx[i] = -1;
+            if (vtc.isSaveable()) {
+                String field = settings.getFieldNameForVirtualColumnType(vtc);
+                if (field != null && field.length() > 0) {
+                    if (first)
+                        first=false;
+                    else
+                        sql.append(", ");
+                    sql.append(field).append(" = ?");
+                    updateStmtVTCIdx[i] = count++;
+                }
+            }
+        }
+        sql.append("\nWHERE ").append(settings.getKeyFieldName()).append(" = ?");
+        updateStmtKeyIdx = count;
+        if (Utils.debugMode) {
+            log.fine("UPDATE statement: " + sql);
+        }
+        updateStmt = connection.prepareStatement(sql.toString());
+    }
+    
+    protected synchronized void disconnect() {
+        if (updateTask != null) {
+            updateTask.cancel(false);
+            updateTask = null;
+        }
+        
+        if (connection != null) {
+            try {
+                selectStmt.close();
+                insertStmt.close();
+                updateStmt.close();
+            } catch (SQLException e) {
+                log.log(Level.WARNING, "Could not close statement", e);
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                log.log(Level.WARNING, "Could not close database connection", e);
+            }
+            
+            selectStmt = null;
+            insertStmt = null;
+            updateStmt = null;
+            connection = null;
+            
+            //readStateMap = null;
+        }
+    }
+    
+
+    protected Map<String,Object[]> loadValues() throws SQLException, ClassNotFoundException {
+        if (connection == null) {
+            openConnection();
+        }
+        log.fine("Querying database table...");
+        Map<String,Object[]> readMap = new HashMap<String,Object[]>();
+        ResultSet rs = selectStmt.executeQuery();
+        
+        int keyIdx = rs.findColumn(settings.getKeyFieldName());
+        VirtualColumnType[] vtcs = VirtualColumnType.values();
+        int vtcIdx[] = new int[vtcs.length];
+        for (int i=0; i<vtcs.length; i++) {
+            VirtualColumnType vtc = vtcs[i];
+            vtcIdx[i] = -1;
+            
+            if (vtc.isSaveable()) {
+                String fieldName = settings.getFieldNameForVirtualColumnType(vtc);
+                if (fieldName != null && fieldName.length() > 0) {
+                    vtcIdx[i] = rs.findColumn(fieldName);
+                }
+            }
+        }
+        if (Utils.debugMode)
+            log.fine("keyIdx="+keyIdx+"; vtcIdx="+Arrays.toString(vtcIdx));
+        
+        while (rs.next()) {
+            String key = rs.getString(keyIdx);
+            Object[] keyData = allocateKeyData();
+            
+            for (int i=0; i<vtcs.length; i++) {
+                int idx = vtcIdx[i];
+                if (idx >= 0) {
+                    VirtualColumnType vtc = vtcs[i];
+                    Class<?> dataType = vtc.getDataType();
+                    Object value;
+                    
+                    if (dataType == String.class) {
+                        value = rs.getString(idx);
+                    } else if (dataType == Boolean.class) {
+                        value = Boolean.valueOf(rs.getBoolean(idx));
+                    } else if (dataType == Integer.class) {
+                        value = Integer.valueOf(rs.getInt(idx));
+                    } else if (dataType == Long.class) {
+                        value = Long.valueOf(rs.getLong(idx));
+                    } else {
+                        log.warning("Unsupported data type: " + dataType);
+                        value = rs.getObject(idx);
+                    }
+                    if (rs.wasNull())
+                        value = null;
+                    
+                    keyData[columnToIndex(vtc)] = value;
+                }
+            }
+            
+            readMap.put(key, keyData);
+        }
+        rs.close();
+        return readMap;
+    }
+    
+    private void setStatementValues(PreparedStatement stmt, int keyIdx, int[] vtcIdx, String key, Object[] keyData) throws SQLException {
+        if (Utils.debugMode)
+            log.finer("stmt=" + stmt + "; keyIdx=" + keyIdx + "; vtcIdx=" + Arrays.toString(vtcIdx) + "; key=" + key + "; keyData=" + Arrays.toString(keyData));
+        stmt.setString(keyIdx, key);
+        
+        VirtualColumnType[] vtcs = VirtualColumnType.values();
+        for (int i=0; i<vtcs.length; i++) {
+            int idx = vtcIdx[i];
+            if (idx >= 0) {
+                VirtualColumnType vtc = vtcs[i];
+                stmt.setObject(idx, keyData[columnToIndex(vtc)]);
+            }
+        }
+    }
+    
+    protected synchronized void writeSingleRow(String key, Object[] keyData) throws SQLException {
+        if (Utils.debugMode)
+            log.fine("Trying UPDATE for key " + key);
+        setStatementValues(updateStmt, updateStmtKeyIdx, updateStmtVTCIdx, key, keyData);
+        updateStmt.execute();
+        int updateCnt = updateStmt.getUpdateCount();
+        if (Utils.debugMode)
+            log.fine("Updated " + updateCnt + " columns");
+        if (updateCnt == 0) {
+            log.fine("0 columns updated, trying INSERT");
+            setStatementValues(insertStmt, insertStmtKeyIdx, insertStmtVTCIdx, key, keyData);
+            updateStmt.execute();
+            updateCnt = updateStmt.getUpdateCount();
+            if (Utils.debugMode)
+                log.fine("Inserted " + updateCnt + " columns");
+        }
+        
+    }
+    
+    @Override
+    protected void valueChanged(String key, VirtualColumnType column,
+            int columnIndex, Object value, Object oldValue) {
+        try {
+            writeSingleRow(key, data.get(key));
+        } catch (SQLException e) {
+            log.log(Level.WARNING, "Error saving data for key " + key, e);
+        }
+    }
+    
+    protected void checkForUpdates() {
+        try {
+            Map<String,Object[]> newData = loadValues();
+            
+            synchronized (this) {
+                Map<String,Object[]>[] cmp = compareMaps(data, newData);
+
+                for (String key : cmp[COMPARE_MAP_DELETE].keySet()) {
+                    data.remove(key);
+                }
+                for (Entry<String,Object[]> update : cmp[COMPARE_MAP_UPDATE].entrySet()) {
+                    data.put(update.getKey(), update.getValue());
+                }
+                for (Entry<String,Object[]> insert : cmp[COMPARE_MAP_INSERT].entrySet()) {
+                    data.put(insert.getKey(), insert.getValue());
+                }
+
+                fireColumnsChanged(cmp[COMPARE_MAP_INSERT].keySet(), cmp[COMPARE_MAP_UPDATE].keySet(), cmp[COMPARE_MAP_DELETE].keySet());
+            }
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Error checking for updates", e);
+        } 
+    }
+    
+    public static int COMPARE_MAP_INSERT = 0;
+    public static int COMPARE_MAP_UPDATE = 1;
+    public static int COMPARE_MAP_DELETE = 2;
+    /**
+     * Compares two maps
+     * @param oldMap
+     * @param newMap
+     * @return a tuple [INSERTs, UPDATEs, DELETEs] (also see the COMPARE_MAP* constants)
+     */
+    @SuppressWarnings("unchecked")
+    public static Map<String,Object[]>[] compareMaps(Map<String,Object[]> oldMap, Map<String,Object[]> newMap) {
+        Map<String,Object[]> inserts = new HashMap<String,Object[]>();
+        Map<String,Object[]> updates = new HashMap<String,Object[]>(oldMap.size());
+        Map<String,Object[]> deletes = new HashMap<String,Object[]>();
+        
+        for (Entry<String,Object[]> newEntry : newMap.entrySet()) {
+            final String key = newEntry.getKey();
+            
+            Object[] oldValue = oldMap.get(key);
+            if (oldValue != null) {
+                Object[] newValue = newEntry.getValue();
+                
+                if (!Arrays.equals(oldValue, newValue)) {
+                    updates.put(key, newValue);
+                }
+            } else {
+                inserts.put(key, newEntry.getValue());
+            }
+        }
+        
+        for (Entry<String,Object[]> oldEntry : oldMap.entrySet()) {
+            final String key = oldEntry.getKey();
+            
+            if (!newMap.containsKey(key)){
+                deletes.put(key, oldEntry.getValue());
+            }
+        }
+        
+        return new Map[] {
+                inserts,
+                updates,
+                deletes
+        };
+    }
+    
+    public JDBCVirtColPersister(ConnectionSettings settings) {
+        this.settings = settings;
+    }
+    
+    public static class ConnectionSettings extends AbstractConnectionSettings {
+        public String driver = ""; //"org.postgresql.Driver";
+        public String dbURL = "jdbc:"; //"jdbc:postgresql://hylafax-test/yajhfc";
+        public String user = ""; //"fax";
+        public final Password pwd = new Password(); //"fax";
+        public boolean askForPWD = false;
+        public String table = ""; //"ReadState";
+        
+        public String faxNameField = ""; //"Faxname";
+        public String isReadField = ""; //"isRead";
+        public String commentField = ""; //"isRead";
+
+        public String getFieldNameForVirtualColumnType(VirtualColumnType vtc) {
+            switch (vtc) {
+            case READ:
+                return isReadField;
+            case USER_COMMENT:
+                return commentField;
+            default:
+                log.severe("Unknown column type " + vtc.name());
+                return null;
+            }
+        }
+        
+        public String getKeyFieldName() {
+            return faxNameField;
+        }
+        
+        public ConnectionSettings() {
+            super();
+        }
+        
+        public ConnectionSettings(ConnectionSettings other) {
+            super();
+            copyFrom(other);
+        }
+        
+        public ConnectionSettings(String config) {
+            super();
+            loadFromString(config);
+        }
+    }
+
+    static class PersistenceMethod implements AvailablePersistenceMethod {        
+        public boolean canConfigure() {
+            return true;
+        }
+
+        public VirtColPersister createInstance(String config, int serverID) {
+            return new JDBCVirtColPersister(new ConnectionSettings(config));
+        }
+
+        public String getDescription() {
+            return Utils._("Database table");
+        }
+
+        public String getKey() {
+            return "jdbc";
+        }
+
+        @Override
+        public String toString() {
+            return getDescription();
+        }
+        
+        public String showConfigDialog(Window parent, String oldConfig) {
+            ConnectionDialog cd;
+            final String dialogTitle = Utils._("JDBC settings to save read/unread state");
+            final String dialogPrompt = Utils._("Please select which fields in the table correspond to the necessary fields to save the read/unread state");
+            ConnectionSettings cs = new ConnectionSettings(oldConfig);
+            
+            if (parent instanceof Dialog) {
+                cd = new ConnectionDialog((Dialog)parent, dialogTitle, dialogPrompt, fieldCaptionMap, false);
+            } else if (parent instanceof Frame) {
+                cd = new ConnectionDialog((Frame)parent, dialogTitle, dialogPrompt, fieldCaptionMap, false);
+            } else {
+                throw new IllegalArgumentException("parent must be a Dialog or a Frame!");
+            }
+            
+            if (cd.promptForNewSettings(cs)) {
+                return cs.saveToString();
+            } else {
+                return null;
+            }
+        }
+        
+    }
+}
