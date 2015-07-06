@@ -909,7 +909,7 @@ public final class Utils {
     
     /**
      * Shortens the name of the given file to the desired length (for display to the user)
-     * @param file
+     * @param saveFile
      * @param desiredLen
      * @return
      */
@@ -923,7 +923,7 @@ public final class Utils {
     
     /**
      * Shortens the given String to the desired length (for display to the user)
-     * @param file
+     * @param saveFile
      * @param desiredLen
      * @return
      */

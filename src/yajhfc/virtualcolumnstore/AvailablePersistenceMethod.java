@@ -1,6 +1,6 @@
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005-2015 Jonas Wolz <info@yajhfc.de>
+ * Copyright (C) 2005-2011 Jonas Wolz <info@yajhfc.de>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ *  
  *  Linking YajHFC statically or dynamically with other modules is making 
  *  a combined work based on YajHFC. Thus, the terms and conditions of 
  *  the GNU General Public License cover the whole combination.
@@ -36,20 +36,44 @@
  */
 package yajhfc.virtualcolumnstore;
 
-import java.util.Set;
+import java.awt.Window;
 
 /**
  * @author jonas
  *
  */
-public interface VirtColChangeListener {
+public interface AvailablePersistenceMethod {
+    /**
+     * Returns a key uniquely identifying this method
+     * @return
+     */
+    public String getKey();
     
     /**
-     * Indicates that some values for the given columns changed
-     * @param inserts
-     * @param updates
-     * @param deletes
+     * Returns a user visible description for this method
+     * @return
      */
-    public void columnsChanged(Set<String> inserts, Set<String> updates, Set<String> deletes);
+    public String getDescription();
+    
+    /**
+     * Returns true if this read state persister can be configured.
+     * @return
+     */
+    public boolean canConfigure();
 
+    /**
+     * Shows the configuration dialog if canConfigure() == true and returns
+     * a configuration String.
+     * @param parent
+     * @param oldConfig An old configuration to use as base. May be null to use a default configuration.
+     * @return A valid configuration for createInstance or null if the user selected cancel
+     */
+    public String showConfigDialog(Window parent, String oldConfig);
+    
+    /**
+     * Creates a new instance for this persistence method.
+     * @param config
+     * @return
+     */
+    public VirtColPersister createInstance(String config, int serverID);
 }

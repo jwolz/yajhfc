@@ -36,17 +36,25 @@
  */
 package yajhfc.virtualcolumnstore;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import yajhfc.Utils;
 import yajhfc.model.FmtItem;
 import yajhfc.model.VirtualColumnType;
 import yajhfc.model.servconn.FaxJob;
+import yajhfc.server.ServerOptions;
 
 /**
  * @author jonas
  *
  */
 public abstract class VirtColPersister {
+    static final Logger log = Logger.getLogger(VirtColPersister.class.getName());
+    
     protected static final String KEY_PREFIX_QUEUE = "/Q/";
 
     /**
@@ -58,7 +66,7 @@ public abstract class VirtColPersister {
     /**
      * Saves the values.
      */
-    public abstract void persistReadState();
+    public abstract void persistValues();
         
     /**
      * Adds the given listener to the list of listeners
@@ -84,7 +92,7 @@ public abstract class VirtColPersister {
      * any time consuming initializing to be done outside the event dispatching thread.
      * Sub classes should not rely on this method being called before the first call to isRead(), however.
      */
-    public abstract void prepareReadStates();
+    public abstract void prepareValues();
     
     /**
      * Returns the String key to save the given FaxJob under
@@ -115,6 +123,56 @@ public abstract class VirtColPersister {
             return Integer.valueOf(key.substring(KEY_PREFIX_QUEUE.length()));
         } else { // Received
             return key;
+        }
+    }
+    
+    /**
+     * Updates the given fax job with the values from this persister
+     * @param job
+     */
+    public <T extends FmtItem> void updateToFaxJob(FaxJob<T> job) {
+        String key = getKeyForFaxJob(job);
+        List<T> completeView = job.getParent().getColumns().getCompleteView();
+        for (T fi : completeView) {
+            VirtualColumnType vtc = fi.getVirtualColumnType();
+            if (vtc.isSaveable()) {
+                job.setData(fi, getValue(key, vtc));
+            }
+        }
+    }
+    
+    /**
+     * Updates the given fax jobs with the values from this persister
+     * @param job
+     */
+    public <T extends FmtItem> void updateToAllFaxJobs(Collection<FaxJob<T>> jobs) {
+        for (FaxJob<T> job : jobs) {
+            updateToFaxJob(job);
+        }
+    }
+    
+    /**
+     * Updates the values in this persister with the values in the given fax job
+     * @param job
+     */
+    public <T extends FmtItem> void updateFromFaxJob(FaxJob<T> job) {
+        String key = getKeyForFaxJob(job);
+        List<T> completeView = job.getParent().getColumns().getCompleteView();
+        for (T fi : completeView) {
+            VirtualColumnType vtc = fi.getVirtualColumnType();
+            if (vtc.isSaveable()) {
+                setValue(key, vtc, job.getData(fi));
+            }
+        }
+    }
+    
+    /**
+     * Updates the given fax jobs with the values from this persister
+     * @param job
+     */
+    public <T extends FmtItem> void updateFromAllFaxJobs(Collection<FaxJob<T>> jobs) {
+        for (FaxJob<T> job : jobs) {
+            updateFromFaxJob(job);
         }
     }
     
@@ -153,4 +211,47 @@ public abstract class VirtColPersister {
      * @return
      */
     public abstract void setValue(String key, VirtualColumnType column, Object value);
+
+
+
+    /**
+     * The default persistence method. The createInstance() method of this class
+     * MUST accept a null config as this is used as a fall back.
+     */
+    private static AvailablePersistenceMethod DEFAULT_METHOD;
+
+    public static final List<AvailablePersistenceMethod> persistenceMethods = new ArrayList<AvailablePersistenceMethod>();
+    static {
+        DEFAULT_METHOD = new LocalVirtColPersister.PersistenceMethod();
+        persistenceMethods.add(DEFAULT_METHOD);
+        persistenceMethods.add(new JDBCVirtColPersister.PersistenceMethod());
+    }
+    
+    /**
+     * Returns the currently selected persistent read state
+     * @return 
+     */
+    public static VirtColPersister createFromOptions(ServerOptions so) {
+        String keyToFind = so.persistenceMethod;
+        try {
+            for (AvailablePersistenceMethod method : persistenceMethods) {
+                if (method.getKey().equals(keyToFind)) {
+                    String config = so.persistenceConfig;
+                    if (config != null && config.length() == 0) {
+                        config = null;
+                    }
+                    if (Utils.debugMode) {
+                        log.info(String.format("Using persistence method %s with Config \"%s\".", keyToFind, config));
+                    }
+                    return method.createInstance(config, so.id);
+                }
+            }
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Could not create persistence object:", e);
+        }
+
+        // Something did not work...
+        log.warning(String.format("Could not create instance for persistence method %s, using default.", keyToFind));
+        return DEFAULT_METHOD.createInstance(null, so.id);
+    }
 }

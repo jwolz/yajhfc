@@ -172,7 +172,7 @@ public abstract class YajMailer {
     
     /**
      * Adds an attachment
-     * @param file
+     * @param saveFile
      * @return
      */
     public void addAttachment(String stringContent, String fileName) {
