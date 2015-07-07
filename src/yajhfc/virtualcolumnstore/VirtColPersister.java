@@ -38,7 +38,10 @@ package yajhfc.virtualcolumnstore;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -88,6 +91,21 @@ public abstract class VirtColPersister {
     public abstract void cleanupState(Collection<String> existingFaxes);
     
     /**
+     * "Cleans" the read state up, i.e. tells the persister which
+     * faxes still exist, so the deleted faxes can be deleted.
+     * @param existingFaxes
+     */
+    public <T extends FmtItem> void cleanupStateFromJobs(Collection<FaxJob<T>>... existingFaxes) {
+        Set<String> existing = new HashSet<String>();
+        for (Collection<FaxJob<T>> jobList : existingFaxes) {
+            for (FaxJob<T> job : jobList) {
+                existing.add(getKeyForFaxJob(job));
+            }
+        }
+        cleanupState(existing);
+    }
+    
+    /**
      * Initialized the persister. This is intended to allow
      * any time consuming initializing to be done outside the event dispatching thread.
      * Sub classes should not rely on this method being called before the first call to isRead(), however.
@@ -99,7 +117,7 @@ public abstract class VirtColPersister {
      * @param job
      * @return
      */
-    public String getKeyForFaxJob(FaxJob<? extends FmtItem> job) {
+    public static String getKeyForFaxJob(FaxJob<? extends FmtItem> job) {
         switch (job.getParent().getJobType()) {
         case RECEIVED:
             return job.getIDValue().toString();            
@@ -118,7 +136,7 @@ public abstract class VirtColPersister {
      * @param key
      * @return
      */
-    public Object parseKey(String key) {
+    public static Object parseKey(String key) {
         if (key.startsWith(KEY_PREFIX_QUEUE)) {
             return Integer.valueOf(key.substring(KEY_PREFIX_QUEUE.length()));
         } else { // Received
@@ -130,13 +148,12 @@ public abstract class VirtColPersister {
      * Updates the given fax job with the values from this persister
      * @param job
      */
-    public <T extends FmtItem> void updateToFaxJob(FaxJob<T> job) {
+    public <T extends FmtItem> void updateToFaxJob(FaxJob<T> job, boolean fireEvent) {
         String key = getKeyForFaxJob(job);
-        List<T> completeView = job.getParent().getColumns().getCompleteView();
-        for (T fi : completeView) {
-            VirtualColumnType vtc = fi.getVirtualColumnType();
+        for (Entry<VirtualColumnType,Integer> entry : job.getParent().getColumns().getVirtualColumnIndexes().entrySet()) {
+            VirtualColumnType vtc = entry.getKey();
             if (vtc.isSaveable()) {
-                job.setData(fi, getValue(key, vtc));
+                job.setData(entry.getValue().intValue(), getValue(key, vtc), fireEvent);
             }
         }
     }
@@ -145,9 +162,9 @@ public abstract class VirtColPersister {
      * Updates the given fax jobs with the values from this persister
      * @param job
      */
-    public <T extends FmtItem> void updateToAllFaxJobs(Collection<FaxJob<T>> jobs) {
+    public <T extends FmtItem> void updateToAllFaxJobs(Collection<FaxJob<T>> jobs, boolean fireEvent) {
         for (FaxJob<T> job : jobs) {
-            updateToFaxJob(job);
+            updateToFaxJob(job, fireEvent);
         }
     }
     
@@ -157,11 +174,10 @@ public abstract class VirtColPersister {
      */
     public <T extends FmtItem> void updateFromFaxJob(FaxJob<T> job) {
         String key = getKeyForFaxJob(job);
-        List<T> completeView = job.getParent().getColumns().getCompleteView();
-        for (T fi : completeView) {
-            VirtualColumnType vtc = fi.getVirtualColumnType();
+        for (Entry<VirtualColumnType,Integer> entry : job.getParent().getColumns().getVirtualColumnIndexes().entrySet()) {
+            VirtualColumnType vtc = entry.getKey();
             if (vtc.isSaveable()) {
-                setValue(key, vtc, job.getData(fi));
+                setValue(key, vtc, job.getData(entry.getValue().intValue()));
             }
         }
     }

@@ -39,7 +39,10 @@ package yajhfc.model.table;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.swing.table.AbstractTableModel;
@@ -53,6 +56,8 @@ import yajhfc.model.servconn.FaxJob;
 import yajhfc.model.servconn.FaxJobList;
 import yajhfc.model.servconn.FaxJobListListener;
 import yajhfc.model.servconn.defimpl.SwingFaxJobListListener;
+import yajhfc.virtualcolumnstore.VirtColChangeListener;
+import yajhfc.virtualcolumnstore.VirtColPersister;
 
 public class FaxListTableModel<T extends FmtItem> extends AbstractTableModel {
     static final Logger log = Logger.getLogger(FaxListTableModel.class.getName());
@@ -74,6 +79,60 @@ public class FaxListTableModel<T extends FmtItem> extends AbstractTableModel {
     private static final Color defErrorColor = new Color(255, 230, 230);
     
     protected Color errorColor = defErrorColor;
+    
+    protected VirtColPersister persistence;
+    
+    protected VirtColChangeListener persistenceListener = new VirtColChangeListener() {
+        public void columnsChanged(Set<String> inserts, Set<String> updates,
+                Set<String> deletes) {
+            // deletes are simply ignored
+            
+            Map<String,FaxJob<T>> idMap = getIDMap();
+            
+            for (String key : inserts) {
+                persistence.updateToFaxJob(idMap.get(key), true);
+            }
+            for (String key : updates) {
+                persistence.updateToFaxJob(idMap.get(key), true);
+            }
+        }
+    };
+    
+    private Map<String,FaxJob<T>> idMap;
+    protected Map<String,FaxJob<T>> getIDMap() {
+        if (idMap==null) {
+            idMap = buildIDMap(getJobs().getJobs());
+        }
+        return idMap;
+    }
+    
+    
+    public VirtColPersister getPersistence() {
+        return persistence;
+    }
+
+
+    public void setPersistence(VirtColPersister persistence) {
+        if (persistence != this.persistence) {
+            if (this.persistence != null) {
+                this.persistence.removeVirtColChangeListener(persistenceListener);
+            }
+            this.persistence = persistence;
+            if (persistence != null) {
+                persistence.addVirtColChangeListener(persistenceListener);
+                persistence.updateToAllFaxJobs(getJobs().getJobs(), true);
+            }
+        }
+    }
+
+
+    public static <U extends FmtItem> Map<String,FaxJob<U>> buildIDMap(List<FaxJob<U>> source) {
+        Map<String,FaxJob<U>> idMap = new HashMap<String,FaxJob<U>>(source.size());
+        for (FaxJob<U> job : source) {
+            idMap.put(VirtColPersister.getKeyForFaxJob(job), job);
+        }
+        return idMap;
+    }
     
     public void setJobFilter(Filter<FaxJob<T>,T> jobFilter) {
         if (jobFilter != this.jobFilter) {
@@ -236,10 +295,29 @@ public class FaxListTableModel<T extends FmtItem> extends AbstractTableModel {
                 }
                 
                 @Override
+                public void faxJobsUpdated(FaxJobList<T> source,
+                        List<FaxJob<T>> oldJobList, List<FaxJob<T>> newJobList) {
+                    if (persistence != null) {
+                        persistence.updateToAllFaxJobs(newJobList, false);
+                    }
+                    super.faxJobsUpdated(source, oldJobList, newJobList);
+                }
+                
+                @Override
                 protected void columnChangedSwing(FaxJobList<T> source,
                         FaxJob<T> job, T column, int columnIndex,
                         Object oldValue, Object newValue) {
                     fireTableCellUpdated(Utils.identityIndexOf(jobs.getJobs(), job), columnIndex);
+                }
+                
+                @Override
+                public void columnChanged(FaxJobList<T> source, FaxJob<T> job,
+                        T column, int columnIndex, Object oldValue,
+                        Object newValue) {
+                    if (persistence != null && column.getVirtualColumnType().isSaveable()) {
+                        persistence.setValue(job, column.getVirtualColumnType(), newValue);
+                    }
+                    super.columnChanged(source, job, column, columnIndex, oldValue, newValue);
                 }
             };
         }
@@ -251,15 +329,18 @@ public class FaxListTableModel<T extends FmtItem> extends AbstractTableModel {
                 this.jobs.removeFaxJobListListener(getUpdateListener());
             }
             this.jobs = jobs;
+            idMap = null;
             if (jobs != null) {
                 jobs.addFaxJobListListener(getUpdateListener());
+                if (persistence != null) {
+                    persistence.updateToAllFaxJobs(jobs.getJobs(), false);
+                }
             }
             refreshVisibleJobsWithoutEvent();
             log.fine("New Jobs have been set, firing tableStructureChanged");
             fireTableStructureChanged();
         }
     }
-    
 
     public FaxListTableModel(FaxJobList<T> jobs) {
         super();

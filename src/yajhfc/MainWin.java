@@ -150,7 +150,6 @@ import yajhfc.phonebook.ui.NewPhoneBookWin;
 import yajhfc.plugin.PluginManager;
 import yajhfc.plugin.PluginUI;
 import yajhfc.print.FaxTablePrinter;
-import yajhfc.readstate.PersistentReadState;
 import yajhfc.send.SendController;
 import yajhfc.send.SendWinControl;
 import yajhfc.send.ServerFileTFLItem;
@@ -178,7 +177,6 @@ import yajhfc.util.ProgressWorker.ProgressUI;
 import yajhfc.util.SafeJFileChooser;
 import yajhfc.util.SelectedActionPropertyChangeListener;
 import yajhfc.util.ToolbarEditorDialog;
-import yajhfc.virtualcolumnstore.LocalVirtColPersister;
 import yajhfc.virtualcolumnstore.VirtColPersister;
 
 @SuppressWarnings("serial")
@@ -2032,13 +2030,22 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             if (connection.getConnectionState() == ConnectionState.CONNECTED) {                
                 saveTableColumnSettings();
                 
-                recvTableModel.cleanupReadState();
-                
                 tablePanel.showIndeterminateProgress(_("Logging out..."));
+                
+                
+                final Collection[] jobLists = new Collection[] {
+                        recvTableModel.getJobs().getJobs(),
+                        sendingTableModel.getJobs().getJobs(),
+                        sentTableModel.getJobs().getJobs(),
+                        archiveTableModel != null ? archiveTableModel.getJobs().getJobs() : Collections.EMPTY_LIST,
+                };
                 
                 userInitiatedLogout = true;
                 Utils.executorService.submit(new Runnable() {
                    public void run() {
+                       VirtColPersister persistence = currentServer.getPersistence();
+                       persistence.cleanupStateFromJobs(jobLists);
+                       
                        connection.disconnect();
                        SwingUtilities.invokeLater(new Runnable() {
                            public void run() {
@@ -2317,7 +2324,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     
     public ReadStateFaxListTableModel<RecvFormat> getRecvTableModel() {
         if (recvTableModel == null) {
-            recvTableModel = new ReadStateFaxListTableModel<RecvFormat>(connection.getReceivedJobs(), currentServer.getPersistence());
+            recvTableModel = new ReadStateFaxListTableModel<RecvFormat>(connection.getReceivedJobs());
             recvTableModel.addUnreadItemListener(new UnreadItemListener<RecvFormat>() {
                 public void newItemsAvailable(UnreadItemEvent<RecvFormat> evt) {
                     if (evt.isOldDataNull())
@@ -2481,8 +2488,6 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         return menuFax;
     }
     
-    //XXX
-    VirtColPersister vcp = new LocalVirtColPersister(new File("/tmp/test.csv"));
     public JMenu getMenuTable() {
         if (menuTable == null) {
             menuTable = new JMenu(_("Table"));
@@ -2493,25 +2498,6 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             menuTable.add(new JMenuItem(actExport));
             menuTable.addSeparator();
             menuTable.add(new JMenuItem(actSelectAll));
-            
-            //XXX
-            Action actLoad = new ExcDialogAbstractAction("Load values") {
-                @Override
-                protected void actualActionPerformed(ActionEvent e) {
-                    vcp.updateToAllFaxJobs(getTableRecv().getRealModel().getJobs().getJobs());
-                    vcp.updateToAllFaxJobs(getTableSent().getRealModel().getJobs().getJobs());
-                }
-            };
-            Action actSave = new ExcDialogAbstractAction("Save values") {
-                @Override
-                protected void actualActionPerformed(ActionEvent e) {
-                    vcp.updateFromAllFaxJobs(getTableRecv().getRealModel().getJobs().getJobs());
-                    vcp.updateFromAllFaxJobs(getTableSent().getRealModel().getJobs().getJobs());
-                    vcp.persistValues();
-                }
-            };
-            menuTable.add(actLoad);
-            menuTable.add(actSave);
         }
         return menuTable;
     }
@@ -2871,12 +2857,16 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         public void run() {  
             try {
                 
-                PersistentReadState persistentReadState = currentServer.getPersistence();
-                recvTableModel.setPersistentReadState(persistentReadState);
+                VirtColPersister persistence = currentServer.getPersistence();
+                recvTableModel.setPersistence(persistence);
+                sentTableModel.setPersistence(persistence);
+                sendingTableModel.setPersistence(persistence);
+                if (archiveTableModel != null)
+                    archiveTableModel.setPersistence(persistence);
                 
                 // Read the read/unread status *after* the table contents has been set 
 
-                persistentReadState.prepareReadStates();
+                persistence.prepareValues();
                 
                 
                 if (Utils.debugMode) {

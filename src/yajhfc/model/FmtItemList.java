@@ -62,6 +62,7 @@ public class FmtItemList<T extends FmtItem> extends ArrayList<T> implements Filt
     protected List<T> completeView;
     protected Map<T,Integer> itemIndices;
     protected Map<VirtualColumnType,Integer> virtualColumnIndexes;
+
     protected boolean haveItemMap = false;
 
     /**
@@ -78,7 +79,8 @@ public class FmtItemList<T extends FmtItem> extends ArrayList<T> implements Filt
                 final Integer index = Integer.valueOf(i);
                 
                 itemIndices.put(item, index);
-                virtualColumnIndexes.put(item.getVirtualColumnType(), index);
+                if (item.getVirtualColumnType() != VirtualColumnType.NONE)
+                    virtualColumnIndexes.put(item.getVirtualColumnType(), index);
                 
             }
             haveItemMap = true;
@@ -101,7 +103,8 @@ public class FmtItemList<T extends FmtItem> extends ArrayList<T> implements Filt
                     
                     final Integer index = Integer.valueOf(completeView.size()-1);
                     itemIndices.put(fi, index);
-                    virtualColumnIndexes.put(fi.getVirtualColumnType(), index);
+                    if (fi.getVirtualColumnType() != VirtualColumnType.NONE)
+                        virtualColumnIndexes.put(fi.getVirtualColumnType(), index);
                 }
             }
             if (completeView.size() > size()) {
@@ -275,6 +278,10 @@ public class FmtItemList<T extends FmtItem> extends ArrayList<T> implements Filt
             return -1;
         else
             return mapping.intValue();
+    }
+    
+    public Map<VirtualColumnType, Integer> getVirtualColumnIndexes() {
+        return virtualColumnIndexes;
     }
     
     @SuppressWarnings("unchecked")
