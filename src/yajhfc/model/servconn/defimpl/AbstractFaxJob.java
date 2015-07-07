@@ -319,9 +319,11 @@ public abstract class AbstractFaxJob<T extends FmtItem> implements SerializableF
 
     public void setRead(boolean isRead, boolean fireEvent) {
         final int readColumn = parent.getColumns().getVirtualColumnIndex(VirtualColumnType.READ);
-        if (readColumn < 0)
-            throw new UnsupportedOperationException("This type of fax job doe not support a read/unread state!");
-        
+        if (readColumn < 0) {
+            //throw new UnsupportedOperationException("This type of fax job does not support a read/unread state!");
+            log.fine("This type of fax job does not support a read/unread state!");
+            return;
+        }
         setData(readColumn, Boolean.valueOf(isRead), fireEvent);
     }
     

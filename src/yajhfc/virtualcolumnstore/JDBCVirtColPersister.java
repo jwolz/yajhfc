@@ -44,6 +44,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,6 +59,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
 import yajhfc.Password;
 import yajhfc.Utils;
 import yajhfc.launch.Launcher2;
@@ -66,6 +70,7 @@ import yajhfc.phonebook.AbstractConnectionSettings;
 import yajhfc.phonebook.jdbc.ConnectionDialog;
 import yajhfc.phonebook.jdbc.ConnectionDialog.FieldMapEntry;
 import yajhfc.plugin.PluginManager;
+import yajhfc.util.DoNotAskAgainDialog;
 
 /**
  * @author jonas
@@ -220,7 +225,7 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
         for (VirtualColumnType vtc : vtcs) {
             if (vtc.isSaveable()) {
                 String field = settings.getFieldNameForVirtualColumnType(vtc);
-                if (field != null && field.length() > 0)
+                if (!ConnectionSettings.isNoField(field))
                     sql.append(", ").append(field);
             }
         }
@@ -242,7 +247,7 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
             
             if (vtc.isSaveable()) {
                 String field = settings.getFieldNameForVirtualColumnType(vtc);
-                if (field != null && field.length() > 0) {
+                if (!ConnectionSettings.isNoField(field)) {
                     sql.append(", ").append(field);
                     insertStmtVTCIdx[i] = count++;
                 }
@@ -252,7 +257,7 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
         for (VirtualColumnType vtc : vtcs) {
             if (vtc.isSaveable()) {
                 String field = settings.getFieldNameForVirtualColumnType(vtc);
-                if (field != null && field.length() > 0)
+                if (!ConnectionSettings.isNoField(field))
                     sql.append(", ?");
             }
         }
@@ -273,7 +278,7 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
             updateStmtVTCIdx[i] = -1;
             if (vtc.isSaveable()) {
                 String field = settings.getFieldNameForVirtualColumnType(vtc);
-                if (field != null && field.length() > 0) {
+                if (!ConnectionSettings.isNoField(field)) {
                     if (first)
                         first=false;
                     else
@@ -289,6 +294,14 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
             log.fine("UPDATE statement: " + sql);
         }
         updateStmt = connection.prepareStatement(sql.toString());
+        
+        if (ConnectionSettings.isNoField(settings.getFieldNameForVirtualColumnType(VirtualColumnType.USER_COMMENT))) {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    DoNotAskAgainDialog.showMessageDialog(JDBCVirtColPersister.class.getName() + ".CommentUnset", Launcher2.application.getFrame(), Utils._("No database field is set to save column \"User comment\". Values will be lost after restart."), Utils._("User comment"), JOptionPane.WARNING_MESSAGE);
+                }
+            });
+        }
     }
     
     protected synchronized void disconnect() {
@@ -338,7 +351,7 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
             
             if (vtc.isSaveable()) {
                 String fieldName = settings.getFieldNameForVirtualColumnType(vtc);
-                if (fieldName != null && fieldName.length() > 0) {
+                if (!ConnectionSettings.isNoField(fieldName)) {
                     vtcIdx[i] = rs.findColumn(fieldName);
                 }
             }
@@ -384,7 +397,7 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
     
     private void setStatementValues(PreparedStatement stmt, int keyIdx, int[] vtcIdx, String key, Object[] keyData) throws SQLException {
         if (Utils.debugMode)
-            log.finer("stmt=" + stmt + "; keyIdx=" + keyIdx + "; vtcIdx=" + Arrays.toString(vtcIdx) + "; key=" + key + "; keyData=" + Arrays.toString(keyData));
+            log.finer("keyIdx=" + keyIdx + "; vtcIdx=" + Arrays.toString(vtcIdx) + "; key=" + key + "; keyData=" + Arrays.toString(keyData));
         stmt.setString(keyIdx, key);
         
         VirtualColumnType[] vtcs = VirtualColumnType.values();
@@ -392,9 +405,38 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
             int idx = vtcIdx[i];
             if (idx >= 0) {
                 VirtualColumnType vtc = vtcs[i];
-                stmt.setObject(idx, keyData[columnToIndex(vtc)]);
+                Class<?> dataType = vtc.getDataType();
+                Object value = keyData[columnToIndex(vtc)];
+                
+                if (dataType == String.class) {
+                    if (value == null) 
+                        stmt.setNull(idx, Types.VARCHAR);
+                    else
+                        stmt.setString(idx, (String)value);
+                } else if (dataType == Boolean.class) {
+                    if (value == null) 
+                        stmt.setNull(idx, Types.BOOLEAN);
+                    else
+                        stmt.setBoolean(idx, (Boolean)value);
+                } else if (dataType == Integer.class) {
+                    if (value == null) 
+                        stmt.setNull(idx, Types.INTEGER);
+                    else
+                        stmt.setInt(idx, (Integer)value);
+                } else if (dataType == Long.class) {
+                    if (value == null) 
+                        stmt.setNull(idx, Types.BIGINT);
+                    else
+                        stmt.setLong(idx, (Long)value);
+                } else {
+                    log.warning("Unsupported data type: " + dataType);
+                    stmt.setObject(idx, value);
+                }
+
             }
         }
+        if (Utils.debugMode)
+            log.finer(stmt.toString());
     }
     
     protected synchronized void writeSingleRow(String key, Object[] keyData) throws SQLException {
@@ -408,8 +450,8 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
         if (updateCnt == 0) {
             log.fine("0 columns updated, trying INSERT");
             setStatementValues(insertStmt, insertStmtKeyIdx, insertStmtVTCIdx, key, keyData);
-            updateStmt.execute();
-            updateCnt = updateStmt.getUpdateCount();
+            insertStmt.execute();
+            updateCnt = insertStmt.getUpdateCount();
             if (Utils.debugMode)
                 log.fine("Inserted " + updateCnt + " columns");
         }
@@ -417,8 +459,21 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
     }
     
     @Override
-    protected void valueChanged(String key, VirtualColumnType column,
+    protected void valueChanged(final String key, VirtualColumnType column,
             int columnIndex, Object value, Object oldValue) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            // Make the DB write outside the event dispatch thread
+            Utils.executorService.schedule(new Runnable() {
+                public void run() {
+                    realValueChanged(key);
+                }
+            }, 0, TimeUnit.MILLISECONDS);
+        } else {
+            realValueChanged(key);
+        }
+    }
+    
+    protected void realValueChanged(String key) {
         try {
             writeSingleRow(key, data.get(key));
         } catch (SQLException e) {
@@ -433,17 +488,25 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
             synchronized (this) {
                 Map<String,Object[]>[] cmp = compareMaps(data, newData);
 
-                for (String key : cmp[COMPARE_MAP_DELETE].keySet()) {
-                    data.remove(key);
-                }
-                for (Entry<String,Object[]> update : cmp[COMPARE_MAP_UPDATE].entrySet()) {
-                    data.put(update.getKey(), update.getValue());
-                }
-                for (Entry<String,Object[]> insert : cmp[COMPARE_MAP_INSERT].entrySet()) {
-                    data.put(insert.getKey(), insert.getValue());
-                }
+                if (cmp[COMPARE_MAP_INSERT].size() > 0 || cmp[COMPARE_MAP_UPDATE].size() > 0 || cmp[COMPARE_MAP_DELETE].size() > 0) {
+                    if (cmp[COMPARE_MAP_DELETE].size() > 0) {
+                        for (String key : cmp[COMPARE_MAP_DELETE].keySet()) {
+                            data.remove(key);
+                        }
+                    }
+                    if (cmp[COMPARE_MAP_UPDATE].size() > 0) {
+                        for (Entry<String,Object[]> update : cmp[COMPARE_MAP_UPDATE].entrySet()) {
+                            data.put(update.getKey(), update.getValue());
+                        }
+                    }
+                    if (cmp[COMPARE_MAP_INSERT].size() > 0) {
+                        for (Entry<String,Object[]> insert : cmp[COMPARE_MAP_INSERT].entrySet()) {
+                            data.put(insert.getKey(), insert.getValue());
+                        }
+                    }
 
-                fireColumnsChanged(cmp[COMPARE_MAP_INSERT].keySet(), cmp[COMPARE_MAP_UPDATE].keySet(), cmp[COMPARE_MAP_DELETE].keySet());
+                    fireColumnsChanged(cmp[COMPARE_MAP_INSERT].keySet(), cmp[COMPARE_MAP_UPDATE].keySet(), cmp[COMPARE_MAP_DELETE].keySet());
+                }
             }
         } catch (Exception e) {
             log.log(Level.WARNING, "Error checking for updates", e);

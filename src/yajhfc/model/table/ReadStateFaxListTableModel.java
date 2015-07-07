@@ -39,28 +39,24 @@ package yajhfc.model.table;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.swing.SwingUtilities;
 import javax.swing.event.EventListenerList;
 
+import yajhfc.Utils;
 import yajhfc.model.FmtItem;
+import yajhfc.model.VirtualColumnType;
 import yajhfc.model.servconn.FaxJob;
 import yajhfc.model.servconn.FaxJobList;
 import yajhfc.model.servconn.FaxJobListListener;
-import yajhfc.readstate.PersistentReadState;
-import yajhfc.readstate.ReadStateChangedListener;
+import yajhfc.virtualcolumnstore.VirtColPersister;
 
-public class ReadStateFaxListTableModel<T extends FmtItem> extends FaxListTableModel<T> 
-    implements ReadStateChangedListener {
+public class ReadStateFaxListTableModel<T extends FmtItem> extends FaxListTableModel<T> {
     protected Font readFont = null;
     protected Font unreadFont = null;    
     protected EventListenerList listenerList = new EventListenerList();
-    protected PersistentReadState persistentReadState;
     
     public Font getReadFont() {
         return readFont;
@@ -78,12 +74,10 @@ public class ReadStateFaxListTableModel<T extends FmtItem> extends FaxListTableM
         this.unreadFont = unreadFont;
     }
     
-    public ReadStateFaxListTableModel(FaxJobList<T> jobs, PersistentReadState persistentReadState) {
+    public ReadStateFaxListTableModel(FaxJobList<T> jobs) {
         super(jobs);
-        setPersistentReadState(persistentReadState);
     }
 
-    
     
     public void addUnreadItemListener(UnreadItemListener<T> l) {
         listenerList.add(UnreadItemListener.class, l);
@@ -141,13 +135,6 @@ public class ReadStateFaxListTableModel<T extends FmtItem> extends FaxListTableM
         }
     }
     
-    protected Map<Object,FaxJob<T>> buildIDMap(List<FaxJob<T>> source) {
-        Map<Object,FaxJob<T>> idMap = new HashMap<Object,FaxJob<T>>(source.size());
-        for (FaxJob<T> job : source) {
-            idMap.put(job.getIDValue(), job);
-        }
-        return idMap;
-    }
     
     @Override
     public void setJobs(FaxJobList<T> jobs) {
@@ -168,22 +155,26 @@ public class ReadStateFaxListTableModel<T extends FmtItem> extends FaxListTableM
             jobsListener = new FaxJobListListener<T>() {
                 public void faxJobsUpdated(FaxJobList<T> source,
                         final List<FaxJob<T>> oldJobList, final List<FaxJob<T>> newJobList) {
-                    Map<Object,FaxJob<T>> oldJobIDs = buildIDMap(oldJobList);
+                    if (persistence==null)
+                        return;
+                    
+                    Map<String,FaxJob<T>> oldJobMap = buildIDMap(oldJobList);
                     final List<FaxJob<T>> newUnread = new ArrayList<FaxJob<T>>();
 
                     for (FaxJob<T> newJob : newJobList) {
-                        Object jobID = newJob.getIDValue();
-                        newJob.setRead(persistentReadState.isRead(jobID.toString()), false);
+                        String key = VirtColPersister.getKeyForFaxJob(newJob);
+                        Object oIsRead = persistence.getValue(key, VirtualColumnType.READ);
+                        boolean isRead = (oIsRead != null && ((Boolean)oIsRead).booleanValue());
 
-                        FaxJob<T> oldJob = oldJobIDs.get(jobID);
+                        FaxJob<T> oldJob = oldJobMap.get(key);
                         if (oldJob == null) { // Job is new
-                            if (!jobIsInProgress(newJob) && !newJob.isRead()) {
+                            if (!jobIsInProgress(newJob) && !isRead) {
                                 // New Job that is not in progress (i.e. ready) and still unread
                                 // -> consider as new job ready for viewing
                                 newUnread.add(newJob);
                             }
                         } else { // Existing job
-                            if (jobIsInProgress(oldJob) && !jobIsInProgress(newJob) && !newJob.isRead()) {
+                            if (jobIsInProgress(oldJob) && !jobIsInProgress(newJob) && !isRead) {
                                 // If the old job was in process, but the new one is ready and still unread
                                 // -> consider as new job ready for viewing
                                 newUnread.add(newJob);
@@ -211,11 +202,12 @@ public class ReadStateFaxListTableModel<T extends FmtItem> extends FaxListTableM
                     }
                 }
 
-                public void readStateChanged(FaxJobList<T> source, FaxJob<T> job,
+                public void readStateChanged(FaxJobList<T> source, final FaxJob<T> job,
                         boolean oldState, boolean newState) {
-                    persistentReadState.setRead(job.getIDValue().toString(), newState);
+                    final int row = Utils.identityIndexOf(jobs.getJobs(), job);
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
+                            fireTableRowsUpdated(row,row);
                             fireReadStateChanged();
                         }
                     });
@@ -230,7 +222,6 @@ public class ReadStateFaxListTableModel<T extends FmtItem> extends FaxListTableM
         }
         return jobsListener;
     }
-
     
     @Override
     public Font getCellFont(int row, int col) {
@@ -240,74 +231,6 @@ public class ReadStateFaxListTableModel<T extends FmtItem> extends FaxListTableM
         else
             return unreadFont;
     }
+   
     
-
-    public void readStateChanged(PersistentReadState sender,
-            Set<String> changedFaxes) {
-        int[] updateRows = new int[changedFaxes.size()];
-        int updateRowPtr = 0;
-        List<FaxJob<T>> jobList = jobs.getJobs();
-        
-        for (int i=0; i<jobList.size(); i++) {
-            FaxJob<T> job = jobList.get(i);
-            String id = job.getIDValue().toString();
-            
-            if (changedFaxes.contains(id)) {
-                // Do not use the normal setter here to avoid a unnecessary update of the read state persister
-                job.setRead(sender.isRead(id), false);
-                updateRows[updateRowPtr++] = i;
-            }
-        }
-
-        int[] updRows;
-        if (updateRowPtr == updateRows.length) {
-            updRows = updateRows;
-        } else {
-            updRows = new int[updateRowPtr];
-            System.arraycopy(updateRows, 0, updRows, 0, updateRowPtr);
-        }
-        SwingUtilities.invokeLater(new TableUpdater(updRows));
-    }
-    
-    public void cleanupReadState() {
-        if (jobs == null)
-            return;
-        
-        Set<String> existingJobs = new HashSet<String>();
-        for (FaxJob<T> j : jobs.getJobs()) {
-            existingJobs.add((String)j.getIDValue());
-        }
-        persistentReadState.cleanupState(existingJobs);
-    }
-    
-    public PersistentReadState getPersistentReadState() {
-        return persistentReadState;
-    }
-
-    public void setPersistentReadState(PersistentReadState persistentReadState) {
-        if (this.persistentReadState != null) {
-            this.persistentReadState.removeReadStateChangedListener(this);
-        }
-        this.persistentReadState = persistentReadState;
-        persistentReadState.addReadStateChangedListener(this);
-    }
-    
-    protected class TableUpdater implements Runnable {
-        protected final int[] updateRows;
-        
-        public void run() {
-            for (int i = 0; i < updateRows.length; i++) {
-                int row = updateRows[i];
-                fireTableRowsUpdated(row, row);
-            }
-            
-            fireReadStateChanged();
-        }
-
-        public TableUpdater(int[] updateRows) {
-            super();
-            this.updateRows = updateRows;
-        }
-
-    }
 }

@@ -58,7 +58,7 @@ FaxJobListListener<T> {
     public final boolean enableColumnChanged;
     
 
-    public final void faxJobsUpdated(final FaxJobList<T> source,
+    public void faxJobsUpdated(final FaxJobList<T> source,
             final List<FaxJob<T>> oldJobList, final List<FaxJob<T>> newJobList) {
         if (!enableFaxJobsUpdated)
             return;
@@ -80,7 +80,7 @@ FaxJobListListener<T> {
         // Do nothing       
     }
 
-    public final void readStateChanged(final FaxJobList<T> source, final FaxJob<T> job,
+    public void readStateChanged(final FaxJobList<T> source, final FaxJob<T> job,
             final boolean oldState, final boolean newState) {
         if (!enableReadStateChanged)
             return;
@@ -101,7 +101,7 @@ FaxJobListListener<T> {
         // Do nothing
     }
     
-    public final void columnChanged(final FaxJobList<T> source, final FaxJob<T> job, final T column,
+    public void columnChanged(final FaxJobList<T> source, final FaxJob<T> job, final T column,
             final int columnIndex, final Object oldValue, final Object newValue) {
         if (!enableColumnChanged)
             return;

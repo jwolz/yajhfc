@@ -47,15 +47,15 @@ import yajhfc.launch.Launcher2;
 import yajhfc.model.servconn.ConnectionState;
 import yajhfc.model.servconn.FaxListConnection;
 import yajhfc.model.servconn.FaxListConnectionFactory;
-import yajhfc.readstate.PersistentReadState;
 import yajhfc.ui.YajOptionPane;
+import yajhfc.virtualcolumnstore.VirtColPersister;
 
 public class Server {
     static final Logger log = Logger.getLogger(Server.class.getName());
     
     protected ServerOptions options;
     protected FaxListConnection connection;
-    protected PersistentReadState persistence;
+    protected VirtColPersister persistence;
     protected HylaClientManager clientManager;
     
     public int getID() {
@@ -131,11 +131,11 @@ public class Server {
         }
     }
     
-    public synchronized PersistentReadState getPersistence() {
+    public synchronized VirtColPersister getPersistence() {
         if (persistence == null) {
             if (Utils.debugMode)
                 log.fine("Server " + options.id + ": creating persistence");
-            persistence = PersistentReadState.createFromOptions(options);
+            persistence = VirtColPersister.createFromOptions(options);
         }
         return persistence;
     }
@@ -171,7 +171,7 @@ public class Server {
         if (persistence != null) {
             if (Utils.debugMode)
                 log.fine("Server " + options.id + ": saving persistence");
-            persistence.persistReadState();
+            persistence.persistValues();
             persistence.shutdown();
             persistence = null;
         }

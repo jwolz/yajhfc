@@ -75,8 +75,6 @@ import yajhfc.HylaClientManager;
 import yajhfc.IDAndNameOptions;
 import yajhfc.Utils;
 import yajhfc.model.servconn.FaxListConnectionType;
-import yajhfc.readstate.AvailablePersistenceMethod;
-import yajhfc.readstate.PersistentReadState;
 import yajhfc.server.ServerOptions;
 import yajhfc.ui.swing.SwingYajOptionPane;
 import yajhfc.util.ClipboardPopup;
@@ -86,6 +84,8 @@ import yajhfc.util.IntVerifier;
 import yajhfc.util.ProgressDialog;
 import yajhfc.util.ProgressWorker;
 import yajhfc.util.SpinnerDateOffsetEditor;
+import yajhfc.virtualcolumnstore.AvailablePersistenceMethod;
+import yajhfc.virtualcolumnstore.VirtColPersister;
 
 /**
  * @author jonas
@@ -220,8 +220,8 @@ public class SingleServerSettingsPanel extends AbstractOptionsPanel<ServerOption
         persistenceConfigs.clear();
         persistenceConfigs.put(foEdit.persistenceMethod, foEdit.persistenceConfig);
         int pos = 0; 
-        for (int i=0; i<PersistentReadState.persistenceMethods.size(); i++) {
-            if (PersistentReadState.persistenceMethods.get(i).getKey().equals(foEdit.persistenceMethod)) {
+        for (int i=0; i<VirtColPersister.persistenceMethods.size(); i++) {
+            if (VirtColPersister.persistenceMethods.get(i).getKey().equals(foEdit.persistenceMethod)) {
                 pos = i;
                 break;
             }
@@ -602,7 +602,7 @@ public class SingleServerSettingsPanel extends AbstractOptionsPanel<ServerOption
                     }
                 }
             };
-            comboPersistenceMethods = new JComboBox(PersistentReadState.persistenceMethods.toArray());
+            comboPersistenceMethods = new JComboBox(VirtColPersister.persistenceMethods.toArray());
             comboPersistenceMethods.addActionListener(persistenceListener);
             comboPersistenceMethods.setActionCommand("combo");
             
