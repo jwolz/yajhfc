@@ -473,7 +473,7 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
         }
     }
     
-    protected void realValueChanged(String key) {
+    protected synchronized void realValueChanged(String key) {
         try {
             writeSingleRow(key, data.get(key));
         } catch (SQLException e) {
