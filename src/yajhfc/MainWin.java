@@ -80,6 +80,7 @@ import javax.swing.Action;
 import javax.swing.ButtonGroup;
 import javax.swing.InputMap;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -94,6 +95,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
@@ -129,6 +131,7 @@ import yajhfc.model.IconMap;
 import yajhfc.model.JobFormat;
 import yajhfc.model.RecvFormat;
 import yajhfc.model.TableType;
+import yajhfc.model.VirtualColumnType;
 import yajhfc.model.jobq.QueueFileFormat;
 import yajhfc.model.servconn.ConnectionState;
 import yajhfc.model.servconn.FaxDocument;
@@ -164,6 +167,7 @@ import yajhfc.util.AbstractQuickSearchHelper;
 import yajhfc.util.AcceleratorKeyDialog;
 import yajhfc.util.AcceleratorKeys;
 import yajhfc.util.ActionJCheckBoxMenuItem;
+import yajhfc.util.ClipboardPopup;
 import yajhfc.util.ExampleFileFilter;
 import yajhfc.util.ExcDialogAbstractAction;
 import yajhfc.util.ExceptionDialog;
@@ -239,7 +243,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     protected Action actSend, actShow, actDelete, actOptions, actExit, actAbout, actPhonebook, actReadme, actPoll, actFaxRead, actFaxSave, actForward, actAdminMode;
     protected Action actRefresh, actResend, actPrintTable, actSuspend, actResume, actClipCopy, actShowRowNumbers, actAdjustColumns, actReconnect, actEditToolbar;
     protected Action actSaveAsPDF, actSaveAsTIFF, actUpdateCheck, actAnswerCall, actSearchFax, actViewLog, actLogConsole, actExport;
-    protected Action actShowToolbar, actShowQuickSearchBar, actServerSelectionPopup, actEditAccelerators, actMarkFailedJobs, actSelectAll, actEditJob;
+    protected Action actShowToolbar, actShowQuickSearchBar, actServerSelectionPopup, actEditAccelerators, actMarkFailedJobs, actSelectAll, actEditJob, actEditComment;
     protected StatusBarResizeAction actAutoSizeStatus;
     protected ActionEnabler actChecker;
     protected Map<String,Action> availableActions = new HashMap<String,Action>();
@@ -1562,6 +1566,52 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         actSelectAll.putValue(Action.SHORT_DESCRIPTION, _("Selects all rows"));
         putAvailableAction("SelectAll", actSelectAll);
         
+        actEditComment = new ExcDialogAbstractAction() {            
+            public void actualActionPerformed(java.awt.event.ActionEvent e) {
+                TooltipJTable<? extends FmtItem> selTable = getSelectedTable();
+                
+                int commentIdx = selTable.getRealModel().getColumns().getVirtualColumnIndex(VirtualColumnType.USER_COMMENT);
+                if (commentIdx < 0)
+                    // No comment col present
+                    return;
+                
+                FaxJob<? extends FmtItem>[] selJobs = selTable.getSelectedJobs();
+                String oldValue = null;
+                for (FaxJob<? extends FmtItem> job : selJobs) {
+                    String comment = (String)job.getData(commentIdx);
+                    if (comment != null && comment.length() > 0) {
+                        // Use the first value set
+                        oldValue = comment;
+                        break;
+                    }
+                }
+                if (oldValue == null)
+                    oldValue = "";
+                
+                
+                JTextArea textComment = new JTextArea(4, 60);
+                textComment.setLineWrap(true);
+                textComment.setEditable(true);
+                ClipboardPopup.DEFAULT_POPUP.addToComponent(textComment);
+                textComment.setText(oldValue);
+                
+                Object[] items = {
+                        new JScrollPane(textComment, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER)
+                };
+                                
+                if (JOptionPane.showConfirmDialog(MainWin.this, items, _("Edit user comment"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION) {
+                    String newValue = textComment.getText();
+                    
+                    for (FaxJob<? extends FmtItem> job : selJobs) {
+                        job.setData(commentIdx, newValue);
+                    }
+                }
+            }
+        };
+        actEditComment.putValue(Action.NAME, _("Edit user comment") + "...");
+        actEditComment.putValue(Action.SHORT_DESCRIPTION, _("Edit this job's user comment"));
+        putAvailableAction("EditComment", actEditComment);
+        
         actAutoSizeStatus = new StatusBarResizeAction();
         actAutoSizeStatus.putValue(Action.NAME, _("Auto-size status bar"));
         actAutoSizeStatus.putValue(Action.SHORT_DESCRIPTION, _("Automatically resize the status bar"));
@@ -1672,6 +1722,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             tblPopup.add(new JMenuItem(actEditJob));
             tblPopup.addSeparator();
             tblPopup.add(new ActionJCheckBoxMenuItem(actFaxRead));
+            tblPopup.add(new JMenuItem(actEditComment));
             tblPopup.addSeparator();
             tblPopup.add(new JMenuItem(actSelectAll));
         }
@@ -2033,18 +2084,21 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 tablePanel.showIndeterminateProgress(_("Logging out..."));
                 
                 
+                // Persistence cleanup disabled for now for safety reasons...
+                /*
                 final Collection[] jobLists = new Collection[] {
                         recvTableModel.getJobs().getJobs(),
                         sendingTableModel.getJobs().getJobs(),
                         sentTableModel.getJobs().getJobs(),
                         archiveTableModel != null ? archiveTableModel.getJobs().getJobs() : Collections.EMPTY_LIST,
-                };
+                };*/
                 
                 userInitiatedLogout = true;
                 Utils.executorService.submit(new Runnable() {
                    public void run() {
-                       VirtColPersister persistence = currentServer.getPersistence();
-                       persistence.cleanupStateFromJobs(jobLists);
+                       // Persistence cleanup disabled for now for safety reasons...
+                       //VirtColPersister persistence = currentServer.getPersistence();
+                       //persistence.cleanupStateFromJobs(jobLists);
                        
                        connection.disconnect();
                        SwingUtilities.invokeLater(new Runnable() {
@@ -2480,6 +2534,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             menuFax.add(new JMenuItem(actEditJob));
             menuFax.addSeparator();
             menuFax.add(new ActionJCheckBoxMenuItem(actFaxRead));
+            menuFax.add(new JMenuItem(actEditComment));
             if (!hideMenusForMac) {
                 menuFax.addSeparator();
                 menuFax.add(new JMenuItem(actExit));
@@ -2770,6 +2825,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             boolean viewLogState = false;
             
             final Component selectedComponent = tabMain.getSelectedComponent();
+            TooltipJTable<?> selectedTable = getSelectedTable();
             if (selectedComponent == scrollRecv) { // Received Table active
                 if (tableRecv.getSelectedRow() >= 0) {
                     showState = true;
@@ -2815,6 +2871,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             actEditJob.setEnabled(suspResumeState);
             actClipCopy.setEnabled(showState);
             actViewLog.setEnabled(viewLogState);
+            actEditComment.setEnabled(showState && selectedTable.getRealModel().getColumns().getVirtualColumnIndex(VirtualColumnType.USER_COMMENT) >= 0);
 
             actFaxRead.putValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY, faxReadSelected);
         }
