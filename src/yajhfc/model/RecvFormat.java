@@ -138,7 +138,7 @@ public enum RecvFormat implements FmtItem {
     /**
      * Virtual column: read/unread state
      */
-    virt_read(null, _("Fax is read"), _("If the fax has been read by a YajHFC user"), Boolean.class, null, null, false, VirtualColumnType.READ),
+    virt_read(null, _("Read"), _("Has the fax been read by a YajHFC user?"), Boolean.class, null, null, false, VirtualColumnType.READ),
     /**
      * Virtual column: user comment
      */
