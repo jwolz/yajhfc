@@ -43,8 +43,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Types;
+import java.sql.Timestamp;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -82,9 +83,12 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
     protected ConnectionSettings settings;
     
     protected Connection connection;
-    protected PreparedStatement selectStmt, updateStmt, insertStmt;
+    protected PreparedStatement selectStmt, updateStmt, insertStmt, lmtsStmt;
     protected int updateStmtKeyIdx, insertStmtKeyIdx;
     protected int[] updateStmtVTCIdx, insertStmtVTCIdx;
+    protected ColumnMetaData[] columnMetaData;
+    
+    protected long lastLastModified;
     
     protected ScheduledFuture<?> updateTask;
     
@@ -97,8 +101,9 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
     protected static final Map<String,FieldMapEntry> fieldCaptionMap = new HashMap<String,FieldMapEntry>();
     static {
         fieldCaptionMap.put("faxNameField", new FieldMapEntry(Utils._("Key (fax filename):"),0));
-        fieldCaptionMap.put("isReadField", new FieldMapEntry(Utils._("Read/Unread State:"),1));
+        fieldCaptionMap.put("isReadField", new FieldMapEntry(Utils._("Read/Unread state:"),1));
         fieldCaptionMap.put("commentField", new FieldMapEntry(Utils._("Comment:"),2));
+        fieldCaptionMap.put("lastModifiedField", new FieldMapEntry(Utils._("Last modified:"),3));
     }
 
     @Override
@@ -178,7 +183,7 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
     protected synchronized void checkInitialized() {
         if (data==null) {
             try {
-                data = loadValues();
+                data = loadValues(true);
             } catch (Exception e) {
                 log.log(Level.WARNING, "Error loading data ", e);
                 data = new HashMap<String,Object[]>();
@@ -218,6 +223,7 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
         
         final VirtualColumnType[] vtcs = VirtualColumnType.values();
         StringBuilder sql = new StringBuilder();
+        final boolean haveLastModified = haveLastModified();
         int count;
         
         sql.append("SELECT ");
@@ -229,11 +235,29 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
                     sql.append(", ").append(field);
             }
         }
+        if (haveLastModified) {
+            sql.append(", ").append(settings.lastModifiedField);
+        }
         sql.append("\nFROM ").append(settings.table);
         if (Utils.debugMode) {
             log.fine("SELECT statement: " + sql);
         }
         selectStmt = connection.prepareStatement(sql.toString());
+        
+        lastLastModified = -1;
+        if (haveLastModified) {
+            sql.setLength(0);
+            sql.append("SELECT ").append("max(");
+            sql.append(settings.lastModifiedField);
+            sql.append(')');
+            sql.append("\nFROM ").append(settings.table);
+            if (Utils.debugMode) {
+                log.fine("max last modified SELECT statement: " + sql);
+            }
+            lmtsStmt = connection.prepareStatement(sql.toString());
+        } else {
+            lmtsStmt = null;
+        }
         
         sql.setLength(0);
         insertStmtVTCIdx = new int[vtcs.length];
@@ -253,6 +277,9 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
                 }
             }
         }
+        if (haveLastModified) {
+            sql.append(", ").append(settings.lastModifiedField);
+        }
         sql.append(")\n VALUES (?");
         for (VirtualColumnType vtc : vtcs) {
             if (vtc.isSaveable()) {
@@ -260,6 +287,9 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
                 if (!ConnectionSettings.isNoField(field))
                     sql.append(", ?");
             }
+        }
+        if (haveLastModified) {
+            sql.append(", ").append("current_timestamp");
         }
         sql.append(')');
         if (Utils.debugMode) {
@@ -288,6 +318,9 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
                 }
             }
         }
+        if (haveLastModified) {
+            sql.append(", ").append(settings.lastModifiedField).append(" = current_timestamp");
+        }
         sql.append("\nWHERE ").append(settings.getKeyFieldName()).append(" = ?");
         updateStmtKeyIdx = count;
         if (Utils.debugMode) {
@@ -303,6 +336,10 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
             });
         }
     }
+
+    protected boolean haveLastModified() {
+        return !ConnectionSettings.isNoField(settings.lastModifiedField);
+    }
     
     protected synchronized void disconnect() {
         if (updateTask != null) {
@@ -313,6 +350,8 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
         if (connection != null) {
             try {
                 selectStmt.close();
+                if (lmtsStmt != null)
+                    lmtsStmt.close();
                 insertStmt.close();
                 updateStmt.close();
             } catch (SQLException e) {
@@ -325,6 +364,7 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
             }
             
             selectStmt = null;
+            lmtsStmt = null;
             insertStmt = null;
             updateStmt = null;
             connection = null;
@@ -332,19 +372,64 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
             //readStateMap = null;
         }
     }
+
+    /**
+     * Returns true if there probably was a modification
+     * @return
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     */
+    protected boolean checkLastModified() throws SQLException, ClassNotFoundException {
+        if (connection == null) {
+            openConnection();
+        }
+        log.fine("Checking last modified timestamp...");
+        
+        ResultSet rs = lmtsStmt.executeQuery();
+        if (rs.next()) {
+            Timestamp ts = rs.getTimestamp(1);
+            if (Utils.debugMode)
+                log.fine("Last modified timestamp: " + ts);
+            if (ts == null)
+                return true;
+            
+            long tsMillis = ts.getTime();
+            
+            synchronized (this) {
+                if (Utils.debugMode)
+                    log.fine("Last modified: old: " + lastLastModified + "; new: " + tsMillis);
+                return (tsMillis != lastLastModified);
+            }
+        } else {
+            // If the query fails, assume modification
+            return true;
+        }
+    }
     
 
-    protected Map<String,Object[]> loadValues() throws SQLException, ClassNotFoundException {
+    protected Map<String,Object[]> loadValues(boolean updateMetadata) throws SQLException, ClassNotFoundException {
         if (connection == null) {
             openConnection();
         }
         log.fine("Querying database table...");
         Map<String,Object[]> readMap = new HashMap<String,Object[]>();
         ResultSet rs = selectStmt.executeQuery();
+
         
         int keyIdx = rs.findColumn(settings.getKeyFieldName());
-        VirtualColumnType[] vtcs = VirtualColumnType.values();
+        int lmtsIdx = -1;
+        if (haveLastModified())
+            lmtsIdx = rs.findColumn(settings.lastModifiedField);
+        
+        VirtualColumnType[] vtcs = VirtualColumnType.values();        
         int vtcIdx[] = new int[vtcs.length];
+        ResultSetMetaData rsmd = null;
+        
+        if (updateMetadata) {
+            rsmd = rs.getMetaData();
+            columnMetaData = new ColumnMetaData[vtcs.length];
+        }
+        
         for (int i=0; i<vtcs.length; i++) {
             VirtualColumnType vtc = vtcs[i];
             vtcIdx[i] = -1;
@@ -352,12 +437,18 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
             if (vtc.isSaveable()) {
                 String fieldName = settings.getFieldNameForVirtualColumnType(vtc);
                 if (!ConnectionSettings.isNoField(fieldName)) {
-                    vtcIdx[i] = rs.findColumn(fieldName);
+                    int col = vtcIdx[i] = rs.findColumn(fieldName);
+                    
+                    if (updateMetadata)
+                        columnMetaData[i] = new ColumnMetaData(rsmd, col);
                 }
             }
         }
+
         if (Utils.debugMode)
             log.fine("keyIdx="+keyIdx+"; vtcIdx="+Arrays.toString(vtcIdx));
+        
+        long maxLastModified = -1;
         
         while (rs.next()) {
             String key = rs.getString(keyIdx);
@@ -390,8 +481,24 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
             }
             
             readMap.put(key, keyData);
+            
+            if (lmtsIdx >= 0) {
+                Timestamp lmts = rs.getTimestamp(lmtsIdx);
+                if (lmts != null) {
+                    long tsMillis = lmts.getTime();
+                
+                    if (tsMillis > maxLastModified)
+                        maxLastModified = tsMillis;
+                }
+            }
         }
         rs.close();
+        
+        synchronized (this) {
+            // Update last seen modification
+            lastLastModified = maxLastModified;
+        }
+        
         return readMap;
     }
     
@@ -407,27 +514,52 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
                 VirtualColumnType vtc = vtcs[i];
                 Class<?> dataType = vtc.getDataType();
                 Object value = keyData[columnToIndex(vtc)];
+                ColumnMetaData metaData = columnMetaData[i];
                 
                 if (dataType == String.class) {
-                    if (value == null) 
-                        stmt.setNull(idx, Types.VARCHAR);
-                    else
-                        stmt.setString(idx, (String)value);
+                    if (value == null) {
+                        if (metaData.nullable) {
+                            stmt.setNull(idx, metaData.type);
+                        } else {
+                            stmt.setString(idx, "");
+                        }
+                    } else {
+                        String sValue = (String)value;
+                        if (metaData.length > 0 && sValue.length() > metaData.length) // If the string is too long, simply cut it off
+                            sValue = sValue.substring(0, metaData.length);
+                        
+                        stmt.setString(idx, sValue);
+                    }
                 } else if (dataType == Boolean.class) {
-                    if (value == null) 
-                        stmt.setNull(idx, Types.BOOLEAN);
-                    else
+                    if (value == null) {
+                        if (metaData.nullable) {
+                            stmt.setNull(idx, metaData.type);
+                        } else {
+                            stmt.setBoolean(idx, false);
+                        }
+                    } else {
                         stmt.setBoolean(idx, (Boolean)value);
+                    }
                 } else if (dataType == Integer.class) {
-                    if (value == null) 
-                        stmt.setNull(idx, Types.INTEGER);
-                    else
+                    if (value == null){
+                        if (metaData.nullable) {
+                            stmt.setNull(idx, metaData.type);
+                        } else {
+                            stmt.setInt(idx, -1);
+                        }
+                    } else {
                         stmt.setInt(idx, (Integer)value);
+                    }
                 } else if (dataType == Long.class) {
-                    if (value == null) 
-                        stmt.setNull(idx, Types.BIGINT);
-                    else
+                    if (value == null){
+                        if (metaData.nullable) {
+                            stmt.setNull(idx, metaData.type);
+                        } else {
+                            stmt.setLong(idx, -1);
+                        }
+                    } else {
                         stmt.setLong(idx, (Long)value);
+                    }
                 } else {
                     log.warning("Unsupported data type: " + dataType);
                     stmt.setObject(idx, value);
@@ -483,12 +615,27 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
     
     protected void checkForUpdates() {
         try {
-            Map<String,Object[]> newData = loadValues();
+            log.fine("Checking for updates on the DB...");
+            
+            if (haveLastModified()) {
+                if (!checkLastModified())
+                    return;
+            }
+            
+            log.fine("No last modified or modification found, doing full diff...");
+            Map<String,Object[]> newData = loadValues(false);
             
             synchronized (this) {
                 Map<String,Object[]>[] cmp = compareMaps(data, newData);
 
                 if (cmp[COMPARE_MAP_INSERT].size() > 0 || cmp[COMPARE_MAP_UPDATE].size() > 0 || cmp[COMPARE_MAP_DELETE].size() > 0) {
+                    log.fine("Differences found");
+                    if (Utils.debugMode) {
+                        log.finer("Inserts: " + cmp[COMPARE_MAP_INSERT].keySet());
+                        log.finer("Updates: " + cmp[COMPARE_MAP_UPDATE].keySet());
+                        log.finer("Deletes: " + cmp[COMPARE_MAP_DELETE].keySet());
+                    }
+                    
                     if (cmp[COMPARE_MAP_DELETE].size() > 0) {
                         for (String key : cmp[COMPARE_MAP_DELETE].keySet()) {
                             data.remove(key);
@@ -562,6 +709,43 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
         this.settings = settings;
     }
     
+    static class ColumnMetaData {
+        
+        public final String columnName;
+        
+        /**
+         * data type as in java.util.sql.Types
+         */
+        public final int type;
+        
+        /**
+         * max length
+         */
+        public final int length;
+        
+        /**
+         * nullable
+         */
+        public final boolean nullable;
+
+        public ColumnMetaData(ResultSetMetaData rsmd, int colIdx) throws SQLException {
+            this.columnName = rsmd.getColumnName(colIdx);
+            this.type = rsmd.getColumnType(colIdx);
+            this.length = rsmd.getPrecision(colIdx);
+            
+            this.nullable = (rsmd.isNullable(colIdx) == ResultSetMetaData.columnNullable);
+        }
+        
+        public ColumnMetaData(String columnName, int type, int length,
+                boolean nullable) {
+            super();
+            this.columnName = columnName;
+            this.type = type;
+            this.length = length;
+            this.nullable = nullable;
+        }        
+    }
+    
     public static class ConnectionSettings extends AbstractConnectionSettings {
         public String driver = ""; //"org.postgresql.Driver";
         public String dbURL = "jdbc:"; //"jdbc:postgresql://hylafax-test/yajhfc";
@@ -572,7 +756,8 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
         
         public String faxNameField = ""; //"Faxname";
         public String isReadField = ""; //"isRead";
-        public String commentField = ""; //"isRead";
+        public String commentField = ""; 
+        public String lastModifiedField = "";
 
         public String getFieldNameForVirtualColumnType(VirtualColumnType vtc) {
             switch (vtc) {
@@ -629,8 +814,8 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
         
         public String showConfigDialog(Window parent, String oldConfig) {
             ConnectionDialog cd;
-            final String dialogTitle = Utils._("JDBC settings to save read/unread state");
-            final String dialogPrompt = Utils._("Please select which fields in the table correspond to the necessary fields to save the read/unread state");
+            final String dialogTitle = Utils._("JDBC settings to save read/unread state and comment");
+            final String dialogPrompt = Utils._("Please select which database fields correspond to the key, read/unread state and comment");
             ConnectionSettings cs = new ConnectionSettings(oldConfig);
             
             if (parent instanceof Dialog) {

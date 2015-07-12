@@ -66,6 +66,11 @@ YajHFC was originally written as a first more complicated
 CHANGES
 -------
 
+0.6.0:
+- Ability to add user defined comments to faxes
+  NOTE: If the read/unread state is saved in a database table, you will have to alter that table!
+  Please see TODO for details.
+
 0.5.7:
 - Bug fixes for phone book: Can now handle identical items, multi-select no longer "kills" entries
 - Changed behaviour of "Filter from fax number": Specified characters are now removed completely instead of being replaced by spaces

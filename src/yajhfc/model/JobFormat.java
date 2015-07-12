@@ -266,7 +266,9 @@ public enum JobFormat implements FmtItem {
      * Notification (icon only)
      */
     n_desc("n", _("Notification when"), _("E-mail notification handling (long description)"), IconMap.class),
-    
+    /**
+     * Use extended resolution?
+     */
     _0("0", _("Use XVRES?"), _("Use extended resolution?"), Boolean.class),
     /**
      * Virtual column: user comment

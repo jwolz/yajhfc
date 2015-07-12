@@ -572,7 +572,7 @@ public class SingleServerSettingsPanel extends AbstractOptionsPanel<ServerOption
                     {border, TableLayout.PREFERRED, TableLayout.PREFERRED, border, TableLayout.PREFERRED, border}
             };
             panelPersistence = new JPanel(new TableLayout(tablelay), false);
-            panelPersistence.setBorder(BorderFactory.createTitledBorder(_("Read/Unread state of faxes")));
+            panelPersistence.setBorder(BorderFactory.createTitledBorder(_("Read/unread state + comment")));
             
             ActionListener persistenceListener = new ActionListener() {
                 public void actionPerformed(ActionEvent e) {

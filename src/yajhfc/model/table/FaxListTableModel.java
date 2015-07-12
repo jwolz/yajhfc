@@ -90,10 +90,14 @@ public class FaxListTableModel<T extends FmtItem> extends AbstractTableModel {
             Map<String,FaxJob<T>> idMap = getIDMap();
             
             for (String key : inserts) {
-                persistence.updateToFaxJob(idMap.get(key), true);
+                final FaxJob<T> job = idMap.get(key);
+                if (job != null)
+                    persistence.updateToFaxJob(job, true);
             }
             for (String key : updates) {
-                persistence.updateToFaxJob(idMap.get(key), true);
+                final FaxJob<T> job = idMap.get(key);
+                if (job != null)
+                    persistence.updateToFaxJob(job, true);
             }
         }
     };
