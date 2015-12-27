@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YajHFC\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-08 14:58+0200\n"
+"POT-Creation-Date: 2015-12-27 10:19+0100\n"
 "PO-Revision-Date: 2015-01-14 09:29+0300\n"
 "Last-Translator: Alexander Moisseev <moiseev@mezonplus.ru>\n"
 "Language-Team: RUSSIAN <moiseev@mezonplus.ru>\n"
@@ -3260,13 +3260,13 @@ msgstr "Невозможно загрузить указанный класс д
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:285
 #: ../phonebook/jdbc/ConnectionDialog.java:319
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:208
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:213
 msgid "Database password"
 msgstr "Пароль базы данных"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:285
 #: ../phonebook/jdbc/ConnectionDialog.java:319
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:208
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:213
 #, java-format
 msgid "Please enter the database password (database: {0}):"
 msgstr "Пожалуйста, введите пароль базы данных (database: {0}):"
@@ -3799,13 +3799,13 @@ msgstr "Номер телефона (голосовой) получателя"
 msgid "Subject (\"Regarding\") of the fax"
 msgstr "Тема факса (\"O\")"
 
-#: ../model/jobq/QueueFileFormat.java:120 ../model/JobFormat.java:274
+#: ../model/jobq/QueueFileFormat.java:120 ../model/JobFormat.java:276
 #: ../model/RecvFormat.java:145
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:301
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:334
 msgid "User comment"
 msgstr ""
 
-#: ../model/jobq/QueueFileFormat.java:120 ../model/JobFormat.java:274
+#: ../model/jobq/QueueFileFormat.java:120 ../model/JobFormat.java:276
 #: ../model/RecvFormat.java:145
 msgid "Comment added by a YajHFC user"
 msgstr ""
@@ -3923,11 +3923,11 @@ msgstr "Уведомление по E-mail (буквенное обозначе�
 msgid "Job retry time"
 msgstr "Время повтора задания"
 
-#: ../model/JobFormat.java:270
+#: ../model/JobFormat.java:272
 msgid "Use XVRES?"
 msgstr "Использовать XVRES?"
 
-#: ../model/JobFormat.java:270
+#: ../model/JobFormat.java:272
 msgid "Use extended resolution?"
 msgstr "Использовать увеличенное разрешение?"
 
@@ -4629,33 +4629,39 @@ msgstr "Изменить параметры задания {0}"
 msgid "Local file"
 msgstr "Локальный файл"
 
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:99
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:103
 msgid "Key (fax filename):"
 msgstr ""
 
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:100
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:104
 msgid "Read/Unread state:"
 msgstr ""
 
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:101
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:105
 msgid "Comment:"
 msgstr ""
 
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:301
-msgid ""
-"No database field is set to save column \"User comment\". Values will be "
-"lost after restart."
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:106
+msgid "Last modified:"
 msgstr ""
 
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:618
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:334
+#, java-format
+msgid ""
+"No database field is set to save column \"User comment\". Values will be "
+"lost after restart.\n"
+"Please see {0} for more information."
+msgstr ""
+
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:803
 msgid "Database table"
 msgstr "База данных"
 
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:632
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:817
 msgid "JDBC settings to save read/unread state and comment"
 msgstr ""
 
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:633
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:818
 msgid ""
 "Please select which database fields correspond to the key, read/unread state "
 "and comment"

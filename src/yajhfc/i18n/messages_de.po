@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: messages_de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-08 14:58+0200\n"
-"PO-Revision-Date: 2015-07-08 14:59+0100\n"
+"POT-Creation-Date: 2015-12-27 10:19+0100\n"
+"PO-Revision-Date: 2015-12-27 10:21+0100\n"
 "Last-Translator: Jonas Wolz <jonas.wolz@freenet.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
 "Language: de\n"
@@ -3287,13 +3287,13 @@ msgstr "Konnte die angegebene Treiberklasse nicht laden:"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:285
 #: ../phonebook/jdbc/ConnectionDialog.java:319
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:208
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:213
 msgid "Database password"
 msgstr "Datenbank-Passwort"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:285
 #: ../phonebook/jdbc/ConnectionDialog.java:319
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:208
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:213
 #, java-format
 msgid "Please enter the database password (database: {0}):"
 msgstr "Bitte geben Sie das Datenbankpasswort ein (Datenbank: {0}):"
@@ -3827,13 +3827,13 @@ msgstr "Telefonnummmer (Sprache) des Empfängers"
 msgid "Subject (\"Regarding\") of the fax"
 msgstr "Betreff des Faxes"
 
-#: ../model/jobq/QueueFileFormat.java:120 ../model/JobFormat.java:274
+#: ../model/jobq/QueueFileFormat.java:120 ../model/JobFormat.java:276
 #: ../model/RecvFormat.java:145
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:301
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:334
 msgid "User comment"
 msgstr "Benutzerkommentar"
 
-#: ../model/jobq/QueueFileFormat.java:120 ../model/JobFormat.java:274
+#: ../model/jobq/QueueFileFormat.java:120 ../model/JobFormat.java:276
 #: ../model/RecvFormat.java:145
 msgid "Comment added by a YajHFC user"
 msgstr "Kommentar durch einen YajHFC-Benutzer"
@@ -3950,11 +3950,11 @@ msgstr "E-Mail-Benachrichtigungsbehandlung (1 Buchstabe)"
 msgid "Job retry time"
 msgstr "Wiederholungszeit"
 
-#: ../model/JobFormat.java:270
+#: ../model/JobFormat.java:272
 msgid "Use XVRES?"
 msgstr "XVRES verwenden?"
 
-#: ../model/JobFormat.java:270
+#: ../model/JobFormat.java:272
 msgid "Use extended resolution?"
 msgstr "Erweiterte Auflösung verwenden?"
 
@@ -4665,43 +4665,57 @@ msgstr "Parameter von Auftrag {0} ändern"
 msgid "Local file"
 msgstr "Lokale Datei"
 
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:99
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:103
 msgid "Key (fax filename):"
 msgstr "Schlüssel (Fax-Dateiname):"
 
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:100
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:104
 msgid "Read/Unread state:"
 msgstr "Gelesen/ungelesen-Status:"
 
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:101
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:105
 msgid "Comment:"
 msgstr "Kommentar:"
 
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:301
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:106
+msgid "Last modified:"
+msgstr "Zuletzt geändert:"
+
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:334
+#, java-format
 msgid ""
 "No database field is set to save column \"User comment\". Values will be "
-"lost after restart."
+"lost after restart.\n"
+"Please see {0} for more information."
 msgstr ""
 "Es wurde kein Datenbankfeld festgelegt, um die Spalte \"Benutzerkommentar\" "
-"zu speichern. Werte werden beim Neustart verloren gehen."
+"zu speichern. Werte werden beim Neustart verloren gehen.\n"
+"Für mehr Informationen besuchen Sie bitte {0}."
 
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:618
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:803
 msgid "Database table"
 msgstr "Datenbanktabelle"
 
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:632
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:817
 msgid "JDBC settings to save read/unread state and comment"
 msgstr ""
 "JDBC-Einstellungen, um den gelesen/ungelesen-Status und den Kommentar zu "
 "speichern."
 
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:633
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:818
 msgid ""
 "Please select which database fields correspond to the key, read/unread state "
 "and comment"
 msgstr ""
 "Bitte wählen Sie aus, welche Datenbankfelder dem Schlüssel, gelesen/"
 "ungelesen-Status und Kommentar entsprechen."
+
+#~ msgid ""
+#~ "No database field is set to save column \"User comment\". Values will be "
+#~ "lost after restart."
+#~ msgstr ""
+#~ "Es wurde kein Datenbankfeld festgelegt, um die Spalte \"Benutzerkommentar"
+#~ "\" zu speichern. Werte werden beim Neustart verloren gehen."
 
 #~ msgid "Fax is read"
 #~ msgstr "Fax ist gelesen"

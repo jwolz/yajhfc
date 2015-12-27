@@ -69,7 +69,8 @@ CHANGES
 0.6.0:
 - Ability to add user defined comments to faxes
   NOTE: If the read/unread state is saved in a database table, you will have to alter that table!
-  Please see TODO for details.
+  Please see http://www.yajhfc.de/documentation/knowledge-base/152-database-migration-to-0-6-0 for details.
+- Linux fax printer deb package now works again with installations having systemd
 
 0.5.7:
 - Bug fixes for phone book: Can now handle identical items, multi-select no longer "kills" entries

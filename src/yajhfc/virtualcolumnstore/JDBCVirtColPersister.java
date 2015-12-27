@@ -331,7 +331,7 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
         if (ConnectionSettings.isNoField(settings.getFieldNameForVirtualColumnType(VirtualColumnType.USER_COMMENT))) {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
-                    DoNotAskAgainDialog.showMessageDialog(JDBCVirtColPersister.class.getName() + ".CommentUnset", Launcher2.application.getFrame(), Utils._("No database field is set to save column \"User comment\". Values will be lost after restart."), Utils._("User comment"), JOptionPane.WARNING_MESSAGE);
+                    DoNotAskAgainDialog.showMessageDialog(JDBCVirtColPersister.class.getName() + ".CommentUnset", Launcher2.application.getFrame(), MessageFormat.format(Utils._("No database field is set to save column \"User comment\". Values will be lost after restart.\nPlease see {0} for more information."), "http://www.yajhfc.de/documentation/knowledge-base/152-database-migration-to-0-6-0"), Utils._("User comment"), JOptionPane.WARNING_MESSAGE);
                 }
             });
         }
