@@ -83,7 +83,6 @@ public class JavaVersionParser {
         return (javaMajor < major || (javaMajor == major && javaMinor < minor));
     }
    
-    @Override
     public String toString() {
         return stringVersion + " (Java " + javaMajor + '.' + javaMinor + ')';
     }
