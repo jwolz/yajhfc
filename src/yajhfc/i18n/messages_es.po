@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: messages_es 0.5.7\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-27 10:19+0100\n"
-"PO-Revision-Date: 2015-01-04 19:20+0200\n"
+"PO-Revision-Date: 2015-12-27 12:42+0100\n"
 "Last-Translator: Elsa Andrés <e.andres@ist-sci.com>\n"
 "Language-Team: Spanish <yajhfc-translators@lists.berlios.de>\n"
 "Language: es\n"
@@ -1319,11 +1319,11 @@ msgstr "Selecciona todas las filas"
 
 #: ../MainWin.java:1602 ../MainWin.java:1611
 msgid "Edit user comment"
-msgstr ""
+msgstr "Editar el comentario de usuario"
 
 #: ../MainWin.java:1612
 msgid "Edit this job's user comment"
-msgstr ""
+msgstr "Edita este comentario del trabajo de usuario"
 
 #: ../MainWin.java:1616
 msgid "Auto-size status bar"
@@ -2587,7 +2587,7 @@ msgstr "Zona horaria:"
 
 #: ../options/SingleServerSettingsPanel.java:575
 msgid "Read/unread state + comment"
-msgstr ""
+msgstr "Estado leído/no leído + comentarios"
 
 #: ../options/SingleServerSettingsPanel.java:609
 msgid "Configure..."
@@ -3853,12 +3853,12 @@ msgstr "Asunto (\"En relación con\") del fax"
 #: ../model/RecvFormat.java:145
 #: ../virtualcolumnstore/JDBCVirtColPersister.java:334
 msgid "User comment"
-msgstr ""
+msgstr "Comentario de usuario"
 
 #: ../model/jobq/QueueFileFormat.java:120 ../model/JobFormat.java:276
 #: ../model/RecvFormat.java:145
 msgid "Comment added by a YajHFC user"
-msgstr ""
+msgstr "Comentario añadido por un usuario de YajHFC"
 
 #: ../model/JobFormat.java:68
 msgid "Dials: total/max."
@@ -4204,8 +4204,8 @@ msgstr "En progreso"
 #: ../model/RecvFormat.java:132
 msgid "A ``*'' if receive is going on; otherwise `` '' (space)"
 msgstr ""
-"Un ''*'' si la recepción se está llevando a cabo; de lo contrario '' "
-"'' (espacio)"
+"Un ''*'' si la recepción se está llevando a cabo; de lo contrario '' '' "
+"(espacio)"
 
 #: ../model/RecvFormat.java:136
 msgid "Time/Date (UNIX)"
@@ -4217,11 +4217,11 @@ msgstr "Tiempo en segundos desde la época UNIX"
 
 #: ../model/RecvFormat.java:141
 msgid "Read"
-msgstr ""
+msgstr "Leído"
 
 #: ../model/RecvFormat.java:141
 msgid "Has the fax been read by a YajHFC user?"
-msgstr ""
+msgstr "¿Ha sido leído el fax por un usuario de YajHFC?"
 
 #: ../MainWinSearchWin.java:126
 msgid "No matching fax found."
@@ -4691,19 +4691,19 @@ msgstr "Archivo local"
 
 #: ../virtualcolumnstore/JDBCVirtColPersister.java:103
 msgid "Key (fax filename):"
-msgstr ""
+msgstr "Clave (nombre de archivo del fax):"
 
 #: ../virtualcolumnstore/JDBCVirtColPersister.java:104
 msgid "Read/Unread state:"
-msgstr ""
+msgstr "Estado leído/no leído:"
 
 #: ../virtualcolumnstore/JDBCVirtColPersister.java:105
 msgid "Comment:"
-msgstr ""
+msgstr "Comentario:"
 
 #: ../virtualcolumnstore/JDBCVirtColPersister.java:106
 msgid "Last modified:"
-msgstr ""
+msgstr "Última modificación:"
 
 #: ../virtualcolumnstore/JDBCVirtColPersister.java:334
 #, java-format
@@ -4712,6 +4712,9 @@ msgid ""
 "lost after restart.\n"
 "Please see {0} for more information."
 msgstr ""
+"No se ha definido ningún campo de la base de datos para almacenar la columna "
+"\"Comentario de usuario\". Los valores se perderán al reiniciar.\n"
+"Consulte {0} para obtener más información."
 
 #: ../virtualcolumnstore/JDBCVirtColPersister.java:803
 msgid "Database table"
@@ -4719,13 +4722,15 @@ msgstr "Tabla de la base de datos"
 
 #: ../virtualcolumnstore/JDBCVirtColPersister.java:817
 msgid "JDBC settings to save read/unread state and comment"
-msgstr ""
+msgstr "Ajustes JDBC para almacenar el estado leído/no leído y los comentarios"
 
 #: ../virtualcolumnstore/JDBCVirtColPersister.java:818
 msgid ""
 "Please select which database fields correspond to the key, read/unread state "
 "and comment"
 msgstr ""
+"Seleccione los campos de la base de datos correspondientes para la clave, el "
+"estado leído/no leído y los comentarios"
 
 #~ msgid "Read/Unread state of faxes"
 #~ msgstr "Estado leído/no leído de los faxes"

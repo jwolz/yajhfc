@@ -1,4 +1,4 @@
-LÉAME (README) de YajHFC 0.5.7
+LÉAME (README) de YajHFC 0.6.0
 ==============================
 
 ACERCA DE
@@ -23,7 +23,7 @@ INSTALACIÓN
 -----------
 
 Requisitos:
-* JRE 5.0 o superior (se recomienda Java 6 o 7)
+* JRE 5.0 o superior (se recomienda Java 6, 7 u 8)
 * Servidor HylaFAX funcionando en la red (obviamente ;-) )
 * Algún programa para ver archivos TIFF (consultar la FAQ)
 * Opcional: un visor PostScript (p. ej., Ghostview), GhostScript
@@ -31,7 +31,7 @@ Requisitos:
 
 Para instalar YajHFC descargue el archivo yajhfc-0_5_7.jar en algún lugar 
 de su disco.
-Para ejecutarlo, utilice: "java -jar yajhfc-0_5_7.jar"
+Para ejecutarlo, utilice: "java -jar yajhfc-0_6_0.jar"
 (En Windows seguramente sólo sea necesario ejecutarlo pulsando dos veces sobre el archivo).
 
 LICENCIA
@@ -65,6 +65,12 @@ de Java (más avanzado que los programas "Hola mundo") utilizando la IDE Eclipse
 
 CAMBIOS
 -------
+
+0.6.0:
+- Posibilidad de añadir comentarios definidos por el usuario a los faxes
+  NOTA: Si el estado leído/no leído se almacena en una tabla de la base de datos, tendrá que editar esa tabla
+  Consulte http://www.yajhfc.de/documentation/knowledge-base/152-database-migration-to-0-6-0 para más detalles.
+- El paquete deb para la impresora de fax en Linux vuelve a funcionar con sistemas que usen systemd
 
 0.5.7:
 - Correcciones en la agenda telefónica: ahora puede gestionar elementos idénticos, las selecciones múltiples ya no "matan" las entradas
