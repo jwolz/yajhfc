@@ -62,28 +62,10 @@ public class Launcher {
         }
 
         if (docheck) {
-            int javaMinor = -1, javaMajor = -1;
-            String javaVer = System.getProperty("java.version");
-            try {
-                if (javaVer != null) {
-                    int firstDot = javaVer.indexOf('.');
-                    if (firstDot < 0) {
-                        javaMajor = Integer.parseInt(javaVer);
-                    } else {
-                        int secondDot = javaVer.indexOf('.', firstDot+1);
-                        if (secondDot < 0)
-                            secondDot = javaVer.length();
+            JavaVersionParser jVersion = new JavaVersionParser();
 
-                        javaMajor = Integer.parseInt(javaVer.substring(0, firstDot));
-                        javaMinor = Integer.parseInt(javaVer.substring(firstDot+1, secondDot));
-                    }
-                }
-            } catch (NumberFormatException e) {
-                System.err.println("Could not determine Java version.\n Reason:");
-                e.printStackTrace();
-            }
-            if (javaMajor < 1 || (javaMajor == 1 && javaMinor < 5)) {
-                showMessage("You need at least Java 1.5 (Java 5) to run YajHFC.\nThe installed version is " + javaVer + ".", "Error");
+            if (jVersion.isLessThan(1, 5)) {
+                showMessage("You need at least Java 1.5 (Java 5) to run YajHFC.\nThe installed version is " + jVersion + ".", "Error");
                 System.exit(1);
             }
 
