@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: YajHFC\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-27 10:19+0100\n"
-"PO-Revision-Date: 2015-01-14 09:29+0300\n"
+"PO-Revision-Date: 2016-01-12 18:31+0300\n"
 "Last-Translator: Alexander Moisseev <moiseev@mezonplus.ru>\n"
 "Language-Team: RUSSIAN <moiseev@mezonplus.ru>\n"
 "Language: ru_RU\n"
@@ -1306,11 +1306,11 @@ msgstr "Выделить все строки"
 
 #: ../MainWin.java:1602 ../MainWin.java:1611
 msgid "Edit user comment"
-msgstr ""
+msgstr "Редактировать примечание"
 
 #: ../MainWin.java:1612
 msgid "Edit this job's user comment"
-msgstr ""
+msgstr "Редактировать примечание к этому заданию"
 
 #: ../MainWin.java:1616
 msgid "Auto-size status bar"
@@ -2554,7 +2554,7 @@ msgstr "Часовой пояс:"
 
 #: ../options/SingleServerSettingsPanel.java:575
 msgid "Read/unread state + comment"
-msgstr ""
+msgstr " \"Прочитан/не прочитан\" + примечание"
 
 #: ../options/SingleServerSettingsPanel.java:609
 msgid "Configure..."
@@ -3803,12 +3803,12 @@ msgstr "Тема факса (\"O\")"
 #: ../model/RecvFormat.java:145
 #: ../virtualcolumnstore/JDBCVirtColPersister.java:334
 msgid "User comment"
-msgstr ""
+msgstr "Примечание"
 
 #: ../model/jobq/QueueFileFormat.java:120 ../model/JobFormat.java:276
 #: ../model/RecvFormat.java:145
 msgid "Comment added by a YajHFC user"
-msgstr ""
+msgstr "Примечание, добавленное пользователем YajHFC"
 
 #: ../model/JobFormat.java:68
 msgid "Dials: total/max."
@@ -4166,11 +4166,11 @@ msgstr "Время в секундах от начала эпохи UNIX"
 
 #: ../model/RecvFormat.java:141
 msgid "Read"
-msgstr ""
+msgstr "Прочитано"
 
 #: ../model/RecvFormat.java:141
 msgid "Has the fax been read by a YajHFC user?"
-msgstr ""
+msgstr "Был ли факс прочитан пользователем YajHFC?"
 
 #: ../MainWinSearchWin.java:126
 msgid "No matching fax found."
@@ -4631,19 +4631,19 @@ msgstr "Локальный файл"
 
 #: ../virtualcolumnstore/JDBCVirtColPersister.java:103
 msgid "Key (fax filename):"
-msgstr ""
+msgstr "Идентификатор (имя файла факса):"
 
 #: ../virtualcolumnstore/JDBCVirtColPersister.java:104
 msgid "Read/Unread state:"
-msgstr ""
+msgstr "Прочитан/не прочитан:"
 
 #: ../virtualcolumnstore/JDBCVirtColPersister.java:105
 msgid "Comment:"
-msgstr ""
+msgstr "Примечание:"
 
 #: ../virtualcolumnstore/JDBCVirtColPersister.java:106
 msgid "Last modified:"
-msgstr ""
+msgstr "Изменён:"
 
 #: ../virtualcolumnstore/JDBCVirtColPersister.java:334
 #, java-format
@@ -4652,6 +4652,9 @@ msgid ""
 "lost after restart.\n"
 "Please see {0} for more information."
 msgstr ""
+"Не выбрано поле базы даных для сохранения колонки \"Примечание\". После "
+"перезапуска значения будут потеряны.\n"
+"Дополнительная информация в {0}."
 
 #: ../virtualcolumnstore/JDBCVirtColPersister.java:803
 msgid "Database table"
@@ -4660,12 +4663,15 @@ msgstr "База данных"
 #: ../virtualcolumnstore/JDBCVirtColPersister.java:817
 msgid "JDBC settings to save read/unread state and comment"
 msgstr ""
+"Настройки JDBC для сохранения состояния прочитан/не прочитан и примечания"
 
 #: ../virtualcolumnstore/JDBCVirtColPersister.java:818
 msgid ""
 "Please select which database fields correspond to the key, read/unread state "
 "and comment"
 msgstr ""
+"Пожалуйста, выберите поля базы данных, соответствующие идентификатору, "
+"состоянию прочитан/не прочитан и примечанию"
 
 #~ msgid "Read/Unread state of faxes"
 #~ msgstr "Состояние факсов Прочитано/Непрочитано"
