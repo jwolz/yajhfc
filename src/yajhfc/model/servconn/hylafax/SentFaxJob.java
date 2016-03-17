@@ -192,7 +192,10 @@ public class SentFaxJob extends AbstractHylaFaxJob<JobFormat> {
     }
 
     public Job getJob(HylaFAXClient hyfc) throws ServerResponseException, IOException {
-        return hyfc.getJob((Integer)getData(JobFormat.j));
+        Object jobid = getData(JobFormat.j);
+        if (jobid==null)
+            throw new IOException("Cannot get job ID for fax job");
+        return hyfc.getJob((Integer)jobid);
     }
     
     @Override

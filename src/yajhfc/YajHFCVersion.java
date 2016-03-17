@@ -104,6 +104,19 @@ public class YajHFCVersion implements Comparable<YajHFCVersion> {
     }
     
     @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof YajHFCVersion)
+            return compareTo((YajHFCVersion)obj)==0;
+        else
+            return false;
+    }
+    
+    @Override
+    public int hashCode() {
+        return (((((major * 10) + minor) * 10) + revision) * 10 + additionInt) * 10 + additionNumber; 
+    }
+    
+    @Override
     public String toString() {
         //return "" + major + '.' + minor + '.' + revision + additionString + additionNumber;
         return stringVersion;
