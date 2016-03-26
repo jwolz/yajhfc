@@ -85,7 +85,11 @@ public class BOMInputStream extends FilterInputStream {
             bufpos += copyLen;
             
             if (copyLen < len) {
-                return copyLen + in.read(b, off+copyLen, len-copyLen);
+                int readLen = in.read(b, off+copyLen, len-copyLen);
+                if (readLen <= 0)
+                    return copyLen;
+                else
+                    return copyLen+readLen;
             } else {
                 return copyLen;
             }
@@ -107,4 +111,21 @@ public class BOMInputStream extends FilterInputStream {
             }
         }
     }
+    
+    /*
+    public static void main(String[] args) throws Exception {
+        BufferedReader r = new BufferedReader(new InputStreamReader(new BOMInputStream(new FileInputStream(args[0]))));
+        String line;
+        while ((line=r.readLine()) != null) {
+            System.out.println(line);
+        }
+        r.close();
+        
+        r = new BufferedReader(new InputStreamReader(new FileInputStream(args[0])));
+        while ((line=r.readLine()) != null) {
+            System.out.println(line);
+        }
+        r.close();
+    }
+    */
 }
