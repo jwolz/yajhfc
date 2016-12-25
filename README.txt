@@ -1,4 +1,4 @@
-README for YajHFC 0.6.0
+README for YajHFC 0.6.1
 =======================
 
 ABOUT
@@ -29,9 +29,9 @@ Requirements:
 * Optional: A PostScript viewer (e.g. Ghostview), GhostScript
      and tiff2pdf (from libtiff-utils)
 
-To install YajHFC just download the yajhfc-0_6_0.jar file to some folder on your
+To install YajHFC just download the yajhfc-0_6_1.jar file to some folder on your
 file system.
-To execute it, use: "java -jar yajhfc-0_6_0.jar"
+To execute it, use: "java -jar yajhfc-0_6_1.jar"
 (In Windows you usually can just double click the jar file as well.)
 
 LICENSE
@@ -65,6 +65,10 @@ YajHFC was originally written as a first more complicated
 
 CHANGES
 -------
+
+0.6.1:
+- Some minor bug fixes
+- Mac App now works with the Oracle Java packages
 
 0.6.0:
 - Ability to add user defined comments to faxes
