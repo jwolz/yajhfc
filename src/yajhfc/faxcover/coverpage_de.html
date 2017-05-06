@@ -67,10 +67,10 @@
 			@@IfSomeFilled:Place,State,ZIPCode,FromPlace,FromState,FromZIPCode@@
 			<tr>
 				<td colspan="2">
-					<font face="SansSerif">@@Place@@ @@IfSomeFilled:State,ZIPCode@@, @@State@@ @@ZIPCode@@ @@EndIf@@ </font>
+					<font face="SansSerif">@@ZIPCode@@ @@Place@@ @@IfSomeFilled:State@@, @@State@@ @@EndIf@@ </font>
 				</td>
 				<td colspan="2">
-					<font face="SansSerif">@@FromPlace@@ @@IfSomeFilled:FromState,FromZIPCode@@, @@FromState@@ @@FromZIPCode@@ @@EndIf@@ </font>
+					<font face="SansSerif">@@FromZIPCode@@ @@FromPlace@@ @@IfSomeFilled:FromState@@, @@FromState@@ @@EndIf@@ </font>
 				</td>
 			</tr>
 			@@EndIf@@
