@@ -174,6 +174,7 @@ public class JobToQueueMapping {
         put(new DateFormatMapping(JobFormat.z, QueueFileFormat.tts, DateFormat.getDateTimeInstance()));
         put(new JobToQueueMapping(JobFormat._0, QueueFileFormat.usexvres));
         put(new JobToQueueMapping(JobFormat.virt_comment, QueueFileFormat.virt_comment));
+        put(new JobToQueueMapping(JobFormat.virt_resolvedname, QueueFileFormat.virt_resolvedname));
         
         assert (jobToQueueMap.size() == JobFormat.values().length);
         // Sanity check if all Job Formats are mapped

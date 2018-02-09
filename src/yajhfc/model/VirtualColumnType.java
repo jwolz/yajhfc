@@ -46,24 +46,29 @@ public enum VirtualColumnType {
     /**
      * Not a virtual column (i.e. data comes from HylaFAX)
      */
-    NONE(Void.class),
+    NONE(Void.class, false),
     /**
      * Read/unread state
      */
-    READ(Boolean.class),
+    READ(Boolean.class, true),
     /**
      * User comment
      */
-    USER_COMMENT(String.class);
+    USER_COMMENT(String.class, true),
+    /**
+     * Resolved name from phone book
+     */
+    RESOLVED_NAME(String.class, false);
 
     private final Class<?> dataType;
+    private final boolean saveable;
     
     /**
      * Returns if the value of the column should be persisted
      * @return
      */
     public boolean isSaveable() {
-        return (this != NONE);
+        return saveable;
     }
     
     /**
@@ -74,8 +79,9 @@ public enum VirtualColumnType {
         return dataType;
     }
 
-    private VirtualColumnType(Class<?> dataType) {
+    private VirtualColumnType(Class<?> dataType, boolean saveable) {
         this.dataType = dataType;
+        this.saveable = saveable;
     }
     
     
