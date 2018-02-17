@@ -2498,6 +2498,8 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         table.setDefaultRenderer(IconMap.class, new IconMap.TableCellRenderer());
         
         JTableTABAction.replaceTABWithNextRow(table);
+        
+        table.setAutoResizeMode(myopts.adjustColumnWidths ? JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS : JTable.AUTO_RESIZE_OFF);
     }
     
     public FaxListTableModel<JobFormat> getSendingTableModel() {
