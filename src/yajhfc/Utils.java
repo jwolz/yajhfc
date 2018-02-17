@@ -586,11 +586,11 @@ public final class Utils {
         
     public static void unsetWaitCursorOnOpen(final Dialog dlgToSet, final Window target) {
         target.addWindowListener(new WindowAdapter() {
-            //private final long creationTime = System.currentTimeMillis();
+            private final long creationTime = System.currentTimeMillis();
             
             @Override
             public void windowOpened(WindowEvent e) {
-                //System.out.println("Time for showing: " + (System.currentTimeMillis() - creationTime));
+                log.info("Profiling: Time to open " + target.getClass().getName() + ": " + (System.currentTimeMillis() - creationTime) + "ms");
                 unsetWaitCursor(dlgToSet);
                 target.removeWindowListener(this);
             }
@@ -870,6 +870,46 @@ public final class Utils {
         for (char c : chars) {
             if (forbiddenChars.indexOf(c) < 0) {
                 // If not a forbidden char, append to output
+                out.append(c);
+            } else {
+                changed = true;
+            }
+        }
+        
+        if (changed) {
+            return out.toString();
+        } else {
+            return input;
+        }
+    }
+    
+    /**
+     * "Sanitizes" the given input by keeping only characters in allowedChars 
+     * @param input the input string
+     * @param allowedChars chars to keep
+     */
+    public static String stringKeepChars(String input, String allowedChars) {
+        return stringKeepChars(input, allowedChars, 0);
+    }
+    
+    /**
+     * "Sanitizes" the given input by keeping only characters in allowedChars 
+     * @param input the input string
+     * @param allowedChars chars to keep
+     * @param maxLen the maximum allowed length of the output or 0 for unlimited length 
+     */
+    public static String stringKeepChars(String input, String allowedChars, int maxLen) {
+        if (input == null)
+            return null;
+        if (maxLen > 0 && input.length() > maxLen)
+            input = input.substring(0, maxLen);
+        
+        char[] chars = input.toCharArray();
+        StringBuilder out = new StringBuilder(chars.length);
+        boolean changed = false;
+        for (char c : chars) {
+            if (allowedChars.indexOf(c) >= 0) {
+                // If a allowed char, append to output
                 out.append(c);
             } else {
                 changed = true;

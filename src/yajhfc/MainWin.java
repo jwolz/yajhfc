@@ -843,9 +843,11 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 SendReadyState oldState = sendReady;
                 sendReady = SendReadyState.NeedToWait;
                                 
-                //PROFILE: long time = System.currentTimeMillis();
+                //PROFILE: 
+                long time = System.currentTimeMillis();
                 OptionsWin ow = new OptionsWin(myopts, MainWin.this);
-                //PROFILE: System.out.println("After OptionsWin constructor: " + (-time + (time = System.currentTimeMillis())));
+                //PROFILE: 
+                log.info("Profiling: Needed " + (-time + (time = System.currentTimeMillis())) + "ms to create OptionsWin");
                 ow.setModal(true);
                 Utils.unsetWaitCursorOnOpen(null, ow);
                 ow.setVisible(true);

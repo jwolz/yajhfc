@@ -36,8 +36,6 @@
  */
 package yajhfc.phonebook.namelookup;
 
-import java.util.regex.Pattern;
-
 import yajhfc.FaxOptions;
 import yajhfc.Utils;
 
@@ -50,8 +48,6 @@ import yajhfc.Utils;
  *
  */
 public class PhoneNumberCanonicalizer {
-
-    protected static final Pattern notNumberPlusPattern = Pattern.compile("[^0-9+*#]");
     
     /**
      * Convert a number to international format
@@ -63,7 +59,7 @@ public class PhoneNumberCanonicalizer {
             return null;
         
         // Strip everything but 0-9 or + from the String 
-        String cleanNumber = notNumberPlusPattern.matcher(number).replaceAll("");
+        String cleanNumber = Utils.stringKeepChars(number, "0123456789++#");
         
         if (cleanNumber.startsWith("+") || cleanNumber.startsWith("*") || cleanNumber.startsWith("#"))
             return cleanNumber; // Assume already in intl. Format or "special number"
