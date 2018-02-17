@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-27 10:19+0100\n"
+"POT-Creation-Date: 2018-02-17 14:01+0100\n"
 "PO-Revision-Date: 2010-11-06 09:17+0100\n"
 "Last-Translator: Jonas Wolz <jonas.wolz@freenet.de>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,8 +18,8 @@ msgstr ""
 "X-Poedit-Language: Chinese\n"
 "X-Poedit-Country: TAIWAN\n"
 
-#: ../FaxOptions.java:668 ../FaxOptions.java:676 ../FaxOptions.java:684
-#: ../FaxOptions.java:696 ../options/ServerSettingsPanel.java:163
+#: ../FaxOptions.java:690 ../FaxOptions.java:698 ../FaxOptions.java:706
+#: ../FaxOptions.java:718 ../options/ServerSettingsPanel.java:163
 #: ../options/CoverPanel.java:237
 msgid "Default"
 msgstr "預設"
@@ -53,8 +53,7 @@ msgstr "$LANGUAGE$ 譯自 {0}"
 #: ../AboutDialog.java:261 ../report/SendReportDialog.java:166
 #: ../filters/ui/CustomFilterDialog.java:104 ../options/OptionsWin.java:195
 #: ../phonebook/ldap/ConnectionDialog.java:174
-#: ../phonebook/csv/CSVDialog.java:151
-#: ../phonebook/ui/SortOrderDialog.java:108
+#: ../phonebook/csv/CSVDialog.java:151 ../phonebook/ui/SortOrderDialog.java:108
 #: ../phonebook/ui/RuleParserDialog.java:126
 #: ../phonebook/jdbc/ConnectionDialog.java:215
 #: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:118
@@ -65,7 +64,7 @@ msgstr "$LANGUAGE$ 譯自 {0}"
 msgid "OK"
 msgstr "確定"
 
-#: ../AboutDialog.java:305 ../MainWin.java:951
+#: ../AboutDialog.java:305 ../MainWin.java:953
 msgid "About"
 msgstr "關於"
 
@@ -82,7 +81,7 @@ msgstr "系統資訊"
 msgid "About {0}"
 msgstr "關於 {0}"
 
-#: ../AboutDialog.java:322 ../MainWin.java:979
+#: ../AboutDialog.java:322 ../MainWin.java:987
 msgid "Documentation"
 msgstr "文件"
 
@@ -114,7 +113,7 @@ msgstr "版本"
 msgid "Release date"
 msgstr "發布日期"
 
-#: ../UpdateChecker.java:99 ../MainWin.java:512
+#: ../UpdateChecker.java:99 ../MainWin.java:514
 msgid "Go to website"
 msgstr "進入網站"
 
@@ -127,14 +126,14 @@ msgid "Do not remind me again"
 msgstr "不要提醒我"
 
 #: ../UpdateChecker.java:115 ../logconsole/LogConsole.java:149
-#: ../MainWin.java:524 ../filters/ui/SearchWin.java:184
+#: ../MainWin.java:526 ../filters/ui/SearchWin.java:184
 #: ../phonebook/ui/NewPhoneBookWin.java:1152
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:353
 #: ../TextViewPanel.java:135
 msgid "Close"
 msgstr "關閉"
 
-#: ../UpdateChecker.java:119 ../UpdateChecker.java:246 ../MainWin.java:1374
+#: ../UpdateChecker.java:119 ../UpdateChecker.java:246 ../MainWin.java:1382
 msgid "Check for update"
 msgstr "檢查更新"
 
@@ -264,7 +263,7 @@ msgid "Print phone books"
 msgstr "列印通訊錄"
 
 #: ../print/PhonebooksPrinter.java:108 ../print/FaxTablePrinter.java:105
-#: ../MainWin.java:1211
+#: ../MainWin.java:1219
 msgid "Print"
 msgstr "列印"
 
@@ -306,7 +305,7 @@ msgstr "列印 {0}"
 msgid "Use a bold font for unread faxes"
 msgstr "未讀傳真使用粗體顯示"
 
-#: ../print/FaxTablePrinter.java:134 ../MainWin.java:1299
+#: ../print/FaxTablePrinter.java:134 ../MainWin.java:1307
 msgid "Mark failed jobs"
 msgstr "標示失敗的作業"
 
@@ -505,7 +504,7 @@ msgstr "此傳真工作無記錄檔"
 msgid "Error retrieving the log:"
 msgstr "檢索記錄檔錯誤"
 
-#: ../LogViewWorker.java:118 ../MainWin.java:1476
+#: ../LogViewWorker.java:118 ../MainWin.java:1484
 msgid "View log"
 msgstr "瀏覽記錄檔"
 
@@ -513,7 +512,7 @@ msgstr "瀏覽記錄檔"
 msgid "YajHFC log console"
 msgstr "YajHFC記錄控制台"
 
-#: ../logconsole/LogConsole.java:115 ../MainWin.java:1258 ../MainWin.java:2353
+#: ../logconsole/LogConsole.java:115 ../MainWin.java:1266 ../MainWin.java:2363
 #: ../util/ExceptionDialog.java:106 ../util/ClipboardPopup.java:74
 #: ../TextViewPanel.java:210
 msgid "Copy"
@@ -566,7 +565,7 @@ msgstr "{0}-檔案"
 msgid "Export to XML"
 msgstr ""
 
-#: ../export/ExportAction.java:163 ../MainWin.java:3366
+#: ../export/ExportAction.java:163 ../MainWin.java:3383
 #: ../send/SimplifiedSendDialog.java:359
 msgid "Server"
 msgstr "伺服器"
@@ -698,132 +697,132 @@ msgstr "無法找到 PrintService 轉換檔案格式 {0} to Postscript!"
 msgid "An error occured while converting the document to PostScript."
 msgstr "文件轉換PostScript,發生錯誤"
 
-#: ../MainWin.java:283
+#: ../MainWin.java:285
 #, java-format
 msgid "Deleting fax {0}"
 msgstr "刪除傳真 {0}"
 
-#: ../MainWin.java:294
+#: ../MainWin.java:296
 msgid "Error deleting a fax:\n"
 msgstr "删除傳真:\n"
 
-#: ../MainWin.java:296
+#: ../MainWin.java:298
 #, java-format
 msgid "Error deleting the fax \"{0}\":\n"
 msgstr "删除傳真錯誤 \"{0}\":\n"
 
-#: ../MainWin.java:306
+#: ../MainWin.java:308
 msgid "Error deleting faxes:"
 msgstr "刪除傳真錯誤:"
 
-#: ../MainWin.java:340 ../MainWin.java:704
+#: ../MainWin.java:342 ../MainWin.java:706
 #, java-format
 msgid "Saving fax {0}"
 msgstr "儲存傳真 {0}"
 
-#: ../MainWin.java:348 ../MainWin.java:468
+#: ../MainWin.java:350 ../MainWin.java:470
 #, java-format
 msgid "No accessible document files are available for the fax \"{0}\"."
 msgstr "傳真無權限 \"{0}\""
 
-#: ../MainWin.java:351 ../MainWin.java:471
+#: ../MainWin.java:353 ../MainWin.java:473
 msgid "The following files were inaccessible:"
 msgstr "下面的文件是不可訪問："
 
-#: ../MainWin.java:357
+#: ../MainWin.java:359
 msgid "Save fax"
 msgstr "儲存傳真"
 
-#: ../MainWin.java:373
+#: ../MainWin.java:375
 #, java-format
 msgid "Save {0} to"
 msgstr "儲存{0}到.."
 
-#: ../MainWin.java:386 ../MainWin.java:488 ../MainWin.java:713
+#: ../MainWin.java:388 ../MainWin.java:490 ../MainWin.java:715
 #, java-format
 msgid ""
 "While downloading the file {0} (job {1}), the server gave back an error code:"
 msgstr "下載檔案 {0} (job {1}), 伺服器回覆錯誤::"
 
-#: ../MainWin.java:388 ../MainWin.java:490 ../MainWin.java:715
+#: ../MainWin.java:390 ../MainWin.java:492 ../MainWin.java:717
 #, java-format
 msgid ""
 "The file {0} (job {1}) could not be opened for reading (probably you lack "
 "the necessary access permissions):"
 msgstr "檔案{0} (job {1}) 不能開啟 (也許需要權限)"
 
-#: ../MainWin.java:391 ../MainWin.java:717
+#: ../MainWin.java:393 ../MainWin.java:719
 #, java-format
 msgid "An error occured saving the file {0} (job {1}):"
 msgstr "存檔發生錯誤 {0} (job {1}):"
 
-#: ../MainWin.java:399 ../MainWin.java:747
+#: ../MainWin.java:401 ../MainWin.java:749
 msgid "An error occured saving the fax:"
 msgstr "發生錯誤儲存傳真："
 
-#: ../MainWin.java:408 ../MainWin.java:757
+#: ../MainWin.java:410 ../MainWin.java:759
 msgid "Error saving faxes:"
 msgstr "儲存傳真錯誤:"
 
-#: ../MainWin.java:425 ../MainWin.java:778
+#: ../MainWin.java:427 ../MainWin.java:780
 #, java-format
 msgid "{0} files saved to directory {1}."
 msgstr "{0} 檔案儲存到目錄 {1}."
 
-#: ../MainWin.java:425 ../MainWin.java:778
+#: ../MainWin.java:427 ../MainWin.java:780
 msgid "Faxes saved"
 msgstr "傳真已儲存"
 
-#: ../MainWin.java:454
+#: ../MainWin.java:456
 #, java-format
 msgid "Displaying fax {0}"
 msgstr "顯示傳真中{0}"
 
-#: ../MainWin.java:455
+#: ../MainWin.java:457
 #, java-format
 msgid "Downloading {0}"
 msgstr "下載中{0}"
 
-#: ../MainWin.java:477 ../MainWin.java:527
+#: ../MainWin.java:479 ../MainWin.java:529
 msgid "Display fax"
 msgstr "顯示傳真"
 
-#: ../MainWin.java:492
+#: ../MainWin.java:494
 #, java-format
 msgid "An error occured displaying the file {0} (job {1}):\n"
 msgstr "顯示檔案錯誤 {0} (job {1}):\n"
 
-#: ../MainWin.java:496 ../send/SendController.java:276
+#: ../MainWin.java:498 ../send/SendController.java:276
 msgid "Launching viewer"
 msgstr "瀏覽"
 
-#: ../MainWin.java:507
+#: ../MainWin.java:509
 msgid ""
 "It seems the TIFF files of your HylaFAX installation are incompatible with "
 "iText (often the case with capi4hylafax)."
 msgstr "可能是HylaFAX TIFF檔"
 
-#: ../MainWin.java:508
+#: ../MainWin.java:510
 msgid ""
 "Please see the following page for more details and how to work around this "
 "problem:"
 msgstr "詳細操作,請參考下面頁面"
 
-#: ../MainWin.java:532
+#: ../MainWin.java:534
 #, java-format
 msgid "An error occured displaying the fax \"{0}\":"
 msgstr "顯示傳真錯誤 \"{0}\":"
 
-#: ../MainWin.java:540
+#: ../MainWin.java:542
 msgid "Error displaying faxes:"
 msgstr "顯示傳真錯誤:"
 
-#: ../MainWin.java:584 ../EditJobWorker.java:103
+#: ../MainWin.java:586 ../EditJobWorker.java:103
 #, java-format
 msgid "Suspending job {0}"
 msgstr "暫停job {0}"
 
-#: ../MainWin.java:591
+#: ../MainWin.java:593
 #, java-format
 msgid ""
 "Suspending the currently running job {0} may block until it is done (or "
@@ -832,29 +831,29 @@ msgstr ""
 "暫停目前進行工作 job {0} 可能被阻止直到完成 (or switch to another \"non "
 "running state\"). 不管如何暫停它?"
 
-#: ../MainWin.java:592
+#: ../MainWin.java:594
 msgid "Suspend fax job"
 msgstr "暫停傳真任務"
 
-#: ../MainWin.java:603
+#: ../MainWin.java:605
 msgid "Error suspending a fax job:\n"
 msgstr "暫停傳真作錯誤:\n"
 
-#: ../MainWin.java:605
+#: ../MainWin.java:607
 #, java-format
 msgid "Error suspending the fax job \"{0}\":\n"
 msgstr "暫停傳真作錯誤 \"{0}\":\n"
 
-#: ../MainWin.java:613
+#: ../MainWin.java:615
 msgid "Error suspending faxes:"
 msgstr "取消傳真錯誤:"
 
-#: ../MainWin.java:641 ../EditJobWorker.java:104
+#: ../MainWin.java:643 ../EditJobWorker.java:104
 #, java-format
 msgid "Resuming job {0}"
 msgstr "恢復任務 {0}"
 
-#: ../MainWin.java:648
+#: ../MainWin.java:650
 #, java-format
 msgid ""
 "Job {0} is not in state \"Suspended\" so resuming it probably will not work. "
@@ -862,29 +861,29 @@ msgid ""
 msgstr ""
 "Job {0} is not in state \"Suspended\"所以恢復它可能不會工作。嘗試恢復它呢？"
 
-#: ../MainWin.java:649
+#: ../MainWin.java:651
 msgid "Resume fax job"
 msgstr "恢復任務中 {0}"
 
-#: ../MainWin.java:660
+#: ../MainWin.java:662
 msgid "Error resuming a fax job:\n"
 msgstr "恢復傳真錯誤工作:\n"
 
-#: ../MainWin.java:662
+#: ../MainWin.java:664
 #, java-format
 msgid "Error resuming the fax job \"{0}\":\n"
 msgstr "恢復傳真錯誤工作 \"{0}\":\n"
 
-#: ../MainWin.java:670
+#: ../MainWin.java:672
 msgid "Error resuming faxes:"
 msgstr "重送傳真錯誤:"
 
-#: ../MainWin.java:734
+#: ../MainWin.java:736
 #, java-format
 msgid "File name to save fax {0}"
 msgstr "儲存傳真檔名 {0}"
 
-#: ../MainWin.java:801
+#: ../MainWin.java:803
 #, java-format
 msgid ""
 "Save to {0} needs GhostScript and tiff2pdf.\n"
@@ -894,7 +893,7 @@ msgstr ""
 "儲存 {0} 需要 GhostScript and tiff2pdf.\n"
 "請在選項設定這些檔案所在位置"
 
-#: ../MainWin.java:801 ../filters/ui/CustomFilterDialog.java:237
+#: ../MainWin.java:803 ../filters/ui/CustomFilterDialog.java:237
 #: ../filters/ui/CustomFilterDialog.java:241 ../options/IdentityPanel.java:214
 #: ../options/IdentityPanel.java:220 ../options/PathAndViewPanel.java:327
 #: ../options/PathAndViewPanel.java:333 ../options/PathAndViewPanel.java:339
@@ -923,297 +922,297 @@ msgstr ""
 msgid "Error"
 msgstr "錯誤"
 
-#: ../MainWin.java:807 ../MainWin.java:1023
+#: ../MainWin.java:809 ../MainWin.java:1031
 msgid "Select a directory to save the faxes in"
 msgstr "選擇一個目錄儲存傳真"
 
-#: ../MainWin.java:808 ../MainWin.java:1024
+#: ../MainWin.java:810 ../MainWin.java:1032
 #: ../phonebook/ui/NewPhoneBookWin.java:1344
 msgid "Select"
 msgstr "選擇"
 
-#: ../MainWin.java:815 ../MainWin.java:820 ../MainWin.java:1031
-#: ../MainWin.java:1036
+#: ../MainWin.java:817 ../MainWin.java:822 ../MainWin.java:1039
+#: ../MainWin.java:1044
 msgid "Saving faxes"
 msgstr "儲存傳真中"
 
-#: ../MainWin.java:828
+#: ../MainWin.java:830
 #, java-format
 msgid "Save fax as {0}..."
 msgstr "儲存傳真為{0}..."
 
-#: ../MainWin.java:829
+#: ../MainWin.java:831
 #, java-format
 msgid "Saves the selected fax(es) as single {0} file"
 msgstr "儲存所選傳真{0}至1個檔"
 
-#: ../MainWin.java:859 ../options/OptionsWin.java:120
+#: ../MainWin.java:861 ../options/OptionsWin.java:120
 #: ../options/CommonPanel.java:371
 msgid "Options"
 msgstr "選項"
 
-#: ../MainWin.java:860
+#: ../MainWin.java:862
 msgid "Shows the Options dialog"
 msgstr "顯示選項對話框"
 
-#: ../MainWin.java:876 ../send/SendWin.java:548
+#: ../MainWin.java:878 ../send/SendWin.java:548
 #: ../send/SimplifiedSendDialog.java:270
 msgid "Send"
 msgstr "發送"
 
-#: ../MainWin.java:877
+#: ../MainWin.java:879
 msgid "Shows the send fax dialog"
 msgstr "顯示傳送視窗"
 
-#: ../MainWin.java:889 ../send/SendWin.java:545
+#: ../MainWin.java:891 ../send/SendWin.java:545
 msgid "Poll"
 msgstr "poll"
 
-#: ../MainWin.java:890
+#: ../MainWin.java:892
 msgid "Shows the poll fax dialog"
 msgstr "顯示Poll視窗"
 
-#: ../MainWin.java:901
+#: ../MainWin.java:903
 msgid "Do you really want to cancel the selected fax jobs?"
 msgstr "是否要取消所選傳真工作?"
 
-#: ../MainWin.java:903
+#: ../MainWin.java:905
 msgid "Do you really want to delete the selected faxes?"
 msgstr "是否要刪除所選傳真工作?"
 
-#: ../MainWin.java:905
+#: ../MainWin.java:907
 msgid "Delete faxes"
 msgstr "删除傳真"
 
-#: ../MainWin.java:907
+#: ../MainWin.java:909
 msgid "Deleting faxes"
 msgstr "删除傳真中"
 
-#: ../MainWin.java:912 ../phonebook/ui/NewPhoneBookWin.java:928
+#: ../MainWin.java:914 ../phonebook/ui/NewPhoneBookWin.java:928
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:208
 #: ../util/ClipboardPopup.java:78
 msgid "Delete"
 msgstr "删除"
 
-#: ../MainWin.java:913
+#: ../MainWin.java:915
 msgid "Deletes the selected fax"
 msgstr "删除所選傳真"
 
-#: ../MainWin.java:922
+#: ../MainWin.java:924
 msgid "Viewing faxes"
 msgstr "檢視傳真"
 
-#: ../MainWin.java:925
+#: ../MainWin.java:927
 msgid "Show"
 msgstr "顯示"
 
-#: ../MainWin.java:926
+#: ../MainWin.java:928
 msgid "Displays the selected fax"
 msgstr "顯示所選傳真"
 
-#: ../MainWin.java:936
+#: ../MainWin.java:938
 msgid "Exit"
 msgstr "離開"
 
-#: ../MainWin.java:937
+#: ../MainWin.java:939
 msgid "Exits the application"
 msgstr "退出程式"
 
-#: ../MainWin.java:952
+#: ../MainWin.java:954
 msgid "Shows the about dialog"
 msgstr "顯示關於對話框"
 
-#: ../MainWin.java:965 ../phonebook/ui/NewPhoneBookWin.java:795
+#: ../MainWin.java:973 ../phonebook/ui/NewPhoneBookWin.java:795
 #: ../phonebook/ui/NewPhoneBookWin.java:1241
 msgid "Phone book"
 msgstr "通訊錄"
 
-#: ../MainWin.java:966
+#: ../MainWin.java:974
 msgid "Display/edit the phone book"
 msgstr "瀏覽/編輯通訊錄"
 
-#: ../MainWin.java:980
+#: ../MainWin.java:988
 msgid "Shows the README files"
 msgstr "顯示 README文件"
 
-#: ../MainWin.java:1008
+#: ../MainWin.java:1016
 msgid "Marked as read"
 msgstr "標記為已讀"
 
-#: ../MainWin.java:1009
+#: ../MainWin.java:1017
 msgid "Marks the selected fax as read/unread"
 msgstr "標示所選傳真為已讀/未讀"
 
-#: ../MainWin.java:1040
+#: ../MainWin.java:1048
 msgid "Save fax..."
 msgstr "儲存傳真 ..."
 
-#: ../MainWin.java:1041
+#: ../MainWin.java:1049
 msgid "Saves the selected fax on disk"
 msgstr "儲存所選傳真到硬碟"
 
-#: ../MainWin.java:1057
+#: ../MainWin.java:1065
 msgid "Couldn't get a filename for the fax:"
 msgstr "傳真無法取得檔案名稱"
 
-#: ../MainWin.java:1070
+#: ../MainWin.java:1078
 msgid "Forward fax..."
 msgstr "轉發傳真.."
 
-#: ../MainWin.java:1071
+#: ../MainWin.java:1079
 msgid "Forwards the fax"
 msgstr "轉發傳真"
 
-#: ../MainWin.java:1091
+#: ../MainWin.java:1099
 msgid "Admin mode"
 msgstr "管理模式"
 
-#: ../MainWin.java:1092
+#: ../MainWin.java:1100
 msgid "Connect to the server in admin mode (e.g. to delete faxes)"
 msgstr "管理模式連線(例:刪除傳真)"
 
-#: ../MainWin.java:1104
+#: ../MainWin.java:1112
 msgid "Refresh"
 msgstr "重新整理"
 
-#: ../MainWin.java:1105
+#: ../MainWin.java:1113
 msgid "Refresh tables and server status"
 msgstr "更新狀態"
 
-#: ../MainWin.java:1129
+#: ../MainWin.java:1137
 #, java-format
 msgid "Getting information for job {0}..."
 msgstr "取得工作{0}資訊"
 
-#: ../MainWin.java:1158 ../NoGUISender.java:151
+#: ../MainWin.java:1166 ../NoGUISender.java:151
 msgid "Opening send dialog..."
 msgstr "開啟傳送對話框"
 
-#: ../MainWin.java:1162
+#: ../MainWin.java:1170
 msgid "Could not get all of the job information necessary to resend the fax:"
 msgstr "無法獲取所有工作必需的信息重新發送傳真："
 
-#: ../MainWin.java:1168
+#: ../MainWin.java:1176
 msgid "Error resending faxes:"
 msgstr "重送傳真錯誤:"
 
-#: ../MainWin.java:1197
+#: ../MainWin.java:1205
 msgid "Resending fax..."
 msgstr "重送傳真..."
 
-#: ../MainWin.java:1200
+#: ../MainWin.java:1208
 msgid "Resend fax..."
 msgstr "傳真重送"
 
-#: ../MainWin.java:1201
+#: ../MainWin.java:1209
 msgid "Resend the fax"
 msgstr "重送傳真"
 
-#: ../MainWin.java:1212
+#: ../MainWin.java:1220
 msgid "Prints the currently displayed table"
 msgstr "列印目前顯示的表"
 
-#: ../MainWin.java:1220
+#: ../MainWin.java:1228
 msgid "Suspending jobs"
 msgstr "暫停工作中"
 
-#: ../MainWin.java:1223
+#: ../MainWin.java:1231
 msgid "Suspend"
 msgstr "暫不實行"
 
-#: ../MainWin.java:1224
+#: ../MainWin.java:1232
 msgid "Suspends the transfer of the selected fax"
 msgstr "暫停轉換所選傳真"
 
-#: ../MainWin.java:1232
+#: ../MainWin.java:1240
 msgid "Modifying job parameters"
 msgstr "修改工作參數"
 
-#: ../MainWin.java:1235 ../EditJobWorker.java:114
+#: ../MainWin.java:1243 ../EditJobWorker.java:114
 msgid "Modify job parameters"
 msgstr "修改工作參數"
 
-#: ../MainWin.java:1236
+#: ../MainWin.java:1244
 msgid "Allows to modify some job parameters"
 msgstr "允許修改工作參數"
 
-#: ../MainWin.java:1244
+#: ../MainWin.java:1252
 msgid "Resuming jobs"
 msgstr "恢復工作"
 
-#: ../MainWin.java:1247
+#: ../MainWin.java:1255
 msgid "Resume"
 msgstr "恢復"
 
-#: ../MainWin.java:1248
+#: ../MainWin.java:1256
 msgid "Resumes the transfer of the selected fax"
 msgstr "恢復轉換所選傳真"
 
-#: ../MainWin.java:1259
+#: ../MainWin.java:1267
 msgid "Copies the selected table items to the clipboard"
 msgstr "複製所選清單到剪貼簿"
 
-#: ../MainWin.java:1279 ../MainWin.java:1280
+#: ../MainWin.java:1287 ../MainWin.java:1288
 msgid "Show row numbers"
 msgstr "顯示行號"
 
-#: ../MainWin.java:1323
+#: ../MainWin.java:1331
 msgid "Adjust column widths"
 msgstr "調整列寬"
 
-#: ../MainWin.java:1324
+#: ../MainWin.java:1332
 msgid "Adjust column widths to fit the window size"
 msgstr "調整列寬度以適合視窗大小"
 
-#: ../MainWin.java:1340
+#: ../MainWin.java:1348
 msgid "Connect or disconnect to the HylaFAX server"
 msgstr " HylaFAX 連線or斷線"
 
-#: ../MainWin.java:1350 ../util/ToolbarEditorDialog.java:133
+#: ../MainWin.java:1358 ../util/ToolbarEditorDialog.java:133
 msgid "Customize toolbar"
 msgstr "自定義工具欄"
 
-#: ../MainWin.java:1351
+#: ../MainWin.java:1359
 msgid "Customize the toolbar"
 msgstr "自定義工具欄"
 
-#: ../MainWin.java:1364 ../phonebook/ui/NewPhoneBookWin.java:1165
+#: ../MainWin.java:1372 ../phonebook/ui/NewPhoneBookWin.java:1165
 #: ../util/AcceleratorKeyDialog.java:93 ../util/AcceleratorKeyDialog.java:99
 msgid "Edit keyboard shortcuts"
 msgstr "編輯鍵盤捷徑"
 
-#: ../MainWin.java:1365 ../phonebook/ui/NewPhoneBookWin.java:1166
+#: ../MainWin.java:1373 ../phonebook/ui/NewPhoneBookWin.java:1166
 msgid "Customize the keyboard shortcuts"
 msgstr "自訂鍵盤捷徑"
 
-#: ../MainWin.java:1375
+#: ../MainWin.java:1383
 msgid "Checks if there is a newer version of YajHFC available"
 msgstr "檢查是否有更新的版本可用的YajHFC"
 
-#: ../MainWin.java:1383
+#: ../MainWin.java:1391
 msgid ""
 "Answering a phone call requires a direct connection to the HylaFAX server "
 "which is not available."
 msgstr "回應語音電話需要直接連線HylaFAx server不可使用"
 
-#: ../MainWin.java:1383 ../MainWin.java:1396 ../MainWin.java:1401
-#: ../MainWin.java:1418 ../MainWin.java:1422
+#: ../MainWin.java:1391 ../MainWin.java:1404 ../MainWin.java:1409
+#: ../MainWin.java:1426 ../MainWin.java:1430
 msgid "Answer call"
 msgstr "回答來電"
 
-#: ../MainWin.java:1396
+#: ../MainWin.java:1404
 msgid "No valid modem found."
 msgstr "沒有找到正確的數據機"
 
-#: ../MainWin.java:1401
+#: ../MainWin.java:1409
 msgid "Please select which modem shall answer a phone call:"
 msgstr "請選擇要用那台數據機回答來電"
 
-#: ../MainWin.java:1413
+#: ../MainWin.java:1421
 msgid "Error answering the phone call:"
 msgstr "回答來電錯誤:"
 
-#: ../MainWin.java:1418
+#: ../MainWin.java:1426
 msgid ""
 "Answering a phone call requires administrative privileges.\n"
 "Please enable admin mode first."
@@ -1221,181 +1220,181 @@ msgstr ""
 "回答來電,需要管理者權限\n"
 "請使用管理模式"
 
-#: ../MainWin.java:1423
+#: ../MainWin.java:1431
 msgid "Manually answer a phone call with a modem"
 msgstr "手動回答來電"
 
-#: ../MainWin.java:1437 ../MainWinSearchWin.java:126
+#: ../MainWin.java:1445 ../MainWinSearchWin.java:126
 #: ../MainWinSearchWin.java:146
 msgid "Search fax"
 msgstr "尋找傳真"
 
-#: ../MainWin.java:1438
+#: ../MainWin.java:1446
 msgid "Searches for a fax"
 msgstr "尋找傳真"
 
-#: ../MainWin.java:1472
+#: ../MainWin.java:1480
 msgid "Viewing logs"
 msgstr "瀏覽記錄檔"
 
-#: ../MainWin.java:1477
+#: ../MainWin.java:1485
 msgid "Displays the communication log of the selected fax"
 msgstr "顯示所選傳真的通訊記錄"
 
-#: ../MainWin.java:1500
+#: ../MainWin.java:1508
 msgid "Log console"
 msgstr "記錄控制台"
 
-#: ../MainWin.java:1501
+#: ../MainWin.java:1509
 msgid "Displays the YajHFC log in real time"
 msgstr "即時顯示YajHFC記錄"
 
-#: ../MainWin.java:1519
+#: ../MainWin.java:1527
 msgid "Show Toolbar"
 msgstr "顯示工具列"
 
-#: ../MainWin.java:1520
+#: ../MainWin.java:1528
 msgid "Shows or hides the toolbar."
 msgstr "顯示/隱藏工具列"
 
-#: ../MainWin.java:1539
+#: ../MainWin.java:1547
 msgid "Show Quick Search bar"
 msgstr "顯示快搜列"
 
-#: ../MainWin.java:1540
+#: ../MainWin.java:1548
 msgid "Show or hides the Quick Search toolbar."
 msgstr "顯示/隱藏快搜列"
 
-#: ../MainWin.java:1555
+#: ../MainWin.java:1563
 msgid "Shows/Changes the current server."
 msgstr "顯示/更改目前伺服器"
 
-#: ../MainWin.java:1565 ../util/ClipboardPopup.java:80
+#: ../MainWin.java:1573 ../util/ClipboardPopup.java:80
 msgid "Select All"
 msgstr "全部選取"
 
-#: ../MainWin.java:1566
+#: ../MainWin.java:1574
 msgid "Selects all rows"
 msgstr "選擇所有列"
 
-#: ../MainWin.java:1602 ../MainWin.java:1611
+#: ../MainWin.java:1610 ../MainWin.java:1619
 msgid "Edit user comment"
 msgstr ""
 
-#: ../MainWin.java:1612
+#: ../MainWin.java:1620
 msgid "Edit this job's user comment"
 msgstr ""
 
-#: ../MainWin.java:1616
+#: ../MainWin.java:1624
 msgid "Auto-size status bar"
 msgstr "狀態列自動大小"
 
-#: ../MainWin.java:1617
+#: ../MainWin.java:1625
 msgid "Automatically resize the status bar"
 msgstr "自動變更狀態列大小"
 
-#: ../MainWin.java:1699
+#: ../MainWin.java:1707
 msgid "Connect"
 msgstr "連接"
 
-#: ../MainWin.java:1699
+#: ../MainWin.java:1707
 msgid "Disconnect"
 msgstr "斷線"
 
-#: ../MainWin.java:1706 ../MainWin.java:2519
+#: ../MainWin.java:1714 ../MainWin.java:2535
 msgid "Fax"
 msgstr "傳真"
 
-#: ../MainWin.java:1733 ../MainWin.java:2984
+#: ../MainWin.java:1741 ../MainWin.java:3000
 msgid "Fetching fax list..."
 msgstr "擷取傳真清單..."
 
-#: ../MainWin.java:1878 ../phonebook/ui/NewPhoneBookWin.java:828
+#: ../MainWin.java:1886 ../phonebook/ui/NewPhoneBookWin.java:828
 msgid "View"
 msgstr "檢視"
 
-#: ../MainWin.java:2084
+#: ../MainWin.java:2094
 msgid "Logging out..."
 msgstr "登出..."
 
-#: ../MainWin.java:2135
+#: ../MainWin.java:2145
 #: ../model/servconn/hylafax/HylaFaxListConnection.java:212
 msgid "Disconnected."
 msgstr "已離線"
 
-#: ../MainWin.java:2186 ../options/ModemsPanel.java:109
+#: ../MainWin.java:2196 ../options/ModemsPanel.java:109
 #: ../options/SingleServerSettingsPanel.java:115
 msgid "Logging in..."
 msgstr "登入中.."
 
-#: ../MainWin.java:2263
+#: ../MainWin.java:2273
 msgid "Help"
 msgstr "幫助"
 
-#: ../MainWin.java:2278 ../options/OptionsWin.java:252
+#: ../MainWin.java:2288 ../options/OptionsWin.java:254
 msgid "Received"
 msgstr "已接收"
 
-#: ../MainWin.java:2278
+#: ../MainWin.java:2288
 msgid "Received faxes"
 msgstr "接收的傳真"
 
-#: ../MainWin.java:2279 ../options/OptionsWin.java:253
+#: ../MainWin.java:2289 ../options/OptionsWin.java:255
 msgid "Sent"
 msgstr "已傳送"
 
-#: ../MainWin.java:2279
+#: ../MainWin.java:2289
 msgid "Sent faxes"
 msgstr "已送傳真"
 
-#: ../MainWin.java:2280 ../options/OptionsWin.java:254
+#: ../MainWin.java:2290 ../options/OptionsWin.java:256
 msgid "Transmitting"
 msgstr "傳送中"
 
-#: ../MainWin.java:2280
+#: ../MainWin.java:2290
 msgid "Faxes in the output queue"
 msgstr "傳真輸出列"
 
-#: ../MainWin.java:2293 ../options/OptionsWin.java:255
+#: ../MainWin.java:2303 ../options/OptionsWin.java:257
 msgid "Archive"
 msgstr "檔案"
 
-#: ../MainWin.java:2548
+#: ../MainWin.java:2564
 msgid "Table"
 msgstr "清單"
 
-#: ../MainWin.java:2562
+#: ../MainWin.java:2578
 msgid "Extras"
 msgstr "設定"
 
-#: ../MainWin.java:2623
+#: ../MainWin.java:2639
 msgid "All faxes"
 msgstr "所有傳真"
 
-#: ../MainWin.java:2628
+#: ../MainWin.java:2644
 msgid "Only own faxes"
 msgstr "只有自己的傳真"
 
-#: ../MainWin.java:2632
+#: ../MainWin.java:2648
 msgid "Custom filter..."
 msgstr "自定義篩選..."
 
-#: ../MainWin.java:2663
+#: ../MainWin.java:2679
 #, java-format
 msgid "Custom filter for table {0}"
 msgstr "自定義篩選表{0}"
 
-#: ../MainWin.java:2664
+#: ../MainWin.java:2680
 msgid "Only display fax jobs fulfilling:"
 msgstr "只顯示完成傳真作業："
 
-#: ../MainWin.java:2665
+#: ../MainWin.java:2681
 msgid ""
 "You have entered no filtering conditions. Do you want to show all faxes "
 "instead?"
 msgstr "你有沒有輸入篩選條件。你想顯示所有傳真呢？"
 
-#: ../MainWin.java:2666
+#: ../MainWin.java:2682
 msgid ""
 "Please enter a valid date/time!\n"
 "(Hint: Exactly the same format as in the fax job table is expected)"
@@ -1403,26 +1402,26 @@ msgstr ""
 "請輸入正確的日期/時間！\n"
 "(提示：相同的格式如表傳真作業)"
 
-#: ../MainWin.java:3005 ../HylaClientManager.java:242
+#: ../MainWin.java:3021 ../HylaClientManager.java:242
 msgid "An error occured connecting to the server:"
 msgstr "連接到伺服器發生錯誤："
 
-#: ../MainWin.java:3167
+#: ../MainWin.java:3184
 #, java-format
 msgid "Disconnected, will try to reconnect in {0} seconds..."
 msgstr "連不到,將在{0}秒後重試"
 
-#: ../MainWin.java:3174
+#: ../MainWin.java:3191
 msgid "Trying to reconnect..."
 msgstr "重試連線..."
 
-#: ../MainWin.java:3242
+#: ../MainWin.java:3259
 msgid ""
 "Type here parts of the sender, recipient or file name in order to search for "
 "a fax."
 msgstr "在這裡輸入部分的寄件人，收件人或文件名，以尋找一個傳真。"
 
-#: ../MainWin.java:3243
+#: ../MainWin.java:3260
 msgid "Reset quick search and show all faxes."
 msgstr "重置快速尋找,並顯示所有傳真"
 
@@ -1638,56 +1637,60 @@ msgstr "外掛"
 msgid "General"
 msgstr "一般"
 
-#: ../options/OptionsWin.java:236
+#: ../options/OptionsWin.java:235
+msgid "Phone numbers"
+msgstr ""
+
+#: ../options/OptionsWin.java:238
 msgid "Paths and viewers"
 msgstr "路徑和瀏覽"
 
-#: ../options/OptionsWin.java:237
+#: ../options/OptionsWin.java:239
 msgid "Recipient extraction"
 msgstr "解壓縮"
 
-#: ../options/OptionsWin.java:240 ../options/ServerSettingsPanel.java:264
+#: ../options/OptionsWin.java:242 ../options/ServerSettingsPanel.java:264
 msgid "Servers"
 msgstr "伺服器"
 
-#: ../options/OptionsWin.java:243
+#: ../options/OptionsWin.java:245
 msgid "Cover page & Identities"
 msgstr "封面&ident"
 
-#: ../options/OptionsWin.java:246 ../options/PluginPanel.java:94
+#: ../options/OptionsWin.java:248 ../options/PluginPanel.java:94
 msgid "Plugins & JDBC"
 msgstr "外掛& JDBC"
 
-#: ../options/OptionsWin.java:249
+#: ../options/OptionsWin.java:251
 msgid "Please select on the left which table you want to edit."
 msgstr "請在清單左邊選取要編輯的傳真"
 
-#: ../options/OptionsWin.java:250
+#: ../options/OptionsWin.java:252
 msgid "Tables"
 msgstr "清單"
 
-#: ../options/OptionsWin.java:251
+#: ../options/OptionsWin.java:253
 #, java-format
 msgid "Table \"{0}\""
 msgstr "清單 \"{0}\""
 
-#: ../options/OptionsWin.java:259
+#: ../options/OptionsWin.java:261
 msgid "These settings normally need not to be changed."
 msgstr "這些設置一般不需要改變。"
 
-#: ../options/OptionsWin.java:260 ../options/AdminSettingsPage.java:102
+#: ../options/OptionsWin.java:262 ../options/AdminSettingsPage.java:102
 msgid "Advanced settings"
 msgstr "進階設定"
 
-#: ../options/OptionsWin.java:261
+#: ../options/OptionsWin.java:263
 msgid "Administrative settings"
 msgstr "管理設定"
 
-#: ../options/OptionsWin.java:262
+#: ../options/OptionsWin.java:264
 msgid "File converters"
 msgstr "檔案轉換"
 
-#: ../options/OptionsWin.java:472
+#: ../options/OptionsWin.java:474
 msgid "Error saving the settings:"
 msgstr "儲存設置錯誤："
 
@@ -2214,6 +2217,29 @@ msgstr "撥號前綴："
 #: ../options/SendPanel.java:187
 msgid "Default identity:"
 msgstr "預設識別:"
+
+#: ../options/PhoneNumberPanel.java:85
+msgid ""
+"Here you can set information on how to translate phone numbers to canonic "
+"format (e.g. +49 1234 567890). Currently this is only used to look up names "
+"from the phone book."
+msgstr ""
+
+#: ../options/PhoneNumberPanel.java:89
+msgid "Country Code"
+msgstr ""
+
+#: ../options/PhoneNumberPanel.java:90
+msgid "Area Code"
+msgstr ""
+
+#: ../options/PhoneNumberPanel.java:91
+msgid "Long Distance Call Prefix"
+msgstr ""
+
+#: ../options/PhoneNumberPanel.java:92
+msgid "International Call Prefix"
+msgstr ""
 
 #: ../options/CommonPanel.java:115
 msgid "(System native)"
@@ -2759,8 +2785,7 @@ msgid "Comments"
 msgstr "註解"
 
 #: ../phonebook/WrapperDistributionList.java:201
-#: ../phonebook/xml/XMLDistributionList.java:164
-#: ../phonebook/PhoneBook.java:74
+#: ../phonebook/xml/XMLDistributionList.java:164 ../phonebook/PhoneBook.java:74
 msgid "<no name>"
 msgstr "<無名稱>"
 
@@ -3268,6 +3293,56 @@ msgstr "你必須指定一個資料庫表。"
 msgid "Connection to the database succeeded."
 msgstr "連接到資料庫成功。"
 
+#: ../virtualcolumnstore/LocalVirtColPersister.java:355
+msgid "Local file"
+msgstr "本地檔案"
+
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:103
+msgid "Key (fax filename):"
+msgstr ""
+
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:104
+msgid "Read/Unread state:"
+msgstr "讀取/未讀狀態:"
+
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:105
+msgid "Comment:"
+msgstr "意見:"
+
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:106
+msgid "Last modified:"
+msgstr "最後編輯:"
+
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:334
+#, java-format
+msgid ""
+"No database field is set to save column \"User comment\". Values will be "
+"lost after restart.\n"
+"Please see {0} for more information."
+msgstr ""
+"資料庫欄位 \"User comment\"設定沒有儲存.  重新啟動後設定值將會遺失.\n"
+"更多資訊請參閱 {0}."
+
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:334
+#: ../model/jobq/QueueFileFormat.java:120 ../model/JobFormat.java:276
+#: ../model/RecvFormat.java:145
+msgid "User comment"
+msgstr ""
+
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:803
+msgid "Database table"
+msgstr "資料庫表"
+
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:817
+msgid "JDBC settings to save read/unread state and comment"
+msgstr "JDBC設定,儲存已讀/未讀狀態並評論"
+
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:818
+msgid ""
+"Please select which database fields correspond to the key, read/unread state "
+"and comment"
+msgstr "請選擇資料庫對應索引,已讀/未讀狀態並評論並評論"
+
 #: ../FaxResolution.java:46
 msgid "Extended (> 196 lpi)"
 msgstr "延伸(>196 lpi)"
@@ -3733,13 +3808,17 @@ msgstr "主題 (\"Regarding\")"
 
 #: ../model/jobq/QueueFileFormat.java:120 ../model/JobFormat.java:276
 #: ../model/RecvFormat.java:145
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:334
-msgid "User comment"
+msgid "Comment added by a YajHFC user"
 msgstr ""
 
-#: ../model/jobq/QueueFileFormat.java:120 ../model/JobFormat.java:276
-#: ../model/RecvFormat.java:145
-msgid "Comment added by a YajHFC user"
+#: ../model/jobq/QueueFileFormat.java:124 ../model/JobFormat.java:280
+#: ../model/RecvFormat.java:149
+msgid "Name (phone book)"
+msgstr ""
+
+#: ../model/jobq/QueueFileFormat.java:124 ../model/JobFormat.java:280
+#: ../model/RecvFormat.java:149
+msgid "Name looked up from phone book"
 msgstr ""
 
 #: ../model/JobFormat.java:68
@@ -4546,51 +4625,6 @@ msgstr "錯誤修改傳真工作\"{0}\""
 msgid "Modify parameters of job {0}"
 msgstr "修改工作 {0} 參數"
 
-#: ../virtualcolumnstore/LocalVirtColPersister.java:355
-msgid "Local file"
-msgstr "本地檔案"
-
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:103
-msgid "Key (fax filename):"
-msgstr ""
-
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:104
-msgid "Read/Unread state:"
-msgstr "讀取/未讀狀態:"
-
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:105
-msgid "Comment:"
-msgstr "意見:"
-
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:106
-msgid "Last modified:"
-msgstr "最後編輯:"
-
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:334
-#, java-format
-msgid ""
-"No database field is set to save column \"User comment\". Values will be "
-"lost after restart.\n"
-"Please see {0} for more information."
-msgstr ""
-"資料庫欄位 \"User comment\"設定沒有儲存.  "
-"重新啟動後設定值將會遺失.\n"
-"更多資訊請參閱 {0}."
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:803
-msgid "Database table"
-msgstr "資料庫表"
-
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:817
-msgid "JDBC settings to save read/unread state and comment"
-msgstr "JDBC設定,儲存已讀/未讀狀態並評論"
-
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:818
-msgid ""
-"Please select which database fields correspond to the key, read/unread state "
-"and comment"
-msgstr ""
-"請選擇資料庫對應索引,已讀/未讀狀態並評論"
-"並評論"
 #~ msgid "Read/Unread state of faxes"
 #~ msgstr "已讀 /未讀傳真狀態"
 
