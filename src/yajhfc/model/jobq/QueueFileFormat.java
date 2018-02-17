@@ -119,9 +119,9 @@ public enum QueueFileFormat implements FmtItem {
          */
         virt_comment(null, _("User comment"), _("Comment added by a YajHFC user"), String.class, null, null, false, VirtualColumnType.USER_COMMENT),
         /**
-         * Virtual column: resolved name
+         * Virtual column: Phonebook name
          */
-        virt_resolvedname(null, _("Resolved name"), _("Name resolved from phone book"), String.class, null, null, true, VirtualColumnType.RESOLVED_NAME),
+        virt_resolvedname(null, _("Phonebook name"), _("Name looked up from phone book"), String.class, null, null, true, VirtualColumnType.RESOLVED_NAME),
         ;
         
         private final String description;
@@ -208,7 +208,8 @@ public enum QueueFileFormat implements FmtItem {
         private static final QueueFileFormat[] requiredFormats = {
             QueueFileFormat.owner,
             QueueFileFormat.state,
-            QueueFileFormat.commid
+            QueueFileFormat.commid,
+            QueueFileFormat.external
         };
         public static QueueFileFormat[] getRequiredFormats() {
             return requiredFormats;

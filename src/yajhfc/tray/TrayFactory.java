@@ -122,7 +122,7 @@ public class TrayFactory {
     public static void checkForProblematicPlatformAsync() {
         if (PlatformInfo.isGNOME()) {
             log.fine("Running GNOME, check version of it...");
-            Utils.executorService.submit(new Runnable() {
+            Utils.poolExecutor.submit(new Runnable() {
                 public void run() {
                     if (PlatformInfo.getGNOMEMajorVersion() >= 3) {
                         log.info("We have GNOME >= 3, show a warning.");

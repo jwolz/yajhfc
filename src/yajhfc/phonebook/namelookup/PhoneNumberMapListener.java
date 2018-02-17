@@ -1,6 +1,6 @@
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005-2013 Jonas Wolz <info@yajhfc.de>
+ * Copyright (C) 2005-2018 Jonas Wolz <info@yajhfc.de>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -34,22 +34,12 @@
  *  version without this exception; this exception also makes it possible 
  *  to release a modified version which carries forward this exception.
  */
-package yajhfc;
+package yajhfc.phonebook.namelookup;
 
 /**
- * Holds version information about this build of YajHFC
- * 
  * @author jonas
  *
  */
-public final class VersionInfo {
-    public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
-    public static final String AppShortName = "YajHFC";
-    public static final String AppCopyright = "Copyright © 2005-2017 by Jonas Wolz";
-    public static final String AppVersion = "0.6.2alpha2";
-    public static final String AuthorName = "Jonas Wolz";
-    public static final String AuthorEMail = "info@yajhfc.de";
-    public static final String HomepageURL = "http://www.yajhfc.de/";
-
-    private VersionInfo() { }
+public interface PhoneNumberMapListener {
+    public void phoneNumberMapUpdated();
 }

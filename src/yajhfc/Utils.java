@@ -36,9 +36,6 @@ package yajhfc;
  *  to release a modified version which carries forward this exception.
  */
 
-import info.clearthought.layout.TableLayoutConstants;
-import info.clearthought.layout.TableLayoutConstraints;
-
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
@@ -78,6 +75,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.logging.Level;
@@ -94,6 +92,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 
+import info.clearthought.layout.TableLayoutConstants;
+import info.clearthought.layout.TableLayoutConstraints;
 import yajhfc.launch.Launcher2;
 import yajhfc.macosx.MacOSXSupport;
 import yajhfc.model.jobq.QueueFileDateFormat;
@@ -139,7 +139,9 @@ public final class Utils {
     /**
      * Returns an executor service which may be used for various non time critical asynchronous computations
      */
-    public static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(2);
+    public static final ScheduledExecutorService scheduledExecutor = Executors.newScheduledThreadPool(2);
+    
+    public static final ExecutorService poolExecutor = Executors.newCachedThreadPool();
 
     static final Logger log = Logger.getLogger(Utils.class.getName());
     

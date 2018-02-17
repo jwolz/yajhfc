@@ -1,6 +1,6 @@
 /*
  * YAJHFC - Yet another Java Hylafax client
- * Copyright (C) 2005-2013 Jonas Wolz <info@yajhfc.de>
+ * Copyright (C) 2005-2018 Jonas Wolz <info@yajhfc.de>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -34,22 +34,48 @@
  *  version without this exception; this exception also makes it possible 
  *  to release a modified version which carries forward this exception.
  */
-package yajhfc;
+package yajhfc.phonebook.namelookup;
+
+import java.util.regex.Pattern;
+
+import yajhfc.FaxOptions;
+import yajhfc.Utils;
 
 /**
- * Holds version information about this build of YajHFC
+ * Class to canonicalize phone numbers.
+ * 
+ * TODO: Current logic works for Germany and probably most of Europe and USA. Make this more international, probably based on a library
  * 
  * @author jonas
  *
  */
-public final class VersionInfo {
-    public static final String AppName = "Yet Another Java HylaFAX Client (YajHFC)";
-    public static final String AppShortName = "YajHFC";
-    public static final String AppCopyright = "Copyright © 2005-2017 by Jonas Wolz";
-    public static final String AppVersion = "0.6.2alpha2";
-    public static final String AuthorName = "Jonas Wolz";
-    public static final String AuthorEMail = "info@yajhfc.de";
-    public static final String HomepageURL = "http://www.yajhfc.de/";
+public class PhoneNumberCanonicalizer {
 
-    private VersionInfo() { }
+    protected static final Pattern notNumberPlusPattern = Pattern.compile("[^0-9+*#]");
+    
+    /**
+     * Convert a number to international format
+     * @param number
+     * @return
+     */
+    public static String canonicalizeNumber(String number) {
+        if (number == null)
+            return null;
+        
+        // Strip everything but 0-9 or + from the String 
+        String cleanNumber = notNumberPlusPattern.matcher(number).replaceAll("");
+        
+        if (cleanNumber.startsWith("+") || cleanNumber.startsWith("*") || cleanNumber.startsWith("#"))
+            return cleanNumber; // Assume already in intl. Format or "special number"
+        
+        final FaxOptions fo = Utils.getFaxOptions();
+        
+        if (cleanNumber.startsWith(fo.internationalCallPrefix))
+            return "+" + cleanNumber.substring(fo.internationalCallPrefix.length()); // Replace international prefix with +
+        
+        if (cleanNumber.startsWith(fo.longDistanceCallPrefix))
+            return "+" + fo.countryCode + cleanNumber.substring(fo.longDistanceCallPrefix.length()); // Replace long distance prefix with +<country code> 
+        
+        return "+" + fo.countryCode + fo.areaCode + cleanNumber; // Add +<country code><local prefix>
+    }
 }

@@ -100,7 +100,7 @@ public abstract class AbstractFaxJob<T extends FmtItem> implements SerializableF
     
     public void setData(int columnIndex, Object value, boolean fireEvent) {
         T column = parent.getColumns().getCompleteView().get(columnIndex);
-        if (column.isReadOnly())
+        if (column.isReadOnly() && column.getVirtualColumnType()==VirtualColumnType.NONE) // Allow setting values of virtual columns
             throw new UnsupportedOperationException("Column " + column.name() + " is read only!");
         if (value != null && !column.getDataType().isInstance(value))
             throw new ClassCastException("value is of type " + value.getClass() + ", but column " + column.name() + " has type " + column.getDataType());

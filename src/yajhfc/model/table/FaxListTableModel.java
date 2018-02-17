@@ -56,6 +56,7 @@ import yajhfc.model.servconn.FaxJob;
 import yajhfc.model.servconn.FaxJobList;
 import yajhfc.model.servconn.FaxJobListListener;
 import yajhfc.model.servconn.defimpl.SwingFaxJobListListener;
+import yajhfc.phonebook.namelookup.FaxJobListResolvedPhoneNumUpdater;
 import yajhfc.virtualcolumnstore.VirtColChangeListener;
 import yajhfc.virtualcolumnstore.VirtColPersister;
 
@@ -81,6 +82,8 @@ public class FaxListTableModel<T extends FmtItem> extends AbstractTableModel {
     protected Color errorColor = defErrorColor;
     
     protected VirtColPersister persistence;
+    
+    protected FaxJobListResolvedPhoneNumUpdater<T> faxListUpdater;
     
     protected VirtColChangeListener persistenceListener = new VirtColChangeListener() {
         public void columnsChanged(Set<String> inserts, Set<String> updates,
@@ -334,6 +337,8 @@ public class FaxListTableModel<T extends FmtItem> extends AbstractTableModel {
             }
             this.jobs = jobs;
             idMap = null;
+            if (faxListUpdater != null)
+                faxListUpdater.setJobList(jobs);
             if (jobs != null) {
                 jobs.addFaxJobListListener(getUpdateListener());
                 if (persistence != null) {
@@ -346,8 +351,9 @@ public class FaxListTableModel<T extends FmtItem> extends AbstractTableModel {
         }
     }
 
-    public FaxListTableModel(FaxJobList<T> jobs) {
+    public FaxListTableModel(FaxJobList<T> jobs, FaxJobListResolvedPhoneNumUpdater<T> faxListUpdater) {
         super();
+        this.faxListUpdater = faxListUpdater;
         setJobs(jobs);
     }
 }

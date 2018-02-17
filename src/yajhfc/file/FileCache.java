@@ -213,7 +213,7 @@ public class FileCache {
         public static synchronized void checkInstall() {
             if (!INSTALLED) {
                 log.fine("Installing global cache cleaner...");
-                Utils.executorService.scheduleWithFixedDelay(new Cleaner(), FREQUENCY, FREQUENCY, TimeUnit.SECONDS);
+                Utils.scheduledExecutor.scheduleWithFixedDelay(new Cleaner(), FREQUENCY, FREQUENCY, TimeUnit.SECONDS);
                 INSTALLED = true;
             }
         }
