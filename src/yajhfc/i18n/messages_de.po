@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: messages_de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-27 10:19+0100\n"
-"PO-Revision-Date: 2015-12-27 10:21+0100\n"
+"POT-Creation-Date: 2018-02-17 14:01+0100\n"
+"PO-Revision-Date: 2018-02-17 14:01+0100\n"
 "Last-Translator: Jonas Wolz <jonas.wolz@freenet.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
 "Language: de\n"
@@ -18,10 +18,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.6.10\n"
+"X-Generator: Poedit 1.8.11\n"
 
-#: ../FaxOptions.java:668 ../FaxOptions.java:676 ../FaxOptions.java:684
-#: ../FaxOptions.java:696 ../options/ServerSettingsPanel.java:163
+#: ../FaxOptions.java:690 ../FaxOptions.java:698 ../FaxOptions.java:706
+#: ../FaxOptions.java:718 ../options/ServerSettingsPanel.java:163
 #: ../options/CoverPanel.java:237
 msgid "Default"
 msgstr "Standard"
@@ -55,8 +55,7 @@ msgstr "Deutsche Übersetzung durch {0}"
 #: ../AboutDialog.java:261 ../report/SendReportDialog.java:166
 #: ../filters/ui/CustomFilterDialog.java:104 ../options/OptionsWin.java:195
 #: ../phonebook/ldap/ConnectionDialog.java:174
-#: ../phonebook/csv/CSVDialog.java:151
-#: ../phonebook/ui/SortOrderDialog.java:108
+#: ../phonebook/csv/CSVDialog.java:151 ../phonebook/ui/SortOrderDialog.java:108
 #: ../phonebook/ui/RuleParserDialog.java:126
 #: ../phonebook/jdbc/ConnectionDialog.java:215
 #: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:118
@@ -67,7 +66,7 @@ msgstr "Deutsche Übersetzung durch {0}"
 msgid "OK"
 msgstr "OK"
 
-#: ../AboutDialog.java:305 ../MainWin.java:951
+#: ../AboutDialog.java:305 ../MainWin.java:953
 msgid "About"
 msgstr "Über"
 
@@ -84,7 +83,7 @@ msgstr "System-Properties"
 msgid "About {0}"
 msgstr "Über {0}"
 
-#: ../AboutDialog.java:322 ../MainWin.java:979
+#: ../AboutDialog.java:322 ../MainWin.java:987
 msgid "Documentation"
 msgstr "Dokumentation"
 
@@ -116,7 +115,7 @@ msgstr "Version"
 msgid "Release date"
 msgstr "Release-Datum"
 
-#: ../UpdateChecker.java:99 ../MainWin.java:512
+#: ../UpdateChecker.java:99 ../MainWin.java:514
 msgid "Go to website"
 msgstr "Gehe zu Webseite"
 
@@ -129,14 +128,14 @@ msgid "Do not remind me again"
 msgstr "Nicht erneut erinnern"
 
 #: ../UpdateChecker.java:115 ../logconsole/LogConsole.java:149
-#: ../MainWin.java:524 ../filters/ui/SearchWin.java:184
+#: ../MainWin.java:526 ../filters/ui/SearchWin.java:184
 #: ../phonebook/ui/NewPhoneBookWin.java:1152
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:353
 #: ../TextViewPanel.java:135
 msgid "Close"
 msgstr "Schließen"
 
-#: ../UpdateChecker.java:119 ../UpdateChecker.java:246 ../MainWin.java:1374
+#: ../UpdateChecker.java:119 ../UpdateChecker.java:246 ../MainWin.java:1382
 msgid "Check for update"
 msgstr "Auf Update prüfen"
 
@@ -277,7 +276,7 @@ msgid "Print phone books"
 msgstr "Telefonbücher drucken"
 
 #: ../print/PhonebooksPrinter.java:108 ../print/FaxTablePrinter.java:105
-#: ../MainWin.java:1211
+#: ../MainWin.java:1219
 msgid "Print"
 msgstr "Drucken"
 
@@ -319,7 +318,7 @@ msgstr "{0} drucken"
 msgid "Use a bold font for unread faxes"
 msgstr "Fettschrift für ungelesene Faxe verwenden"
 
-#: ../print/FaxTablePrinter.java:134 ../MainWin.java:1299
+#: ../print/FaxTablePrinter.java:134 ../MainWin.java:1307
 msgid "Mark failed jobs"
 msgstr "Gescheiterte Aufträge markieren"
 
@@ -520,7 +519,7 @@ msgstr "Für dieses Fax ist keine Log-Datei vorhanden."
 msgid "Error retrieving the log:"
 msgstr "Fehler beim Holen des Logs:"
 
-#: ../LogViewWorker.java:118 ../MainWin.java:1476
+#: ../LogViewWorker.java:118 ../MainWin.java:1484
 msgid "View log"
 msgstr "Log anzeigen"
 
@@ -528,7 +527,7 @@ msgstr "Log anzeigen"
 msgid "YajHFC log console"
 msgstr "YajHFC-Log-Konsole"
 
-#: ../logconsole/LogConsole.java:115 ../MainWin.java:1258 ../MainWin.java:2353
+#: ../logconsole/LogConsole.java:115 ../MainWin.java:1266 ../MainWin.java:2363
 #: ../util/ExceptionDialog.java:106 ../util/ClipboardPopup.java:74
 #: ../TextViewPanel.java:210
 msgid "Copy"
@@ -581,7 +580,7 @@ msgstr "{0}-Dateien"
 msgid "Export to XML"
 msgstr "Als XML exportieren"
 
-#: ../export/ExportAction.java:163 ../MainWin.java:3366
+#: ../export/ExportAction.java:163 ../MainWin.java:3383
 #: ../send/SimplifiedSendDialog.java:359
 msgid "Server"
 msgstr "Server"
@@ -716,48 +715,48 @@ msgid "An error occured while converting the document to PostScript."
 msgstr ""
 "Beim Konvertieren des Dokuments in PostScript ist ein Fehler aufgetreten."
 
-#: ../MainWin.java:283
+#: ../MainWin.java:285
 #, java-format
 msgid "Deleting fax {0}"
 msgstr "Lösche Fax {0}"
 
-#: ../MainWin.java:294
+#: ../MainWin.java:296
 msgid "Error deleting a fax:\n"
 msgstr "Fehler beim Löschen eines Faxes:\n"
 
-#: ../MainWin.java:296
+#: ../MainWin.java:298
 #, java-format
 msgid "Error deleting the fax \"{0}\":\n"
 msgstr "Fehler beim Löschen des Faxes  \"{0}\":\n"
 
-#: ../MainWin.java:306
+#: ../MainWin.java:308
 msgid "Error deleting faxes:"
 msgstr "Fehler beim Löschen der Faxe:"
 
-#: ../MainWin.java:340 ../MainWin.java:704
+#: ../MainWin.java:342 ../MainWin.java:706
 #, java-format
 msgid "Saving fax {0}"
 msgstr "Speichere Fax {0}"
 
-#: ../MainWin.java:348 ../MainWin.java:468
+#: ../MainWin.java:350 ../MainWin.java:470
 #, java-format
 msgid "No accessible document files are available for the fax \"{0}\"."
 msgstr "Für das Fax \"{0}\" sind keine zugreifbaren Dokumente vorhanden."
 
-#: ../MainWin.java:351 ../MainWin.java:471
+#: ../MainWin.java:353 ../MainWin.java:473
 msgid "The following files were inaccessible:"
 msgstr "Auf die folgenden Dateien konnte nicht zugegriffen werden:"
 
-#: ../MainWin.java:357
+#: ../MainWin.java:359
 msgid "Save fax"
 msgstr "Fax speichern"
 
-#: ../MainWin.java:373
+#: ../MainWin.java:375
 #, java-format
 msgid "Save {0} to"
 msgstr "{0} speichern unter"
 
-#: ../MainWin.java:386 ../MainWin.java:488 ../MainWin.java:713
+#: ../MainWin.java:388 ../MainWin.java:490 ../MainWin.java:715
 #, java-format
 msgid ""
 "While downloading the file {0} (job {1}), the server gave back an error code:"
@@ -765,7 +764,7 @@ msgstr ""
 "Während des Herunterladens der Datei {0} (Fax {1}) hat der Server einen "
 "Fehler zurückgegeben:"
 
-#: ../MainWin.java:388 ../MainWin.java:490 ../MainWin.java:715
+#: ../MainWin.java:390 ../MainWin.java:492 ../MainWin.java:717
 #, java-format
 msgid ""
 "The file {0} (job {1}) could not be opened for reading (probably you lack "
@@ -774,53 +773,53 @@ msgstr ""
 "Die Datei {0} (Fax {1}) konnte nicht zum Lesen geöffnet werden "
 "(wahrscheinlich besitzen Sie nicht die erforderlichen Zugriffsrechte)"
 
-#: ../MainWin.java:391 ../MainWin.java:717
+#: ../MainWin.java:393 ../MainWin.java:719
 #, java-format
 msgid "An error occured saving the file {0} (job {1}):"
 msgstr "Beim Speichern der Datei {0} (Auftrag {1}) ist ein Fehler aufgetreten:"
 
-#: ../MainWin.java:399 ../MainWin.java:747
+#: ../MainWin.java:401 ../MainWin.java:749
 msgid "An error occured saving the fax:"
 msgstr "Beim Speichern des Faxes ist ein Fehler aufgetreten:"
 
-#: ../MainWin.java:408 ../MainWin.java:757
+#: ../MainWin.java:410 ../MainWin.java:759
 msgid "Error saving faxes:"
 msgstr "Fehler beim Speichern der Faxe:"
 
-#: ../MainWin.java:425 ../MainWin.java:778
+#: ../MainWin.java:427 ../MainWin.java:780
 #, java-format
 msgid "{0} files saved to directory {1}."
 msgstr "{0} Dateien in Verzeichnis {1} gespeichert"
 
-#: ../MainWin.java:425 ../MainWin.java:778
+#: ../MainWin.java:427 ../MainWin.java:780
 msgid "Faxes saved"
 msgstr "Faxe gespeichert"
 
-#: ../MainWin.java:454
+#: ../MainWin.java:456
 #, java-format
 msgid "Displaying fax {0}"
 msgstr "Zeige Fax {0} an"
 
-#: ../MainWin.java:455
+#: ../MainWin.java:457
 #, java-format
 msgid "Downloading {0}"
 msgstr "Lade {0} herunter"
 
-#: ../MainWin.java:477 ../MainWin.java:527
+#: ../MainWin.java:479 ../MainWin.java:529
 msgid "Display fax"
 msgstr "Fax anzeigen"
 
-#: ../MainWin.java:492
+#: ../MainWin.java:494
 #, java-format
 msgid "An error occured displaying the file {0} (job {1}):\n"
 msgstr ""
 "Beim Anzeigen der Datei {0} (für Auftrag {1}) ist ein Fehler aufgetreten:\n"
 
-#: ../MainWin.java:496 ../send/SendController.java:276
+#: ../MainWin.java:498 ../send/SendController.java:276
 msgid "Launching viewer"
 msgstr "Starte Betrachter"
 
-#: ../MainWin.java:507
+#: ../MainWin.java:509
 msgid ""
 "It seems the TIFF files of your HylaFAX installation are incompatible with "
 "iText (often the case with capi4hylafax)."
@@ -828,7 +827,7 @@ msgstr ""
 "Scheinbar sind die TIFF-Dateien Ihrer HylaFAX-Installation nicht mit iText "
 "kompatibel (häufig bei capi4hylafax der Fall)."
 
-#: ../MainWin.java:508
+#: ../MainWin.java:510
 msgid ""
 "Please see the following page for more details and how to work around this "
 "problem:"
@@ -836,21 +835,21 @@ msgstr ""
 "Bitte gehen Sie auf die folgende Seite für mehr Informationen und wie das "
 "Problem umgangen werden kann:"
 
-#: ../MainWin.java:532
+#: ../MainWin.java:534
 #, java-format
 msgid "An error occured displaying the fax \"{0}\":"
 msgstr "Beim Anzeigen des Faxes \"{0}\" ist ein Fehler aufgetreten:"
 
-#: ../MainWin.java:540
+#: ../MainWin.java:542
 msgid "Error displaying faxes:"
 msgstr "Fehler beim Anzeigen der Faxe:"
 
-#: ../MainWin.java:584 ../EditJobWorker.java:103
+#: ../MainWin.java:586 ../EditJobWorker.java:103
 #, java-format
 msgid "Suspending job {0}"
 msgstr "Halte Auftrag {0} an"
 
-#: ../MainWin.java:591
+#: ../MainWin.java:593
 #, java-format
 msgid ""
 "Suspending the currently running job {0} may block until it is done (or "
@@ -860,29 +859,29 @@ msgstr ""
 "solange bis er fertig ist (oder in einen \"nicht-aktiven Zustand\" "
 "übergeht). Soll trotzdem versucht werden, ihn anzuhalten?"
 
-#: ../MainWin.java:592
+#: ../MainWin.java:594
 msgid "Suspend fax job"
 msgstr "Halte Faxauftrag an"
 
-#: ../MainWin.java:603
+#: ../MainWin.java:605
 msgid "Error suspending a fax job:\n"
 msgstr "Fehler beim Anhalten des Faxauftrags:\n"
 
-#: ../MainWin.java:605
+#: ../MainWin.java:607
 #, java-format
 msgid "Error suspending the fax job \"{0}\":\n"
 msgstr "Fehler beim Anhalten von Faxauftrag \"{0}\":\n"
 
-#: ../MainWin.java:613
+#: ../MainWin.java:615
 msgid "Error suspending faxes:"
 msgstr "Fehler beim Anhalten der Faxaufträge:"
 
-#: ../MainWin.java:641 ../EditJobWorker.java:104
+#: ../MainWin.java:643 ../EditJobWorker.java:104
 #, java-format
 msgid "Resuming job {0}"
 msgstr "Setze Auftrag {0} fort"
 
-#: ../MainWin.java:648
+#: ../MainWin.java:650
 #, java-format
 msgid ""
 "Job {0} is not in state \"Suspended\" so resuming it probably will not work. "
@@ -892,29 +891,29 @@ msgstr ""
 "Fortsetzen wahrscheinlich nicht funktionieren. Trotzdem versuchen, ihn "
 "fortzusetzen?"
 
-#: ../MainWin.java:649
+#: ../MainWin.java:651
 msgid "Resume fax job"
 msgstr "Setze Faxauftrag fort"
 
-#: ../MainWin.java:660
+#: ../MainWin.java:662
 msgid "Error resuming a fax job:\n"
 msgstr "Fehler beim Fortsetzen eines Faxauftrags:\n"
 
-#: ../MainWin.java:662
+#: ../MainWin.java:664
 #, java-format
 msgid "Error resuming the fax job \"{0}\":\n"
 msgstr "Fehler beim Fortsetzen von Faxauftrag \"{0}\":\n"
 
-#: ../MainWin.java:670
+#: ../MainWin.java:672
 msgid "Error resuming faxes:"
 msgstr "Fehler beim Fortsetzen der Faxaufträge:"
 
-#: ../MainWin.java:734
+#: ../MainWin.java:736
 #, java-format
 msgid "File name to save fax {0}"
 msgstr "Dateiname, um Fax {0} zu speichern"
 
-#: ../MainWin.java:801
+#: ../MainWin.java:803
 #, java-format
 msgid ""
 "Save to {0} needs GhostScript and tiff2pdf.\n"
@@ -925,7 +924,7 @@ msgstr ""
 "Bitte geben sie den Speicherort dieser Programme im Optionendialog an (für "
 "Downloadquellen: siehe die FAQ)."
 
-#: ../MainWin.java:801 ../filters/ui/CustomFilterDialog.java:237
+#: ../MainWin.java:803 ../filters/ui/CustomFilterDialog.java:237
 #: ../filters/ui/CustomFilterDialog.java:241 ../options/IdentityPanel.java:214
 #: ../options/IdentityPanel.java:220 ../options/PathAndViewPanel.java:327
 #: ../options/PathAndViewPanel.java:333 ../options/PathAndViewPanel.java:339
@@ -954,276 +953,276 @@ msgstr ""
 msgid "Error"
 msgstr "Fehler"
 
-#: ../MainWin.java:807 ../MainWin.java:1023
+#: ../MainWin.java:809 ../MainWin.java:1031
 msgid "Select a directory to save the faxes in"
 msgstr "Wählen Sie ein Verzeichnis zum Speichern der Faxe aus"
 
-#: ../MainWin.java:808 ../MainWin.java:1024
+#: ../MainWin.java:810 ../MainWin.java:1032
 #: ../phonebook/ui/NewPhoneBookWin.java:1344
 msgid "Select"
 msgstr "Auswählen"
 
-#: ../MainWin.java:815 ../MainWin.java:820 ../MainWin.java:1031
-#: ../MainWin.java:1036
+#: ../MainWin.java:817 ../MainWin.java:822 ../MainWin.java:1039
+#: ../MainWin.java:1044
 msgid "Saving faxes"
 msgstr "Speichere Faxe"
 
-#: ../MainWin.java:828
+#: ../MainWin.java:830
 #, java-format
 msgid "Save fax as {0}..."
 msgstr "Fax als {0} speichern..."
 
-#: ../MainWin.java:829
+#: ../MainWin.java:831
 #, java-format
 msgid "Saves the selected fax(es) as single {0} file"
 msgstr "Speichert das/die ausgewählte(n) Fax(e) als einzelne {0}-Datei."
 
-#: ../MainWin.java:859 ../options/OptionsWin.java:120
+#: ../MainWin.java:861 ../options/OptionsWin.java:120
 #: ../options/CommonPanel.java:371
 msgid "Options"
 msgstr "Optionen"
 
-#: ../MainWin.java:860
+#: ../MainWin.java:862
 msgid "Shows the Options dialog"
 msgstr "Zeigt den Optionen-Dialog an"
 
-#: ../MainWin.java:876 ../send/SendWin.java:548
+#: ../MainWin.java:878 ../send/SendWin.java:548
 #: ../send/SimplifiedSendDialog.java:270
 msgid "Send"
 msgstr "Senden"
 
-#: ../MainWin.java:877
+#: ../MainWin.java:879
 msgid "Shows the send fax dialog"
 msgstr "Zeigt das \"Fax versenden\"-Dialogfeld an"
 
-#: ../MainWin.java:889 ../send/SendWin.java:545
+#: ../MainWin.java:891 ../send/SendWin.java:545
 msgid "Poll"
 msgstr "Abrufen"
 
-#: ../MainWin.java:890
+#: ../MainWin.java:892
 msgid "Shows the poll fax dialog"
 msgstr "Zeigt das \"Fax abrufen\"-Dialogfeld an"
 
-#: ../MainWin.java:901
+#: ../MainWin.java:903
 msgid "Do you really want to cancel the selected fax jobs?"
 msgstr "Möchten Sie die ausgewählten Faxaufträge wirklich abbrechen?"
 
-#: ../MainWin.java:903
+#: ../MainWin.java:905
 msgid "Do you really want to delete the selected faxes?"
 msgstr "Möchten Sie die ausgewählten Faxe wirklich löschen?"
 
-#: ../MainWin.java:905
+#: ../MainWin.java:907
 msgid "Delete faxes"
 msgstr "Faxe löschen"
 
-#: ../MainWin.java:907
+#: ../MainWin.java:909
 msgid "Deleting faxes"
 msgstr "Lösche Faxe"
 
-#: ../MainWin.java:912 ../phonebook/ui/NewPhoneBookWin.java:928
+#: ../MainWin.java:914 ../phonebook/ui/NewPhoneBookWin.java:928
 #: ../phonebook/ui/DistributionListPhonebookPanel.java:208
 #: ../util/ClipboardPopup.java:78
 msgid "Delete"
 msgstr "Löschen"
 
-#: ../MainWin.java:913
+#: ../MainWin.java:915
 msgid "Deletes the selected fax"
 msgstr "Löscht das ausgewählte Fax"
 
-#: ../MainWin.java:922
+#: ../MainWin.java:924
 msgid "Viewing faxes"
 msgstr "Zeige Faxe an"
 
-#: ../MainWin.java:925
+#: ../MainWin.java:927
 msgid "Show"
 msgstr "Anzeigen"
 
-#: ../MainWin.java:926
+#: ../MainWin.java:928
 msgid "Displays the selected fax"
 msgstr "Zeigt das ausgewählte Fax an"
 
-#: ../MainWin.java:936
+#: ../MainWin.java:938
 msgid "Exit"
 msgstr "Beenden"
 
-#: ../MainWin.java:937
+#: ../MainWin.java:939
 msgid "Exits the application"
 msgstr "Beendet die Anwendung"
 
-#: ../MainWin.java:952
+#: ../MainWin.java:954
 msgid "Shows the about dialog"
 msgstr "Zeigt das Info-Dialogfeld an"
 
-#: ../MainWin.java:965 ../phonebook/ui/NewPhoneBookWin.java:795
+#: ../MainWin.java:973 ../phonebook/ui/NewPhoneBookWin.java:795
 #: ../phonebook/ui/NewPhoneBookWin.java:1241
 msgid "Phone book"
 msgstr "Telefonbuch"
 
-#: ../MainWin.java:966
+#: ../MainWin.java:974
 msgid "Display/edit the phone book"
 msgstr "Das Telefonbuch anzeigen/bearbeiten"
 
-#: ../MainWin.java:980
+#: ../MainWin.java:988
 msgid "Shows the README files"
 msgstr "Zeigt die README-Dateien an"
 
-#: ../MainWin.java:1008
+#: ../MainWin.java:1016
 msgid "Marked as read"
 msgstr "Als gelesen markiert"
 
-#: ../MainWin.java:1009
+#: ../MainWin.java:1017
 msgid "Marks the selected fax as read/unread"
 msgstr "Markiert das ausgewählte Fax als (un)gelesen"
 
-#: ../MainWin.java:1040
+#: ../MainWin.java:1048
 msgid "Save fax..."
 msgstr "Fax speichern..."
 
-#: ../MainWin.java:1041
+#: ../MainWin.java:1049
 msgid "Saves the selected fax on disk"
 msgstr "Speichert das ausgewählte Fax auf der Festplatte"
 
-#: ../MainWin.java:1057
+#: ../MainWin.java:1065
 msgid "Couldn't get a filename for the fax:"
 msgstr "Konnte keinen Dateinamen für das Fax bestimmen:"
 
-#: ../MainWin.java:1070
+#: ../MainWin.java:1078
 msgid "Forward fax..."
 msgstr "Fax weiterleiten..."
 
-#: ../MainWin.java:1071
+#: ../MainWin.java:1079
 msgid "Forwards the fax"
 msgstr "Leitet das Fax weiter"
 
-#: ../MainWin.java:1091
+#: ../MainWin.java:1099
 msgid "Admin mode"
 msgstr "Admin-Modus"
 
-#: ../MainWin.java:1092
+#: ../MainWin.java:1100
 msgid "Connect to the server in admin mode (e.g. to delete faxes)"
 msgstr "Mit dem Server im Admin-Modus verbinden (z.B. um Faxe zu löschen)"
 
-#: ../MainWin.java:1104
+#: ../MainWin.java:1112
 msgid "Refresh"
 msgstr "Aktualisieren"
 
-#: ../MainWin.java:1105
+#: ../MainWin.java:1113
 msgid "Refresh tables and server status"
 msgstr "Aktualisiert die Tabellen und den Serverstatus"
 
-#: ../MainWin.java:1129
+#: ../MainWin.java:1137
 #, java-format
 msgid "Getting information for job {0}..."
 msgstr "Hole Informationen für Fax {0}..."
 
-#: ../MainWin.java:1158 ../NoGUISender.java:151
+#: ../MainWin.java:1166 ../NoGUISender.java:151
 msgid "Opening send dialog..."
 msgstr "Öffne Sendedialog..."
 
-#: ../MainWin.java:1162
+#: ../MainWin.java:1170
 msgid "Could not get all of the job information necessary to resend the fax:"
 msgstr ""
 "Konnte nicht alle zum erneuten Senden des Faxes notwendigen "
 "Auftragsinformationen abrufen."
 
-#: ../MainWin.java:1168
+#: ../MainWin.java:1176
 msgid "Error resending faxes:"
 msgstr "Fehler beim Erneuten Senden der Faxe:"
 
-#: ../MainWin.java:1197
+#: ../MainWin.java:1205
 msgid "Resending fax..."
 msgstr "Sende Fax erneut..."
 
-#: ../MainWin.java:1200
+#: ../MainWin.java:1208
 msgid "Resend fax..."
 msgstr "Fax erneut senden..."
 
-#: ../MainWin.java:1201
+#: ../MainWin.java:1209
 msgid "Resend the fax"
 msgstr "Fax erneut senden"
 
-#: ../MainWin.java:1212
+#: ../MainWin.java:1220
 msgid "Prints the currently displayed table"
 msgstr "Druckt die gerade angezeigte Tabelle"
 
-#: ../MainWin.java:1220
+#: ../MainWin.java:1228
 msgid "Suspending jobs"
 msgstr "Halte Aufträge an"
 
-#: ../MainWin.java:1223
+#: ../MainWin.java:1231
 msgid "Suspend"
 msgstr "Anhalten"
 
-#: ../MainWin.java:1224
+#: ../MainWin.java:1232
 msgid "Suspends the transfer of the selected fax"
 msgstr "Hält die Übermittlung des ausgewählten Fax an"
 
-#: ../MainWin.java:1232
+#: ../MainWin.java:1240
 msgid "Modifying job parameters"
 msgstr "Ändere Auftragsparameter"
 
-#: ../MainWin.java:1235 ../EditJobWorker.java:114
+#: ../MainWin.java:1243 ../EditJobWorker.java:114
 msgid "Modify job parameters"
 msgstr "Auftragsparameter ändern"
 
-#: ../MainWin.java:1236
+#: ../MainWin.java:1244
 msgid "Allows to modify some job parameters"
 msgstr "Erlaubt es, einige Auftragsparameter zu ändern"
 
-#: ../MainWin.java:1244
+#: ../MainWin.java:1252
 msgid "Resuming jobs"
 msgstr "Setze Aufträge fort"
 
-#: ../MainWin.java:1247
+#: ../MainWin.java:1255
 msgid "Resume"
 msgstr "Fortsetzen"
 
-#: ../MainWin.java:1248
+#: ../MainWin.java:1256
 msgid "Resumes the transfer of the selected fax"
 msgstr "Setzt die Übermittlung des ausgewählten Fax fort"
 
-#: ../MainWin.java:1259
+#: ../MainWin.java:1267
 msgid "Copies the selected table items to the clipboard"
 msgstr "Kopiert die ausgewählten Tabelleneinträge in die Zwischenablage"
 
-#: ../MainWin.java:1279 ../MainWin.java:1280
+#: ../MainWin.java:1287 ../MainWin.java:1288
 msgid "Show row numbers"
 msgstr "Zeilennummern anzeigen"
 
-#: ../MainWin.java:1323
+#: ../MainWin.java:1331
 msgid "Adjust column widths"
 msgstr "Spaltenbreiten anpassen"
 
-#: ../MainWin.java:1324
+#: ../MainWin.java:1332
 msgid "Adjust column widths to fit the window size"
 msgstr "Spaltenbreiten an die Fenstergröße anpassen"
 
-#: ../MainWin.java:1340
+#: ../MainWin.java:1348
 msgid "Connect or disconnect to the HylaFAX server"
 msgstr "Die Verbindung zum HylaFAX-Server aufbauen oder trennen"
 
-#: ../MainWin.java:1350 ../util/ToolbarEditorDialog.java:133
+#: ../MainWin.java:1358 ../util/ToolbarEditorDialog.java:133
 msgid "Customize toolbar"
 msgstr "Symbolleiste anpassen"
 
-#: ../MainWin.java:1351
+#: ../MainWin.java:1359
 msgid "Customize the toolbar"
 msgstr "Die Symbolleiste anpassen"
 
-#: ../MainWin.java:1364 ../phonebook/ui/NewPhoneBookWin.java:1165
+#: ../MainWin.java:1372 ../phonebook/ui/NewPhoneBookWin.java:1165
 #: ../util/AcceleratorKeyDialog.java:93 ../util/AcceleratorKeyDialog.java:99
 msgid "Edit keyboard shortcuts"
 msgstr "Tastaturkürzel bearbeiten"
 
-#: ../MainWin.java:1365 ../phonebook/ui/NewPhoneBookWin.java:1166
+#: ../MainWin.java:1373 ../phonebook/ui/NewPhoneBookWin.java:1166
 msgid "Customize the keyboard shortcuts"
 msgstr "Bearbeitet die Tastaturkürzel"
 
-#: ../MainWin.java:1375
+#: ../MainWin.java:1383
 msgid "Checks if there is a newer version of YajHFC available"
 msgstr "Überprüft, ob eine neue Version von YajHFC verfügbar ist."
 
-#: ../MainWin.java:1383
+#: ../MainWin.java:1391
 msgid ""
 "Answering a phone call requires a direct connection to the HylaFAX server "
 "which is not available."
@@ -1231,25 +1230,25 @@ msgstr ""
 "Einen Anruf zu beantworten erfordert eine direkte Verbindung zum HylaFAX-"
 "Server, die nicht verfügbar ist."
 
-#: ../MainWin.java:1383 ../MainWin.java:1396 ../MainWin.java:1401
-#: ../MainWin.java:1418 ../MainWin.java:1422
+#: ../MainWin.java:1391 ../MainWin.java:1404 ../MainWin.java:1409
+#: ../MainWin.java:1426 ../MainWin.java:1430
 msgid "Answer call"
 msgstr "Anruf beantworten"
 
-#: ../MainWin.java:1396
+#: ../MainWin.java:1404
 msgid "No valid modem found."
 msgstr "Kein gültiges Modem gefunden."
 
-#: ../MainWin.java:1401
+#: ../MainWin.java:1409
 msgid "Please select which modem shall answer a phone call:"
 msgstr ""
 "Bitte wählen Sie aus, welches Modem einen Telefonanruf beantworten soll:"
 
-#: ../MainWin.java:1413
+#: ../MainWin.java:1421
 msgid "Error answering the phone call:"
 msgstr "Fehler beim Beantworten des Telefonanrufs:"
 
-#: ../MainWin.java:1418
+#: ../MainWin.java:1426
 msgid ""
 "Answering a phone call requires administrative privileges.\n"
 "Please enable admin mode first."
@@ -1257,175 +1256,175 @@ msgstr ""
 "Einen Telefonanruf zu beantworten benötigt administrative Privilegien.\n"
 "Bitte aktivieren Sie vorher den Admin-Modus."
 
-#: ../MainWin.java:1423
+#: ../MainWin.java:1431
 msgid "Manually answer a phone call with a modem"
 msgstr "Beantwortet einen Telefonanruf manuell mit einem Modem"
 
-#: ../MainWin.java:1437 ../MainWinSearchWin.java:126
+#: ../MainWin.java:1445 ../MainWinSearchWin.java:126
 #: ../MainWinSearchWin.java:146
 msgid "Search fax"
 msgstr "Fax suchen"
 
-#: ../MainWin.java:1438
+#: ../MainWin.java:1446
 msgid "Searches for a fax"
 msgstr "Sucht nach einem Fax"
 
-#: ../MainWin.java:1472
+#: ../MainWin.java:1480
 msgid "Viewing logs"
 msgstr "Zeige Logs an"
 
-#: ../MainWin.java:1477
+#: ../MainWin.java:1485
 msgid "Displays the communication log of the selected fax"
 msgstr "Zeigt das Kommunikations-Log des ausgewählten Faxes an"
 
-#: ../MainWin.java:1500
+#: ../MainWin.java:1508
 msgid "Log console"
 msgstr "Log-Konsole"
 
-#: ../MainWin.java:1501
+#: ../MainWin.java:1509
 msgid "Displays the YajHFC log in real time"
 msgstr "Zeigt das YajHFC-Log in Echtzeit an"
 
-#: ../MainWin.java:1519
+#: ../MainWin.java:1527
 msgid "Show Toolbar"
 msgstr "Symbolleiste anzeigen"
 
-#: ../MainWin.java:1520
+#: ../MainWin.java:1528
 msgid "Shows or hides the toolbar."
 msgstr "Zeigt die Symbolleiste an oder versteckt sie"
 
-#: ../MainWin.java:1539
+#: ../MainWin.java:1547
 msgid "Show Quick Search bar"
 msgstr "Schnellsuchleiste anzeigen"
 
-#: ../MainWin.java:1540
+#: ../MainWin.java:1548
 msgid "Show or hides the Quick Search toolbar."
 msgstr "Zeigt die Schnellsuchleiste oder versteckt sie"
 
-#: ../MainWin.java:1555
+#: ../MainWin.java:1563
 msgid "Shows/Changes the current server."
 msgstr "Zeigt/Ändert den aktuell ausgewählten Server"
 
-#: ../MainWin.java:1565 ../util/ClipboardPopup.java:80
+#: ../MainWin.java:1573 ../util/ClipboardPopup.java:80
 msgid "Select All"
 msgstr "Alles Auswählen"
 
-#: ../MainWin.java:1566
+#: ../MainWin.java:1574
 msgid "Selects all rows"
 msgstr "Wählt alle Zeilen aus"
 
-#: ../MainWin.java:1602 ../MainWin.java:1611
+#: ../MainWin.java:1610 ../MainWin.java:1619
 msgid "Edit user comment"
 msgstr "Benutzerkommentar bearbeiten"
 
-#: ../MainWin.java:1612
+#: ../MainWin.java:1620
 msgid "Edit this job's user comment"
 msgstr "Benutzerkommentar dieses Auftrags bearbeiten"
 
-#: ../MainWin.java:1616
+#: ../MainWin.java:1624
 msgid "Auto-size status bar"
 msgstr "Automatische Höhe der Statusleiste"
 
-#: ../MainWin.java:1617
+#: ../MainWin.java:1625
 msgid "Automatically resize the status bar"
 msgstr "Die Höhe der Statusleiste automatisch bestimmen"
 
-#: ../MainWin.java:1699
+#: ../MainWin.java:1707
 msgid "Connect"
 msgstr "Verbinden"
 
-#: ../MainWin.java:1699
+#: ../MainWin.java:1707
 msgid "Disconnect"
 msgstr "Trennen"
 
-#: ../MainWin.java:1706 ../MainWin.java:2519
+#: ../MainWin.java:1714 ../MainWin.java:2535
 msgid "Fax"
 msgstr "Fax"
 
-#: ../MainWin.java:1733 ../MainWin.java:2984
+#: ../MainWin.java:1741 ../MainWin.java:3000
 msgid "Fetching fax list..."
 msgstr "Hole Faxliste..."
 
-#: ../MainWin.java:1878 ../phonebook/ui/NewPhoneBookWin.java:828
+#: ../MainWin.java:1886 ../phonebook/ui/NewPhoneBookWin.java:828
 msgid "View"
 msgstr "Ansicht"
 
-#: ../MainWin.java:2084
+#: ../MainWin.java:2094
 msgid "Logging out..."
 msgstr "Ausloggen läuft..."
 
-#: ../MainWin.java:2135
+#: ../MainWin.java:2145
 #: ../model/servconn/hylafax/HylaFaxListConnection.java:212
 msgid "Disconnected."
 msgstr "Nicht verbunden."
 
-#: ../MainWin.java:2186 ../options/ModemsPanel.java:109
+#: ../MainWin.java:2196 ../options/ModemsPanel.java:109
 #: ../options/SingleServerSettingsPanel.java:115
 msgid "Logging in..."
 msgstr "Einloggen läuft..."
 
-#: ../MainWin.java:2263
+#: ../MainWin.java:2273
 msgid "Help"
 msgstr "Hilfe"
 
-#: ../MainWin.java:2278 ../options/OptionsWin.java:252
+#: ../MainWin.java:2288 ../options/OptionsWin.java:254
 msgid "Received"
 msgstr "Empfangen"
 
-#: ../MainWin.java:2278
+#: ../MainWin.java:2288
 msgid "Received faxes"
 msgstr "Empfangene Faxe"
 
-#: ../MainWin.java:2279 ../options/OptionsWin.java:253
+#: ../MainWin.java:2289 ../options/OptionsWin.java:255
 msgid "Sent"
 msgstr "Gesendet"
 
-#: ../MainWin.java:2279
+#: ../MainWin.java:2289
 msgid "Sent faxes"
 msgstr "Gesendete Faxe"
 
-#: ../MainWin.java:2280 ../options/OptionsWin.java:254
+#: ../MainWin.java:2290 ../options/OptionsWin.java:256
 msgid "Transmitting"
 msgstr "Sendend"
 
-#: ../MainWin.java:2280
+#: ../MainWin.java:2290
 msgid "Faxes in the output queue"
 msgstr "Faxe in der Ausgangswarteschlange"
 
-#: ../MainWin.java:2293 ../options/OptionsWin.java:255
+#: ../MainWin.java:2303 ../options/OptionsWin.java:257
 msgid "Archive"
 msgstr "Archiv"
 
-#: ../MainWin.java:2548
+#: ../MainWin.java:2564
 msgid "Table"
 msgstr "Tabelle"
 
-#: ../MainWin.java:2562
+#: ../MainWin.java:2578
 msgid "Extras"
 msgstr "Extras"
 
-#: ../MainWin.java:2623
+#: ../MainWin.java:2639
 msgid "All faxes"
 msgstr "Alle Faxe"
 
-#: ../MainWin.java:2628
+#: ../MainWin.java:2644
 msgid "Only own faxes"
 msgstr "Nur eigene Faxe"
 
-#: ../MainWin.java:2632
+#: ../MainWin.java:2648
 msgid "Custom filter..."
 msgstr "Benutzerdefinierter Filter..."
 
-#: ../MainWin.java:2663
+#: ../MainWin.java:2679
 #, java-format
 msgid "Custom filter for table {0}"
 msgstr "Benutzerdefinierter Filter für Tabelle {0}"
 
-#: ../MainWin.java:2664
+#: ../MainWin.java:2680
 msgid "Only display fax jobs fulfilling:"
 msgstr "Nur Faxe anzeigen, die Folgendes erfüllen:"
 
-#: ../MainWin.java:2665
+#: ../MainWin.java:2681
 msgid ""
 "You have entered no filtering conditions. Do you want to show all faxes "
 "instead?"
@@ -1433,7 +1432,7 @@ msgstr ""
 "Sie haben keine Filterbedingung eingegeben. Möchten Sie stattdessen alle "
 "Faxe anzeigen?"
 
-#: ../MainWin.java:2666
+#: ../MainWin.java:2682
 msgid ""
 "Please enter a valid date/time!\n"
 "(Hint: Exactly the same format as in the fax job table is expected)"
@@ -1441,21 +1440,21 @@ msgstr ""
 "Bitte geben Sie ein gültiges Datum ein! \n"
 "(Hinweis: Es wird genau das selbe Format wie in der Fax-Tabelle erwartet)"
 
-#: ../MainWin.java:3005 ../HylaClientManager.java:242
+#: ../MainWin.java:3021 ../HylaClientManager.java:242
 msgid "An error occured connecting to the server:"
 msgstr "Beim Verbindungsaufbau mit dem Server ist ein Fehler aufgetreten:"
 
-#: ../MainWin.java:3167
+#: ../MainWin.java:3184
 #, java-format
 msgid "Disconnected, will try to reconnect in {0} seconds..."
 msgstr ""
 "Nicht verbunden, werde in {0} Sekunden versuchen, erneut zu verbinden..."
 
-#: ../MainWin.java:3174
+#: ../MainWin.java:3191
 msgid "Trying to reconnect..."
 msgstr "Versuche neu zu verbinden..."
 
-#: ../MainWin.java:3242
+#: ../MainWin.java:3259
 msgid ""
 "Type here parts of the sender, recipient or file name in order to search for "
 "a fax."
@@ -1463,7 +1462,7 @@ msgstr ""
 "Hier Teile des Senders, Empfängers oder Dateinamens eingeben, um nach einem "
 "Fax zu suchen."
 
-#: ../MainWin.java:3243
+#: ../MainWin.java:3260
 msgid "Reset quick search and show all faxes."
 msgstr "Schnellsuche zurücksetzen und alle Faxe anzeigen."
 
@@ -1681,56 +1680,60 @@ msgstr "Plugin"
 msgid "General"
 msgstr "Allgemein"
 
-#: ../options/OptionsWin.java:236
+#: ../options/OptionsWin.java:235
+msgid "Phone numbers"
+msgstr "Telefonnummern"
+
+#: ../options/OptionsWin.java:238
 msgid "Paths and viewers"
 msgstr "Pfade und Betrachter"
 
-#: ../options/OptionsWin.java:237
+#: ../options/OptionsWin.java:239
 msgid "Recipient extraction"
 msgstr "Empfänger auslesen"
 
-#: ../options/OptionsWin.java:240 ../options/ServerSettingsPanel.java:264
+#: ../options/OptionsWin.java:242 ../options/ServerSettingsPanel.java:264
 msgid "Servers"
 msgstr "Server"
 
-#: ../options/OptionsWin.java:243
+#: ../options/OptionsWin.java:245
 msgid "Cover page & Identities"
 msgstr "Deckblatt & Identitäten"
 
-#: ../options/OptionsWin.java:246 ../options/PluginPanel.java:94
+#: ../options/OptionsWin.java:248 ../options/PluginPanel.java:94
 msgid "Plugins & JDBC"
 msgstr "Plugins & JDBC"
 
-#: ../options/OptionsWin.java:249
+#: ../options/OptionsWin.java:251
 msgid "Please select on the left which table you want to edit."
 msgstr "Bitte wählen Sie links aus, welche Tabelle editiert werden soll."
 
-#: ../options/OptionsWin.java:250
+#: ../options/OptionsWin.java:252
 msgid "Tables"
 msgstr "Tabellen"
 
-#: ../options/OptionsWin.java:251
+#: ../options/OptionsWin.java:253
 #, java-format
 msgid "Table \"{0}\""
 msgstr "Tabelle \"{0}\""
 
-#: ../options/OptionsWin.java:259
+#: ../options/OptionsWin.java:261
 msgid "These settings normally need not to be changed."
 msgstr "Diese Einstellungen müssen normalerweise nicht geändert werden."
 
-#: ../options/OptionsWin.java:260 ../options/AdminSettingsPage.java:102
+#: ../options/OptionsWin.java:262 ../options/AdminSettingsPage.java:102
 msgid "Advanced settings"
 msgstr "Erweiterte Einstellungen"
 
-#: ../options/OptionsWin.java:261
+#: ../options/OptionsWin.java:263
 msgid "Administrative settings"
 msgstr "Administrative Einstellungen"
 
-#: ../options/OptionsWin.java:262
+#: ../options/OptionsWin.java:264
 msgid "File converters"
 msgstr "Datei-Konverter"
 
-#: ../options/OptionsWin.java:472
+#: ../options/OptionsWin.java:474
 msgid "Error saving the settings:"
 msgstr "Fehler beim Speichern der Einstellungen:"
 
@@ -2278,6 +2281,32 @@ msgstr "Wählprefix:"
 #: ../options/SendPanel.java:187
 msgid "Default identity:"
 msgstr "Standardidentität:"
+
+#: ../options/PhoneNumberPanel.java:85
+msgid ""
+"Here you can set information on how to translate phone numbers to canonic "
+"format (e.g. +49 1234 567890). Currently this is only used to look up names "
+"from the phone book."
+msgstr ""
+"Hier können Sie angeben, wie Telefonnummern ins kanonische Format (z.B. +49 "
+"1234 4567890) übersetzt werden. Momentan wird dies nur verwendet, um Namen "
+"aus dem Telefonbuch nachzuschlagen."
+
+#: ../options/PhoneNumberPanel.java:89
+msgid "Country Code"
+msgstr "Ländercode"
+
+#: ../options/PhoneNumberPanel.java:90
+msgid "Area Code"
+msgstr "Vorwahl"
+
+#: ../options/PhoneNumberPanel.java:91
+msgid "Long Distance Call Prefix"
+msgstr "Präfix für Ferngespräche"
+
+#: ../options/PhoneNumberPanel.java:92
+msgid "International Call Prefix"
+msgstr "Präfix für internationale Anrufe"
 
 #: ../options/CommonPanel.java:115
 msgid "(System native)"
@@ -2841,8 +2870,7 @@ msgid "Comments"
 msgstr "Kommentare"
 
 #: ../phonebook/WrapperDistributionList.java:201
-#: ../phonebook/xml/XMLDistributionList.java:164
-#: ../phonebook/PhoneBook.java:74
+#: ../phonebook/xml/XMLDistributionList.java:164 ../phonebook/PhoneBook.java:74
 msgid "<no name>"
 msgstr "<kein Name>"
 
@@ -3363,6 +3391,61 @@ msgstr "Sie müssen eine Datenbanktabelle angeben."
 msgid "Connection to the database succeeded."
 msgstr "Verbindung mit der Datenbank erfolgreich hergestellt."
 
+#: ../virtualcolumnstore/LocalVirtColPersister.java:355
+msgid "Local file"
+msgstr "Lokale Datei"
+
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:103
+msgid "Key (fax filename):"
+msgstr "Schlüssel (Fax-Dateiname):"
+
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:104
+msgid "Read/Unread state:"
+msgstr "Gelesen/ungelesen-Status:"
+
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:105
+msgid "Comment:"
+msgstr "Kommentar:"
+
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:106
+msgid "Last modified:"
+msgstr "Zuletzt geändert:"
+
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:334
+#, java-format
+msgid ""
+"No database field is set to save column \"User comment\". Values will be "
+"lost after restart.\n"
+"Please see {0} for more information."
+msgstr ""
+"Es wurde kein Datenbankfeld festgelegt, um die Spalte \"Benutzerkommentar\" "
+"zu speichern. Werte werden beim Neustart verloren gehen.\n"
+"Für mehr Informationen besuchen Sie bitte {0}."
+
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:334
+#: ../model/jobq/QueueFileFormat.java:120 ../model/JobFormat.java:276
+#: ../model/RecvFormat.java:145
+msgid "User comment"
+msgstr "Benutzerkommentar"
+
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:803
+msgid "Database table"
+msgstr "Datenbanktabelle"
+
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:817
+msgid "JDBC settings to save read/unread state and comment"
+msgstr ""
+"JDBC-Einstellungen, um den gelesen/ungelesen-Status und den Kommentar zu "
+"speichern."
+
+#: ../virtualcolumnstore/JDBCVirtColPersister.java:818
+msgid ""
+"Please select which database fields correspond to the key, read/unread state "
+"and comment"
+msgstr ""
+"Bitte wählen Sie aus, welche Datenbankfelder dem Schlüssel, gelesen/"
+"ungelesen-Status und Kommentar entsprechen."
+
 #: ../FaxResolution.java:46
 msgid "Extended (> 196 lpi)"
 msgstr "Erweitert (> 196 lpi)"
@@ -3829,14 +3912,18 @@ msgstr "Betreff des Faxes"
 
 #: ../model/jobq/QueueFileFormat.java:120 ../model/JobFormat.java:276
 #: ../model/RecvFormat.java:145
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:334
-msgid "User comment"
-msgstr "Benutzerkommentar"
-
-#: ../model/jobq/QueueFileFormat.java:120 ../model/JobFormat.java:276
-#: ../model/RecvFormat.java:145
 msgid "Comment added by a YajHFC user"
 msgstr "Kommentar durch einen YajHFC-Benutzer"
+
+#: ../model/jobq/QueueFileFormat.java:124 ../model/JobFormat.java:280
+#: ../model/RecvFormat.java:149
+msgid "Name (phone book)"
+msgstr "Name (Telefonbuch)"
+
+#: ../model/jobq/QueueFileFormat.java:124 ../model/JobFormat.java:280
+#: ../model/RecvFormat.java:149
+msgid "Name looked up from phone book"
+msgstr "Aus dem Telefonbuch nachgeschlagener Name"
 
 #: ../model/JobFormat.java:68
 msgid "Dials: total/max."
@@ -4660,55 +4747,6 @@ msgstr "Fehler beim Ändern des Faxauftrags \"{0}\""
 #, java-format
 msgid "Modify parameters of job {0}"
 msgstr "Parameter von Auftrag {0} ändern"
-
-#: ../virtualcolumnstore/LocalVirtColPersister.java:355
-msgid "Local file"
-msgstr "Lokale Datei"
-
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:103
-msgid "Key (fax filename):"
-msgstr "Schlüssel (Fax-Dateiname):"
-
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:104
-msgid "Read/Unread state:"
-msgstr "Gelesen/ungelesen-Status:"
-
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:105
-msgid "Comment:"
-msgstr "Kommentar:"
-
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:106
-msgid "Last modified:"
-msgstr "Zuletzt geändert:"
-
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:334
-#, java-format
-msgid ""
-"No database field is set to save column \"User comment\". Values will be "
-"lost after restart.\n"
-"Please see {0} for more information."
-msgstr ""
-"Es wurde kein Datenbankfeld festgelegt, um die Spalte \"Benutzerkommentar\" "
-"zu speichern. Werte werden beim Neustart verloren gehen.\n"
-"Für mehr Informationen besuchen Sie bitte {0}."
-
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:803
-msgid "Database table"
-msgstr "Datenbanktabelle"
-
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:817
-msgid "JDBC settings to save read/unread state and comment"
-msgstr ""
-"JDBC-Einstellungen, um den gelesen/ungelesen-Status und den Kommentar zu "
-"speichern."
-
-#: ../virtualcolumnstore/JDBCVirtColPersister.java:818
-msgid ""
-"Please select which database fields correspond to the key, read/unread state "
-"and comment"
-msgstr ""
-"Bitte wählen Sie aus, welche Datenbankfelder dem Schlüssel, gelesen/"
-"ungelesen-Status und Kommentar entsprechen."
 
 #~ msgid ""
 #~ "No database field is set to save column \"User comment\". Values will be "
