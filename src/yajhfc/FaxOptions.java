@@ -555,6 +555,28 @@ public class FaxOptions extends AbstractFaxOptions implements Cloneable {
      */
     public boolean recipientExtractionTagMandatoryColon = false;
     
+    
+    /**
+     * Dial prefix for long distance calls
+     */
+    public String longDistanceCallPrefix = "0";
+    
+    /**
+     * Dial prefix for international calls
+     */
+    public String internationalCallPrefix = "00";
+    
+    /**
+     * Area Code for calls
+     */
+    public String areaCode = "1234";
+    
+    /**
+     * Country code
+     */
+    public String countryCode = "49";
+    
+    
     public FaxOptions() {
         super(null);
         

@@ -240,7 +240,8 @@ public enum RecvFormat implements FmtItem {
         RecvFormat.z,
         RecvFormat.e,
         RecvFormat.virt_comment,
-        RecvFormat.virt_read
+        RecvFormat.virt_read,
+        RecvFormat.s
     };
     public static RecvFormat[] getRequiredFormats() {
         return requiredFormats;

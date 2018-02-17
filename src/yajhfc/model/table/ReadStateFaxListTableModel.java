@@ -51,6 +51,7 @@ import yajhfc.model.VirtualColumnType;
 import yajhfc.model.servconn.FaxJob;
 import yajhfc.model.servconn.FaxJobList;
 import yajhfc.model.servconn.FaxJobListListener;
+import yajhfc.phonebook.namelookup.FaxJobListResolvedPhoneNumUpdater;
 import yajhfc.virtualcolumnstore.VirtColPersister;
 
 public class ReadStateFaxListTableModel<T extends FmtItem> extends FaxListTableModel<T> {
@@ -74,8 +75,8 @@ public class ReadStateFaxListTableModel<T extends FmtItem> extends FaxListTableM
         this.unreadFont = unreadFont;
     }
     
-    public ReadStateFaxListTableModel(FaxJobList<T> jobs) {
-        super(jobs);
+    public ReadStateFaxListTableModel(FaxJobList<T> jobs, FaxJobListResolvedPhoneNumUpdater<T> faxListUpdater) {
+        super(jobs, faxListUpdater);
     }
 
     

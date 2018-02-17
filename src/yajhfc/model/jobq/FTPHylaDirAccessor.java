@@ -147,7 +147,7 @@ public class FTPHylaDirAccessor implements HylaDirAccessor {
     protected ScheduledFuture<?> logoutChecker;
     private void initializeLogoutChecker() {
         if (logoutChecker != null) {
-            logoutChecker = Utils.executorService.scheduleWithFixedDelay(new Runnable() {
+            logoutChecker = Utils.scheduledExecutor.scheduleWithFixedDelay(new Runnable() {
                 public void run() {
                     if (ftpClient != null) {
                         synchronized (FTPHylaDirAccessor.this) {

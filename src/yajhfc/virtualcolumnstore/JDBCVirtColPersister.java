@@ -194,7 +194,7 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
                     checkForUpdates();
                 }  
             };
-            updateTask = Utils.executorService.scheduleAtFixedRate(updater, 
+            updateTask = Utils.scheduledExecutor.scheduleAtFixedRate(updater, 
                     Utils.getFaxOptions().statusUpdateInterval,
                     Utils.getFaxOptions().statusUpdateInterval,
                     TimeUnit.MILLISECONDS);
@@ -595,11 +595,11 @@ public class JDBCVirtColPersister extends CachingVirtColPersister {
             int columnIndex, Object value, Object oldValue) {
         if (SwingUtilities.isEventDispatchThread()) {
             // Make the DB write outside the event dispatch thread
-            Utils.executorService.schedule(new Runnable() {
+            Utils.poolExecutor.submit(new Runnable() {
                 public void run() {
                     realValueChanged(key);
                 }
-            }, 0, TimeUnit.MILLISECONDS);
+            });
         } else {
             realValueChanged(key);
         }

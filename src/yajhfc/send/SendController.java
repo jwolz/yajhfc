@@ -458,7 +458,7 @@ public class SendController implements FaxSender {
         @Override
         protected void done() {
             fireSendOperationComplete(success);
-            Utils.executorService.submit(new Runnable() {
+            Utils.poolExecutor.submit(new Runnable() {
                public void run() {
                    fileManager.cleanup();
                 } 

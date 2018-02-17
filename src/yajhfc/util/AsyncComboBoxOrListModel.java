@@ -108,7 +108,7 @@ public class AsyncComboBoxOrListModel<T> extends AbstractListModel
      * Refreshes the list asynchronously
      */
     public void refreshListAsync() {
-        future = Utils.executorService.submit(listCallable);
+        future = Utils.poolExecutor.submit(listCallable);
     }
     
     /* (non-Javadoc)

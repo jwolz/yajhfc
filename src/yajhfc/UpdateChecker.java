@@ -215,7 +215,7 @@ public class UpdateChecker {
                     }
                 }
             };
-            Utils.executorService.submit(r);
+            Utils.poolExecutor.submit(r);
         }
     }
     

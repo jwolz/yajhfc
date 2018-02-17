@@ -37,8 +37,6 @@ package yajhfc;
  */
 
 import static yajhfc.Utils._;
-import gnu.hylafax.HylaFAXClient;
-import gnu.inet.ftp.ServerResponseException;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -73,6 +71,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -80,7 +79,6 @@ import javax.swing.Action;
 import javax.swing.ButtonGroup;
 import javax.swing.InputMap;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -111,6 +109,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import gnu.hylafax.HylaFAXClient;
+import gnu.inet.ftp.ServerResponseException;
 import yajhfc.export.ExportAction;
 import yajhfc.file.FormattedFile;
 import yajhfc.file.MultiFileConvFormat;
@@ -149,6 +149,8 @@ import yajhfc.model.ui.TooltipJTable;
 import yajhfc.options.OptionsWin;
 import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
 import yajhfc.phonebook.convrules.PBEntryFieldContainer;
+import yajhfc.phonebook.namelookup.FaxJobListResolvedPhoneNumUpdater;
+import yajhfc.phonebook.namelookup.PhoneNumberMap;
 import yajhfc.phonebook.ui.NewPhoneBookWin;
 import yajhfc.plugin.PluginManager;
 import yajhfc.plugin.PluginUI;
@@ -955,11 +957,17 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         
         actPhonebook = new ExcDialogAbstractAction() {
             public void actualActionPerformed(ActionEvent e) {
-                Utils.setWaitCursor(null);
-                NewPhoneBookWin pbw = new NewPhoneBookWin(MainWin.this);
-                pbw.setModal(true);
-                Utils.unsetWaitCursorOnOpen(null, pbw);
-                pbw.setVisible(true);
+                try {
+                    PhoneNumberMap.disableLoad = true;
+                    Utils.setWaitCursor(null);
+                    NewPhoneBookWin pbw = new NewPhoneBookWin(MainWin.this);
+                    pbw.setModal(true);
+                    Utils.unsetWaitCursorOnOpen(null, pbw);
+                    pbw.setVisible(true);
+                } finally {
+                    PhoneNumberMap.disableLoad = false;
+                    PhoneNumberMap.reloadPhoneBooksAsync();
+                }
             }
         };
         actPhonebook.putValue(Action.NAME, _("Phone book") +  "...");
@@ -1734,7 +1742,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         
         connection.addFaxListConnectionListener(new RefreshCompleteHider(tablePanel, connection));
         //tableRefresher.hideProgress = true;
-        Utils.executorService.submit(new Runnable() {
+        Utils.poolExecutor.submit(new Runnable() {
             public void run() {
                 connection.refreshFaxLists();
              } 
@@ -1742,7 +1750,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     }
     
     public void refreshStatus() {
-        Utils.executorService.submit(new Runnable() {
+        Utils.poolExecutor.submit(new Runnable() {
            public void run() {
                connection.refreshStatus();
             } 
@@ -1984,6 +1992,8 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
             UpdateChecker.startSilentUpdateCheck();
         }
         
+        Utils.scheduledExecutor.scheduleWithFixedDelay(PhoneNumberMap.createRefreshRunner(), 111, myopts.tableUpdateInterval, TimeUnit.MILLISECONDS);
+        
     }
     
     public void saveWindowSettings() {
@@ -2094,7 +2104,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                 };*/
                 
                 userInitiatedLogout = true;
-                Utils.executorService.submit(new Runnable() {
+                Utils.poolExecutor.submit(new Runnable() {
                    public void run() {
                        // Persistence cleanup disabled for now for safety reasons...
                        //VirtColPersister persistence = currentServer.getPersistence();
@@ -2186,7 +2196,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         tablePanel.showIndeterminateProgress(_("Logging in..."));
         
         userInitiatedLogout = false;
-        Utils.executorService.submit(new LoginThread((Boolean)actAdminMode.getValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY), loginAction, showErrorDialogs));
+        Utils.poolExecutor.submit(new LoginThread((Boolean)actAdminMode.getValue(SelectedActionPropertyChangeListener.SELECTED_PROPERTY), loginAction, showErrorDialogs));
         
     }
     
@@ -2378,7 +2388,8 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     
     public ReadStateFaxListTableModel<RecvFormat> getRecvTableModel() {
         if (recvTableModel == null) {
-            recvTableModel = new ReadStateFaxListTableModel<RecvFormat>(connection.getReceivedJobs());
+            recvTableModel = new ReadStateFaxListTableModel<RecvFormat>(connection.getReceivedJobs(),
+                    new FaxJobListResolvedPhoneNumUpdater<RecvFormat>(RecvFormat.virt_resolvedname, RecvFormat.s));
             recvTableModel.addUnreadItemListener(new UnreadItemListener<RecvFormat>() {
                 public void newItemsAvailable(UnreadItemEvent<RecvFormat> evt) {
                     if (evt.isOldDataNull())
@@ -2445,7 +2456,8 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
 
     public FaxListTableModel<JobFormat> getSentTableModel() {
         if (sentTableModel == null) {
-            sentTableModel = new FaxListTableModel<JobFormat>(connection.getSentJobs());
+            sentTableModel = new FaxListTableModel<JobFormat>(connection.getSentJobs(),
+                                    new FaxJobListResolvedPhoneNumUpdater<JobFormat>(JobFormat.virt_resolvedname, JobFormat.e));
         }
         return sentTableModel;
     }
@@ -2490,14 +2502,16 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     
     public FaxListTableModel<JobFormat> getSendingTableModel() {
         if (sendingTableModel == null) {
-            sendingTableModel = new FaxListTableModel<JobFormat>(connection.getSendingJobs());
+            sendingTableModel = new FaxListTableModel<JobFormat>(connection.getSendingJobs(),
+                    new FaxJobListResolvedPhoneNumUpdater<JobFormat>(JobFormat.virt_resolvedname, JobFormat.e));
         }
         return sendingTableModel;
     }
 
     FaxListTableModel<QueueFileFormat> getArchiveTableModel() {
         if (archiveTableModel == null) {
-            archiveTableModel = new FaxListTableModel<QueueFileFormat>(connection.getArchivedJobs());
+            archiveTableModel = new FaxListTableModel<QueueFileFormat>(connection.getArchivedJobs(),
+                    new FaxJobListResolvedPhoneNumUpdater<QueueFileFormat>(QueueFileFormat.virt_resolvedname, QueueFileFormat.external));
         }
         return archiveTableModel;
     }
@@ -3113,6 +3127,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
         ServerManager.getDefault().optionsChanged();
         serverMenu.refreshMenuItems();
         switchServer(currentServer.getID());
+        PhoneNumberMap.reloadPhoneBooksAsync();
     }
 
     private final FaxListConnectionListener connListener = new SwingFaxListConnectionListener(true, true, false) {        

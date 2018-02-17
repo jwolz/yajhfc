@@ -158,7 +158,7 @@ public class LocalVirtColPersister extends CachingVirtColPersister implements Ru
             log.info("No saved values found");
         }
         
-        sft = Utils.executorService.scheduleWithFixedDelay(this, SAVE_INTERVAL, SAVE_INTERVAL, TimeUnit.SECONDS);
+        sft = Utils.scheduledExecutor.scheduleWithFixedDelay(this, SAVE_INTERVAL, SAVE_INTERVAL, TimeUnit.SECONDS);
     }
     
     protected static String booleanToString(boolean b) {

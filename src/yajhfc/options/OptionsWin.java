@@ -232,6 +232,8 @@ public class OptionsWin extends JDialog {
         
         rootNode.addChild(generalNode = new PanelTreeNode(rootNode, panelCommon = new CommonPanel(this), _("General"), Utils.loadIcon("general/Preferences")));
         
+        generalNode.addChild(new PanelTreeNode(generalNode, new PhoneNumberPanel(), _("Phone numbers"), Utils.loadCustomIcon("modem.png")));
+        
         PathAndViewPanel pathAndViewPanel;
         rootNode.addChild(pathsNode = new PanelTreeNode(rootNode, pathAndViewPanel = new PathAndViewPanel(), _("Paths and viewers"), Utils.loadIcon("development/Host")));
         pathsNode.addChild(new PanelTreeNode(pathsNode, new TextExtractorPanel(pathAndViewPanel), _("Recipient extraction"), Utils.loadCustomIcon("extract_recipient.gif"))); 
