@@ -68,6 +68,11 @@ public abstract class SimplePhoneBookEntry extends DefaultPhoneBookEntry {
     }
     
     @Override
+    public void copyFrom(PBEntryFieldContainer other) {
+        entryData.copyFrom(other);
+    }
+    
+    @Override
     public void setField(PBEntryField field, String value) {
         String oldVal = entryData.getField(field);
         if (value != oldVal && (oldVal == null || !oldVal.equals(value))) {
