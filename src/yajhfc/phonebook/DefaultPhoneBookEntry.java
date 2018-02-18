@@ -1,6 +1,7 @@
 package yajhfc.phonebook;
 
 import yajhfc.Utils;
+import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
 import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 
 /*
@@ -77,9 +78,7 @@ public abstract class DefaultPhoneBookEntry implements PhoneBookEntry {
     }
 
     public void copyFrom(PBEntryFieldContainer other) {
-        for (PBEntryField field : PBEntryField.values()) {
-            setField(field, other.getField(field));
-        }
+        DefaultPBEntryFieldContainer.copyEntries(other, this);
     }
 
     public void refreshToStringRule() {

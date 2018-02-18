@@ -1,6 +1,6 @@
 package yajhfc.phonebook;
 
-import java.util.Arrays;
+import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
 
 
 
@@ -43,8 +43,7 @@ import java.util.Arrays;
 
 public abstract class SimplePhoneBookEntry extends DefaultPhoneBookEntry {
     
-    // Not using an EnumMap here to save some memory (we will have lots of Entries...)
-    protected String[] data = new String[PBEntryField.FIELD_COUNT];
+    protected final DefaultPBEntryFieldContainer entryData = new DefaultPBEntryFieldContainer("");
     
     private boolean dirty = false;
     /**
@@ -55,16 +54,16 @@ public abstract class SimplePhoneBookEntry extends DefaultPhoneBookEntry {
     
     @Override
     public String getField(PBEntryField field) {
-        return data[field.ordinal()];
+        return entryData.getField(field);
     }
     
     protected void setFieldUndirty(PBEntryField field, String value) {
-        data[field.ordinal()] = value;
+        entryData.setField(field, value);
     }
     
     @Override
     public void setField(PBEntryField field, String value) {
-        String oldVal = data[field.ordinal()];
+        String oldVal = entryData.getField(field);
         if (value != oldVal && (oldVal == null || !oldVal.equals(value))) {
             setFieldUndirty(field, value);
             dirty = true;
@@ -98,6 +97,6 @@ public abstract class SimplePhoneBookEntry extends DefaultPhoneBookEntry {
     }
     
     public SimplePhoneBookEntry() {
-        Arrays.fill(data, "");
+        super();
     }
 }

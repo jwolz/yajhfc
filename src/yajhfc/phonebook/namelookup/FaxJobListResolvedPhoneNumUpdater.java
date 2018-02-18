@@ -68,6 +68,11 @@ public class FaxJobListResolvedPhoneNumUpdater<T extends FmtItem> implements Fax
     }
 
     public void updateFaxJobs(List<FaxJob<T>> jobs, boolean fireEvent) {
+        if (!PhoneNumberMap.entriesAreLoaded()) {
+            log.fine("No phone book entries are loaded yet...");
+            return;
+        }
+        
         final List<T> completeView = jobList.getColumns().getCompleteView();
         final int numberIndex = completeView.indexOf(numberField);
         final int nameIndex = completeView.indexOf(nameField);

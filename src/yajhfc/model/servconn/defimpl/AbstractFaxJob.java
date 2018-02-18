@@ -291,7 +291,6 @@ public abstract class AbstractFaxJob<T extends FmtItem> implements SerializableF
 
     /**
      * Calculates this job's state
-     * @param data
      * @return
      */
     protected abstract JobState calculateJobState();

@@ -56,4 +56,10 @@ public interface PBEntryFieldContainer {
      * @param field
      */
     public void setField(PBEntryField field, String value);
+    
+    /**
+     * Copy all values from another PBEntryFieldContainer
+     * @param other
+     */
+    public void copyFrom(PBEntryFieldContainer other);
 }
