@@ -590,7 +590,8 @@ public final class Utils {
             
             @Override
             public void windowOpened(WindowEvent e) {
-                log.info("Profiling: Time to open " + target.getClass().getName() + ": " + (System.currentTimeMillis() - creationTime) + "ms");
+                if (Utils.debugMode)
+                    log.info("Profiling: Time to open " + target.getClass().getName() + ": " + (System.currentTimeMillis() - creationTime) + "ms");
                 unsetWaitCursor(dlgToSet);
                 target.removeWindowListener(this);
             }

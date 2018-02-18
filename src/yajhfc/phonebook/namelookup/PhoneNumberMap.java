@@ -36,16 +36,19 @@
  */
 package yajhfc.phonebook.namelookup;
 
+import java.awt.Dialog;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import yajhfc.FaxOptions;
 import yajhfc.Utils;
+import yajhfc.launch.Launcher2;
 import yajhfc.model.JobFormat;
 import yajhfc.model.RecvFormat;
 import yajhfc.model.jobq.QueueFileFormat;
@@ -71,6 +74,8 @@ public class PhoneNumberMap {
     
     protected static List<PhoneNumberMapListener> listeners = new ArrayList<PhoneNumberMapListener>();
     
+    protected static Semaphore loadLock = new Semaphore(1);
+    
     public static void addPhoneNumberMapListener(PhoneNumberMapListener listener) {
         listeners.add(listener);
     }
@@ -83,6 +88,10 @@ public class PhoneNumberMap {
         for (PhoneNumberMapListener listener : listeners) {
             listener.phoneNumberMapUpdated();
         }
+    }
+    
+    public static boolean entriesAreLoaded() {
+        return (map != null);
     }
     
     public static PBEntryFieldContainer getEntryForNumber(String number) {
@@ -121,37 +130,45 @@ public class PhoneNumberMap {
         Utils.poolExecutor.submit(createRefreshRunner());
     }
     
-    public static synchronized void loadPhonebooks(List<String> phoneBooks) {
-        Map<String,PBEntryFieldContainer> newMap = new Hashtable<String,PBEntryFieldContainer>(phoneBooks.size() * 50);
-        CountDownLatch latch = new CountDownLatch(phoneBooks.size());
-        
-        if (Utils.debugMode)
-            log.fine("Loading phone books: " + phoneBooks);
-        for (String desc : phoneBooks) {
-            Utils.poolExecutor.submit(new PBRunnable(desc, latch, newMap));
+    public static void loadPhonebooks(List<String> phoneBooks) {
+        if (!loadLock.tryAcquire()) {
+            log.info("Another load is in progress, cancelling this one...");
+            return;
         }
         try {
+            Map<String,PBEntryFieldContainer> newMap = new ConcurrentHashMap<String,PBEntryFieldContainer>(phoneBooks.size() * 50);
+            CountDownLatch latch = new CountDownLatch(phoneBooks.size());
+            Dialog dummyDialog = new Dialog(Launcher2.application.getFrame(), "Dummy dialog");
+            
+            if (Utils.debugMode)
+                log.fine("Loading phone books: " + phoneBooks);
+            for (String desc : phoneBooks) {
+                Utils.poolExecutor.submit(new PBRunnable(desc, latch, newMap, dummyDialog));
+            }
             log.fine("Waiting for phone books to be loaded...");
             latch.await();
             map = newMap;
             log.fine("New number map available");
             firePhoneNumberMapUpdated();
+            dummyDialog.dispose();
         } catch (Exception e) {
             log.log(Level.SEVERE, "Error refreshing phone books", e);
+        } finally {
+            loadLock.release();
         }
-        
     }
     
     protected static class PBRunnable implements Runnable {
         protected final String descriptor;
         protected final CountDownLatch latch;
         protected final Map<String,PBEntryFieldContainer> myMap;
+        protected final Dialog dialog;
         
         public void run() {
             try {
                 if (Utils.debugMode)
                     log.fine("Opening phone book: " + descriptor);
-                PhoneBook pb = PhoneBookFactory.instanceForDescriptor(descriptor, null);
+                PhoneBook pb = PhoneBookFactory.instanceForDescriptor(descriptor, dialog);
                 pb.open(descriptor);
                 if (Utils.debugMode)
                     log.fine("Loading entries for phone book: " + descriptor);
@@ -190,11 +207,12 @@ public class PhoneNumberMap {
             }
         }
         
-        protected PBRunnable(String descriptor, CountDownLatch latch, Map<String,PBEntryFieldContainer> myMap) {
+        protected PBRunnable(String descriptor, CountDownLatch latch, Map<String,PBEntryFieldContainer> myMap, Dialog dialog) {
             super();
             this.descriptor = descriptor;
             this.latch = latch;
             this.myMap = myMap;
+            this.dialog = dialog;
         }
     }
 }

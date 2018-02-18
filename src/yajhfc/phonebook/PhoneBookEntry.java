@@ -62,8 +62,6 @@ public interface PhoneBookEntry extends Comparable<PhoneBookEntry>, FilterableOb
      */
     public void updateDisplay();
 
-    public void copyFrom(PBEntryFieldContainer other);
-
     /**
      * Refreshes the return value of toString()
      */

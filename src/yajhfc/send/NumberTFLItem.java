@@ -45,12 +45,12 @@ public class NumberTFLItem extends TFLItem implements PBEntryFieldContainer {
     
     @Override
     public String getText() {
-        return fields.get(PBEntryField.FaxNumber);
+        return fields.getField(PBEntryField.FaxNumber);
     }
     
     @Override
     public void setText(String newText) {
-        fields.put(PBEntryField.FaxNumber, newText);
+        fields.setField(PBEntryField.FaxNumber, newText);
     }
     
     public void loadFromPBE(PBEntryFieldContainer pbe) {
@@ -66,10 +66,14 @@ public class NumberTFLItem extends TFLItem implements PBEntryFieldContainer {
     }
 
     public String getField(PBEntryField field) {
-        return fields.get(field);
+        return fields.getField(field);
     }
 
     public void setField(PBEntryField field, String value) {
-        fields.put(field, value);
+        fields.setField(field, value);
+    }
+    
+    public void copyFrom(PBEntryFieldContainer other) {
+        fields.copyFrom(other);
     }
 }

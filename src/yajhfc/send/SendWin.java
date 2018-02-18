@@ -405,8 +405,8 @@ final class SendWin extends JDialog implements SendWinControl  {
                         String name = textToName.getText();
                         String voiceNumber = textToVoiceNumber.getText();
                         if (current != null) {
-                            if (company.equals(current.fields.get(PBEntryField.Company)) && location.equals(current.fields.get(PBEntryField.Location)) &&
-                                    name.equals(current.fields.get(PBEntryField.Name)) && voiceNumber.equals(current.fields.get(PBEntryField.VoiceNumber))) {
+                            if (company.equals(current.fields.getField(PBEntryField.Company)) && location.equals(current.fields.getField(PBEntryField.Location)) &&
+                                    name.equals(current.fields.getField(PBEntryField.Name)) && voiceNumber.equals(current.fields.getField(PBEntryField.VoiceNumber))) {
 
                                 company = ""; //textToCompany.getText();
                                 location  = ""; //textToLocation.getText();
@@ -414,10 +414,10 @@ final class SendWin extends JDialog implements SendWinControl  {
                                 voiceNumber = ""; //textToVoiceNumber.getText();
                             }
                         } 
-                        rv.fields.put(PBEntryField.Company, company);
-                        rv.fields.put(PBEntryField.Location, location);
-                        rv.fields.put(PBEntryField.Name, name);
-                        rv.fields.put(PBEntryField.VoiceNumber, voiceNumber);
+                        rv.fields.setField(PBEntryField.Company, company);
+                        rv.fields.setField(PBEntryField.Location, location);
+                        rv.fields.setField(PBEntryField.Name, name);
+                        rv.fields.setField(PBEntryField.VoiceNumber, voiceNumber);
                     }
                     return rv;
                 }
@@ -426,10 +426,10 @@ final class SendWin extends JDialog implements SendWinControl  {
                 protected void commitChanges(TFLItem sel) {
                     if (!pollMode) {
                         NumberTFLItem numSel = (NumberTFLItem)sel;
-                        numSel.fields.put(PBEntryField.Company, textToCompany.getText());
-                        numSel.fields.put(PBEntryField.Location, textToLocation.getText());
-                        numSel.fields.put(PBEntryField.Name, textToName.getText());
-                        numSel.fields.put(PBEntryField.VoiceNumber, textToVoiceNumber.getText());
+                        numSel.fields.setField(PBEntryField.Company, textToCompany.getText());
+                        numSel.fields.setField(PBEntryField.Location, textToLocation.getText());
+                        numSel.fields.setField(PBEntryField.Name, textToName.getText());
+                        numSel.fields.setField(PBEntryField.VoiceNumber, textToVoiceNumber.getText());
                     }
                     super.commitChanges(sel);
                 }
@@ -438,10 +438,10 @@ final class SendWin extends JDialog implements SendWinControl  {
                 protected void displayItem(TFLItem sel) {
                     if (!pollMode) {
                         NumberTFLItem numSel = (NumberTFLItem)sel;
-                        textToCompany.setText(numSel.fields.get(PBEntryField.Company));
-                        textToLocation.setText(numSel.fields.get(PBEntryField.Location));
-                        textToName.setText(numSel.fields.get(PBEntryField.Name));
-                        textToVoiceNumber.setText(numSel.fields.get(PBEntryField.VoiceNumber));
+                        textToCompany.setText(numSel.fields.getField(PBEntryField.Company));
+                        textToLocation.setText(numSel.fields.getField(PBEntryField.Location));
+                        textToName.setText(numSel.fields.getField(PBEntryField.Name));
+                        textToVoiceNumber.setText(numSel.fields.getField(PBEntryField.VoiceNumber));
                     }
                     super.displayItem(sel);
                 }

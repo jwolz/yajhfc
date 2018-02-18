@@ -39,8 +39,8 @@ package yajhfc.phonebook.convrules;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.EnumMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,25 +50,29 @@ import yajhfc.phonebook.PBEntryField;
  * @author jonas
  *
  */
-public class DefaultPBEntryFieldContainer extends EnumMap<PBEntryField, String>
-        implements PBEntryFieldContainer {
+public class DefaultPBEntryFieldContainer implements PBEntryFieldContainer {
 
     private static final Logger log = Logger.getLogger(DefaultPBEntryFieldContainer.class.getName());
+    
+    // Not using an EnumMap here to save some memory (we will have lots of Entries...)
+    protected String[] data = new String[PBEntryField.FIELD_COUNT];
     
     /* (non-Javadoc)
      * @see yajhfc.phonebook.convrules.PBEntryFieldContainer#getField(yajhfc.phonebook.PBEntryField)
      */
     public String getField(PBEntryField field) {
-        return get(field);
+        return data[field.ordinal()];
     }
     
     public void setField(PBEntryField field, String value) {
-        put(field, value);
+        data[field.ordinal()] = value;
     }
     
     public void copyFrom(PBEntryFieldContainer other) {
-        for (PBEntryField field : PBEntryField.values()) {
-            put(field, other.getField(field));
+        if (other instanceof DefaultPBEntryFieldContainer) {
+            System.arraycopy(((DefaultPBEntryFieldContainer)other).data, 0, data, 0, data.length);
+        } else {
+            copyEntries(other, this);
         }
     }    
     
@@ -82,6 +86,17 @@ public class DefaultPBEntryFieldContainer extends EnumMap<PBEntryField, String>
         setAllFieldsTo("");
         parseStringToPBEntryFieldContainer(this, numberOrFullFields);
         return this;
+    }
+    
+    /**
+     * Copy a phone book entry
+     * @param source
+     * @param target
+     */
+    public static void copyEntries(PBEntryFieldContainer source, PBEntryFieldContainer target) {
+        for (PBEntryField field : PBEntryField.values()) {
+            target.setField(field, source.getField(field));
+        }
     }
     
     /**
@@ -142,13 +157,20 @@ public class DefaultPBEntryFieldContainer extends EnumMap<PBEntryField, String>
     }
     
     public void setAllFieldsTo(String value) {
+        Arrays.fill(data, value);
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder res = new StringBuilder(256);
         for (PBEntryField field : PBEntryField.values()) {
-            put(field, value);
+            res.append(field.getKey()).append(':').append(getField(field)).append(';');
         }
+        return res.toString();
     }
     
     public DefaultPBEntryFieldContainer() {
-        super(PBEntryField.class);
+        super();
     }
 
     public DefaultPBEntryFieldContainer(String defValue) {

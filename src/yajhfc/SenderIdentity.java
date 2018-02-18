@@ -39,6 +39,7 @@ package yajhfc;
 import java.util.logging.Logger;
 
 import yajhfc.phonebook.PBEntryField;
+import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
 import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 
 /**
@@ -216,12 +217,16 @@ public class SenderIdentity extends IDAndNameOptions implements PBEntryFieldCont
         }
     }
     
+    public void copyFrom(PBEntryFieldContainer other) {
+        DefaultPBEntryFieldContainer.copyEntries(other, this);
+    }
+    
     public SenderIdentity(FaxOptions parent) {
         super(null, parent);
     }
     
     public SenderIdentity(SenderIdentity toClone) {
         super(null, toClone.parent, toClone.id);
-        copyFrom(toClone);
+        super.copyFrom(toClone);
     }
 }
