@@ -60,6 +60,8 @@ public class PhoneNumberCanonicalizer {
         
         // Strip everything but 0-9 or + from the String 
         String cleanNumber = Utils.stringKeepChars(number, "0123456789++#");
+        if (cleanNumber.length() == 0)
+            return "";
         
         if (cleanNumber.startsWith("+") || cleanNumber.startsWith("*") || cleanNumber.startsWith("#"))
             return cleanNumber; // Assume already in intl. Format or "special number"
