@@ -68,7 +68,8 @@ public interface PhoneBookEntry extends Comparable<PhoneBookEntry>, FilterableOb
     public void refreshToStringRule();
     
     /**
-     * Returns a read only clone of this entries' data
+     * Returns a read only clone of this entries' data.
+     * This should still be valid if the associated phone book is closed.
      */
     public PBEntryFieldContainer getReadOnlyClone();
 }
