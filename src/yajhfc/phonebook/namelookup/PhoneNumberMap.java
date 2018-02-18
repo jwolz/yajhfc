@@ -57,7 +57,6 @@ import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.PhoneBook;
 import yajhfc.phonebook.PhoneBookEntry;
 import yajhfc.phonebook.PhoneBookFactory;
-import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
 import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 
 /**
@@ -201,7 +200,7 @@ public class PhoneNumberMap {
                 final String canonicalizedNumber = PhoneNumberCanonicalizer.canonicalizeNumber(number);
                 if (Utils.debugMode)
                     log.finest("Put: " + canonicalizedNumber + " -> " + pbe);
-                PBEntryFieldContainer old = myMap.put(canonicalizedNumber, new DefaultPBEntryFieldContainer(pbe));
+                PBEntryFieldContainer old = myMap.put(canonicalizedNumber, pbe.getReadOnlyClone());
                 if (old != null && old != pbe)
                     log.info("Phone number is not unique: " + canonicalizedNumber);
             }

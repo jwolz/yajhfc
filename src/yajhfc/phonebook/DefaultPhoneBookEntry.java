@@ -80,6 +80,10 @@ public abstract class DefaultPhoneBookEntry implements PhoneBookEntry {
     public void copyFrom(PBEntryFieldContainer other) {
         DefaultPBEntryFieldContainer.copyEntries(other, this);
     }
+    
+    public PBEntryFieldContainer getReadOnlyClone() {
+        return new DefaultPBEntryFieldContainer(this);
+    }
 
     public void refreshToStringRule() {
         // Do nothing here...

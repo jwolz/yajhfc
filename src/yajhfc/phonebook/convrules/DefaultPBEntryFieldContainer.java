@@ -68,6 +68,13 @@ public class DefaultPBEntryFieldContainer implements PBEntryFieldContainer {
         data[field.ordinal()] = value;
     }
     
+    /**
+     * Returns a read only clone of this entries' data
+     */
+    public PBEntryFieldContainer getReadOnlyClone() {
+        return new DefaultPBEntryFieldContainer(this);
+    }
+    
     public void copyFrom(PBEntryFieldContainer other) {
         if (other instanceof DefaultPBEntryFieldContainer) {
             System.arraycopy(((DefaultPBEntryFieldContainer)other).data, 0, data, 0, data.length);
