@@ -505,6 +505,10 @@ public class PhoneBookSorter implements PhonebookEventListener, PhoneBookEntryLi
             entry.copyFrom(other);
         }
 
+        public PBEntryFieldContainer getReadOnlyClone() {
+            return entry.getReadOnlyClone();
+        }
+        
         public void refreshToStringRule() {
             entry.refreshToStringRule();
         }

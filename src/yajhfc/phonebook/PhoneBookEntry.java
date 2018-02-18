@@ -66,4 +66,9 @@ public interface PhoneBookEntry extends Comparable<PhoneBookEntry>, FilterableOb
      * Refreshes the return value of toString()
      */
     public void refreshToStringRule();
+    
+    /**
+     * Returns a read only clone of this entries' data
+     */
+    public PBEntryFieldContainer getReadOnlyClone();
 }

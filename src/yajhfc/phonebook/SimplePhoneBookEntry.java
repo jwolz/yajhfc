@@ -1,6 +1,7 @@
 package yajhfc.phonebook;
 
 import yajhfc.phonebook.convrules.DefaultPBEntryFieldContainer;
+import yajhfc.phonebook.convrules.PBEntryFieldContainer;
 
 
 
@@ -59,6 +60,11 @@ public abstract class SimplePhoneBookEntry extends DefaultPhoneBookEntry {
     
     protected void setFieldUndirty(PBEntryField field, String value) {
         entryData.setField(field, value);
+    }
+    
+    @Override
+    public PBEntryFieldContainer getReadOnlyClone() {
+        return entryData.getReadOnlyClone();
     }
     
     @Override
