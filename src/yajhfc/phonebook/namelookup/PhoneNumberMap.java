@@ -100,7 +100,11 @@ public class PhoneNumberMap {
         final String canonicalizedNumber = PhoneNumberCanonicalizer.canonicalizeNumber(number);
         if (Utils.debugMode)
             log.finer("Getting entry for number: " + number + "; canonicalized: " + canonicalizedNumber);
-        return map.get(canonicalizedNumber);
+        if (canonicalizedNumber.length() > 0) {
+            return map.get(canonicalizedNumber);
+        } else {
+            return null;
+        }
     }
     
     public static void loadPhonebooks() {
@@ -200,9 +204,12 @@ public class PhoneNumberMap {
                 final String canonicalizedNumber = PhoneNumberCanonicalizer.canonicalizeNumber(number);
                 if (Utils.debugMode)
                     log.finest("Put: " + canonicalizedNumber + " -> " + pbe);
-                PBEntryFieldContainer old = myMap.put(canonicalizedNumber, pbe.getReadOnlyClone());
-                if (old != null && old != pbe)
-                    log.info("Phone number is not unique: " + canonicalizedNumber);
+                
+                if (canonicalizedNumber.length() > 0) {
+                    PBEntryFieldContainer old = myMap.put(canonicalizedNumber, pbe.getReadOnlyClone());
+                    if (old != null && old != pbe)
+                        log.info("Phone number is not unique: " + canonicalizedNumber);
+                }
             }
         }
         
