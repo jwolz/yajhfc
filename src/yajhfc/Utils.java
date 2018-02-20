@@ -866,20 +866,19 @@ public final class Utils {
             input = input.substring(0, maxLen);
         
         char[] chars = input.toCharArray();
-        StringBuilder out = new StringBuilder(chars.length);
-        boolean changed = false;
-        for (char c : chars) {
+        int inIdx, outIdx;
+        outIdx = 0;
+        for (inIdx = 0; inIdx<chars.length; inIdx++) {
+            char c = chars[inIdx];
             if (forbiddenChars.indexOf(c) < 0) {
-                // If not a forbidden char, append to output
-                out.append(c);
-            } else {
-                changed = true;
+                // If it is not a forbidden char, keep in output
+                chars[outIdx++] = c;
             }
         }
         
-        if (changed) {
-            return out.toString();
-        } else {
+        if (outIdx < chars.length) { // We have less chars in output than we had in input -> string was changed
+            return new String(chars, 0, outIdx);
+        } else { // Unchanged
             return input;
         }
     }
@@ -906,20 +905,19 @@ public final class Utils {
             input = input.substring(0, maxLen);
         
         char[] chars = input.toCharArray();
-        StringBuilder out = new StringBuilder(chars.length);
-        boolean changed = false;
-        for (char c : chars) {
+        int inIdx, outIdx;
+        outIdx = 0;
+        for (inIdx = 0; inIdx<chars.length; inIdx++) {
+            char c = chars[inIdx];
             if (allowedChars.indexOf(c) >= 0) {
-                // If a allowed char, append to output
-                out.append(c);
-            } else {
-                changed = true;
+                // If it is a allowed char, keep in output
+                chars[outIdx++] = c;
             }
         }
         
-        if (changed) {
-            return out.toString();
-        } else {
+        if (outIdx < chars.length) { // We have less chars in output than we had in input -> string was changed
+            return new String(chars, 0, outIdx);
+        } else { // Unchanged
             return input;
         }
     }
