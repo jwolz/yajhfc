@@ -36,15 +36,20 @@
  */
 package yajhfc.phonebook.namelookup;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
 import yajhfc.Utils;
 import yajhfc.model.FmtItem;
+import yajhfc.model.VirtualColumnType;
 import yajhfc.model.servconn.FaxJob;
 import yajhfc.model.servconn.FaxJobList;
 import yajhfc.model.servconn.FaxJobListListener;
+import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.PhoneBook;
+import yajhfc.phonebook.convrules.CompanyRule;
+import yajhfc.phonebook.convrules.ConcatRule;
 import yajhfc.phonebook.convrules.EntryToStringRule;
 import yajhfc.phonebook.convrules.NameRule;
 import yajhfc.phonebook.convrules.PBEntryFieldContainer;
@@ -58,7 +63,7 @@ public class FaxJobListResolvedPhoneNumUpdater<T extends FmtItem> implements Fax
     static final Logger log = Logger.getLogger(FaxJobListResolvedPhoneNumUpdater.class.getName());
     
     protected FaxJobList<T> jobList;
-    protected final T nameField;
+    //protected final T nameField;
     protected final T numberField;
 
     public void updateFaxJobs() {
@@ -67,6 +72,18 @@ public class FaxJobListResolvedPhoneNumUpdater<T extends FmtItem> implements Fax
         }
     }
 
+    public static int[] getPhonebookColumnIndexes(List<? extends FmtItem> list) {
+        int[] aIdx = new int[list.size()];
+        int j=0;
+        
+        for (int i=0; i<list.size(); i++) {
+            if (list.get(i).getVirtualColumnType().isPhonebook()) {
+                aIdx[j++] = i;
+            }
+        }
+        return Arrays.copyOf(aIdx, j);
+    }
+    
     public void updateFaxJobs(List<FaxJob<T>> jobs, boolean fireEvent) {
         if (!PhoneNumberMap.entriesAreLoaded()) {
             log.fine("No phone book entries are loaded yet...");
@@ -75,20 +92,42 @@ public class FaxJobListResolvedPhoneNumUpdater<T extends FmtItem> implements Fax
         
         final List<T> completeView = jobList.getColumns().getCompleteView();
         final int numberIndex = completeView.indexOf(numberField);
-        final int nameIndex = completeView.indexOf(nameField);
+        final int[] fieldIdxs = getPhonebookColumnIndexes(completeView);
         final EntryToStringRule nameRule = PhoneBook.toStringRuleFromNameRule(RuleSerializer.stringToRule(Utils.getFaxOptions().phonebookDisplayStyle, NameRule.class, NameRule.GIVENNAME_NAME));
+        final EntryToStringRule companyRule = CompanyRule.COMPANY_DEPARTMENT;
+        final EntryToStringRule commentRule = new ConcatRule(PBEntryField.Comment);
         
         for (FaxJob<T> job : jobs) {
             String number = job.getData(numberIndex).toString();
             PBEntryFieldContainer pbe = PhoneNumberMap.getEntryForNumber(number);
-            String nameVal;
-            if (pbe != null) {
-                nameVal = nameRule.applyRule(pbe);
-            } else
-                nameVal = "";
             if (Utils.debugMode)
-                log.finer("Job " + job.getIDValue() + ": " + number + " -> " + pbe + " -> " + nameVal);
-            job.setData(nameIndex, nameVal, fireEvent);
+                log.finer("Job " + job.getIDValue() + ": " + number + " -> " + pbe);
+            
+            for (int fieldIdx : fieldIdxs) {
+                VirtualColumnType vct = completeView.get(fieldIdx).getVirtualColumnType();
+                EntryToStringRule rule;
+                switch (vct) {
+                case RESOLVED_NAME:
+                    rule = nameRule;
+                    break;
+                case RESOLVED_COMPANY:
+                    rule = companyRule;
+                    break;
+                case RESOLVED_COMMENT:
+                    rule = commentRule;
+                    break;
+                default:
+                    continue;
+                }
+                
+                String val;
+                if (pbe != null) {
+                    val = rule.applyRule(pbe);
+                } else {
+                    val = "";
+                }
+                job.setData(fieldIdx, val, fireEvent);
+            }
         }
     }
     
@@ -97,7 +136,7 @@ public class FaxJobListResolvedPhoneNumUpdater<T extends FmtItem> implements Fax
             return false;
         
         final List<T> completeView = jobList.getColumns().getCompleteView();
-        return completeView.contains(nameField) && completeView.contains(numberField);
+        return completeView.contains(numberField) && PhoneNumberMap.containsPhonebookColumn(completeView);
     }
     
     public void faxJobsUpdated(FaxJobList<T> source, List<FaxJob<T>> oldJobList, final List<FaxJob<T>> newJobList) {
@@ -151,17 +190,12 @@ public class FaxJobListResolvedPhoneNumUpdater<T extends FmtItem> implements Fax
         // Ignored
     }
 
-    public T getNameField() {
-        return nameField;
-    }
-    
     public T getNumberField() {
         return numberField;
     }
     
-    public FaxJobListResolvedPhoneNumUpdater(T nameField, T numberField) {
+    public FaxJobListResolvedPhoneNumUpdater(T numberField) {
         super();
-        this.nameField = nameField;
         this.numberField = numberField;
         
         //XXX: Not really clean

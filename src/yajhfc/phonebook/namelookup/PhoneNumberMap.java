@@ -49,9 +49,7 @@ import java.util.logging.Logger;
 import yajhfc.FaxOptions;
 import yajhfc.Utils;
 import yajhfc.launch.Launcher2;
-import yajhfc.model.JobFormat;
-import yajhfc.model.RecvFormat;
-import yajhfc.model.jobq.QueueFileFormat;
+import yajhfc.model.FmtItem;
 import yajhfc.phonebook.DistributionList;
 import yajhfc.phonebook.PBEntryField;
 import yajhfc.phonebook.PhoneBook;
@@ -107,14 +105,22 @@ public class PhoneNumberMap {
         }
     }
     
+    public static boolean containsPhonebookColumn(List<? extends FmtItem> list) {
+        for (FmtItem fi : list) {
+            if (fi.getVirtualColumnType().isPhonebook())
+                return true;
+        }
+        return false;
+    }
+    
     public static void loadPhonebooks() {
         final FaxOptions fo = Utils.getFaxOptions();
         // Only load phone books if needed
         if (!disableLoad && (
-            fo.recvfmt.contains(RecvFormat.virt_resolvedname) ||
-            fo.sentfmt.contains(JobFormat.virt_resolvedname) ||
-            fo.sendingfmt.contains(JobFormat.virt_resolvedname) ||
-            fo.archiveFmt.contains(QueueFileFormat.virt_resolvedname)
+            containsPhonebookColumn(fo.recvfmt) ||
+            containsPhonebookColumn(fo.sentfmt) ||
+            containsPhonebookColumn(fo.sendingfmt) ||
+            containsPhonebookColumn(fo.archiveFmt)
            ))
         {
             loadPhonebooks(fo.phoneBooks);

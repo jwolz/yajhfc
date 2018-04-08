@@ -175,6 +175,8 @@ public class JobToQueueMapping {
         put(new JobToQueueMapping(JobFormat._0, QueueFileFormat.usexvres));
         put(new JobToQueueMapping(JobFormat.virt_comment, QueueFileFormat.virt_comment));
         put(new JobToQueueMapping(JobFormat.virt_resolvedname, QueueFileFormat.virt_resolvedname));
+        put(new JobToQueueMapping(JobFormat.virt_resolvedcompany, QueueFileFormat.virt_resolvedcompany));
+        put(new JobToQueueMapping(JobFormat.virt_resolvedcomment, QueueFileFormat.virt_resolvedcomment));
         
         assert (jobToQueueMap.size() == JobFormat.values().length);
         // Sanity check if all Job Formats are mapped

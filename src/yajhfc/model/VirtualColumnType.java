@@ -58,10 +58,19 @@ public enum VirtualColumnType {
     /**
      * Resolved name from phone book
      */
-    RESOLVED_NAME(String.class, false);
+    RESOLVED_NAME(String.class, false, true),
+    /**
+     * Resolved company from phone book
+     */
+    RESOLVED_COMPANY(String.class, false, true),
+    /**
+     * Resolved comment from phone book
+     */
+    RESOLVED_COMMENT(String.class, false, true);
 
     private final Class<?> dataType;
     private final boolean saveable;
+    private final boolean phonebook;
     
     /**
      * Returns if the value of the column should be persisted
@@ -78,10 +87,23 @@ public enum VirtualColumnType {
     public Class<?> getDataType() {
         return dataType;
     }
+    
+    /**
+     * Returns if the data source of this virtual column is a resolved phone book entry
+     * @return
+     */
+    public boolean isPhonebook() {
+        return phonebook;
+    }
 
     private VirtualColumnType(Class<?> dataType, boolean saveable) {
+        this(dataType, saveable, false);
+    }
+    
+    private VirtualColumnType(Class<?> dataType, boolean saveable, boolean phonebook) {
         this.dataType = dataType;
         this.saveable = saveable;
+        this.phonebook = phonebook;
     }
     
     
