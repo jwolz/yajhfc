@@ -122,6 +122,14 @@ public enum QueueFileFormat implements FmtItem {
          * Virtual column: Name (phone book)
          */
         virt_resolvedname(null, _("Name (phone book)"), _("Name looked up from phone book"), String.class, null, null, true, VirtualColumnType.RESOLVED_NAME),
+        /**
+         * Virtual column: Company (phone book)
+         */
+        virt_resolvedcompany(null, _("Company (phone book)"), _("Company name looked up from phone book"), String.class, null, null, true, VirtualColumnType.RESOLVED_COMPANY),
+        /**
+         * Virtual column: Comment (phone book)
+         */
+        virt_resolvedcomment(null, _("Comment (phone book)"), _("Comment looked up from phone book"), String.class, null, null, true, VirtualColumnType.RESOLVED_COMMENT)
         ;
         
         private final String description;

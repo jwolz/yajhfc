@@ -2391,7 +2391,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     public ReadStateFaxListTableModel<RecvFormat> getRecvTableModel() {
         if (recvTableModel == null) {
             recvTableModel = new ReadStateFaxListTableModel<RecvFormat>(connection.getReceivedJobs(),
-                    new FaxJobListResolvedPhoneNumUpdater<RecvFormat>(RecvFormat.virt_resolvedname, RecvFormat.s));
+                    new FaxJobListResolvedPhoneNumUpdater<RecvFormat>(RecvFormat.s));
             recvTableModel.addUnreadItemListener(new UnreadItemListener<RecvFormat>() {
                 public void newItemsAvailable(UnreadItemEvent<RecvFormat> evt) {
                     if (evt.isOldDataNull())
@@ -2459,7 +2459,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     public FaxListTableModel<JobFormat> getSentTableModel() {
         if (sentTableModel == null) {
             sentTableModel = new FaxListTableModel<JobFormat>(connection.getSentJobs(),
-                                    new FaxJobListResolvedPhoneNumUpdater<JobFormat>(JobFormat.virt_resolvedname, JobFormat.e));
+                                    new FaxJobListResolvedPhoneNumUpdater<JobFormat>(JobFormat.e));
         }
         return sentTableModel;
     }
@@ -2507,7 +2507,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     public FaxListTableModel<JobFormat> getSendingTableModel() {
         if (sendingTableModel == null) {
             sendingTableModel = new FaxListTableModel<JobFormat>(connection.getSendingJobs(),
-                    new FaxJobListResolvedPhoneNumUpdater<JobFormat>(JobFormat.virt_resolvedname, JobFormat.e));
+                    new FaxJobListResolvedPhoneNumUpdater<JobFormat>(JobFormat.e));
         }
         return sendingTableModel;
     }
@@ -2515,7 +2515,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
     FaxListTableModel<QueueFileFormat> getArchiveTableModel() {
         if (archiveTableModel == null) {
             archiveTableModel = new FaxListTableModel<QueueFileFormat>(connection.getArchivedJobs(),
-                    new FaxJobListResolvedPhoneNumUpdater<QueueFileFormat>(QueueFileFormat.virt_resolvedname, QueueFileFormat.external));
+                    new FaxJobListResolvedPhoneNumUpdater<QueueFileFormat>(QueueFileFormat.external));
         }
         return archiveTableModel;
     }
