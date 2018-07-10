@@ -63,7 +63,7 @@ public class JavaVersionParser {
             if (javaVer != null) {
                 int firstDot = javaVer.indexOf('.');
                 if (firstDot < 0) {
-                    javaMajor = Integer.parseInt(javaVer);
+                    javaMajor = parseIntPrefix(javaVer);
                 } else {
                     int secondDot = javaVer.indexOf('.', firstDot+1);
                     if (secondDot < 0)
