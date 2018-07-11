@@ -67,8 +67,8 @@ CHANGES
 -------
 
 0.6.2:
-- Support to show the name from a phone book for a number 
-  (new column "Name (phone book)" that can be added to the tables)
+- Support to show the name/company/comment from a phone book for a number 
+  (new columns "Name/Company/Comment (phone book)" that can be added to the tables)
 - Some minor bug fixes
 
 0.6.1:
