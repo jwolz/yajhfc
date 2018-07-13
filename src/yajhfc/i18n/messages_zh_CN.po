@@ -68,7 +68,7 @@ msgstr "版权"
 
 #: ../AboutDialog.java:307
 msgid "System properties"
-msgstr "系统信息"
+msgstr "系统属性"
 
 #: ../AboutDialog.java:308
 #, java-format
@@ -97,7 +97,7 @@ msgstr ""
 
 #: ../printerport/EntryPoint.java:85
 msgid "Printer port"
-msgstr "打印机port："
+msgstr "打印机端口"
 
 #: ../printerport/PortOptionsPanel.java:91
 msgid ""
@@ -503,7 +503,7 @@ msgstr "保存表错误:"
 
 #: ../export/ExportCSVAction.java:96
 msgid "Save to CSV"
-msgstr "保存成CSV档"
+msgstr "保存成CSV"
 
 #: ../export/ImageExportManager.java:114
 #, java-format
@@ -660,7 +660,7 @@ msgstr "永不"
 
 #: ../FaxNotification.java:51
 msgid "Delivered"
-msgstr "已交付"
+msgstr "已投递"
 
 #: ../FaxNotification.java:52
 msgid "Requeued"
@@ -885,7 +885,7 @@ msgstr "JDBC driver"
 
 #: ../plugin/PluginTableModel.java:67
 msgid "Plugin"
-msgstr "外挂"
+msgstr "插件"
 
 #: ../options/ConvertersPage.java:103
 msgid "For information on how to use this page, please see the Wiki at:"
@@ -1001,11 +1001,11 @@ msgstr "服务器Socket时间结束(秒):"
 
 #: ../options/FmtEditorPanel.java:77
 msgid "Selected columns:"
-msgstr "选择栏位"
+msgstr "已选择列"
 
 #: ../options/FmtEditorPanel.java:77
 msgid "Available columns:"
-msgstr "可用栏位"
+msgstr "可选列"
 
 #: ../options/CoverPanel.java:100
 #, java-format
@@ -1660,7 +1660,7 @@ msgstr "连线设置："
 #: ../phonebook/jdbc/ConnectionDialog.java:205
 #: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:114
 msgid "Always ask"
-msgstr "总是问"
+msgstr "总是询问"
 
 #: ../options/SingleServerSettingsPanel.java:478
 msgid "Use passive mode to fetch faxes"
@@ -1812,7 +1812,7 @@ msgstr "排序"
 
 #: ../options/OptionsWin.java:235
 msgid "Phone numbers"
-msgstr ""
+msgstr "电话号码"
 
 #: ../options/OptionsWin.java:238
 msgid "Paths and viewers"
@@ -1853,7 +1853,7 @@ msgstr "发送中"
 
 #: ../options/OptionsWin.java:257 ../MainWin.java:2305
 msgid "Archive"
-msgstr "文件"
+msgstr "归档"
 
 #: ../options/OptionsWin.java:261
 msgid "These settings normally need not to be changed."
@@ -1880,19 +1880,19 @@ msgstr ""
 
 #: ../options/PhoneNumberPanel.java:89
 msgid "Country Code"
-msgstr ""
+msgstr "国家代码"
 
 #: ../options/PhoneNumberPanel.java:90
 msgid "Area Code"
-msgstr ""
+msgstr "地区代码"
 
 #: ../options/PhoneNumberPanel.java:91
 msgid "Long Distance Call Prefix"
-msgstr ""
+msgstr "长途电话前缀"
 
 #: ../options/PhoneNumberPanel.java:92
 msgid "International Call Prefix"
-msgstr ""
+msgstr "国际电话前缀"
 
 #: ../phonebook/PhoneBookFactory.java:79
 msgid "Personal phone book"
@@ -1914,7 +1914,7 @@ msgstr "LDAP密码"
 #: ../phonebook/ldap/LDAPPhoneBook.java:137
 #: ../phonebook/ldap/ConnectionDialog.java:278
 msgid "Please enter the LDAP password:"
-msgstr ""
+msgstr "请输入LDAP密码"
 
 #: ../phonebook/ldap/LDAPPhoneBook.java:199
 msgid "Error executing the search:"
@@ -2008,7 +2008,7 @@ msgstr "错误:无法解析输入 \"{0}\"."
 #: ../phonebook/convrules/RuleParser.java:132
 #, java-format
 msgid "Unknown field \"{0}\"."
-msgstr "不明子段 \"{0}\"."
+msgstr "不明字段 \"{0}\"."
 
 #: ../phonebook/convrules/LocationRule.java:85
 msgid "[Location with ZIP code]"
@@ -2538,19 +2538,19 @@ msgstr "无法载入指定的驱动程序类："
 #: ../phonebook/jdbc/ConnectionDialog.java:319
 #: ../virtualcolumnstore/JDBCVirtColPersister.java:213
 msgid "Database password"
-msgstr "资料库密码"
+msgstr "数据库密码"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:285
 #: ../phonebook/jdbc/ConnectionDialog.java:319
 #: ../virtualcolumnstore/JDBCVirtColPersister.java:213
 #, java-format
 msgid "Please enter the database password (database: {0}):"
-msgstr "请输入资料库密码(资料库: {0}):"
+msgstr "请输入资料库密码(数据库: {0}):"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:297
 #: ../phonebook/jdbc/ConnectionDialog.java:346
 msgid "Could not connect to the database:"
-msgstr "无法连接到资料库："
+msgstr "无法连接到数据库："
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:341
 msgid "Could not load the phone book:"
@@ -2558,7 +2558,7 @@ msgstr "无法载入通讯录："
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:358
 msgid "Cannot open phone book since no database fields were selected!"
-msgstr "无法开启通讯录，因为没有选定的资料库栏位！"
+msgstr "无法开启通讯录，因为没有选定的数据库栏位！"
 
 #: ../phonebook/jdbc/JDBCPhoneBook.java:411
 #: ../phonebook/jdbc/JDBCPhoneBook.java:414
@@ -2584,7 +2584,7 @@ msgstr "驱动程序类："
 
 #: ../phonebook/jdbc/ConnectionDialog.java:224
 msgid "Database URL:"
-msgstr "资料库网址："
+msgstr "数据库网址："
 
 #: ../phonebook/jdbc/ConnectionDialog.java:234
 msgid "Table:"
@@ -2596,7 +2596,7 @@ msgstr "你必须指定一个驱动程序类。"
 
 #: ../phonebook/jdbc/ConnectionDialog.java:295
 msgid "You have to specify a database URL."
-msgstr "你必须指定一个资料库 URL。"
+msgstr "你必须指定一个数据库 URL。"
 
 #: ../phonebook/jdbc/ConnectionDialog.java:401
 msgid "Could not get the field names:"
@@ -2604,11 +2604,11 @@ msgstr "无法获取栏位名称："
 
 #: ../phonebook/jdbc/ConnectionDialog.java:413
 msgid "You have to specify a database table."
-msgstr "你必须指定一个资料库表。"
+msgstr "你必须指定一个数据库表。"
 
 #: ../phonebook/jdbc/ConnectionDialog.java:421
 msgid "Connection to the database succeeded."
-msgstr "连接到资料库成功。"
+msgstr "连接到数据库成功。"
 
 #: ../FaxResolution.java:46
 msgid "Extended (> 196 lpi)"
@@ -4460,7 +4460,7 @@ msgstr "回应语音电话需要直接连线HylaFAx server不可使用"
 #: ../MainWin.java:1393 ../MainWin.java:1406 ../MainWin.java:1411
 #: ../MainWin.java:1428 ../MainWin.java:1432
 msgid "Answer call"
-msgstr "回答来电"
+msgstr "应答来电"
 
 #: ../MainWin.java:1406
 msgid "No valid modem found."
@@ -4468,23 +4468,23 @@ msgstr "没有找到正确的数据机"
 
 #: ../MainWin.java:1411
 msgid "Please select which modem shall answer a phone call:"
-msgstr "请选择要用那台数据机回答来电"
+msgstr "请选择要用那台数据机应答来电"
 
 #: ../MainWin.java:1423
 msgid "Error answering the phone call:"
-msgstr "回答来电错误:"
+msgstr "应答来电错误:"
 
 #: ../MainWin.java:1428
 msgid ""
 "Answering a phone call requires administrative privileges.\n"
 "Please enable admin mode first."
 msgstr ""
-"回答来电,需要管理者权限\n"
+"应答来电,需要管理者权限\n"
 "请使用管理模式"
 
 #: ../MainWin.java:1433
 msgid "Manually answer a phone call with a modem"
-msgstr "手动回答来电"
+msgstr "手动应答来电"
 
 #: ../MainWin.java:1448
 msgid "Searches for a fax"
@@ -4532,11 +4532,11 @@ msgstr "选取所有行"
 
 #: ../MainWin.java:1612 ../MainWin.java:1621
 msgid "Edit user comment"
-msgstr ""
+msgstr "编辑用户注释"
 
 #: ../MainWin.java:1622
 msgid "Edit this job's user comment"
-msgstr ""
+msgstr "编辑当前任务的注释"
 
 #: ../MainWin.java:1626
 msgid "Auto-size status bar"
@@ -4658,7 +4658,7 @@ msgstr "重置快速寻找,并显示所有传真"
 #~ "current read/unread state will not be saved.\n"
 #~ " Reason:"
 #~ msgstr ""
-#~ "无法开启资料库表来存储读 /未读状态。目前的读 /未读状态将不会被保存。\n"
+#~ "无法开启数据库表来存储读 /未读状态。目前的读 /未读状态将不会被保存。\n"
 #~ "理由:"
 
 #~ msgid "JDBC settings to save read/unread state"

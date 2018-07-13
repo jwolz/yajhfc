@@ -1,4 +1,4 @@
-LÉAME (README) de YajHFC 0.6.0
+LÉAME (README) de YajHFC 0.6.2
 ==============================
 
 ACERCA DE
@@ -23,15 +23,15 @@ INSTALACIÓN
 -----------
 
 Requisitos:
-* JRE 5.0 o superior (se recomienda Java 6, 7 u 8)
+* JRE 5.0 o superior (se recomienda Java 7 u 8)
 * Servidor HylaFAX funcionando en la red (obviamente ;-) )
 * Algún programa para ver archivos TIFF (consultar la FAQ)
 * Opcional: un visor PostScript (p. ej., Ghostview), GhostScript
   y tiff2pdf (integrado en libtiff-utils)
 
-Para instalar YajHFC descargue el archivo yajhfc-0_5_7.jar en algún lugar 
+Para instalar YajHFC descargue el archivo yajhfc-0_6_2.jar en algún lugar 
 de su disco.
-Para ejecutarlo, utilice: "java -jar yajhfc-0_6_0.jar"
+Para ejecutarlo, utilice: "java -jar yajhfc-0_6_2.jar"
 (En Windows seguramente sólo sea necesario ejecutarlo pulsando dos veces sobre el archivo).
 
 LICENCIA
@@ -65,6 +65,15 @@ de Java (más avanzado que los programas "Hola mundo") utilizando la IDE Eclipse
 
 CAMBIOS
 -------
+
+0.6.2:
+- Soporte para mostrar el nombre/empresa/comentario de un número desde la agenda telefónica 
+  (se pueden añadir nuevas columnas "Nombre/Empresa/Comentario (agenda telefónica)" en las tablas)
+- Varias mejoras de características menores y corrección de errores
+
+0.6.1:
+- Varias mejoras de características menores y corrección de errores
+- La APP de MAC ya funciona con los paquetes Java de Oracle
 
 0.6.0:
 - Posibilidad de añadir comentarios definidos por el usuario a los faxes
