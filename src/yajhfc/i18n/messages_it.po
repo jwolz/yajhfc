@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: messages_it\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-11 12:58+0200\n"
-"PO-Revision-Date: 2015-12-28 16:41+0100\n"
+"PO-Revision-Date: 2018-07-16 23:38+0100\n"
 "Last-Translator: Giulio Orsero <giulioo@pobox.com>\n"
 "Language-Team: \n"
 "Language: it\n"
@@ -46,7 +46,8 @@ msgstr "Traduzione italiana a cura di {0}"
 #: ../AboutDialog.java:261 ../report/SendReportDialog.java:166
 #: ../filters/ui/CustomFilterDialog.java:104 ../options/OptionsWin.java:195
 #: ../phonebook/ldap/ConnectionDialog.java:174
-#: ../phonebook/csv/CSVDialog.java:151 ../phonebook/ui/SortOrderDialog.java:108
+#: ../phonebook/csv/CSVDialog.java:151
+#: ../phonebook/ui/SortOrderDialog.java:108
 #: ../phonebook/ui/RuleParserDialog.java:126
 #: ../phonebook/jdbc/ConnectionDialog.java:215
 #: ../model/servconn/directaccess/fritz/FritzConfigDialog.java:118
@@ -1858,7 +1859,7 @@ msgstr "Ordina"
 
 #: ../options/OptionsWin.java:235
 msgid "Phone numbers"
-msgstr ""
+msgstr "Numeri telefonici"
 
 #: ../options/OptionsWin.java:238
 msgid "Paths and viewers"
@@ -1923,22 +1924,25 @@ msgid ""
 "format (e.g. +49 1234 567890). Currently this is only used to look up names "
 "from the phone book."
 msgstr ""
+"Qui è possibile specificare come trasformare i numeri telefonici in formato "
+"canonico (es. +39 123 4567890). Ad ora viene utilizzato solo per ricercare "
+"nomi nella rubrica."
 
 #: ../options/PhoneNumberPanel.java:89
 msgid "Country Code"
-msgstr ""
+msgstr "Prefisso della nazione"
 
 #: ../options/PhoneNumberPanel.java:90
 msgid "Area Code"
-msgstr ""
+msgstr "Prefisso del distretto"
 
 #: ../options/PhoneNumberPanel.java:91
 msgid "Long Distance Call Prefix"
-msgstr ""
+msgstr "Prefisso chiamate nazionali"
 
 #: ../options/PhoneNumberPanel.java:92
 msgid "International Call Prefix"
-msgstr ""
+msgstr "Prefisso chiamate internazionali"
 
 #: ../phonebook/PhoneBookFactory.java:79
 msgid "Personal phone book"
@@ -2121,7 +2125,8 @@ msgid "Comments"
 msgstr "Commenti/note"
 
 #: ../phonebook/WrapperDistributionList.java:201
-#: ../phonebook/xml/XMLDistributionList.java:164 ../phonebook/PhoneBook.java:74
+#: ../phonebook/xml/XMLDistributionList.java:164
+#: ../phonebook/PhoneBook.java:74
 msgid "<no name>"
 msgstr "<senza nome>"
 
@@ -3148,32 +3153,32 @@ msgstr "Commento aggiunto da un utente di YajHFC"
 #: ../model/jobq/QueueFileFormat.java:124 ../model/JobFormat.java:280
 #: ../model/RecvFormat.java:149
 msgid "Name (phone book)"
-msgstr ""
+msgstr "Nome (rubrica)"
 
 #: ../model/jobq/QueueFileFormat.java:124 ../model/JobFormat.java:280
 #: ../model/RecvFormat.java:149
 msgid "Name looked up from phone book"
-msgstr ""
+msgstr "Nome trovato nella rubrica"
 
 #: ../model/jobq/QueueFileFormat.java:128 ../model/JobFormat.java:284
 #: ../model/RecvFormat.java:153
 msgid "Company (phone book)"
-msgstr ""
+msgstr "Società (rubrica)"
 
 #: ../model/jobq/QueueFileFormat.java:128 ../model/JobFormat.java:284
 #: ../model/RecvFormat.java:153
 msgid "Company name looked up from phone book"
-msgstr ""
+msgstr "Nome società trovato nella rubrica"
 
 #: ../model/jobq/QueueFileFormat.java:132 ../model/JobFormat.java:288
 #: ../model/RecvFormat.java:157
 msgid "Comment (phone book)"
-msgstr ""
+msgstr "Commento (rubrica)"
 
 #: ../model/jobq/QueueFileFormat.java:132 ../model/JobFormat.java:288
 #: ../model/RecvFormat.java:157
 msgid "Comment looked up from phone book"
-msgstr ""
+msgstr "Commento trovato nella rubrica"
 
 #: ../model/servconn/FaxListConnectionType.java:55
 msgid "Using the HylaFAX protocol"

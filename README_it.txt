@@ -1,4 +1,4 @@
-LEGGIMI per YajHFC 0.6.0
+LEGGIMI per YajHFC 0.6.2
 ========================
 
 INFORMAZIONI
@@ -10,7 +10,7 @@ YajHFC (Yet Another Java HylaFAX Client) è un client per il server fax HylaFAX
 Funzionalità:
 * Invio via fax di documenti PostScript, PDF e vari altri formati
 * Fax polling
-* Supporto per la generazioni di copertine fax da modelli
+* Supporto per la generazione di copertine fax da modelli
 * Visualizzazione dei fax inviati e ricevuti
 * Rubrica (le voci possono essere opzionalmente lette da database SQL o directory LDAP)
 * E' possibile selezionare in una apposita finestra le colonne degli elenchi fax da visualizzare
@@ -23,14 +23,14 @@ INSTALLAZIONE
 -------------
 
 Requisiti:
-* JRE 5.0 o superiore (si raccomanda Java 6, 7 o 8)
+* JRE 5.0 o superiore (si raccomanda Java 7 o 8)
 * Un server fax HylaFAX attivo sulla rete (ovviamente ;-) )
 * Un programma per visualizzare i file TIFF (vedere anche la FAQ)
 * Opzionale: un visualizzatore PostScript (es. Ghostview), GhostScript
      e tiff2pdf (dal pacchetto libtiff-utils)
 
-Per installare YajHFC basta scaricare il file yajhfc-0_6_0.jar in una cartella del proprio disco.
-Per eseguirlo utilizzare: "java -jar yajhfc-0_6_0.jar"
+Per installare YajHFC basta scaricare il file yajhfc-0_6_2.jar in una cartella del proprio disco.
+Per eseguirlo utilizzare: "java -jar yajhfc-0_6_2.jar"
 (In Windows normalmente è anche possibile cliccare due volte sul file jar.)
 
 LICENZA
@@ -64,6 +64,15 @@ YajHFC originariamente era stato scritto come primo progetto Java più complesso
 
 MODIFICHE
 ---------
+
+0.6.2:
+- Supporto per evidenziare i campi nome/società/commento da una rubrica per un numero fax
+  (nuove colonne "Name/Company/Comment (rubrica)" che possono essere aggiunte alle tabelle)
+- Correzioni di errori minori
+
+0.6.1:
+- Correzioni di errori minori
+- L'app su Mac ora funziona con i pacchetti Java di Oracle
 
 0.6.0:
 - Possibilità da parte dell'utente di aggiungere commenti ai fax
