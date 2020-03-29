@@ -271,6 +271,11 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         actSend.putValue(Action.SMALL_ICON, Utils.loadIcon("general/SendMail"));
 
         JButton buttonSend = new JButton(actSend);
+        String sendKeyStroke = Utils.getFaxOptions().keyboardAccelerators.get("Send");
+        if (sendKeyStroke!=null) {
+            buttonSend.getActionMap().put("Send", actSend);
+            buttonSend.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(sendKeyStroke), "Send");
+        }
 
         actPreview = new ExcDialogAbstractAction() {
             @Override
