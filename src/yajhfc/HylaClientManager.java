@@ -43,6 +43,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -170,28 +171,32 @@ public class HylaClientManager {
                     }
                     
 
-                    while (client.user(userName)) {                
-                        if (password == null || password.length() == 0) {
+                    while (client.user(userName)) {            
+                        try {
+                            if (password == null || password.length() == 0) {
 
-                            String[] pwd = dialogs.showPasswordDialog(Utils._("User password"), Utils._("Please enter the user password:"), userName, false, false);
-                            if (pwd == null || pwd[1].length() == 0) { // User cancelled
-                                client.quit();
-                                //doErrorCleanup(); // TODO
-                                return null;
-                            } else
-                                try {
-                                    client.pass(pwd[1]);
-                                    
-                                    password = pwd[1]; // password after pass is important for repeated asks
-                                    //repeatAsk = false;
-                                    break;
-                                } catch (ServerResponseException e) {
-                                    dialogs.showExceptionDialog(Utils._("An error occured in response to the password:"), e);
-                                    //repeatAsk = true;
-                                }
-                        } else {
-                            client.pass(password);
-                            break;
+                                String[] pwd = dialogs.showPasswordDialog(Utils._("User password"), Utils._("Please enter the user password:"), userName, false, false);
+                                if (pwd == null || pwd[1].length() == 0) { // User cancelled
+                                    client.quit();
+                                    //doErrorCleanup(); // TODO
+                                    return null;
+                                } else
+                                    try {
+                                        client.pass(pwd[1]);
+
+                                        password = pwd[1]; // password after pass is important for repeated asks
+                                        //repeatAsk = false;
+                                        break;
+                                    } catch (ServerResponseException e) {
+                                        dialogs.showExceptionDialog(Utils._("An error occured in response to the password:"), e);
+                                        //repeatAsk = true;
+                                    }
+                            } else {
+                                client.pass(password);
+                                break;
+                            }
+                        } catch (NoSuchElementException e) {
+                            dialogs.showExceptionDialog(Utils._("The server unexpectedly closed the connection when trying to send the password. Maybe it crashed (check the server's syslog)."), e);
                         }
                     } 
 

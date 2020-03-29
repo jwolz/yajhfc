@@ -780,10 +780,18 @@ public final class Utils {
      */
     public static void copyStream(InputStream inStream, OutputStream outStream) throws IOException {
         int len = 0;
-        final byte[] buf = new byte[8000];
+        long copyLen = 0;
+        final byte[] buf = new byte[0x20000];
+        
+        if (Utils.debugMode)
+            log.fine("Copying " + inStream + " to " + outStream);
+        
         while ((len = inStream.read(buf)) >= 0) {
             outStream.write(buf, 0, len);
+            copyLen += len;
         }
+        if (Utils.debugMode)
+            log.fine(copyLen + " bytes copied");
     }
     
     /**

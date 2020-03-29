@@ -63,7 +63,8 @@ import yajhfc.util.ProgressContentPane;
  *
  */
 public class NoGUISender implements MainApplicationFrame {
-
+    static Logger log = Logger.getLogger(NoGUISender.class.getName());
+    
     protected ProgressContentPane progressPanel;
     protected YajOptionPane dialogUI;
     protected JFrame frame;
@@ -132,10 +133,11 @@ public class NoGUISender implements MainApplicationFrame {
     
     public static void submitWithoutUI(final CommandLineOpts opts, final SendControllerSubmitProtocol submitProto) {
         final NoGUISender sender;
+        log.fine("Creating GUI...");
         try {
             sender = new NoGUISender(submitProto);
         } catch (Exception e) {
-            Logger.getLogger(NoGUISender.class.getName()).log(Level.SEVERE, "Could not initialize main frame", e);
+            log.log(Level.SEVERE, "Could not initialize main frame", e);
             System.exit(1);
             return;
         }
@@ -153,7 +155,11 @@ public class NoGUISender implements MainApplicationFrame {
                 });
             }
             
+            log.fine("Submitting job...");
+            
             submitProto.submit(true);
+            
+            log.fine("Waiting for submit to finish");
 
             System.exit(submitProto.waitReady() ? 0 : 1);
         } catch (Exception ex) {

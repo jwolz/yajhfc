@@ -99,12 +99,16 @@ public abstract class FaxSenderSubmitProtocol implements SubmitProtocol {
     /**
      * Prepares the submit
      */
+    @SuppressWarnings("unchecked")
     public void prepareSubmit() throws IOException {
         if (preparedSubmit)
             return;
     
+        log.fine("Preparing submit...");
         if (inStream != null) {
+            log.fine("Reading inStream");
             tflInStream = new StreamTFLItem(inStream, streamDesc);
+            log.fine("inStream read");
 
             if (subject == null) {
                 log.fine("No subject specified, trying to extract one from the file...");

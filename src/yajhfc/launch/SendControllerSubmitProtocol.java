@@ -94,6 +94,7 @@ public class SendControllerSubmitProtocol extends FaxSenderSubmitProtocol implem
 
     protected void dispatchToSendController() {
         try {
+            log.fine("dispatchToSendController ...");
             Launcher2.application.bringToFront();
 
             SendController controller = new SendController(ServerManager.getDefault().getCurrent(), Launcher2.application.getFrame(), false);
