@@ -45,6 +45,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -89,6 +90,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 
@@ -1291,6 +1293,29 @@ public final class Utils {
             lastItem = item;
         }
         return numDups;
+    }
+    
+    /**
+     * Copied from sun.swing.MenuItemLayoutHelper.getAccText(String)
+     * @param prefix
+     * @param accelerator
+     * @return
+     */
+    public static String getAcceleratorText(KeyStroke accelerator) {
+        StringBuilder accText = new StringBuilder();
+        if (accelerator != null) {
+            int modifiers = accelerator.getModifiers();
+            if (modifiers > 0) {
+                accText.append(KeyEvent.getKeyModifiersText(modifiers)).append('+');
+            }
+            int keyCode = accelerator.getKeyCode();
+            if (keyCode != 0) {
+                accText.append(KeyEvent.getKeyText(keyCode));
+            } else {
+                accText.append(accelerator.getKeyChar());
+            }
+        }
+        return accText.toString();
     }
 }
 

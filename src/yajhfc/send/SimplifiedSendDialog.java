@@ -37,7 +37,6 @@
 package yajhfc.send;
 
 import static yajhfc.Utils.addWithLabel;
-import info.clearthought.layout.TableLayout;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -89,6 +88,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import info.clearthought.layout.TableLayout;
 import yajhfc.FaxNotification;
 import yajhfc.FaxOptions;
 import yajhfc.FaxResolution;
@@ -274,7 +274,9 @@ final class SimplifiedSendDialog extends JDialog implements SendWinControl {
         String sendKeyStroke = Utils.getFaxOptions().keyboardAccelerators.get("Send");
         if (sendKeyStroke!=null) {
             buttonSend.getActionMap().put("Send", actSend);
-            buttonSend.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(sendKeyStroke), "Send");
+            KeyStroke ks = KeyStroke.getKeyStroke(sendKeyStroke);
+            buttonSend.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(ks, "Send");
+            buttonSend.setToolTipText(Utils._("Accelerator key") + ": " + Utils.getAcceleratorText(ks));
         }
 
         actPreview = new ExcDialogAbstractAction() {
