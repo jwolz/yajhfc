@@ -66,6 +66,11 @@ YajHFC was originally written as a first more complicated
 CHANGES
 -------
 
+0.6.3:
+- Minor bugfixes
+- Linux fax printer should work again with newer Ubuntu versions
+- Java Runtime included in Windows setup by default
+
 0.6.2:
 - Support to show the name/company/comment from a phone book for a number 
   (new columns "Name/Company/Comment (phone book)" that can be added to the tables)
