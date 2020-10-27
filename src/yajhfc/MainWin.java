@@ -503,7 +503,7 @@ public final class MainWin extends JFrame implements MainApplicationFrame {
                             }
                             yj.setRead(true);
                         } catch (Exception e1) {
-                            if (e1.getMessage().contains("All fill bits preceding EOL code must be 0.")) {
+                            if (e1.getMessage()!=null && e1.getMessage().contains("All fill bits preceding EOL code must be 0.")) {
                                 final String helpURL = "http://www.yajhfc.de/documentation/knowledge-base/134-error-qall-fill-bits-preceding-eol-code-must-be-0q";
                                 final String text = 
                                         Utils._("It seems the TIFF files of your HylaFAX installation are incompatible with iText (often the case with capi4hylafax).") + "\n\n" +
