@@ -62,7 +62,7 @@ public abstract class MacOSXSupport {
 		if (instance == null) {
 			try {
 				instance = (MacOSXSupport)Class.forName(IMPL_CLASS_NAME).newInstance();
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				instance = null;
 				Logger.getLogger(MacOSXSupport.class.getName()).log(Level.WARNING, "Mac OS X support not available:", e);
 			}
